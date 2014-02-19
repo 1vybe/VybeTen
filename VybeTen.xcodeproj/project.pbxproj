@@ -1,0 +1,457 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		604B627D18B495BB00D3EF19 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B627C18B495BB00D3EF19 /* Foundation.framework */; };
+		604B627F18B495BB00D3EF19 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B627E18B495BB00D3EF19 /* CoreGraphics.framework */; };
+		604B628118B495BB00D3EF19 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B628018B495BB00D3EF19 /* UIKit.framework */; };
+		604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 604B628518B495BB00D3EF19 /* InfoPlist.strings */; };
+		604B628918B495BB00D3EF19 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 604B628818B495BB00D3EF19 /* main.m */; };
+		604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 604B628C18B495BB00D3EF19 /* VYBAppDelegate.m */; };
+		604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 604B628E18B495BB00D3EF19 /* Images.xcassets */; };
+		604B629618B495BB00D3EF19 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B629518B495BB00D3EF19 /* XCTest.framework */; };
+		604B629718B495BB00D3EF19 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B627C18B495BB00D3EF19 /* Foundation.framework */; };
+		604B629818B495BB00D3EF19 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B628018B495BB00D3EF19 /* UIKit.framework */; };
+		604B62A018B495BB00D3EF19 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 604B629E18B495BB00D3EF19 /* InfoPlist.strings */; };
+		604B62A218B495BB00D3EF19 /* VybeTenTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 604B62A118B495BB00D3EF19 /* VybeTenTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		604B629918B495BB00D3EF19 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 604B627118B495BB00D3EF19 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 604B627818B495BB00D3EF19;
+			remoteInfo = VybeTen;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		604B627918B495BB00D3EF19 /* VybeTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VybeTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		604B627C18B495BB00D3EF19 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		604B627E18B495BB00D3EF19 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		604B628018B495BB00D3EF19 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		604B628418B495BB00D3EF19 /* VybeTen-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VybeTen-Info.plist"; sourceTree = "<group>"; };
+		604B628618B495BB00D3EF19 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		604B628818B495BB00D3EF19 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		604B628A18B495BB00D3EF19 /* VybeTen-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VybeTen-Prefix.pch"; sourceTree = "<group>"; };
+		604B628B18B495BB00D3EF19 /* VYBAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VYBAppDelegate.h; sourceTree = "<group>"; };
+		604B628C18B495BB00D3EF19 /* VYBAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VYBAppDelegate.m; sourceTree = "<group>"; };
+		604B628E18B495BB00D3EF19 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		604B629418B495BB00D3EF19 /* VybeTenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VybeTenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		604B629518B495BB00D3EF19 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		604B629D18B495BB00D3EF19 /* VybeTenTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VybeTenTests-Info.plist"; sourceTree = "<group>"; };
+		604B629F18B495BB00D3EF19 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		604B62A118B495BB00D3EF19 /* VybeTenTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VybeTenTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		604B627618B495BB00D3EF19 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				604B627F18B495BB00D3EF19 /* CoreGraphics.framework in Frameworks */,
+				604B628118B495BB00D3EF19 /* UIKit.framework in Frameworks */,
+				604B627D18B495BB00D3EF19 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		604B629118B495BB00D3EF19 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				604B629618B495BB00D3EF19 /* XCTest.framework in Frameworks */,
+				604B629818B495BB00D3EF19 /* UIKit.framework in Frameworks */,
+				604B629718B495BB00D3EF19 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		604B627018B495BB00D3EF19 = {
+			isa = PBXGroup;
+			children = (
+				604B628218B495BB00D3EF19 /* VybeTen */,
+				604B629B18B495BB00D3EF19 /* VybeTenTests */,
+				604B627B18B495BB00D3EF19 /* Frameworks */,
+				604B627A18B495BB00D3EF19 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		604B627A18B495BB00D3EF19 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				604B627918B495BB00D3EF19 /* VybeTen.app */,
+				604B629418B495BB00D3EF19 /* VybeTenTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		604B627B18B495BB00D3EF19 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				604B627C18B495BB00D3EF19 /* Foundation.framework */,
+				604B627E18B495BB00D3EF19 /* CoreGraphics.framework */,
+				604B628018B495BB00D3EF19 /* UIKit.framework */,
+				604B629518B495BB00D3EF19 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		604B628218B495BB00D3EF19 /* VybeTen */ = {
+			isa = PBXGroup;
+			children = (
+				604B628B18B495BB00D3EF19 /* VYBAppDelegate.h */,
+				604B628C18B495BB00D3EF19 /* VYBAppDelegate.m */,
+				604B628E18B495BB00D3EF19 /* Images.xcassets */,
+				604B628318B495BB00D3EF19 /* Supporting Files */,
+			);
+			path = VybeTen;
+			sourceTree = "<group>";
+		};
+		604B628318B495BB00D3EF19 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				604B628418B495BB00D3EF19 /* VybeTen-Info.plist */,
+				604B628518B495BB00D3EF19 /* InfoPlist.strings */,
+				604B628818B495BB00D3EF19 /* main.m */,
+				604B628A18B495BB00D3EF19 /* VybeTen-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		604B629B18B495BB00D3EF19 /* VybeTenTests */ = {
+			isa = PBXGroup;
+			children = (
+				604B62A118B495BB00D3EF19 /* VybeTenTests.m */,
+				604B629C18B495BB00D3EF19 /* Supporting Files */,
+			);
+			path = VybeTenTests;
+			sourceTree = "<group>";
+		};
+		604B629C18B495BB00D3EF19 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				604B629D18B495BB00D3EF19 /* VybeTenTests-Info.plist */,
+				604B629E18B495BB00D3EF19 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		604B627818B495BB00D3EF19 /* VybeTen */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 604B62A518B495BB00D3EF19 /* Build configuration list for PBXNativeTarget "VybeTen" */;
+			buildPhases = (
+				604B627518B495BB00D3EF19 /* Sources */,
+				604B627618B495BB00D3EF19 /* Frameworks */,
+				604B627718B495BB00D3EF19 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VybeTen;
+			productName = VybeTen;
+			productReference = 604B627918B495BB00D3EF19 /* VybeTen.app */;
+			productType = "com.apple.product-type.application";
+		};
+		604B629318B495BB00D3EF19 /* VybeTenTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 604B62A818B495BB00D3EF19 /* Build configuration list for PBXNativeTarget "VybeTenTests" */;
+			buildPhases = (
+				604B629018B495BB00D3EF19 /* Sources */,
+				604B629118B495BB00D3EF19 /* Frameworks */,
+				604B629218B495BB00D3EF19 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				604B629A18B495BB00D3EF19 /* PBXTargetDependency */,
+			);
+			name = VybeTenTests;
+			productName = VybeTenTests;
+			productReference = 604B629418B495BB00D3EF19 /* VybeTenTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		604B627118B495BB00D3EF19 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = VYB;
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = Vybe;
+				TargetAttributes = {
+					604B629318B495BB00D3EF19 = {
+						TestTargetID = 604B627818B495BB00D3EF19;
+					};
+				};
+			};
+			buildConfigurationList = 604B627418B495BB00D3EF19 /* Build configuration list for PBXProject "VybeTen" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 604B627018B495BB00D3EF19;
+			productRefGroup = 604B627A18B495BB00D3EF19 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				604B627818B495BB00D3EF19 /* VybeTen */,
+				604B629318B495BB00D3EF19 /* VybeTenTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		604B627718B495BB00D3EF19 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */,
+				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		604B629218B495BB00D3EF19 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				604B62A018B495BB00D3EF19 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		604B627518B495BB00D3EF19 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
+				604B628918B495BB00D3EF19 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		604B629018B495BB00D3EF19 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				604B62A218B495BB00D3EF19 /* VybeTenTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		604B629A18B495BB00D3EF19 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 604B627818B495BB00D3EF19 /* VybeTen */;
+			targetProxy = 604B629918B495BB00D3EF19 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		604B628518B495BB00D3EF19 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				604B628618B495BB00D3EF19 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		604B629E18B495BB00D3EF19 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				604B629F18B495BB00D3EF19 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		604B62A318B495BB00D3EF19 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		604B62A418B495BB00D3EF19 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		604B62A618B495BB00D3EF19 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
+				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		604B62A718B495BB00D3EF19 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
+				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		604B62A918B495BB00D3EF19 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/VybeTen.app/VybeTen";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "VybeTenTests/VybeTenTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		604B62AA18B495BB00D3EF19 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/VybeTen.app/VybeTen";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
+				INFOPLIST_FILE = "VybeTenTests/VybeTenTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		604B627418B495BB00D3EF19 /* Build configuration list for PBXProject "VybeTen" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				604B62A318B495BB00D3EF19 /* Debug */,
+				604B62A418B495BB00D3EF19 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		604B62A518B495BB00D3EF19 /* Build configuration list for PBXNativeTarget "VybeTen" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				604B62A618B495BB00D3EF19 /* Debug */,
+				604B62A718B495BB00D3EF19 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		604B62A818B495BB00D3EF19 /* Build configuration list for PBXNativeTarget "VybeTenTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				604B62A918B495BB00D3EF19 /* Debug */,
+				604B62AA18B495BB00D3EF19 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 604B627118B495BB00D3EF19 /* Project object */;
+}
