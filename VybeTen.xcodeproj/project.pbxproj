@@ -19,6 +19,9 @@
 		604B629818B495BB00D3EF19 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B628018B495BB00D3EF19 /* UIKit.framework */; };
 		604B62A018B495BB00D3EF19 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 604B629E18B495BB00D3EF19 /* InfoPlist.strings */; };
 		604B62A218B495BB00D3EF19 /* VybeTenTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 604B62A118B495BB00D3EF19 /* VybeTenTests.m */; };
+		6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */; };
+		6061246F18B7862F00B0A14E /* VYBCaptureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6061246D18B7862F00B0A14E /* VYBCaptureViewController.xib */; };
+		6061247118B7937700B0A14E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6061247018B7937700B0A14E /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6038EF1018B7A00600B9669B /* RecordPause.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RecordPause.m; path = ../../../Desktop/RecordPause.m; sourceTree = "<group>"; };
 		604B627918B495BB00D3EF19 /* VybeTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VybeTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		604B627C18B495BB00D3EF19 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		604B627E18B495BB00D3EF19 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -48,6 +52,10 @@
 		604B629D18B495BB00D3EF19 /* VybeTenTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VybeTenTests-Info.plist"; sourceTree = "<group>"; };
 		604B629F18B495BB00D3EF19 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		604B62A118B495BB00D3EF19 /* VybeTenTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VybeTenTests.m; sourceTree = "<group>"; };
+		6061246B18B7862F00B0A14E /* VYBCaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCaptureViewController.h; sourceTree = "<group>"; };
+		6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCaptureViewController.m; sourceTree = "<group>"; };
+		6061246D18B7862F00B0A14E /* VYBCaptureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBCaptureViewController.xib; sourceTree = "<group>"; };
+		6061247018B7937700B0A14E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6061247118B7937700B0A14E /* AVFoundation.framework in Frameworks */,
 				604B627F18B495BB00D3EF19 /* CoreGraphics.framework in Frameworks */,
 				604B628118B495BB00D3EF19 /* UIKit.framework in Frameworks */,
 				604B627D18B495BB00D3EF19 /* Foundation.framework in Frameworks */,
@@ -96,6 +105,7 @@
 		604B627B18B495BB00D3EF19 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6061247018B7937700B0A14E /* AVFoundation.framework */,
 				604B627C18B495BB00D3EF19 /* Foundation.framework */,
 				604B627E18B495BB00D3EF19 /* CoreGraphics.framework */,
 				604B628018B495BB00D3EF19 /* UIKit.framework */,
@@ -109,6 +119,10 @@
 			children = (
 				604B628B18B495BB00D3EF19 /* VYBAppDelegate.h */,
 				604B628C18B495BB00D3EF19 /* VYBAppDelegate.m */,
+				6061246B18B7862F00B0A14E /* VYBCaptureViewController.h */,
+				6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */,
+				6038EF1018B7A00600B9669B /* RecordPause.m */,
+				6061246D18B7862F00B0A14E /* VYBCaptureViewController.xib */,
 				604B628E18B495BB00D3EF19 /* Images.xcassets */,
 				604B628318B495BB00D3EF19 /* Supporting Files */,
 			);
@@ -220,6 +234,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6061246F18B7862F00B0A14E /* VYBCaptureViewController.xib in Resources */,
 				604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
 			);
@@ -242,6 +257,7 @@
 			files = (
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
+				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,10 +376,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -373,10 +392,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -442,6 +464,7 @@
 				604B62A718B495BB00D3EF19 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		604B62A818B495BB00D3EF19 /* Build configuration list for PBXNativeTarget "VybeTenTests" */ = {
 			isa = XCConfigurationList;
@@ -450,6 +473,7 @@
 				604B62AA18B495BB00D3EF19 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

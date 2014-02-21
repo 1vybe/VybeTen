@@ -7,15 +7,23 @@
 //
 
 #import "VYBAppDelegate.h"
+#import "VYBCaptureViewController.h"
 
 @implementation VYBAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
+    
+    VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
+    
+    [self.window setRootViewController:captureVC];
+    
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    
     return YES;
 }
 
