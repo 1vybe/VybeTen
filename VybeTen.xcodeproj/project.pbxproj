@@ -35,7 +35,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		6038EF1018B7A00600B9669B /* RecordPause.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RecordPause.m; path = ../../../Desktop/RecordPause.m; sourceTree = "<group>"; };
 		604B627918B495BB00D3EF19 /* VybeTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VybeTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		604B627C18B495BB00D3EF19 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		604B627E18B495BB00D3EF19 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -121,7 +120,6 @@
 				604B628C18B495BB00D3EF19 /* VYBAppDelegate.m */,
 				6061246B18B7862F00B0A14E /* VYBCaptureViewController.h */,
 				6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */,
-				6038EF1018B7A00600B9669B /* RecordPause.m */,
 				6061246D18B7862F00B0A14E /* VYBCaptureViewController.xib */,
 				604B628E18B495BB00D3EF19 /* Images.xcassets */,
 				604B628318B495BB00D3EF19 /* Supporting Files */,

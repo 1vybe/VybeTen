@@ -6,22 +6,24 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
-#import <AVFoundation/AVFoundation.h>
 #import "VYBCaptureViewController.h"
 
-@interface VYBCaptureViewController () {
-    AVCaptureMovieFileOutput *movieFileOutput;
-}
+@interface VYBCaptureViewController ()
 
 @end
 
-@implementation VYBCaptureViewController
+@implementation VYBCaptureViewController {
+    AVCaptureMovieFileOutput *movieFileOutput;
+    NSString *outputPath;
+    NSTimer *recordingTimer;
+    BOOL recording;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        recording = NO;
     }
     return self;
 }
@@ -29,6 +31,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
 
     // Setup for video capturing session
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
@@ -46,14 +50,6 @@
     
     // Add movie file output
     movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
-    AVCaptureVideoDataOutput *videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
-    [videoDataOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
-    
-    NSString *key = (NSString *)kCVPixelBufferBytesPerRowAlignmentKey;
-    NSNumber *value = [NSNumber numberWithUnsignedInt:kCVPixelFormatType_32ABGR];
-    NSDictionary *videoSettings = [NSDictionary dictionaryWithObject:value forKey:key];
-    
-    [videoDataOutput setVideoSettings:videoSettings];
     
     Float64 totalSeconds = 7;
     int32_t preferredTimeScale = 30;
@@ -67,10 +63,13 @@
     // Set frame rate
     //CMTimeShow(captureConnection.videoMinFrameDuration);
     //CMTimeShow(captureConnection.videoMaxFrameDuration);
+
     
-    if ( [session canAddOutput:movieFileOutput] )
+    
+    if ( [session canAddOutput:movieFileOutput] ) {
+        NSLog(@"movieFileOutput added");
         [session addOutput:movieFileOutput];
-    [session addOutput:videoDataOutput];
+    }
     
     
     CALayer *rootLayer = [[self view] layer];
@@ -83,19 +82,34 @@
 }
 
 - (IBAction)startRecording:(id)sender {
-    NSDate *date = [NSDate date];
-    NSLog(@" date: %@", date);
+    // Start Recording
+    // Display the remaining time from 7 seconds
+    if (!recording) {
+        NSDate *date = [NSDate date];
+        NSLog(@"Recording Started. Date: %@", date);
     
-    // Path to save in the application's document directory
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory, NSUserDomainMask, YES);
-    NSString *recordedFileName = nil;
-    recordedFileName = [NSString stringWithFormat:@"%@.mov", date];
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *outputPath = [documentsDirectory stringByAppendingPathComponent:recordedFileName];
-    NSLog(@"video will be saved to %@", outputPath);
-    
-    NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:outputPath];
-    [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
+        // Path to save in the application's document directory
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory, NSUserDomainMask, YES);
+        NSString *recordedFileName = nil;
+        recordedFileName = [NSString stringWithFormat:@"%@.mov", date];
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        outputPath = [documentsDirectory stringByAppendingPathComponent:recordedFileName];
+        NSLog(@"Video will be saved to %@", outputPath);
+        
+        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:outputPath];
+        [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
+        //recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(VideoRecording) userInfo:nil repeats:YES];
+
+        recording = YES;
+    }
+    // Stop Recording
+    else {
+        NSLog(@"Recodring Stopped.");
+        [movieFileOutput stopRecording];
+        // Brings up a new control view with Cancel/ Done/ Replay/ Timestamp
+        
+        recording = NO;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -105,7 +119,7 @@
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
-    
+    NSLog(@"DidFinishRecording called and output saved");
     BOOL recordSuccess = YES;
     if ( [error code] != noErr ) {
         id value = [[error userInfo] objectForKey:AVErrorRecordingSuccessfullyFinishedKey];
@@ -115,16 +129,17 @@
     
     AVCaptureConnection *videoConnection = nil;
     for ( AVCaptureConnection *connection in [movieFileOutput connections] ) {
-        NSLog(@"%@", connection);
+        NSLog(@"[CONNECTIONS] %@", connection);
         for ( AVCaptureInputPort *port in [connection inputPorts] ) {
-            NSLog(@"%@", port);
+            NSLog(@"[PORT] %@", port);
             if ( [[port mediaType] isEqual:AVMediaTypeVideo] )
                 videoConnection = connection;
         }
     }
     
     NSData *videoData = [NSData dataWithContentsOfURL:outputFileURL];
-    [videoData writeToFile:self.outputPath atomically:NO];
+    [videoData writeToFile:outputPath atomically:NO];
 }
+
 
 @end
