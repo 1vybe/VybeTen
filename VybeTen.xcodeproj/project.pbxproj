@@ -22,6 +22,10 @@
 		6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */; };
 		6061246F18B7862F00B0A14E /* VYBCaptureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6061246D18B7862F00B0A14E /* VYBCaptureViewController.xib */; };
 		6061247118B7937700B0A14E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6061247018B7937700B0A14E /* AVFoundation.framework */; };
+		60F1BBB118BA34AA00070EEC /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F1BBB018BA34AA00070EEC /* AssetsLibrary.framework */; };
+		60F1BBB618BA692100070EEC /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F1BBB518BA692100070EEC /* ImageIO.framework */; };
+		60F1BBB918BAAFA900070EEC /* VYBVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBVybeStore.m */; };
+		60F1BBBC18BAB39400070EEC /* VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBBB18BAB39400070EEC /* VYBVybe.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +59,12 @@
 		6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCaptureViewController.m; sourceTree = "<group>"; };
 		6061246D18B7862F00B0A14E /* VYBCaptureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBCaptureViewController.xib; sourceTree = "<group>"; };
 		6061247018B7937700B0A14E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		60F1BBB018BA34AA00070EEC /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		60F1BBB518BA692100070EEC /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		60F1BBB718BAAFA900070EEC /* VYBVybeStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybeStore.h; sourceTree = "<group>"; };
+		60F1BBB818BAAFA900070EEC /* VYBVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybeStore.m; sourceTree = "<group>"; };
+		60F1BBBA18BAB39400070EEC /* VYBVybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybe.h; sourceTree = "<group>"; };
+		60F1BBBB18BAB39400070EEC /* VYBVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybe.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +72,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60F1BBB618BA692100070EEC /* ImageIO.framework in Frameworks */,
+				60F1BBB118BA34AA00070EEC /* AssetsLibrary.framework in Frameworks */,
 				6061247118B7937700B0A14E /* AVFoundation.framework in Frameworks */,
 				604B627F18B495BB00D3EF19 /* CoreGraphics.framework in Frameworks */,
 				604B628118B495BB00D3EF19 /* UIKit.framework in Frameworks */,
@@ -104,6 +116,8 @@
 		604B627B18B495BB00D3EF19 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				60F1BBB518BA692100070EEC /* ImageIO.framework */,
+				60F1BBB018BA34AA00070EEC /* AssetsLibrary.framework */,
 				6061247018B7937700B0A14E /* AVFoundation.framework */,
 				604B627C18B495BB00D3EF19 /* Foundation.framework */,
 				604B627E18B495BB00D3EF19 /* CoreGraphics.framework */,
@@ -121,6 +135,10 @@
 				6061246B18B7862F00B0A14E /* VYBCaptureViewController.h */,
 				6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */,
 				6061246D18B7862F00B0A14E /* VYBCaptureViewController.xib */,
+				60F1BBBA18BAB39400070EEC /* VYBVybe.h */,
+				60F1BBBB18BAB39400070EEC /* VYBVybe.m */,
+				60F1BBB718BAAFA900070EEC /* VYBVybeStore.h */,
+				60F1BBB818BAAFA900070EEC /* VYBVybeStore.m */,
 				604B628E18B495BB00D3EF19 /* Images.xcassets */,
 				604B628318B495BB00D3EF19 /* Supporting Files */,
 			);
@@ -253,6 +271,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60F1BBBC18BAB39400070EEC /* VYBVybe.m in Sources */,
+				60F1BBB918BAAFA900070EEC /* VYBVybeStore.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,

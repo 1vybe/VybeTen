@@ -8,6 +8,7 @@
 
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
+#import "VYBVybeStore.h"
 
 @implementation VYBAppDelegate
 
@@ -37,6 +38,12 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
+    BOOL success = [[VYBVybeStore sharedStore] saveChanges];
+    if (success)
+        NSLog(@"My vybes are saved. :)");
+    else
+        NSLog(@"My vybes will be lost. :(");
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application

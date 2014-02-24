@@ -39,16 +39,6 @@
                         <action selector="startRecording:" destination="-1" eventType="touchUpInside" id="CyF-AB-osh"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gio-v9-jwx">
-                    <rect key="frame" x="315" y="145" width="46" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="Button">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="startRecording:" destination="-1" eventType="touchUpInside" id="Ode-d2-Ylw"/>
-                    </connections>
-                </button>
             </subviews>
             <gestureRecognizers/>
             <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>

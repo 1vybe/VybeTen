@@ -12,6 +12,5 @@
 @interface VYBCaptureViewController : UIViewController <AVCaptureFileOutputRecordingDelegate>
 
 - (IBAction)startRecording:(id)sender;
-- 
 
 @end
