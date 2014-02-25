@@ -10,4 +10,7 @@
 
 @interface VYBMenuViewController : UIViewController
 
+- (IBAction)captureVybe:(id)sender;
+
 @end
+

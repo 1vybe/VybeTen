@@ -34,6 +34,14 @@
     [super viewDidLoad];
 }
 
+/**
+ * Actions that are triggered by buttons
+ **/
+
+- (IBAction)captureVybe:(id)sender {
+    [[self navigationController] popToRootViewControllerAnimated:YES];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

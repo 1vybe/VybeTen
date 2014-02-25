@@ -15,8 +15,10 @@
     IBOutlet UILabel *timerLabel;
 }
 
+- (void)setSession:(AVCaptureSession *)s WithVideoInput:(AVCaptureDeviceInput *)vidInput WithMovieFileOutput:(AVCaptureMovieFileOutput *)movieOutput;
 - (IBAction)flipCamera:(id)sender;
 - (IBAction)startRecording:(id)sender;
+- (IBAction)goToMenu:(id)sender;
 - (AVCaptureDeviceInput *)frontCameraInput;
 - (AVCaptureDeviceInput *)backCameraInput;
 
