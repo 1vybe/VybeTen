@@ -9,15 +9,17 @@
 #import <Foundation/Foundation.h>
 
 @interface VYBVybe : NSObject <NSCoding> {
+    NSString *vybePath;
     NSString *videoPath;
-    UIImage *thumbnailImg;
+    NSString *thumbnailPath;
     NSDate *timeStamp;
 }
-
+- (void)setVybePath:(NSString *)vybePath;
 - (void)setVideoPath:(NSString *)vidPath;
-- (void)setThumbnailImg:(UIImage *)thumbpath;
+- (void)setThumbnailPath:(NSString *)thumbPath;
 - (void)setTimeStamp:(NSDate *)date;
-- (UIImage *)getThumbnail;
+- (NSString *)getVideoPath;
+- (NSString *)getThumbnailPath;
 - (NSData *)getVideo;
 
 

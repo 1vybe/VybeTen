@@ -56,7 +56,7 @@
     
     NSString *documentDirectory = [documentDirectories objectAtIndex:0];
     
-    return [documentDirectory stringByAppendingString:@"myVybes.archive"];
+    return [documentDirectory stringByAppendingPathComponent:@"myVybes.archive"];
 }
 
 - (BOOL)saveChanges {

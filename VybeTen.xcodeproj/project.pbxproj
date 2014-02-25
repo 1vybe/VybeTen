@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		024B0E2B18BB39E30073574E /* VYBImageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2A18BB39E30073574E /* VYBImageStore.m */; };
+		024B0E2E18BB39FF0073574E /* VYBVideoStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2D18BB39FF0073574E /* VYBVideoStore.m */; };
 		604B627D18B495BB00D3EF19 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B627C18B495BB00D3EF19 /* Foundation.framework */; };
 		604B627F18B495BB00D3EF19 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B627E18B495BB00D3EF19 /* CoreGraphics.framework */; };
 		604B628118B495BB00D3EF19 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B628018B495BB00D3EF19 /* UIKit.framework */; };
@@ -39,6 +41,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		024B0E2918BB39E30073574E /* VYBImageStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBImageStore.h; sourceTree = "<group>"; };
+		024B0E2A18BB39E30073574E /* VYBImageStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBImageStore.m; sourceTree = "<group>"; };
+		024B0E2C18BB39FF0073574E /* VYBVideoStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVideoStore.h; sourceTree = "<group>"; };
+		024B0E2D18BB39FF0073574E /* VYBVideoStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVideoStore.m; sourceTree = "<group>"; };
 		604B627918B495BB00D3EF19 /* VybeTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VybeTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		604B627C18B495BB00D3EF19 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		604B627E18B495BB00D3EF19 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -139,6 +145,10 @@
 				60F1BBBB18BAB39400070EEC /* VYBVybe.m */,
 				60F1BBB718BAAFA900070EEC /* VYBVybeStore.h */,
 				60F1BBB818BAAFA900070EEC /* VYBVybeStore.m */,
+				024B0E2918BB39E30073574E /* VYBImageStore.h */,
+				024B0E2A18BB39E30073574E /* VYBImageStore.m */,
+				024B0E2C18BB39FF0073574E /* VYBVideoStore.h */,
+				024B0E2D18BB39FF0073574E /* VYBVideoStore.m */,
 				604B628E18B495BB00D3EF19 /* Images.xcassets */,
 				604B628318B495BB00D3EF19 /* Supporting Files */,
 			);
@@ -272,9 +282,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				60F1BBBC18BAB39400070EEC /* VYBVybe.m in Sources */,
+				024B0E2B18BB39E30073574E /* VYBImageStore.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBVybeStore.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
+				024B0E2E18BB39FF0073574E /* VYBVideoStore.m in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

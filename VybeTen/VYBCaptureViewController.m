@@ -17,16 +17,21 @@
 @end
 
 @implementation VYBCaptureViewController {
+    AVCaptureSession *session;
+    AVCaptureDeviceInput *videoInput;
     AVCaptureMovieFileOutput *movieFileOutput;
-    NSString *outputPath;
     NSTimer *recordingTimer;
-    BOOL recording;
     
     VYBVybe *newVybe;
+    
+    BOOL recording;
+    BOOL frontCamera;
 }
 
+// Fix orientation to landscapeRight
+
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskLandscape;
+    return UIInterfaceOrientationMaskLandscapeRight;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -34,6 +39,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         recording = NO;
+        frontCamera = NO;
     }
     return self;
 }
@@ -43,23 +49,22 @@
     [super viewDidLoad];
     
     // Setup for video capturing session
-    AVCaptureSession *session = [[AVCaptureSession alloc] init];
+    session = [[AVCaptureSession alloc] init];
     [session setSessionPreset:AVCaptureSessionPresetHigh];
-    
-    // Setup preview layer
-    AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
-    [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-    [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    
+
     
     // Add video input from camera
-    AVCaptureDevice *inputDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    AVCaptureDeviceInput *deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDevice error:nil];
-    if ( [session canAddInput:deviceInput] )
-        [session addInput:deviceInput];
+    AVCaptureDevice *inputDeviceVideo = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    videoInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDeviceVideo error:nil];
+    if ( [session canAddInput:videoInput] )
+        [session addInput:videoInput];
     
 
     // Add audio input from mic
+    AVCaptureDevice *inputDeviceAudio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+    AVCaptureDeviceInput *deviceAudioInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDeviceAudio error:nil];
+    if ( [session canAddInput:deviceAudioInput] )
+        [session addInput:deviceAudioInput];
     
     // Add movie file output
     // Orientation must be set AFTER FileOutput is added to session
@@ -75,6 +80,10 @@
     [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
  
     
+    // Setup preview layer
+    AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
+    [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+    [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     // Display preview layer
     CALayer *rootLayer = [[self view] layer];
     [rootLayer setMasksToBounds:YES];
@@ -84,6 +93,37 @@
     
     [session startRunning];
 }
+
+/**
+ * Helper functions
+ **/
+
+- (AVCaptureDeviceInput *)frontCameraInput {
+    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    for (AVCaptureDevice *device in devices) {
+        if ([device position] == AVCaptureDevicePositionFront) {
+            AVCaptureDeviceInput *frontVideoInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:nil];
+            return frontVideoInput;
+        }
+    }
+    return nil;
+}
+
+- (AVCaptureDeviceInput *)backCameraInput {
+    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    for (AVCaptureDevice *device in devices) {
+        if ([device position] == AVCaptureDevicePositionBack) {
+            AVCaptureDeviceInput *backVideoInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:nil];
+            return backVideoInput;
+        }
+    }
+    return nil;
+}
+
+
+/**
+ * Actions that are triggered by buttons 
+ **/
 
 - (IBAction)startRecording:(id)sender {
     // Start Recording
@@ -97,13 +137,12 @@
         
         // Path to save in the application's document directory
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *recordedFileName = nil;
-        recordedFileName = [NSString stringWithFormat:@"%@.mov", date];
         NSString *documentsDirectory = [paths objectAtIndex:0];
-        outputPath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", recordedFileName]];
-        NSLog(@"Video will be saved to %@", outputPath);
+        NSString *vybePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", date]];
+        [newVybe setVybePath:vybePath];
+
         
-        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:outputPath];
+        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[newVybe getVideoPath]];
         [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
         //recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(VideoRecording) userInfo:nil repeats:YES];
         
@@ -123,11 +162,28 @@
     }
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (IBAction)flipCamera:(id)sender {
+    [session stopRunning];
+    [session removeInput:videoInput];
+    if (frontCamera)
+        videoInput = [self backCameraInput];
+    else
+        videoInput = [self frontCameraInput];
+    
+    [session addInput:videoInput];
+    frontCamera = !frontCamera;
+    
+    // Setting orientation of AVCaptureMovieFileOutput AFTER a video input is added back to session
+    AVCaptureConnection *movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+    [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+
+    [session startRunning];
 }
+
+
+/**
+ * Callback functions to conform to protocols
+ **/
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
     NSLog(@"DidFinishRecording called");
@@ -138,39 +194,46 @@
             recordSuccess = [value boolValue];
     }
     
-    if (recordSuccess)
-        NSLog(@"Record SUCCESS");
-    
-    AVCaptureConnection *videoConnection = nil;
-    for ( AVCaptureConnection *connection in [movieFileOutput connections] ) {
-        for ( AVCaptureInputPort *port in [connection inputPorts] ) {
-            if ( [[port mediaType] isEqual:AVMediaTypeVideo] )
-                videoConnection = connection;
+    if (recordSuccess) {
+        AVCaptureConnection *videoConnection = nil;
+        for ( AVCaptureConnection *connection in [movieFileOutput connections] ) {
+            for ( AVCaptureInputPort *port in [connection inputPorts] ) {
+                if ( [[port mediaType] isEqual:AVMediaTypeVideo] )
+                    videoConnection = connection;
+            }
         }
+        
+        // Generating and saving a thumbnail for the captured vybe
+        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:outputFileURL options:nil];
+        AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+        NSError *err = NULL;
+        CMTime time = CMTimeMake(1, 60);
+        CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
+        UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
+        NSData *thumbData = UIImageJPEGRepresentation(thumb, 1);
+        NSString *thumbPath = [newVybe getThumbnailPath];
+        NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:thumbPath];
+        [thumbData writeToURL:thumbURL atomically:YES];
+        
+        [[VYBVybeStore sharedStore] addVybe:newVybe];
+        
+        // Save the video and snapshot in a device's photo album
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        if ( [library videoAtPathIsCompatibleWithSavedPhotosAlbum:outputFileURL] )
+            [library writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:nil];
+        [library writeImageToSavedPhotosAlbum:imgRef metadata:nil completionBlock:nil];
+        
     }
-
-    [newVybe setVideoPath:outputPath];
-    
-    // Generating and saving a thumbnail for the captured vybe
-    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:outputFileURL options:nil];
-    AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-    NSError *err = NULL;
-    CMTime time = CMTimeMake(1, 60);
-    CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
-    UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
-    [newVybe setThumbnailImg:thumb];
-    
-    
-    [[VYBVybeStore sharedStore] addVybe:newVybe];
-
-
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    if ( [library videoAtPathIsCompatibleWithSavedPhotosAlbum:outputFileURL] )
-        [library writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:nil];
-    [library writeImageToSavedPhotosAlbum:imgRef metadata:nil completionBlock:nil];
     
     recording = NO;
     newVybe = nil;
+}
+
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 

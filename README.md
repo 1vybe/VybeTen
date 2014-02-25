@@ -8,4 +8,4 @@ Pilot/concierge version of Vybe app on iOS aimed to be used by 10 people for sha
 - BUT allow both landscape to be right AND left
 - Remove Record button and create a subclass of UIView that responds to touch events and flicks when touched
 - NSTimer
-
+- Use VYBImageStore and VYBVideoStore

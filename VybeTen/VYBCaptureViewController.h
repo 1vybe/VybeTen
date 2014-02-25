@@ -11,6 +11,10 @@
 
 @interface VYBCaptureViewController : UIViewController <AVCaptureFileOutputRecordingDelegate>
 
+- (IBAction)flipCamera:(id)sender;
 - (IBAction)startRecording:(id)sender;
+- (AVCaptureDeviceInput *)frontCameraInput;
+- (AVCaptureDeviceInput *)backCameraInput;
+
 
 @end
