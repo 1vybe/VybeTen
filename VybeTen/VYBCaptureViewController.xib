@@ -6,6 +6,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VYBCaptureViewController">
             <connections>
+                <outlet property="flipButton" destination="RTB-Px-0Ms" id="Tcp-yc-jQ1"/>
+                <outlet property="menuButton" destination="bKv-nT-p5t" id="2FN-pc-Vbc"/>
+                <outlet property="timerLabel" destination="Ku7-sR-EAp" id="ChJ-KT-dvW"/>
                 <outlet property="view" destination="1" id="3"/>
             </connections>
         </placeholder>
@@ -42,6 +45,13 @@
                         <action selector="startRecording:" destination="-1" eventType="touchUpInside" id="CyF-AB-osh"/>
                     </connections>
                 </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="00:07" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ku7-sR-EAp" userLabel="label_timer">
+                    <rect key="frame" x="220" y="14" width="40" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <gestureRecognizers/>
             <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>

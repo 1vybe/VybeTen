@@ -20,6 +20,8 @@
     AVCaptureSession *session;
     AVCaptureDeviceInput *videoInput;
     AVCaptureMovieFileOutput *movieFileOutput;
+   
+    NSDate *startTime;
     NSTimer *recordingTimer;
     
     VYBVybe *newVybe;
@@ -120,6 +122,14 @@
     return nil;
 }
 
+- (void)timer:(NSTimer *)timer {
+    NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
+    
+    NSString *secondsPassed = [NSString stringWithFormat:@"00:%02d", 7 - secondsSinceStart];
+    
+    timerLabel.text = secondsPassed;
+}
+
 
 /**
  * Actions that are triggered by buttons 
@@ -129,16 +139,16 @@
     // Start Recording
     // Display the remaining time from 7 seconds
     if (!recording) {
-        NSDate *date = [NSDate date];
-        NSLog(@"Recording Started. Date: %@", date);
-    
         newVybe = [[VYBVybe alloc] init];
-        [newVybe setTimeStamp:date];
-        
+
+        startTime = [NSDate date];
+        NSLog(@"Recording Started. Date: %@", startTime);
+        [newVybe setTimeStamp:startTime];
+
         // Path to save in the application's document directory
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
-        NSString *vybePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", date]];
+        NSString *vybePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", startTime]];
         [newVybe setVybePath:vybePath];
 
         
@@ -146,7 +156,8 @@
         [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
         //recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(VideoRecording) userInfo:nil repeats:YES];
         
-        recording = YES;
+        recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
+        recording = YES; flipButton.hidden = recording; menuButton.hidden = recording;
     }
     
     // Stop Recording
@@ -155,8 +166,12 @@
         NSLog(@"Recodring Stopped.");
         [movieFileOutput stopRecording];
         
-        recording = NO;
-        
+        startTime = nil;
+        [recordingTimer invalidate];
+        recordingTimer = nil;
+        timerLabel.text = @"00:07";
+        recording = NO; flipButton.hidden = recording; menuButton.hidden = recording;
+
         //TODO: Animated effect to show that the captured vybe is saved and shrinked into menu button
         //TODO: Bring up a new control view with Cancel/ Done/ Replay/ Timestamp
     }
@@ -225,7 +240,11 @@
         
     }
     
-    recording = NO;
+    startTime = nil;
+    [recordingTimer invalidate];
+    recordingTimer = nil;
+    timerLabel.text = @"00:07";
+    recording = NO; flipButton.hidden = recording; menuButton.hidden = recording;
     newVybe = nil;
 }
 
