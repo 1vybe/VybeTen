@@ -7,6 +7,7 @@
 //
 
 #import "VYBMenuViewController.h"
+#import "VYBMyVybesViewController.h"
 
 @interface VYBMenuViewController ()
 
@@ -41,6 +42,12 @@
 - (IBAction)captureVybe:(id)sender {
     [[self navigationController] popToRootViewControllerAnimated:YES];
 }
+
+- (IBAction)goToMyVybes:(id)sender {
+    VYBMyVybesViewController *myVybesVC = [[VYBMyVybesViewController alloc] init];
+    [[self navigationController] pushViewController:myVybesVC animated:YES];
+}
+
 
 - (void)didReceiveMemoryWarning
 {

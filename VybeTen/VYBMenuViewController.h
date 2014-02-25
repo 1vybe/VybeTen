@@ -11,6 +11,7 @@
 @interface VYBMenuViewController : UIViewController
 
 - (IBAction)captureVybe:(id)sender;
+- (IBAction)goToMyVybes:(id)sender;
 
 @end
 
