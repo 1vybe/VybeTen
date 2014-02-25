@@ -39,7 +39,7 @@
     // Display preview layer
     CALayer *rootLayer = [[navContoller view] layer];
     [rootLayer setMasksToBounds:YES];
-    [previewLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.width, rootLayer.bounds.size.height)];
+    [previewLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.height, rootLayer.bounds.size.width)]; // width and height are switched in landscape mode
     [rootLayer insertSublayer:previewLayer atIndex:0];
     // Add audio input from mic
     AVCaptureDevice *inputDeviceAudio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];

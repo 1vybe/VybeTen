@@ -159,7 +159,7 @@
 
 - (IBAction)goToMenu:(id)sender {
     VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
-    [[self navigationController] pushViewController:menuVC animated:YES];
+    [[self navigationController] pushViewController:menuVC animated:NO];
 }
 
 
@@ -188,6 +188,7 @@
         // Generating and saving a thumbnail for the captured vybe
         AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:outputFileURL options:nil];
         AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+        [generate setAppliesPreferredTrackTransform:YES]; // To transform the snapshot to be in the orientation the video was taken with
         NSError *err = NULL;
         CMTime time = CMTimeMake(1, 60);
         CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
