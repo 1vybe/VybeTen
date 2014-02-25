@@ -31,7 +31,6 @@
 }
 
 // Fix orientation to landscapeRight
-
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskLandscapeRight;
 }
@@ -154,7 +153,6 @@
         
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[newVybe getVideoPath]];
         [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
-        //recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(VideoRecording) userInfo:nil repeats:YES];
         
         recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
         recording = YES; flipButton.hidden = recording; menuButton.hidden = recording;

@@ -6,7 +6,9 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
+#import <AVFoundation/AVFoundation.h>
 #import "VYBAppDelegate.h"
+#import "VYBMenuViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBVybeStore.h"
 
@@ -17,8 +19,15 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
+    VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
     
-    [self.window setRootViewController:captureVC];
+    UINavigationController *navContoller = [[UINavigationController alloc] initWithRootViewController:captureVC];
+    [navContoller pushViewController:menuVC animated:NO];
+
+    // Set navigation controller's background as preview layer from video input
+    AVCaptureDevice *device = [[AVCaptureDevice alloc] init];
+    
+    [self.window setRootViewController:navContoller];
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
