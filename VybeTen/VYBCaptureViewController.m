@@ -9,6 +9,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
 #import "VYBCaptureViewController.h"
+#import "VYBMenuViewController.h"
 #import "VYBVybeStore.h"
 #import "VYBVybe.h"
 
@@ -45,59 +46,22 @@
     return self;
 }
 
+- (void)setSession:(AVCaptureSession *)s WithVideoInput:(AVCaptureDeviceInput *)vidInput WithMovieFileOutput:(AVCaptureMovieFileOutput *)movieOutput{
+    session = s;
+    videoInput = vidInput;
+    movieFileOutput = movieOutput;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    // Setup for video capturing session
-    session = [[AVCaptureSession alloc] init];
-    [session setSessionPreset:AVCaptureSessionPresetHigh];
-
-    
-    // Add video input from camera
-    AVCaptureDevice *inputDeviceVideo = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    videoInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDeviceVideo error:nil];
-    if ( [session canAddInput:videoInput] )
-        [session addInput:videoInput];
-    
-
-    // Add audio input from mic
-    AVCaptureDevice *inputDeviceAudio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-    AVCaptureDeviceInput *deviceAudioInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDeviceAudio error:nil];
-    if ( [session canAddInput:deviceAudioInput] )
-        [session addInput:deviceAudioInput];
-    
-    // Add movie file output
-    // Orientation must be set AFTER FileOutput is added to session
-    movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
-    Float64 totalSeconds = 7;
-    int32_t preferredTimeScale = 30;
-    CMTime maxDuration = CMTimeMakeWithSeconds(totalSeconds, preferredTimeScale);
-    movieFileOutput.maxRecordedDuration = maxDuration;
-    movieFileOutput.minFreeDiskSpaceLimit = 1024 * 512;
-    if ( [session canAddOutput:movieFileOutput] )
-        [session addOutput:movieFileOutput];
-    AVCaptureConnection *movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-    [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
- 
-    
-    // Setup preview layer
-    AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
-    [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-    [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    // Display preview layer
-    CALayer *rootLayer = [[self view] layer];
-    [rootLayer setMasksToBounds:YES];
-    [previewLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.width, rootLayer.bounds.size.height)];
-    [rootLayer insertSublayer:previewLayer atIndex:0];
-    
-    
-    [session startRunning];
 }
+
 
 /**
  * Helper functions
  **/
+
 
 - (AVCaptureDeviceInput *)frontCameraInput {
     NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
@@ -191,6 +155,11 @@
     [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
 
     [session startRunning];
+}
+
+- (IBAction)goToMenu:(id)sender {
+    VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
+    [[self navigationController] pushViewController:menuVC animated:YES];
 }
 
 
