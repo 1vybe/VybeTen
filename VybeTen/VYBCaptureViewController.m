@@ -45,12 +45,7 @@
     // Setup for video capturing session
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [session setSessionPreset:AVCaptureSessionPresetHigh];
-    
-    // Setup preview layer
-    AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
-    [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-    [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    
+
     
     // Add video input from camera
     AVCaptureDevice *inputDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -58,7 +53,12 @@
     if ( [session canAddInput:deviceInput] )
         [session addInput:deviceInput];
     
-
+    
+    // Setup preview layer
+    AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
+    [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+    [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    
     // Add audio input from mic
     
     // Add movie file output
