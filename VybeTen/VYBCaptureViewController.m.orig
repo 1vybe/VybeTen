@@ -55,6 +55,47 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+<<<<<<< HEAD
+    
+    // Setup for video capturing session
+    AVCaptureSession *session = [[AVCaptureSession alloc] init];
+    [session setSessionPreset:AVCaptureSessionPresetHigh];
+
+    
+    // Add video input from camera
+    AVCaptureDevice *inputDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    AVCaptureDeviceInput *deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDevice error:nil];
+    if ( [session canAddInput:deviceInput] )
+        [session addInput:deviceInput];
+    
+    
+    // Setup preview layer
+    AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
+    [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+    [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    
+    // Add audio input from mic
+    
+    // Add movie file output
+    // Orientation must be set AFTER FileOutput is added to session
+    movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
+    Float64 totalSeconds = 7;
+    int32_t preferredTimeScale = 30;
+    CMTime maxDuration = CMTimeMakeWithSeconds(totalSeconds, preferredTimeScale);
+    movieFileOutput.maxRecordedDuration = maxDuration;
+    movieFileOutput.minFreeDiskSpaceLimit = 1024 * 512;
+    if ( [session canAddOutput:movieFileOutput] )
+        [session addOutput:movieFileOutput];
+    AVCaptureConnection *movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+    [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+ 
+    
+    // Display preview layer
+    CALayer *rootLayer = [[self view] layer];
+    [rootLayer setMasksToBounds:YES];
+    [previewLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.width, rootLayer.bounds.size.height)];
+    [rootLayer insertSublayer:previewLayer atIndex:0];
+=======
 }
 
 
@@ -87,6 +128,8 @@
 
 - (void)timer:(NSTimer *)timer {
     NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
+>>>>>>> c5157886156cc1cd6885d4e5df6d4f7fe6e6026b
+    
     NSString *secondsPassed = [NSString stringWithFormat:@"00:%02d", 7 - secondsSinceStart];
     
     timerLabel.text = secondsPassed;
