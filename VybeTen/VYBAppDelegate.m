@@ -6,6 +6,7 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
+#import <AVFoundation/AVFoundation.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
 #import "VYBVybeStore.h"
@@ -15,10 +16,56 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+
+    UINavigationController *navContoller = [[UINavigationController alloc] init];
+    [[navContoller navigationBar] setHidden:YES];
+
+    /**
+     * Set navigation controller's background as preview layer from video input
+     */
+    // Setup for video capturing session
+    AVCaptureSession *session = [[AVCaptureSession alloc] init];
+    [session setSessionPreset:AVCaptureSessionPresetHigh];
     
+    // Add video input from camera
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    AVCaptureDeviceInput *videoInput = [[AVCaptureDeviceInput alloc] initWithDevice:device error:nil];
+    if ( [session canAddInput:videoInput] )
+        [session addInput:videoInput];
+    // Setup preview layer
+    AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
+    [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+    [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    // Display preview layer
+    CALayer *rootLayer = [[navContoller view] layer];
+    [rootLayer setMasksToBounds:YES];
+    [previewLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.height, rootLayer.bounds.size.width)]; // width and height are switched in landscape mode
+    [rootLayer insertSublayer:previewLayer atIndex:0];
+    // Add audio input from mic
+    AVCaptureDevice *inputDeviceAudio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+    AVCaptureDeviceInput *deviceAudioInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDeviceAudio error:nil];
+    if ( [session canAddInput:deviceAudioInput] )
+        [session addInput:deviceAudioInput];
+    // Add movie file output
+    /* Orientation must be set AFTER FileOutput is added to session */
+    AVCaptureMovieFileOutput *movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
+    Float64 totalSeconds = 7;
+    int32_t preferredTimeScale = 30;
+    CMTime maxDuration = CMTimeMakeWithSeconds(totalSeconds, preferredTimeScale);
+    movieFileOutput.maxRecordedDuration = maxDuration;
+    movieFileOutput.minFreeDiskSpaceLimit = 1024 * 512;
+    if ( [session canAddOutput:movieFileOutput] )
+        [session addOutput:movieFileOutput];
+    AVCaptureConnection *movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+    [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+
+                                            
     VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
-    
-    [self.window setRootViewController:captureVC];
+    [captureVC setSession:session WithVideoInput:videoInput WithMovieFileOutput:movieFileOutput];
+    [navContoller pushViewController:captureVC animated:NO];
+    [self.window setRootViewController:navContoller];
+
+    [session startRunning];
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];

@@ -6,6 +6,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VYBCaptureViewController">
             <connections>
+                <outlet property="flipButton" destination="RTB-Px-0Ms" id="Tcp-yc-jQ1"/>
+                <outlet property="menuButton" destination="bKv-nT-p5t" id="2FN-pc-Vbc"/>
+                <outlet property="timerLabel" destination="Ku7-sR-EAp" id="ChJ-KT-dvW"/>
                 <outlet property="view" destination="1" id="3"/>
             </connections>
         </placeholder>
@@ -20,6 +23,9 @@
                     <state key="normal" image="flip">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="flipCamera:" destination="-1" eventType="touchUpInside" id="7Be-bl-7z6"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bKv-nT-p5t" userLabel="button_menu">
                     <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
@@ -27,6 +33,9 @@
                     <state key="normal" image="menu">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="goToMenu:" destination="-1" eventType="touchUpInside" id="Ubc-3J-uZv"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GmU-2Z-6Ye" userLabel="button_rec">
                     <rect key="frame" x="216" y="136" width="48" height="48"/>
@@ -39,6 +48,13 @@
                         <action selector="startRecording:" destination="-1" eventType="touchUpInside" id="CyF-AB-osh"/>
                     </connections>
                 </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="00:07" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ku7-sR-EAp" userLabel="label_timer">
+                    <rect key="frame" x="220" y="14" width="40" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <gestureRecognizers/>
             <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>

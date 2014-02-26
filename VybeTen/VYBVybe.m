@@ -15,31 +15,41 @@
     self = [super init];
     if (self) {
         [self setVideoPath:[aDecoder decodeObjectForKey:@"videoPath"]];
-        [self setThumbnailImg:[aDecoder decodeObjectForKey:@"thumbnanilImg"]];
+        [self setThumbnailPath:[aDecoder decodeObjectForKey:@"thumbnailPath"]];
         [self setTimeStamp:[aDecoder decodeObjectForKey:@"timeStamp"]];
     }
     return self;
 }
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:videoPath forKey:@"videoPath"];
-    [aCoder encodeObject:thumbnailImg forKey:@"thumbnailImg"];
+    [aCoder encodeObject:thumbnailPath forKey:@"thumbnailPath"];
     [aCoder encodeObject:timeStamp forKey:@"timeStamp"];
+}
+
+- (void)setVybePath:(NSString *)vyPath {
+    vybePath = vyPath;
+    [self setVideoPath:[NSString stringWithFormat:@"%@.mov", vyPath]];
+    [self setThumbnailPath:[NSString stringWithFormat:@"%@.jpeg", vyPath]];
 }
 
 - (void)setVideoPath:(NSString *)vidPath {
     videoPath = vidPath;
 }
 
-- (void)setThumbnailImg:(UIImage *)thumbImg {
-    thumbnailImg = thumbImg;
+- (void)setThumbnailPath:(NSString *)thumbPath {
+    thumbnailPath = thumbPath;
 }
 
 - (void)setTimeStamp:(NSDate *)date {
     timeStamp = date;
 }
 
-- (UIImage *)getThumbnail {
-    return thumbnailImg;
+- (NSString *)getVideoPath {
+    return videoPath;
+}
+
+- (NSString *)getThumbnailPath {
+    return thumbnailPath;
 }
 - (NSData *)getVideo {
     return [[NSData alloc] initWithContentsOfFile:videoPath];

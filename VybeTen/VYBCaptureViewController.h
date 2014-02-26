@@ -9,8 +9,18 @@
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
 
-@interface VYBCaptureViewController : UIViewController <AVCaptureFileOutputRecordingDelegate>
+@interface VYBCaptureViewController : UIViewController <AVCaptureFileOutputRecordingDelegate> {
+    IBOutlet UIButton *flipButton;
+    IBOutlet UIButton *menuButton;
+    IBOutlet UILabel *timerLabel;
+}
 
+- (void)setSession:(AVCaptureSession *)s WithVideoInput:(AVCaptureDeviceInput *)vidInput WithMovieFileOutput:(AVCaptureMovieFileOutput *)movieOutput;
+- (IBAction)flipCamera:(id)sender;
 - (IBAction)startRecording:(id)sender;
+- (IBAction)goToMenu:(id)sender;
+- (AVCaptureDeviceInput *)frontCameraInput;
+- (AVCaptureDeviceInput *)backCameraInput;
+
 
 @end
