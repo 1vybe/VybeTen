@@ -51,6 +51,11 @@
 - (NSString *)getThumbnailPath {
     return thumbnailPath;
 }
+
+- (NSDate *)getTimeStamp {
+    return timeStamp;
+}
+
 - (NSData *)getVideo {
     return [[NSData alloc] initWithContentsOfFile:videoPath];
 }

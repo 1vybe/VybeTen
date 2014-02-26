@@ -7,6 +7,9 @@
 //
 
 #import "VYBMyVybesViewController.h"
+#import "VYBVybeStore.h"
+#import "VYBVybe.h"
+#import "VYBVybeCell.h"
 
 @interface VYBMyVybesViewController ()
 
@@ -14,18 +17,25 @@
 
 @implementation VYBMyVybesViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
+- (id)init {
+    self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
         // Rotate the tableView for horizontal scrolling
         CGAffineTransform rotateTable = CGAffineTransformMakeRotation(-M_PI_2);
         self.tableView.transform = rotateTable;
         self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
         [self.tableView setBackgroundColor:[UIColor clearColor]];
+        [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+        [self.tableView setRowHeight:200.0];
+        self.tableView.showsVerticalScrollIndicator = NO;
     }
     return self;
 }
+
+- (id)initWithStyle:(UITableViewStyle)style
+{
+    return [self init];
+  }
 
 - (void)viewDidLoad
 {
@@ -48,25 +58,28 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    return [[[VYBVybeStore sharedStore] myVybes] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    VYBVybeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
+    if (!cell) {
+        cell = [[VYBVybeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableViewCell"];
+    }
+    VYBVybe *vybe = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
+    [cell setThumbnailPath:[vybe getThumbnailPath]];
+    [cell setVideoPath:[vybe getVideoPath]];
+    [cell setDate:[vybe getTimeStamp]];
+    [cell setContentView];
     
     // Configure the cell...
-    
+    [[cell textLabel] setText:[cell getDate]];
     return cell;
 }
 
