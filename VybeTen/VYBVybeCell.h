@@ -12,6 +12,7 @@
     NSString *videoPath;
     NSString *thumbnailPath;
     NSString *date;
+    UIImageView *thumbnail;
 }
 
 - (void)setThumbnailPath:(NSString *)path;

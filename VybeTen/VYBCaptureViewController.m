@@ -52,6 +52,7 @@
     movieFileOutput = movieOutput;
 }
 
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -87,11 +88,10 @@
 
 - (void)timer:(NSTimer *)timer {
     NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
-    NSString *secondsPassed = [NSString stringWithFormat:@"00:%02d", 7 - secondsSinceStart];
+    NSString *secondsPassed = [NSString stringWithFormat:@"00:%02ld", 7 - secondsSinceStart];
     
     timerLabel.text = secondsPassed;
 }
-
 
 /**
  * Actions that are triggered by buttons 
@@ -191,6 +191,13 @@
         NSError *err = NULL;
         CMTime time = CMTimeMake(1, 60);
         CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
+
+        /* Crop image to 150 x 150 */
+        //NSLog(@"imgRef width:%zu height:%zu", CGImageGetWidth(imgRef), CGImageGetHeight(imgRef));
+        //NSLog(@"thumb width:%f height:%f", thumb.size.width, thumb.size.height);
+        //CGRect rect = CGRectMake((CGImageGetWidth(imgRef) - 150)/2, (CGImageGetHeight(imgRef) - 150)/2, 150, 150);
+        //imgRef = CGImageCreateWithImageInRect(imgRef, rect);
+        
         UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
         NSData *thumbData = UIImageJPEGRepresentation(thumb, 1);
         NSString *thumbPath = [newVybe getThumbnailPath];

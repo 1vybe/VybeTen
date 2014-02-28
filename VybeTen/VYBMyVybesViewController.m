@@ -54,7 +54,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -71,15 +70,16 @@
     VYBVybeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
     if (!cell) {
         cell = [[VYBVybeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableViewCell"];
+        VYBVybe *vybe = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
+        [cell setThumbnailPath:[vybe getThumbnailPath]];
+        [cell setVideoPath:[vybe getVideoPath]];
+        [cell setDate:[vybe getTimeStamp]];
+        [cell setContentView];
+        
+        // Configure the cell...
+        [[cell textLabel] setText:[cell getDate]];
     }
-    VYBVybe *vybe = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
-    [cell setThumbnailPath:[vybe getThumbnailPath]];
-    [cell setVideoPath:[vybe getVideoPath]];
-    [cell setDate:[vybe getTimeStamp]];
-    [cell setContentView];
-    
-    // Configure the cell...
-    [[cell textLabel] setText:[cell getDate]];
+
     return cell;
 }
 

@@ -41,7 +41,18 @@
 }
 
 - (void)setContentView {
-    
+    UIImageView *thumbImgView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:thumbnailPath]];
+    NSLog(@"thumbImgView FRAME width:%f height:%f", thumbImgView.frame.size.width, thumbImgView.frame.size.height);
+    NSLog(@"thumbImgView BOUNDS width:%f height:%f", thumbImgView.bounds.size.width, thumbImgView.bounds.size.height);
+
+    // Rotate the thumbnail image
+    CGAffineTransform rotate = CGAffineTransformMakeRotation(-M_PI_2);
+    thumbImgView.transform = rotate;
+    // Crop the image to circle
+    CALayer *layer = thumbImgView.layer;
+    [layer setCornerRadius:thumbImgView.frame.size.width/2];
+    [layer setMasksToBounds:YES];
+    [self.contentView addSubview:thumbImgView];
 }
 
 - (NSString *)getDate {
