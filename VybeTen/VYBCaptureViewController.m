@@ -88,7 +88,7 @@
 
 - (void)timer:(NSTimer *)timer {
     NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
-    NSString *secondsPassed = [NSString stringWithFormat:@"00:%02ld", 7 - secondsSinceStart];
+    NSString *secondsPassed = [NSString stringWithFormat:@"00:%02d", 7 - secondsSinceStart];
     
     timerLabel.text = secondsPassed;
 }
@@ -187,30 +187,16 @@
         // Generating and saving a thumbnail for the captured vybe
         AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:outputFileURL options:nil];
         AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-        [generate setAppliesPreferredTrackTransform:YES]; // To transform the snapshot to be in the orientation the video was taken with
+        [generate setAppliesPreferredTrackTransform:YES]; /* To transform the snapshot to be in the orientation the video was taken with */
         NSError *err = NULL;
         CMTime time = CMTimeMake(1, 60);
         CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
-
-        /* Crop image to 150 x 150 */
-        //NSLog(@"imgRef width:%zu height:%zu", CGImageGetWidth(imgRef), CGImageGetHeight(imgRef));
-        //NSLog(@"thumb width:%f height:%f", thumb.size.width, thumb.size.height);
-        //CGRect rect = CGRectMake((CGImageGetWidth(imgRef) - 150)/2, (CGImageGetHeight(imgRef) - 150)/2, 150, 150);
-        //imgRef = CGImageCreateWithImageInRect(imgRef, rect);
-        
         UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
         NSData *thumbData = UIImageJPEGRepresentation(thumb, 1);
-        NSString *thumbPath = [newVybe getThumbnailPath];
-        NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:thumbPath];
+        NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[newVybe getThumbnailPath]];
         [thumbData writeToURL:thumbURL atomically:YES];
         
         [[VYBVybeStore sharedStore] addVybe:newVybe];
-        
-        // Save the video and snapshot in a device's photo album
-        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-        if ( [library videoAtPathIsCompatibleWithSavedPhotosAlbum:outputFileURL] )
-            [library writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:nil];
-        [library writeImageToSavedPhotosAlbum:imgRef metadata:nil completionBlock:nil];
         
     }
     

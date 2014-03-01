@@ -25,8 +25,8 @@
         self.tableView.transform = rotateTable;
         self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
         [self.tableView setBackgroundColor:[UIColor clearColor]];
-        [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-        [self.tableView setRowHeight:200.0];
+        //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+        [self.tableView setRowHeight:200.0f];
         self.tableView.showsVerticalScrollIndicator = NO;
     }
     return self;
@@ -70,17 +70,24 @@
     VYBVybeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
     if (!cell) {
         cell = [[VYBVybeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableViewCell"];
-        VYBVybe *vybe = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
-        [cell setThumbnailPath:[vybe getThumbnailPath]];
-        [cell setVideoPath:[vybe getVideoPath]];
-        [cell setDate:[vybe getTimeStamp]];
-        [cell setContentView];
-        
         // Configure the cell...
-        [[cell textLabel] setText:[cell getDate]];
+        //[[cell textLabel] setText:[cell getDate]];
     }
+    VYBVybe *vybe = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
+    NSLog(@"cell center should be %@", NSStringFromCGPoint(cell.center));
+    NSLog(@"cell frame: %@", NSStringFromCGRect(cell.frame));
+    [cell setThumbnailPath:[vybe getThumbnailPath]];
+    [cell setVideoPath:[vybe getVideoPath]];
+    [cell setDate:[vybe getTimeStamp]];
+    [cell setContentView];
 
     return cell;
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"SELECTED");
+    [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 /*
