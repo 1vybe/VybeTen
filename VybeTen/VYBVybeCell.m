@@ -51,10 +51,11 @@
     // Rotate the thumbnail image
     CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
     thumbImgView.transform = rotate;
-    // Crop the image to circle
+    /* Crop the image to circle
     CALayer *layer = thumbImgView.layer;
     [layer setCornerRadius:thumbImgView.frame.size.width/2];
     [layer setMasksToBounds:YES];
+    */
     
     NSLog(@"contentView frame %@", NSStringFromCGRect(self.contentView.frame));
     NSLog(@"contentView bounds %@", NSStringFromCGRect(self.contentView.bounds));
@@ -68,5 +69,6 @@
 - (NSString *)getDate {
     return date;
 }
+
 
 @end

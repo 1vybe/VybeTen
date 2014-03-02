@@ -20,12 +20,12 @@
 - (id)init {
     self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
+        self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
         // Rotate the tableView for horizontal scrolling
         CGAffineTransform rotateTable = CGAffineTransformMakeRotation(-M_PI_2);
         self.tableView.transform = rotateTable;
-        self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
         [self.tableView setBackgroundColor:[UIColor clearColor]];
-        //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+        [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
         [self.tableView setRowHeight:200.0f];
         self.tableView.showsVerticalScrollIndicator = NO;
     }
@@ -67,19 +67,39 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    VYBVybeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
     if (!cell) {
-        cell = [[VYBVybeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableViewCell"];
-        // Configure the cell...
-        //[[cell textLabel] setText:[cell getDate]];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableViewCell"];
+        cell.backgroundColor = [UIColor clearColor];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+
     }
+
     VYBVybe *vybe = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
-    NSLog(@"cell center should be %@", NSStringFromCGPoint(cell.center));
-    NSLog(@"cell frame: %@", NSStringFromCGRect(cell.frame));
-    [cell setThumbnailPath:[vybe getThumbnailPath]];
-    [cell setVideoPath:[vybe getVideoPath]];
-    [cell setDate:[vybe getTimeStamp]];
-    [cell setContentView];
+
+    // Crop Image to 180 x 180
+    UIImageView *thumbImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 180, 180)];
+    [thumbImgView setImage:[UIImage imageWithContentsOfFile:[vybe getThumbnailPath]]];
+    // Move the thumbnail image so its center aligns with the center of a cell's cententView
+    CGRect newFrame = thumbImgView.frame;
+    newFrame.origin.x = cell.contentView.center.x - 90.0f;
+    newFrame.origin.y = cell.contentView.center.y - 90.0f;
+    [thumbImgView setFrame:newFrame];
+     
+    
+    // Rotate the thumbnail image
+    CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
+    thumbImgView.transform = rotate;
+    /* Crop the image to circle
+    CALayer *layer = cell.backgroundView.layer;
+    [layer setCornerRadius:cell.backgroundView.frame.size.width/2];
+    [layer setMasksToBounds:YES];
+     */
+    
+    [cell addSubview:thumbImgView];
+    
+    NSLog(@"bgView has frame:%@",NSStringFromCGRect(cell.backgroundView.frame));
+    NSLog(@"bgView has bounds:%@",NSStringFromCGRect(cell.backgroundView.bounds));
 
     return cell;
 }

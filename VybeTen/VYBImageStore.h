@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface VYBImageStore : NSObject
+@interface VYBImageStore : NSObject {
+    NSMutableDictionary *dictionary;
+}
+
++ (VYBImageStore *)sharedStore;
+- (void)setImage:(UIImage *)img forKey:(NSString *)key;
+- (UIImage *)imageWithKey:(NSString *)key;
 
 @end
