@@ -38,4 +38,10 @@
 - (UIImage *)imageWithKey:(NSString *)key {
     return [dictionary objectForKey:key];
 }
+
+- (void)deleteImageForKey:(NSString *)key {
+    if (!key)
+        return;
+    [dictionary removeObjectForKey:key];
+}
 @end

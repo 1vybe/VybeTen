@@ -15,5 +15,6 @@
 + (VYBImageStore *)sharedStore;
 - (void)setImage:(UIImage *)img forKey:(NSString *)key;
 - (UIImage *)imageWithKey:(NSString *)key;
+- (void)deleteImageForKey:(NSString *)key;
 
 @end

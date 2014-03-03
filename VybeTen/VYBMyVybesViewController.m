@@ -10,6 +10,7 @@
 #import "VYBVybeStore.h"
 #import "VYBVybe.h"
 #import "VYBVybeCell.h"
+#import "VYBImageStore.h"
 
 @interface VYBMyVybesViewController ()
 
@@ -74,34 +75,41 @@
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 
     }
-
     VYBVybe *vybe = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
-
+    // Cache thumbnail images into a memory
+    UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:[vybe getThumbnailPath]];
+    if (!thumbImg) {
+        thumbImg = [UIImage imageWithContentsOfFile:[vybe getThumbnailPath]];
+        [[VYBImageStore sharedStore] setImage:thumbImg forKey:[vybe getThumbnailPath]];
+    }
     // Crop Image to 180 x 180
     UIImageView *thumbImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 180, 180)];
-    [thumbImgView setImage:[UIImage imageWithContentsOfFile:[vybe getThumbnailPath]]];
+    [thumbImgView setImage:thumbImg];
     // Move the thumbnail image so its center aligns with the center of a cell's cententView
     CGRect newFrame = thumbImgView.frame;
     newFrame.origin.x = cell.contentView.center.x - 90.0f;
     newFrame.origin.y = cell.contentView.center.y - 90.0f;
     [thumbImgView setFrame:newFrame];
-     
-    
     // Rotate the thumbnail image
     CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
     thumbImgView.transform = rotate;
-    /* Crop the image to circle
+    // Crop the image to circle
     CALayer *layer = cell.backgroundView.layer;
     [layer setCornerRadius:cell.backgroundView.frame.size.width/2];
     [layer setMasksToBounds:YES];
-     */
     
-    [cell addSubview:thumbImgView];
+    [cell setBackgroundView:thumbImgView];
     
     NSLog(@"bgView has frame:%@",NSStringFromCGRect(cell.backgroundView.frame));
     NSLog(@"bgView has bounds:%@",NSStringFromCGRect(cell.backgroundView.bounds));
 
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    cell.backgroundView.bounds = CGRectMake(0, 0, 180, 180);
+    NSLog(@"[display]bgView has frame:%@",NSStringFromCGRect(cell.backgroundView.frame));
+    NSLog(@"[display]bgView has bounds:%@",NSStringFromCGRect(cell.backgroundView.bounds));
 }
 
 
