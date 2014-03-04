@@ -1,6 +1,9 @@
 //
 //  VYBMyVybesViewController.m
 //  VybeTen
+//  VYBMyVybesViewController can extend UIViewController to fix floating views(buttons) on the same position while user scrolls over its table view.
+//  For the purpose of practice, however, I implemented two methods that will automatically re-position floating views after scrolling.
+//
 //
 //  Created by jinsuk on 2/25/14.
 //  Copyright (c) 2014 Vybe. All rights reserved.
@@ -8,11 +11,14 @@
 
 #import "VYBMyVybesViewController.h"
 #import "VYBVybeStore.h"
-#import "VYBVybe.h"
 #import "VYBVybeCell.h"
 #import "VYBImageStore.h"
+#import "VYBPlayerViewController.h"
 
-@interface VYBMyVybesViewController ()
+@interface VYBMyVybesViewController () {
+    UIButton *buttonCapture;
+    UIButton *buttonMenu;
+}
 
 @end
 
@@ -41,24 +47,31 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Initializing capture button
+    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 48, self.view.bounds.size.height - 48, 48, 48);
+    buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
+    UIImage *captureImage = [UIImage imageNamed:@"capture.png"];
+    [buttonCapture setImage:captureImage forState:UIControlStateNormal];
+    [buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
+    
+    // Initializing menu button
+    CGRect buttonMenuFrame = CGRectMake(self.view.bounds.size.width - 48, 0, 48, 48);
+    buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
+    UIImage *menuImage = [UIImage imageNamed:@"menu.png"];
+    [buttonMenu setImage:menuImage forState:UIControlStateNormal];
+    CGAffineTransform rotation = CGAffineTransformMakeRotation(-M_PI_2);
+    buttonMenu.transform = rotation;
+    [buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [[self tableView] addSubview:buttonCapture];
+    [[self tableView] addSubview:buttonMenu];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -73,7 +86,6 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableViewCell"];
         cell.backgroundColor = [UIColor clearColor];
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-
     }
     VYBVybe *vybe = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
     // Cache thumbnail images into a memory
@@ -98,6 +110,7 @@
     [layer setCornerRadius:cell.backgroundView.frame.size.width/2];
     [layer setMasksToBounds:YES];
     
+    [thumbImgView setContentMode:UIViewContentModeScaleAspectFit];
     [cell setBackgroundView:thumbImgView];
     
     NSLog(@"bgView has frame:%@",NSStringFromCGRect(cell.backgroundView.frame));
@@ -108,6 +121,8 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     cell.backgroundView.bounds = CGRectMake(0, 0, 180, 180);
+    [cell.backgroundView setContentMode:UIViewContentModeScaleAspectFit];
+    
     NSLog(@"[display]bgView has frame:%@",NSStringFromCGRect(cell.backgroundView.frame));
     NSLog(@"[display]bgView has bounds:%@",NSStringFromCGRect(cell.backgroundView.bounds));
 }
@@ -115,7 +130,36 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"SELECTED");
+    VYBPlayerViewController *playVC = [[VYBPlayerViewController alloc] init];
+    [playVC playFromIndex:[indexPath row]];
+    //[self.navigationController pushViewController:playVC animated:NO];
+    [self presentViewController:playVC animated:NO completion:nil];
+}
+
+- (void)captureVybe {
     [self.navigationController popToRootViewControllerAnimated:NO];
+}
+
+- (void)goToMenu {
+    [self.navigationController popViewControllerAnimated:NO];
+}
+
+/**
+ * Repositioning floating views during/after scroll
+ **/
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGRect frame = buttonMenu.frame;
+    frame.origin.y = scrollView.contentOffset.y;
+    buttonMenu.frame = frame;
+    
+    CGRect frameTwo = buttonCapture.frame;
+    frameTwo.origin.y =scrollView.contentOffset.y + self.view.bounds.size.height - 48;
+    buttonCapture.frame = frameTwo;
+    
+    [[self view] bringSubviewToFront:buttonMenu];
+    [[self view] bringSubviewToFront:buttonCapture];
+
 }
 
 /*

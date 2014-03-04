@@ -40,12 +40,12 @@
  **/
 
 - (IBAction)captureVybe:(id)sender {
-    [[self navigationController] popToRootViewControllerAnimated:YES];
+    [[self navigationController] popViewControllerAnimated:NO];
 }
 
 - (IBAction)goToMyVybes:(id)sender {
     VYBMyVybesViewController *myVybesVC = [[VYBMyVybesViewController alloc] init];
-    [[self navigationController] pushViewController:myVybesVC animated:YES];
+    [[self navigationController] pushViewController:myVybesVC animated:NO];
 }
 
 

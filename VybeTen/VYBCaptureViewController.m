@@ -11,7 +11,6 @@
 #import "VYBCaptureViewController.h"
 #import "VYBMenuViewController.h"
 #import "VYBVybeStore.h"
-#import "VYBVybe.h"
 
 @interface VYBCaptureViewController ()
 
@@ -88,7 +87,8 @@
 
 - (void)timer:(NSTimer *)timer {
     NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
-    NSString *secondsPassed = [NSString stringWithFormat:@"00:%02d", 7 - secondsSinceStart];
+    int secondsLeft = 7 - (int)secondsSinceStart;
+    NSString *secondsPassed = [NSString stringWithFormat:@"00:%02d", secondsLeft];
     
     timerLabel.text = secondsPassed;
 }

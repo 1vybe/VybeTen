@@ -28,6 +28,9 @@
 		6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */; };
 		6061246F18B7862F00B0A14E /* VYBCaptureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6061246D18B7862F00B0A14E /* VYBCaptureViewController.xib */; };
 		6061247118B7937700B0A14E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6061247018B7937700B0A14E /* AVFoundation.framework */; };
+		607CA69618C43B480060B420 /* VYBPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 607CA69418C43B480060B420 /* VYBPlayerViewController.m */; };
+		607CA69718C43B480060B420 /* VYBPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607CA69518C43B480060B420 /* VYBPlayerViewController.xib */; };
+		607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 607CA69918C5C80C0060B420 /* VYBPlayerView.m */; };
 		60B0DCEB18BDCC4E007F4D5C /* VYBVybeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60B0DCEA18BDCC4E007F4D5C /* VYBVybeCell.m */; };
 		60F1BBB118BA34AA00070EEC /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F1BBB018BA34AA00070EEC /* AssetsLibrary.framework */; };
 		60F1BBB618BA692100070EEC /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F1BBB518BA692100070EEC /* ImageIO.framework */; };
@@ -77,6 +80,11 @@
 		6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCaptureViewController.m; sourceTree = "<group>"; };
 		6061246D18B7862F00B0A14E /* VYBCaptureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBCaptureViewController.xib; sourceTree = "<group>"; };
 		6061247018B7937700B0A14E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		607CA69318C43B480060B420 /* VYBPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerViewController.h; sourceTree = "<group>"; };
+		607CA69418C43B480060B420 /* VYBPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerViewController.m; sourceTree = "<group>"; };
+		607CA69518C43B480060B420 /* VYBPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBPlayerViewController.xib; sourceTree = "<group>"; };
+		607CA69818C5C80C0060B420 /* VYBPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerView.h; sourceTree = "<group>"; };
+		607CA69918C5C80C0060B420 /* VYBPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerView.m; sourceTree = "<group>"; };
 		60B0DCE918BDCC4E007F4D5C /* VYBVybeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybeCell.h; sourceTree = "<group>"; };
 		60B0DCEA18BDCC4E007F4D5C /* VYBVybeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybeCell.m; sourceTree = "<group>"; };
 		60F1BBB018BA34AA00070EEC /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
@@ -170,6 +178,11 @@
 				60F1BBB818BAAFA900070EEC /* VYBVybeStore.m */,
 				024B0E2918BB39E30073574E /* VYBImageStore.h */,
 				024B0E2A18BB39E30073574E /* VYBImageStore.m */,
+				607CA69318C43B480060B420 /* VYBPlayerViewController.h */,
+				607CA69418C43B480060B420 /* VYBPlayerViewController.m */,
+				607CA69518C43B480060B420 /* VYBPlayerViewController.xib */,
+				607CA69818C5C80C0060B420 /* VYBPlayerView.h */,
+				607CA69918C5C80C0060B420 /* VYBPlayerView.m */,
 				024B0E2C18BB39FF0073574E /* VYBVideoStore.h */,
 				024B0E2D18BB39FF0073574E /* VYBVideoStore.m */,
 				604B628E18B495BB00D3EF19 /* Images.xcassets */,
@@ -283,6 +296,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				607CA69718C43B480060B420 /* VYBPlayerViewController.xib in Resources */,
 				6061246F18B7862F00B0A14E /* VYBCaptureViewController.xib in Resources */,
 				604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
@@ -312,7 +326,9 @@
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
 				0256407518BE116800B93B09 /* VYBVybeThumbnailView.m in Sources */,
+				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
 				024B0E2E18BB39FF0073574E /* VYBVideoStore.m in Sources */,
+				607CA69618C43B480060B420 /* VYBPlayerViewController.m in Sources */,
 				022296DE18BCA24C0096BB30 /* VYBMyVybesViewController.m in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
 				022296DA18BC506D0096BB30 /* VYBMenuViewController.m in Sources */,

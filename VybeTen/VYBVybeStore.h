@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class VYBVybe;
+#import "VYBVybe.h"
 
 @interface VYBVybeStore : NSObject {
     NSMutableArray *myVybes;
