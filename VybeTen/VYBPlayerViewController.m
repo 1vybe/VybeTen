@@ -6,16 +6,11 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
-#import <AVFoundation/AVFoundation.h>
 #import "VYBPlayerViewController.h"
 #import "VYBVybeStore.h"
 
-@interface VYBPlayerViewController ()
-
-@end
 
 @implementation VYBPlayerViewController {
-    AVQueuePlayer *queuePlayer;
     NSInteger playIndex;
 }
 
@@ -26,6 +21,8 @@
     }
     return self;
 }
+
+#pragma mark - View Lifecycle
 
 - (void)viewDidLoad
 {
@@ -39,38 +36,42 @@
     [self.view addGestureRecognizer:swiperight];
 
     // Add AVPlayerLayer on the view
-    AVPlayerLayer *playLayer = [AVPlayerLayer playerLayerWithPlayer:queuePlayer];
+    AVPlayerLayer *playLayer = [AVPlayerLayer playerLayerWithPlayer:[self player]];
     CALayer *rootLayer = [[self view] layer];
     [rootLayer setMasksToBounds:YES];
     [playLayer setFrame:rootLayer.bounds];
     [playLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [rootLayer addSublayer:playLayer];
-
-    // Start the player
-    [queuePlayer play];
+    
+    [[self player] play];
 }
 
 - (void)playFromIndex:(NSInteger)index {
     playIndex = index;
-    NSMutableArray *items = [[NSMutableArray alloc] init];
-    for (NSInteger i = playIndex; i < [[[VYBVybeStore sharedStore] myVybes] count]; i++) {
+    for (NSInteger i = index; i < [[[VYBVybeStore sharedStore] myVybes] count]; i++) {
         VYBVybe *v = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:i];
         NSURL *vybeURL = [[NSURL alloc] initFileURLWithPath:[v getVideoPath]];
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:vybeURL options:nil];
         AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
-        [items addObject:item];
+        if ( [[self player] canInsertItem:item afterItem:nil] ) {
+            [[self player] insertItem:item afterItem:nil];
+        } else {
+            NSLog(@"asset(%@) could not be added to the queue", [asset URL]);
+        }
     }
-    queuePlayer = [[AVQueuePlayer alloc] initWithItems:items];
 }
 
+/**
+ * User Interactions
+ **/
 - (void)swipeLeft {
-    playIndex++;
-    [queuePlayer advanceToNextItem];
+    [[self player] pause];
+    [[self player] advanceToNextItem];
+    [[self player] play];
 }
 
 - (void)swipeRight {
-    
-    NSLog(@"swiped left");
+    [[self player] pause];
 }
 
 - (IBAction)captureVybe:(id)sender {
@@ -80,9 +81,9 @@
 }
 
 - (IBAction)goToMenu:(id)sender {
-    [queuePlayer pause];
     [self dismissViewControllerAnimated:NO completion:nil];
 }
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -90,9 +91,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)dealloc {
-    NSLog(@"PlayViewController DESTROYED");
-}
 
 
 @end

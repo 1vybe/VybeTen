@@ -31,7 +31,7 @@
         // Rotate the tableView for horizontal scrolling
         CGAffineTransform rotateTable = CGAffineTransformMakeRotation(-M_PI_2);
         self.tableView.transform = rotateTable;
-        [self.tableView setBackgroundColor:[UIColor clearColor]];
+        [self.tableView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.4]];
         [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
         [self.tableView setRowHeight:200.0f];
         self.tableView.showsVerticalScrollIndicator = NO;
@@ -42,11 +42,16 @@
 - (id)initWithStyle:(UITableViewStyle)style
 {
     return [self init];
-  }
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    CGRect frame = self.tableView.frame;
+    UIView *transView = [[UIView alloc] initWithFrame:frame];
+
+
+    [self.tableView setBackgroundView:transView];
     
     // Initializing capture button
     CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 48, self.view.bounds.size.height - 48, 48, 48);
@@ -113,8 +118,8 @@
     [thumbImgView setContentMode:UIViewContentModeScaleAspectFit];
     [cell setBackgroundView:thumbImgView];
     
-    NSLog(@"bgView has frame:%@",NSStringFromCGRect(cell.backgroundView.frame));
-    NSLog(@"bgView has bounds:%@",NSStringFromCGRect(cell.backgroundView.bounds));
+    //NSLog(@"bgView has frame:%@",NSStringFromCGRect(cell.backgroundView.frame));
+    //NSLog(@"bgView has bounds:%@",NSStringFromCGRect(cell.backgroundView.bounds));
 
     return cell;
 }
@@ -123,8 +128,8 @@
     cell.backgroundView.bounds = CGRectMake(0, 0, 180, 180);
     [cell.backgroundView setContentMode:UIViewContentModeScaleAspectFit];
     
-    NSLog(@"[display]bgView has frame:%@",NSStringFromCGRect(cell.backgroundView.frame));
-    NSLog(@"[display]bgView has bounds:%@",NSStringFromCGRect(cell.backgroundView.bounds));
+    //NSLog(@"[display]bgView has frame:%@",NSStringFromCGRect(cell.backgroundView.frame));
+    //NSLog(@"[display]bgView has bounds:%@",NSStringFromCGRect(cell.backgroundView.bounds));
 }
 
 

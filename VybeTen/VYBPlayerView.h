@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface VYBPlayerView : UIView
-
+@property (nonatomic) AVPlayer *player;
 @end

@@ -45,7 +45,7 @@
     return self;
 }
 
-- (void)setSession:(AVCaptureSession *)s WithVideoInput:(AVCaptureDeviceInput *)vidInput WithMovieFileOutput:(AVCaptureMovieFileOutput *)movieOutput{
+- (void)setSession:(AVCaptureSession *)s withVideoInput:(AVCaptureDeviceInput *)vidInput withMovieFileOutput:(AVCaptureMovieFileOutput *)movieOutput{
     session = s;
     videoInput = vidInput;
     movieFileOutput = movieOutput;

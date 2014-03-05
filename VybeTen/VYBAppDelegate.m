@@ -61,7 +61,7 @@
 
                                             
     VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
-    [captureVC setSession:session WithVideoInput:videoInput WithMovieFileOutput:movieFileOutput];
+    [captureVC setSession:session withVideoInput:videoInput withMovieFileOutput:movieFileOutput];
     [navContoller pushViewController:captureVC animated:NO];
     [self.window setRootViewController:navContoller];
 
