@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+@class VYBPlayerViewController;
 
 @interface VYBMyVybesViewController : UITableViewController
-
+@property (nonatomic) UIButton *buttonCapture;
+@property (nonatomic) UIButton *buttonMenu;
 @end

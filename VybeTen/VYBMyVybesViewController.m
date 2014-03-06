@@ -15,14 +15,9 @@
 #import "VYBImageStore.h"
 #import "VYBPlayerViewController.h"
 
-@interface VYBMyVybesViewController () {
-    UIButton *buttonCapture;
-    UIButton *buttonMenu;
-}
-
-@end
 
 @implementation VYBMyVybesViewController
+@synthesize buttonCapture, buttonMenu;
 
 - (id)init {
     self = [super initWithStyle:UITableViewStylePlain];
@@ -135,17 +130,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"SELECTED");
-    VYBPlayerViewController *playVC = [[VYBPlayerViewController alloc] init];
-    [playVC playFromIndex:[indexPath row]];
-    //[self.navigationController pushViewController:playVC animated:NO];
-    [self presentViewController:playVC animated:NO completion:nil];
+    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    [self presentViewController:playerVC animated:NO completion:nil];
 }
 
 - (void)captureVybe {
+    NSLog(@"capture");
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 - (void)goToMenu {
+    NSLog(@"menu");
     [self.navigationController popViewControllerAnimated:NO];
 }
 

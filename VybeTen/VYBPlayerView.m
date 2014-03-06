@@ -10,15 +10,6 @@
 
 @implementation VYBPlayerView
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
-
 + (Class)layerClass {
     return [AVPlayerLayer class];
 }
@@ -29,6 +20,11 @@
 
 - (void)setPlayer:(AVPlayer *)player {
     [(AVPlayerLayer *)[self layer] setPlayer:player];
+}
+
+- (void)setVideoFillMode {
+    AVPlayerLayer *playerLayer = (AVPlayerLayer *)[self layer];
+    [playerLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
 }
 
 @end
