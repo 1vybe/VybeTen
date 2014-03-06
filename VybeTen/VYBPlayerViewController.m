@@ -59,6 +59,7 @@
             NSLog(@"asset(%@) could not be added to the queue", [asset URL]);
         }
     }
+
 }
 
 /**
