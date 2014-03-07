@@ -50,14 +50,14 @@
 
     [self.tableView setBackgroundView:transView];
     
-    // Initializing capture button
+    // Adding capture button
     CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 48, self.view.bounds.size.height - 48, 48, 48);
     buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"capture.png"];
     [buttonCapture setImage:captureImage forState:UIControlStateNormal];
     [buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
-    
-    // Initializing menu button
+    [[self tableView] addSubview:buttonCapture];
+    // Adding menu button
     CGRect buttonMenuFrame = CGRectMake(self.view.bounds.size.width - 48, 0, 48, 48);
     buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
     UIImage *menuImage = [UIImage imageNamed:@"menu.png"];
@@ -65,8 +65,6 @@
     CGAffineTransform rotation = CGAffineTransformMakeRotation(-M_PI_2);
     buttonMenu.transform = rotation;
     [buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
-
-    [[self tableView] addSubview:buttonCapture];
     [[self tableView] addSubview:buttonMenu];
 }
 
@@ -83,11 +81,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
+    VYBVybeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VYBTableCell"];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableViewCell"];
-        cell.backgroundColor = [UIColor clearColor];
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBTableCell" owner:self options:nil];
+        cell = [nib objectAtIndex:0];
     }
     VYBVybe *vybe = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
     // Cache thumbnail images into a memory
@@ -96,39 +93,11 @@
         thumbImg = [UIImage imageWithContentsOfFile:[vybe getThumbnailPath]];
         [[VYBImageStore sharedStore] setImage:thumbImg forKey:[vybe getThumbnailPath]];
     }
-    // Crop Image to 180 x 180
-    UIImageView *thumbImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 180, 180)];
-    [thumbImgView setImage:thumbImg];
-    // Move the thumbnail image so its center aligns with the center of a cell's cententView
-    CGRect newFrame = thumbImgView.frame;
-    newFrame.origin.x = cell.contentView.center.x - 90.0f;
-    newFrame.origin.y = cell.contentView.center.y - 90.0f;
-    [thumbImgView setFrame:newFrame];
-    // Rotate the thumbnail image
-    CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
-    thumbImgView.transform = rotate;
-    // Crop the image to circle
-    CALayer *layer = cell.backgroundView.layer;
-    [layer setCornerRadius:cell.backgroundView.frame.size.width/2];
-    [layer setMasksToBounds:YES];
-    
-    [thumbImgView setContentMode:UIViewContentModeScaleAspectFit];
-    [cell setBackgroundView:thumbImgView];
-    
-    //NSLog(@"bgView has frame:%@",NSStringFromCGRect(cell.backgroundView.frame));
-    //NSLog(@"bgView has bounds:%@",NSStringFromCGRect(cell.backgroundView.bounds));
+    [cell.thumbnailImageView setImage:thumbImg];
+    [cell customize];
 
     return cell;
 }
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    cell.backgroundView.bounds = CGRectMake(0, 0, 180, 180);
-    [cell.backgroundView setContentMode:UIViewContentModeScaleAspectFit];
-    
-    //NSLog(@"[display]bgView has frame:%@",NSStringFromCGRect(cell.backgroundView.frame));
-    //NSLog(@"[display]bgView has bounds:%@",NSStringFromCGRect(cell.backgroundView.bounds));
-}
-
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"SELECTED");
@@ -165,55 +134,6 @@
 
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-
- */
 
 @end

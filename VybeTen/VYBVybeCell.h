@@ -8,17 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBVybeCell : UITableViewCell {
-    NSString *videoPath;
-    NSString *thumbnailPath;
-    NSString *date;
-    UIImageView *thumbnail;
-}
-
-- (void)setThumbnailPath:(NSString *)path;
-- (void)setVideoPath:(NSString *)path;
-- (void)setDate:(NSDate *)date;
-- (void)setContentView;
-- (NSString *)getDate;
-
+@interface VYBVybeCell : UITableViewCell
+@property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
+- (void)customize;
 @end
