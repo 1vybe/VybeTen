@@ -11,4 +11,5 @@
 
 @interface VYBPlayerView : UIView
 @property (nonatomic) AVPlayer *player;
+- (void)setVideoFillMode;
 @end

@@ -20,8 +20,11 @@
 - (void)setTimeStamp:(NSDate *)date;
 - (NSString *)getVideoPath;
 - (NSString *)getThumbnailPath;
+- (NSString *)getTimeString;
+- (NSString *)getDateString;
 - (NSDate *)getTimeStamp;
 - (NSData *)getVideo;
+
 
 
 @end

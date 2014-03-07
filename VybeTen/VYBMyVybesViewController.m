@@ -22,14 +22,7 @@
 - (id)init {
     self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
-        self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
-        // Rotate the tableView for horizontal scrolling
-        CGAffineTransform rotateTable = CGAffineTransformMakeRotation(-M_PI_2);
-        self.tableView.transform = rotateTable;
-        [self.tableView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.4]];
-        [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-        [self.tableView setRowHeight:200.0f];
-        self.tableView.showsVerticalScrollIndicator = NO;
+
     }
     return self;
 }
@@ -42,6 +35,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
+    // Rotate the tableView for horizontal scrolling
+    CGAffineTransform rotateTable = CGAffineTransformMakeRotation(-M_PI_2);
+    self.tableView.transform = rotateTable;
+    [self.tableView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.4]];
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [self.tableView setRowHeight:200.0f];
+    self.tableView.showsVerticalScrollIndicator = NO;
     CGRect frame = self.tableView.frame;
     UIView *transView = [[UIView alloc] initWithFrame:frame];
 
@@ -131,7 +133,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"SELECTED");
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [self presentViewController:playerVC animated:NO completion:nil];
+    [playerVC playFrom:[indexPath row]];
+    [self.navigationController pushViewController:playerVC animated:NO];
 }
 
 - (void)captureVybe {
