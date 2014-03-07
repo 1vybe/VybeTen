@@ -81,9 +81,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    VYBVybeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VYBTableCell"];
+    VYBVybeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VYBVybeCell"];
     if (!cell) {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBTableCell" owner:self options:nil];
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBVybeCell" owner:self options:nil];
         cell = [nib objectAtIndex:0];
     }
     VYBVybe *vybe = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
