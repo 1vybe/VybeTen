@@ -10,9 +10,6 @@
 #import <UIKit/UIKit.h>
 #import <AWSS3/AWSS3.h>
 
-#define ACCESS_KEY_ID   @"AKIAJVN4HPJ6VBOKP7XA"
-#define SECRET_KEY      @"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"
-
 @interface VYBCaptureViewController : UIViewController <AVCaptureFileOutputRecordingDelegate, AmazonServiceRequestDelegate> {
     IBOutlet UIButton *flipButton;
     IBOutlet UIButton *menuButton;

@@ -7,10 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AWSS3/AWSS3.h>
 
-@interface VYBMyTribeStore : NSObject {
+@interface VYBMyTribeStore : NSObject <AmazonServiceRequestDelegate> {
     NSMutableArray *myTribeVybes;
 }
+@property (nonatomic) AmazonS3Client *s3;
 + (VYBMyTribeStore *)sharedStore;
 - (NSArray *)myTribeVybes;
+- (void)connectToTribe;
 @end

@@ -45,23 +45,24 @@
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.tableView setRowHeight:200.0f];
     self.tableView.showsVerticalScrollIndicator = NO;
-    CGRect frame = self.tableView.frame;
-    UIView *transView = [[UIView alloc] initWithFrame:frame];
-    [self.tableView setBackgroundView:transView];
+    UIToolbar* blurredView = [[UIToolbar alloc] initWithFrame:self.tableView.bounds];
+    [blurredView setBarStyle:UIBarStyleBlack];
+    [self.tableView setBackgroundView:blurredView];
     
     // Adding capture button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 48, self.view.bounds.size.height - 48, 48, 48);
+    CGRect buttonCaptureFrame = CGRectMake(0, self.view.bounds.size.height - 48, 48, 48);
     self.buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
-    UIImage *captureImage = [UIImage imageNamed:@"capture.png"];
+    UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
     [self.buttonCapture setImage:captureImage forState:UIControlStateNormal];
+    CGAffineTransform rotation = CGAffineTransformMakeRotation(M_PI_2);
+    self.buttonCapture.transform = rotation;
     [self.buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonCapture];
     // Adding menu button
-    CGRect buttonMenuFrame = CGRectMake(self.view.bounds.size.width - 48, 0, 48, 48);
+    CGRect buttonMenuFrame = CGRectMake(0, 0, 48, 48);
     self.buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
-    UIImage *menuImage = [UIImage imageNamed:@"menu.png"];
+    UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
     [self.buttonMenu setImage:menuImage forState:UIControlStateNormal];
-    CGAffineTransform rotation = CGAffineTransformMakeRotation(-M_PI_2);
     self.buttonMenu.transform = rotation;
     [self.buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonMenu];
@@ -100,19 +101,16 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"SELECTED");
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
     [playerVC playFrom:[indexPath row]];
     [self.navigationController pushViewController:playerVC animated:NO];
 }
 
 - (void)captureVybe {
-    NSLog(@"capture");
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 - (void)goToMenu {
-    NSLog(@"menu");
     [self.navigationController popViewControllerAnimated:NO];
 }
 

@@ -12,6 +12,7 @@
 #import "VYBCaptureViewController.h"
 #import "VYBMenuViewController.h"
 #import "VYBMyVybeStore.h"
+#import "VYBConstants.h"
 
 @implementation VYBCaptureViewController {
     AVCaptureSession *session;
@@ -72,7 +73,6 @@
 /**
  * Helper functions
  **/
-
 
 - (AVCaptureDeviceInput *)frontCameraInput {
     NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];

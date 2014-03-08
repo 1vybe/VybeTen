@@ -38,26 +38,26 @@
     [self.view addGestureRecognizer:swiperight];
     /* NOTE: Origin for menu button is (0, 0) */
     // Adding menu button
-    CGRect buttonMenuFrame = CGRectMake(0, 0, 48, 48);
+    CGRect buttonMenuFrame = CGRectMake(0, self.view.bounds.size.width - 48, 48, 48);
     UIButton *buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
-    UIImage *menuImage = [UIImage imageNamed:@"menu.png"];
+    UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
     [buttonMenu setImage:menuImage forState:UIControlStateNormal];
     [buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonMenu];
     // Adding capture button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 48, 0, 48, 48);
+    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 48, self.view.bounds.size.width - 48, 48, 48);
     UIButton *buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
-    UIImage *captureImage = [UIImage imageNamed:@"capture.png"];
+    UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
     [buttonCapture setImage:captureImage forState:UIControlStateNormal];
     [buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonCapture];
     // Adding date label
-    CGRect labelDateFrame = CGRectMake(self.view.bounds.size.height/2 - 60, self.view.bounds.size.width - 48, 120, 48);
+    CGRect labelDateFrame = CGRectMake(self.view.bounds.size.height/2 - 60, 0, 120, 48);
     labelDate = [[UILabel alloc] initWithFrame:labelDateFrame];
     [labelDate setTextColor:[UIColor whiteColor]];
     [self.view addSubview:labelDate];
     // Adding time label
-    CGRect labelTimeFrame = CGRectMake(self.view.bounds.size.height - 100, self.view.bounds.size.width - 48, 100, 48);
+    CGRect labelTimeFrame = CGRectMake(self.view.bounds.size.height - 100, 0, 100, 48);
     labelTime = [[UILabel alloc] initWithFrame:labelTimeFrame];
     [labelTime setTextColor:[UIColor whiteColor]];
     [self.view addSubview:labelTime];

@@ -8,6 +8,7 @@
 
 #import "VYBMenuViewController.h"
 #import "VYBMyVybesViewController.h"
+#import "VYBMyTribeViewController.h"
 
 @interface VYBMenuViewController ()
 
@@ -33,6 +34,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    UIToolbar* blurredView = [[UIToolbar alloc] initWithFrame:self.view.bounds];
+    NSLog(@"blurredView: %@", NSStringFromCGRect(blurredView.frame));
+    [blurredView setBarStyle:UIBarStyleBlack];
+    [self.view insertSubview:blurredView atIndex:0];
+
 }
 
 /**
@@ -49,7 +55,8 @@
 }
 
 - (IBAction)goToMyTribe:(id)sender {
-    
+    VYBMyTribeViewController *myTribeVC = [[VYBMyTribeViewController alloc] init];
+    [[self navigationController] pushViewController:myTribeVC animated:NO];
 }
 
 - (void)didReceiveMemoryWarning
