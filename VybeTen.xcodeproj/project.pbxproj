@@ -14,6 +14,10 @@
 		024B0E2E18BB39FF0073574E /* VYBVideoStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2D18BB39FF0073574E /* VYBVideoStore.m */; };
 		6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6035496118C88B11003F5D3E /* VYBPlayerViewController.m */; };
 		6043967D18C9FFDC0090F3AE /* VYBVybeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */; };
+		6043968418CA215D0090F3AE /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6043968218CA215D0090F3AE /* AWSRuntime.framework */; };
+		6043968518CA215D0090F3AE /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6043968318CA215D0090F3AE /* AWSS3.framework */; };
+		6043968818CAD8A70090F3AE /* VYBMyTribeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */; };
+		6043968B18CAE4A60090F3AE /* VYBMyTribeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6043968A18CAE4A60090F3AE /* VYBMyTribeStore.m */; };
 		604B627D18B495BB00D3EF19 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B627C18B495BB00D3EF19 /* Foundation.framework */; };
 		604B627F18B495BB00D3EF19 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B627E18B495BB00D3EF19 /* CoreGraphics.framework */; };
 		604B628118B495BB00D3EF19 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604B628018B495BB00D3EF19 /* UIKit.framework */; };
@@ -33,7 +37,7 @@
 		60B0DCEB18BDCC4E007F4D5C /* VYBVybeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60B0DCEA18BDCC4E007F4D5C /* VYBVybeCell.m */; };
 		60F1BBB118BA34AA00070EEC /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F1BBB018BA34AA00070EEC /* AssetsLibrary.framework */; };
 		60F1BBB618BA692100070EEC /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F1BBB518BA692100070EEC /* ImageIO.framework */; };
-		60F1BBB918BAAFA900070EEC /* VYBVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBVybeStore.m */; };
+		60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */; };
 		60F1BBBC18BAB39400070EEC /* VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBBB18BAB39400070EEC /* VYBVybe.m */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +64,12 @@
 		6035496018C88B11003F5D3E /* VYBPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerViewController.h; sourceTree = "<group>"; };
 		6035496118C88B11003F5D3E /* VYBPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerViewController.m; sourceTree = "<group>"; };
 		6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBVybeCell.xib; sourceTree = "<group>"; };
+		6043968218CA215D0090F3AE /* AWSRuntime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSRuntime.framework; sourceTree = "<group>"; };
+		6043968318CA215D0090F3AE /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
+		6043968618CAD8A70090F3AE /* VYBMyTribeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyTribeViewController.h; sourceTree = "<group>"; };
+		6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyTribeViewController.m; sourceTree = "<group>"; };
+		6043968918CAE4A60090F3AE /* VYBMyTribeStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyTribeStore.h; sourceTree = "<group>"; };
+		6043968A18CAE4A60090F3AE /* VYBMyTribeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyTribeStore.m; sourceTree = "<group>"; };
 		604B627918B495BB00D3EF19 /* VybeTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VybeTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		604B627C18B495BB00D3EF19 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		604B627E18B495BB00D3EF19 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -86,8 +96,8 @@
 		60B0DCEA18BDCC4E007F4D5C /* VYBVybeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybeCell.m; sourceTree = "<group>"; };
 		60F1BBB018BA34AA00070EEC /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		60F1BBB518BA692100070EEC /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		60F1BBB718BAAFA900070EEC /* VYBVybeStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybeStore.h; sourceTree = "<group>"; };
-		60F1BBB818BAAFA900070EEC /* VYBVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybeStore.m; sourceTree = "<group>"; };
+		60F1BBB718BAAFA900070EEC /* VYBMyVybeStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyVybeStore.h; sourceTree = "<group>"; };
+		60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybeStore.m; sourceTree = "<group>"; };
 		60F1BBBA18BAB39400070EEC /* VYBVybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybe.h; sourceTree = "<group>"; };
 		60F1BBBB18BAB39400070EEC /* VYBVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybe.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,8 +111,10 @@
 				60F1BBB118BA34AA00070EEC /* AssetsLibrary.framework in Frameworks */,
 				6061247118B7937700B0A14E /* AVFoundation.framework in Frameworks */,
 				604B627F18B495BB00D3EF19 /* CoreGraphics.framework in Frameworks */,
+				6043968518CA215D0090F3AE /* AWSS3.framework in Frameworks */,
 				604B628118B495BB00D3EF19 /* UIKit.framework in Frameworks */,
 				604B627D18B495BB00D3EF19 /* Foundation.framework in Frameworks */,
+				6043968418CA215D0090F3AE /* AWSRuntime.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,6 +153,8 @@
 		604B627B18B495BB00D3EF19 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6043968218CA215D0090F3AE /* AWSRuntime.framework */,
+				6043968318CA215D0090F3AE /* AWSS3.framework */,
 				60F1BBB518BA692100070EEC /* ImageIO.framework */,
 				60F1BBB018BA34AA00070EEC /* AssetsLibrary.framework */,
 				6061247018B7937700B0A14E /* AVFoundation.framework */,
@@ -165,6 +179,8 @@
 				022296D918BC506D0096BB30 /* VYBMenuViewController.xib */,
 				022296DC18BCA24C0096BB30 /* VYBMyVybesViewController.h */,
 				022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */,
+				6043968618CAD8A70090F3AE /* VYBMyTribeViewController.h */,
+				6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */,
 				60B0DCE918BDCC4E007F4D5C /* VYBVybeCell.h */,
 				60B0DCEA18BDCC4E007F4D5C /* VYBVybeCell.m */,
 				6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */,
@@ -174,8 +190,10 @@
 				607CA69918C5C80C0060B420 /* VYBPlayerView.m */,
 				60F1BBBA18BAB39400070EEC /* VYBVybe.h */,
 				60F1BBBB18BAB39400070EEC /* VYBVybe.m */,
-				60F1BBB718BAAFA900070EEC /* VYBVybeStore.h */,
-				60F1BBB818BAAFA900070EEC /* VYBVybeStore.m */,
+				60F1BBB718BAAFA900070EEC /* VYBMyVybeStore.h */,
+				60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */,
+				6043968918CAE4A60090F3AE /* VYBMyTribeStore.h */,
+				6043968A18CAE4A60090F3AE /* VYBMyTribeStore.m */,
 				024B0E2918BB39E30073574E /* VYBImageStore.h */,
 				024B0E2A18BB39E30073574E /* VYBImageStore.m */,
 				024B0E2C18BB39FF0073574E /* VYBVideoStore.h */,
@@ -317,14 +335,16 @@
 				60F1BBBC18BAB39400070EEC /* VYBVybe.m in Sources */,
 				024B0E2B18BB39E30073574E /* VYBImageStore.m in Sources */,
 				6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */,
-				60F1BBB918BAAFA900070EEC /* VYBVybeStore.m in Sources */,
+				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
 				60B0DCEB18BDCC4E007F4D5C /* VYBVybeCell.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
+				6043968B18CAE4A60090F3AE /* VYBMyTribeStore.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
 				024B0E2E18BB39FF0073574E /* VYBVideoStore.m in Sources */,
 				022296DE18BCA24C0096BB30 /* VYBMyVybesViewController.m in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
+				6043968818CAD8A70090F3AE /* VYBMyTribeViewController.m in Sources */,
 				022296DA18BC506D0096BB30 /* VYBMenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -446,6 +466,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/jinsuk/Project/VybeTen,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
@@ -462,6 +486,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/jinsuk/Project/VybeTen,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";

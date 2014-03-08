@@ -17,6 +17,7 @@
         [self setVideoPath:[aDecoder decodeObjectForKey:@"videoPath"]];
         [self setThumbnailPath:[aDecoder decodeObjectForKey:@"thumbnailPath"]];
         [self setTimeStamp:[aDecoder decodeObjectForKey:@"timeStamp"]];
+        [self setUploaded:[aDecoder decodeBoolForKey:@"uploaded"]];
     }
     return self;
 }
@@ -24,6 +25,7 @@
     [aCoder encodeObject:videoPath forKey:@"videoPath"];
     [aCoder encodeObject:thumbnailPath forKey:@"thumbnailPath"];
     [aCoder encodeObject:timeStamp forKey:@"timeStamp"];
+    [aCoder encodeBool:uploaded forKey:@"uploaded"];
 }
 
 - (void)setVybePath:(NSString *)vyPath {
@@ -44,15 +46,19 @@
     timeStamp = date;
 }
 
-- (NSString *)getVideoPath {
+- (void)setUploaded:(BOOL)up {
+    uploaded = up;
+}
+
+- (NSString *)videoPath {
     return videoPath;
 }
 
-- (NSString *)getThumbnailPath {
+- (NSString *)thumbnailPath {
     return thumbnailPath;
 }
 
-- (NSString *)getDateString {
+- (NSString *)dateString {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
@@ -62,7 +68,7 @@
     return [dateFormatter stringFromDate:timeStamp];
 }
 
-- (NSString *)getTimeString {
+- (NSString *)timeString {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
     [dateFormatter setDateStyle:NSDateFormatterNoStyle];
@@ -72,8 +78,12 @@
     return [dateFormatter stringFromDate:timeStamp];
 }
 
-- (NSDate *)getTimeStamp {
+- (NSDate *)timeStamp {
     return timeStamp;
+}
+
+- (BOOL)isUploaded {
+    return uploaded;
 }
 
 - (NSData *)getVideo {

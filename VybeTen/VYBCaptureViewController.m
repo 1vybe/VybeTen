@@ -8,13 +8,10 @@
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
+#import <AWSRuntime/AWSRuntime.h>
 #import "VYBCaptureViewController.h"
 #import "VYBMenuViewController.h"
-#import "VYBVybeStore.h"
-
-@interface VYBCaptureViewController ()
-
-@end
+#import "VYBMyVybeStore.h"
 
 @implementation VYBCaptureViewController {
     AVCaptureSession *session;
@@ -29,6 +26,7 @@
     BOOL recording;
     BOOL frontCamera;
 }
+@synthesize s3 = _s3;
 
 // Fix orientation to landscapeRight
 - (NSUInteger)supportedInterfaceOrientations {
@@ -55,6 +53,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // Adding swipe gestures
+    UITapGestureRecognizer * tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(startRecording)];
+    [self.view addGestureRecognizer:tapGesture];
+    
+    // Initialize S3 client
+    @try {
+        self.s3 = [[AmazonS3Client alloc] initWithAccessKey:ACCESS_KEY_ID withSecretKey:SECRET_KEY];
+        self.s3.endpoint = [AmazonEndpoints s3Endpoint:US_WEST_2];
+    } @catch (AmazonServiceException *exception) {
+        NSLog(@"FAILURE: %@", exception);
+    }
+
+    
 }
 
 
@@ -97,24 +108,25 @@
  * Actions that are triggered by buttons 
  **/
 
-- (IBAction)startRecording:(id)sender {
-    // Start Recording
-    // Display the remaining time from 7 seconds
+- (void)startRecording {
+    /* Start Recording */
     if (!recording) {
         newVybe = [[VYBVybe alloc] init];
-
+        // Of course, it is not uploaded to S3 yet
+        [newVybe setUploaded:NO];
+        
         startTime = [NSDate date];
-        NSLog(@"Recording Started. Date: %@", startTime);
         [newVybe setTimeStamp:startTime];
+
 
         // Path to save in the application's document directory
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         NSString *vybePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", startTime]];
         [newVybe setVybePath:vybePath];
-
         
-        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[newVybe getVideoPath]];
+        
+        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[newVybe videoPath]];
         [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
         
         recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
@@ -167,7 +179,6 @@
  **/
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
-    NSLog(@"DidFinishRecording called");
     BOOL recordSuccess = YES;
     if ( [error code] != noErr ) {
         id value = [[error userInfo] objectForKey:AVErrorRecordingSuccessfullyFinishedKey];
@@ -193,11 +204,15 @@
         CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
         UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
         NSData *thumbData = UIImageJPEGRepresentation(thumb, 1);
-        NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[newVybe getThumbnailPath]];
+        NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[newVybe thumbnailPath]];
         [thumbData writeToURL:thumbURL atomically:YES];
         
-        [[VYBVybeStore sharedStore] addVybe:newVybe];
+        // Save the capture vybe
+        [[VYBMyVybeStore sharedStore] addVybe:newVybe];
         
+        // Upload it to AWS S3
+        NSData *videoData = [NSData dataWithContentsOfURL:outputFileURL];
+        [self processDelegateUpload:videoData];
     }
     
     startTime = nil;
@@ -206,6 +221,36 @@
     timerLabel.text = @"00:07";
     recording = NO; flipButton.hidden = recording; menuButton.hidden = recording;
     newVybe = nil;
+}
+
+/**
+ * Functions related to uploading to AWS S3
+ **/
+- (void)processDelegateUpload:(NSData *)video {
+    // First genereate a unique device ID
+    NSString *keyString = [NSString stringWithFormat:@"%@.mov", [newVybe timeStamp]];
+    S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:keyString inBucket:@"vybes"];
+    
+    por.contentType = @"video/quicktime";
+    por.data = video;
+    por.delegate = self;
+    
+    @try {
+        [self.s3 putObject:por];
+    }@catch (AmazonServiceException *exception) {
+        NSLog(@"Upload Failed: %@", exception);
+    }
+    NSLog(@"uploading started");
+}
+
+- (void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response {
+    NSLog(@"upload success");
+    VYBVybe *lastVybe = [[[VYBMyVybeStore sharedStore] myVybes] lastObject];
+    [lastVybe setUploaded:YES];
+}
+
+- (void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error {
+    NSLog(@"upload failed: %@", error);
 }
 
 

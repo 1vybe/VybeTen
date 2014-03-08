@@ -13,18 +13,18 @@
     NSString *videoPath;
     NSString *thumbnailPath;
     NSDate *timeStamp;
+    BOOL uploaded;
 }
 - (void)setVybePath:(NSString *)vybePath;
 - (void)setVideoPath:(NSString *)vidPath;
 - (void)setThumbnailPath:(NSString *)thumbPath;
+- (void)setUploaded:(BOOL)up;
 - (void)setTimeStamp:(NSDate *)date;
-- (NSString *)getVideoPath;
-- (NSString *)getThumbnailPath;
-- (NSString *)getTimeString;
-- (NSString *)getDateString;
-- (NSDate *)getTimeStamp;
-- (NSData *)getVideo;
-
-
+- (NSString *)videoPath;
+- (NSString *)thumbnailPath;
+- (BOOL)isUploaded;
+- (NSDate *)timeStamp;
+- (NSString *)timeString;
+- (NSString *)dateString;
 
 @end

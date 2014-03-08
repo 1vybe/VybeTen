@@ -8,7 +8,7 @@
 
 #import "VYBPlayerViewController.h"
 #import "VYBPlayerView.h"
-#import "VYBVybeStore.h"
+#import "VYBMyVybeStore.h"
 
 @implementation VYBPlayerViewController {
     NSInteger playIndex;
@@ -63,10 +63,10 @@
     [self.view addSubview:labelTime];
     
     // Find a vybe to play and set up playerLayer
-    VYBVybe *v = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:playIndex];
-    [labelDate setText:[v getDateString]];
-    [labelTime setText:[v getTimeString]];
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:[v getVideoPath]];
+    VYBVybe *v = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:playIndex];
+    [labelDate setText:[v dateString]];
+    [labelTime setText:[v timeString]];
+    NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     // Registering the current playerItem to Notification center
@@ -89,11 +89,11 @@
 - (void)playbackFrom:(NSInteger)from {
     // Remove the playerItem that just finished playing
     [[NSNotificationCenter defaultCenter] removeObserver:self.currItem];
-    if (from < [[[VYBVybeStore sharedStore] myVybes] count]) {
-        VYBVybe *v = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:from];
-        [labelDate setText:[v getDateString]];
-        [labelTime setText:[v getTimeString]];
-        NSURL *url = [[NSURL alloc] initFileURLWithPath:[v getVideoPath]];
+    if (from < [[[VYBMyVybeStore sharedStore] myVybes] count]) {
+        VYBVybe *v = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:from];
+        [labelDate setText:[v dateString]];
+        [labelTime setText:[v timeString]];
+        NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
         self.currItem = [AVPlayerItem playerItemWithAsset:asset];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];

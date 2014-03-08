@@ -10,14 +10,15 @@
 //
 
 #import "VYBMyVybesViewController.h"
-#import "VYBVybeStore.h"
+#import "VYBMyVybeStore.h"
 #import "VYBVybeCell.h"
 #import "VYBImageStore.h"
 #import "VYBPlayerViewController.h"
 
 
 @implementation VYBMyVybesViewController
-@synthesize buttonCapture, buttonMenu;
+@synthesize buttonCapture = _buttonCapture;
+@synthesize buttonMenu = _buttonMenu;
 
 - (id)init {
     self = [super initWithStyle:UITableViewStylePlain];
@@ -46,26 +47,24 @@
     self.tableView.showsVerticalScrollIndicator = NO;
     CGRect frame = self.tableView.frame;
     UIView *transView = [[UIView alloc] initWithFrame:frame];
-
-
     [self.tableView setBackgroundView:transView];
     
     // Adding capture button
     CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 48, self.view.bounds.size.height - 48, 48, 48);
-    buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
+    self.buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"capture.png"];
-    [buttonCapture setImage:captureImage forState:UIControlStateNormal];
-    [buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
-    [[self tableView] addSubview:buttonCapture];
+    [self.buttonCapture setImage:captureImage forState:UIControlStateNormal];
+    [self.buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
+    [[self tableView] addSubview:self.buttonCapture];
     // Adding menu button
     CGRect buttonMenuFrame = CGRectMake(self.view.bounds.size.width - 48, 0, 48, 48);
-    buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
+    self.buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
     UIImage *menuImage = [UIImage imageNamed:@"menu.png"];
-    [buttonMenu setImage:menuImage forState:UIControlStateNormal];
+    [self.buttonMenu setImage:menuImage forState:UIControlStateNormal];
     CGAffineTransform rotation = CGAffineTransformMakeRotation(-M_PI_2);
-    buttonMenu.transform = rotation;
-    [buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
-    [[self tableView] addSubview:buttonMenu];
+    self.buttonMenu.transform = rotation;
+    [self.buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
+    [[self tableView] addSubview:self.buttonMenu];
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,7 +75,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[VYBVybeStore sharedStore] myVybes] count];
+    return [[[VYBMyVybeStore sharedStore] myVybes] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -86,13 +85,14 @@
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBVybeCell" owner:self options:nil];
         cell = [nib objectAtIndex:0];
     }
-    VYBVybe *vybe = [[[VYBVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
+    VYBVybe *vybe = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
     // Cache thumbnail images into a memory
-    UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:[vybe getThumbnailPath]];
+    UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:[vybe thumbnailPath]];
     if (!thumbImg) {
-        thumbImg = [UIImage imageWithContentsOfFile:[vybe getThumbnailPath]];
-        [[VYBImageStore sharedStore] setImage:thumbImg forKey:[vybe getThumbnailPath]];
+        thumbImg = [UIImage imageWithContentsOfFile:[vybe thumbnailPath]];
+        [[VYBImageStore sharedStore] setImage:thumbImg forKey:[vybe thumbnailPath]];
     }
+    // Customize cell
     [cell.thumbnailImageView setImage:thumbImg];
     [cell customize];
 
@@ -121,19 +121,16 @@
  **/
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGRect frame = buttonMenu.frame;
+    CGRect frame = self.buttonMenu.frame;
     frame.origin.y = scrollView.contentOffset.y;
-    buttonMenu.frame = frame;
+    self.buttonMenu.frame = frame;
     
-    CGRect frameTwo = buttonCapture.frame;
+    CGRect frameTwo = self.buttonCapture.frame;
     frameTwo.origin.y =scrollView.contentOffset.y + self.view.bounds.size.height - 48;
-    buttonCapture.frame = frameTwo;
+    self.buttonCapture.frame = frameTwo;
     
-    [[self view] bringSubviewToFront:buttonMenu];
-    [[self view] bringSubviewToFront:buttonCapture];
-
+    [[self view] bringSubviewToFront:self.buttonMenu];
+    [[self view] bringSubviewToFront:self.buttonCapture];
 }
-
-
 
 @end

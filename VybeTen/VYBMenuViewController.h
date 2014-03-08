@@ -12,6 +12,6 @@
 
 - (IBAction)captureVybe:(id)sender;
 - (IBAction)goToMyVybes:(id)sender;
-
+- (IBAction)goToMyTribe:(id)sender;
 @end
 

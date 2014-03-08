@@ -48,6 +48,9 @@
     [[self navigationController] pushViewController:myVybesVC animated:NO];
 }
 
+- (IBAction)goToMyTribe:(id)sender {
+    
+}
 
 - (void)didReceiveMemoryWarning
 {

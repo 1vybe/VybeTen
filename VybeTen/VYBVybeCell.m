@@ -12,7 +12,6 @@
 @synthesize thumbnailImageView = _thumbnailImageView;
 
 - (void)customize {
-    NSLog(@"Customizing this cell");
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     // Rotate the thumbnail image
     CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
