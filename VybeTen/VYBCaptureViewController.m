@@ -13,6 +13,7 @@
 #import "VYBMenuViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBConstants.h"
+#import "VYBReplayViewController.h"
 
 @implementation VYBCaptureViewController {
     AVCaptureSession *session;
@@ -136,7 +137,6 @@
     // Stop Recording
     // Save the vybe automatically and keep recording
     else {
-        NSLog(@"Recodring Stopped.");
         [movieFileOutput stopRecording];
         
         startTime = nil;
@@ -187,18 +187,19 @@
     }
     
     if (recordSuccess) {
-        AVCaptureConnection *videoConnection = nil;
-        for ( AVCaptureConnection *connection in [movieFileOutput connections] ) {
-            for ( AVCaptureInputPort *port in [connection inputPorts] ) {
-                if ( [[port mediaType] isEqual:AVMediaTypeVideo] )
-                    videoConnection = connection;
-            }
-        }
+        // Prompt a review screen to save it or not
+        VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
+        [replayVC setVybe:newVybe];
+
+        [self presentViewController:replayVC animated:NO completion:^{
+            [replayVC playVideoAtUrl:outputFileURL];
+        }];
         
+        /*
         // Generating and saving a thumbnail for the captured vybe
         AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:outputFileURL options:nil];
         AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-        [generate setAppliesPreferredTrackTransform:YES]; /* To transform the snapshot to be in the orientation the video was taken with */
+        [generate setAppliesPreferredTrackTransform:YES]; // To transform the snapshot to be in the orientation the video was taken with
         NSError *err = NULL;
         CMTime time = CMTimeMake(1, 60);
         CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
@@ -213,8 +214,9 @@
         // Upload it to AWS S3
         NSData *videoData = [NSData dataWithContentsOfURL:outputFileURL];
         [self processDelegateUpload:videoData];
+        */
     }
-    
+    NSLog(@"DECISION MADE!");
     startTime = nil;
     [recordingTimer invalidate];
     recordingTimer = nil;

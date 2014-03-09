@@ -43,6 +43,7 @@
 }
 
 - (void)addVybe:(VYBVybe *)v {
+    NSLog(@"adding a new vybe");
     [myVybes addObject:v];
 }
 

@@ -19,7 +19,6 @@
 @synthesize labelTime, labelDate;
 
 - (void)loadView {
-    NSLog(@"loading view for the first time");
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
     self.view = playerView;
     [self.view setFrame:CGRectMake(0, 0, 320, 480)];
@@ -28,14 +27,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //[self.view setBackgroundColor:[UIColor redColor]];
     // Adding swipe gestures
-    UISwipeGestureRecognizer * swipeleft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
-    swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:swipeleft];
-    UISwipeGestureRecognizer * swiperight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight)];
-    swiperight.direction=UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:swiperight];
+    UISwipeGestureRecognizer *swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
+    swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
+    [self.view addGestureRecognizer:swipeLeft];
+    UISwipeGestureRecognizer *swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight)];
+    swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:swipeRight];
     /* NOTE: Origin for menu button is (0, 0) */
     // Adding menu button
     CGRect buttonMenuFrame = CGRectMake(0, self.view.bounds.size.width - 48, 48, 48);
