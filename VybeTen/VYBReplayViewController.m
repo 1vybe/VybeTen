@@ -9,15 +9,16 @@
 #import "VYBReplayViewController.h"
 #import "VYBPlayerView.h"
 #import "VYBMyVybeStore.h"
+#import "VYBCaptureViewController.h"
+#import "VYBConstants.h"
 
-@implementation VYBReplayViewController {
-    NSURL *replayURL;
-}
+@implementation VYBReplayViewController
 
 @synthesize player = _player;
 @synthesize playerItem = _playerItem;
 @synthesize playerView = _playerView;
 @synthesize vybe = _vybe;
+@synthesize replayURL = _replayURL;
 @synthesize buttonDiscard, buttonSave, instruction;
 
 - (void)loadView {
@@ -31,6 +32,7 @@
 {
     NSLog(@"replay view loaded");
     [super viewDidLoad];
+
     // Adding swipe gestures
     UISwipeGestureRecognizer *swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(saveVybe)];
     swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
@@ -45,43 +47,26 @@
     [instructionImg setContentMode:UIViewContentModeScaleToFill];
     [instructionImg setImage:[UIImage imageNamed:@"firstvid.png"]];
     [self.view addSubview:instructionImg];
+    
+    [self playVideo];
 }
 
 - (void)saveVybe {
-    // Generating and saving a thumbnail for the captured vybe
-    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:replayURL options:nil];
-    AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-    // To transform the snapshot to be in the orientation the video was taken with
-    [generate setAppliesPreferredTrackTransform:YES];
-    NSError *err = NULL;
-    CMTime time = CMTimeMake(1, 60);
-    CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
-    UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
-    NSData *thumbData = UIImageJPEGRepresentation(thumb, 1);
-    NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[self.vybe thumbnailPath]];
-    [thumbData writeToURL:thumbURL atomically:YES];
- 
     // Save the captured vybe in MyVybeStore
     [[VYBMyVybeStore sharedStore] addVybe:self.vybe];
- 
-    // Upload it to AWS S3
-    //NSData *videoData = [NSData dataWithContentsOfURL:replayURL];
-    //[self processDelegateUpload:videoData];
-
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (void)discardVybe {
     NSError *error;
-    [[NSFileManager defaultManager] removeItemAtURL:replayURL error:&error];
+    [[NSFileManager defaultManager] removeItemAtURL:self.replayURL error:&error];
     if (error)
         NSLog(@"Removing a file failed: %@", error);
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
-- (void)playVideoAtUrl:(NSURL *)url {
-    replayURL = url;
-    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:replayURL options:nil];
+- (void)playVideo {
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:self.replayURL options:nil];
     self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
     // For play loop
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];

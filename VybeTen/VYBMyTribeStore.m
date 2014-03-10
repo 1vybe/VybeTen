@@ -29,9 +29,17 @@
     self = [super init];
   
     if (self) {
-        //[self connectToTribe];
+        @try {
+            // Initializing S3 client
+            self.s3 = [[AmazonS3Client alloc] initWithAccessKey:ACCESS_KEY_ID withSecretKey:SECRET_KEY];
+            self.s3.endpoint = [AmazonEndpoints s3Endpoint:US_WEST_2];
+        } @catch (AmazonServiceException *exception) {
+            NSLog(@"[MyTribe]S3 init failed: %@", exception);
+        }
         if (!myTribeVybes)
             myTribeVybes = [[NSMutableArray alloc] init];
+        else
+            [self syncMyTribeWithCloud];
     }
     
     return self;
@@ -41,12 +49,10 @@
     return myTribeVybes;
 }
 
-- (void)connectToTribe {
+- (void)syncMyTribeWithCloud {
     @try {
-        NSLog(@"connecting to Tribe");
-        // Initializing S3 client
-        self.s3 = [[AmazonS3Client alloc] initWithAccessKey:ACCESS_KEY_ID withSecretKey:SECRET_KEY];
-        self.s3.endpoint = [AmazonEndpoints s3Endpoint:US_WEST_2];
+        NSLog(@"Synching My Tribe with cloud");
+        // TODO: listObjectsInBucket request should be run in background
         NSArray *objects = [self.s3 listObjectsInBucket:@"vybes"];
         NSLog(@"there are %d objects", [objects count]);
         // Download all the vybes for this tribe
@@ -57,8 +63,6 @@
             NSLog(@"Downloading object[%@]", [obj key]);
             [self.s3 getObject:gor];
         }
-        
-        
     } @catch (AmazonServiceException *exception) {
         NSLog(@"[MyTribe]AWS Error: %@", exception);
     }
@@ -69,6 +73,7 @@
 -(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response
 {
     NSData *received = response.body;
+    
     NSLog(@"File received: %@", response.responseHeader);
     
 }

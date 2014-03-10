@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <AWSS3/AWSS3.h>
 
 @class VYBPlayerView;
 @class VYBVybe;
@@ -20,9 +21,10 @@
 @property (nonatomic) UIButton *buttonDiscard;
 @property (nonatomic) UIImageView *instruction;
 @property (nonatomic) VYBVybe *vybe;
+@property (nonatomic) NSURL *replayURL;
 
 - (void)saveVybe;
 - (void)discardVybe;
-- (void)playVideoAtUrl:(NSURL *)url;
+- (void)playVideo;
 
 @end

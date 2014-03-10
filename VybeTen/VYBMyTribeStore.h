@@ -15,5 +15,5 @@
 @property (nonatomic) AmazonS3Client *s3;
 + (VYBMyTribeStore *)sharedStore;
 - (NSArray *)myTribeVybes;
-- (void)connectToTribe;
+- (void)syncMyTribeWithCloud;
 @end

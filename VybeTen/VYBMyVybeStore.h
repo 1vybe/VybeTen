@@ -7,11 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AWSS3/AWSS3.h>
 #import "VYBVybe.h"
 
-@interface VYBMyVybeStore : NSObject {
+@interface VYBMyVybeStore : NSObject <AmazonServiceRequestDelegate> {
     NSMutableArray *myVybes;
 }
+@property (nonatomic) AmazonS3Client *s3;
 
 + (VYBMyVybeStore *)sharedStore;
 - (NSArray *)myVybes;

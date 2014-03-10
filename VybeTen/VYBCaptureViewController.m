@@ -8,7 +8,6 @@
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
-#import <AWSRuntime/AWSRuntime.h>
 #import "VYBCaptureViewController.h"
 #import "VYBMenuViewController.h"
 #import "VYBMyVybeStore.h"
@@ -28,7 +27,6 @@
     BOOL recording;
     BOOL frontCamera;
 }
-@synthesize s3 = _s3;
 
 // Fix orientation to landscapeRight
 - (NSUInteger)supportedInterfaceOrientations {
@@ -58,16 +56,7 @@
     // Adding swipe gestures
     UITapGestureRecognizer * tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(startRecording)];
     [self.view addGestureRecognizer:tapGesture];
-    
-    // Initialize S3 client
-    @try {
-        self.s3 = [[AmazonS3Client alloc] initWithAccessKey:ACCESS_KEY_ID withSecretKey:SECRET_KEY];
-        self.s3.endpoint = [AmazonEndpoints s3Endpoint:US_WEST_2];
-    } @catch (AmazonServiceException *exception) {
-        NSLog(@"FAILURE: %@", exception);
-    }
 
-    
 }
 
 
@@ -190,69 +179,17 @@
         // Prompt a review screen to save it or not
         VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
         [replayVC setVybe:newVybe];
+        [replayVC setReplayURL:outputFileURL];
 
-        [self presentViewController:replayVC animated:NO completion:^{
-            [replayVC playVideoAtUrl:outputFileURL];
-        }];
-        
-        /*
-        // Generating and saving a thumbnail for the captured vybe
-        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:outputFileURL options:nil];
-        AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-        [generate setAppliesPreferredTrackTransform:YES]; // To transform the snapshot to be in the orientation the video was taken with
-        NSError *err = NULL;
-        CMTime time = CMTimeMake(1, 60);
-        CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
-        UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
-        NSData *thumbData = UIImageJPEGRepresentation(thumb, 1);
-        NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[newVybe thumbnailPath]];
-        [thumbData writeToURL:thumbURL atomically:YES];
-        
-        // Save the capture vybe
-        [[VYBMyVybeStore sharedStore] addVybe:newVybe];
-        
-        // Upload it to AWS S3
-        NSData *videoData = [NSData dataWithContentsOfURL:outputFileURL];
-        [self processDelegateUpload:videoData];
-        */
+        [self.navigationController pushViewController:replayVC animated:NO];
     }
-    NSLog(@"DECISION MADE!");
+
     startTime = nil;
     [recordingTimer invalidate];
     recordingTimer = nil;
     timerLabel.text = @"00:07";
     recording = NO; flipButton.hidden = recording; menuButton.hidden = recording;
     newVybe = nil;
-}
-
-/**
- * Functions related to uploading to AWS S3
- **/
-- (void)processDelegateUpload:(NSData *)video {
-    // First genereate a unique device ID
-    NSString *keyString = [NSString stringWithFormat:@"%@.mov", [newVybe timeStamp]];
-    S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:keyString inBucket:@"vybes"];
-    
-    por.contentType = @"video/quicktime";
-    por.data = video;
-    por.delegate = self;
-    
-    @try {
-        [self.s3 putObject:por];
-    }@catch (AmazonServiceException *exception) {
-        NSLog(@"Upload Failed: %@", exception);
-    }
-    NSLog(@"uploading started");
-}
-
-- (void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response {
-    NSLog(@"upload success");
-    VYBVybe *lastVybe = [[[VYBMyVybeStore sharedStore] myVybes] lastObject];
-    [lastVybe setUploaded:YES];
-}
-
-- (void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error {
-    NSLog(@"upload failed: %@", error);
 }
 
 
