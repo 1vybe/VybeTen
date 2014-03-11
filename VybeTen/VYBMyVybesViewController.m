@@ -68,12 +68,6 @@
     [[self tableView] addSubview:self.buttonMenu];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [[[VYBMyVybeStore sharedStore] myVybes] count];
@@ -129,6 +123,12 @@
     
     [[self view] bringSubviewToFront:self.buttonMenu];
     [[self view] bringSubviewToFront:self.buttonCapture];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 @end

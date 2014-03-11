@@ -1,18 +1,16 @@
 //
-//  VYBPlayerViewController.m
+//  VYBTribePlayerViewController.m
 //  VybeTen
 //
-//  Created by Kim Jin Su on 2014. 3. 6..
+//  Created by Kim Jin Su on 2014. 3. 10..
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
-#import "VYBPlayerViewController.h"
+#import "VYBTribePlayerViewController.h"
+#import "VYBMyTribeStore.h"
 #import "VYBPlayerView.h"
-#import "VYBMyVybeStore.h"
 
-@implementation VYBPlayerViewController {
-    NSInteger playIndex;
-}
+@implementation VYBTribePlayerViewController
 @synthesize player = _player;
 @synthesize playerView = _playerView;
 @synthesize currItem = _currItem;
@@ -24,6 +22,7 @@
     [self.view setFrame:CGRectMake(0, 0, 320, 480)];
     self.playerView = playerView;
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -60,58 +59,22 @@
     [labelTime setTextColor:[UIColor whiteColor]];
     [self.view addSubview:labelTime];
     
-    // Find a vybe to play and set up playerLayer
-    VYBVybe *v = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:playIndex];
-    [labelDate setText:[v dateString]];
-    [labelTime setText:[v timeString]];
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
-    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-    self.currItem = [AVPlayerItem playerItemWithAsset:asset];
-    // Registering the current playerItem to Notification center
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-    [self setPlayer:[AVPlayer playerWithPlayerItem:self.currItem]];
-    [self.playerView setPlayer:self.player];
-    [self.playerView setVideoFillMode];
-    [self.player play];
+    // Start playing videos from the server
 }
 
-- (void)playFrom:(NSInteger)index {
-    playIndex = index;
+- (void)playFrom:(NSInteger)from {
+    
 }
 
-- (void)playerItemDidReachEnd {
-    playIndex++;
-    [self playbackFrom:playIndex];
- }
-
-- (void)playbackFrom:(NSInteger)from {
-    // Remove the playerItem that just finished playing
-    [[NSNotificationCenter defaultCenter] removeObserver:self.currItem];
-    if (from < [[[VYBMyVybeStore sharedStore] myVybes] count]) {
-        VYBVybe *v = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:from];
-        [labelDate setText:[v dateString]];
-        [labelTime setText:[v timeString]];
-        NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-        self.currItem = [AVPlayerItem playerItemWithAsset:asset];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-        [self.player replaceCurrentItemWithPlayerItem:self.currItem];
-        [self.player play];
-    }
-}
 
 /**
  * User Interactions
  **/
 
 - (void)swipeLeft {
-    playIndex++;
-    [self playbackFrom:playIndex];
 }
 
 - (void)swipeRight {
-    playIndex--;
-    [self playbackFrom:playIndex];
 }
 
 - (void)captureVybe {

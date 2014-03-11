@@ -7,7 +7,10 @@
 //
 
 #import "VYBMyTribeViewController.h"
+#import "VYBVybeCell.h"
+#import "VYBImageStore.h"
 #import "VYBMyTribeStore.h"
+#import "VYBTribePlayerViewController.h"
 
 @implementation VYBMyTribeViewController
 @synthesize buttonMenu = _buttonMenu;
@@ -60,8 +63,31 @@
     [self.buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonMenu];
     
-    //[[VYBMyTribeStore sharedStore] connectToTribe];
+    [VYBMyTribeStore sharedStore];
 }
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 10;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DefaultCell"];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DefaultCell"];
+    }
+    [cell.textLabel setText:@"TOUCH ME"];
+
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    VYBTribePlayerViewController *playerVC = [[VYBTribePlayerViewController alloc] init];
+    [playerVC playFrom:[indexPath row]];
+    [self.navigationController pushViewController:playerVC animated:NO];
+}
+
 
 - (void)captureVybe {
     [self.navigationController popToRootViewControllerAnimated:NO];
@@ -70,6 +96,24 @@
 - (void)goToMenu {
     [self.navigationController popViewControllerAnimated:NO];
 }
+
+/**
+ * Repositioning floating views during/after scroll
+ **/
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGRect frame = self.buttonMenu.frame;
+    frame.origin.y = scrollView.contentOffset.y;
+    self.buttonMenu.frame = frame;
+    
+    CGRect frameTwo = self.buttonCapture.frame;
+    frameTwo.origin.y =scrollView.contentOffset.y + self.view.bounds.size.height - 48;
+    self.buttonCapture.frame = frameTwo;
+    
+    [[self view] bringSubviewToFront:self.buttonMenu];
+    [[self view] bringSubviewToFront:self.buttonCapture];
+}
+
 
 - (void)didReceiveMemoryWarning
 {

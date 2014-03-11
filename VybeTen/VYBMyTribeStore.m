@@ -26,6 +26,7 @@
 }
 
 - (id)init {
+    NSLog(@"tribe store init");
     self = [super init];
   
     if (self) {
@@ -38,8 +39,10 @@
         }
         if (!myTribeVybes)
             myTribeVybes = [[NSMutableArray alloc] init];
-        else
-            [self syncMyTribeWithCloud];
+        if (!tribeVideos)
+            tribeVideos = [[NSMutableArray alloc] init];
+        
+        [self syncMyTribeWithCloud];
     }
     
     return self;
@@ -47,6 +50,10 @@
 
 - (NSArray *)myTribeVybes {
     return myTribeVybes;
+}
+
+- (NSArray *)tribeVideos {
+    return tribeVideos;
 }
 
 - (void)syncMyTribeWithCloud {
@@ -72,10 +79,9 @@
 
 -(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response
 {
-    NSData *received = response.body;
-    
+    NSData *received = [[NSData alloc] initWithData:response.body];
+    [tribeVideos addObject:received];
     NSLog(@"File received: %@", response.responseHeader);
-    
 }
 
 -(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error
