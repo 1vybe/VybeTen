@@ -8,6 +8,7 @@
 
 #import <AWSRuntime/AWSRuntime.h>
 #import <AVFoundation/AVFoundation.h>
+#import <AdSupport/ASIdentifierManager.h>
 #import "VYBMyVybeStore.h"
 #import "VYBVybe.h"
 #import "VYBConstants.h"
@@ -32,6 +33,10 @@
     self = [super init];
     
     if (self) {
+        // Retrieves this device's unique ID
+        adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+        NSLog(@"This device's unique ID: %@", adId);
+        // Load saved videos from Vybe's Documents directory
         NSString *path = [self myVybesArchivePath];
         myVybes = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
         if (!myVybes)
@@ -109,10 +114,11 @@
 - (void)processDelegateUploadForVybe:(VYBVybe *)v {
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
     NSData *videoData = [NSData dataWithContentsOfURL:videoURL];
-    // First genereate a unique device ID
+    //NSString *keyString = [NSString stringWithFormat:@"%@/%@.mov", adId, [v timeStamp]];
     NSString *keyString = [NSString stringWithFormat:@"%@.mov", [v timeStamp]];
+
     S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:keyString inBucket:@"vybes"];
-    
+
     por.contentType = @"video/quicktime";
     por.data = videoData;
     por.delegate = self;

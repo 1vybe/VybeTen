@@ -12,6 +12,7 @@
 
 @interface VYBMyVybeStore : NSObject <AmazonServiceRequestDelegate> {
     NSMutableArray *myVybes;
+    NSString *adId;
 }
 @property (nonatomic) AmazonS3Client *s3;
 

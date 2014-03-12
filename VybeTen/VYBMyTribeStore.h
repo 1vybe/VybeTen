@@ -12,13 +12,14 @@
 
 @interface VYBMyTribeStore : NSObject <AmazonServiceRequestDelegate> {
     NSMutableArray *myTribeVybes;
-    NSMutableArray *tribeVideos;
+    NSString *adId;
 }
 @property (nonatomic) AmazonS3Client *s3;
 
 + (VYBMyTribeStore *)sharedStore;
 - (NSArray *)myTribeVybes;
-- (NSArray *)tribeVideos;
 
 - (void)syncMyTribeWithCloud;
+- (NSString *)thumbPathAtIndex:(NSInteger)index;
+
 @end

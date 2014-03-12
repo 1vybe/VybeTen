@@ -84,6 +84,7 @@
     // Cache thumbnail images into a memory
     UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:[vybe thumbnailPath]];
     if (!thumbImg) {
+        NSLog(@"MyVybe ThumbImg:%@", [vybe thumbnailPath]);
         thumbImg = [UIImage imageWithContentsOfFile:[vybe thumbnailPath]];
         [[VYBImageStore sharedStore] setImage:thumbImg forKey:[vybe thumbnailPath]];
     }
