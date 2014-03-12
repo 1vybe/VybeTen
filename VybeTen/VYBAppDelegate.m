@@ -10,6 +10,7 @@
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
 #import "VYBMyVybeStore.h"
+#import "VYBMyTribeStore.h"
 
 @implementation VYBAppDelegate
 
@@ -91,6 +92,12 @@
         NSLog(@"My vybes are saved. :)");
     else
         NSLog(@"My vybes will be lost. :(");
+    
+    success = [[VYBMyTribeStore sharedStore] saveChanges];
+    if (success)
+        NSLog(@"My tribes are saved. :)");
+    else
+        NSLog(@"My tribes will be lost. :(");
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application

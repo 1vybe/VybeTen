@@ -51,7 +51,7 @@
         </view>
     </objects>
     <resources>
-        <image name="button_flip" width="57" height="53"/>
-        <image name="button_menu" width="162" height="164"/>
+        <image name="button_flip" width="48" height="48"/>
+        <image name="button_menu" width="69" height="69"/>
     </resources>
 </document>

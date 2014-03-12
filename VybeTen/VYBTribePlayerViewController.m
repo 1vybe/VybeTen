@@ -10,7 +10,9 @@
 #import "VYBMyTribeStore.h"
 #import "VYBPlayerView.h"
 
-@implementation VYBTribePlayerViewController
+@implementation VYBTribePlayerViewController {
+    NSInteger playIndex;
+}
 @synthesize player = _player;
 @synthesize playerView = _playerView;
 @synthesize currItem = _currItem;
@@ -59,11 +61,43 @@
     [labelTime setTextColor:[UIColor whiteColor]];
     [self.view addSubview:labelTime];
     
-    // Start playing videos from the server
+    // Start playing videos downloaded from the server
+    // Find a vybe to play and set up playerLayer
+    NSString *videoPath = [[VYBMyTribeStore sharedStore] videoPathAtIndex:playIndex];
+    //[labelDate setText:[v dateString]];
+    //[labelTime setText:[v timeString]];
+    NSURL *url = [[NSURL alloc] initFileURLWithPath:videoPath];
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+    self.currItem = [AVPlayerItem playerItemWithAsset:asset];
+    // Registering the current playerItem to Notification center
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+    [self setPlayer:[AVPlayer playerWithPlayerItem:self.currItem]];
+    [self.playerView setPlayer:self.player];
+    [self.playerView setVideoFillMode];
+    [self.player play];
 }
 
 - (void)playFrom:(NSInteger)from {
-    
+    playIndex = from;
+}
+
+- (void)playerItemDidReachEnd {
+    playIndex++;
+    [self playbackFrom:playIndex];
+}
+
+- (void)playbackFrom:(NSInteger)from {
+    // Remove the playerItem that just finished playing
+    [[NSNotificationCenter defaultCenter] removeObserver:self.currItem];
+    if (from < [[[VYBMyTribeStore sharedStore] myTribeVybes] count]) {
+        NSString *videoPath = [[VYBMyTribeStore sharedStore] videoPathAtIndex:from];
+        NSURL *url = [[NSURL alloc] initFileURLWithPath:videoPath];
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+        self.currItem = [AVPlayerItem playerItemWithAsset:asset];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+        [self.player replaceCurrentItemWithPlayerItem:self.currItem];
+        [self.player play];
+    }
 }
 
 

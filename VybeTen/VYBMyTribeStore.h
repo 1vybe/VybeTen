@@ -20,6 +20,9 @@
 - (NSArray *)myTribeVybes;
 
 - (void)syncMyTribeWithCloud;
+- (NSString *)videoPathAtIndex:(NSInteger)index;
 - (NSString *)thumbPathAtIndex:(NSInteger)index;
+- (NSString *)myTribeArchivePath;
+- (BOOL)saveChanges;
 
 @end

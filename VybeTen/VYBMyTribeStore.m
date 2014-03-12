@@ -40,10 +40,14 @@
         } @catch (AmazonServiceException *exception) {
             NSLog(@"[MyTribe]S3 init failed: %@", exception);
         }
-        if (!myTribeVybes)
-            myTribeVybes = [[NSMutableArray alloc] init];
+        // Load saved videos from Tribe's Documents directory
+        NSString *path = [self myTribeArchivePath];
+        myTribeVybes = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
 
-        [self syncMyTribeWithCloud];
+        if (!myTribeVybes) {
+            myTribeVybes = [[NSMutableArray alloc] init];
+            [self syncMyTribeWithCloud];
+        }
     }
     
     return self;
@@ -115,6 +119,18 @@
     [thumbData writeToURL:thumbURL atomically:YES];
 }
 
+- (NSString *)videoPathAtIndex:(NSInteger)index {
+    // Path to save in a temporary storage in document directory
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *videoPath = [documentsDirectory stringByAppendingPathComponent:@"Tribe"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:videoPath])
+        [[NSFileManager defaultManager] createDirectoryAtPath:videoPath withIntermediateDirectories:YES attributes:nil error:nil];
+    videoPath = [videoPath stringByAppendingPathComponent:[myTribeVybes objectAtIndex:index]];
+    
+    return videoPath;
+}
+
 - (NSString *)thumbPathAtIndex:(NSInteger)index {
     // Path to save in a temporary storage in document directory
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -126,6 +142,20 @@
     thumbPath = [thumbPath stringByReplacingOccurrencesOfString:@".mov" withString:@".jpeg"];
     
     return thumbPath;
+}
+
+- (NSString *)myTribeArchivePath {
+    NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    NSString *documentDirectory = [documentDirectories objectAtIndex:0];
+    
+    return [documentDirectory stringByAppendingPathComponent:@"myTribe.archive"];
+}
+
+- (BOOL)saveChanges {
+    NSString *path = [self myTribeArchivePath];
+    
+    return [NSKeyedArchiver archiveRootObject:myTribeVybes toFile:path];
 }
 
 

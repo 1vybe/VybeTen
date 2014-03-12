@@ -51,7 +51,7 @@
         </view>
     </objects>
     <resources>
-        <image name="button_vybe" width="168" height="168"/>
+        <image name="button_vybe" width="69" height="69"/>
         <image name="tribecircle" width="375" height="375"/>
         <image name="vibecircle" width="375" height="375"/>
     </resources>
