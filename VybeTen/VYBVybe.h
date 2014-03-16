@@ -9,20 +9,25 @@
 #import <Foundation/Foundation.h>
 
 @interface VYBVybe : NSObject <NSCoding> {
+    NSString *vybeKey;
     NSString *vybePath;
     NSString *videoPath;
     NSString *thumbnailPath;
     NSDate *timeStamp;
-    BOOL uploaded;
+    int upStatus; int downStatus;
 }
-- (void)setVybePath:(NSString *)vybePath;
+- (void)setVybeKey:(NSString *)vyKey;
+- (void)setVybePath:(NSString *)vyPath;
 - (void)setVideoPath:(NSString *)vidPath;
 - (void)setThumbnailPath:(NSString *)thumbPath;
-- (void)setUploaded:(BOOL)up;
+- (void)setUpStatus:(int)us;
+- (void)setDownStatus:(int)ds;
 - (void)setTimeStamp:(NSDate *)date;
+- (NSString *)vybeKey;
 - (NSString *)videoPath;
 - (NSString *)thumbnailPath;
-- (BOOL)isUploaded;
+- (int)upStatus;
+- (int)downStatus;
 - (NSDate *)timeStamp;
 - (NSString *)timeString;
 - (NSString *)dateString;

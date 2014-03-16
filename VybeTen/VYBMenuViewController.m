@@ -34,7 +34,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIToolbar* blurredView = [[UIToolbar alloc] initWithFrame:self.view.bounds];
+    CGRect mainBounds = [[UIScreen mainScreen] bounds];
+    UIToolbar* blurredView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, mainBounds.size.height, mainBounds.size.width)];
     [blurredView setBarStyle:UIBarStyleBlack];
     [self.view insertSubview:blurredView atIndex:0];
 

@@ -7,6 +7,7 @@
 //
 
 #import "VYBVybe.h"
+#import "VYBConstants.h"
 
 
 @implementation VYBVybe
@@ -14,18 +15,32 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super init];
     if (self) {
+        [self setVybeKey:[aDecoder decodeObjectForKey:@"vybeKey"]];
         [self setVideoPath:[aDecoder decodeObjectForKey:@"videoPath"]];
         [self setThumbnailPath:[aDecoder decodeObjectForKey:@"thumbnailPath"]];
         [self setTimeStamp:[aDecoder decodeObjectForKey:@"timeStamp"]];
-        [self setUploaded:[aDecoder decodeBoolForKey:@"uploaded"]];
+        [self setUpStatus:[aDecoder decodeIntForKey:@"upStatus"]];
+        if (upStatus != UPLOADED)
+            upStatus = UPFRESH;
+        [self setDownStatus:[aDecoder decodeIntForKey:@"downStatus"]];
+        if (downStatus != DOWNLOADED)
+            downStatus = DOWNFRESH;
     }
     return self;
 }
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:vybeKey forKey:@"vybeKey"];
     [aCoder encodeObject:videoPath forKey:@"videoPath"];
     [aCoder encodeObject:thumbnailPath forKey:@"thumbnailPath"];
     [aCoder encodeObject:timeStamp forKey:@"timeStamp"];
-    [aCoder encodeBool:uploaded forKey:@"uploaded"];
+    if (upStatus != UPLOADED)
+        upStatus = UPFRESH;
+    [aCoder encodeInt:upStatus forKey:@"upStatus"];
+    [aCoder encodeInt:downStatus forKey:@"downStatus"];
+}
+
+- (void)setVybeKey:(NSString *)vyKey {
+    vybeKey = vyKey;
 }
 
 - (void)setVybePath:(NSString *)vyPath {
@@ -46,8 +61,16 @@
     timeStamp = date;
 }
 
-- (void)setUploaded:(BOOL)up {
-    uploaded = up;
+- (void)setUpStatus:(int)us {
+    upStatus = us;
+}
+
+- (void)setDownStatus:(int)ds {
+    downStatus = ds;
+}
+
+- (NSString *)vybeKey {
+    return vybeKey;
 }
 
 - (NSString *)videoPath {
@@ -82,8 +105,12 @@
     return timeStamp;
 }
 
-- (BOOL)isUploaded {
-    return uploaded;
+- (int)upStatus {
+    return upStatus;
+}
+
+- (int)downStatus {
+    return downStatus;
 }
 
 - (NSData *)getVideo {

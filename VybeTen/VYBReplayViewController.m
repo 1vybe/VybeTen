@@ -25,7 +25,7 @@
     NSLog(@"replay loadView");
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
     self.view = playerView;
-    [self.view setFrame:CGRectMake(0, 0, 320, 480)];
+    [self.view setFrame:[[UIScreen mainScreen] bounds]];
     self.playerView = playerView;
 }
 - (void)viewDidLoad
@@ -43,7 +43,7 @@
     
     // First vybe instruction view
     [self.view setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
-    UIImageView *instructionImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 480, 320)];
+    UIImageView *instructionImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
     [instructionImg setContentMode:UIViewContentModeScaleToFill];
     [instructionImg setImage:[UIImage imageNamed:@"firstvid.png"]];
     [self.view addSubview:instructionImg];

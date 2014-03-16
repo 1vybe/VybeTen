@@ -41,6 +41,7 @@
         myVybes = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
         if (!myVybes)
             myVybes = [[NSMutableArray alloc] init];
+        [self listVybes];
         // Initialize S3 client
         @try {
             self.s3 = [[AmazonS3Client alloc] initWithAccessKey:ACCESS_KEY_ID withSecretKey:SECRET_KEY];
@@ -61,11 +62,14 @@
     NSLog(@"adding a new vybe");
     [myVybes addObject:v];
 
-    // Save the thumbnail image for the captured video
+    // Save the thumbnail image for the captured video on local Documents directory
     [self saveThumbnailImageFor:v];
     
     // Upload the saved video to S3
     [self processDelegateUploadForVybe:v];
+    
+    // Update myVybes
+    [self saveChanges];
 }
 
 - (void)removeVybe:(VYBVybe *)v {
@@ -82,13 +86,12 @@
 
 - (BOOL)saveChanges {
     NSString *path = [self myVybesArchivePath];
-    
     return [NSKeyedArchiver archiveRootObject:myVybes toFile:path];
 }
 
 - (void)listVybes {
     for (VYBVybe *v in myVybes) {
-        NSLog(@"Vybe[%@]: %@", [v isUploaded]?@"YES":@"NO", [v videoPath]);
+        NSLog(@"Vybe[%d]:%@", [v upStatus], [v videoPath]);
     }
 }
 
@@ -115,30 +118,65 @@
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
     NSData *videoData = [NSData dataWithContentsOfURL:videoURL];
     //NSString *keyString = [NSString stringWithFormat:@"%@/%@.mov", adId, [v timeStamp]];
-    NSString *keyString = [NSString stringWithFormat:@"%@.mov", [v timeStamp]];
+    if (![v vybeKey]) {
+        NSLog(@"fixing vybeKey");
+        NSCharacterSet *delimiters = [NSCharacterSet characterSetWithCharactersInString:@"["];
+        NSString *vykey = @"[";
+        NSString *vidPath = [[[v videoPath] componentsSeparatedByCharactersInSet:delimiters] objectAtIndex:1];
+        vykey = [vykey stringByAppendingString:vidPath];
+        [v setVybeKey:vykey];
+    }
+
+    NSString *keyString = [v vybeKey];
 
     S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:keyString inBucket:@"vybes"];
 
     por.contentType = @"video/quicktime";
     por.data = videoData;
     por.delegate = self;
-    
+    por.requestTag = keyString;
     @try {
         [self.s3 putObject:por];
+        [v setUpStatus:UPLOADING];
     }@catch (AmazonServiceException *exception) {
         NSLog(@"Upload Failed: %@", exception);
     }
-    NSLog(@"uploading started");
+    NSLog(@"uploading started for: %@", keyString);
+}
+
+- (void)delayedUploadsBegin {
+    NSLog(@"delayedUploadedBegin");
+    for (VYBVybe *v in myVybes) {
+        if ([v upStatus] == UPFRESH) {
+            NSLog(@"let's try uploading again for %@", [v vybeKey]);
+            [self processDelegateUploadForVybe:v];
+        }
+    }
 }
 
 - (void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response {
-    NSLog(@"upload success");
-    VYBVybe *lastVybe = [[[VYBMyVybeStore sharedStore] myVybes] lastObject];
-    [lastVybe setUploaded:YES];
+    NSLog(@"UPLOAD SUCCESS for: %@", request.requestTag);
+    //[self listVybes];
+    [self changeUpStatusFor:request.requestTag withStatus:UPLOADED];
+    /* TODO: Saving changes to myVybesStore's status is redundant */
+    //[self saveChanges];
+    //[self listVybes];
+
 }
 
 - (void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error {
-    NSLog(@"upload failed: %@", error);
+    NSLog(@"UPLOAD FAILED for: %@", request.requestTag);
+
+    [self changeUpStatusFor:request.requestTag withStatus:UPFRESH];
+
+}
+
+- (void)changeUpStatusFor:(NSString *)key withStatus:(int)status{
+    for (VYBVybe *v in myVybes) {
+        if ( [[v vybeKey] isEqualToString:key] ) {
+            [v setUpStatus:status];
+        }
+    }
 }
 
 

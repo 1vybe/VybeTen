@@ -39,6 +39,8 @@
     if (self) {
         recording = NO;
         frontCamera = NO;
+        // Retrieves this device's unique ID
+        adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
     }
     return self;
 }
@@ -101,9 +103,10 @@
 - (void)startRecording {
     /* Start Recording */
     if (!recording) {
+        NSLog(@"Start recording");
         newVybe = [[VYBVybe alloc] init];
         // Of course, it is not uploaded to S3 yet
-        [newVybe setUploaded:NO];
+        [newVybe setUpStatus:UPFRESH];
         
         startTime = [NSDate date];
         [newVybe setTimeStamp:startTime];
@@ -112,9 +115,10 @@
         // Path to save in the application's document directory
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
-        NSString *vybePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", startTime]];
+        NSString *vybePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"[%@]%@", adId, startTime]];
+        [newVybe setVybeKey:[NSString stringWithFormat:@"[%@]%@.mov", adId, startTime]];
         [newVybe setVybePath:vybePath];
-        
+        NSLog(@"Saving a vybe at:%@", [newVybe videoPath]);
         
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[newVybe videoPath]];
         [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
@@ -123,17 +127,17 @@
         recording = YES; flipButton.hidden = recording; menuButton.hidden = recording;
     }
     
-    // Stop Recording
-    // Save the vybe automatically and keep recording
+    /* Stop Recording */
     else {
         [movieFileOutput stopRecording];
         
+        /*
         startTime = nil;
         [recordingTimer invalidate];
         recordingTimer = nil;
         timerLabel.text = @"00:07";
         recording = NO; flipButton.hidden = recording; menuButton.hidden = recording;
-
+         */
         //TODO: Animated effect to show that the captured vybe is saved and shrinked into menu button
         //TODO: Bring up a new control view with Cancel/ Done/ Replay/ Timestamp
     }
@@ -176,6 +180,7 @@
     }
     
     if (recordSuccess) {
+
         // Prompt a review screen to save it or not
         VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
         [replayVC setVybe:newVybe];

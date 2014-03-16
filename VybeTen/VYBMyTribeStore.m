@@ -41,15 +41,12 @@
             NSLog(@"[MyTribe]S3 init failed: %@", exception);
         }
         // Load saved videos from Tribe's Documents directory
+
         NSString *path = [self myTribeArchivePath];
         myTribeVybes = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
-
-        if (!myTribeVybes) {
+        if (!myTribeVybes)
             myTribeVybes = [[NSMutableArray alloc] init];
-            [self syncMyTribeWithCloud];
-        }
     }
-    
     return self;
 }
 
@@ -58,23 +55,59 @@
 }
 
 - (void)syncMyTribeWithCloud {
+    NSLog(@"Already existing %u in myTribeVybes", [myTribeVybes count]);
+    //[self listVybes];
     @try {
         NSLog(@"Synching My Tribe with cloud");
         // TODO: listObjectsInBucket request should be run in background
         NSArray *objects = [self.s3 listObjectsInBucket:@"vybes"];
-        NSLog(@"there are %d objects", [objects count]);
+        NSLog(@"there are %u vybes in the server", [objects count]);
         // Download all the vybes for this tribe
         // TODO: Download only new vybes
         for (S3ObjectSummary *obj in objects) {
             S3GetObjectRequest *gor = [[S3GetObjectRequest alloc] initWithKey:[obj key] withBucket:@"vybes"];
             gor.delegate = self;
             gor.requestTag = [obj key];
-            [myTribeVybes addObject:[obj key]];
-            NSLog(@"Downloading object[%@]", [obj key]);
-            [self.s3 getObject:gor];
+            // add only if it's new
+            if (![myTribeVybes containsObject:[obj key]]) {
+                NSLog(@"downloading new vybe");
+                [self addNewVybe:[obj key]];
+                [self.s3 getObject:gor];
+            }
+            
         }
     } @catch (AmazonServiceException *exception) {
         NSLog(@"[MyTribe]AWS Error: %@", exception);
+    }
+}
+
+- (void)addNewVybe:(NSString *)key {
+    NSInteger i = 0;
+    for (; i < [myTribeVybes count]; i++) {
+        if (![self vybe:key isNewerThan:[myTribeVybes objectAtIndex:i]])
+            break;
+    }
+    [myTribeVybes insertObject:key atIndex:i];
+    // Update myTribeVybes
+    [self saveChanges];
+}
+
+/**
+ * Helper Functions
+ **/
+
+/* TODO: MOVE THIS FUNCTION TO DATA OBJECTS */
+- (BOOL)vybe:(NSString *)one isNewerThan:(NSString *)two {
+    NSCharacterSet *delimiters = [NSCharacterSet characterSetWithCharactersInString:@"[]"];
+    NSString *timeOne = [[one componentsSeparatedByCharactersInSet:delimiters] objectAtIndex:2];
+    NSString *timeTwo = [[two componentsSeparatedByCharactersInSet:delimiters] objectAtIndex:2];
+
+    return timeTwo > timeOne;
+}
+
+- (void)listVybes {
+    for (NSString *v in myTribeVybes) {
+        NSLog(@"[Listing] tribe vybe:%@", v);
     }
 }
 
@@ -82,6 +115,8 @@
 
 -(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response
 {
+    //NSLog(@"File received: %@", response.request.requestTag);
+    //[self addNewVybe:request.requestTag];
     // Path to save in a temporary storage in document directory
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -93,8 +128,7 @@
     NSData *received = [[NSData alloc] initWithData:response.body];
     [received writeToURL:outputURL atomically:YES];
     [self saveThumbnailImageForVideo:videoPath];
-    
-    NSLog(@"File received: %@", response.request.requestTag);
+    //NSLog(@"thumbnail saved");
 }
 
 -(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error

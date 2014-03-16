@@ -66,6 +66,8 @@
     self.buttonMenu.transform = rotation;
     [self.buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonMenu];
+    
+    [[VYBMyVybeStore sharedStore] delayedUploadsBegin];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -84,7 +86,7 @@
     // Cache thumbnail images into a memory
     UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:[vybe thumbnailPath]];
     if (!thumbImg) {
-        NSLog(@"MyVybe ThumbImg:%@", [vybe thumbnailPath]);
+        //NSLog(@"MyVybe ThumbImg:%@", [vybe thumbnailPath]);
         thumbImg = [UIImage imageWithContentsOfFile:[vybe thumbnailPath]];
         [[VYBImageStore sharedStore] setImage:thumbImg forKey:[vybe thumbnailPath]];
     }

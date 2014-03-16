@@ -63,12 +63,11 @@
     [self.buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonMenu];
     
-    [VYBMyTribeStore sharedStore];
+    [[VYBMyTribeStore sharedStore] syncMyTribeWithCloud];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSLog(@"There are %u tribe vybes", [[[VYBMyTribeStore sharedStore] myTribeVybes] count]);
     return [[[VYBMyTribeStore sharedStore] myTribeVybes] count];
 }
 
@@ -82,10 +81,10 @@
     NSString *thumbPath = [[VYBMyTribeStore sharedStore] thumbPathAtIndex:[indexPath row]];
     // Cache thumbnail images into a memory
     UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:thumbPath];
-    NSLog(@"Tribe ThumbImg: %@", thumbPath);
     if (!thumbImg) {
         thumbImg = [UIImage imageWithContentsOfFile:thumbPath];
-        //[[VYBImageStore sharedStore] setImage:thumbImg forKey:thumbPath];
+        if (thumbImg)
+            [[VYBImageStore sharedStore] setImage:thumbImg forKey:thumbPath];
     }
     // Customize cell
     [cell.thumbnailImageView setImage:thumbImg];

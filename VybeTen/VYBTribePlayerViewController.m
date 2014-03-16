@@ -21,7 +21,7 @@
 - (void)loadView {
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
     self.view = playerView;
-    [self.view setFrame:CGRectMake(0, 0, 320, 480)];
+    [self.view setFrame:[[UIScreen mainScreen] bounds]];
     self.playerView = playerView;
 }
 
@@ -106,9 +106,13 @@
  **/
 
 - (void)swipeLeft {
+    playIndex++;
+    [self playbackFrom:playIndex];
 }
 
 - (void)swipeRight {
+    playIndex--;
+    [self playbackFrom:playIndex];
 }
 
 - (void)captureVybe {
