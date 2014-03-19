@@ -33,5 +33,6 @@
 - (NSDate *)timeStamp;
 - (NSString *)timeString;
 - (NSString *)dateString;
+- (NSString *)howOld;
 - (BOOL)isFresherThan:(VYBVybe *)comp;
 @end

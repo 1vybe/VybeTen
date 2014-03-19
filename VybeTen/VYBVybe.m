@@ -208,5 +208,22 @@
     }
 }
 
+- (NSString *)howOld {
+    NSDate *now = [NSDate date];
+    NSTimeInterval timeDiff = [now timeIntervalSinceDate:[self timeStamp]];
+    int timeD = (int)timeDiff;
+    NSString *timePassedBy;
+    if (timeD >= 3600 * 24)
+        timePassedBy = [NSString stringWithFormat:@"%d %@ ago ", timeD/24, (timeD/24 == 1) ? @"day" : @"days"];
+    else if (timeD >= 3600)
+        timePassedBy = [NSString stringWithFormat:@"%dh %dm ago ", timeD/3600, (timeD%3600)/60];
+    else if (timeD >= 60)
+        timePassedBy = [NSString stringWithFormat:@"%dm %ds ago ", timeD/60, timeD%60];
+    else
+        timePassedBy = [NSString stringWithFormat:@"%ds ago ", timeD];
+    
+    return timePassedBy;
+}
+
 
 @end

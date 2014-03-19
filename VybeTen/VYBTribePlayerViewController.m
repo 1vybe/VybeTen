@@ -50,27 +50,20 @@
     [buttonCapture setImage:captureImage forState:UIControlStateNormal];
     [buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonCapture];
-    /*
-    // Adding date label
-    CGRect labelDateFrame = CGRectMake(self.view.bounds.size.height/2 - 60, 0, 120, 48);
-    labelDate = [[UILabel alloc] initWithFrame:labelDateFrame];
-    [labelDate setTextColor:[UIColor whiteColor]];
-    [self.view addSubview:labelDate];
-     */
+
     // Adding time label
     CGRect labelTimeFrame = CGRectMake(self.view.bounds.size.height - 100, 0, 100, 48);
     labelTime = [[UILabel alloc] initWithFrame:labelTimeFrame];
     [labelTime setTextColor:[UIColor whiteColor]];
+    [labelTime setTextAlignment:NSTextAlignmentRight];
     [self.view addSubview:labelTime];
+
+    VYBVybe *v = [[[VYBMyTribeStore sharedStore] myTribesVybes] objectAtIndex:playIndex];
+    [labelTime setText:[v howOld]];
     
+
     // Start playing videos downloaded from the server
     // Find a vybe to play and set up playerLayer
-    VYBVybe *v = [[[VYBMyTribeStore sharedStore] myTribesVybes] objectAtIndex:playIndex];
-    NSDate *now = [NSDate date];
-    NSTimeInterval timeDiff = [now timeIntervalSinceDate:[v timeStamp]];
-    int timeD = (int)timeDiff;
-    NSString *timePassedBy = [NSString stringWithFormat:@"%dm %ds ago", timeD/60, timeD%60];
-    [labelTime setText:timePassedBy];
     NSString *videoPath = [v videoPath];
     NSURL *url = [[NSURL alloc] initFileURLWithPath:videoPath];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
@@ -97,11 +90,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self.currItem];
     if (from < [[[VYBMyTribeStore sharedStore] myTribesVybes] count]) {
         VYBVybe *v = [[[VYBMyTribeStore sharedStore] myTribesVybes] objectAtIndex:from];
-        NSDate *now = [NSDate date];
-        NSTimeInterval timeDiff = [now timeIntervalSinceDate:[v timeStamp]];
-        int timeD = (int)timeDiff;
-        NSString *timePassedBy = [NSString stringWithFormat:@"%dm %ds ago", timeD/60, timeD%60];
-        [labelTime setText:timePassedBy];
+        [labelTime setText:[v howOld]];
         NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
         self.currItem = [AVPlayerItem playerItemWithAsset:asset];
