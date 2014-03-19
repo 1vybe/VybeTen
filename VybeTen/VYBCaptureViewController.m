@@ -27,22 +27,20 @@
     BOOL recording;
     BOOL frontCamera;
 }
+@synthesize labelTimer, buttonFlip, buttonMenu;
 
 // Fix orientation to landscapeRight
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskLandscapeRight;
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        recording = NO;
-        frontCamera = NO;
-        // Retrieves this device's unique ID
-        adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-    }
-    return self;
+- (void)loadView {
+    // Retrieves this device's unique ID
+    adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+    NSLog(@"adId:%@", adId);
+    NSLog(@"%@", NSStringFromCGRect([[UIScreen mainScreen] bounds]));
+    UIView *theView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.view = theView;
 }
 
 - (void)setSession:(AVCaptureSession *)s withVideoInput:(AVCaptureDeviceInput *)vidInput withMovieFileOutput:(AVCaptureMovieFileOutput *)movieOutput{
@@ -55,9 +53,35 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    recording = NO;
+    frontCamera = NO;
+
     // Adding swipe gestures
     UITapGestureRecognizer * tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(startRecording)];
     [self.view addGestureRecognizer:tapGesture];
+    
+    /* NOTE: Origin for menu button is (0, 0) */
+    // Adding menu button
+    CGRect buttonMenuFrame = CGRectMake(0, self.view.bounds.size.width - 48, 48, 48);
+    buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
+    UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
+    [buttonMenu setImage:menuImage forState:UIControlStateNormal];
+    [buttonMenu addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:buttonMenu];
+    // Adding flip button
+    CGRect buttonFlipFrame = CGRectMake(self.view.bounds.size.height - 48, self.view.bounds.size.width - 48, 48, 48);
+    buttonFlip = [[UIButton alloc] initWithFrame:buttonFlipFrame];
+    UIImage *flipImage = [UIImage imageNamed:@"button_flip.png"];
+    [buttonFlip setImage:flipImage forState:UIControlStateNormal];
+    [buttonFlip addTarget:self action:@selector(flipCamera:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:buttonFlip];
+    // Adding timer label
+    CGRect labelTimerFrame = CGRectMake(self.view.bounds.size.height/2 - 25, 0, 50, 48);
+    labelTimer = [[UILabel alloc] initWithFrame:labelTimerFrame];
+    [labelTimer setTextColor:[UIColor whiteColor]];
+    [labelTimer setNumberOfLines:0];
+    labelTimer.text = @"00:07";
+    [self.view addSubview:labelTimer];
 
 }
 
@@ -93,7 +117,7 @@
     int secondsLeft = 7 - (int)secondsSinceStart;
     NSString *secondsPassed = [NSString stringWithFormat:@"00:%02d", secondsLeft];
     
-    timerLabel.text = secondsPassed;
+    labelTimer.text = secondsPassed;
 }
 
 /**
@@ -104,27 +128,15 @@
     /* Start Recording */
     if (!recording) {
         NSLog(@"Start recording");
-        newVybe = [[VYBVybe alloc] init];
+        newVybe = [[VYBVybe alloc] initWithDeviceId:adId];
+        startTime = [newVybe timeStamp];
         // Of course, it is not uploaded to S3 yet
-        [newVybe setUpStatus:UPFRESH];
-        
-        startTime = [NSDate date];
-        [newVybe setTimeStamp:startTime];
-
-
-        // Path to save in the application's document directory
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        NSString *vybePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"[%@]%@", adId, startTime]];
-        [newVybe setVybeKey:[NSString stringWithFormat:@"[%@]%@.mov", adId, startTime]];
-        [newVybe setVybePath:vybePath];
-        NSLog(@"Saving a vybe at:%@", [newVybe videoPath]);
-        
+              
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[newVybe videoPath]];
         [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
         
         recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
-        recording = YES; flipButton.hidden = recording; menuButton.hidden = recording;
+        recording = YES; buttonFlip.hidden = recording; buttonMenu.hidden = recording;
     }
     
     /* Stop Recording */
@@ -143,7 +155,7 @@
     }
 }
 
-- (IBAction)flipCamera:(id)sender {
+- (void)flipCamera:(id)sender {
     [session stopRunning];
     [session removeInput:videoInput];
     if (frontCamera)
@@ -161,7 +173,7 @@
     [session startRunning];
 }
 
-- (IBAction)goToMenu:(id)sender {
+- (void)goToMenu:(id)sender {
     VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
     [[self navigationController] pushViewController:menuVC animated:NO];
 }
@@ -180,7 +192,6 @@
     }
     
     if (recordSuccess) {
-
         // Prompt a review screen to save it or not
         VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
         [replayVC setVybe:newVybe];
@@ -192,8 +203,8 @@
     startTime = nil;
     [recordingTimer invalidate];
     recordingTimer = nil;
-    timerLabel.text = @"00:07";
-    recording = NO; flipButton.hidden = recording; menuButton.hidden = recording;
+    labelTimer.text = @"00:07";
+    recording = NO; buttonFlip.hidden = recording; buttonMenu.hidden = recording;
     newVybe = nil;
 }
 

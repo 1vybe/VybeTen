@@ -50,11 +50,13 @@
     [buttonCapture setImage:captureImage forState:UIControlStateNormal];
     [buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonCapture];
+    /*
     // Adding date label
     CGRect labelDateFrame = CGRectMake(self.view.bounds.size.height/2 - 60, 0, 120, 48);
     labelDate = [[UILabel alloc] initWithFrame:labelDateFrame];
     [labelDate setTextColor:[UIColor whiteColor]];
     [self.view addSubview:labelDate];
+     */
     // Adding time label
     CGRect labelTimeFrame = CGRectMake(self.view.bounds.size.height - 100, 0, 100, 48);
     labelTime = [[UILabel alloc] initWithFrame:labelTimeFrame];
@@ -63,9 +65,13 @@
     
     // Start playing videos downloaded from the server
     // Find a vybe to play and set up playerLayer
-    NSString *videoPath = [[VYBMyTribeStore sharedStore] videoPathAtIndex:playIndex];
-    //[labelDate setText:[v dateString]];
-    //[labelTime setText:[v timeString]];
+    VYBVybe *v = [[[VYBMyTribeStore sharedStore] myTribesVybes] objectAtIndex:playIndex];
+    NSDate *now = [NSDate date];
+    NSTimeInterval timeDiff = [now timeIntervalSinceDate:[v timeStamp]];
+    int timeD = (int)timeDiff;
+    NSString *timePassedBy = [NSString stringWithFormat:@"%dm %ds ago", timeD/60, timeD%60];
+    [labelTime setText:timePassedBy];
+    NSString *videoPath = [v videoPath];
     NSURL *url = [[NSURL alloc] initFileURLWithPath:videoPath];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
@@ -89,9 +95,14 @@
 - (void)playbackFrom:(NSInteger)from {
     // Remove the playerItem that just finished playing
     [[NSNotificationCenter defaultCenter] removeObserver:self.currItem];
-    if (from < [[[VYBMyTribeStore sharedStore] myTribeVybes] count]) {
-        NSString *videoPath = [[VYBMyTribeStore sharedStore] videoPathAtIndex:from];
-        NSURL *url = [[NSURL alloc] initFileURLWithPath:videoPath];
+    if (from < [[[VYBMyTribeStore sharedStore] myTribesVybes] count]) {
+        VYBVybe *v = [[[VYBMyTribeStore sharedStore] myTribesVybes] objectAtIndex:from];
+        NSDate *now = [NSDate date];
+        NSTimeInterval timeDiff = [now timeIntervalSinceDate:[v timeStamp]];
+        int timeD = (int)timeDiff;
+        NSString *timePassedBy = [NSString stringWithFormat:@"%dm %ds ago", timeD/60, timeD%60];
+        [labelTime setText:timePassedBy];
+        NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
         self.currItem = [AVPlayerItem playerItemWithAsset:asset];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];

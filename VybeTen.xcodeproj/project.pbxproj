@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		022296DA18BC506D0096BB30 /* VYBMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022296D818BC506D0096BB30 /* VYBMenuViewController.m */; };
-		022296DB18BC506D0096BB30 /* VYBMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 022296D918BC506D0096BB30 /* VYBMenuViewController.xib */; };
 		022296DE18BCA24C0096BB30 /* VYBMyVybesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */; };
 		0243CC9818CC665200CA03C0 /* VYBReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */; };
 		024B0E2B18BB39E30073574E /* VYBImageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2A18BB39E30073574E /* VYBImageStore.m */; };
@@ -33,7 +32,6 @@
 		604B62A018B495BB00D3EF19 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 604B629E18B495BB00D3EF19 /* InfoPlist.strings */; };
 		604B62A218B495BB00D3EF19 /* VybeTenTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 604B62A118B495BB00D3EF19 /* VybeTenTests.m */; };
 		6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */; };
-		6061246F18B7862F00B0A14E /* VYBCaptureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6061246D18B7862F00B0A14E /* VYBCaptureViewController.xib */; };
 		6061247118B7937700B0A14E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6061247018B7937700B0A14E /* AVFoundation.framework */; };
 		607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 607CA69918C5C80C0060B420 /* VYBPlayerView.m */; };
 		60B0DCEB18BDCC4E007F4D5C /* VYBVybeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60B0DCEA18BDCC4E007F4D5C /* VYBVybeCell.m */; };
@@ -57,7 +55,6 @@
 /* Begin PBXFileReference section */
 		022296D718BC506D0096BB30 /* VYBMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMenuViewController.h; sourceTree = "<group>"; };
 		022296D818BC506D0096BB30 /* VYBMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMenuViewController.m; sourceTree = "<group>"; };
-		022296D918BC506D0096BB30 /* VYBMenuViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBMenuViewController.xib; sourceTree = "<group>"; };
 		022296DC18BCA24C0096BB30 /* VYBMyVybesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyVybesViewController.h; sourceTree = "<group>"; };
 		022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybesViewController.m; sourceTree = "<group>"; };
 		0243CC9618CC665200CA03C0 /* VYBReplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBReplayViewController.h; sourceTree = "<group>"; };
@@ -95,7 +92,6 @@
 		604B62A118B495BB00D3EF19 /* VybeTenTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VybeTenTests.m; sourceTree = "<group>"; };
 		6061246B18B7862F00B0A14E /* VYBCaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCaptureViewController.h; sourceTree = "<group>"; };
 		6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCaptureViewController.m; sourceTree = "<group>"; };
-		6061246D18B7862F00B0A14E /* VYBCaptureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBCaptureViewController.xib; sourceTree = "<group>"; };
 		6061247018B7937700B0A14E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		607CA69818C5C80C0060B420 /* VYBPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerView.h; sourceTree = "<group>"; };
 		607CA69918C5C80C0060B420 /* VYBPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerView.m; sourceTree = "<group>"; };
@@ -182,12 +178,10 @@
 				604B628C18B495BB00D3EF19 /* VYBAppDelegate.m */,
 				6061246B18B7862F00B0A14E /* VYBCaptureViewController.h */,
 				6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */,
-				6061246D18B7862F00B0A14E /* VYBCaptureViewController.xib */,
 				0243CC9618CC665200CA03C0 /* VYBReplayViewController.h */,
 				0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */,
 				022296D718BC506D0096BB30 /* VYBMenuViewController.h */,
 				022296D818BC506D0096BB30 /* VYBMenuViewController.m */,
-				022296D918BC506D0096BB30 /* VYBMenuViewController.xib */,
 				022296DC18BCA24C0096BB30 /* VYBMyVybesViewController.h */,
 				022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */,
 				6043968618CAD8A70090F3AE /* VYBMyTribeViewController.h */,
@@ -324,11 +318,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6061246F18B7862F00B0A14E /* VYBCaptureViewController.xib in Resources */,
 				6043967D18C9FFDC0090F3AE /* VYBVybeCell.xib in Resources */,
 				604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
-				022296DB18BC506D0096BB30 /* VYBMenuViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

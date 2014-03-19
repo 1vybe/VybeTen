@@ -41,11 +41,10 @@
         myVybes = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
         if (!myVybes)
             myVybes = [[NSMutableArray alloc] init];
-        [self listVybes];
         // Initialize S3 client
         @try {
             self.s3 = [[AmazonS3Client alloc] initWithAccessKey:ACCESS_KEY_ID withSecretKey:SECRET_KEY];
-            self.s3.endpoint = [AmazonEndpoints s3Endpoint:US_WEST_2];
+            self.s3.endpoint = [AmazonEndpoints s3Endpoint:US_EAST_1];
         } @catch (AmazonServiceException *exception) {
             NSLog(@"[MyVybe]S3 init failed: %@", exception);
         }
@@ -117,6 +116,8 @@
 - (void)processDelegateUploadForVybe:(VYBVybe *)v {
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
     NSData *videoData = [NSData dataWithContentsOfURL:videoURL];
+    NSLog(@"uploading video: %d", [videoData length]);
+    NSLog(@"BEGIN");
     //NSString *keyString = [NSString stringWithFormat:@"%@/%@.mov", adId, [v timeStamp]];
     if (![v vybeKey]) {
         NSLog(@"fixing vybeKey");
@@ -126,18 +127,23 @@
         vykey = [vykey stringByAppendingString:vidPath];
         [v setVybeKey:vykey];
     }
+    NSLog(@"CHECK");
 
     NSString *keyString = [v vybeKey];
 
-    S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:keyString inBucket:@"vybes"];
+    S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:keyString inBucket:BUCKET_NAME];
 
     por.contentType = @"video/quicktime";
     por.data = videoData;
     por.delegate = self;
     por.requestTag = keyString;
+    NSLog(@"CHECK2");
+
     @try {
         [self.s3 putObject:por];
         [v setUpStatus:UPLOADING];
+        NSLog(@"CHECK3");
+
     }@catch (AmazonServiceException *exception) {
         NSLog(@"Upload Failed: %@", exception);
     }
@@ -148,7 +154,7 @@
     NSLog(@"delayedUploadedBegin");
     for (VYBVybe *v in myVybes) {
         if ([v upStatus] == UPFRESH) {
-            NSLog(@"let's try uploading again for %@", [v vybeKey]);
+            //NSLog(@"let's try uploading again for %@", [v vybeKey]);
             [self processDelegateUploadForVybe:v];
         }
     }
@@ -166,7 +172,6 @@
 
 - (void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error {
     NSLog(@"UPLOAD FAILED for: %@", request.requestTag);
-
     [self changeUpStatusFor:request.requestTag withStatus:UPFRESH];
 
 }

@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>FEDC4766-3B33-4E51-8DEC-A0767A2B7532</string>
+	<string>48EE311D-DDEA-46A3-819E-A2B78BCCB55F</string>
 	<key>IDESourceControlProjectName</key>
 	<string>VybeTen</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>F50F8378-01EE-4FB3-A999-D07398D54023</key>
-		<string>ssh://github.com/jart21/VybeTen.git</string>
+		<key>46820208-6CA8-427A-AC21-C2EABB86EC05</key>
+		<string>ssh://github.com/jart21/VybeTen</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>VybeTen.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>F50F8378-01EE-4FB3-A999-D07398D54023</key>
+		<key>46820208-6CA8-427A-AC21-C2EABB86EC05</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/jart21/VybeTen.git</string>
+	<string>ssh://github.com/jart21/VybeTen</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>F50F8378-01EE-4FB3-A999-D07398D54023</string>
+	<string>46820208-6CA8-427A-AC21-C2EABB86EC05</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>F50F8378-01EE-4FB3-A999-D07398D54023</string>
+			<string>46820208-6CA8-427A-AC21-C2EABB86EC05</string>
 			<key>IDESourceControlWCCName</key>
 			<string>VybeTen</string>
 		</dict>

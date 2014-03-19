@@ -63,12 +63,22 @@
     [self.buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonMenu];
     
-    [[VYBMyTribeStore sharedStore] syncMyTribeWithCloud];
+    [[VYBMyTribeStore sharedStore] syncMyTribesWithCloud];
+}
+
+/* Scroll to the bottom of table */
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    NSInteger idx = [[[VYBMyTribeStore sharedStore] myTribesVybes] count] - 1;
+    if (idx < 0)
+        return;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[VYBMyTribeStore sharedStore] myTribeVybes] count];
+    return [[[VYBMyTribeStore sharedStore] myTribesVybes] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

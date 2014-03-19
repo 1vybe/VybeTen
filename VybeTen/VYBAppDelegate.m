@@ -26,7 +26,7 @@
      */
     // Setup for video capturing session
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
-    [session setSessionPreset:AVCaptureSessionPresetHigh];
+    [session setSessionPreset:AVCaptureSessionPresetMedium];
     
     // Add video input from camera
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -98,6 +98,8 @@
         NSLog(@"My tribes are saved. :)");
     else
         NSLog(@"My tribes will be lost. :(");
+    [[VYBMyTribeStore sharedStore] listVybes];
+
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -113,6 +115,18 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
+    if (success)
+        NSLog(@"My vybes are saved. :)");
+    else
+        NSLog(@"My vybes will be lost. :(");
+    
+    success = [[VYBMyTribeStore sharedStore] saveChanges];
+    if (success)
+        NSLog(@"My tribes are saved. :)");
+    else
+        NSLog(@"My tribes will be lost. :(");
+    [[VYBMyTribeStore sharedStore] listVybes];
 }
 
 @end

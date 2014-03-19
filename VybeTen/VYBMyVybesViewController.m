@@ -70,6 +70,15 @@
     [[VYBMyVybeStore sharedStore] delayedUploadsBegin];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    NSInteger idx = [[[VYBMyVybeStore sharedStore] myVybes] count] - 1;
+    if (idx < 0)
+        return;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [[[VYBMyVybeStore sharedStore] myVybes] count];

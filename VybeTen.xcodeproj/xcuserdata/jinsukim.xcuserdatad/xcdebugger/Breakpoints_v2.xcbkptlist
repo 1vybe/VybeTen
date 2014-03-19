@@ -10,43 +10,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VybeTen/VYBMyTribeStore.m"
-            timestampString = "416590028.101667"
+            timestampString = "416782471.785887"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
-            landmarkName = "-syncMyTribeWithCloud"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "-syncMyTribesWithCloud"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[VYBMyTribeStore syncMyTribeWithCloud]"
-                  moduleName = "VybeTen"
-                  urlString = "file:///Users/jinsukim/Project/VybeTen/VybeTen/VYBMyTribeStore.m"
-                  timestampString = "416688941.349631"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "80"
-                  endingLineNumber = "80"
-                  offsetFromSymbolStart = "1272">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[VYBMyTribeStore syncMyTribeWithCloud]"
-                  moduleName = "VybeTen"
-                  urlString = "file:///Users/jinsukim/Project/VybeTen/VybeTen/VYBMyTribeStore.m"
-                  timestampString = "416688941.35"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "80"
-                  endingLineNumber = "80"
-                  offsetFromSymbolStart = "1372">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -10,8 +10,8 @@
 
 @interface VYBMenuViewController : UIViewController
 
-- (IBAction)captureVybe:(id)sender;
-- (IBAction)goToMyVybes:(id)sender;
-- (IBAction)goToMyTribe:(id)sender;
+- (void)captureVybe:(id)sender;
+- (void)goToMyVybes:(id)sender;
+- (void)goToMyTribes:(id)sender;
 @end
 
