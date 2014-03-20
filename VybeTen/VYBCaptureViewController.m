@@ -13,6 +13,7 @@
 #import "VYBMyVybeStore.h"
 #import "VYBConstants.h"
 #import "VYBReplayViewController.h"
+#import "VYBCaptureProgressView.h"
 
 @implementation VYBCaptureViewController {
     AVCaptureSession *session;
@@ -76,11 +77,7 @@
     [buttonFlip addTarget:self action:@selector(flipCamera:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonFlip];
     // Adding timer label
-    CGRect labelTimerFrame = CGRectMake(self.view.bounds.size.height/2 - 25, 0, 50, 48);
-    labelTimer = [[UILabel alloc] initWithFrame:labelTimerFrame];
-    [labelTimer setTextColor:[UIColor whiteColor]];
-    [labelTimer setNumberOfLines:0];
-    labelTimer.text = @"00:07";
+    labelTimer = [[VYBCaptureProgressView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.width - (48+10), self.view.bounds.size.height, 10)];
     [self.view addSubview:labelTimer];
 
 }
@@ -113,11 +110,12 @@
 }
 
 - (void)timer:(NSTimer *)timer {
-    NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
-    int secondsLeft = 7 - (int)secondsSinceStart;
-    NSString *secondsPassed = [NSString stringWithFormat:@"00:%02d", secondsLeft];
+    //NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
+    //int secondsLeft = 7 - (int)secondsSinceStart;
+    //NSString *secondsPassed = [NSString stringWithFormat:@"00:%02d", secondsLeft];
     
-    labelTimer.text = secondsPassed;
+    //labelTimer.text = secondsPassed;
+    [labelTimer incrementBar];
 }
 
 /**
@@ -135,7 +133,7 @@
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[newVybe videoPath]];
         [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
         
-        recordingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
+        recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
         recording = YES; buttonFlip.hidden = recording; buttonMenu.hidden = recording;
     }
     
@@ -203,7 +201,7 @@
     startTime = nil;
     [recordingTimer invalidate];
     recordingTimer = nil;
-    labelTimer.text = @"00:07";
+    [labelTimer resetBar];
     recording = NO; buttonFlip.hidden = recording; buttonMenu.hidden = recording;
     newVybe = nil;
 }

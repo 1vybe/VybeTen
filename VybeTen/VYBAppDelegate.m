@@ -11,6 +11,7 @@
 #import "VYBCaptureViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBMyTribeStore.h"
+#import "VYBConstants.h"
 
 @implementation VYBAppDelegate
 
@@ -73,6 +74,7 @@
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
+    NSLog(@"Welcome to %@ Vybe", BUCKET_NAME);
     return YES;
 }
 
@@ -98,7 +100,7 @@
         NSLog(@"My tribes are saved. :)");
     else
         NSLog(@"My tribes will be lost. :(");
-    [[VYBMyTribeStore sharedStore] listVybes];
+    //[[VYBMyTribeStore sharedStore] listVybes];
 
 }
 
@@ -126,7 +128,7 @@
         NSLog(@"My tribes are saved. :)");
     else
         NSLog(@"My tribes will be lost. :(");
-    [[VYBMyTribeStore sharedStore] listVybes];
+    //[[VYBMyTribeStore sharedStore] listVybes];
 }
 
 @end

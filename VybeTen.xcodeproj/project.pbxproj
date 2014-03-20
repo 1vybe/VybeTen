@@ -12,6 +12,7 @@
 		0243CC9818CC665200CA03C0 /* VYBReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */; };
 		024B0E2B18BB39E30073574E /* VYBImageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2A18BB39E30073574E /* VYBImageStore.m */; };
 		024B0E2E18BB39FF0073574E /* VYBVideoStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2D18BB39FF0073574E /* VYBVideoStore.m */; };
+		0255736918DB96C6008B1B20 /* VYBCaptureProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0255736818DB96C6008B1B20 /* VYBCaptureProgressView.m */; };
 		025DE65718CB143D0054F739 /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65518CB143D0054F739 /* AWSRuntime.framework */; };
 		025DE65818CB143D0054F739 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65618CB143D0054F739 /* AWSS3.framework */; };
 		025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 025DE65A18CB16E30054F739 /* VYBConstants.m */; };
@@ -63,6 +64,8 @@
 		024B0E2A18BB39E30073574E /* VYBImageStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBImageStore.m; sourceTree = "<group>"; };
 		024B0E2C18BB39FF0073574E /* VYBVideoStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVideoStore.h; sourceTree = "<group>"; };
 		024B0E2D18BB39FF0073574E /* VYBVideoStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVideoStore.m; sourceTree = "<group>"; };
+		0255736718DB96C6008B1B20 /* VYBCaptureProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCaptureProgressView.h; sourceTree = "<group>"; };
+		0255736818DB96C6008B1B20 /* VYBCaptureProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCaptureProgressView.m; sourceTree = "<group>"; };
 		025DE65518CB143D0054F739 /* AWSRuntime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSRuntime.framework; sourceTree = "<group>"; };
 		025DE65618CB143D0054F739 /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
 		025DE65918CB16E30054F739 /* VYBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBConstants.h; sourceTree = "<group>"; };
@@ -207,6 +210,8 @@
 				024B0E2D18BB39FF0073574E /* VYBVideoStore.m */,
 				025DE65918CB16E30054F739 /* VYBConstants.h */,
 				025DE65A18CB16E30054F739 /* VYBConstants.m */,
+				0255736718DB96C6008B1B20 /* VYBCaptureProgressView.h */,
+				0255736818DB96C6008B1B20 /* VYBCaptureProgressView.m */,
 				604B628E18B495BB00D3EF19 /* Images.xcassets */,
 				604B628318B495BB00D3EF19 /* Supporting Files */,
 			);
@@ -287,7 +292,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = VYB;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Vybe;
 				TargetAttributes = {
 					604B629318B495BB00D3EF19 = {
@@ -355,6 +360,7 @@
 				022296DE18BCA24C0096BB30 /* VYBMyVybesViewController.m in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
 				6043968818CAD8A70090F3AE /* VYBMyTribeViewController.m in Sources */,
+				0255736918DB96C6008B1B20 /* VYBCaptureProgressView.m in Sources */,
 				022296DA18BC506D0096BB30 /* VYBMenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -401,7 +407,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -440,7 +445,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -514,7 +518,6 @@
 		604B62A918B495BB00D3EF19 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/VybeTen.app/VybeTen";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -537,7 +540,6 @@
 		604B62AA18B495BB00D3EF19 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/VybeTen.app/VybeTen";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",

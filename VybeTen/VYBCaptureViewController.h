@@ -9,11 +9,12 @@
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
 #import <AdSupport/ASIdentifierManager.h>
+@class VYBCaptureProgressView;
 
 @interface VYBCaptureViewController : UIViewController <AVCaptureFileOutputRecordingDelegate> {
     NSString *adId;
 }
-@property (nonatomic) UILabel *labelTimer;
+@property (nonatomic) VYBCaptureProgressView *labelTimer;
 @property (nonatomic) UIButton *buttonFlip;
 @property (nonatomic) UIButton *buttonMenu;
 - (void)setSession:(AVCaptureSession *)s withVideoInput:(AVCaptureDeviceInput *)vidInput withMovieFileOutput:(AVCaptureMovieFileOutput *)movieOutput;

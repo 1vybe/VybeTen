@@ -9,7 +9,7 @@
 
 #define ACCESS_KEY_ID   @"AKIAJVN4HPJ6VBOKP7XA"
 #define SECRET_KEY      @"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"
-#define BUCKET_NAME     @"mtl_vybes"
+#define BUCKET_NAME     @"amino"
 
 #define UPFRESH         0
 #define UPLOADING       1
