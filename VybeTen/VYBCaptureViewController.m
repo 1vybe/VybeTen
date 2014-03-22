@@ -38,8 +38,8 @@
 - (void)loadView {
     // Retrieves this device's unique ID
     adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-    NSLog(@"adId:%@", adId);
-    NSLog(@"%@", NSStringFromCGRect([[UIScreen mainScreen] bounds]));
+    NSLog(@"UserID:%@", adId);
+    //NSLog(@"%@", NSStringFromCGRect([[UIScreen mainScreen] bounds]));
     UIView *theView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.view = theView;
 }
@@ -63,14 +63,14 @@
     
     /* NOTE: Origin for menu button is (0, 0) */
     // Adding menu button
-    CGRect buttonMenuFrame = CGRectMake(0, self.view.bounds.size.width - 48, 48, 48);
+    CGRect buttonMenuFrame = CGRectMake(6, self.view.bounds.size.width - 40, 34, 34);
     buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
     UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
     [buttonMenu setImage:menuImage forState:UIControlStateNormal];
     [buttonMenu addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonMenu];
     // Adding flip button
-    CGRect buttonFlipFrame = CGRectMake(self.view.bounds.size.height - 48, self.view.bounds.size.width - 48, 48, 48);
+    CGRect buttonFlipFrame = CGRectMake(self.view.bounds.size.height - 40, self.view.bounds.size.width - 40, 34, 34);
     buttonFlip = [[UIButton alloc] initWithFrame:buttonFlipFrame];
     UIImage *flipImage = [UIImage imageNamed:@"button_flip.png"];
     [buttonFlip setImage:flipImage forState:UIControlStateNormal];

@@ -13,7 +13,7 @@
 @class VYBPlayerView;
 @class VYBVybe;
 
-@interface VYBReplayViewController : UIViewController
+@interface VYBReplayViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *playerItem;
 @property (nonatomic) VYBPlayerView *playerView;

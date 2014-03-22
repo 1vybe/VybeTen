@@ -1,29 +1,26 @@
 //
-//  VYBMyVybesViewController.m
+//  VYBTribeVybesViewController.m
 //  VybeTen
-//  VYBMyVybesViewController can extend UIViewController to fix floating views(buttons) on the same position while user scrolls over its table view.
-//  For the purpose of practice, however, I implemented two methods that will automatically re-position floating views after scrolling.
 //
-//
-//  Created by jinsuk on 2/25/14.
+//  Created by jinsuk on 3/20/14.
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import "VYBMyVybesViewController.h"
-#import "VYBMyVybeStore.h"
+#import "VYBTribeVybesViewController.h"
 #import "VYBVybeCell.h"
 #import "VYBImageStore.h"
-#import "VYBPlayerViewController.h"
+#import "VYBMyTribeStore.h"
+#import "VYBTribePlayerViewController.h"
 
-
-@implementation VYBMyVybesViewController
+@implementation VYBTribeVybesViewController
+@synthesize buttonBack = _buttonBack;
 @synthesize buttonCapture = _buttonCapture;
-@synthesize buttonMenu = _buttonMenu;
+@synthesize tribeName = _tribeName;
 
 - (id)init {
     self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
-
+        
     }
     return self;
 }
@@ -37,13 +34,11 @@
 {
     [super viewDidLoad];
     
-    /* Table Setup for horizontal transparent tableview */
     self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
     // Rotate the tableView for horizontal scrolling
     CGAffineTransform rotateTable = CGAffineTransformMakeRotation(-M_PI_2);
     self.tableView.transform = rotateTable;
     [self.tableView setBackgroundColor:[UIColor clearColor]];
-    // Remove cell separators
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.tableView setRowHeight:200.0f];
     self.tableView.showsVerticalScrollIndicator = NO;
@@ -60,22 +55,22 @@
     self.buttonCapture.transform = rotation;
     [self.buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonCapture];
-    // Adding MENU button
-    CGRect buttonMenuFrame = CGRectMake(6, 6, 34, 34);
-    self.buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
-    UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
-    [self.buttonMenu setImage:menuImage forState:UIControlStateNormal];
-    self.buttonMenu.transform = rotation;
-    [self.buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
-    [[self tableView] addSubview:self.buttonMenu];
+    // Adding BACK button
+    CGRect buttonBackFrame = CGRectMake(6, 6, 34, 34);
+    self.buttonBack = [[UIButton alloc] initWithFrame:buttonBackFrame];
+    UIImage *backImage = [UIImage imageNamed:@"button_back.png"];
+    [self.buttonBack setImage:backImage forState:UIControlStateNormal];
+    self.buttonBack.transform = rotation;
+    [self.buttonBack addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    [[self tableView] addSubview:self.buttonBack];
     
-    [[VYBMyVybeStore sharedStore] delayedUploadsBegin];
+    [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:self.tribeName];
 }
 
-/* Scroll down to the bottom to show recent vybes first */
+/* Scroll to the bottom of table */
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    NSInteger idx = [[[VYBMyVybeStore sharedStore] myVybes] count] - 1;
+    NSInteger idx = [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] count] - 1;
     if (idx < 0)
         return;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
@@ -84,7 +79,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[VYBMyVybeStore sharedStore] myVybes] count];
+    return [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -94,23 +89,24 @@
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBVybeCell" owner:self options:nil];
         cell = [nib objectAtIndex:0];
     }
-    VYBVybe *vybe = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
+    NSString *thumbPath = [[VYBMyTribeStore sharedStore] thumbPathAtIndex:[indexPath row] forTribe:self.tribeName];
     // Cache thumbnail images into a memory
-    UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:[vybe thumbnailPath]];
+    UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:thumbPath];
     if (!thumbImg) {
-        //NSLog(@"MyVybe ThumbImg:%@", [vybe thumbnailPath]);
-        thumbImg = [UIImage imageWithContentsOfFile:[vybe thumbnailPath]];
-        [[VYBImageStore sharedStore] setImage:thumbImg forKey:[vybe thumbnailPath]];
+        thumbImg = [UIImage imageWithContentsOfFile:thumbPath];
+        if (thumbImg)
+            [[VYBImageStore sharedStore] setImage:thumbImg forKey:thumbPath];
     }
     // Customize cell
     [cell.thumbnailImageView setImage:thumbImg];
     [cell customize];
-
+    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    VYBTribePlayerViewController *playerVC = [[VYBTribePlayerViewController alloc] init];
+    [playerVC setTribeName:self.tribeName];
     [playerVC playFrom:[indexPath row]];
     [self.navigationController pushViewController:playerVC animated:NO];
 }
@@ -119,7 +115,7 @@
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
-- (void)goToMenu {
+- (void)goBack {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -128,22 +124,24 @@
  **/
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGRect frame = self.buttonMenu.frame;
+    CGRect frame = self.buttonBack.frame;
     frame.origin.y = scrollView.contentOffset.y;
-    self.buttonMenu.frame = frame;
+    self.buttonBack.frame = frame;
     
     CGRect frameTwo = self.buttonCapture.frame;
     frameTwo.origin.y =scrollView.contentOffset.y + self.view.bounds.size.height - 40;
     self.buttonCapture.frame = frameTwo;
     
-    [[self view] bringSubviewToFront:self.buttonMenu];
+    [[self view] bringSubviewToFront:self.buttonBack];
     [[self view] bringSubviewToFront:self.buttonCapture];
 }
+
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 @end

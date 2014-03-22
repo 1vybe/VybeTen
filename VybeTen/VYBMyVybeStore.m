@@ -35,7 +35,6 @@
     if (self) {
         // Retrieves this device's unique ID
         adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-        NSLog(@"This device's unique ID: %@", adId);
         // Load saved videos from Vybe's Documents directory
         NSString *path = [self myVybesArchivePath];
         myVybes = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
@@ -117,7 +116,6 @@
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
     NSData *videoData = [NSData dataWithContentsOfURL:videoURL];
     NSLog(@"uploading video: %d", [videoData length]);
-    NSLog(@"BEGIN");
     //NSString *keyString = [NSString stringWithFormat:@"%@/%@.mov", adId, [v timeStamp]];
     if (![v vybeKey]) {
         NSLog(@"fixing vybeKey");
@@ -127,23 +125,19 @@
         vykey = [vykey stringByAppendingString:vidPath];
         [v setVybeKey:vykey];
     }
-    NSLog(@"CHECK");
 
     NSString *keyString = [v vybeKey];
 
-    S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:keyString inBucket:BUCKET_NAME];
+    S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:keyString inBucket:[v tribeName] ];
 
     por.contentType = @"video/quicktime";
     por.data = videoData;
     por.delegate = self;
     por.requestTag = keyString;
-    NSLog(@"CHECK2");
 
     @try {
         [self.s3 putObject:por];
         [v setUpStatus:UPLOADING];
-        NSLog(@"CHECK3");
-
     }@catch (AmazonServiceException *exception) {
         NSLog(@"Upload Failed: %@", exception);
     }
@@ -161,7 +155,9 @@
 }
 
 - (void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response {
-    NSLog(@"UPLOAD SUCCESS for: %@", request.requestTag);
+    S3GetObjectRequest *getReq = (S3GetObjectRequest *)request;
+    NSLog(@"UPLOAD SUCCESS for %@ Tribe: %@", [getReq bucket], request.requestTag);
+
     //[self listVybes];
     [self changeUpStatusFor:request.requestTag withStatus:UPLOADED];
     /* TODO: Saving changes to myVybesStore's status is redundant */
@@ -171,7 +167,8 @@
 }
 
 - (void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error {
-    NSLog(@"UPLOAD FAILED for: %@", request.requestTag);
+    S3GetObjectRequest *getReq = (S3GetObjectRequest *)request;
+    NSLog(@"UPLOAD FAILED for %@ Tribe: %@", [getReq bucket], request.requestTag);
     [self changeUpStatusFor:request.requestTag withStatus:UPFRESH];
 
 }

@@ -10,6 +10,7 @@
 
 @implementation VYBVybeCell
 @synthesize thumbnailImageView = _thumbnailImageView;
+@synthesize labelTitle = _labelTitle;
 
 - (void)customize {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -21,5 +22,24 @@
     [layer setCornerRadius:_thumbnailImageView.frame.size.width/2];
     [layer setMasksToBounds:YES];
 }
+
+- (void)customizeWithTitle:(NSString *)title {
+    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+    // Rotate the thumbnail image
+    CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
+    //_thumbnailImageView.transform = rotate;
+    UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(self.contentView.bounds.size.width/2 - 80, self.contentView.bounds.size.height/2 - 20, 160, 40)];
+    [labelTitle setText:title];
+    [labelTitle setTextColor:[UIColor whiteColor]];
+    [labelTitle setTextAlignment:NSTextAlignmentCenter];
+    [self.contentView addSubview:labelTitle];
+    [labelTitle setTransform:rotate];
+    _labelTitle = labelTitle;
+}
+
+- (void)prepareForReuse {
+    [_labelTitle removeFromSuperview];
+}
+
 
 @end

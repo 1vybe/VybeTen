@@ -28,6 +28,7 @@
     if (self) {
         [self setDeviceId:[aDecoder decodeObjectForKey:@"deviceId"]];
         [self setVybeKey:[aDecoder decodeObjectForKey:@"vybeKey"]];
+        [self setTribeName:[aDecoder decodeObjectForKey:@"tribeName"]];
         [self setVideoPath:[aDecoder decodeObjectForKey:@"videoPath"]];
         [self setThumbnailPath:[aDecoder decodeObjectForKey:@"thumbnailPath"]];
         [self setTimeStamp:[aDecoder decodeObjectForKey:@"timeStamp"]];
@@ -43,6 +44,7 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:deviceId forKey:@"deviceId"];
     [aCoder encodeObject:vybeKey forKey:@"vybeKey"];
+    [aCoder encodeObject:tribeName forKey:@"tribeName"];
     [aCoder encodeObject:videoPath forKey:@"videoPath"];
     [aCoder encodeObject:thumbnailPath forKey:@"thumbnailPath"];
     [aCoder encodeObject:timeStamp forKey:@"timeStamp"];
@@ -59,24 +61,29 @@
     [self setVybePath];
     if (!timeStamp) {
         //NSLog(@"timeStamp will be created for the first time for thie vybe");
-        NSDate *date = [self encodeKeyString:vyKey];
+        NSDate *date = [self decodeKeyString:vyKey];
         [self setTimeStamp:date];
     }
 
 }
 
-- (void)setTribeVybeKey:(NSString *)vyKey {
+- (void)setTribeName:(NSString *)name {
+    tribeName = name;
+}
+
+- (void)setTribe:(NSString *)name withKey:(NSString *)vyKey {
     vybeKey = vyKey;
-    [self setTribeVybePath];
+    [self setTribeName:name];
+    [self setTribeVybePathWith:name];
     if (!timeStamp) {
         //NSLog(@"timeStamp will be created for the first time for thie vybe");
-        NSDate *date = [self encodeKeyString:vyKey];
+        NSDate *date = [self decodeKeyString:vyKey];
         [self setTimeStamp:date];
     }
 }
 
 /* Returns a date object from the key string */
-- (NSDate *)encodeKeyString:(NSString *)str {
+- (NSDate *)decodeKeyString:(NSString *)str {
     //NSLog(@"encoding string: %@", str);
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss:SSS"];
@@ -102,10 +109,12 @@
     [self setThumbnailPath:[vidPath stringByReplacingOccurrencesOfString:@".mov" withString:@".jpeg"]];
 }
 
-- (void)setTribeVybePath {
+- (void)setTribeVybePathWith:(NSString *)name {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *vidPath = [documentsDirectory stringByAppendingPathComponent:@"Tribe"];
+    vidPath = [vidPath stringByAppendingPathComponent:name];
+    //NSLog(@"tribe video to be saved at:%@", vidPath);
     if (![[NSFileManager defaultManager] fileExistsAtPath:vidPath])
         [[NSFileManager defaultManager] createDirectoryAtPath:vidPath withIntermediateDirectories:YES attributes:nil error:nil];
     vidPath = [vidPath stringByAppendingPathComponent:vybeKey];
@@ -147,6 +156,10 @@
 
 - (NSString *)vybeKey {
     return vybeKey;
+}
+
+- (NSString *)tribeName {
+    return tribeName;
 }
 
 - (NSString *)videoPath {
@@ -198,12 +211,12 @@
 }
 
 - (BOOL)isFresherThan:(VYBVybe *)comp {
-    NSLog(@"%@ VS %@", [self timeStamp], [comp timeStamp]);
+    //NSLog(@"%@ VS %@", [self timeStamp], [comp timeStamp]);
     if ([[self timeStamp] compare:[comp timeStamp]] == NSOrderedDescending) {
-        NSLog(@"date1 is later than date2");
+        //NSLog(@"date1 is later than date2");
         return YES;
     } else {
-        NSLog(@"date1 is older than date2");
+        //NSLog(@"date1 is older than date2");
         return NO;
     }
 }
@@ -213,8 +226,14 @@
     NSTimeInterval timeDiff = [now timeIntervalSinceDate:[self timeStamp]];
     int timeD = (int)timeDiff;
     NSString *timePassedBy;
-    if (timeD >= 3600 * 24)
-        timePassedBy = [NSString stringWithFormat:@"%d %@ ago ", timeD/24, (timeD/24 == 1) ? @"day" : @"days"];
+    if (timeD >= 3600 * 24 * 365)
+        timePassedBy = [NSString stringWithFormat:@"%d %@ ago ", timeD/(3600*24*365), (timeD/(3600*24*365) == 1) ? @"year" : @"years"];
+    if (timeD >= 3600 * 24 * 30)
+        timePassedBy = [NSString stringWithFormat:@"%d %@ ago ", timeD/(3600*24*30), (timeD/(3600*24*30) == 1) ? @"month" : @"months"];
+    else if (timeD >= 3600 * 24 * 7)
+        timePassedBy = [NSString stringWithFormat:@"%d %@ ago ", timeD/(3600*24*7), (timeD/(3600*24*7) == 1) ? @"week" : @"weeks"];
+    else if (timeD >= 3600 * 24)
+        timePassedBy = [NSString stringWithFormat:@"%d %@ ago ", timeD/(3600*24), (timeD/(3600*24) == 1) ? @"day" : @"days"];
     else if (timeD >= 3600)
         timePassedBy = [NSString stringWithFormat:@"%dh %dm ago ", timeD/3600, (timeD%3600)/60];
     else if (timeD >= 60)

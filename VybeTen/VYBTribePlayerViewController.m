@@ -17,12 +17,16 @@
 @synthesize playerView = _playerView;
 @synthesize currItem = _currItem;
 @synthesize labelTime, labelDate;
+@synthesize tribeName = _tribeName;
 
 - (void)loadView {
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
-    self.view = playerView;
-    [self.view setFrame:[[UIScreen mainScreen] bounds]];
+    UIView *darkBackground = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [darkBackground setBackgroundColor:[UIColor blackColor]];
+    self.view = darkBackground;
+    [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
     self.playerView = playerView;
+    [self.view addSubview:playerView];
 }
 
 - (void)viewDidLoad
@@ -36,15 +40,15 @@
     swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipeRight];
     /* NOTE: Origin for menu button is (0, 0) */
-    // Adding menu button
-    CGRect buttonMenuFrame = CGRectMake(0, self.view.bounds.size.width - 48, 48, 48);
+    // Adding MENU button
+    CGRect buttonMenuFrame = CGRectMake(6, self.view.bounds.size.width - 40, 34, 34);
     UIButton *buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
     UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
     [buttonMenu setImage:menuImage forState:UIControlStateNormal];
     [buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonMenu];
-    // Adding capture button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 48, self.view.bounds.size.width - 48, 48, 48);
+    // Adding CAPTURE button
+    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 40, self.view.bounds.size.width - 40, 34, 34);
     UIButton *buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
     [buttonCapture setImage:captureImage forState:UIControlStateNormal];
@@ -52,16 +56,15 @@
     [self.view addSubview:buttonCapture];
 
     // Adding time label
-    CGRect labelTimeFrame = CGRectMake(self.view.bounds.size.height - 100, 0, 100, 48);
+    CGRect labelTimeFrame = CGRectMake(self.view.bounds.size.height/2 - 80, self.view.bounds.size.width - 48, 160, 48);
     labelTime = [[UILabel alloc] initWithFrame:labelTimeFrame];
     [labelTime setTextColor:[UIColor whiteColor]];
-    [labelTime setTextAlignment:NSTextAlignmentRight];
+    [labelTime setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:labelTime];
 
-    VYBVybe *v = [[[VYBMyTribeStore sharedStore] myTribesVybes] objectAtIndex:playIndex];
+    VYBVybe *v = [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] objectAtIndex:playIndex];
     [labelTime setText:[v howOld]];
     
-
     // Start playing videos downloaded from the server
     // Find a vybe to play and set up playerLayer
     NSString *videoPath = [v videoPath];
@@ -88,8 +91,11 @@
 - (void)playbackFrom:(NSInteger)from {
     // Remove the playerItem that just finished playing
     [[NSNotificationCenter defaultCenter] removeObserver:self.currItem];
-    if (from < [[[VYBMyTribeStore sharedStore] myTribesVybes] count]) {
-        VYBVybe *v = [[[VYBMyTribeStore sharedStore] myTribesVybes] objectAtIndex:from];
+    if (from < [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] count]) {
+        [UIView animateWithDuration:0.1 animations:^{
+            self.playerView.alpha = 0.0f;
+        }];
+        VYBVybe *v = [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] objectAtIndex:from];
         [labelTime setText:[v howOld]];
         NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
@@ -97,6 +103,9 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
         [self.player replaceCurrentItemWithPlayerItem:self.currItem];
         [self.player play];
+        [UIView animateWithDuration:0.8 animations:^{
+            self.playerView.alpha = 1.0f;
+        }];
     }
 }
 
@@ -120,7 +129,7 @@
 }
 
 - (void)goToMenu {
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning

@@ -17,6 +17,7 @@
 @property (nonatomic) VYBPlayerView *playerView;
 @property (nonatomic) UILabel *labelDate;
 @property (nonatomic) UILabel *labelTime;
+@property (nonatomic) NSString *tribeName;
 
 - (void)playFrom:(NSInteger)from;
 - (void)captureVybe;

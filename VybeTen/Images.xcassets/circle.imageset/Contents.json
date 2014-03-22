@@ -3,11 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "VybeiOS_SwitchCam.png"
+      "filename" : "circle.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x"
+      "scale" : "2x",
+      "filename" : "circle-1.png"
     }
   ],
   "info" : {

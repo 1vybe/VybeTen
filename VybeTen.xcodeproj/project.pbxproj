@@ -12,6 +12,7 @@
 		0243CC9818CC665200CA03C0 /* VYBReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */; };
 		024B0E2B18BB39E30073574E /* VYBImageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2A18BB39E30073574E /* VYBImageStore.m */; };
 		024B0E2E18BB39FF0073574E /* VYBVideoStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2D18BB39FF0073574E /* VYBVideoStore.m */; };
+		024C28D718DBCE0600399980 /* VYBTribeVybesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */; };
 		0255736918DB96C6008B1B20 /* VYBCaptureProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0255736818DB96C6008B1B20 /* VYBCaptureProgressView.m */; };
 		025DE65718CB143D0054F739 /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65518CB143D0054F739 /* AWSRuntime.framework */; };
 		025DE65818CB143D0054F739 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65618CB143D0054F739 /* AWSS3.framework */; };
@@ -64,6 +65,8 @@
 		024B0E2A18BB39E30073574E /* VYBImageStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBImageStore.m; sourceTree = "<group>"; };
 		024B0E2C18BB39FF0073574E /* VYBVideoStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVideoStore.h; sourceTree = "<group>"; };
 		024B0E2D18BB39FF0073574E /* VYBVideoStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVideoStore.m; sourceTree = "<group>"; };
+		024C28D518DBCE0600399980 /* VYBTribeVybesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTribeVybesViewController.h; sourceTree = "<group>"; };
+		024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBTribeVybesViewController.m; sourceTree = "<group>"; };
 		0255736718DB96C6008B1B20 /* VYBCaptureProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCaptureProgressView.h; sourceTree = "<group>"; };
 		0255736818DB96C6008B1B20 /* VYBCaptureProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCaptureProgressView.m; sourceTree = "<group>"; };
 		025DE65518CB143D0054F739 /* AWSRuntime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSRuntime.framework; sourceTree = "<group>"; };
@@ -189,6 +192,8 @@
 				022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */,
 				6043968618CAD8A70090F3AE /* VYBMyTribeViewController.h */,
 				6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */,
+				024C28D518DBCE0600399980 /* VYBTribeVybesViewController.h */,
+				024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */,
 				60B0DCE918BDCC4E007F4D5C /* VYBVybeCell.h */,
 				60B0DCEA18BDCC4E007F4D5C /* VYBVybeCell.m */,
 				6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */,
@@ -295,6 +300,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Vybe;
 				TargetAttributes = {
+					604B627818B495BB00D3EF19 = {
+						DevelopmentTeam = KV65D55DL4;
+					};
 					604B629318B495BB00D3EF19 = {
 						TestTargetID = 604B627818B495BB00D3EF19;
 					};
@@ -355,6 +363,7 @@
 				6043968B18CAE4A60090F3AE /* VYBMyTribeStore.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
+				024C28D718DBCE0600399980 /* VYBTribeVybesViewController.m in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				024B0E2E18BB39FF0073574E /* VYBVideoStore.m in Sources */,
 				022296DE18BCA24C0096BB30 /* VYBMyVybesViewController.m in Sources */,

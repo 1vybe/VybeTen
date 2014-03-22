@@ -91,9 +91,9 @@
     
     BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
     if (success)
-        NSLog(@"My vybes are saved. :)");
+        NSLog(@"Vybe put to sleep. My vybes are saved. :)");
     else
-        NSLog(@"My vybes will be lost. :(");
+        NSLog(@"Vybe put to sleep. My vybes will be lost. :(");
     
     success = [[VYBMyTribeStore sharedStore] saveChanges];
     if (success)
@@ -119,9 +119,9 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
     if (success)
-        NSLog(@"My vybes are saved. :)");
+        NSLog(@"Vybe terminated. My vybes are saved. :)");
     else
-        NSLog(@"My vybes will be lost. :(");
+        NSLog(@"Vybe terminated. My vybes will be lost. :(");
     
     success = [[VYBMyTribeStore sharedStore] saveChanges];
     if (success)

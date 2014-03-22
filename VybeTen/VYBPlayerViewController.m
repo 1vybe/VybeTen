@@ -16,13 +16,16 @@
 @synthesize player = _player;
 @synthesize playerView = _playerView;
 @synthesize currItem = _currItem;
-@synthesize labelTime, labelDate;
+@synthesize labelTime = _labelTime;
 
 - (void)loadView {
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
-    self.view = playerView;
-    [self.view setFrame:[[UIScreen mainScreen] bounds]];
+    UIView *darkBackground = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [darkBackground setBackgroundColor:[UIColor blackColor]];
+    self.view = darkBackground;
+    [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
     self.playerView = playerView;
+    [self.view addSubview:playerView];
 }
 - (void)viewDidLoad
 {
@@ -36,34 +39,30 @@
     [self.view addGestureRecognizer:swipeRight];
     /* NOTE: Origin for menu button is (0, 0) */
     // Adding menu button
-    CGRect buttonMenuFrame = CGRectMake(0, self.view.bounds.size.width - 48, 48, 48);
+    CGRect buttonMenuFrame = CGRectMake(6, self.view.bounds.size.width - 40, 34, 34);
     UIButton *buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
     UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
     [buttonMenu setImage:menuImage forState:UIControlStateNormal];
     [buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonMenu];
     // Adding capture button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 48, self.view.bounds.size.width - 48, 48, 48);
+    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 40, self.view.bounds.size.width - 40, 34, 34);
     UIButton *buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
     [buttonCapture setImage:captureImage forState:UIControlStateNormal];
     [buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonCapture];
-    // Adding date label
-    CGRect labelDateFrame = CGRectMake(self.view.bounds.size.height/2 - 60, 0, 120, 48);
-    labelDate = [[UILabel alloc] initWithFrame:labelDateFrame];
-    [labelDate setTextColor:[UIColor whiteColor]];
-    [self.view addSubview:labelDate];
+
     // Adding time label
-    CGRect labelTimeFrame = CGRectMake(self.view.bounds.size.height - 100, 0, 100, 48);
-    labelTime = [[UILabel alloc] initWithFrame:labelTimeFrame];
-    [labelTime setTextColor:[UIColor whiteColor]];
-    [self.view addSubview:labelTime];
+    CGRect labelTimeFrame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 48, 200, 48);
+    self.labelTime = [[UILabel alloc] initWithFrame:labelTimeFrame];
+    [self.labelTime setTextColor:[UIColor whiteColor]];
+    [self.labelTime setTextAlignment:NSTextAlignmentCenter];
+    [self.view addSubview:self.labelTime];
     
     // Find a vybe to play and set up playerLayer
     VYBVybe *v = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:playIndex];
-    [labelDate setText:[v dateString]];
-    [labelTime setText:[v timeString]];
+    [self.labelTime setText:[NSString stringWithFormat:@"%@ %@",[v dateString], [v timeString]]];
     NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
@@ -88,15 +87,22 @@
     // Remove the playerItem that just finished playing
     [[NSNotificationCenter defaultCenter] removeObserver:self.currItem];
     if (from < [[[VYBMyVybeStore sharedStore] myVybes] count]) {
+        // Fade-out effect
+        [UIView animateWithDuration:0.1 animations:^{
+            self.playerView.alpha = 0.0f;
+        }];
         VYBVybe *v = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:from];
-        [labelDate setText:[v dateString]];
-        [labelTime setText:[v timeString]];
+        [self.labelTime setText:[NSString stringWithFormat:@"%@ %@", [v dateString], [v timeString]]];
         NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
         self.currItem = [AVPlayerItem playerItemWithAsset:asset];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
         [self.player replaceCurrentItemWithPlayerItem:self.currItem];
         [self.player play];
+        // Fade-in effect
+        [UIView animateWithDuration:0.8 animations:^{
+            self.playerView.alpha = 1.0f;
+        }];
     }
 }
 
@@ -119,7 +125,7 @@
 }
 
 - (void)goToMenu {
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning

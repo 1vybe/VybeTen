@@ -14,20 +14,23 @@
     NSString *vybePath;
     NSString *videoPath;
     NSString *thumbnailPath;
+    NSString *tribeName;
     NSDate *timeStamp;
     int upStatus; int downStatus;
 }
 - (id)initWithDeviceId:(NSString *)devId;
 - (void)setDeviceId:(NSString *)devId;
 - (void)setVybeKey:(NSString *)vyKey;
-- (void)setTribeVybeKey:(NSString *)key;
+- (void)setTribe:(NSString *)name withKey:(NSString *)key;
 - (void)setUpStatus:(int)us;
 - (void)setDownStatus:(int)ds;
 - (void)setTimeStamp:(NSDate *)date;
+- (void)setTribeName:(NSString *)name;
 - (NSString *)deviceId;
 - (NSString *)vybeKey;
 - (NSString *)videoPath;
 - (NSString *)thumbnailPath;
+- (NSString *)tribeName;
 - (int)upStatus;
 - (int)downStatus;
 - (NSDate *)timeStamp;

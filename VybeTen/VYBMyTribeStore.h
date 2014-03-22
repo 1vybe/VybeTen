@@ -11,17 +11,18 @@
 #import "VYBVybe.h"
 
 @interface VYBMyTribeStore : NSObject <AmazonServiceRequestDelegate> {
-    NSMutableArray *myTribesVybes;
+    NSMutableDictionary *myTribesVybes;
     NSString *adId;
 }
 @property (nonatomic) AmazonS3Client *s3;
 
 + (VYBMyTribeStore *)sharedStore;
-- (NSArray *)myTribesVybes;
+- (NSDictionary *)myTribesVybes;
 
-- (void)syncMyTribesWithCloud;
-- (NSString *)videoPathAtIndex:(NSInteger)index;
-- (NSString *)thumbPathAtIndex:(NSInteger)index;
+- (void)refreshTribes;
+- (void)syncWithCloudForTribe:(NSString *)tribeName;
+- (NSString *)videoPathAtIndex:(NSInteger)index forTribe:(NSString *)name;
+- (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name;;
 - (NSString *)myTribesArchivePath;
 - (void)listVybes;
 - (BOOL)saveChanges;

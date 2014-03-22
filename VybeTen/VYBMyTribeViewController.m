@@ -11,8 +11,10 @@
 #import "VYBImageStore.h"
 #import "VYBMyTribeStore.h"
 #import "VYBTribePlayerViewController.h"
+#import "VYBTribeVybesViewController.h"
 
 @implementation VYBMyTribeViewController
+
 @synthesize buttonMenu = _buttonMenu;
 @synthesize buttonCapture = _buttonCapture;
 
@@ -37,7 +39,7 @@
     // Rotate the tableView for horizontal scrolling
     CGAffineTransform rotateTable = CGAffineTransformMakeRotation(-M_PI_2);
     self.tableView.transform = rotateTable;
-    [self.tableView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.4]];
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.tableView setRowHeight:200.0f];
     self.tableView.showsVerticalScrollIndicator = NO;
@@ -45,8 +47,8 @@
     [blurredView setBarStyle:UIBarStyleBlack];
     [self.tableView setBackgroundView:blurredView];
     
-    // Adding capture button
-    CGRect buttonCaptureFrame = CGRectMake(0, self.view.bounds.size.height - 48, 48, 48);
+    // Adding CAPTURE button
+    CGRect buttonCaptureFrame = CGRectMake(6, self.view.bounds.size.height - 40, 34, 34);
     self.buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
     [self.buttonCapture setImage:captureImage forState:UIControlStateNormal];
@@ -54,8 +56,8 @@
     self.buttonCapture.transform = rotation;
     [self.buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonCapture];
-    // Adding menu button
-    CGRect buttonMenuFrame = CGRectMake(0, 0, 48, 48);
+    // Adding MENU button
+    CGRect buttonMenuFrame = CGRectMake(6, 6, 34, 34);
     self.buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
     UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
     [self.buttonMenu setImage:menuImage forState:UIControlStateNormal];
@@ -63,22 +65,13 @@
     [self.buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonMenu];
     
-    [[VYBMyTribeStore sharedStore] syncMyTribesWithCloud];
+    [[VYBMyTribeStore sharedStore] refreshTribes];
 }
 
-/* Scroll to the bottom of table */
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    NSInteger idx = [[[VYBMyTribeStore sharedStore] myTribesVybes] count] - 1;
-    if (idx < 0)
-        return;
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[VYBMyTribeStore sharedStore] myTribesVybes] count];
+    return [[[[VYBMyTribeStore sharedStore] myTribesVybes] allKeys] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -88,25 +81,21 @@
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBVybeCell" owner:self options:nil];
         cell = [nib objectAtIndex:0];
     }
-    NSString *thumbPath = [[VYBMyTribeStore sharedStore] thumbPathAtIndex:[indexPath row]];
-    // Cache thumbnail images into a memory
-    UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:thumbPath];
-    if (!thumbImg) {
-        thumbImg = [UIImage imageWithContentsOfFile:thumbPath];
-        if (thumbImg)
-            [[VYBImageStore sharedStore] setImage:thumbImg forKey:thumbPath];
-    }
-    // Customize cell
-    [cell.thumbnailImageView setImage:thumbImg];
-    [cell customize];
-    
+    NSArray *keys = [[[VYBMyTribeStore sharedStore] myTribesVybes] allKeys];
+    //NSLog(@"there are %d keys", [keys count]);
+    NSString *title = [keys objectAtIndex:[indexPath row]];
+    [cell customizeWithTitle:title];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    VYBTribePlayerViewController *playerVC = [[VYBTribePlayerViewController alloc] init];
-    [playerVC playFrom:[indexPath row]];
-    [self.navigationController pushViewController:playerVC animated:NO];
+    NSArray *keys = [[[VYBMyTribeStore sharedStore] myTribesVybes] allKeys];
+    NSLog(@"there are %d keys", [keys count]);
+    NSString *title = [keys objectAtIndex:[indexPath row]];
+    VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
+    NSLog(@"TribeVybesVC initiated for %@ Tribe", title);
+    [vybesVC setTribeName:title];
+    [self.navigationController pushViewController:vybesVC animated:YES];
 }
 
 
@@ -115,7 +104,7 @@
 }
 
 - (void)goToMenu {
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 /**
@@ -128,7 +117,7 @@
     self.buttonMenu.frame = frame;
     
     CGRect frameTwo = self.buttonCapture.frame;
-    frameTwo.origin.y =scrollView.contentOffset.y + self.view.bounds.size.height - 48;
+    frameTwo.origin.y =scrollView.contentOffset.y + self.view.bounds.size.height - 40;
     self.buttonCapture.frame = frameTwo;
     
     [[self view] bringSubviewToFront:self.buttonMenu];

@@ -48,7 +48,7 @@
     [self.view insertSubview:blurredView atIndex:0];
 
     // Adding flip button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 48, self.view.bounds.size.width - 48, 48, 48);
+    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 40, self.view.bounds.size.width - 40, 34, 34);
     UIButton *buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
     [buttonCapture setImage:captureImage forState:UIControlStateNormal];
@@ -82,12 +82,12 @@
 
 - (void)goToMyVybes:(id)sender {
     VYBMyVybesViewController *myVybesVC = [[VYBMyVybesViewController alloc] init];
-    [[self navigationController] pushViewController:myVybesVC animated:NO];
+    [[self navigationController] pushViewController:myVybesVC animated:YES];
 }
 
 - (void)goToMyTribes:(id)sender {
     VYBMyTribeViewController *myTribeVC = [[VYBMyTribeViewController alloc] init];
-    [[self navigationController] pushViewController:myTribeVC animated:NO];
+    [[self navigationController] pushViewController:myTribeVC animated:YES];
 }
 
 - (void)didReceiveMemoryWarning

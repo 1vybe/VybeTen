@@ -45,24 +45,37 @@
         NSString *path = [self myTribesArchivePath];
         myTribesVybes = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
         if (!myTribesVybes)
-            myTribesVybes = [[NSMutableArray alloc] init];
+            myTribesVybes = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
 
-- (NSArray *)myTribesVybes {
+- (NSDictionary *)myTribesVybes {
     return myTribesVybes;
 }
 
-- (void)syncMyTribesWithCloud {
-    NSLog(@"Already existing %u in myTribesVybes", [myTribesVybes count]);
+
+- (void)refreshTribes {
+    NSLog(@"Refreshing tribe lists");
+    @try {
+        S3ListBucketsRequest *bucketReq = [[S3ListBucketsRequest alloc] init];
+        bucketReq.requestTag=@"ListBuckets";
+        bucketReq.delegate = self;
+        [self.s3 listBuckets:bucketReq];
+    } @catch (AmazonServiceException *exception) {
+        NSLog(@"[MyTribe]AWS error: %@", exception);
+    }
+}
+
+- (void)syncWithCloudForTribe:(NSString *)name {
+    NSLog(@"Already existing %u vybes in %@ Tribe", [[myTribesVybes objectForKey:name] count], name);
 
     //[self listVybes];
     @try {
-        NSLog(@"Synching My Tribe with cloud");
-        S3ListObjectsRequest *lor = [[S3ListObjectsRequest alloc] initWithName:BUCKET_NAME];
+        NSLog(@"Synching with %@ Tribe", name);
+        S3ListObjectsRequest *lor = [[S3ListObjectsRequest alloc] initWithName:name];
         lor.delegate = self;
-        lor.requestTag = @"listObjects";
+        lor.requestTag = @"ListVybesToDownload";
         [self.s3 listObjects:lor];
       } @catch (AmazonServiceException *exception) {
         NSLog(@"[MyTribe]AWS Error: %@", exception);
@@ -75,26 +88,29 @@
 }
 
 
-- (void)addNewVybeWithKey:(NSString *)key {
-    if ( [self vybeWithKey:key] )
+
+
+- (void)addNewVybeWithKey:(NSString *)key forTribe:(NSString *)name{
+    
+    if ( [self vybeWithKey:key forTribe:name] )
         return;
     NSInteger i = 0;
-    NSLog(@"basket size: %d", [myTribesVybes count]);
-    for (; i < [myTribesVybes count]; i++) {
+    //NSLog(@"basket size: %d", [[myTribesVybes objectForKey:name] count]);
+    for (; i < [[myTribesVybes objectForKey:name] count]; i++) {
         VYBVybe *tempV = [[VYBVybe alloc] init];
-        [tempV setTribeVybeKey:key];
-        if (![tempV isFresherThan:[myTribesVybes objectAtIndex:i]]) {
-            NSLog(@"OLDER");
+        [tempV setTribe:name withKey:key];
+        if (![tempV isFresherThan:[[myTribesVybes objectForKey:name] objectAtIndex:i]]) {
+            //NSLog(@"OLDER");
             break;
         }
     }
     
-    NSLog(@"adding a new tribe vybe at %d", i);
+    //NSLog(@"adding a new tribe vybe at %d", i);
 
     VYBVybe *newVybe = [[VYBVybe alloc] init];
-    [newVybe setTribeVybeKey:key];
+    [newVybe setTribe:name withKey:key];
     [newVybe setDownStatus:DOWNFRESH];
-    [myTribesVybes insertObject:newVybe atIndex:i];
+    [[myTribesVybes objectForKey:name] insertObject:newVybe atIndex:i];
     [self saveChanges];
 }
 
@@ -112,9 +128,20 @@
 
 -(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response
 {
+    
+    if ( [request.requestTag isEqualToString:@"ListBuckets"] ) {
+        S3ListBucketsResponse *buckets = (S3ListBucketsResponse *)response;
+        S3ListBucketsResult *result = buckets.listBucketsResult;
+        NSLog(@"There are %d Tribes", [result.buckets count]);
+        for (S3Bucket *bucket in result.buckets) {
+            if (![myTribesVybes objectForKey:bucket.name] && ![bucket.name isEqualToString:@"vybes"]) {
+                NSLog(@"Creating %@ Tribe for the first time", bucket.name);
+                [myTribesVybes setObject:[[NSMutableArray alloc] init] forKey:bucket.name];
+            }
+        }
+    }
 
-    if ( [request.requestTag isEqualToString:@"listObjects"] ) {
-        NSLog(@"listing!!!!!!");
+    else if ( [request.requestTag isEqualToString:@"ListVybesToDownload"] ) {
         S3ListObjectsResponse *listResponse = (S3ListObjectsResponse *)response;
         S3ListObjectsResult *result = listResponse.listObjectsResult;
         NSLog(@"There are %d in the server", [result.objectSummaries count]);
@@ -122,12 +149,12 @@
             return;
                 else {
             for (S3ObjectSummary *obj in result.objectSummaries) {
-                S3GetObjectRequest *gor = [[S3GetObjectRequest alloc] initWithKey:[obj key] withBucket:BUCKET_NAME];
+                S3GetObjectRequest *gor = [[S3GetObjectRequest alloc] initWithKey:[obj key] withBucket:result.bucketName];
                 gor.delegate = self;
                 gor.requestTag = [obj key];
                 // add only if it's new
-                [self addNewVybeWithKey:[obj key]];
-                if ([self downStatusForVybeWithKey:[obj key]] == DOWNFRESH ) {
+                [self addNewVybeWithKey:[obj key] forTribe:result.bucketName];
+                if ([self downStatusForVybeWithKey:[obj key] forTribe:result.bucketName] == DOWNFRESH ) {
                     NSLog(@"new downloading");
                     [self.s3 getObject:gor];
                 }
@@ -136,8 +163,9 @@
         }
     }
     else {
-        NSLog(@"down success");
-        VYBVybe *v = [self vybeWithKey:request.requestTag];
+        S3GetObjectRequest *getReq = (S3GetObjectRequest *)request;
+        NSLog(@"down success for %@ Tribe", [getReq bucket]);
+        VYBVybe *v = [self vybeWithKey:request.requestTag forTribe:[getReq bucket]];
         NSString *videoPath = [v videoPath];
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:videoPath];
         NSData *received = [[NSData alloc] initWithData:response.body];
@@ -145,14 +173,15 @@
         
         [self saveThumbnailImageForVybe:v];
 
-        [self changeDownStatusFor:request.requestTag withStatus:DOWNLOADED];
+        [self changeDownStatusFor:request.requestTag forTribe:[getReq bucket] withStatus:DOWNLOADED];
     }
 }
 
 -(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error
 {
     NSLog(@"Error occured while receiving a file");
-    [self changeDownStatusFor:request.requestTag withStatus:DOWNFRESH];
+    S3GetObjectRequest *getReq = (S3GetObjectRequest *)request;
+    [self changeDownStatusFor:request.requestTag forTribe:[getReq bucket] withStatus:DOWNFRESH];
 }
 
 - (void)saveThumbnailImageForVybe:(VYBVybe *)v {
@@ -171,12 +200,12 @@
     [thumbData writeToURL:thumbURL atomically:YES];
 }
 
-- (NSString *)videoPathAtIndex:(NSInteger)index {
-    return [[myTribesVybes objectAtIndex:index] videoPath];
+- (NSString *)videoPathAtIndex:(NSInteger)index forTribe:(NSString *)name{
+    return [[[myTribesVybes objectForKey:name] objectAtIndex:index] videoPath];
 }
 
-- (NSString *)thumbPathAtIndex:(NSInteger)index {
-    return [[myTribesVybes objectAtIndex:index] thumbnailPath];
+- (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name{
+    return [[[myTribesVybes objectForKey:name] objectAtIndex:index] thumbnailPath];
 }
 
 - (NSString *)myTribesArchivePath {
@@ -192,24 +221,24 @@
     return [NSKeyedArchiver archiveRootObject:myTribesVybes toFile:path];
 }
 
-- (VYBVybe *)vybeWithKey:(NSString *)key {
-    for (VYBVybe *v in myTribesVybes)
+- (VYBVybe *)vybeWithKey:(NSString *)key forTribe:(NSString *)name{
+    for (VYBVybe *v in [myTribesVybes objectForKey:name])
         if ( [[v vybeKey] isEqualToString:key] )
             return v;
     
     return nil;
 }
 
-- (void)changeDownStatusFor:(NSString *)key withStatus:(int)status{
-    for (VYBVybe *v in myTribesVybes) {
+- (void)changeDownStatusFor:(NSString *)key forTribe:(NSString *)name withStatus:(int)status{
+    for (VYBVybe *v in [myTribesVybes objectForKey:name]) {
         if ( [[v vybeKey] isEqualToString:key] ) {
             [v setDownStatus:status];
         }
     }
 }
 
-- (int)downStatusForVybeWithKey:(NSString *)key {
-    for (VYBVybe *v in myTribesVybes) {
+- (int)downStatusForVybeWithKey:(NSString *)key forTribe:(NSString *)name{
+    for (VYBVybe *v in [myTribesVybes objectForKey:name]) {
         if ( [[v vybeKey] isEqualToString:key] ) {
             return [v downStatus];
         }

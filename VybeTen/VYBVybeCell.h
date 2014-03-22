@@ -10,5 +10,7 @@
 
 @interface VYBVybeCell : UITableViewCell
 @property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
+@property (nonatomic, weak) UILabel *labelTitle;
 - (void)customize;
+- (void)customizeWithTitle:(NSString *)title;
 @end

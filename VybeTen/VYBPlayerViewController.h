@@ -15,7 +15,6 @@
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *currItem;
 @property (nonatomic) VYBPlayerView *playerView;
-@property (nonatomic) UILabel *labelDate;
 @property (nonatomic) UILabel *labelTime;
 
 - (void)captureVybe;
