@@ -84,7 +84,7 @@
 }
 
 - (void)playerItemDidReachEnd {
-    playIndex++;
+    playIndex--;
     [self playbackFrom:playIndex];
 }
 
@@ -115,12 +115,12 @@
  **/
 
 - (void)swipeLeft {
-    playIndex++;
+    playIndex--;
     [self playbackFrom:playIndex];
 }
 
 - (void)swipeRight {
-    playIndex--;
+    playIndex++;
     [self playbackFrom:playIndex];
 }
 
@@ -129,7 +129,7 @@
 }
 
 - (void)goToMenu {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (void)didReceiveMemoryWarning

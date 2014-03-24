@@ -30,11 +30,12 @@
 }
 @synthesize labelTimer, buttonFlip, buttonMenu;
 
+/*
 // Fix orientation to landscapeRight
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskLandscapeRight;
 }
-
+*/
 - (void)loadView {
     // Retrieves this device's unique ID
     adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
@@ -79,7 +80,7 @@
     // Adding timer label
     labelTimer = [[VYBCaptureProgressView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.width - (48+10), self.view.bounds.size.height, 10)];
     [self.view addSubview:labelTimer];
-
+    
 }
 
 
@@ -190,6 +191,7 @@
     }
     
     if (recordSuccess) {
+        NSLog(@"Record succes");
         // Prompt a review screen to save it or not
         VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
         [replayVC setVybe:newVybe];

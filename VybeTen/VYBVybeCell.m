@@ -14,7 +14,18 @@
 
 - (void)customize {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
-    // Rotate the thumbnail image
+    // Rotate the thumbnail image counter-clockwise
+    CGAffineTransform rotate = CGAffineTransformMakeRotation(-M_PI_2);
+    _thumbnailImageView.transform = rotate;
+    // Crop the image to circle
+    CALayer *layer = _thumbnailImageView.layer;
+    [layer setCornerRadius:_thumbnailImageView.frame.size.width/2];
+    [layer setMasksToBounds:YES];
+}
+
+- (void)customizeOtherDirection {
+    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+    // Rotate the thumbnail image counter-clockwise
     CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
     _thumbnailImageView.transform = rotate;
     // Crop the image to circle
@@ -26,12 +37,12 @@
 - (void)customizeWithTitle:(NSString *)title {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     // Rotate the thumbnail image
-    CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
-    //_thumbnailImageView.transform = rotate;
+    CGAffineTransform rotate = CGAffineTransformMakeRotation(-M_PI_2);
     UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(self.contentView.bounds.size.width/2 - 80, self.contentView.bounds.size.height/2 - 20, 160, 40)];
     [labelTitle setText:title];
     [labelTitle setTextColor:[UIColor whiteColor]];
     [labelTitle setTextAlignment:NSTextAlignmentCenter];
+    [labelTitle setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18]];
     [self.contentView addSubview:labelTitle];
     [labelTitle setTransform:rotate];
     _labelTitle = labelTitle;

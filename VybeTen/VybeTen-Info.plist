@@ -2,6 +2,23 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Montreal-Bold.otf</string>
+		<string>Montreal-BoldIta.otf</string>
+		<string>Montreal-DemiBold.otf</string>
+		<string>Montreal-DemiBoldIta.otf</string>
+		<string>Montreal-Heavy.otf</string>
+		<string>Montreal-HeavyIta.otf</string>
+		<string>Montreal-Light.otf</string>
+		<string>Montreal-LightIta.otf</string>
+		<string>Montreal-Medium.otf</string>
+		<string>Montreal-MediumIta.otf</string>
+		<string>Montreal-Regular.otf</string>
+		<string>Montreal-RegularIta.otf</string>
+		<string>Montreal-Xlight.otf</string>
+		<string>Montreal-XlightIta.otf</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>

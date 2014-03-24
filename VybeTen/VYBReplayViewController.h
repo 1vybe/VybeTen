@@ -19,6 +19,7 @@
 @property (nonatomic) VYBPlayerView *playerView;
 @property (nonatomic) UIButton *buttonSave;
 @property (nonatomic) UIButton *buttonDiscard;
+@property (nonatomic) UIButton *buttonCancel;
 @property (nonatomic) UIImageView *instruction;
 @property (nonatomic) VYBVybe *vybe;
 @property (nonatomic) NSURL *replayURL;

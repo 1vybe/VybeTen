@@ -25,11 +25,12 @@
     return self;
 }
 
-
+/*
 // Fix orientation to landscapeRight
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskLandscapeRight;
 }
+*/
 
 - (void)loadView {
     UIView *theView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -82,12 +83,12 @@
 
 - (void)goToMyVybes:(id)sender {
     VYBMyVybesViewController *myVybesVC = [[VYBMyVybesViewController alloc] init];
-    [[self navigationController] pushViewController:myVybesVC animated:YES];
+    [[self navigationController] pushViewController:myVybesVC animated:NO];
 }
 
 - (void)goToMyTribes:(id)sender {
     VYBMyTribeViewController *myTribeVC = [[VYBMyTribeViewController alloc] init];
-    [[self navigationController] pushViewController:myTribeVC animated:YES];
+    [[self navigationController] pushViewController:myTribeVC animated:NO];
 }
 
 - (void)didReceiveMemoryWarning

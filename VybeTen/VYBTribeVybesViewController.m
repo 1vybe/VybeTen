@@ -35,8 +35,8 @@
     [super viewDidLoad];
     
     self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
-    // Rotate the tableView for horizontal scrolling
-    CGAffineTransform rotateTable = CGAffineTransformMakeRotation(-M_PI_2);
+    // Rotate the tableView clockwise for horizontal scrolling
+    CGAffineTransform rotateTable = CGAffineTransformMakeRotation(M_PI_2);
     self.tableView.transform = rotateTable;
     [self.tableView setBackgroundColor:[UIColor clearColor]];
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -47,35 +47,47 @@
     [self.tableView setBackgroundView:blurredView];
     
     // Adding CAPTURE button
-    CGRect buttonCaptureFrame = CGRectMake(6, self.view.bounds.size.height - 40, 34, 34);
+    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 40, 6, 34, 34);
     self.buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
     [self.buttonCapture setImage:captureImage forState:UIControlStateNormal];
-    CGAffineTransform rotation = CGAffineTransformMakeRotation(M_PI_2);
-    self.buttonCapture.transform = rotation;
+    CGAffineTransform counterClockwise = CGAffineTransformMakeRotation(-M_PI_2);
+    self.buttonCapture.transform = counterClockwise;
     [self.buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonCapture];
     // Adding BACK button
-    CGRect buttonBackFrame = CGRectMake(6, 6, 34, 34);
+    CGRect buttonBackFrame = CGRectMake(self.view.bounds.size.width - 40, self.view.bounds.size.height - 40, 34, 34);
     self.buttonBack = [[UIButton alloc] initWithFrame:buttonBackFrame];
     UIImage *backImage = [UIImage imageNamed:@"button_back.png"];
     [self.buttonBack setImage:backImage forState:UIControlStateNormal];
-    self.buttonBack.transform = rotation;
+    self.buttonBack.transform = counterClockwise;
     [self.buttonBack addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonBack];
     
+    // Adding a refresh control
+    UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
+    refresh.tintColor = [UIColor whiteColor];
+    [refresh addTarget:self action:@selector(refreshTribeVybes:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:refresh];
+    
+    //NSLog(@"[TribeVybesViewController]view loaded. Let's sync!");
     [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:self.tribeName];
 }
 
-/* Scroll to the bottom of table */
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    NSInteger idx = [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] count] - 1;
-    if (idx < 0)
-        return;
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+- (void)viewDidDisappear:(BOOL)animated {
+    [[VYBMyTribeStore sharedStore] saveChanges];
+    [super viewDidDisappear:animated];
 }
+
+
+- (void)refreshTribeVybes:(UIRefreshControl *)refresh {
+    [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:self.tribeName];
+    NSLog(@"synching really done");
+    [self.tableView reloadData];
+    [refresh endRefreshing];
+    return;
+}
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -116,7 +128,7 @@
 }
 
 - (void)goBack {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 /**
@@ -125,11 +137,11 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGRect frame = self.buttonBack.frame;
-    frame.origin.y = scrollView.contentOffset.y;
+    frame.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 40;
     self.buttonBack.frame = frame;
     
     CGRect frameTwo = self.buttonCapture.frame;
-    frameTwo.origin.y =scrollView.contentOffset.y + self.view.bounds.size.height - 40;
+    frameTwo.origin.y =scrollView.contentOffset.y + 6;
     self.buttonCapture.frame = frameTwo;
     
     [[self view] bringSubviewToFront:self.buttonBack];

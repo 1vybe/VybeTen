@@ -72,6 +72,12 @@
     [[VYBMyVybeStore sharedStore] delayedUploadsBegin];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    NSLog(@"view did appear for MyVybesVC");
+    [super viewDidAppear:animated];
+    [[VYBMyVybeStore sharedStore] delayedUploadsBegin];
+}
+
 /* Scroll down to the bottom to show recent vybes first */
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -100,11 +106,12 @@
     if (!thumbImg) {
         //NSLog(@"MyVybe ThumbImg:%@", [vybe thumbnailPath]);
         thumbImg = [UIImage imageWithContentsOfFile:[vybe thumbnailPath]];
-        [[VYBImageStore sharedStore] setImage:thumbImg forKey:[vybe thumbnailPath]];
+        if (thumbImg)
+            [[VYBImageStore sharedStore] setImage:thumbImg forKey:[vybe thumbnailPath]];
     }
     // Customize cell
     [cell.thumbnailImageView setImage:thumbImg];
-    [cell customize];
+    [cell customizeOtherDirection];
 
     return cell;
 }
@@ -120,7 +127,7 @@
 }
 
 - (void)goToMenu {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 /**

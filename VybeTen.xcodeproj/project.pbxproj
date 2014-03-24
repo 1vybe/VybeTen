@@ -17,6 +17,20 @@
 		025DE65718CB143D0054F739 /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65518CB143D0054F739 /* AWSRuntime.framework */; };
 		025DE65818CB143D0054F739 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65618CB143D0054F739 /* AWSS3.framework */; };
 		025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 025DE65A18CB16E30054F739 /* VYBConstants.m */; };
+		02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */; };
+		02D11D0618DF62AC0018DA97 /* Montreal-BoldIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */; };
+		02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF918DF62AC0018DA97 /* Montreal-DemiBold.otf */; };
+		02D11D0818DF62AC0018DA97 /* Montreal-DemiBoldIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CFA18DF62AC0018DA97 /* Montreal-DemiBoldIta.otf */; };
+		02D11D0918DF62AC0018DA97 /* Montreal-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CFB18DF62AC0018DA97 /* Montreal-Heavy.otf */; };
+		02D11D0A18DF62AC0018DA97 /* Montreal-HeavyIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CFC18DF62AC0018DA97 /* Montreal-HeavyIta.otf */; };
+		02D11D0B18DF62AC0018DA97 /* Montreal-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CFD18DF62AC0018DA97 /* Montreal-Light.otf */; };
+		02D11D0C18DF62AC0018DA97 /* Montreal-LightIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CFE18DF62AC0018DA97 /* Montreal-LightIta.otf */; };
+		02D11D0D18DF62AC0018DA97 /* Montreal-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CFF18DF62AC0018DA97 /* Montreal-Medium.otf */; };
+		02D11D0E18DF62AC0018DA97 /* Montreal-MediumIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0018DF62AC0018DA97 /* Montreal-MediumIta.otf */; };
+		02D11D0F18DF62AC0018DA97 /* Montreal-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0118DF62AC0018DA97 /* Montreal-Regular.otf */; };
+		02D11D1018DF62AC0018DA97 /* Montreal-RegularIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0218DF62AC0018DA97 /* Montreal-RegularIta.otf */; };
+		02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */; };
+		02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */; };
 		6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6035496118C88B11003F5D3E /* VYBPlayerViewController.m */; };
 		6043967D18C9FFDC0090F3AE /* VYBVybeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */; };
 		6043968818CAD8A70090F3AE /* VYBMyTribeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */; };
@@ -73,6 +87,20 @@
 		025DE65618CB143D0054F739 /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
 		025DE65918CB16E30054F739 /* VYBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBConstants.h; sourceTree = "<group>"; };
 		025DE65A18CB16E30054F739 /* VYBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBConstants.m; sourceTree = "<group>"; };
+		02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Bold.otf"; sourceTree = "<group>"; };
+		02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-BoldIta.otf"; sourceTree = "<group>"; };
+		02D11CF918DF62AC0018DA97 /* Montreal-DemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-DemiBold.otf"; sourceTree = "<group>"; };
+		02D11CFA18DF62AC0018DA97 /* Montreal-DemiBoldIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-DemiBoldIta.otf"; sourceTree = "<group>"; };
+		02D11CFB18DF62AC0018DA97 /* Montreal-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Heavy.otf"; sourceTree = "<group>"; };
+		02D11CFC18DF62AC0018DA97 /* Montreal-HeavyIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-HeavyIta.otf"; sourceTree = "<group>"; };
+		02D11CFD18DF62AC0018DA97 /* Montreal-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Light.otf"; sourceTree = "<group>"; };
+		02D11CFE18DF62AC0018DA97 /* Montreal-LightIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-LightIta.otf"; sourceTree = "<group>"; };
+		02D11CFF18DF62AC0018DA97 /* Montreal-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Medium.otf"; sourceTree = "<group>"; };
+		02D11D0018DF62AC0018DA97 /* Montreal-MediumIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-MediumIta.otf"; sourceTree = "<group>"; };
+		02D11D0118DF62AC0018DA97 /* Montreal-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Regular.otf"; sourceTree = "<group>"; };
+		02D11D0218DF62AC0018DA97 /* Montreal-RegularIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-RegularIta.otf"; sourceTree = "<group>"; };
+		02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Xlight.otf"; sourceTree = "<group>"; };
+		02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-XlightIta.otf"; sourceTree = "<group>"; };
 		6035496018C88B11003F5D3E /* VYBPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerViewController.h; sourceTree = "<group>"; };
 		6035496118C88B11003F5D3E /* VYBPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerViewController.m; sourceTree = "<group>"; };
 		6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBVybeCell.xib; sourceTree = "<group>"; };
@@ -142,6 +170,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		02D11CF418DF62680018DA97 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				02D11CF518DF62710018DA97 /* fonts */,
+			);
+			name = resources;
+			sourceTree = "<group>";
+		};
+		02D11CF518DF62710018DA97 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				02D11CF618DF62AC0018DA97 /* Montreal */,
+			);
+			name = fonts;
+			sourceTree = "<group>";
+		};
+		02D11CF618DF62AC0018DA97 /* Montreal */ = {
+			isa = PBXGroup;
+			children = (
+				02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */,
+				02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */,
+				02D11CF918DF62AC0018DA97 /* Montreal-DemiBold.otf */,
+				02D11CFA18DF62AC0018DA97 /* Montreal-DemiBoldIta.otf */,
+				02D11CFB18DF62AC0018DA97 /* Montreal-Heavy.otf */,
+				02D11CFC18DF62AC0018DA97 /* Montreal-HeavyIta.otf */,
+				02D11CFD18DF62AC0018DA97 /* Montreal-Light.otf */,
+				02D11CFE18DF62AC0018DA97 /* Montreal-LightIta.otf */,
+				02D11CFF18DF62AC0018DA97 /* Montreal-Medium.otf */,
+				02D11D0018DF62AC0018DA97 /* Montreal-MediumIta.otf */,
+				02D11D0118DF62AC0018DA97 /* Montreal-Regular.otf */,
+				02D11D0218DF62AC0018DA97 /* Montreal-RegularIta.otf */,
+				02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */,
+				02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */,
+			);
+			name = Montreal;
+			path = "Montreal Font";
+			sourceTree = "<group>";
+		};
 		604B627018B495BB00D3EF19 = {
 			isa = PBXGroup;
 			children = (
@@ -226,6 +292,7 @@
 		604B628318B495BB00D3EF19 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				02D11CF418DF62680018DA97 /* resources */,
 				604B628418B495BB00D3EF19 /* VybeTen-Info.plist */,
 				604B628518B495BB00D3EF19 /* InfoPlist.strings */,
 				604B628818B495BB00D3EF19 /* main.m */,
@@ -331,9 +398,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02D11D0B18DF62AC0018DA97 /* Montreal-Light.otf in Resources */,
+				02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */,
+				02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */,
+				02D11D0A18DF62AC0018DA97 /* Montreal-HeavyIta.otf in Resources */,
 				6043967D18C9FFDC0090F3AE /* VYBVybeCell.xib in Resources */,
 				604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */,
+				02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */,
+				02D11D0D18DF62AC0018DA97 /* Montreal-Medium.otf in Resources */,
+				02D11D0C18DF62AC0018DA97 /* Montreal-LightIta.otf in Resources */,
+				02D11D1018DF62AC0018DA97 /* Montreal-RegularIta.otf in Resources */,
+				02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */,
+				02D11D0F18DF62AC0018DA97 /* Montreal-Regular.otf in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
+				02D11D0918DF62AC0018DA97 /* Montreal-Heavy.otf in Resources */,
+				02D11D0E18DF62AC0018DA97 /* Montreal-MediumIta.otf in Resources */,
+				02D11D0818DF62AC0018DA97 /* Montreal-DemiBoldIta.otf in Resources */,
+				02D11D0618DF62AC0018DA97 /* Montreal-BoldIta.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

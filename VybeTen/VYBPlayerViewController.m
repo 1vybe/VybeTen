@@ -125,7 +125,7 @@
 }
 
 - (void)goToMenu {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (void)didReceiveMemoryWarning

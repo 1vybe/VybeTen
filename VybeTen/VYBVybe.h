@@ -21,7 +21,7 @@
 - (id)initWithDeviceId:(NSString *)devId;
 - (void)setDeviceId:(NSString *)devId;
 - (void)setVybeKey:(NSString *)vyKey;
-- (void)setTribe:(NSString *)name withKey:(NSString *)key;
+- (void)setTribeVybePathWith:(NSString *)name;
 - (void)setUpStatus:(int)us;
 - (void)setDownStatus:(int)ds;
 - (void)setTimeStamp:(NSDate *)date;

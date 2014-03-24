@@ -12,5 +12,6 @@
 @property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
 @property (nonatomic, weak) UILabel *labelTitle;
 - (void)customize;
+- (void)customizeOtherDirection;
 - (void)customizeWithTitle:(NSString *)title;
 @end

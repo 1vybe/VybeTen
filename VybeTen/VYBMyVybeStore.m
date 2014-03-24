@@ -57,17 +57,21 @@
 }
 
 - (void)addVybe:(VYBVybe *)v {
-    NSLog(@"adding a new vybe");
     [myVybes addObject:v];
+    NSLog(@"added a new vybe");
 
-    // Save the thumbnail image for the captured video on local Documents directory
-    [self saveThumbnailImageFor:v];
+    @try {
+        // Save the thumbnail image for the captured video on local Documents directory
+        [self saveThumbnailImageFor:v];
+        
+        // Upload the saved video to S3
+        [self processDelegateUploadForVybe:v];
     
-    // Upload the saved video to S3
-    [self processDelegateUploadForVybe:v];
-    
-    // Update myVybes
-    [self saveChanges];
+        // Update myVybes
+        [self saveChanges];
+    }@catch (NSError *err) {
+        NSLog(@"Error occured while adding a vybe:%@", err);
+    }
 }
 
 - (void)removeVybe:(VYBVybe *)v {
@@ -115,7 +119,6 @@
 - (void)processDelegateUploadForVybe:(VYBVybe *)v {
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
     NSData *videoData = [NSData dataWithContentsOfURL:videoURL];
-    NSLog(@"uploading video: %d", [videoData length]);
     //NSString *keyString = [NSString stringWithFormat:@"%@/%@.mov", adId, [v timeStamp]];
     if (![v vybeKey]) {
         NSLog(@"fixing vybeKey");
@@ -138,20 +141,21 @@
     @try {
         [self.s3 putObject:por];
         [v setUpStatus:UPLOADING];
+        NSLog(@"UPLOAD STARTED for %@ Tribe: %@", [v tribeName], [v vybeKey]);
     }@catch (AmazonServiceException *exception) {
         NSLog(@"Upload Failed: %@", exception);
     }
-    NSLog(@"uploading started for: %@", keyString);
 }
 
 - (void)delayedUploadsBegin {
-    NSLog(@"delayedUploadedBegin");
-    for (VYBVybe *v in myVybes) {
-        if ([v upStatus] == UPFRESH) {
-            //NSLog(@"let's try uploading again for %@", [v vybeKey]);
-            [self processDelegateUploadForVybe:v];
-        }
+    if ([self hasUploadingVybeAlready]) {
+        return;
     }
+    VYBVybe *v = [self mostRecentVybeToBeUploaded];
+    if (!v)
+        return;
+
+    [self processDelegateUploadForVybe:v];
 }
 
 - (void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response {
@@ -160,6 +164,9 @@
 
     //[self listVybes];
     [self changeUpStatusFor:request.requestTag withStatus:UPLOADED];
+    
+    [self delayedUploadsBegin];
+    // Start next
     /* TODO: Saving changes to myVybesStore's status is redundant */
     //[self saveChanges];
     //[self listVybes];
@@ -179,6 +186,22 @@
             [v setUpStatus:status];
         }
     }
+}
+
+- (BOOL)hasUploadingVybeAlready{
+    for (VYBVybe *v in myVybes) {
+        if ([v upStatus] == UPLOADING)
+            return YES;
+    }
+    return NO;
+}
+
+- (VYBVybe *)mostRecentVybeToBeUploaded {
+    for (VYBVybe *v in myVybes) {
+        if ([v upStatus] == UPFRESH)
+            return v;
+    }
+    return nil;
 }
 
 

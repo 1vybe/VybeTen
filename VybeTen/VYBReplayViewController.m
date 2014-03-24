@@ -20,7 +20,7 @@
 @synthesize playerView = _playerView;
 @synthesize vybe = _vybe;
 @synthesize replayURL = _replayURL;
-@synthesize buttonDiscard, buttonSave, instruction;
+@synthesize buttonDiscard, buttonSave, instruction, buttonCancel;
 
 - (void)loadView {
     NSLog(@"replay loadView");
@@ -67,13 +67,13 @@
     // Brighten the background when blurred view lies upon
     [self.view setBackgroundColor:[UIColor clearColor]];
     
- 
     // Adding CANCEL button
-    CGRect buttonCancelFrame = CGRectMake(tableVC.tableView.bounds.size.height - 40, tableVC.tableView.bounds.size.width -40, 34, 34);
-    UIButton *buttonCancel = [[UIButton alloc] initWithFrame:buttonCancelFrame];
+    CGRect buttonCancelFrame = CGRectMake(tableVC.tableView.bounds.size.height - 40, tableVC.tableView.bounds.size.width - 40, 34, 34);
+    buttonCancel = [[UIButton alloc] initWithFrame:buttonCancelFrame];
     UIImage *cancelImage = [UIImage imageNamed:@"button_cancel.png"];
     [buttonCancel setImage:cancelImage forState:UIControlStateNormal];
-    [buttonCancel addTarget:self action:@selector(discardVybe) forControlEvents:UIControlEventTouchUpInside];
+    [buttonCancel addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    // Dealing with the buttons position when table is scrolled will be done here
     [tableVC.tableView addSubview:buttonCancel];
     
     [self.navigationController pushViewController:tableVC animated:NO];
@@ -85,6 +85,10 @@
     [[NSFileManager defaultManager] removeItemAtURL:self.replayURL error:&error];
     if (error)
         NSLog(@"Removing a file failed: %@", error);
+    [self.navigationController popViewControllerAnimated:NO];
+}
+
+- (void)goBack {
     [self.navigationController popViewControllerAnimated:NO];
 }
 
@@ -100,6 +104,7 @@
 }
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
+    NSLog(@"playerItemDidReachEnd");
     [self.playerItem seekToTime:kCMTimeZero];
     [self.player play];
 }
@@ -142,7 +147,7 @@
     [cell.textLabel setTextColor:[UIColor whiteColor]];
     NSString *tribeName = [[[[VYBMyTribeStore sharedStore] myTribesVybes] allKeys] objectAtIndex:[indexPath row]];
 
-    [self performSelector:@selector(uploadForTribe:) withObject:tribeName afterDelay:0.3];
+    [self performSelector:@selector(uploadForTribe:) withObject:tribeName afterDelay:0.2];
 }
 
 - (void)uploadForTribe:(NSString *)tribeName {
@@ -157,20 +162,15 @@
 /**
  * Repositioning floating views during/after scroll
  **/
-/*
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGRect frame = self.buttonMenu.frame;
-    frame.origin.y = scrollView.contentOffset.y;
-    self.buttonMenu.frame = frame;
+    CGRect frame = self.buttonCancel.frame;
+    frame.origin.y = scrollView.contentOffset.y + [[UIScreen mainScreen] bounds].size.width - 40;
+    self.buttonCancel.frame = frame;
     
-    CGRect frameTwo = self.buttonCapture.frame;
-    frameTwo.origin.y =scrollView.contentOffset.y + self.view.bounds.size.height - 48;
-    self.buttonCapture.frame = frameTwo;
-    
-    [[self view] bringSubviewToFront:self.buttonMenu];
-    [[self view] bringSubviewToFront:self.buttonCapture];
+    [scrollView bringSubviewToFront:self.buttonCancel];
 }
-*/
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
