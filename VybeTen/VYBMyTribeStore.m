@@ -32,7 +32,7 @@
 }
 
 - (id)init {
-    NSLog(@"tribe store init");
+    //NSLog(@"tribe store init");
     self = [super init];
   
     if (self) {
@@ -232,9 +232,35 @@
 }
 
 - (BOOL)saveChanges {
-    NSLog(@"Tribe Store saved");
+    //NSLog(@"Tribe Store saving");
     NSString *path = [self myTribesArchivePath];
     return [NSKeyedArchiver archiveRootObject:myTribesVybes toFile:path];
+}
+
+- (BOOL)clear {
+    NSLog(@"Tribe Store cache clearing");
+    NSError *error;
+    for (NSString *tribeName in [myTribesVybes allKeys]) {
+        for (VYBVybe *v in [myTribesVybes objectForKey:tribeName]) {
+            // Delete the video file from local storage
+            NSURL *vidURL = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
+            [[NSFileManager defaultManager] removeItemAtURL:vidURL error:&error];
+            if (error) {
+                NSLog(@"[clear] Removing a video failed: %@", error);
+            } else {
+                NSLog(@"[clear] Removing a video success: %@", error);
+            }
+            // Delete the image file from local storage
+            NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[v thumbnailPath]];
+            [[NSFileManager defaultManager] removeItemAtURL:thumbURL error:&error];
+            if (error) {
+                NSLog(@"[clear] Removing a thumbnail image failed: %@", error);
+            }
+        }
+    }
+    myTribesVybes = nil;
+    [self saveChanges];
+    return YES;
 }
 
 - (VYBVybe *)vybeWithKey:(NSString *)key forTribe:(NSString *)name{

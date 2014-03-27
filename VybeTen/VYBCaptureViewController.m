@@ -128,7 +128,7 @@
     if (!recording) {
         NSLog(@"Start recording");
         newVybe = [[VYBVybe alloc] initWithDeviceId:adId];
-        startTime = [newVybe timeStamp];
+        //startTime = [newVybe timeStamp];
         // Of course, it is not uploaded to S3 yet
               
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[newVybe videoPath]];

@@ -48,10 +48,11 @@
     [blurredView setBarStyle:UIBarStyleBlack];
     [self.view insertSubview:blurredView atIndex:0];
 
-    // Adding flip button
+    // Adding CAPTURE button
     CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 40, self.view.bounds.size.width - 40, 34, 34);
     UIButton *buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
+    [buttonCapture setContentMode:UIViewContentModeScaleAspectFit];
     [buttonCapture setImage:captureImage forState:UIControlStateNormal];
     [buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonCapture];

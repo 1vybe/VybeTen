@@ -25,7 +25,7 @@
 
 - (void)customizeOtherDirection {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
-    // Rotate the thumbnail image counter-clockwise
+    // Rotate the thumbnail image clockwise
     CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
     _thumbnailImageView.transform = rotate;
     // Crop the image to circle
@@ -48,9 +48,31 @@
     _labelTitle = labelTitle;
 }
 
+- (void)willTransitionToState:(UITableViewCellStateMask)state {
+    [super willTransitionToState:state];
+    NSLog(@"cell transition state");
+    if ((state & UITableViewCellStateShowingDeleteConfirmationMask) == UITableViewCellStateShowingDeleteConfirmationMask ) {
+        NSLog(@"cell transition state");
+        for (UIView *subview in self.subviews) {
+            for (UIView *subview2 in subview.subviews) {
+                if ( [NSStringFromClass([subview2 class]) rangeOfString:@"Delete"].location != NSNotFound ) {
+                    NSLog(@"Delete button for cell genereated");
+                    UIImageView *buttonDelete = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 64, 33)];
+                    [buttonDelete setImage:[UIImage imageNamed:@"button_cancel.png"]];
+                    [subview2 addSubview:buttonDelete];
+                }
+            }
+        }
+    }
+}
+
 - (void)prepareForReuse {
+    //[self setEditing:NO animated:NO];
+    //[self setEditing:YES animated:NO];
     [_labelTitle removeFromSuperview];
 }
+     
+    
 
 
 @end

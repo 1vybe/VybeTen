@@ -31,7 +31,6 @@
 
 - (id)init {
     self = [super init];
-    
     if (self) {
         // Retrieves this device's unique ID
         adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
@@ -74,8 +73,45 @@
     }
 }
 
-- (void)removeVybe:(VYBVybe *)v {
-    [myVybes removeObjectIdenticalTo:v];
+- (BOOL)removeVybe:(VYBVybe *)v {
+    NSError *error;
+    NSLog(@"Removing vybe from %@: %@", [v tribeName], [v vybeKey]);
+    // First delete it from S3
+    @try {
+        S3DeleteObjectResponse *response = [self.s3 deleteObjectWithKey:[v vybeKey] withBucket:[v tribeName]];
+        if ([response hasClockSkewError]) {
+            response = [self.s3 deleteObjectWithKey:[v vybeKey] withBucket:[v tribeName]];
+            if ([response hasClockSkewError]) {
+                NSLog(@"[removeVybe] ClockSkewError");
+                return NO;
+            }
+        }
+        NSLog(@"removed from S3:%@", response.body);
+    } @catch (AmazonServiceException *exception) {
+        NSLog(@"[removeVybe]: S3 exception %@", exception);
+        // If the bucket is already erased, it will go on and erase from your phone too
+        if (![exception.errorCode isEqualToString:@"NoSuchBucket"])
+            return NO;
+    }
+    // Delete the video file from local storage
+    NSURL *vidURL = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
+    [[NSFileManager defaultManager] removeItemAtURL:vidURL error:&error];
+    if (error)
+        NSLog(@"[removeVybe] Removing a video failed: %@", error);
+    // Delete the image file from local storage
+    NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[v thumbnailPath]];
+    [[NSFileManager defaultManager] removeItemAtURL:thumbURL error:&error];
+    if (error)
+        NSLog(@"[removeVybe] Removing a thumbnail image failed: %@", error);
+    // Delete from myVybes
+    for (VYBVybe *vy in myVybes) {
+        if ([vy vybeKey] == [v vybeKey]) {
+            [myVybes removeObject:vy];
+            break;
+        }
+    }
+    NSLog(@"after removal myVybes has %d", [myVybes count]);
+    return YES;
 }
 
 - (NSString *)myVybesArchivePath {

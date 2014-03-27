@@ -123,11 +123,11 @@
     else
         NSLog(@"Vybe terminated. My vybes will be lost. :(");
     
-    success = [[VYBMyTribeStore sharedStore] saveChanges];
+    success = [[VYBMyTribeStore sharedStore] clear];
     if (success)
-        NSLog(@"My tribes are saved. :)");
+        NSLog(@"My tribes caches are cleared. :)");
     else
-        NSLog(@"My tribes will be lost. :(");
+        NSLog(@"My tribes caches are not cleared. :(");
     //[[VYBMyTribeStore sharedStore] listVybes];
 }
 

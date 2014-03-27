@@ -28,7 +28,6 @@
         NSString *dateString = [dFormatter stringFromDate:now];
         NSString *keyString = [NSString stringWithFormat:@"[%@]%@", deviceId, dateString];
         [self setVybeKey:keyString];
-        
     }
     return self;
 }
@@ -161,6 +160,8 @@
 }
 
 - (NSString *)dateString {
+    if (!dFormatter)
+        dFormatter = [[NSDateFormatter alloc] init];
     [dFormatter setDateStyle:NSDateFormatterMediumStyle];
     [dFormatter setTimeStyle:NSDateFormatterNoStyle];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -172,6 +173,8 @@
 }
 
 - (NSString *)timeString {
+    if (!dFormatter)
+        dFormatter = [[NSDateFormatter alloc] init];
     [dFormatter setTimeStyle:NSDateFormatterShortStyle];
     [dFormatter setDateStyle:NSDateFormatterNoStyle];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];

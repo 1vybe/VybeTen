@@ -36,6 +36,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //NSLog(@"[viewDidLoad]: MyVybes");
     
     /* Table Setup for horizontal transparent tableview */
     self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
@@ -73,7 +74,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    NSLog(@"view did appear for MyVybesVC");
+    //NSLog(@"view did appear for MyVybesVC");
     [super viewDidAppear:animated];
     [[VYBMyVybeStore sharedStore] delayedUploadsBegin];
 }
@@ -122,6 +123,30 @@
     [self.navigationController pushViewController:playerVC animated:NO];
 }
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        VYBVybe *vybe = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
+        BOOL success = [[VYBMyVybeStore sharedStore] removeVybe:vybe];
+        if (!success) {
+            NSLog(@"removing failed");
+            return;
+        }
+        NSIndexPath *firstRow = [NSIndexPath indexPathForRow:0 inSection:0];
+        [self.tableView beginUpdates];
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+        if (firstRow)
+            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:firstRow, nil] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+    }
+}
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return YES if you want the specified item to be editable.
+    return YES;
+}
+
+
 - (void)captureVybe {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
@@ -135,12 +160,14 @@
  **/
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    //NSLog(@"[scrollViewDidScroll] MyVybes");
     CGRect frame = self.buttonMenu.frame;
     frame.origin.y = scrollView.contentOffset.y;
+    
     self.buttonMenu.frame = frame;
     
     CGRect frameTwo = self.buttonCapture.frame;
-    frameTwo.origin.y =scrollView.contentOffset.y + self.view.bounds.size.height - 40;
+    frameTwo.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 40;
     self.buttonCapture.frame = frameTwo;
     
     [[self view] bringSubviewToFront:self.buttonMenu];

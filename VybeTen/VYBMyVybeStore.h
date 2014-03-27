@@ -20,7 +20,7 @@
 - (NSArray *)myVybes;
 - (void)listVybes;
 - (void)addVybe:(VYBVybe *)v;
-- (void)removeVybe:(VYBVybe *)v;
+- (BOOL)removeVybe:(VYBVybe *)v;
 - (NSString *)myVybesArchivePath;
 - (void)delayedUploadsBegin;
 - (BOOL)saveChanges;
