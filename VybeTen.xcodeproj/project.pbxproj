@@ -17,6 +17,10 @@
 		025DE65718CB143D0054F739 /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65518CB143D0054F739 /* AWSRuntime.framework */; };
 		025DE65818CB143D0054F739 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65618CB143D0054F739 /* AWSS3.framework */; };
 		025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 025DE65A18CB16E30054F739 /* VYBConstants.m */; };
+		02B2030F18E3AD4C0020916A /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B2030E18E3AD4C0020916A /* CoreText.framework */; };
+		02B2031118E3AD5E0020916A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B2031018E3AD5E0020916A /* QuartzCore.framework */; };
+		02B2031318E3AD670020916A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B2031218E3AD670020916A /* Security.framework */; };
+		02B2031518E3AD780020916A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B2031418E3AD780020916A /* SystemConfiguration.framework */; };
 		02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */; };
 		02D11D0618DF62AC0018DA97 /* Montreal-BoldIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */; };
 		02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF918DF62AC0018DA97 /* Montreal-DemiBold.otf */; };
@@ -87,6 +91,10 @@
 		025DE65618CB143D0054F739 /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
 		025DE65918CB16E30054F739 /* VYBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBConstants.h; sourceTree = "<group>"; };
 		025DE65A18CB16E30054F739 /* VYBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBConstants.m; sourceTree = "<group>"; };
+		02B2030E18E3AD4C0020916A /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		02B2031018E3AD5E0020916A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		02B2031218E3AD670020916A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		02B2031418E3AD780020916A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Bold.otf"; sourceTree = "<group>"; };
 		02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-BoldIta.otf"; sourceTree = "<group>"; };
 		02D11CF918DF62AC0018DA97 /* Montreal-DemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-DemiBold.otf"; sourceTree = "<group>"; };
@@ -146,6 +154,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02B2031518E3AD780020916A /* SystemConfiguration.framework in Frameworks */,
+				02B2031318E3AD670020916A /* Security.framework in Frameworks */,
+				02B2031118E3AD5E0020916A /* QuartzCore.framework in Frameworks */,
+				02B2030F18E3AD4C0020916A /* CoreText.framework in Frameworks */,
 				60F1BBB618BA692100070EEC /* ImageIO.framework in Frameworks */,
 				60F1BBB118BA34AA00070EEC /* AssetsLibrary.framework in Frameworks */,
 				6061247118B7937700B0A14E /* AVFoundation.framework in Frameworks */,
@@ -230,6 +242,10 @@
 		604B627B18B495BB00D3EF19 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				02B2031418E3AD780020916A /* SystemConfiguration.framework */,
+				02B2031218E3AD670020916A /* Security.framework */,
+				02B2031018E3AD5E0020916A /* QuartzCore.framework */,
+				02B2030E18E3AD4C0020916A /* CoreText.framework */,
 				025DE65518CB143D0054F739 /* AWSRuntime.framework */,
 				025DE65618CB143D0054F739 /* AWSS3.framework */,
 				60F1BBB518BA692100070EEC /* ImageIO.framework */,
@@ -573,6 +589,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SOURCE_ROOT)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
@@ -594,6 +611,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SOURCE_ROOT)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
