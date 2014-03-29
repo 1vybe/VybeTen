@@ -2,6 +2,8 @@
 //  VYBVybeCell.m
 //  VybeTen
 //
+//  Customize delete button. Basically the button is hidden until the top layer slides down.
+//
 //  Created by Kim Jin Su on 2014. 2. 26..
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
@@ -9,31 +11,36 @@
 #import "VYBVybeCell.h"
 
 @implementation VYBVybeCell
-@synthesize thumbnailImageView = _thumbnailImageView;
+@synthesize thumbnailView = _thumbnailView;
 @synthesize labelTitle = _labelTitle;
+@synthesize buttonDelete = _buttonDelete;
+@synthesize topLayer = _topLayer;
 
+// For vybes in MyTribes
 - (void)customize {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     // Rotate the thumbnail image counter-clockwise
     CGAffineTransform rotate = CGAffineTransformMakeRotation(-M_PI_2);
-    _thumbnailImageView.transform = rotate;
+    self.thumbnailView.transform = rotate;
     // Crop the image to circle
-    CALayer *layer = _thumbnailImageView.layer;
-    [layer setCornerRadius:_thumbnailImageView.frame.size.width/2];
+    CALayer *layer = self.thumbnailView.layer;
+    [layer setCornerRadius:self.thumbnailView.frame.size.width/2];
     [layer setMasksToBounds:YES];
 }
 
+// For vybes in MyVybes
 - (void)customizeOtherDirection {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     // Rotate the thumbnail image clockwise
     CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
-    _thumbnailImageView.transform = rotate;
+    self.thumbnailView.transform = rotate;
     // Crop the image to circle
-    CALayer *layer = _thumbnailImageView.layer;
-    [layer setCornerRadius:_thumbnailImageView.frame.size.width/2];
+    CALayer *layer = self.thumbnailView.layer;
+    [layer setCornerRadius:self.thumbnailView.frame.size.width/2];
     [layer setMasksToBounds:YES];
 }
 
+// For tribes in MyTribes
 - (void)customizeWithTitle:(NSString *)title {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     // Rotate the thumbnail image
@@ -45,34 +52,92 @@
     [labelTitle setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18]];
     [self.contentView addSubview:labelTitle];
     [labelTitle setTransform:rotate];
-    _labelTitle = labelTitle;
+    self.labelTitle = labelTitle;
 }
 
+/**
+ * In iOS7 it works because by using performSelector:withObject:afterDelay the selector is queued on the thread’s run loop and
+ * not performed immediately, allowing the OS to add the Delete button view in the meantime.
+ **/
 - (void)willTransitionToState:(UITableViewCellStateMask)state {
     [super willTransitionToState:state];
-    NSLog(@"cell transition state");
     if ((state & UITableViewCellStateShowingDeleteConfirmationMask) == UITableViewCellStateShowingDeleteConfirmationMask ) {
-        NSLog(@"cell transition state");
-        for (UIView *subview in self.subviews) {
-            for (UIView *subview2 in subview.subviews) {
-                if ( [NSStringFromClass([subview2 class]) rangeOfString:@"Delete"].location != NSNotFound ) {
-                    NSLog(@"Delete button for cell genereated");
-                    UIImageView *buttonDelete = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 64, 33)];
-                    [buttonDelete setImage:[UIImage imageNamed:@"button_cancel.png"]];
-                    [subview2 addSubview:buttonDelete];
-                }
-            }
-        }
+        [self recurseAndReplaceSubviewIfDeleteConfirmationControl:self.subviews];
+        [self performSelector:@selector(recurseAndReplaceSubviewIfDeleteConfirmationControl:) withObject:self.subviews afterDelay:0];
     }
 }
 
-- (void)prepareForReuse {
-    //[self setEditing:NO animated:NO];
-    //[self setEditing:YES animated:NO];
-    [_labelTitle removeFromSuperview];
+- (void)recurseAndReplaceSubviewIfDeleteConfirmationControl:(NSArray *)subviews {
+    NSLog(@"recursing");
+    for (UIView *subview in subviews) {
+        // For iOS 6 and earlier
+        if ([NSStringFromClass([subview class]) isEqualToString:@"UITableViewCellDeleteConfirmationControl"]) {
+            UIView *backgroundCoverDefaultControl = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
+            [backgroundCoverDefaultControl setBackgroundColor:[UIColor clearColor]];
+            UIImage *deleteImg = [UIImage imageNamed:@"button_cancel.png"];
+            UIImageView *deleteButton = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, deleteImg.size.width, deleteImg.size.height)];
+            [deleteButton setImage:deleteImg];
+        }
+        // The rest is to handle iOS 7
+        if ([NSStringFromClass([subview class]) isEqualToString:@"UITableViewCellDeleteConfirmationButton"]) {
+            NSLog(@"ConfirmationButton found");
+            UIButton *deleteButton = (UIButton *)subview;
+            [deleteButton setImage:[UIImage imageNamed:@"button_cancel.png"] forState:UIControlStateNormal];
+            [deleteButton setBackgroundColor:[UIColor clearColor]];
+            for (UIView *view in subview.subviews) {
+                if ([view isKindOfClass:[UILabel class]]) {
+                    [view removeFromSuperview];
+                }
+            }
+        }
+        if ([NSStringFromClass([subview class]) isEqualToString:@"UITableViewCellDeleteConfirmationView"]) {
+            NSLog(@"ConfirmationView found");
+            [subview setBackgroundColor:[UIColor clearColor]];
+            for (UIView *innerSubview in subview.subviews) {
+                if (![innerSubview isKindOfClass:[UIButton class]]) {
+                    NSLog(@"DeleteConfirmationView: removing a button");
+                    [innerSubview removeFromSuperview];
+                }
+            }
+        }
+        if ([subview.subviews count] > 0) {
+            [self recurseAndReplaceSubviewIfDeleteConfirmationControl:subview.subviews];
+        }
+    }
+    NSLog(@"recursing done");
 }
-     
-    
 
+- (void)prepareForReuse {
+    [self.labelTitle removeFromSuperview];
+    [super prepareForReuse];
+}
+
+/**
+ * Helper functions
+ **/
+
+// Recursively travel down the view tree, increasing the
+// indentation level for children
+- (void) dumpView: (UIView *) aView atIndent: (int) indent into:(NSMutableString *) outstring
+{
+    // Add the indentation dashes
+    for (int i = 0; i < indent; i++)
+        [outstring appendString:@"--"];
+    // Follow that with the class description
+    [outstring appendFormat:@"[%2d] %@\n", indent, [[aView class] description]];
+    
+    // Recurse through each subview
+    for (UIView *view in aView.subviews)
+        [self dumpView:view atIndent:indent + 1 into:outstring];
+}
+
+// Start the tree recursion at level 0 with the root view
+- (NSString *) displayViews: (UIView *) aView
+{
+    NSMutableString *outstring = [NSMutableString string];
+    [self dumpView:aView atIndent:0 into:outstring];
+    
+    return outstring;
+}
 
 @end

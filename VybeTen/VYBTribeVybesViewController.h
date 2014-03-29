@@ -11,6 +11,7 @@
 @interface VYBTribeVybesViewController : UITableViewController
 @property (nonatomic) UIButton *buttonCapture;
 @property (nonatomic) UIButton *buttonBack;
+@property (nonatomic) UILabel *countLabel;
 @property (nonatomic) NSString *tribeName;
 
 @end

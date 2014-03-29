@@ -16,6 +16,7 @@
 @synthesize buttonBack = _buttonBack;
 @synthesize buttonCapture = _buttonCapture;
 @synthesize tribeName = _tribeName;
+@synthesize countLabel = _countLabel;
 
 - (id)init {
     self = [super initWithStyle:UITableViewStylePlain];
@@ -47,23 +48,36 @@
     [self.tableView setBackgroundView:blurredView];
     
     // Adding CAPTURE button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 40, 6, 34, 34);
+    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
     self.buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
+    [self.buttonCapture setContentMode:UIViewContentModeCenter];
     [self.buttonCapture setImage:captureImage forState:UIControlStateNormal];
     CGAffineTransform counterClockwise = CGAffineTransformMakeRotation(-M_PI_2);
     self.buttonCapture.transform = counterClockwise;
-    [self.buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
+    [self.buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonCapture];
     // Adding BACK button
-    CGRect buttonBackFrame = CGRectMake(self.view.bounds.size.width - 40, self.view.bounds.size.height - 40, 34, 34);
+    CGRect buttonBackFrame = CGRectMake(self.view.bounds.size.width - 50, self.view.bounds.size.height - 50, 50, 50);
     self.buttonBack = [[UIButton alloc] initWithFrame:buttonBackFrame];
     UIImage *backImage = [UIImage imageNamed:@"button_back.png"];
+    [self.buttonBack setContentMode:UIViewContentModeCenter];
     [self.buttonBack setImage:backImage forState:UIControlStateNormal];
     self.buttonBack.transform = counterClockwise;
-    [self.buttonBack addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    [self.buttonBack addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonBack];
-    
+    // Adding COUNT label
+    // These frequent view related steps should be done in Model side.
+    // Count label translates the view by 35 px along x and 85px along y axis because the label is a rectangle
+    CGRect frame = CGRectMake(-35, self.view.bounds.size.height - 85, 120, 50);
+    self.countLabel = [[UILabel alloc] initWithFrame:frame];
+    [self.countLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
+    [self.countLabel setText:[NSString stringWithFormat:@"%@", self.tribeName]];
+    [self.countLabel setTextColor:[UIColor colorWithWhite:1.0 alpha:0.8]];
+    [self.countLabel setTextAlignment:NSTextAlignmentCenter];
+    self.countLabel.transform = counterClockwise;
+    [self.countLabel setBackgroundColor:[UIColor clearColor]];
+    [self.tableView addSubview:self.countLabel];
     // Adding a refresh control
     UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
     refresh.tintColor = [UIColor whiteColor];
@@ -71,7 +85,17 @@
     [self.tableView addSubview:refresh];
     
     //NSLog(@"[TribeVybesViewController]view loaded. Let's sync!");
-    [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:self.tribeName];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    NSLog(@"#######SYNC BEGIN##########");
+    UIView *view = [[UIView alloc] initWithFrame:self.view.bounds];
+    [view setBackgroundColor:[UIColor redColor]];
+    [self.view addSubview:view];
+    [self.view setNeedsDisplay];
+    BOOL success = [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:self.tribeName];
+    [view removeFromSuperview];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -110,7 +134,7 @@
             [[VYBImageStore sharedStore] setImage:thumbImg forKey:thumbPath];
     }
     // Customize cell
-    [cell.thumbnailImageView setImage:thumbImg];
+    [cell.thumbnailView setImage:thumbImg];
     [cell customize];
     
     return cell;
@@ -123,11 +147,11 @@
     [self.navigationController pushViewController:playerVC animated:NO];
 }
 
-- (void)captureVybe {
+- (void)captureVybe:(id)sender {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
-- (void)goBack {
+- (void)goBack:(id)sender {
     [self.navigationController popViewControllerAnimated:NO];
 }
 
@@ -137,15 +161,20 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGRect frame = self.buttonBack.frame;
-    frame.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 40;
+    frame.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 50;
     self.buttonBack.frame = frame;
     
     CGRect frameTwo = self.buttonCapture.frame;
-    frameTwo.origin.y =scrollView.contentOffset.y + 6;
+    frameTwo.origin.y = scrollView.contentOffset.y;
     self.buttonCapture.frame = frameTwo;
+    
+    CGRect frameThree = self.countLabel.frame;
+    frameThree.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 120;
+    self.countLabel.frame = frameThree;
     
     [[self view] bringSubviewToFront:self.buttonBack];
     [[self view] bringSubviewToFront:self.buttonCapture];
+    [[self view] bringSubviewToFront:self.countLabel];
 }
 
 

@@ -17,8 +17,6 @@
 @property (nonatomic) VYBPlayerView *playerView;
 @property (nonatomic) UILabel *labelTime;
 
-- (void)captureVybe;
-- (void)goToMenu;
 - (void)playFrom:(NSInteger)index;
 
 @end

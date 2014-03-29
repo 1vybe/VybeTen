@@ -15,20 +15,19 @@
 
 @implementation VYBMyTribeViewController
 
-@synthesize buttonMenu = _buttonMenu;
+@synthesize buttonBack = _buttonBack;
 @synthesize buttonCapture = _buttonCapture;
-
-- (id)init {
-    self = [super initWithStyle:UITableViewStylePlain];
-    if (self) {
-        
-    }
-    return self;
-}
+@synthesize createButton = _createButton;
+@synthesize countLabel = _countLabel;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
-    return [self init];
+    self = [super initWithStyle:style];
+    if (self) {
+        
+    }
+    
+    return self;
 }
 
 - (void)viewDidLoad
@@ -48,38 +47,66 @@
     [self.tableView setBackgroundView:blurredView];
     
     // Adding CAPTURE button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 40, 6, 34, 34);
-    self.buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
-    UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
-    [self.buttonCapture setImage:captureImage forState:UIControlStateNormal];
+    CGRect buttonFrame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
+    self.buttonCapture = [[UIButton alloc] initWithFrame:buttonFrame];
+    UIImage *buttonImg = [UIImage imageNamed:@"button_vybe.png"];
+    [self.buttonCapture setContentMode:UIViewContentModeCenter];
+    [self.buttonCapture setImage:buttonImg forState:UIControlStateNormal];
     CGAffineTransform rotation = CGAffineTransformMakeRotation(-M_PI_2);
     self.buttonCapture.transform = rotation;
-    [self.buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
+    [self.buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonCapture];
-    // Adding MENU button
-    CGRect buttonMenuFrame = CGRectMake(self.view.bounds.size.width - 40, self.view.bounds.size.height - 40, 34, 34);
-    self.buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
-    UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
-    [self.buttonMenu setImage:menuImage forState:UIControlStateNormal];
-    self.buttonMenu.transform = rotation;
-    [self.buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
-    [[self tableView] addSubview:self.buttonMenu];
+    // Adding BACK button
+    buttonFrame = CGRectMake(self.view.bounds.size.width - 50, self.view.bounds.size.height - 50, 50, 50);
+    self.buttonBack = [[UIButton alloc] initWithFrame:buttonFrame];
+    buttonImg = [UIImage imageNamed:@"button_back.png"];
+    [self.buttonBack setContentMode:UIViewContentModeCenter];
+    [self.buttonBack setImage:buttonImg forState:UIControlStateNormal];
+    self.buttonBack.transform = rotation;
+    [self.buttonBack addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
+    [[self tableView] addSubview:self.buttonBack];
+
+    // Adding CREATE button
+    buttonFrame = CGRectMake(0, 0, 50, 50);
+    self.createButton = [[UIButton alloc] initWithFrame:buttonFrame];
+    buttonImg = [UIImage imageNamed:@"button_add.png"];
+    [self.createButton setContentMode:UIViewContentModeCenter];
+    [self.createButton setImage:buttonImg forState:UIControlStateNormal];
+    [self.createButton addTarget:self action:@selector(createTribe:) forControlEvents:UIControlEventTouchUpInside];
+    [self.tableView addSubview:self.createButton];
+
+    // Adding COUNT label
+    // These frequent view related steps should be done in Model side.
+    // Count label translates the view by 25 px along x and 75px along y axis because the label is a rectangle
+    CGRect frame = CGRectMake(-25, self.view.bounds.size.height - 75, 100, 50);
+    self.countLabel = [[UILabel alloc] initWithFrame:frame];
+    [self.countLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
+    [self.countLabel setText:[NSString stringWithFormat:@"MY TRIBES"]];
+    [self.countLabel setTextColor:[UIColor colorWithWhite:1.0 alpha:0.8]];
+    [self.countLabel setTextAlignment:NSTextAlignmentCenter];
+    self.countLabel.transform = rotation;
+    [self.countLabel setBackgroundColor:[UIColor clearColor]];
+    [self.tableView addSubview:self.countLabel];
+
     
     // Adding a refresh control
     UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
     refresh.tintColor = [UIColor whiteColor];
     [refresh addTarget:self action:@selector(refreshTribes:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refresh];
-    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     [[VYBMyTribeStore sharedStore] refreshTribes];
 }
 
 - (void)refreshTribes:(UIRefreshControl *)refresh {
-    [[VYBMyTribeStore sharedStore] refreshTribes];
-    NSLog(@"refresh really done");
-    [self.tableView reloadData];
+    BOOL success = [[VYBMyTribeStore sharedStore] refreshTribes];
+    if (success)
+        NSLog(@"refresh really really done");
     [refresh endRefreshing];
-    return;
+    [self.tableView reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -90,7 +117,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[[VYBMyTribeStore sharedStore] myTribesVybes] allKeys] count];
+    return [[[VYBMyTribeStore sharedStore] tribes] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -100,17 +127,17 @@
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBVybeCell" owner:self options:nil];
         cell = [nib objectAtIndex:0];
     }
-    NSArray *keys = [[[VYBMyTribeStore sharedStore] myTribesVybes] allKeys];
+    NSArray *tribes = [[VYBMyTribeStore sharedStore] tribes];
     //NSLog(@"there are %d keys", [keys count]);
-    NSString *title = [keys objectAtIndex:[indexPath row]];
+    NSString *title = [tribes objectAtIndex:[indexPath row]];
     [cell customizeWithTitle:title];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSArray *keys = [[[VYBMyTribeStore sharedStore] myTribesVybes] allKeys];
-    NSLog(@"there are %d keys", [keys count]);
-    NSString *title = [keys objectAtIndex:[indexPath row]];
+    NSArray *tribes = [[VYBMyTribeStore sharedStore] tribes];
+    NSLog(@"there are %d keys", [tribes count]);
+    NSString *title = [tribes objectAtIndex:[indexPath row]];
     VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
     NSLog(@"TribeVybesVC initiated for %@ Tribe", title);
     [vybesVC setTribeName:title];
@@ -118,29 +145,61 @@
 }
 
 
-- (void)captureVybe {
+- (void)captureVybe:(id)sender {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
-- (void)goToMenu {
+- (void)goToMenu:(id)sender {
     [self.navigationController popViewControllerAnimated:NO];
 }
+
+- (void)createTribe:(id)sender {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Name your new tribe" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    [alertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    [alertView show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *tribeName = [[alertView textFieldAtIndex:0] text];
+    BOOL success = [[VYBMyTribeStore sharedStore] addNewTribe:tribeName];
+    if (success) {
+        NSString *msg = [NSString stringWithFormat:@"Awesome! Now %@ is your tribe", tribeName];
+        UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [popUp show];
+    } else {
+        NSString *msg = @"Sorry :( That tribe name is taken";
+        UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [popUp show];
+    }
+    [self.tableView reloadData];
+}
+
 
 /**
  * Repositioning floating views during/after scroll
  **/
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGRect frame = self.buttonMenu.frame;
-    frame.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 40;
-    self.buttonMenu.frame = frame;
+    CGRect frame = self.buttonBack.frame;
+    frame.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 50;
+    self.buttonBack.frame = frame;
     
     CGRect frameTwo = self.buttonCapture.frame;
-    frameTwo.origin.y =scrollView.contentOffset.y + 6;
+    frameTwo.origin.y =scrollView.contentOffset.y;
     self.buttonCapture.frame = frameTwo;
     
-    [[self view] bringSubviewToFront:self.buttonMenu];
+    CGRect frameThree = self.createButton.frame;
+    frameThree.origin.y = scrollView.contentOffset.y;
+    self.createButton.frame = frameThree;
+    
+    CGRect frameFour = self.countLabel.frame;
+    frameFour.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 100;
+    self.countLabel.frame = frameFour;
+    
+    [[self view] bringSubviewToFront:self.buttonBack];
     [[self view] bringSubviewToFront:self.buttonCapture];
+    [[self view] bringSubviewToFront:self.createButton];
+    [[self view] bringSubviewToFront:self.countLabel];
 }
 
 

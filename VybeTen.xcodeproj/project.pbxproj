@@ -10,6 +10,7 @@
 		022296DA18BC506D0096BB30 /* VYBMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022296D818BC506D0096BB30 /* VYBMenuViewController.m */; };
 		022296DE18BCA24C0096BB30 /* VYBMyVybesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */; };
 		0243CC9818CC665200CA03C0 /* VYBReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */; };
+		024924A418E52B7200568441 /* VYBMainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 024924A318E52B7200568441 /* VYBMainNavigationController.m */; };
 		024B0E2B18BB39E30073574E /* VYBImageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2A18BB39E30073574E /* VYBImageStore.m */; };
 		024B0E2E18BB39FF0073574E /* VYBVideoStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2D18BB39FF0073574E /* VYBVideoStore.m */; };
 		024C28D718DBCE0600399980 /* VYBTribeVybesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */; };
@@ -17,6 +18,9 @@
 		025DE65718CB143D0054F739 /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65518CB143D0054F739 /* AWSRuntime.framework */; };
 		025DE65818CB143D0054F739 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65618CB143D0054F739 /* AWSS3.framework */; };
 		025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 025DE65A18CB16E30054F739 /* VYBConstants.m */; };
+		028F37F818E3AFA900F84AB7 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 028F37F418E3AFA900F84AB7 /* HockeySDK.framework */; };
+		028F37F918E3AFA900F84AB7 /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 028F37F618E3AFA900F84AB7 /* HockeySDK.xcconfig */; };
+		028F37FA18E3AFA900F84AB7 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 028F37F718E3AFA900F84AB7 /* HockeySDKResources.bundle */; };
 		02B2030F18E3AD4C0020916A /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B2030E18E3AD4C0020916A /* CoreText.framework */; };
 		02B2031118E3AD5E0020916A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B2031018E3AD5E0020916A /* QuartzCore.framework */; };
 		02B2031318E3AD670020916A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B2031218E3AD670020916A /* Security.framework */; };
@@ -79,6 +83,8 @@
 		022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybesViewController.m; sourceTree = "<group>"; };
 		0243CC9618CC665200CA03C0 /* VYBReplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBReplayViewController.h; sourceTree = "<group>"; };
 		0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBReplayViewController.m; sourceTree = "<group>"; };
+		024924A218E52B7200568441 /* VYBMainNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMainNavigationController.h; sourceTree = "<group>"; };
+		024924A318E52B7200568441 /* VYBMainNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMainNavigationController.m; sourceTree = "<group>"; };
 		024B0E2918BB39E30073574E /* VYBImageStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBImageStore.h; sourceTree = "<group>"; };
 		024B0E2A18BB39E30073574E /* VYBImageStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBImageStore.m; sourceTree = "<group>"; };
 		024B0E2C18BB39FF0073574E /* VYBVideoStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVideoStore.h; sourceTree = "<group>"; };
@@ -91,6 +97,9 @@
 		025DE65618CB143D0054F739 /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
 		025DE65918CB16E30054F739 /* VYBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBConstants.h; sourceTree = "<group>"; };
 		025DE65A18CB16E30054F739 /* VYBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBConstants.m; sourceTree = "<group>"; };
+		028F37F418E3AFA900F84AB7 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
+		028F37F618E3AFA900F84AB7 /* HockeySDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
+		028F37F718E3AFA900F84AB7 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
 		02B2030E18E3AD4C0020916A /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		02B2031018E3AD5E0020916A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		02B2031218E3AD670020916A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -166,6 +175,7 @@
 				604B628118B495BB00D3EF19 /* UIKit.framework in Frameworks */,
 				604B627D18B495BB00D3EF19 /* Foundation.framework in Frameworks */,
 				025DE65718CB143D0054F739 /* AWSRuntime.framework in Frameworks */,
+				028F37F818E3AFA900F84AB7 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,6 +192,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		028F37F318E3AFA900F84AB7 /* HockeySDK.embeddedframework */ = {
+			isa = PBXGroup;
+			children = (
+				028F37F418E3AFA900F84AB7 /* HockeySDK.framework */,
+				028F37F518E3AFA900F84AB7 /* Resources */,
+			);
+			path = HockeySDK.embeddedframework;
+			sourceTree = "<group>";
+		};
+		028F37F518E3AFA900F84AB7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				028F37F618E3AFA900F84AB7 /* HockeySDK.xcconfig */,
+				028F37F718E3AFA900F84AB7 /* HockeySDKResources.bundle */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		02D11CF418DF62680018DA97 /* resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -242,6 +270,7 @@
 		604B627B18B495BB00D3EF19 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				028F37F318E3AFA900F84AB7 /* HockeySDK.embeddedframework */,
 				02B2031418E3AD780020916A /* SystemConfiguration.framework */,
 				02B2031218E3AD670020916A /* Security.framework */,
 				02B2031018E3AD5E0020916A /* QuartzCore.framework */,
@@ -264,6 +293,8 @@
 			children = (
 				604B628B18B495BB00D3EF19 /* VYBAppDelegate.h */,
 				604B628C18B495BB00D3EF19 /* VYBAppDelegate.m */,
+				024924A218E52B7200568441 /* VYBMainNavigationController.h */,
+				024924A318E52B7200568441 /* VYBMainNavigationController.m */,
 				6061246B18B7862F00B0A14E /* VYBCaptureViewController.h */,
 				6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */,
 				0243CC9618CC665200CA03C0 /* VYBReplayViewController.h */,
@@ -426,6 +457,8 @@
 				02D11D1018DF62AC0018DA97 /* Montreal-RegularIta.otf in Resources */,
 				02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */,
 				02D11D0F18DF62AC0018DA97 /* Montreal-Regular.otf in Resources */,
+				028F37F918E3AFA900F84AB7 /* HockeySDK.xcconfig in Resources */,
+				028F37FA18E3AFA900F84AB7 /* HockeySDKResources.bundle in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
 				02D11D0918DF62AC0018DA97 /* Montreal-Heavy.otf in Resources */,
 				02D11D0E18DF62AC0018DA97 /* Montreal-MediumIta.otf in Resources */,
@@ -455,6 +488,7 @@
 				6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */,
 				60C0745D18CDD28700390BE1 /* VYBTribePlayerViewController.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
+				024924A418E52B7200568441 /* VYBMainNavigationController.m in Sources */,
 				60B0DCEB18BDCC4E007F4D5C /* VYBVybeCell.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				6043968B18CAE4A60090F3AE /* VYBMyTribeStore.m in Sources */,
@@ -590,6 +624,7 @@
 					"$(inherited)",
 					"$(SOURCE_ROOT)",
 					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+					"$(PROJECT_DIR)/HockeySDK.embeddedframework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
@@ -612,13 +647,14 @@
 					"$(inherited)",
 					"$(SOURCE_ROOT)",
 					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+					"$(PROJECT_DIR)/HockeySDK.embeddedframework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "AF0CAF3C-25E8-4530-A8A4-6DE6DC1E8146";
+				PROVISIONING_PROFILE = "74EFE1C3-5D6C-48BF-8AC3-237095AB01C7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

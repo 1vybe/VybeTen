@@ -10,6 +10,8 @@
 @class VYBPlayerViewController;
 
 @interface VYBMyVybesViewController : UITableViewController
-@property (nonatomic) UIButton *buttonCapture;
-@property (nonatomic) UIButton *buttonMenu;
+@property (nonatomic, strong) UIButton *buttonCapture;
+@property (nonatomic, strong) UIButton *buttonBack;
+@property (nonatomic, strong) UIView *bottomBar;
+@property (nonatomic, strong) UILabel *countLabel;
 @end

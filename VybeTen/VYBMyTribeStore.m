@@ -65,25 +65,53 @@
 }
 
 
-- (void)refreshTribes {
+- (BOOL)addNewTribe:(NSString *)tribeName {
+    @try {
+        S3CreateBucketRequest *request = [[S3CreateBucketRequest alloc] initWithName:tribeName];
+        [self.s3 createBucket:request];
+        NSLog(@"A new tribe added");
+        [myTribesVybes setObject:[[NSMutableArray alloc] init] forKey:tribeName];
+    } @catch (AmazonServiceException *exception){
+        NSLog(@"[MyTribe addNewTribe] Amazon Service Error: %@", exception);
+        return NO;
+    } @catch (AmazonClientException *exception) {
+        NSLog(@"[MyTribe addNewTribe] Amazon Client Error: %@", exception);
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)refreshTribes {
     NSLog(@"Refreshing tribe lists");
     @try {
         S3ListBucketsRequest *bucketReq = [[S3ListBucketsRequest alloc] init];
         S3ListBucketsResponse *buckets = [self.s3 listBuckets:bucketReq];
         S3ListBucketsResult *result = buckets.listBucketsResult;
-        NSLog(@"There are %d Tribes", [result.buckets count]);
+        NSLog(@"There are %d tribes in the server", [result.buckets count]);
+        NSMutableDictionary *newDictionary = [[NSMutableDictionary alloc] init];
         for (S3Bucket *bucket in result.buckets) {
-            if (![myTribesVybes objectForKey:bucket.name] && ![bucket.name isEqualToString:@"vybes"]) {
-                NSLog(@"Creating %@ Tribe for the first time", bucket.name);
-                [myTribesVybes setObject:[[NSMutableArray alloc] init] forKey:bucket.name];
+            /* Here we are manually exlcuding some buckets on testing purpose */
+            if ([bucket.name isEqualToString:@"vybes"] || [bucket.name isEqualToString:@"NUNS-ISLAND"] || [bucket.name isEqualToString:@"CERCLE"] || [bucket.name isEqualToString:@"RUSSIAN"]) {
+            }
+            else {
+                // If there already exists a tribe, copy its vybes into new
+                if ( [myTribesVybes objectForKey:bucket.name] ) {
+                    [newDictionary setObject:[myTribesVybes objectForKey:bucket.name] forKey:bucket.name];
+                } else {
+                    [newDictionary setObject:[[NSMutableArray alloc] init] forKey:bucket.name];
+                }
             }
         }
+        myTribesVybes = nil;
+        myTribesVybes = newDictionary;
     } @catch (AmazonServiceException *exception) {
         NSLog(@"[MyTribe]AWS error: %@", exception);
+        return NO;
     }
+    return YES;
 }
 
-- (void)syncWithCloudForTribe:(NSString *)name {
+- (BOOL)syncWithCloudForTribe:(NSString *)name {
     NSLog(@"Already existing %u vybes in %@ Tribe", [[myTribesVybes objectForKey:name] count], name);
     @try {
         NSLog(@"Synching with %@ Tribe", name);
@@ -94,7 +122,7 @@
         NSString *buckName = result.bucketName;
         NSLog(@"Server has %d videos for %@ Tribe", [result.objectSummaries count], name);
         if ([result.objectSummaries count] == 0)
-            return;
+            return YES;
         else {
             NSLog(@"adding begins");
             for (S3ObjectSummary *obj in result.objectSummaries) {
@@ -103,16 +131,21 @@
             }
             NSLog(@"adding done");
             [self downloadTribeVybesFor:buckName];
+            return YES;
         }
       } @catch (AmazonServiceException *exception) {
-        NSLog(@"[MyTribe]AWS Error: %@", exception);
+          NSLog(@"[MyTribe]AWS Error: %@", exception);
+          return NO;
     } @catch (NSException *exception) {
         NSLog(@"[MyTribe]Exception: %@", exception);
-
+        return NO;
     } @catch (NSError *err) {
         NSLog(@"[MyTribe]Error: %@", err);
+        return NO;
     }
+    return YES;
 }
+
 
 
 - (void)addNewVybeWithKey:(NSString *)key forTribe:(NSString *)name{
@@ -222,6 +255,14 @@
 - (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name{
     return [[[myTribesVybes objectForKey:name] objectAtIndex:index] thumbnailPath];
 }
+
+- (NSArray *)tribes {
+    NSArray *tribes = [myTribesVybes allKeys];
+    tribes = [tribes sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    
+    return tribes;
+}
+
 
 - (NSString *)myTribesArchivePath {
     NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

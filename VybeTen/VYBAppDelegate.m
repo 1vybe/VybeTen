@@ -7,16 +7,25 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
+#import <HockeySDK/HockeySDK.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
+#import "VYBMainNavigationController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBMyTribeStore.h"
 #import "VYBConstants.h"
 
-@implementation VYBAppDelegate
+@implementation VYBAppDelegate {
+    UIView *overlayView;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    /* HockeyApp Initilization */
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_ID delegate:self];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
     UINavigationController *navContoller = [[UINavigationController alloc] init];
@@ -61,6 +70,10 @@
     AVCaptureConnection *movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
     [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
 
+    // Overlay alertView will be displayed when a user entered in a portrait mode
+    UIDevice *iphone = [UIDevice currentDevice];
+    [iphone beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayOverlay:) name:UIDeviceOrientationDidChangeNotification object:iphone];
                                             
     VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
     [captureVC setSession:session withVideoInput:videoInput withMovieFileOutput:movieFileOutput];
@@ -76,6 +89,24 @@
     
     NSLog(@"Welcome to %@ Vybe", BUCKET_NAME);
     return YES;
+}
+
+- (void)removeOverlay:(UIView *)overlay {
+    [overlay removeFromSuperview];
+}
+
+- (void)displayOverlay:(NSNotification *)note {
+    UIDevice *device = [note object];
+    if ( UIDeviceOrientationIsPortrait([device orientation]) ) {
+        UIWindow *window = self.window;
+        overlayView = [[UIView alloc] initWithFrame:window.bounds];
+        [overlayView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:1.0f]];
+        [overlayView setUserInteractionEnabled:YES];
+        
+        [window addSubview:overlayView];
+    } else if ( UIDeviceOrientationIsLandscape([device orientation]) ) {
+        [self removeOverlay:overlayView];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -129,6 +160,10 @@
     else
         NSLog(@"My tribes caches are not cleared. :(");
     //[[VYBMyTribeStore sharedStore] listVybes];
+}
+
+- (void)haha:(id)sender {
+    
 }
 
 @end

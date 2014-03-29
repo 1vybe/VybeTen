@@ -30,6 +30,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     // Adding swipe gestures
     UISwipeGestureRecognizer *swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
     swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
@@ -38,19 +39,21 @@
     swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipeRight];
     /* NOTE: Origin for menu button is (0, 0) */
-    // Adding menu button
-    CGRect buttonMenuFrame = CGRectMake(6, self.view.bounds.size.width - 40, 34, 34);
-    UIButton *buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
-    UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
-    [buttonMenu setImage:menuImage forState:UIControlStateNormal];
-    [buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttonMenu];
+    // Adding BACK button
+    CGRect buttonBackFrame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
+    UIButton *buttonBack = [[UIButton alloc] initWithFrame:buttonBackFrame];
+    UIImage *backImage = [UIImage imageNamed:@"button_back.png"];
+    [buttonBack setContentMode:UIViewContentModeCenter];
+    [buttonBack setImage:backImage forState:UIControlStateNormal];
+    [buttonBack addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:buttonBack];
     // Adding capture button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 40, self.view.bounds.size.width - 40, 34, 34);
+    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 50, self.view.bounds.size.width - 50, 50, 50);
     UIButton *buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
+    [buttonCapture setContentMode:UIViewContentModeCenter];
     [buttonCapture setImage:captureImage forState:UIControlStateNormal];
-    [buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
+    [buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonCapture];
 
     // Adding time label
@@ -65,6 +68,9 @@
     [self.labelTime setText:[NSString stringWithFormat:@"%@ %@",[v dateString], [v timeString]]];
     NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+    NSLog(@"Let's play asset: %@", [v videoPath]);
+    NSLog(@"asset URL: %@", url);
+
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     // Registering the current playerItem to Notification center
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
@@ -94,6 +100,7 @@
         VYBVybe *v = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:from];
         [self.labelTime setText:[NSString stringWithFormat:@"%@ %@", [v dateString], [v timeString]]];
         NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
+        
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
         self.currItem = [AVPlayerItem playerItemWithAsset:asset];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
@@ -120,11 +127,11 @@
     [self playbackFrom:playIndex];
 }
 
-- (void)captureVybe {
+- (void)captureVybe:(id)sender {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
-- (void)goToMenu {
+- (void)goBack:(id)sender {
     [self.navigationController popViewControllerAnimated:NO];
 }
 

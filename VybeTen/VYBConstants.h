@@ -19,5 +19,7 @@
 #define DOWNLOADING     1
 #define DOWNLOADED      2
 
+#define HOCKEY_APP_ID   @"f6bbe32e11800913add864bbd07ebcee"
+
 @interface VYBConstants : NSObject
 @end

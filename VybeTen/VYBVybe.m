@@ -99,9 +99,15 @@
 }
 
 - (void)setVybePath {
-    // Path to save in the application's document directory
+    /*
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
+    */
+    /**
+     * Instead you should always make a dynamic reference by only saving the filepath after you've gotten the documents
+     * directory filepath prefix.
+     **/
+    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *vidPath = [documentsDirectory stringByAppendingPathComponent:vybeKey];
     vidPath = [vidPath stringByAppendingString:@".mov"];
     [self setVideoPath:vidPath];
@@ -109,8 +115,11 @@
 }
 
 - (void)setTribeVybePathWith:(NSString *)name {
+    /*
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
+     */
+    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *vidPath = [documentsDirectory stringByAppendingPathComponent:@"Tribe"];
     vidPath = [vidPath stringByAppendingPathComponent:name];
     //NSLog(@"tribe video to be saved at:%@", vidPath);
@@ -152,10 +161,18 @@
 }
 
 - (NSString *)videoPath {
+    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *vidPath = [documentsDirectory stringByAppendingPathComponent:vybeKey];
+    vidPath = [vidPath stringByAppendingString:@".mov"];
+    [self setVideoPath:vidPath];
     return videoPath;
 }
 
 - (NSString *)thumbnailPath {
+    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *thumbPath = [documentsDirectory stringByAppendingPathComponent:vybeKey];
+    thumbPath = [thumbPath stringByAppendingString:@".jpeg"];
+    [self setThumbnailPath:thumbPath];
     return thumbnailPath;
 }
 

@@ -32,6 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     // Adding swipe gestures
     UISwipeGestureRecognizer *swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
     swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
@@ -40,19 +41,21 @@
     swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipeRight];
     /* NOTE: Origin for menu button is (0, 0) */
-    // Adding MENU button
-    CGRect buttonMenuFrame = CGRectMake(6, self.view.bounds.size.width - 40, 34, 34);
+    // Adding BACK button
+    CGRect buttonMenuFrame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
     UIButton *buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
-    UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
+    UIImage *menuImage = [UIImage imageNamed:@"button_back.png"];
+    [buttonMenu setContentMode:UIViewContentModeCenter];
     [buttonMenu setImage:menuImage forState:UIControlStateNormal];
-    [buttonMenu addTarget:self action:@selector(goToMenu) forControlEvents:UIControlEventTouchUpInside];
+    [buttonMenu addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonMenu];
     // Adding CAPTURE button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 40, self.view.bounds.size.width - 40, 34, 34);
+    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 50, self.view.bounds.size.width - 50, 50, 50);
     UIButton *buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
+    [buttonCapture setContentMode:UIViewContentModeCenter];
     [buttonCapture setImage:captureImage forState:UIControlStateNormal];
-    [buttonCapture addTarget:self action:@selector(captureVybe) forControlEvents:UIControlEventTouchUpInside];
+    [buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonCapture];
 
     // Adding time label
@@ -124,11 +127,11 @@
     [self playbackFrom:playIndex];
 }
 
-- (void)captureVybe {
+- (void)captureVybe:(id)sender {
     [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
-- (void)goToMenu {
+- (void)goBack:(id)sender {
     [self.navigationController popViewControllerAnimated:NO];
 }
 

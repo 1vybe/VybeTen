@@ -47,15 +47,21 @@
     UIToolbar* blurredView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, mainBounds.size.height, mainBounds.size.width)];
     [blurredView setBarStyle:UIBarStyleBlack];
     [self.view insertSubview:blurredView atIndex:0];
-
+    
     // Adding CAPTURE button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 40, self.view.bounds.size.width - 40, 34, 34);
+    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 50, self.view.bounds.size.width - 50, 50, 50);
     UIButton *buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
-    [buttonCapture setContentMode:UIViewContentModeScaleAspectFit];
+    [buttonCapture setContentMode:UIViewContentModeCenter];
     [buttonCapture setImage:captureImage forState:UIControlStateNormal];
     [buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonCapture];
+    
+    // Adding BACK button
+    UIImage *backImage = [UIImage imageNamed:@"button_back.png"];
+    UIImageView *backImgView = [[UIImageView alloc] initWithImage:backImage];
+    UIBarButtonItem *buttonBack = [[UIBarButtonItem alloc] initWithCustomView:backImgView];
+    [self.navigationController.navigationItem setBackBarButtonItem:buttonBack];
     
     // Adding MyTribe button
     CGRect buttonMyTribesFrame = CGRectMake(self.view.bounds.size.height/4 - 90, self.view.bounds.size.width/2 - 90, 180, 180);

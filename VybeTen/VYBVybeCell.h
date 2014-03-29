@@ -9,8 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @interface VYBVybeCell : UITableViewCell
-@property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
+@property (nonatomic, weak) IBOutlet UIImageView *thumbnailView;
 @property (nonatomic, weak) UILabel *labelTitle;
+@property (nonatomic, strong) UIButton *buttonDelete;
+@property (nonatomic, strong) UIView *topLayer;
+@property (nonatomic, assign) CGFloat firstX;
+@property (nonatomic, assign) CGFloat firstY;
+
 - (void)customize;
 - (void)customizeOtherDirection;
 - (void)customizeWithTitle:(NSString *)title;

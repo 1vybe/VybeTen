@@ -20,7 +20,5 @@
 @property (nonatomic) NSString *tribeName;
 
 - (void)playFrom:(NSInteger)from;
-- (void)captureVybe;
-- (void)goToMenu;
 
 @end

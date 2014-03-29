@@ -14,6 +14,7 @@
 #import "VYBConstants.h"
 #import "VYBReplayViewController.h"
 #import "VYBCaptureProgressView.h"
+#import "VYBMainNavigationController.h"
 
 @implementation VYBCaptureViewController {
     AVCaptureSession *session;
@@ -55,6 +56,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     recording = NO;
     frontCamera = NO;
 
@@ -64,16 +66,17 @@
     
     /* NOTE: Origin for menu button is (0, 0) */
     // Adding menu button
-    CGRect buttonMenuFrame = CGRectMake(6, self.view.bounds.size.width - 40, 34, 34);
-    buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
+    CGRect buttonMenuFrame = CGRectMake(self.view.bounds.size.height - 50, self.view.bounds.size.width - 50, 50, 50);    buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
     UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
+    [buttonMenu setContentMode:UIViewContentModeCenter];
     [buttonMenu setImage:menuImage forState:UIControlStateNormal];
     [buttonMenu addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonMenu];
     // Adding flip button
-    CGRect buttonFlipFrame = CGRectMake(self.view.bounds.size.height - 40, self.view.bounds.size.width - 40, 34, 34);
+    CGRect buttonFlipFrame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
     buttonFlip = [[UIButton alloc] initWithFrame:buttonFlipFrame];
     UIImage *flipImage = [UIImage imageNamed:@"button_flip.png"];
+    [buttonFlip setContentMode:UIViewContentModeCenter];
     [buttonFlip setImage:flipImage forState:UIControlStateNormal];
     [buttonFlip addTarget:self action:@selector(flipCamera:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonFlip];
@@ -83,6 +86,10 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+}
 
 /**
  * Helper functions

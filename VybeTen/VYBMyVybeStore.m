@@ -86,7 +86,7 @@
                 return NO;
             }
         }
-        NSLog(@"removed from S3:%@", response.body);
+        NSLog(@"removed from S3:%@", response.headers);
     } @catch (AmazonServiceException *exception) {
         NSLog(@"[removeVybe]: S3 exception %@", exception);
         // If the bucket is already erased, it will go on and erase from your phone too
@@ -96,8 +96,16 @@
     // Delete the video file from local storage
     NSURL *vidURL = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
     [[NSFileManager defaultManager] removeItemAtURL:vidURL error:&error];
-    if (error)
-        NSLog(@"[removeVybe] Removing a video failed: %@", error);
+    if (error) {
+        NSLog(@"[removeVybe] Removing a video failed");
+        NSLog(@"%@", vidURL);
+        NSLog(@"%@", [v videoPath]);
+    }
+    else {
+        NSLog(@"[removeVybe] Removing a video success");
+        NSLog(@"%@", vidURL);
+        NSLog(@"%@", [v videoPath]);
+    }
     // Delete the image file from local storage
     NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[v thumbnailPath]];
     [[NSFileManager defaultManager] removeItemAtURL:thumbURL error:&error];
@@ -156,6 +164,7 @@
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
     NSData *videoData = [NSData dataWithContentsOfURL:videoURL];
     //NSString *keyString = [NSString stringWithFormat:@"%@/%@.mov", adId, [v timeStamp]];
+    /*
     if (![v vybeKey]) {
         NSLog(@"fixing vybeKey");
         NSCharacterSet *delimiters = [NSCharacterSet characterSetWithCharactersInString:@"["];
@@ -164,7 +173,7 @@
         vykey = [vykey stringByAppendingString:vidPath];
         [v setVybeKey:vykey];
     }
-
+    */
     NSString *keyString = [v vybeKey];
 
     S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:keyString inBucket:[v tribeName] ];
