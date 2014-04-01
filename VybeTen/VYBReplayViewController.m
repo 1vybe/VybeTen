@@ -145,7 +145,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableCell"];
     }
-    NSString *tribeName = [[[[VYBMyTribeStore sharedStore] myTribesVybes] allKeys] objectAtIndex:[indexPath row]];
+    NSString *tribeName = [[[VYBMyTribeStore sharedStore] tribes] objectAtIndex:[indexPath row]];
     // Save the captured vybe in MyVybeStore
     [cell.textLabel setText:tribeName];
     [cell.textLabel setFont:[UIFont fontWithName:@"Montreal-Light" size:20]];

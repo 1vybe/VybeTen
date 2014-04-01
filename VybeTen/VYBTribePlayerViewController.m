@@ -70,7 +70,7 @@
     
     // Start playing videos downloaded from the server
     // Find a vybe to play and set up playerLayer
-    NSString *videoPath = [v videoPath];
+    NSString *videoPath = [v tribeVideoPath];
     NSURL *url = [[NSURL alloc] initFileURLWithPath:videoPath];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
@@ -100,7 +100,7 @@
         }];
         VYBVybe *v = [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] objectAtIndex:from];
         [labelTime setText:[v howOld]];
-        NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
+        NSURL *url = [[NSURL alloc] initFileURLWithPath:[v tribeVideoPath]];
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
         self.currItem = [AVPlayerItem playerItemWithAsset:asset];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];

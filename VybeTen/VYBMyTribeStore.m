@@ -211,7 +211,7 @@
     S3GetObjectRequest *getReq = (S3GetObjectRequest *)request;
     NSLog(@"[%@]DOWN SUCCESS", [getReq bucket]);
     VYBVybe *v = [self vybeWithKey:request.requestTag forTribe:[getReq bucket]];
-    NSString *videoPath = [v videoPath];
+    NSString *videoPath = [v tribeVideoPath];
     NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:videoPath];
     NSData *videoReceived = [[NSData alloc] initWithData:response.body];
     [videoReceived writeToURL:outputURL atomically:YES];
@@ -233,7 +233,7 @@
 }
 
 - (void)saveThumbnailImageForVybe:(VYBVybe *)v {
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
+    NSURL *url = [[NSURL alloc] initFileURLWithPath:[v tribeVideoPath]];
     // Generating and saving a thumbnail for the captured vybe
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
     AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
@@ -244,16 +244,16 @@
     CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
     UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
     NSData *thumbData = UIImageJPEGRepresentation(thumb, 1);
-    NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[v thumbnailPath]];
+    NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[v tribeThumbnailPath]];
     [thumbData writeToURL:thumbURL atomically:YES];
 }
 
 - (NSString *)videoPathAtIndex:(NSInteger)index forTribe:(NSString *)name{
-    return [[[myTribesVybes objectForKey:name] objectAtIndex:index] videoPath];
+    return [[[myTribesVybes objectForKey:name] objectAtIndex:index] tribeVideoPath];
 }
 
 - (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name{
-    return [[[myTribesVybes objectForKey:name] objectAtIndex:index] thumbnailPath];
+    return [[[myTribesVybes objectForKey:name] objectAtIndex:index] tribeThumbnailPath];
 }
 
 - (NSArray *)tribes {
@@ -276,32 +276,6 @@
     //NSLog(@"Tribe Store saving");
     NSString *path = [self myTribesArchivePath];
     return [NSKeyedArchiver archiveRootObject:myTribesVybes toFile:path];
-}
-
-- (BOOL)clear {
-    NSLog(@"Tribe Store cache clearing");
-    NSError *error;
-    for (NSString *tribeName in [myTribesVybes allKeys]) {
-        for (VYBVybe *v in [myTribesVybes objectForKey:tribeName]) {
-            // Delete the video file from local storage
-            NSURL *vidURL = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
-            [[NSFileManager defaultManager] removeItemAtURL:vidURL error:&error];
-            if (error) {
-                NSLog(@"[clear] Removing a video failed: %@", error);
-            } else {
-                NSLog(@"[clear] Removing a video success: %@", error);
-            }
-            // Delete the image file from local storage
-            NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[v thumbnailPath]];
-            [[NSFileManager defaultManager] removeItemAtURL:thumbURL error:&error];
-            if (error) {
-                NSLog(@"[clear] Removing a thumbnail image failed: %@", error);
-            }
-        }
-    }
-    myTribesVybes = nil;
-    [self saveChanges];
-    return YES;
 }
 
 - (VYBVybe *)vybeWithKey:(NSString *)key forTribe:(NSString *)name{
@@ -362,6 +336,56 @@
             return v;
     }
     return nil;
+}
+
+
+- (BOOL)clear {
+    NSLog(@"Tribe Store cache clearing");
+    NSError *error;
+    for (NSString *tribeName in [myTribesVybes allKeys]) {
+        for (VYBVybe *v in [myTribesVybes objectForKey:tribeName]) {
+            // Delete the video file from local storage
+            NSURL *vidURL = [[NSURL alloc] initFileURLWithPath:[v tribeVideoPath]];
+            [[NSFileManager defaultManager] removeItemAtURL:vidURL error:&error];
+            if (error) {
+                NSLog(@"[clear] Removing a video failed: %@", error);
+            } else {
+                NSLog(@"[clear] Removing a video success: %@", error);
+            }
+            // Delete the image file from local storage
+            NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[v tribeThumbnailPath]];
+            [[NSFileManager defaultManager] removeItemAtURL:thumbURL error:&error];
+            if (error) {
+                NSLog(@"[clear] Removing a thumbnail image failed: %@", error);
+            }
+        }
+    }
+    myTribesVybes = nil;
+    [self saveChanges];
+    return YES;
+}
+
+- (void)analyzeTribe:(NSString *)tribe {
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    for (VYBVybe *v in [myTribesVybes objectForKey:tribe]) {
+        NSString *deviceId = [v deviceId];
+        if ( [dictionary objectForKey:deviceId] ) {
+            NSMutableArray *array = [dictionary objectForKey:deviceId];
+            [array addObject:[v vybeKey]];
+        } else {
+            NSMutableArray *array = [[NSMutableArray alloc] init];
+            [dictionary setObject:array forKey:deviceId];
+        }
+    }
+    NSInteger numVybes = 0;
+    for (NSString *deviceId in [dictionary allKeys]) {
+        NSInteger temp = [[dictionary objectForKey:deviceId] count];
+        NSLog(@"User[%@] took %d vybes", deviceId, temp);
+        numVybes = numVybes + temp;
+    }
+    NSLog(@"There are %d vybes.", numVybes);
+    NSLog(@"There are %d people who vybed.", [[dictionary allKeys] count]);
+    
 }
 
 

@@ -30,6 +30,8 @@
 - (NSString *)vybeKey;
 - (NSString *)videoPath;
 - (NSString *)thumbnailPath;
+- (NSString *)tribeVideoPath;
+- (NSString *)tribeThumbnailPath;
 - (NSString *)tribeName;
 - (int)upStatus;
 - (int)downStatus;

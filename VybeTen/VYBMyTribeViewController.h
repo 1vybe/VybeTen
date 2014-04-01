@@ -11,6 +11,6 @@
 @interface VYBMyTribeViewController : UITableViewController <UIAlertViewDelegate>
 @property (nonatomic) UIButton *buttonCapture;
 @property (nonatomic) UIButton *buttonBack;
-@property (nonatomic) UIButton *createButton;
+@property (nonatomic) UILabel *createButton;
 @property (nonatomic) UILabel *countLabel;
 @end

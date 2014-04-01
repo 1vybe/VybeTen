@@ -122,7 +122,6 @@
     NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *vidPath = [documentsDirectory stringByAppendingPathComponent:@"Tribe"];
     vidPath = [vidPath stringByAppendingPathComponent:name];
-    //NSLog(@"tribe video to be saved at:%@", vidPath);
     if (![[NSFileManager defaultManager] fileExistsAtPath:vidPath])
         [[NSFileManager defaultManager] createDirectoryAtPath:vidPath withIntermediateDirectories:YES attributes:nil error:nil];
     vidPath = [vidPath stringByAppendingPathComponent:vybeKey];
@@ -165,15 +164,35 @@
     NSString *vidPath = [documentsDirectory stringByAppendingPathComponent:vybeKey];
     vidPath = [vidPath stringByAppendingString:@".mov"];
     [self setVideoPath:vidPath];
-    return videoPath;
+    return vidPath;
+}
+
+- (NSString *)tribeVideoPath {
+    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *vidPath = [documentsDirectory stringByAppendingPathComponent:@"Tribe"];
+    vidPath = [vidPath stringByAppendingPathComponent:tribeName];
+    vidPath = [vidPath stringByAppendingPathComponent:vybeKey];
+    vidPath = [vidPath stringByAppendingString:@".mov"];
+    //[self setVideoPath:vidPath];
+    return vidPath;
 }
 
 - (NSString *)thumbnailPath {
     NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *thumbPath = [documentsDirectory stringByAppendingPathComponent:vybeKey];
     thumbPath = [thumbPath stringByAppendingString:@".jpeg"];
-    [self setThumbnailPath:thumbPath];
-    return thumbnailPath;
+    //[self setThumbnailPath:thumbPath];
+    return thumbPath;
+}
+
+- (NSString *)tribeThumbnailPath {
+    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *thumbPath = [documentsDirectory stringByAppendingPathComponent:@"Tribe"];
+    thumbPath = [thumbPath stringByAppendingPathComponent:tribeName];
+    thumbPath = [thumbPath stringByAppendingPathComponent:vybeKey];
+    thumbPath = [thumbPath stringByAppendingString:@".jpeg"];
+    //[self setThumbnailPath:thumbPath];
+    return thumbPath;
 }
 
 - (NSString *)dateString {

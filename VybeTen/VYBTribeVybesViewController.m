@@ -126,6 +126,7 @@
         cell = [nib objectAtIndex:0];
     }
     NSString *thumbPath = [[VYBMyTribeStore sharedStore] thumbPathAtIndex:[indexPath row] forTribe:self.tribeName];
+    NSLog(@"Cell with img:%@", thumbPath);
     // Cache thumbnail images into a memory
     UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:thumbPath];
     if (!thumbImg) {

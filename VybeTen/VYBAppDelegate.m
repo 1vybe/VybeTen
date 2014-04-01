@@ -15,9 +15,7 @@
 #import "VYBMyTribeStore.h"
 #import "VYBConstants.h"
 
-@implementation VYBAppDelegate {
-    UIView *overlayView;
-}
+@implementation VYBAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -70,11 +68,6 @@
     AVCaptureConnection *movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
     [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
 
-    // Overlay alertView will be displayed when a user entered in a portrait mode
-    UIDevice *iphone = [UIDevice currentDevice];
-    [iphone beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayOverlay:) name:UIDeviceOrientationDidChangeNotification object:iphone];
-                                            
     VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
     [captureVC setSession:session withVideoInput:videoInput withMovieFileOutput:movieFileOutput];
     [navContoller pushViewController:captureVC animated:NO];
@@ -87,27 +80,13 @@
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
-    NSLog(@"Welcome to %@ Vybe", BUCKET_NAME);
+    NSLog(@"Welcome to Vybe");
+    //[[VYBMyTribeStore sharedStore] clear];
+    [[VYBMyTribeStore sharedStore] analyzeTribe:@"CITY-GAS"];
     return YES;
 }
 
-- (void)removeOverlay:(UIView *)overlay {
-    [overlay removeFromSuperview];
-}
 
-- (void)displayOverlay:(NSNotification *)note {
-    UIDevice *device = [note object];
-    if ( UIDeviceOrientationIsPortrait([device orientation]) ) {
-        UIWindow *window = self.window;
-        overlayView = [[UIView alloc] initWithFrame:window.bounds];
-        [overlayView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:1.0f]];
-        [overlayView setUserInteractionEnabled:YES];
-        
-        [window addSubview:overlayView];
-    } else if ( UIDeviceOrientationIsLandscape([device orientation]) ) {
-        [self removeOverlay:overlayView];
-    }
-}
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -154,11 +133,9 @@
     else
         NSLog(@"Vybe terminated. My vybes will be lost. :(");
     
-    success = [[VYBMyTribeStore sharedStore] clear];
-    if (success)
-        NSLog(@"My tribes caches are cleared. :)");
-    else
-        NSLog(@"My tribes caches are not cleared. :(");
+    //success = [[VYBMyTribeStore sharedStore] clear];
+    //NSLog(@"My tribes caches are cleared. :)");
+    //NSLog(@"My tribes caches are not cleared. :(");
     //[[VYBMyTribeStore sharedStore] listVybes];
 }
 

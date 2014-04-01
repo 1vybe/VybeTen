@@ -68,11 +68,14 @@
 
     // Adding CREATE button
     buttonFrame = CGRectMake(0, 0, 50, 50);
-    self.createButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    buttonImg = [UIImage imageNamed:@"button_add.png"];
-    [self.createButton setContentMode:UIViewContentModeCenter];
-    [self.createButton setImage:buttonImg forState:UIControlStateNormal];
-    [self.createButton addTarget:self action:@selector(createTribe:) forControlEvents:UIControlEventTouchUpInside];
+    self.createButton = [[UILabel alloc] initWithFrame:buttonFrame];
+    [self.createButton setText:@"NEW"];
+    [self.createButton setTextColor:[UIColor whiteColor]];
+    [self.createButton setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(createTribe:)];
+    [self.createButton addGestureRecognizer:tap];
+    [self.createButton setUserInteractionEnabled:YES];
+    [self.createButton setTransform:rotation];
     [self.tableView addSubview:self.createButton];
 
     // Adding COUNT label

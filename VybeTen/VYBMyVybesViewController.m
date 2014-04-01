@@ -131,6 +131,7 @@
     VYBVybe *vybe = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
     // Cache thumbnail images into a memory
     UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:[vybe thumbnailPath]];
+    NSLog(@"MyVybes cell created:%@", [vybe thumbnailPath]);
     if (!thumbImg) {
         //NSLog(@"MyVybe ThumbImg:%@", [vybe thumbnailPath]);
         thumbImg = [UIImage imageWithContentsOfFile:[vybe thumbnailPath]];

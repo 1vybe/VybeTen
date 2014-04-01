@@ -28,8 +28,10 @@
     
     BOOL recording;
     BOOL frontCamera;
+    
+    UIView *overlayView;
 }
-@synthesize labelTimer, buttonFlip, buttonMenu;
+@synthesize labelTimer, buttonFlip, buttonMenu, buttonFlash;
 
 /*
 // Fix orientation to landscapeRight
@@ -56,6 +58,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // Overlay alertView will be displayed when a user entered in a portrait mode
+    //UIDevice *iphone = [UIDevice currentDevice];
+    //[iphone beginGeneratingDeviceOrientationNotifications];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayOverlay:) name:UIDeviceOrientationDidChangeNotification object:iphone];
     
     recording = NO;
     frontCamera = NO;
@@ -64,15 +70,14 @@
     UITapGestureRecognizer * tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(startRecording)];
     [self.view addGestureRecognizer:tapGesture];
     
-    /* NOTE: Origin for menu button is (0, 0) */
-    // Adding menu button
+    // Adding MENU button
     CGRect buttonMenuFrame = CGRectMake(self.view.bounds.size.height - 50, self.view.bounds.size.width - 50, 50, 50);    buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
     UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
     [buttonMenu setContentMode:UIViewContentModeCenter];
     [buttonMenu setImage:menuImage forState:UIControlStateNormal];
     [buttonMenu addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonMenu];
-    // Adding flip button
+    // Adding FLIP button
     CGRect buttonFlipFrame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
     buttonFlip = [[UIButton alloc] initWithFrame:buttonFlipFrame];
     UIImage *flipImage = [UIImage imageNamed:@"button_flip.png"];
@@ -80,6 +85,15 @@
     [buttonFlip setImage:flipImage forState:UIControlStateNormal];
     [buttonFlip addTarget:self action:@selector(flipCamera:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonFlip];
+    // Adding FLASH button
+    CGRect flashFrame = CGRectMake(70, self.view.bounds.size.width - 50, 50, 50);
+    buttonFlash = [[UIButton alloc] initWithFrame:flashFrame];
+    UIImage *flashImage = [UIImage imageNamed:@"button_flip.png"];
+    [buttonFlash setContentMode:UIViewContentModeCenter];
+    [buttonFlash setImage:flashImage forState:UIControlStateNormal];
+    [buttonFlash addTarget:self action:@selector(switchFlash:) forControlEvents:UIControlEventTouchUpInside];
+    //[self.view addSubview:buttonFlash];
+    
     // Adding timer label
     labelTimer = [[VYBCaptureProgressView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.width - (48+10), self.view.bounds.size.height, 10)];
     [self.view addSubview:labelTimer];
@@ -126,6 +140,10 @@
     [labelTimer incrementBar];
 }
 
+- (BOOL)hasTorch {
+    return [[videoInput device] hasTorch];
+}
+
 /**
  * Actions that are triggered by buttons 
  **/
@@ -142,7 +160,7 @@
         [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
         
         recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
-        recording = YES; buttonFlip.hidden = recording; buttonMenu.hidden = recording;
+        recording = YES; buttonFlip.hidden = recording; buttonMenu.hidden = recording; buttonFlash.hidden = recording;
     }
     
     /* Stop Recording */
@@ -161,13 +179,46 @@
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [self turnOffFlash];
+}
+
+- (void)switchFlash:(id)sender {
+    AVCaptureDevice *device = [videoInput device];
+    [session beginConfiguration];
+    [device lockForConfiguration:nil];
+    
+    // Switch flash on/off
+    if ([device torchMode] == AVCaptureTorchModeOn)
+        [device setTorchMode:AVCaptureTorchModeOff];
+    else
+        [device setTorchMode:AVCaptureTorchModeOn];
+    
+    [device unlockForConfiguration];
+    [session commitConfiguration];
+}
+
+- (void)turnOffFlash {
+    AVCaptureDevice *device = [videoInput device];
+    [session beginConfiguration];
+    [device lockForConfiguration:nil];
+    if ( [device isTorchModeSupported:AVCaptureTorchModeOff])
+        [device setTorchMode:AVCaptureTorchModeOff];
+    
+    [device unlockForConfiguration];
+    [session commitConfiguration];
+}
+
 - (void)flipCamera:(id)sender {
     [session stopRunning];
     [session removeInput:videoInput];
-    if (frontCamera)
+    if (frontCamera) {
         videoInput = [self backCameraInput];
-    else
+        buttonFlash.hidden = NO;
+    } else {
         videoInput = [self frontCameraInput];
+        buttonFlash.hidden = YES;
+    }
     
     [session addInput:videoInput];
     frontCamera = !frontCamera;
@@ -182,6 +233,24 @@
 - (void)goToMenu:(id)sender {
     VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
     [[self navigationController] pushViewController:menuVC animated:NO];
+}
+
+- (void)removeOverlay:(UIView *)overlay {
+    [overlay removeFromSuperview];
+}
+
+- (void)displayOverlay:(NSNotification *)note {
+    UIDevice *device = [note object];
+    if ( UIDeviceOrientationIsPortrait([device orientation]) ) {
+        UIWindow *window = self.view.window;
+        overlayView = [[UIView alloc] initWithFrame:window.bounds];
+        [overlayView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:1.0f]];
+        [overlayView setUserInteractionEnabled:YES];
+        
+        [window addSubview:overlayView];
+    } else if ( UIDeviceOrientationIsLandscape([device orientation]) ) {
+        [self removeOverlay:overlayView];
+    }
 }
 
 
@@ -211,7 +280,7 @@
     [recordingTimer invalidate];
     recordingTimer = nil;
     [labelTimer resetBar];
-    recording = NO; buttonFlip.hidden = recording; buttonMenu.hidden = recording;
+    recording = NO; buttonFlip.hidden = recording; buttonMenu.hidden = recording; buttonFlash.hidden = (recording || frontCamera);
     newVybe = nil;
 }
 

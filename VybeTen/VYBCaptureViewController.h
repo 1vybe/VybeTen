@@ -17,6 +17,7 @@
 @property (nonatomic) VYBCaptureProgressView *labelTimer;
 @property (nonatomic) UIButton *buttonFlip;
 @property (nonatomic) UIButton *buttonMenu;
+@property (nonatomic) UIButton *buttonFlash;
 - (void)setSession:(AVCaptureSession *)s withVideoInput:(AVCaptureDeviceInput *)vidInput withMovieFileOutput:(AVCaptureMovieFileOutput *)movieOutput;
 - (void)startRecording;
 - (AVCaptureDeviceInput *)frontCameraInput;

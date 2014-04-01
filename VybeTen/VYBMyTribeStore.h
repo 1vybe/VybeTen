@@ -26,6 +26,7 @@
 - (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name;;
 - (NSString *)myTribesArchivePath;
 - (NSArray *)tribes;
+- (void)analyzeTribe:(NSString *)tribe;
 - (void)listVybes;
 - (BOOL)clear;
 - (BOOL)saveChanges;
