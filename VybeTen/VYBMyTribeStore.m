@@ -256,6 +256,20 @@
     return [[[myTribesVybes objectForKey:name] objectAtIndex:index] tribeThumbnailPath];
 }
 
+- (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name alreadyDownloaded:(BOOL)down{
+    NSInteger cnt = 0;
+    for (NSInteger i = [[myTribesVybes objectForKey:name] count] - 1; i >= 0; i--) {
+        VYBVybe *v = [[myTribesVybes objectForKey:name] objectAtIndex:i];
+        if ([v downStatus] == DOWNLOADED) {
+            if (cnt == index)
+                return [v tribeThumbnailPath];
+            else
+                cnt++;
+        }
+    }
+    return nil;
+}
+
 - (NSArray *)tribes {
     NSArray *tribes = [myTribesVybes allKeys];
     tribes = [tribes sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
@@ -309,7 +323,9 @@
         NSLog(@"already downloading something for this tribe");
         return;
     }
-    VYBVybe *v = [self mostRecentVybeToBeDownloadedFor:tribeName];
+    //VYBVybe *v = [self mostRecentVybeToBeDownloadedFor:tribeName];
+    VYBVybe *v = [self oldestVybeToBeDownloadedFor:tribeName];
+    
     if (!v) {
         NSLog(@"nothing to be downloaded");
         return;
@@ -336,6 +352,25 @@
             return v;
     }
     return nil;
+}
+
+- (VYBVybe *)oldestVybeToBeDownloadedFor:(NSString *)tribeName {
+    NSInteger i;
+    for (i = [[myTribesVybes objectForKey:tribeName] count] - 1; i >= 0; i--) {
+        VYBVybe *v = [[myTribesVybes objectForKey:tribeName] objectAtIndex:i];
+        if ([v downStatus] == DOWNFRESH)
+            return v;
+    }
+    return nil;
+}
+
+- (NSArray *)downloadedVybesForTribe:(NSString *)tribe {
+    NSMutableArray *arr = [[NSMutableArray alloc] init];
+    for (VYBVybe *v in [myTribesVybes objectForKey:tribe]) {
+        if ([v downStatus] == DOWNLOADED)
+            [arr addObject:v];
+    }
+    return arr;
 }
 
 

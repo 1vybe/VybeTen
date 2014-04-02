@@ -22,10 +22,7 @@
     // Rotate the thumbnail image counter-clockwise
     CGAffineTransform rotate = CGAffineTransformMakeRotation(-M_PI_2);
     self.thumbnailView.transform = rotate;
-    // Crop the image to circle
-    CALayer *layer = self.thumbnailView.layer;
-    [layer setCornerRadius:self.thumbnailView.frame.size.width/2];
-    [layer setMasksToBounds:YES];
+    [self.thumbnailView setContentMode:UIViewContentModeScaleAspectFit];
 }
 
 // For vybes in MyVybes
@@ -34,10 +31,7 @@
     // Rotate the thumbnail image clockwise
     CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
     self.thumbnailView.transform = rotate;
-    // Crop the image to circle
-    CALayer *layer = self.thumbnailView.layer;
-    [layer setCornerRadius:self.thumbnailView.frame.size.width/2];
-    [layer setMasksToBounds:YES];
+    [self.thumbnailView setContentMode:UIViewContentModeScaleAspectFit];
 }
 
 // For tribes in MyTribes

@@ -13,8 +13,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="199"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="circle" translatesAutoresizingMaskIntoConstraints="NO" id="64z-i8-9bD">
-                        <rect key="frame" x="70" y="10" width="180" height="180"/>
+                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="circle_thin" translatesAutoresizingMaskIntoConstraints="NO" id="64z-i8-9bD">
+                        <rect key="frame" x="60" y="0.0" width="200" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </imageView>
                 </subviews>
@@ -27,6 +27,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="circle" width="375" height="375"/>
+        <image name="circle_thin" width="180" height="180"/>
     </resources>
 </document>

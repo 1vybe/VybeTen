@@ -8,6 +8,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <HockeySDK/HockeySDK.h>
+#import "GAI.h"
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
 #import "VYBMainNavigationController.h"
@@ -23,6 +24,17 @@
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_ID delegate:self];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+    
+    /* Google Analytics */
+    // Send uncaught exceptions to Google Anaylytics
+    [GAI sharedInstance].trackUncaughtExceptions = YES;
+    // dispatch interval to 20 seconds
+    [GAI sharedInstance].dispatchInterval = 20;
+    [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelVerbose];
+    [[GAI sharedInstance] trackerWithTrackingId:@"UA-49584125-1"];
+    
+    // First tracker instance ever created. Default is good enough now because we are using one property ID for one app
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
@@ -82,7 +94,7 @@
     
     NSLog(@"Welcome to Vybe");
     //[[VYBMyTribeStore sharedStore] clear];
-    [[VYBMyTribeStore sharedStore] analyzeTribe:@"CITY-GAS"];
+    //[[VYBMyTribeStore sharedStore] analyzeTribe:@"CITY-GAS"];
     return YES;
 }
 

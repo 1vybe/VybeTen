@@ -23,9 +23,11 @@
 - (BOOL)syncWithCloudForTribe:(NSString *)tribeName;
 - (BOOL)addNewTribe:(NSString *)tribeName;
 - (NSString *)videoPathAtIndex:(NSInteger)index forTribe:(NSString *)name;
-- (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name;;
+- (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name;
+- (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name alreadyDownloaded:(BOOL)down;
 - (NSString *)myTribesArchivePath;
 - (NSArray *)tribes;
+- (NSArray *)downloadedVybesForTribe:(NSString *)tribe;
 - (void)analyzeTribe:(NSString *)tribe;
 - (void)listVybes;
 - (BOOL)clear;

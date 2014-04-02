@@ -33,7 +33,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
     // Rotate the tableView clockwise for horizontal scrolling
     CGAffineTransform rotateTable = CGAffineTransformMakeRotation(M_PI_2);

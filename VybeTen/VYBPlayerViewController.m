@@ -93,10 +93,6 @@
     // Remove the playerItem that just finished playing
     [[NSNotificationCenter defaultCenter] removeObserver:self.currItem];
     if (from < [[[VYBMyVybeStore sharedStore] myVybes] count]) {
-        // Fade-out effect
-        [UIView animateWithDuration:0.1 animations:^{
-            self.playerView.alpha = 0.0f;
-        }];
         VYBVybe *v = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:from];
         [self.labelTime setText:[NSString stringWithFormat:@"%@ %@", [v dateString], [v timeString]]];
         NSURL *url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
@@ -106,10 +102,6 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
         [self.player replaceCurrentItemWithPlayerItem:self.currItem];
         [self.player play];
-        // Fade-in effect
-        [UIView animateWithDuration:0.8 animations:^{
-            self.playerView.alpha = 1.0f;
-        }];
     }
 }
 

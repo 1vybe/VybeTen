@@ -70,8 +70,7 @@
     
     // Start playing videos downloaded from the server
     // Find a vybe to play and set up playerLayer
-    NSString *videoPath = [v tribeVideoPath];
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:videoPath];
+    NSURL *url = [[NSURL alloc] initFileURLWithPath:[v tribeVideoPath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     // Registering the current playerItem to Notification center
@@ -95,20 +94,15 @@
     // Remove the playerItem that just finished playing
     [[NSNotificationCenter defaultCenter] removeObserver:self.currItem];
     if (from < [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] count]) {
-        [UIView animateWithDuration:0.1 animations:^{
-            self.playerView.alpha = 0.0f;
-        }];
         VYBVybe *v = [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] objectAtIndex:from];
         [labelTime setText:[v howOld]];
         NSURL *url = [[NSURL alloc] initFileURLWithPath:[v tribeVideoPath]];
+        
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
         self.currItem = [AVPlayerItem playerItemWithAsset:asset];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
         [self.player replaceCurrentItemWithPlayerItem:self.currItem];
         [self.player play];
-        [UIView animateWithDuration:0.8 animations:^{
-            self.playerView.alpha = 1.0f;
-        }];
     }
 }
 

@@ -15,7 +15,9 @@
 #import "VYBVybeCell.h"
 #import "VYBImageStore.h"
 #import "VYBPlayerViewController.h"
-
+#import "GAI.h"
+#import "GAIFields.h"
+#import "GAIDictionaryBuilder.h"
 
 @implementation VYBMyVybesViewController
 @synthesize buttonCapture = _buttonCapture;
@@ -40,7 +42,6 @@
 {
     [super viewDidLoad];
 
-    NSLog(@"[viewDidLoad]: MyVybes");
     /* Table Setup for horizontal transparent tableview */
     self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
     // Rotate the tableView for horizontal scrolling
@@ -60,6 +61,11 @@
     CGRect bottomBarFrame = CGRectMake(0, self.view.bounds.size.width - 50, self.view.bounds.size.height, 50);
     self.bottomBar = [[UIView alloc] initWithFrame:bottomBarFrame];
     [self.bottomBar setBackgroundColor:[UIColor clearColor]];
+    
+    // Adding transparent anchor bat at the top also
+    CGRect topBarFrame = CGRectMake(0, 0, self.view.bounds.size.height, 50);
+    self.topBar = [[UIView alloc] initWithFrame:topBarFrame];
+    [self.topBar setBackgroundColor:[UIColor clearColor]];
     
     // Adding CAPTURE button
     CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 50, 0, 50, 50);
@@ -87,14 +93,22 @@
     CGAffineTransform clockwise = CGAffineTransformMakeRotation(M_PI_2);
     self.countLabel.transform = clockwise;
     [self.countLabel setBackgroundColor:[UIColor clearColor]];
-    [self.tableView addSubview:self.countLabel];
+    [self.topBar addSubview:self.countLabel];
 
     
     [[VYBMyVybeStore sharedStore] delayedUploadsBegin];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    NSLog(@"view did appear for MyVybesVC");
+    /* Google Analytics */
+    /*
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        NSLog(@"[GA]: My Vybes View");
+        [tracker set:kGAIScreenName value:@"My Vybes View"];
+        [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    }
+    */
     [super viewDidAppear:animated];
     [self.navigationController.view addSubview:self.bottomBar];
     [[VYBMyVybeStore sharedStore] delayedUploadsBegin];
@@ -131,7 +145,6 @@
     VYBVybe *vybe = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
     // Cache thumbnail images into a memory
     UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:[vybe thumbnailPath]];
-    NSLog(@"MyVybes cell created:%@", [vybe thumbnailPath]);
     if (!thumbImg) {
         //NSLog(@"MyVybe ThumbImg:%@", [vybe thumbnailPath]);
         thumbImg = [UIImage imageWithContentsOfFile:[vybe thumbnailPath]];
@@ -183,14 +196,6 @@
 
 - (void)goBack:(id)sender {
     [self.navigationController popViewControllerAnimated:NO];
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGRect frame = self.countLabel.frame;
-    frame.origin.y = scrollView.contentOffset.y;
-    self.countLabel.frame = frame;
-    
-    [[self view] bringSubviewToFront:self.countLabel];
 }
 
 - (void)didReceiveMemoryWarning

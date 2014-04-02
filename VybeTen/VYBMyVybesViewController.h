@@ -13,5 +13,6 @@
 @property (nonatomic, strong) UIButton *buttonCapture;
 @property (nonatomic, strong) UIButton *buttonBack;
 @property (nonatomic, strong) UIView *bottomBar;
+@property (nonatomic, strong) UIView *topBar;
 @property (nonatomic, strong) UILabel *countLabel;
 @end

@@ -12,7 +12,9 @@
 #import "VYBMyTribeStore.h"
 #import "VYBTribePlayerViewController.h"
 
-@implementation VYBTribeVybesViewController
+@implementation VYBTribeVybesViewController {
+    NSArray *downloadedTribeVybes;
+}
 @synthesize buttonBack = _buttonBack;
 @synthesize buttonCapture = _buttonCapture;
 @synthesize tribeName = _tribeName;
@@ -84,19 +86,27 @@
     [refresh addTarget:self action:@selector(refreshTribeVybes:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refresh];
     
-    //NSLog(@"[TribeVybesViewController]view loaded. Let's sync!");
-}
+    // Update so downloaded vybes are displayed
+    downloadedTribeVybes = [[VYBMyTribeStore sharedStore] downloadedVybesForTribe:self.tribeName];
+    [self.tableView reloadData];
 
+}
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    NSLog(@"#######SYNC BEGIN##########");
-    UIView *view = [[UIView alloc] initWithFrame:self.view.bounds];
-    [view setBackgroundColor:[UIColor redColor]];
-    [self.view addSubview:view];
-    [self.view setNeedsDisplay];
-    BOOL success = [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:self.tribeName];
-    [view removeFromSuperview];
 }
+
+
+/* Scroll down to the bottom to show recent vybes first */
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    //BOOL success = [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:self.tribeName];
+    NSInteger idx = [downloadedTribeVybes count] - 1;
+    if (idx < 0)
+        return;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+}
+
 
 - (void)viewDidDisappear:(BOOL)animated {
     [[VYBMyTribeStore sharedStore] saveChanges];
@@ -105,8 +115,10 @@
 
 
 - (void)refreshTribeVybes:(UIRefreshControl *)refresh {
+    // Check for new vybes
     [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:self.tribeName];
-    NSLog(@"synching really done");
+    // Update so downloaded vybes are displayed
+    downloadedTribeVybes = [[VYBMyTribeStore sharedStore] downloadedVybesForTribe:self.tribeName];
     [self.tableView reloadData];
     [refresh endRefreshing];
     return;
@@ -115,7 +127,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] count];
+    return [downloadedTribeVybes count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -125,7 +137,7 @@
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBVybeCell" owner:self options:nil];
         cell = [nib objectAtIndex:0];
     }
-    NSString *thumbPath = [[VYBMyTribeStore sharedStore] thumbPathAtIndex:[indexPath row] forTribe:self.tribeName];
+    NSString *thumbPath = [[downloadedTribeVybes objectAtIndex:[indexPath row]] tribeThumbnailPath];
     NSLog(@"Cell with img:%@", thumbPath);
     // Cache thumbnail images into a memory
     UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:thumbPath];
@@ -134,7 +146,7 @@
         if (thumbImg)
             [[VYBImageStore sharedStore] setImage:thumbImg forKey:thumbPath];
     }
-    // Customize cell
+    // Customize cell when there is a thumb image
     [cell.thumbnailView setImage:thumbImg];
     [cell customize];
     
@@ -144,7 +156,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     VYBTribePlayerViewController *playerVC = [[VYBTribePlayerViewController alloc] init];
     [playerVC setTribeName:self.tribeName];
-    [playerVC playFrom:[indexPath row]];
+    // Here d indicated the number of downloaded vybes and n is the number of vybes including the ones to be downloaded
+    NSInteger d = [downloadedTribeVybes count];
+    NSInteger n = [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] count];
+    [playerVC playFrom:[indexPath row] - d + n];
     [self.navigationController pushViewController:playerVC animated:NO];
 }
 

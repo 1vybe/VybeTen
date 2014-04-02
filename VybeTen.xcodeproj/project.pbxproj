@@ -18,6 +18,10 @@
 		025DE65718CB143D0054F739 /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65518CB143D0054F739 /* AWSRuntime.framework */; };
 		025DE65818CB143D0054F739 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65618CB143D0054F739 /* AWSS3.framework */; };
 		025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 025DE65A18CB16E30054F739 /* VYBConstants.m */; };
+		027D925118EA868C00537822 /* libGoogleAnalyticsServices.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 027D925018EA868C00537822 /* libGoogleAnalyticsServices.a */; };
+		027D925318EA874500537822 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 027D925218EA874500537822 /* AdSupport.framework */; };
+		027D925518EA875D00537822 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 027D925418EA875D00537822 /* CoreData.framework */; };
+		027D925718EA876A00537822 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 027D925618EA876A00537822 /* libz.dylib */; };
 		028F37F818E3AFA900F84AB7 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 028F37F418E3AFA900F84AB7 /* HockeySDK.framework */; };
 		028F37F918E3AFA900F84AB7 /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 028F37F618E3AFA900F84AB7 /* HockeySDK.xcconfig */; };
 		028F37FA18E3AFA900F84AB7 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 028F37F718E3AFA900F84AB7 /* HockeySDKResources.bundle */; };
@@ -97,6 +101,16 @@
 		025DE65618CB143D0054F739 /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
 		025DE65918CB16E30054F739 /* VYBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBConstants.h; sourceTree = "<group>"; };
 		025DE65A18CB16E30054F739 /* VYBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBConstants.m; sourceTree = "<group>"; };
+		027D924A18EA868100537822 /* GAI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAI.h; sourceTree = "<group>"; };
+		027D924B18EA868100537822 /* GAIDictionaryBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAIDictionaryBuilder.h; sourceTree = "<group>"; };
+		027D924C18EA868100537822 /* GAIFields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAIFields.h; sourceTree = "<group>"; };
+		027D924D18EA868100537822 /* GAILogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAILogger.h; sourceTree = "<group>"; };
+		027D924E18EA868100537822 /* GAITrackedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAITrackedViewController.h; sourceTree = "<group>"; };
+		027D924F18EA868100537822 /* GAITracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAITracker.h; sourceTree = "<group>"; };
+		027D925018EA868C00537822 /* libGoogleAnalyticsServices.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAnalyticsServices.a; sourceTree = "<group>"; };
+		027D925218EA874500537822 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		027D925418EA875D00537822 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		027D925618EA876A00537822 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		028F37F418E3AFA900F84AB7 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
 		028F37F618E3AFA900F84AB7 /* HockeySDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
 		028F37F718E3AFA900F84AB7 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
@@ -163,9 +177,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				027D925718EA876A00537822 /* libz.dylib in Frameworks */,
+				027D925518EA875D00537822 /* CoreData.framework in Frameworks */,
+				027D925318EA874500537822 /* AdSupport.framework in Frameworks */,
 				02B2031518E3AD780020916A /* SystemConfiguration.framework in Frameworks */,
 				02B2031318E3AD670020916A /* Security.framework in Frameworks */,
 				02B2031118E3AD5E0020916A /* QuartzCore.framework in Frameworks */,
+				027D925118EA868C00537822 /* libGoogleAnalyticsServices.a in Frameworks */,
 				02B2030F18E3AD4C0020916A /* CoreText.framework in Frameworks */,
 				60F1BBB618BA692100070EEC /* ImageIO.framework in Frameworks */,
 				60F1BBB118BA34AA00070EEC /* AssetsLibrary.framework in Frameworks */,
@@ -192,6 +210,69 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		027D924618EA85E800537822 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				60F1BBBA18BAB39400070EEC /* VYBVybe.h */,
+				60F1BBBB18BAB39400070EEC /* VYBVybe.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		027D924718EA85EE00537822 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0255736718DB96C6008B1B20 /* VYBCaptureProgressView.h */,
+				0255736818DB96C6008B1B20 /* VYBCaptureProgressView.m */,
+				607CA69818C5C80C0060B420 /* VYBPlayerView.h */,
+				607CA69918C5C80C0060B420 /* VYBPlayerView.m */,
+				60B0DCE918BDCC4E007F4D5C /* VYBVybeCell.h */,
+				60B0DCEA18BDCC4E007F4D5C /* VYBVybeCell.m */,
+				6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		027D924818EA85F300537822 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				6035496018C88B11003F5D3E /* VYBPlayerViewController.h */,
+				6035496118C88B11003F5D3E /* VYBPlayerViewController.m */,
+				60C0745B18CDD28600390BE1 /* VYBTribePlayerViewController.h */,
+				60C0745C18CDD28700390BE1 /* VYBTribePlayerViewController.m */,
+				024924A218E52B7200568441 /* VYBMainNavigationController.h */,
+				024924A318E52B7200568441 /* VYBMainNavigationController.m */,
+				6061246B18B7862F00B0A14E /* VYBCaptureViewController.h */,
+				6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */,
+				0243CC9618CC665200CA03C0 /* VYBReplayViewController.h */,
+				0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */,
+				022296D718BC506D0096BB30 /* VYBMenuViewController.h */,
+				022296D818BC506D0096BB30 /* VYBMenuViewController.m */,
+				022296DC18BCA24C0096BB30 /* VYBMyVybesViewController.h */,
+				022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */,
+				6043968618CAD8A70090F3AE /* VYBMyTribeViewController.h */,
+				6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */,
+				024C28D518DBCE0600399980 /* VYBTribeVybesViewController.h */,
+				024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		027D924918EA85F900537822 /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				60F1BBB718BAAFA900070EEC /* VYBMyVybeStore.h */,
+				60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */,
+				6043968918CAE4A60090F3AE /* VYBMyTribeStore.h */,
+				6043968A18CAE4A60090F3AE /* VYBMyTribeStore.m */,
+				024B0E2918BB39E30073574E /* VYBImageStore.h */,
+				024B0E2A18BB39E30073574E /* VYBImageStore.m */,
+				024B0E2C18BB39FF0073574E /* VYBVideoStore.h */,
+				024B0E2D18BB39FF0073574E /* VYBVideoStore.m */,
+			);
+			name = Store;
+			sourceTree = "<group>";
+		};
 		028F37F318E3AFA900F84AB7 /* HockeySDK.embeddedframework */ = {
 			isa = PBXGroup;
 			children = (
@@ -270,6 +351,16 @@
 		604B627B18B495BB00D3EF19 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				027D925618EA876A00537822 /* libz.dylib */,
+				027D925418EA875D00537822 /* CoreData.framework */,
+				027D925218EA874500537822 /* AdSupport.framework */,
+				027D925018EA868C00537822 /* libGoogleAnalyticsServices.a */,
+				027D924A18EA868100537822 /* GAI.h */,
+				027D924B18EA868100537822 /* GAIDictionaryBuilder.h */,
+				027D924C18EA868100537822 /* GAIFields.h */,
+				027D924D18EA868100537822 /* GAILogger.h */,
+				027D924E18EA868100537822 /* GAITrackedViewController.h */,
+				027D924F18EA868100537822 /* GAITracker.h */,
 				028F37F318E3AFA900F84AB7 /* HockeySDK.embeddedframework */,
 				02B2031418E3AD780020916A /* SystemConfiguration.framework */,
 				02B2031218E3AD670020916A /* Security.framework */,
@@ -293,43 +384,12 @@
 			children = (
 				604B628B18B495BB00D3EF19 /* VYBAppDelegate.h */,
 				604B628C18B495BB00D3EF19 /* VYBAppDelegate.m */,
-				024924A218E52B7200568441 /* VYBMainNavigationController.h */,
-				024924A318E52B7200568441 /* VYBMainNavigationController.m */,
-				6061246B18B7862F00B0A14E /* VYBCaptureViewController.h */,
-				6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */,
-				0243CC9618CC665200CA03C0 /* VYBReplayViewController.h */,
-				0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */,
-				022296D718BC506D0096BB30 /* VYBMenuViewController.h */,
-				022296D818BC506D0096BB30 /* VYBMenuViewController.m */,
-				022296DC18BCA24C0096BB30 /* VYBMyVybesViewController.h */,
-				022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */,
-				6043968618CAD8A70090F3AE /* VYBMyTribeViewController.h */,
-				6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */,
-				024C28D518DBCE0600399980 /* VYBTribeVybesViewController.h */,
-				024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */,
-				60B0DCE918BDCC4E007F4D5C /* VYBVybeCell.h */,
-				60B0DCEA18BDCC4E007F4D5C /* VYBVybeCell.m */,
-				6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */,
-				6035496018C88B11003F5D3E /* VYBPlayerViewController.h */,
-				6035496118C88B11003F5D3E /* VYBPlayerViewController.m */,
-				60C0745B18CDD28600390BE1 /* VYBTribePlayerViewController.h */,
-				60C0745C18CDD28700390BE1 /* VYBTribePlayerViewController.m */,
-				607CA69818C5C80C0060B420 /* VYBPlayerView.h */,
-				607CA69918C5C80C0060B420 /* VYBPlayerView.m */,
-				60F1BBBA18BAB39400070EEC /* VYBVybe.h */,
-				60F1BBBB18BAB39400070EEC /* VYBVybe.m */,
-				60F1BBB718BAAFA900070EEC /* VYBMyVybeStore.h */,
-				60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */,
-				6043968918CAE4A60090F3AE /* VYBMyTribeStore.h */,
-				6043968A18CAE4A60090F3AE /* VYBMyTribeStore.m */,
-				024B0E2918BB39E30073574E /* VYBImageStore.h */,
-				024B0E2A18BB39E30073574E /* VYBImageStore.m */,
-				024B0E2C18BB39FF0073574E /* VYBVideoStore.h */,
-				024B0E2D18BB39FF0073574E /* VYBVideoStore.m */,
+				027D924818EA85F300537822 /* Controller */,
+				027D924718EA85EE00537822 /* View */,
+				027D924618EA85E800537822 /* Model */,
+				027D924918EA85F900537822 /* Store */,
 				025DE65918CB16E30054F739 /* VYBConstants.h */,
 				025DE65A18CB16E30054F739 /* VYBConstants.m */,
-				0255736718DB96C6008B1B20 /* VYBCaptureProgressView.h */,
-				0255736818DB96C6008B1B20 /* VYBCaptureProgressView.m */,
 				604B628E18B495BB00D3EF19 /* Images.xcassets */,
 				604B628318B495BB00D3EF19 /* Supporting Files */,
 			);
@@ -416,6 +476,11 @@
 				TargetAttributes = {
 					604B627818B495BB00D3EF19 = {
 						DevelopmentTeam = KV65D55DL4;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 0;
+							};
+						};
 					};
 					604B629318B495BB00D3EF19 = {
 						TestTargetID = 604B627818B495BB00D3EF19;
@@ -630,8 +695,12 @@
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "DE1D8D3B-83EE-4683-89FA-542B8C4CF318";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -653,8 +722,12 @@
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "339062A2-1564-4875-BC61-EFDDC2DE7A71";
+				PROVISIONING_PROFILE = "CE03EC93-93F9-4AFD-8C9D-4DED413AC5BE";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
