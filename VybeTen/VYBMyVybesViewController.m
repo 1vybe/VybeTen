@@ -84,14 +84,12 @@
     [self.buttonBack addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomBar addSubview:self.buttonBack];
     
-    CGRect frame = CGRectMake(self.view.bounds.size.width - 75, 25, 100, 50);
+    CGRect frame = CGRectMake(0, 0, 100, 50);
     self.countLabel = [[UILabel alloc] initWithFrame:frame];
     [self.countLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
     [self.countLabel setText:[NSString stringWithFormat:@"MY VYBES"]];
     [self.countLabel setTextColor:[UIColor colorWithWhite:1.0 alpha:0.8]];
     [self.countLabel setTextAlignment:NSTextAlignmentCenter];
-    CGAffineTransform clockwise = CGAffineTransformMakeRotation(M_PI_2);
-    self.countLabel.transform = clockwise;
     [self.countLabel setBackgroundColor:[UIColor clearColor]];
     [self.topBar addSubview:self.countLabel];
 
@@ -101,22 +99,22 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     /* Google Analytics */
-    /*
-    id tracker = [[GAI sharedInstance] defaultTracker];
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
-        NSLog(@"[GA]: My Vybes View");
-        [tracker set:kGAIScreenName value:@"My Vybes View"];
+        [tracker set:kGAIScreenName value:@"MyVybes Screen"];
         [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     }
-    */
+    
     [super viewDidAppear:animated];
     [self.navigationController.view addSubview:self.bottomBar];
+    [self.navigationController.view addSubview:self.topBar];
     [[VYBMyVybeStore sharedStore] delayedUploadsBegin];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [self.bottomBar removeFromSuperview];
+    [self.topBar removeFromSuperview];
 }
 
 

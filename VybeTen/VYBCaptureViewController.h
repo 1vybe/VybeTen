@@ -18,6 +18,7 @@
 @property (nonatomic) UIButton *buttonFlip;
 @property (nonatomic) UIButton *buttonMenu;
 @property (nonatomic) UIButton *buttonFlash;
+@property (nonatomic) UILabel *flashLabel;
 - (void)setSession:(AVCaptureSession *)s withVideoInput:(AVCaptureDeviceInput *)vidInput withMovieFileOutput:(AVCaptureMovieFileOutput *)movieOutput;
 - (void)startRecording;
 - (AVCaptureDeviceInput *)frontCameraInput;

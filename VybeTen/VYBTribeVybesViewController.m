@@ -11,6 +11,9 @@
 #import "VYBImageStore.h"
 #import "VYBMyTribeStore.h"
 #import "VYBTribePlayerViewController.h"
+#import "GAI.h"
+#import "GAIDictionaryBuilder.h"
+#import "GAIFields.h"
 
 @implementation VYBTribeVybesViewController {
     NSArray *downloadedTribeVybes;
@@ -93,6 +96,13 @@
 }
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    /* Google Analytics */
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        NSString *value = [NSString stringWithFormat:@"Tribe[%@] Screen", self.tribeName];
+        [tracker set:kGAIScreenName value:value];
+        [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    }
 }
 
 

@@ -9,6 +9,9 @@
 #import "VYBTribePlayerViewController.h"
 #import "VYBMyTribeStore.h"
 #import "VYBPlayerView.h"
+#import "GAI.h"
+#import "GAIFields.h"
+#import "GAIDictionaryBuilder.h"
 
 @implementation VYBTribePlayerViewController {
     NSInteger playIndex;
@@ -106,6 +109,15 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        NSString *value = [NSString stringWithFormat:@"TribePlayer[%@] Screen", self.tribeName];
+        [tracker set:kGAIScreenName value:value];
+        [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    }
+}
 
 /**
  * User Interactions

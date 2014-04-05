@@ -9,6 +9,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <HockeySDK/HockeySDK.h>
 #import "GAI.h"
+#import "GAITracker.h"
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
 #import "VYBMainNavigationController.h"
@@ -35,6 +36,10 @@
     
     // First tracker instance ever created. Default is good enough now because we are using one property ID for one app
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        // New session starts
+        
+    }
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
@@ -151,8 +156,5 @@
     //[[VYBMyTribeStore sharedStore] listVybes];
 }
 
-- (void)haha:(id)sender {
-    
-}
 
 @end

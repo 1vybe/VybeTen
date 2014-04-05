@@ -31,7 +31,7 @@
     
     UIView *overlayView;
 }
-@synthesize labelTimer, buttonFlip, buttonMenu, buttonFlash;
+@synthesize labelTimer, buttonFlip, buttonMenu, buttonFlash, flashLabel;
 
 /*
 // Fix orientation to landscapeRight
@@ -78,7 +78,7 @@
     [buttonMenu addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonMenu];
     // Adding FLIP button
-    CGRect buttonFlipFrame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
+    CGRect buttonFlipFrame = CGRectMake(0, 0, 50, 50);
     buttonFlip = [[UIButton alloc] initWithFrame:buttonFlipFrame];
     UIImage *flipImage = [UIImage imageNamed:@"button_flip.png"];
     [buttonFlip setContentMode:UIViewContentModeCenter];
@@ -86,13 +86,21 @@
     [buttonFlip addTarget:self action:@selector(flipCamera:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonFlip];
     // Adding FLASH button
-    CGRect flashFrame = CGRectMake(70, self.view.bounds.size.width - 50, 50, 50);
+    CGRect flashFrame = CGRectMake(50, 0, 70, 50);
     buttonFlash = [[UIButton alloc] initWithFrame:flashFrame];
-    UIImage *flashImage = [UIImage imageNamed:@"button_flip.png"];
-    [buttonFlash setContentMode:UIViewContentModeCenter];
+    UIImage *flashImage = [UIImage imageNamed:@"button_flash_on.png"];
+    [buttonFlash setContentMode:UIViewContentModeLeft];
     [buttonFlash setImage:flashImage forState:UIControlStateNormal];
     [buttonFlash addTarget:self action:@selector(switchFlash:) forControlEvents:UIControlEventTouchUpInside];
-    //[self.view addSubview:buttonFlash];
+    [self.view addSubview:buttonFlash];
+    // Adding FLASH label
+    flashFrame = CGRectMake(45, 0, 30, 50);
+    flashLabel = [[UILabel alloc] initWithFrame:flashFrame];
+    [flashLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:14]];
+    [flashLabel setTextAlignment:NSTextAlignmentLeft];
+    [flashLabel setTextColor:[UIColor whiteColor]];
+    [flashLabel setText:@"OFF"];
+    [self.buttonFlash addSubview:flashLabel];
     
     // Adding timer label
     labelTimer = [[VYBCaptureProgressView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.width - (48+10), self.view.bounds.size.height, 10)];
@@ -166,16 +174,6 @@
     /* Stop Recording */
     else {
         [movieFileOutput stopRecording];
-        
-        /*
-        startTime = nil;
-        [recordingTimer invalidate];
-        recordingTimer = nil;
-        timerLabel.text = @"00:07";
-        recording = NO; flipButton.hidden = recording; menuButton.hidden = recording;
-         */
-        //TODO: Animated effect to show that the captured vybe is saved and shrinked into menu button
-        //TODO: Bring up a new control view with Cancel/ Done/ Replay/ Timestamp
     }
 }
 
@@ -189,10 +187,14 @@
     [device lockForConfiguration:nil];
     
     // Switch flash on/off
-    if ([device torchMode] == AVCaptureTorchModeOn)
+    if ([device torchMode] == AVCaptureTorchModeOn) {
         [device setTorchMode:AVCaptureTorchModeOff];
-    else
+        [self.flashLabel setText:@"OFF"];
+    }
+    else {
         [device setTorchMode:AVCaptureTorchModeOn];
+        [self.flashLabel setText:@"ON"];
+    }
     
     [device unlockForConfiguration];
     [session commitConfiguration];
@@ -202,14 +204,16 @@
     AVCaptureDevice *device = [videoInput device];
     [session beginConfiguration];
     [device lockForConfiguration:nil];
-    if ( [device isTorchModeSupported:AVCaptureTorchModeOff])
+    if ( [device isTorchModeSupported:AVCaptureTorchModeOff]) {
         [device setTorchMode:AVCaptureTorchModeOff];
-    
+        [self.flashLabel setText:@"OFF"];
+    }
     [device unlockForConfiguration];
     [session commitConfiguration];
 }
 
 - (void)flipCamera:(id)sender {
+    [self turnOffFlash];
     [session stopRunning];
     [session removeInput:videoInput];
     if (frontCamera) {

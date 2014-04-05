@@ -12,6 +12,9 @@
 #import "VYBMyTribeStore.h"
 #import "VYBTribePlayerViewController.h"
 #import "VYBTribeVybesViewController.h"
+#import "GAI.h"
+#import "GAIDictionaryBuilder.h"
+#import "GAIFields.h"
 
 @implementation VYBMyTribeViewController
 
@@ -69,13 +72,18 @@
     // Adding CREATE button
     buttonFrame = CGRectMake(0, 0, 50, 50);
     self.createButton = [[UILabel alloc] initWithFrame:buttonFrame];
-    [self.createButton setText:@"NEW"];
+    //buttonImg = [UIImage imageNamed:@"button_add.png"];
+    //[self.createButton setContentMode:UIViewContentModeCenter];
+    //[self.createButton setImage:buttonImg forState:UIControlStateNormal];
+    [self.createButton setText:@"+"];
     [self.createButton setTextColor:[UIColor whiteColor]];
-    [self.createButton setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
+    [self.createButton setTextAlignment:NSTextAlignmentCenter];
+    [self.createButton setFont:[UIFont fontWithName:@"Montreal-Xlight" size:40]];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(createTribe:)];
     [self.createButton addGestureRecognizer:tap];
     [self.createButton setUserInteractionEnabled:YES];
     [self.createButton setTransform:rotation];
+    //[self.createButton addTarget:self action:@selector(createTribe:) forControlEvents:UIControlEventTouchUpInside];
     [self.tableView addSubview:self.createButton];
 
     // Adding COUNT label
@@ -100,6 +108,12 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    /* Google Analytics */
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        [tracker set:kGAIScreenName value:@"MyTribes Screen"];
+        [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    }
     [super viewDidAppear:animated];
     [[VYBMyTribeStore sharedStore] refreshTribes];
 }
@@ -157,6 +171,10 @@
 }
 
 - (void)createTribe:(id)sender {
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"UIAction" action:@"buttonPress" label:@"createTribeButton" value:[NSNumber numberWithInt:7]] build]];
+    }
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Name your new tribe" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     [alertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
     [alertView show];
@@ -164,17 +182,19 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *tribeName = [[alertView textFieldAtIndex:0] text];
-    BOOL success = [[VYBMyTribeStore sharedStore] addNewTribe:tribeName];
-    if (success) {
-        NSString *msg = [NSString stringWithFormat:@"Awesome! Now %@ is your tribe", tribeName];
-        UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [popUp show];
-    } else {
-        NSString *msg = @"Sorry :( That tribe name is taken";
-        UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [popUp show];
+    if (buttonIndex == 1) {
+        BOOL success = [[VYBMyTribeStore sharedStore] addNewTribe:tribeName];
+        if (success) {
+            NSString *msg = [NSString stringWithFormat:@"Awesome! Now %@ is your tribe", tribeName];
+            UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [popUp show];
+        } else {
+            NSString *msg = @"Sorry :( That tribe name is taken";
+            UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [popUp show];
+        }
+        [self.tableView reloadData];
     }
-    [self.tableView reloadData];
 }
 
 

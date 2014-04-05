@@ -9,6 +9,9 @@
 #import "VYBPlayerViewController.h"
 #import "VYBPlayerView.h"
 #import "VYBMyVybeStore.h"
+#import "GAI.h"
+#import "GAIFields.h"
+#import "GAIDictionaryBuilder.h"
 
 @implementation VYBPlayerViewController {
     NSInteger playIndex;
@@ -105,6 +108,14 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        [tracker set:kGAIScreenName value:@"VybePlayer Screen"];
+        [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    }
+}
 /**
  * User Interactions
  **/

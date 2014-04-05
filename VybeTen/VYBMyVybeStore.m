@@ -152,7 +152,7 @@
     CMTime time = CMTimeMake(1, 60);
     CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
     UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
-    NSData *thumbData = UIImageJPEGRepresentation(thumb, 1);
+    NSData *thumbData = UIImageJPEGRepresentation(thumb, 0.3);
     NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[v thumbnailPath]];
     [thumbData writeToURL:thumbURL atomically:YES];
 }
