@@ -8,6 +8,7 @@
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
+#import <CoreLocation/CoreLocation.h>
 #import "VYBCaptureViewController.h"
 #import "VYBMenuViewController.h"
 #import "VYBMyVybeStore.h"
@@ -30,15 +31,23 @@
     BOOL frontCamera;
     
     UIView *overlayView;
+    
+    CLLocationManager *locationManager;
 }
 @synthesize labelTimer, buttonFlip, buttonMenu, buttonFlash, flashLabel;
 
-/*
-// Fix orientation to landscapeRight
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskLandscapeRight;
+- (id)init {
+    self = [super init];
+    if (self) {
+        locationManager = [[CLLocationManager alloc] init];
+        NSLog(@"Let's invoke the location manager");
+        //[locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+        [locationManager startUpdatingLocation];
+        [locationManager stopUpdatingLocation];
+    }
+    return self;
 }
-*/
+
 - (void)loadView {
     // Retrieves this device's unique ID
     adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];

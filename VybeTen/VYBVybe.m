@@ -12,12 +12,20 @@
 
 @implementation VYBVybe {
     NSDateFormatter *dFormatter;
+    CLLocationManager *locationManager;
 }
 
 - (id)initWithDeviceId:(NSString *)devId {
     self = [super init];
     if (self) {
         [self setUpStatus:UPFRESH];
+        // Save current location
+        locationManager = [[CLLocationManager alloc] init];
+        [locationManager setDelegate:self];
+        [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+        [locationManager startUpdatingLocation];
+        
+        // Save current time
         NSDate *now = [NSDate date];
         [self setDeviceId:devId];
         [self setTimeStamp:now];
@@ -41,6 +49,7 @@
         [self setVideoPath:[aDecoder decodeObjectForKey:@"videoPath"]];
         [self setThumbnailPath:[aDecoder decodeObjectForKey:@"thumbnailPath"]];
         [self setTimeStamp:[aDecoder decodeObjectForKey:@"timeStamp"]];
+        [self setLocation:[aDecoder decodeObjectForKey:@"location"]];
         [self setUpStatus:[aDecoder decodeIntForKey:@"upStatus"]];
         if (upStatus == UPLOADING)
             upStatus = UPFRESH;
@@ -57,12 +66,20 @@
     [aCoder encodeObject:videoPath forKey:@"videoPath"];
     [aCoder encodeObject:thumbnailPath forKey:@"thumbnailPath"];
     [aCoder encodeObject:timeStamp forKey:@"timeStamp"];
+    [aCoder encodeObject:location forKey:@"location"];
     if (upStatus == UPLOADING)
         upStatus = UPFRESH;
     [aCoder encodeInt:upStatus forKey:@"upStatus"];
     if (downStatus == DOWNLOADING)
         downStatus = DOWNFRESH;
     [aCoder encodeInt:downStatus forKey:@"downStatus"];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    [self setLocation:[locations lastObject]];
+    [locationManager stopUpdatingLocation];
+    locationManager = nil;
+    NSLog(@"Vybe taken at %@",location);
 }
 
 - (void)setDeviceId:(NSString *)devId {
@@ -141,6 +158,10 @@
 
 - (void)setTimeStamp:(NSDate *)date {
     timeStamp = date;
+}
+
+- (void)setLocation:(CLLocation *)loc {
+    location = loc;
 }
 
 - (void)setUpStatus:(int)us {
@@ -225,6 +246,10 @@
     return timeStamp;
 }
 
+- (CLLocation *)location {
+    return location;
+}
+
 - (NSString *)deviceId {
     return deviceId;
 }
@@ -270,6 +295,8 @@
     
     return timePassedBy;
 }
+
+
 
 
 @end
