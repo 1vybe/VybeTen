@@ -91,7 +91,7 @@
         NSMutableDictionary *newDictionary = [[NSMutableDictionary alloc] init];
         for (S3Bucket *bucket in result.buckets) {
             /* Here we are manually exlcuding some buckets on testing purpose */
-            if ([bucket.name isEqualToString:@"vybes"] || [bucket.name isEqualToString:@"NUNS-ISLAND"] || [bucket.name isEqualToString:@"CERCLE"] || [bucket.name isEqualToString:@"RUSSIAN"]) {
+            if ([bucket.name isEqualToString:@"vybes"] || [bucket.name isEqualToString:@"NUNS-ISLAND"] || [bucket.name isEqualToString:@"CERCLE"] || [bucket.name isEqualToString:@"mtl_D3"] ) {
             }
             else {
                 // If there already exists a tribe, copy its vybes into new

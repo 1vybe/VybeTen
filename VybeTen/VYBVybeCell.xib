@@ -27,6 +27,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="circle_thin" width="180" height="180"/>
+        <image name="circle_thin" width="90" height="90"/>
     </resources>
 </document>
