@@ -12,5 +12,6 @@
 
 - (void)goToMyVybes:(id)sender;
 - (void)goToMyTribes:(id)sender;
+
 @end
 

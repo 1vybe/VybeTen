@@ -7,21 +7,32 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "VYBVybe.h"
 
 @interface VYBTribe : NSObject <NSCoding> {
     NSString *tribeName;
+    BOOL open;
     NSMutableArray *vybes;
     NSMutableArray *users;
     NSMutableArray *syncs;
 }
 
 - (void)setTribeName:(NSString *)name;
+- (void)setOpen:(BOOL)op;
 - (void)setVybes:(NSMutableArray *)vys;
 - (void)setUsers:(NSMutableArray *)usrs;
 - (void)setSyncs:(NSMutableArray *)s;
 - (NSString *)tribeName;
+- (BOOL)isOpen;
 - (NSMutableArray *)vybes;
 - (NSMutableArray *)users;
 - (NSMutableArray *)syncs;
 
+- (void)addVybe:(VYBVybe *)v;
+- (VYBVybe *)vybeWithKey:(NSString *)vyKey;
+- (BOOL)hasDownloadingVybe;
+- (VYBVybe *)oldestVybeToBeDownloaded;
+- (VYBVybe *)newestVybeTobeDownloaded;
+- (NSArray *)downloadedVybes;
+- (void)changeDownStatusFor:(NSString *)vyKey withStatus:(BOOL)down;
 @end

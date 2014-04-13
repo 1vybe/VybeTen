@@ -14,7 +14,9 @@
     NSMutableArray *myVybes;
     NSString *adId;
 }
+
 @property (nonatomic) AmazonS3Client *s3;
+@property (nonatomic) NSInteger numVybes;
 
 + (VYBMyVybeStore *)sharedStore;
 - (NSArray *)myVybes;

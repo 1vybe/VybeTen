@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface VYBVybeStore : NSObject
+@interface VYBVybeStore : NSObject {
+    NSMutableArray *tribes;
+}
+
++ (VYBVybeStore *)sharedStore;
+- (NSArray *)tribes;
+- (NSString *)tribesArchivePath;
+- (BOOL)saveChanges;
 
 @end

@@ -11,33 +11,17 @@
 @implementation VYBMainNavigationController
 @synthesize bottomBar = _bottomBar;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        self.bottomBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.width - 40, self.view.bounds.size.height, 40)];
-        [self.bottomBar setShadowImage:[[UIImage alloc] init] forToolbarPosition:UIBarPositionBottom];
-        [self.bottomBar setBarStyle:UIBarStyleBlack];
-        //[self.bottomBar setTranslucent:YES];
-
-        [self.view addSubview:self.bottomBar];
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
+    if (operation == UINavigationControllerOperationPop) {
+        return self.animator;
     }
-    return self;
+    return nil;
 }
 
-- (void)captureVybe:(id)sender {
-    [self popToRootViewControllerAnimated:NO];
+- (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController {
+    return self.interactionController;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 
 @end

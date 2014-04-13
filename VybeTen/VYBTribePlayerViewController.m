@@ -20,7 +20,7 @@
 @synthesize playerView = _playerView;
 @synthesize currItem = _currItem;
 @synthesize labelTime, labelDate;
-@synthesize tribeName = _tribeName;
+@synthesize currTribe = _currTribe;
 
 - (void)loadView {
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
@@ -68,7 +68,7 @@
     [labelTime setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:labelTime];
 
-    VYBVybe *v = [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] objectAtIndex:playIndex];
+    VYBVybe *v = [[self.currTribe vybes] objectAtIndex:playIndex];
     [labelTime setText:[v howOld]];
     
     // Start playing videos downloaded from the server
@@ -96,8 +96,8 @@
 - (void)playbackFrom:(NSInteger)from {
     // Remove the playerItem that just finished playing
     [[NSNotificationCenter defaultCenter] removeObserver:self.currItem];
-    if (from < [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] count]) {
-        VYBVybe *v = [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] objectAtIndex:from];
+    if (from < [[self.currTribe vybes] count]) {
+        VYBVybe *v = [[self.currTribe vybes] objectAtIndex:from];
         [labelTime setText:[v howOld]];
         NSURL *url = [[NSURL alloc] initFileURLWithPath:[v tribeVideoPath]];
         
@@ -113,7 +113,7 @@
     [super viewDidAppear:animated];
     id tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
-        NSString *value = [NSString stringWithFormat:@"TribePlayer[%@] Screen", self.tribeName];
+        NSString *value = [NSString stringWithFormat:@"TribePlayer[%@] Screen", [self.currTribe tribeName]];
         [tracker set:kGAIScreenName value:value];
         [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     }

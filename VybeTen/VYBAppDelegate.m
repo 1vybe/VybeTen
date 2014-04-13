@@ -31,7 +31,7 @@
     [GAI sharedInstance].trackUncaughtExceptions = YES;
     // dispatch interval to 20 seconds
     [GAI sharedInstance].dispatchInterval = 20;
-    [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelVerbose];
+    [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelNone];
     [[GAI sharedInstance] trackerWithTrackingId:@"UA-49584125-1"];
     
     // First tracker instance ever created. Default is good enough now because we are using one property ID for one app

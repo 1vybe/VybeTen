@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 @class VYBPlayerView;
+@class VYBTribe;
 
 @interface VYBTribePlayerViewController : UIViewController
 @property (nonatomic) AVPlayer *player;
@@ -17,7 +18,7 @@
 @property (nonatomic) VYBPlayerView *playerView;
 @property (nonatomic) UILabel *labelDate;
 @property (nonatomic) UILabel *labelTime;
-@property (nonatomic) NSString *tribeName;
+@property (nonatomic) VYBTribe *currTribe;
 
 - (void)playFrom:(NSInteger)from;
 

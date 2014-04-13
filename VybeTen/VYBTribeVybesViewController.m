@@ -20,7 +20,7 @@
 }
 @synthesize buttonBack = _buttonBack;
 @synthesize buttonCapture = _buttonCapture;
-@synthesize tribeName = _tribeName;
+@synthesize currTribe = _currTribe;
 @synthesize countLabel = _countLabel;
 
 - (id)init {
@@ -77,7 +77,7 @@
     CGRect frame = CGRectMake(-35, self.view.bounds.size.height - 85, 120, 50);
     self.countLabel = [[UILabel alloc] initWithFrame:frame];
     [self.countLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
-    [self.countLabel setText:[NSString stringWithFormat:@"%@", self.tribeName]];
+    [self.countLabel setText:[NSString stringWithFormat:@"%@", [self.currTribe tribeName]]];
     [self.countLabel setTextColor:[UIColor colorWithWhite:1.0 alpha:0.8]];
     [self.countLabel setTextAlignment:NSTextAlignmentCenter];
     self.countLabel.transform = counterClockwise;
@@ -90,16 +90,14 @@
     [self.tableView addSubview:refresh];
     
     // Update so downloaded vybes are displayed
-    downloadedTribeVybes = [[VYBMyTribeStore sharedStore] downloadedVybesForTribe:self.tribeName];
-    [self.tableView reloadData];
-
+    [self refreshTribeVybes:refresh];
 }
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     /* Google Analytics */
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
-        NSString *value = [NSString stringWithFormat:@"Tribe[%@] Screen", self.tribeName];
+        NSString *value = [NSString stringWithFormat:@"Tribe[%@] Screen", [self.currTribe tribeName]];
         [tracker set:kGAIScreenName value:value];
         [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     }
@@ -126,12 +124,18 @@
 
 - (void)refreshTribeVybes:(UIRefreshControl *)refresh {
     // Check for new vybes
-    [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:self.tribeName];
-    // Update so downloaded vybes are displayed
-    downloadedTribeVybes = [[VYBMyTribeStore sharedStore] downloadedVybesForTribe:self.tribeName];
-    [self.tableView reloadData];
-    [refresh endRefreshing];
-    return;
+    [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:[self.currTribe tribeName] withCompletionBlock:^(NSError *err){
+        [refresh endRefreshing];
+        if (!err) {
+            // Update so downloaded vybes are displayed
+            downloadedTribeVybes = [self.currTribe downloadedVybes];
+            [self.tableView reloadData];
+        }
+        else {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [av show];
+        }
+    }];
 }
 
 
@@ -165,10 +169,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     VYBTribePlayerViewController *playerVC = [[VYBTribePlayerViewController alloc] init];
-    [playerVC setTribeName:self.tribeName];
+    
+    [playerVC setCurrTribe:self.currTribe];
     // Here d indicated the number of downloaded vybes and n is the number of vybes including the ones to be downloaded
     NSInteger d = [downloadedTribeVybes count];
-    NSInteger n = [[[[VYBMyTribeStore sharedStore] myTribesVybes] objectForKey:self.tribeName] count];
+    NSInteger n = [[self.currTribe vybes] count];
     [playerVC playFrom:[indexPath row] - d + n];
     [self.navigationController pushViewController:playerVC animated:NO];
 }

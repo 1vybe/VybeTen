@@ -8,6 +8,23 @@
 
 #import <Foundation/Foundation.h>
 
-@interface VYBUser : NSObject
+@interface VYBUser : NSObject <NSCoding> {
+    NSString *deviceId;
+    NSString *username;
+    NSMutableArray *vybes;
+    NSMutableArray *tribes;
+    NSMutableArray *friends;
+}
+
+- (void)setDeviceId:(NSString *)devId;
+- (void)setUsername:(NSString *)name;
+- (void)setVybes:(NSMutableArray *)vs;
+- (void)setTribes:(NSMutableArray *)ts;
+- (void)setFriends:(NSMutableArray *)fs;
+- (NSString *)deviceId;
+- (NSString *)username;
+- (NSMutableArray *)vybes;
+- (NSMutableArray *)tribes;
+- (NSMutableArray *)friends;
 
 @end

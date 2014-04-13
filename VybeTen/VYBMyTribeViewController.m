@@ -105,6 +105,8 @@
     refresh.tintColor = [UIColor whiteColor];
     [refresh addTarget:self action:@selector(refreshTribes:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refresh];
+    
+    [self refreshTribes:refresh];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -115,15 +117,20 @@
         [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     }
     [super viewDidAppear:animated];
-    [[VYBMyTribeStore sharedStore] refreshTribes];
+    //[[VYBMyTribeStore sharedStore] refreshTribes];
 }
 
 - (void)refreshTribes:(UIRefreshControl *)refresh {
-    BOOL success = [[VYBMyTribeStore sharedStore] refreshTribes];
-    if (success)
-        NSLog(@"refresh really really done");
-    [refresh endRefreshing];
-    [self.tableView reloadData];
+    [[VYBMyTribeStore sharedStore] refreshTribesWithCompletion:^(NSError *err) {
+        [refresh endRefreshing];
+        if (!err) {
+            [self.tableView reloadData];
+        }
+        else {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [av show];
+        }
+    }];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -134,7 +141,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[VYBMyTribeStore sharedStore] tribes] count];
+    return [[[VYBMyTribeStore sharedStore] myTribes] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -144,20 +151,20 @@
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBVybeCell" owner:self options:nil];
         cell = [nib objectAtIndex:0];
     }
-    NSArray *tribes = [[VYBMyTribeStore sharedStore] tribes];
+    NSArray *tribes = [[VYBMyTribeStore sharedStore] myTribes];
     //NSLog(@"there are %d keys", [keys count]);
-    NSString *title = [tribes objectAtIndex:[indexPath row]];
+    NSString *title = [[tribes objectAtIndex:[indexPath row]] tribeName];
     [cell customizeWithTitle:title];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSArray *tribes = [[VYBMyTribeStore sharedStore] tribes];
+    NSArray *tribes = [[VYBMyTribeStore sharedStore] myTribes];
     NSLog(@"there are %d keys", [tribes count]);
-    NSString *title = [tribes objectAtIndex:[indexPath row]];
+    VYBTribe *tribe = [tribes objectAtIndex:[indexPath row]];
     VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
-    NSLog(@"TribeVybesVC initiated for %@ Tribe", title);
-    [vybesVC setTribeName:title];
+    NSLog(@"TribeVybesVC initiated for %@ Tribe", [tribe tribeName]);
+    [vybesVC setCurrTribe:tribe];
     [self.navigationController pushViewController:vybesVC animated:NO];
 }
 
@@ -171,6 +178,7 @@
 }
 
 - (void)createTribe:(id)sender {
+    /* Report this action to Google Analytics */
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
         [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"UIAction" action:@"buttonPress" label:@"createTribeButton" value:[NSNumber numberWithInt:7]] build]];

@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VYBAnimator.h"
 
-@interface VYBMainNavigationController : UINavigationController
+@interface VYBMainNavigationController : UINavigationController <UINavigationControllerDelegate>
+
+@property (weak, nonatomic) IBOutlet UINavigationController *navigationController;
+@property (strong, nonatomic) VYBAnimator *animator;
+@property (strong, nonatomic) UIPercentDrivenInteractiveTransition* interactionController;
 @property (nonatomic, strong) UIToolbar *bottomBar;
+
 @end

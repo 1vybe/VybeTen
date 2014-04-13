@@ -8,15 +8,25 @@
 
 #import "VYBVybe.h"
 #import "VYBConstants.h"
-
+#import "VYBMyTribeStore.h"
 
 @implementation VYBVybe {
     NSDateFormatter *dFormatter;
     CLLocationManager *locationManager;
 }
 
-- (id)initWithDeviceId:(NSString *)devId {
+- (id)init {
     self = [super init];
+    if (self) {
+        dFormatter = [[NSDateFormatter alloc] init];
+        dFormatter = [[VYBMyTribeStore sharedStore] presetDateFormatter];
+    }
+    return self;
+}
+
+/*** This method should be called ONLY when capturing a new vybe. ***/
+- (id)initWithDeviceId:(NSString *)devId {
+    self = [self init];
     if (self) {
         [self setUpStatus:UPFRESH];
         // Save current location
@@ -29,10 +39,6 @@
         NSDate *now = [NSDate date];
         [self setDeviceId:devId];
         [self setTimeStamp:now];
-        dFormatter = [[NSDateFormatter alloc] init];
-        [dFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss:SSS"];
-        NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-        [dFormatter setTimeZone:gmt];
         NSString *dateString = [dFormatter stringFromDate:now];
         NSString *keyString = [NSString stringWithFormat:@"[%@]%@", deviceId, dateString];
         [self setVybeKey:keyString];
@@ -217,29 +223,27 @@
 }
 
 - (NSString *)dateString {
-    if (!dFormatter)
-        dFormatter = [[NSDateFormatter alloc] init];
-    [dFormatter setDateStyle:NSDateFormatterMediumStyle];
-    [dFormatter setTimeStyle:NSDateFormatterNoStyle];
+    NSDateFormatter *dateForm = [[NSDateFormatter alloc] init];
+    [dateForm setDateStyle:NSDateFormatterMediumStyle];
+    [dateForm setTimeStyle:NSDateFormatterNoStyle];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [dFormatter setLocale:usLocale];
+    [dateForm setLocale:usLocale];
     NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-    [dFormatter setTimeZone:gmt];
+    [dateForm setTimeZone:gmt];
 
-    return [dFormatter stringFromDate:timeStamp];
+    return [dateForm stringFromDate:timeStamp];
 }
 
 - (NSString *)timeString {
-    if (!dFormatter)
-        dFormatter = [[NSDateFormatter alloc] init];
-    [dFormatter setTimeStyle:NSDateFormatterShortStyle];
-    [dFormatter setDateStyle:NSDateFormatterNoStyle];
+    NSDateFormatter *dateForm = [[NSDateFormatter alloc] init];
+    [dateForm setTimeStyle:NSDateFormatterShortStyle];
+    [dateForm setDateStyle:NSDateFormatterNoStyle];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [dFormatter setLocale:usLocale];
+    [dateForm setLocale:usLocale];
     NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-    [dFormatter setTimeZone:gmt];
+    [dateForm setTimeZone:gmt];
     
-    return [dFormatter stringFromDate:timeStamp];
+    return [dateForm stringFromDate:timeStamp];
 }
 
 - (NSDate *)timeStamp {

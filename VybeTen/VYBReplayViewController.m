@@ -95,8 +95,8 @@
     [tableVC.tableView addSubview:buttonCancel];
     
     [self.navigationController pushViewController:tableVC animated:NO];
-    if ([[[VYBMyTribeStore sharedStore] tribes] count] < 1)
-        [[VYBMyTribeStore sharedStore] refreshTribes];
+    //if ([[[VYBMyTribeStore sharedStore] myTribes] count] < 1)
+        //[[VYBMyTribeStore sharedStore] refreshTribes];
     
 }
 
@@ -136,7 +136,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     //NSLog(@"[ReplayViewController]There are %d tribes", [[[[VYBMyTribeStore sharedStore] myTribesVybes] allKeys] count]);
-    return [[[VYBMyTribeStore sharedStore] tribes] count];
+    return [[[VYBMyTribeStore sharedStore] myTribes] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -145,7 +145,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableCell"];
     }
-    NSString *tribeName = [[[VYBMyTribeStore sharedStore] tribes] objectAtIndex:[indexPath row]];
+    NSString *tribeName = [[[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]] tribeName];
     // Save the captured vybe in MyVybeStore
     [cell.textLabel setText:tribeName];
     [cell.textLabel setFont:[UIFont fontWithName:@"Montreal-Light" size:20]];
@@ -166,7 +166,7 @@
     NSLog(@"Cell %@ selected, let's make the text big", [cell.textLabel text]);
     [cell.textLabel setFont:[UIFont systemFontOfSize:24]];
     [cell.textLabel setTextColor:[UIColor whiteColor]];
-    NSString *tribeName = [[[VYBMyTribeStore sharedStore] tribes] objectAtIndex:[indexPath row]];
+    NSString *tribeName = [[[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]] tribeName];
 
     [self performSelector:@selector(uploadForTribe:) withObject:tribeName afterDelay:0.2];
 }

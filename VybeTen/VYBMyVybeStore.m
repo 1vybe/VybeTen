@@ -15,6 +15,7 @@
 
 @implementation VYBMyVybeStore
 @synthesize s3 = _s3;
+@synthesize numVybes = _numVybes;
 
 + (VYBMyVybeStore *)sharedStore {
     static VYBMyVybeStore *sharedStore = nil;
@@ -39,6 +40,8 @@
         myVybes = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
         if (!myVybes)
             myVybes = [[NSMutableArray alloc] init];
+        
+        self.numVybes = [myVybes count];
         // Initialize S3 client
         @try {
             self.s3 = [[AmazonS3Client alloc] initWithAccessKey:ACCESS_KEY_ID withSecretKey:SECRET_KEY];
@@ -71,6 +74,8 @@
     }@catch (NSError *err) {
         NSLog(@"Error occured while adding a vybe:%@", err);
     }
+    
+    self.numVybes++;
 }
 
 - (BOOL)removeVybe:(VYBVybe *)v {
@@ -115,6 +120,7 @@
     for (VYBVybe *vy in myVybes) {
         if ([vy vybeKey] == [v vybeKey]) {
             [myVybes removeObject:vy];
+            self.numVybes--;
             break;
         }
     }
@@ -235,14 +241,18 @@
 
 - (BOOL)hasUploadingVybeAlready{
     for (VYBVybe *v in myVybes) {
-        if ([v upStatus] == UPLOADING)
+        if ([v upStatus] == UPLOADING) {
+            NSLog(@"Already uploading");
             return YES;
+        }
     }
     return NO;
 }
 
 - (VYBVybe *)mostRecentVybeToBeUploaded {
+    NSLog(@"MOST RECENT VYBE");
     for (VYBVybe *v in myVybes) {
+        NSLog(@"[%d]", [v upStatus]);
         if ([v upStatus] == UPFRESH)
             return v;
     }

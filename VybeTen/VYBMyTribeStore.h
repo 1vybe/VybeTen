@@ -8,29 +8,33 @@
 
 #import <Foundation/Foundation.h>
 #import <AWSS3/AWSS3.h>
-#import "VYBVybe.h"
+#import "VYBTribe.h"
 
 @interface VYBMyTribeStore : NSObject <AmazonServiceRequestDelegate> {
-    NSMutableDictionary *myTribesVybes;
+    NSMutableArray *myTribes;
     NSString *adId;
 }
 @property (nonatomic) AmazonS3Client *s3;
 
 + (VYBMyTribeStore *)sharedStore;
-- (NSDictionary *)myTribesVybes;
-
-- (BOOL)refreshTribes;
-- (BOOL)syncWithCloudForTribe:(NSString *)tribeName;
+- (NSArray *)myTribes;
+- (void)setMyTribes:(NSMutableArray *)tribes;
+- (void)refreshTribes;
+- (void)refreshTribesWithCompletion:(void (^)(NSError *err))block;
+- (void)syncWithCloudForTribe:(NSString *)name withCompletionBlock:(void (^)(NSError *err))block;
+- (void)downloadTribeVybesFor:(VYBTribe *)tribe;
 - (BOOL)addNewTribe:(NSString *)tribeName;
 - (NSString *)videoPathAtIndex:(NSInteger)index forTribe:(NSString *)name;
 - (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name;
 - (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name alreadyDownloaded:(BOOL)down;
 - (NSString *)myTribesArchivePath;
-- (NSArray *)tribes;
-- (NSArray *)downloadedVybesForTribe:(NSString *)tribe;
-- (void)analyzeTribe:(NSString *)tribe;
+- (NSDateFormatter *)presetDateFormatter;
+//- (NSArray *)tribes;
+- (BOOL)hasTribe:(NSString *)name;
+- (VYBTribe *)tribe:(NSString *)name;
+//- (void)analyzeTribe:(NSString *)tribe;
 - (void)listVybes;
-- (BOOL)clear;
+//- (BOOL)clear;
 - (BOOL)saveChanges;
 
 @end

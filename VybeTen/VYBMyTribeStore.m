@@ -1,6 +1,8 @@
 //
 //  VYBMyTribeStore.m
-//  VybeTen
+//
+//  myTribes is an array to keep track of tribes.
+//  **ASSUMPTION: Tribe names are unique.
 //
 //  Created by Kim Jin Su on 2014. 3. 8..
 //  Copyright (c) 2014년 Vybe. All rights reserved.
@@ -11,6 +13,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "VYBMyTribeStore.h"
 #import "VYBConstants.h"
+#import "VYBS3Connector.h"
 
 @implementation VYBMyTribeStore {
     NSDateFormatter *dFormatter;
@@ -53,15 +56,19 @@
         // Load saved videos from Tribe's Documents directory
 
         NSString *path = [self myTribesArchivePath];
-        myTribesVybes = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
-        if (!myTribesVybes)
-            myTribesVybes = [[NSMutableDictionary alloc] init];
+        myTribes = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+        if (!myTribes)
+            myTribes = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
-- (NSDictionary *)myTribesVybes {
-    return myTribesVybes;
+- (NSArray *)myTribes {
+    return myTribes;
+}
+
+- (void)setMyTribes:(NSMutableArray *)tribes {
+    myTribes = tribes;
 }
 
 
@@ -70,7 +77,10 @@
         S3CreateBucketRequest *request = [[S3CreateBucketRequest alloc] initWithName:tribeName];
         [self.s3 createBucket:request];
         NSLog(@"A new tribe added");
-        [myTribesVybes setObject:[[NSMutableArray alloc] init] forKey:tribeName];
+        VYBTribe *newTribe = [[VYBTribe alloc] init];
+        [newTribe setTribeName:tribeName];
+        
+        [myTribes addObject:newTribe];
     } @catch (AmazonServiceException *exception){
         NSLog(@"[MyTribe addNewTribe] Amazon Service Error: %@", exception);
         return NO;
@@ -81,74 +91,44 @@
     return YES;
 }
 
-- (BOOL)refreshTribes {
-    NSLog(@"Refreshing tribe lists");
-    @try {
-        S3ListBucketsRequest *bucketReq = [[S3ListBucketsRequest alloc] init];
-        S3ListBucketsResponse *buckets = [self.s3 listBuckets:bucketReq];
-        S3ListBucketsResult *result = buckets.listBucketsResult;
-        NSLog(@"There are %d tribes in the server", [result.buckets count]);
-        NSMutableDictionary *newDictionary = [[NSMutableDictionary alloc] init];
-        for (S3Bucket *bucket in result.buckets) {
-            /* Here we are manually exlcuding some buckets on testing purpose */
-            if ([bucket.name isEqualToString:@"vybes"] || [bucket.name isEqualToString:@"NUNS-ISLAND"] || [bucket.name isEqualToString:@"CERCLE"] || [bucket.name isEqualToString:@"mtl_D3"] ) {
-            }
-            else {
-                // If there already exists a tribe, copy its vybes into new
-                if ( [myTribesVybes objectForKey:bucket.name] ) {
-                    [newDictionary setObject:[myTribesVybes objectForKey:bucket.name] forKey:bucket.name];
-                } else {
-                    [newDictionary setObject:[[NSMutableArray alloc] init] forKey:bucket.name];
-                }
-            }
-        }
-        myTribesVybes = nil;
-        myTribesVybes = newDictionary;
-    } @catch (AmazonServiceException *exception) {
-        NSLog(@"[MyTribe]AWS error: %@", exception);
-        return NO;
-    }
-    return YES;
+- (void)refreshTribesWithCompletion:(void (^)(NSError *err))block {
+    NSLog(@"Async Refreshing Tribes");
+    S3ListBucketsRequest *bucketReq = [[S3ListBucketsRequest alloc] init];
+    VYBS3Connector *s3connector = [[VYBS3Connector alloc] initWithClient:self.s3 completionBlock:block];
+    [s3connector setCompletionBlock:block];
+    [s3connector startTribeListRequest:bucketReq];
 }
 
-- (BOOL)syncWithCloudForTribe:(NSString *)name {
-    NSLog(@"Already existing %u vybes in %@ Tribe", [[myTribesVybes objectForKey:name] count], name);
-    @try {
-        NSLog(@"Synching with %@ Tribe", name);
-        // Tribe name is bucket name is S3
-        S3ListObjectsRequest *lor = [[S3ListObjectsRequest alloc] initWithName:name];
-        S3ListObjectsResponse *listResponse = [self.s3 listObjects:lor];;
-        S3ListObjectsResult *result = listResponse.listObjectsResult;
-        NSString *buckName = result.bucketName;
-        NSLog(@"Server has %d videos for %@ Tribe", [result.objectSummaries count], name);
-        if ([result.objectSummaries count] == 0)
-            return YES;
-        else {
-            NSLog(@"adding begins");
-            for (S3ObjectSummary *obj in result.objectSummaries) {
-                // will be added ONLY if new
-                [self addNewVybeWithKey:[obj key] forTribe:buckName];
-            }
-            NSLog(@"adding done");
-            [self downloadTribeVybesFor:buckName];
-            return YES;
-        }
-      } @catch (AmazonServiceException *exception) {
-          NSLog(@"[MyTribe]AWS Error: %@", exception);
-          return NO;
-    } @catch (NSException *exception) {
-        NSLog(@"[MyTribe]Exception: %@", exception);
-        return NO;
-    } @catch (NSError *err) {
-        NSLog(@"[MyTribe]Error: %@", err);
-        return NO;
-    }
-    return YES;
+- (void)syncWithCloudForTribe:(NSString *)name withCompletionBlock:(void (^)(NSError *err))block {
+    //NSLog(@"Already existing %u vybes in %@ Tribe", [[myTribesVybes objectForKey:name] count], name);
+
+    NSLog(@"Synching with %@ Tribe", name);
+    // Tribe name is bucket name is S3
+    S3ListObjectsRequest *lor = [[S3ListObjectsRequest alloc] initWithName:name];
+    VYBS3Connector *connector = [[VYBS3Connector alloc] initWithClient:self.s3 completionBlock:block];
+    [connector startTribeVybesRequest:lor];
 }
 
 
+- (BOOL)hasTribe:(NSString *)trname {
+    for (VYBTribe *t in myTribes) {
+        if ( [[t tribeName] isEqualToString:trname] )
+            return YES;
+    }
+    return NO;
+}
 
+- (VYBTribe *)tribe:(NSString *)name {
+    for (VYBTribe *t in myTribes) {
+        if ( [[t tribeName] isEqualToString:name] )
+            return t;
+    }
+    return nil;
+}
+
+/*
 - (void)addNewVybeWithKey:(NSString *)key forTribe:(NSString *)name{
+    VYBTribe *newT = [self tribe:name];
     if ( [self vybeWithKey:key forTribe:name] )
         return;
     NSInteger i = 0;
@@ -156,8 +136,8 @@
     NSDate *dateObj = [self extractDateFrom:key];
     [newVybe setTimeStamp:dateObj];
     
-    for (; i < [[myTribesVybes objectForKey:name] count]; i++) {
-        if ([newVybe isFresherThan:[[myTribesVybes objectForKey:name] objectAtIndex:i]]) {
+    for (; i < [[newT vybes] count]; i++) {
+        if ([newVybe isFresherThan:[[newT vybes] objectAtIndex:i]]) {
             break;
         }
     }
@@ -167,15 +147,20 @@
     [newVybe setTribeName:name];
     [newVybe setVybeKey:key];
     [newVybe setTribeVybePathWith:name];
-    [newVybe setDeviceId:[self extractDeviceIdFrom:key]];
+    //[newVybe setDeviceId:[self extractDeviceIdFrom:key]];
     [newVybe setDownStatus:DOWNFRESH];
     [[myTribesVybes objectForKey:name] insertObject:newVybe atIndex:i];
     //[self saveChanges];
 }
+ */
 
 /**
  * Helper Functions
  **/
+
+- (NSDateFormatter *)presetDateFormatter {
+    return dFormatter;
+}
 
 - (NSString *)extractDeviceIdFrom:(NSString *)str {
     NSCharacterSet *delimiters = [NSCharacterSet characterSetWithCharactersInString:@"[]"];
@@ -199,7 +184,7 @@
 
 
 - (void)listVybes {
-    for (VYBVybe *v in myTribesVybes) {
+    for (VYBVybe *v in myTribes) {
         NSLog(@"tribe vybe[%d]:%@", [v downStatus], [v vybeKey]);
     }
 }
@@ -210,17 +195,18 @@
 {
     S3GetObjectRequest *getReq = (S3GetObjectRequest *)request;
     NSLog(@"[%@]DOWN SUCCESS", [getReq bucket]);
-    VYBVybe *v = [self vybeWithKey:request.requestTag forTribe:[getReq bucket]];
+    VYBTribe *tribe = [self tribe:[getReq bucket]];
+    VYBVybe *v = [tribe vybeWithKey:request.requestTag];
     NSString *videoPath = [v tribeVideoPath];
     NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:videoPath];
     NSData *videoReceived = [[NSData alloc] initWithData:response.body];
     [videoReceived writeToURL:outputURL atomically:YES];
     
+    //[tribe changeDownStatusFor:request.requestTag withStatus:DOWNLOADED];
+    [v setDownStatus:DOWNLOADED];
     [self saveThumbnailImageForVybe:v];
-
-    [self changeDownStatusFor:request.requestTag forTribe:[getReq bucket] withStatus:DOWNLOADED];
     
-    [self downloadTribeVybesFor:[getReq bucket]];
+    [self downloadTribeVybesFor:tribe];
     
     videoReceived = nil;
 }
@@ -229,7 +215,8 @@
 {
     NSLog(@"Error occured while receiving a file");
     S3GetObjectRequest *getReq = (S3GetObjectRequest *)request;
-    [self changeDownStatusFor:request.requestTag forTribe:[getReq bucket] withStatus:DOWNFRESH];
+    VYBTribe *tribe = [self tribe:[getReq bucket]];
+    [tribe changeDownStatusFor:request.requestTag withStatus:DOWNFRESH];
 }
 
 - (void)saveThumbnailImageForVybe:(VYBVybe *)v {
@@ -249,17 +236,22 @@
 }
 
 - (NSString *)videoPathAtIndex:(NSInteger)index forTribe:(NSString *)name{
-    return [[[myTribesVybes objectForKey:name] objectAtIndex:index] tribeVideoPath];
+    VYBTribe *tribe = [self tribe:name];
+    VYBVybe *vybe = [[tribe vybes] objectAtIndex:index];
+    return [vybe tribeVideoPath];
 }
 
 - (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name{
-    return [[[myTribesVybes objectForKey:name] objectAtIndex:index] tribeThumbnailPath];
+    VYBTribe *tribe = [self tribe:name];
+    VYBVybe *vybe = [[tribe vybes] objectAtIndex:index];
+    return [vybe tribeThumbnailPath];
 }
 
 - (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name alreadyDownloaded:(BOOL)down{
+    VYBTribe *tribe = [self tribe:name];
     NSInteger cnt = 0;
-    for (NSInteger i = [[myTribesVybes objectForKey:name] count] - 1; i >= 0; i--) {
-        VYBVybe *v = [[myTribesVybes objectForKey:name] objectAtIndex:i];
+    for (NSInteger i = [[tribe vybes] count] - 1; i >= 0; i--) {
+        VYBVybe *v = [[tribe vybes] objectAtIndex:i];
         if ([v downStatus] == DOWNLOADED) {
             if (cnt == index)
                 return [v tribeThumbnailPath];
@@ -270,13 +262,14 @@
     return nil;
 }
 
+/*
 - (NSArray *)tribes {
     NSArray *tribes = [myTribesVybes allKeys];
     tribes = [tribes sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     
     return tribes;
 }
-
+*/
 
 - (NSString *)myTribesArchivePath {
     NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -289,9 +282,10 @@
 - (BOOL)saveChanges {
     //NSLog(@"Tribe Store saving");
     NSString *path = [self myTribesArchivePath];
-    return [NSKeyedArchiver archiveRootObject:myTribesVybes toFile:path];
+    return [NSKeyedArchiver archiveRootObject:myTribes toFile:path];
 }
 
+/*
 - (VYBVybe *)vybeWithKey:(NSString *)key forTribe:(NSString *)name{
     for (VYBVybe *v in [myTribesVybes objectForKey:name])
         if ( [[v vybeKey] isEqualToString:key] )
@@ -300,6 +294,7 @@
     return nil;
 }
 
+
 - (void)changeDownStatusFor:(NSString *)key forTribe:(NSString *)name withStatus:(int)status{
     for (VYBVybe *v in [myTribesVybes objectForKey:name]) {
         if ( [[v vybeKey] isEqualToString:key] ) {
@@ -307,6 +302,7 @@
         }
     }
 }
+
 
 - (int)downStatusForVybeWithKey:(NSString *)key forTribe:(NSString *)name{
     for (VYBVybe *v in [myTribesVybes objectForKey:name]) {
@@ -317,63 +313,29 @@
     
     return -1;
 }
+ */
 
-- (void)downloadTribeVybesFor:(NSString *)tribeName {
-    if ([self hasDownloadingVybeAlreadyFor:tribeName]) {
+- (void)downloadTribeVybesFor:(VYBTribe *)tribe {
+    if ([tribe hasDownloadingVybe]) {
         NSLog(@"already downloading something for this tribe");
         return;
     }
     //VYBVybe *v = [self mostRecentVybeToBeDownloadedFor:tribeName];
-    VYBVybe *v = [self oldestVybeToBeDownloadedFor:tribeName];
+    VYBVybe *v = [tribe oldestVybeToBeDownloaded];
     
     if (!v) {
         NSLog(@"nothing to be downloaded");
         return;
     }
-    S3GetObjectRequest *gor = [[S3GetObjectRequest alloc] initWithKey:[v vybeKey] withBucket:tribeName];
+    S3GetObjectRequest *gor = [[S3GetObjectRequest alloc] initWithKey:[v vybeKey] withBucket:[tribe tribeName]];
     gor.delegate = self;
     gor.requestTag = [v vybeKey];
     [v setDownStatus:DOWNLOADING];
     [self.s3 getObject:gor];
-    NSLog(@"[%@]DOWN BEGIN", tribeName);
+    NSLog(@"[%@]DOWN BEGIN", [tribe tribeName]);
 }
 
-- (BOOL)hasDownloadingVybeAlreadyFor:(NSString *)tribeName {
-    for (VYBVybe *v in [myTribesVybes objectForKey:tribeName]) {
-        if ([v downStatus] == DOWNLOADING)
-            return YES;
-    }
-    return NO;
-}
-
-- (VYBVybe *)mostRecentVybeToBeDownloadedFor:(NSString *)tribeName {
-    for (VYBVybe *v in [myTribesVybes objectForKey:tribeName]) {
-        if ([v downStatus] == DOWNFRESH)
-            return v;
-    }
-    return nil;
-}
-
-- (VYBVybe *)oldestVybeToBeDownloadedFor:(NSString *)tribeName {
-    NSInteger i;
-    for (i = [[myTribesVybes objectForKey:tribeName] count] - 1; i >= 0; i--) {
-        VYBVybe *v = [[myTribesVybes objectForKey:tribeName] objectAtIndex:i];
-        if ([v downStatus] == DOWNFRESH)
-            return v;
-    }
-    return nil;
-}
-
-- (NSArray *)downloadedVybesForTribe:(NSString *)tribe {
-    NSMutableArray *arr = [[NSMutableArray alloc] init];
-    for (VYBVybe *v in [myTribesVybes objectForKey:tribe]) {
-        if ([v downStatus] == DOWNLOADED)
-            [arr addObject:v];
-    }
-    return arr;
-}
-
-
+/*
 - (BOOL)clear {
     NSLog(@"Tribe Store cache clearing");
     NSError *error;
@@ -422,6 +384,6 @@
     NSLog(@"There are %d people who vybed.", [[dictionary allKeys] count]);
     
 }
-
+*/
 
 @end

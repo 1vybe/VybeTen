@@ -14,8 +14,9 @@
 #import "VYBMyVybeStore.h"
 #import "VYBConstants.h"
 #import "VYBReplayViewController.h"
-#import "VYBCaptureProgressView.h"
 #import "VYBMainNavigationController.h"
+#import "UINavigationController+Fade.h"
+#import "JSBadgeView.h"
 
 @implementation VYBCaptureViewController {
     AVCaptureSession *session;
@@ -30,18 +31,20 @@
     BOOL recording;
     BOOL frontCamera;
     
-    UIView *overlayView;
+    UIImageView *overlayView;
+    JSBadgeView *badgeView;
     
     CLLocationManager *locationManager;
 }
-@synthesize labelTimer, buttonFlip, buttonMenu, buttonFlash, flashLabel;
+@synthesize syncButton, recordButton, flipButton, menuButton, flashButton, flashLabel, notificationButton;
+
+static void * XXContext = &XXContext;
 
 - (id)init {
     self = [super init];
     if (self) {
         locationManager = [[CLLocationManager alloc] init];
         NSLog(@"Let's invoke the location manager");
-        //[locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
         [locationManager startUpdatingLocation];
         [locationManager stopUpdatingLocation];
     }
@@ -68,58 +71,87 @@
 {
     [super viewDidLoad];
     // Overlay alertView will be displayed when a user entered in a portrait mode
-    //UIDevice *iphone = [UIDevice currentDevice];
-    //[iphone beginGeneratingDeviceOrientationNotifications];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayOverlay:) name:UIDeviceOrientationDidChangeNotification object:iphone];
+    UIDevice *iphone = [UIDevice currentDevice];
+    [iphone beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayOverlay:) name:UIDeviceOrientationDidChangeNotification object:iphone];
     
     recording = NO;
     frontCamera = NO;
-
-    // Adding swipe gestures
-    UITapGestureRecognizer * tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(startRecording)];
-    [self.view addGestureRecognizer:tapGesture];
+    
     
     // Adding MENU button
-    CGRect buttonMenuFrame = CGRectMake(self.view.bounds.size.height - 50, self.view.bounds.size.width - 50, 50, 50);    buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
+    CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 50, 0, 50, 50);
+    menuButton = [[UIButton alloc] initWithFrame:buttonFrame];
     UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
-    [buttonMenu setContentMode:UIViewContentModeCenter];
-    [buttonMenu setImage:menuImage forState:UIControlStateNormal];
-    [buttonMenu addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttonMenu];
+    [menuButton setContentMode:UIViewContentModeCenter];
+    [menuButton setImage:menuImage forState:UIControlStateNormal];
+    [menuButton addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:menuButton];
+    
+    // Adding SYNC button
+    buttonFrame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
+    syncButton = [[UIButton alloc] initWithFrame:buttonFrame];
+    UIImage *syncNoneImg = [UIImage imageNamed:@"button_sync_none.png"];
+    [syncButton setImage:syncNoneImg forState:UIControlStateNormal];
+    [syncButton addTarget:self action:@selector(changeSync:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:syncButton];
+    
+    // Adding RECORD button
+    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, (self.view.bounds.size.width - 60)/2, 60, 60);
+    recordButton = [[UIButton alloc] initWithFrame:buttonFrame];
+    UIImage *captureButtonImg = [UIImage imageNamed:@"button_record.png"];
+    [recordButton setBackgroundImage:captureButtonImg forState:UIControlStateNormal];
+    [recordButton.titleLabel setFont:[UIFont fontWithName:@"Montreal-Regular" size:24]];
+    [recordButton setTintColor:[UIColor whiteColor]];
+    [recordButton addTarget:self action:@selector(startRecording) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:recordButton];
+    
+    // Adding NOTIFICATION button
+    buttonFrame = CGRectMake(0, 0, 50, 50);
+    notificationButton = [[UIButton alloc] initWithFrame:buttonFrame];
+    UIImageView *notificationImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"button_notification.png"]];
+    [notificationButton addSubview:notificationImgView];
+    notificationImgView.center = notificationButton.center;
+    [notificationButton addTarget:self action:@selector(notificationPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:notificationButton];
+    [notificationImgView setUserInteractionEnabled:NO];
+    badgeView = [[JSBadgeView alloc] initWithParentView:notificationImgView alignment:JSBadgeViewAlignmentTopRight];
+    // Register this class as an observer for notification change
+    [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"numVybes" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:XXContext];
+    //adgeView.badgeText = @"3";
+    
     // Adding FLIP button
-    CGRect buttonFlipFrame = CGRectMake(0, 0, 50, 50);
-    buttonFlip = [[UIButton alloc] initWithFrame:buttonFlipFrame];
+    buttonFrame = CGRectMake((self.view.bounds.size.height - 120)/2, 0, 50, 50);
+    flipButton = [[UIButton alloc] initWithFrame:buttonFrame];
     UIImage *flipImage = [UIImage imageNamed:@"button_flip.png"];
-    [buttonFlip setContentMode:UIViewContentModeCenter];
-    [buttonFlip setImage:flipImage forState:UIControlStateNormal];
-    [buttonFlip addTarget:self action:@selector(flipCamera:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttonFlip];
+    [flipButton setContentMode:UIViewContentModeCenter];
+    [flipButton setImage:flipImage forState:UIControlStateNormal];
+    [flipButton addTarget:self action:@selector(flipCamera:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:flipButton];
+    
     // Adding FLASH button
-    CGRect flashFrame = CGRectMake(50, 0, 70, 50);
-    buttonFlash = [[UIButton alloc] initWithFrame:flashFrame];
+    buttonFrame = CGRectMake((self.view.bounds.size.height-120)/2 + 50, 0, 70, 50);
+    flashButton = [[UIButton alloc] initWithFrame:buttonFrame];
     UIImage *flashImage = [UIImage imageNamed:@"button_flash_on.png"];
-    [buttonFlash setContentMode:UIViewContentModeLeft];
-    [buttonFlash setImage:flashImage forState:UIControlStateNormal];
-    [buttonFlash addTarget:self action:@selector(switchFlash:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttonFlash];
+    [flashButton setContentMode:UIViewContentModeLeft];
+    [flashButton setImage:flashImage forState:UIControlStateNormal];
+    [flashButton addTarget:self action:@selector(switchFlash:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:flashButton];
+    
     // Adding FLASH label
-    flashFrame = CGRectMake(45, 0, 30, 50);
-    flashLabel = [[UILabel alloc] initWithFrame:flashFrame];
-    [flashLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:14]];
+    buttonFrame = CGRectMake(40, 0, 30, 50);
+    flashLabel = [[UILabel alloc] initWithFrame:buttonFrame];
+    [flashLabel setFont:[UIFont fontWithName:@"Montreal-Regular" size:14]];
     [flashLabel setTextAlignment:NSTextAlignmentLeft];
     [flashLabel setTextColor:[UIColor whiteColor]];
     [flashLabel setText:@"OFF"];
-    [self.buttonFlash addSubview:flashLabel];
-    
-    // Adding timer label
-    labelTimer = [[VYBCaptureProgressView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.width - (48+10), self.view.bounds.size.height, 10)];
-    [self.view addSubview:labelTimer];
+    [self.flashButton addSubview:flashLabel];
     
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self turnOffFlash];
 }
 
 /**
@@ -149,12 +181,10 @@
 }
 
 - (void)timer:(NSTimer *)timer {
-    //NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
-    //int secondsLeft = 7 - (int)secondsSinceStart;
-    //NSString *secondsPassed = [NSString stringWithFormat:@"00:%02d", secondsLeft];
-    
-    //labelTimer.text = secondsPassed;
-    [labelTimer incrementBar];
+    NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
+    int secondsLeft = 7 - (int)secondsSinceStart;
+    NSString *secondsPassed = [NSString stringWithFormat:@"%d", secondsLeft];
+    [recordButton setTitle:secondsPassed forState:UIControlStateNormal];
 }
 
 - (BOOL)hasTorch {
@@ -170,14 +200,17 @@
     if (!recording) {
         NSLog(@"Start recording");
         newVybe = [[VYBVybe alloc] initWithDeviceId:adId];
-        //startTime = [newVybe timeStamp];
-        // Of course, it is not uploaded to S3 yet
-              
+        startTime = [newVybe timeStamp];
+        
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[newVybe videoPath]];
         [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
         
-        recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
-        recording = YES; buttonFlip.hidden = recording; buttonMenu.hidden = recording; buttonFlash.hidden = recording;
+        recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
+        // Change record button to act as a counter
+        UIImage *recordButtonEmptyImg = [UIImage imageNamed:@"button_record_empty.png"];
+        [recordButton setBackgroundImage:recordButtonEmptyImg forState:UIControlStateNormal];
+        
+        recording = YES; flipButton.hidden = recording; menuButton.hidden = recording; notificationButton.hidden = recording;flashButton.hidden = recording;
     }
     
     /* Stop Recording */
@@ -186,8 +219,12 @@
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [self turnOffFlash];
+- (void)notificationPressed:(id)sender {
+    NSLog(@"NOTI PRESED");
+}
+
+- (void)changeSync:(id)sender {
+    
 }
 
 - (void)switchFlash:(id)sender {
@@ -227,10 +264,10 @@
     [session removeInput:videoInput];
     if (frontCamera) {
         videoInput = [self backCameraInput];
-        buttonFlash.hidden = NO;
+        flashButton.hidden = NO;
     } else {
         videoInput = [self frontCameraInput];
-        buttonFlash.hidden = YES;
+        flashButton.hidden = YES;
     }
     
     [session addInput:videoInput];
@@ -245,24 +282,25 @@
 
 - (void)goToMenu:(id)sender {
     VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
-    [[self navigationController] pushViewController:menuVC animated:NO];
-}
-
-- (void)removeOverlay:(UIView *)overlay {
-    [overlay removeFromSuperview];
+    [self.navigationController pushFadeViewController:menuVC];
 }
 
 - (void)displayOverlay:(NSNotification *)note {
     UIDevice *device = [note object];
     if ( UIDeviceOrientationIsPortrait([device orientation]) ) {
-        UIWindow *window = self.view.window;
-        overlayView = [[UIView alloc] initWithFrame:window.bounds];
-        [overlayView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:1.0f]];
-        [overlayView setUserInteractionEnabled:YES];
-        
-        [window addSubview:overlayView];
+        if (!overlayView) {
+            UIWindow *window = self.view.window;
+            overlayView = [[UIImageView alloc] initWithFrame:window.bounds];
+            [overlayView setBackgroundColor:[UIColor colorWithWhite:0.0f alpha:0.8f]];
+            [overlayView setUserInteractionEnabled:YES];
+            [overlayView setContentMode:UIViewContentModeCenter];
+            [overlayView setImage:[UIImage imageNamed:@"screen_warning_rotate.png"]];
+            
+            [window addSubview:overlayView];
+        }
     } else if ( UIDeviceOrientationIsLandscape([device orientation]) ) {
-        [self removeOverlay:overlayView];
+        [overlayView removeFromSuperview];
+        overlayView = nil;
     }
 }
 
@@ -285,16 +323,30 @@
         VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
         [replayVC setVybe:newVybe];
         [replayVC setReplayURL:outputFileURL];
-
         [self.navigationController pushViewController:replayVC animated:NO];
     }
 
     startTime = nil;
     [recordingTimer invalidate];
     recordingTimer = nil;
-    [labelTimer resetBar];
-    recording = NO; buttonFlip.hidden = recording; buttonMenu.hidden = recording; buttonFlash.hidden = (recording || frontCamera);
+    // Reset record button image back to original
+    UIImage *recordButtonImg = [UIImage imageNamed:@"button_record.png"];
+    [recordButton setBackgroundImage:recordButtonImg forState:UIControlStateNormal];
+    [recordButton setTitle:@"" forState:UIControlStateNormal];
+    
+    recording = NO; flipButton.hidden = recording; menuButton.hidden = recording; notificationButton.hidden = recording; flashButton.hidden = (recording || frontCamera);
     newVybe = nil;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == XXContext) {
+        if ( [keyPath isEqualToString:@"numVybes"] ) {
+            NSNumber *newCount = (NSNumber *)[change objectForKey:NSKeyValueChangeNewKey];
+            NSString *count = [NSString stringWithFormat:@"%@", newCount];
+            badgeView.badgeText = count;
+        }
+    }
+    //[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 
