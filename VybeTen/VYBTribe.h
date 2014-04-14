@@ -17,6 +17,8 @@
     NSMutableArray *syncs;
 }
 
+- (id)initWithTribeName:(NSString *)name;
+
 - (void)setTribeName:(NSString *)name;
 - (void)setOpen:(BOOL)op;
 - (void)setVybes:(NSMutableArray *)vys;

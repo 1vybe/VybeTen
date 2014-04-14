@@ -16,7 +16,7 @@
     transition.duration = 0.3f;
     transition.type = kCATransitionFade;
     [self.view.layer addAnimation:transition forKey:nil];
-    [self popToRootViewControllerAnimated:NO];
+    [self popViewControllerAnimated:NO];
 }
 
 - (void)pushFadeViewController:(UIViewController *)viewController {

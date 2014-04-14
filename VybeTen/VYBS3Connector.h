@@ -21,5 +21,7 @@
 
 - (void)startTribeListRequest:(S3ListBucketsRequest *)req;
 - (void)startTribeVybesRequest:(S3ListObjectsRequest *)req;
+- (void)startFeaturedRequest:(S3ListObjectsRequest *)req;
+- (void)startTrendingRequest:(S3ListObjectsRequest *)req;
 
 @end

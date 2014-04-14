@@ -14,9 +14,15 @@
 #import "GAI.h"
 #import "GAIDictionaryBuilder.h"
 #import "GAIFields.h"
+#import "VYBMenuViewController.h"
 
 @implementation VYBTribeVybesViewController {
     NSArray *downloadedTribeVybes;
+    
+    UIView *topBar;
+    UIButton *menuButton;
+    
+    UIButton *friendsButton;
 }
 @synthesize buttonBack = _buttonBack;
 @synthesize buttonCapture = _buttonCapture;
@@ -52,37 +58,65 @@
     [blurredView setBarStyle:UIBarStyleBlack];
     [self.tableView setBackgroundView:blurredView];
     
+    
+    // Adding a dark TOPBAR
+    CGRect frame = CGRectMake(0, 0, 50, self.view.bounds.size.height);
+    topBar = [[UIView alloc] initWithFrame:frame];
+    [topBar setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.1]];
+    [self.view addSubview:topBar];
+    // Adding BACK button
+    CGRect buttonBackFrame = CGRectMake(0, self.view.bounds.size.height - 50, 50, 50);
+    self.buttonBack = [[UIButton alloc] initWithFrame:buttonBackFrame];
+    UIImage *backImage = [UIImage imageNamed:@"button_back.png"];
+    [self.buttonBack setContentMode:UIViewContentModeCenter];
+    [self.buttonBack setImage:backImage forState:UIControlStateNormal];
+    CGAffineTransform counterClockwise = CGAffineTransformMakeRotation(-M_PI_2);
+    self.buttonBack.transform = counterClockwise;
+    [self.buttonBack addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
+    [topBar addSubview:self.buttonBack];
+    // Adding MENU button
+    frame = CGRectMake(0, 0, 50, 50);
+    menuButton = [[UIButton alloc] initWithFrame:frame];
+    UIImage *menuImg = [UIImage imageNamed:@"button_menu.png"];
+    [menuButton setImage:menuImg forState:UIControlStateNormal];
+    menuButton.transform = counterClockwise;
+    //[menuButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
+    [menuButton addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
+    [topBar addSubview:menuButton];
+    // Adding COUNT label
+    // These frequent view related steps should be done in Model side.
+    // Count label translates the view by 35 px along x and 85px along y axis because the label is a rectangle
+    frame = CGRectMake(0, 0, 120, 50);
+    self.countLabel = [[UILabel alloc] initWithFrame:frame];
+    [self.countLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
+    [self.countLabel setText:[NSString stringWithFormat:@"%@", [self.currTribe tribeName]]];
+    [self.countLabel setTextColor:[UIColor whiteColor]];
+    [self.countLabel setTextAlignment:NSTextAlignmentCenter];
+    self.countLabel.transform = counterClockwise;
+    [self.countLabel setBackgroundColor:[UIColor clearColor]];
+    [self.tableView addSubview:self.countLabel];
+    self.countLabel.center = topBar.center;
+    
+    
     // Adding CAPTURE button
     CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
     self.buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
     [self.buttonCapture setContentMode:UIViewContentModeCenter];
     [self.buttonCapture setImage:captureImage forState:UIControlStateNormal];
-    CGAffineTransform counterClockwise = CGAffineTransformMakeRotation(-M_PI_2);
     self.buttonCapture.transform = counterClockwise;
     [self.buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonCapture];
-    // Adding BACK button
-    CGRect buttonBackFrame = CGRectMake(self.view.bounds.size.width - 50, self.view.bounds.size.height - 50, 50, 50);
-    self.buttonBack = [[UIButton alloc] initWithFrame:buttonBackFrame];
-    UIImage *backImage = [UIImage imageNamed:@"button_back.png"];
-    [self.buttonBack setContentMode:UIViewContentModeCenter];
-    [self.buttonBack setImage:backImage forState:UIControlStateNormal];
-    self.buttonBack.transform = counterClockwise;
-    [self.buttonBack addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
-    [[self tableView] addSubview:self.buttonBack];
-    // Adding COUNT label
-    // These frequent view related steps should be done in Model side.
-    // Count label translates the view by 35 px along x and 85px along y axis because the label is a rectangle
-    CGRect frame = CGRectMake(-35, self.view.bounds.size.height - 85, 120, 50);
-    self.countLabel = [[UILabel alloc] initWithFrame:frame];
-    [self.countLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
-    [self.countLabel setText:[NSString stringWithFormat:@"%@", [self.currTribe tribeName]]];
-    [self.countLabel setTextColor:[UIColor colorWithWhite:1.0 alpha:0.8]];
-    [self.countLabel setTextAlignment:NSTextAlignmentCenter];
-    self.countLabel.transform = counterClockwise;
-    [self.countLabel setBackgroundColor:[UIColor clearColor]];
-    [self.tableView addSubview:self.countLabel];
+   
+    // Adding FRIENDS button
+    frame = CGRectMake(self.view.bounds.size.width - 50, self.view.bounds.size.height - 50, 50, 50);
+    friendsButton = [[UIButton alloc] initWithFrame:frame];
+    UIImage *friendsImg = [UIImage imageNamed:@"button_friends.png"];
+    [friendsButton setContentMode:UIViewContentModeCenter];
+    [friendsButton setImage:friendsImg forState:UIControlStateNormal];
+    friendsButton.transform = counterClockwise;
+    [self.tableView addSubview:friendsButton];
+    
     // Adding a refresh control
     UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
     refresh.tintColor = [UIColor whiteColor];
@@ -92,6 +126,7 @@
     // Update so downloaded vybes are displayed
     [self refreshTribeVybes:refresh];
 }
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     /* Google Analytics */
@@ -105,16 +140,16 @@
 
 
 /* Scroll down to the bottom to show recent vybes first */
+/*
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    //BOOL success = [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:self.tribeName];
     NSInteger idx = [downloadedTribeVybes count] - 1;
     if (idx < 0)
         return;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
-
+*/
 
 - (void)viewDidDisappear:(BOOL)animated {
     [[VYBMyTribeStore sharedStore] saveChanges];
@@ -186,26 +221,45 @@
     [self.navigationController popViewControllerAnimated:NO];
 }
 
+- (void)goToMenu:(id)sender {
+    VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
+    menuVC.view.backgroundColor = [UIColor clearColor];
+    menuVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //[menuVC setTransitioningDelegate:transitionController];
+    //menuVC.modalPresentationStyle = UIModalPresentationCurrentContext;
+    //self.modalPresentationStyle = UIModalPresentationCurrentContext;
+    [self.navigationController presentViewController:menuVC animated:YES completion:nil];
+}
+
 /**
  * Repositioning floating views during/after scroll
  **/
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGRect frame = self.buttonBack.frame;
-    frame.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 50;
-    self.buttonBack.frame = frame;
+    //CGRect frame = self.buttonBack.frame;
+    //frame.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 50;
+    //self.buttonBack.frame = frame;
     
     CGRect frameTwo = self.buttonCapture.frame;
     frameTwo.origin.y = scrollView.contentOffset.y;
     self.buttonCapture.frame = frameTwo;
     
-    CGRect frameThree = self.countLabel.frame;
-    frameThree.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 120;
-    self.countLabel.frame = frameThree;
+    CGRect frameThree = topBar.frame;
+    frameThree.origin.y = scrollView.contentOffset.y;
+    topBar.frame = frameThree;
     
+    CGRect frameFour = friendsButton.frame;
+    frameFour.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 50;
+    friendsButton.frame = frameFour;
+    
+    self.countLabel.center = topBar.center;
+    
+    [[self view] bringSubviewToFront:topBar];
     [[self view] bringSubviewToFront:self.buttonBack];
     [[self view] bringSubviewToFront:self.buttonCapture];
     [[self view] bringSubviewToFront:self.countLabel];
+    [[self view] bringSubviewToFront:friendsButton];
 }
 
 

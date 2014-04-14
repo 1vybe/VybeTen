@@ -12,17 +12,30 @@
 
 @interface VYBMyTribeStore : NSObject <AmazonServiceRequestDelegate> {
     NSMutableArray *myTribes;
+    NSMutableDictionary *featuredTribes;
+    NSMutableDictionary *trendingTribes;
     NSString *adId;
 }
 @property (nonatomic) AmazonS3Client *s3;
 
 + (VYBMyTribeStore *)sharedStore;
 - (NSArray *)myTribes;
+- (NSArray *)contributingTribes;
+- (NSMutableDictionary *)featuredTribes;
+- (NSMutableDictionary *)trendingTribes;
+- (NSArray *)nonEmptyTribes;
+- (NSArray *)tempFeaturedTribes;
+- (NSArray *)tempTrendingTribes;
+- (NSArray *)allMyTribes;
+
+- (void)downloadFeaturedWithCompletion:(void (^)(NSError *err))block;
+- (void)downloadTrendingWithCompletion:(void (^)(NSError *err))block;
 - (void)setMyTribes:(NSMutableArray *)tribes;
-- (void)refreshTribes;
 - (void)refreshTribesWithCompletion:(void (^)(NSError *err))block;
 - (void)syncWithCloudForTribe:(NSString *)name withCompletionBlock:(void (^)(NSError *err))block;
 - (void)downloadTribeVybesFor:(VYBTribe *)tribe;
+- (void)downloadFeaturedVybes;
+- (void)downloadTrendingVybes;
 - (BOOL)addNewTribe:(NSString *)tribeName;
 - (NSString *)videoPathAtIndex:(NSInteger)index forTribe:(NSString *)name;
 - (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name;

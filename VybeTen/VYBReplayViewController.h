@@ -13,7 +13,7 @@
 @class VYBPlayerView;
 @class VYBVybe;
 
-@interface VYBReplayViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
+@interface VYBReplayViewController : UIViewController
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *playerItem;
 @property (nonatomic) VYBPlayerView *playerView;
@@ -23,6 +23,8 @@
 @property (nonatomic) UIImageView *instruction;
 @property (nonatomic) VYBVybe *vybe;
 @property (nonatomic) NSURL *replayURL;
+@property (nonatomic) UIButton *syncButton;
+@property (nonatomic) UILabel *syncLabel;
 
 - (void)saveVybe;
 - (void)discardVybe;

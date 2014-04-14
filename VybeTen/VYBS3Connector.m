@@ -48,6 +48,28 @@ static NSMutableArray *sharedConnectionList = nil;
     [sharedConnectionList addObject:self];
 }
 
+- (void)startFeaturedRequest:(S3ListObjectsRequest *)req {
+    [req setDelegate:self];
+    [req setRequestTag:@"FeaturedVybes"];
+    [s3 listObjects:req];
+    
+    if (!sharedConnectionList)
+        sharedConnectionList = [[NSMutableArray alloc] init];
+    
+    [sharedConnectionList addObject:self];
+}
+
+- (void)startTrendingRequest:(S3ListObjectsRequest *)req {
+    [req setDelegate:self];
+    [req setRequestTag:@"TrendingVybes"];
+    [s3 listObjects:req];
+    
+    if (!sharedConnectionList)
+        sharedConnectionList = [[NSMutableArray alloc] init];
+    
+    [sharedConnectionList addObject:self];
+}
+
 - (void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response {
     // There was an error from the service
     if (response.exception) {
@@ -72,8 +94,7 @@ static NSMutableArray *sharedConnectionList = nil;
                  VYBTribe *tribe =[[VYBMyTribeStore sharedStore] tribe:bucket.name];
                  [newTribes addObject:tribe];
              } else {
-                 VYBTribe *newT = [[VYBTribe alloc] init];
-                 [newT setTribeName:bucket.name];
+                 VYBTribe *newT = [[VYBTribe alloc] initWithTribeName:bucket.name];
                  [newTribes addObject:newT];
              }
          }
@@ -91,7 +112,6 @@ static NSMutableArray *sharedConnectionList = nil;
         if ([result.objectSummaries count] == 0)
             return;
         else {
-            //NSLog(@"adding begins");
             VYBTribe *tr = [[VYBMyTribeStore sharedStore] tribe:buckName];
             for (S3ObjectSummary *obj in result.objectSummaries) {
                 // will be added ONLY if new
@@ -106,6 +126,80 @@ static NSMutableArray *sharedConnectionList = nil;
             }
             //NSLog(@"adding done");
             [[VYBMyTribeStore sharedStore] downloadTribeVybesFor:tr];
+        }
+    }
+    
+    else if ( [request.requestTag isEqualToString:@"FeaturedVybes"] ) {
+        S3ListObjectsResponse *listResponse = (S3ListObjectsResponse *)response;
+        S3ListObjectsResult *result = listResponse.listObjectsResult;
+        NSString *buckName = result.bucketName;
+        NSLog(@"Server has %d videos for %@ Tribe", [result.objectSummaries count], buckName);
+        //TODO: this if statement should check the total number of NEW vybes ONLY
+        if ([result.objectSummaries count] == 0)
+            return;
+        else {
+            //NSLog(@"adding begins");
+            for (S3ObjectSummary *obj in result.objectSummaries) {
+                NSCharacterSet *delimiters = [NSCharacterSet characterSetWithCharactersInString:@"/"];
+                NSArray *strings = [[obj key] componentsSeparatedByCharactersInSet:delimiters];
+                NSString *featureName = [strings objectAtIndex:0];
+                if (![[[VYBMyTribeStore sharedStore] featuredTribes] objectForKey:featureName]) {
+                    VYBTribe *trb = [[VYBTribe alloc] initWithTribeName:featureName];
+                    [[[VYBMyTribeStore sharedStore] featuredTribes] setObject:trb forKey:featureName];
+                }
+                VYBTribe *tribe = [[[VYBMyTribeStore sharedStore] featuredTribes] objectForKey:featureName];
+                
+                // will be added ONLY if new
+                VYBVybe *newV = [[VYBVybe alloc] init];
+                [newV setVybeKey:[strings objectAtIndex:1]];
+                [newV setTribeName:featureName];
+                [newV setTribeVybePathWith:featureName];
+                //[newV setDeviceId:[self extractDeviceIdFrom:[obj key]]];
+                [newV setDownStatus:DOWNFRESH];
+                // Tribe will add this vybe ONLY IF NEW
+                [tribe addVybe:newV];
+                
+                //NSLog("@After insertion in FEATURE: %d",[[(VYBTribe *)[[[VYBMyTribeStore sharedStore] featuredTribes] objectForKey:featureName] vybes] count]);
+            }
+            //NSLog(@"adding done");
+            [[VYBMyTribeStore sharedStore] downloadFeaturedVybes];
+        }
+    }
+    
+    else if ( [request.requestTag isEqualToString:@"TrendingVybes"] ) {
+        S3ListObjectsResponse *listResponse = (S3ListObjectsResponse *)response;
+        S3ListObjectsResult *result = listResponse.listObjectsResult;
+        NSString *buckName = result.bucketName;
+        NSLog(@"Server has %d videos for %@ Tribe", [result.objectSummaries count], buckName);
+        //TODO: this if statement should check the total number of NEW vybes ONLY
+        if ([result.objectSummaries count] == 0)
+            return;
+        else {
+            //NSLog(@"adding begins");
+            for (S3ObjectSummary *obj in result.objectSummaries) {
+                NSCharacterSet *delimiters = [NSCharacterSet characterSetWithCharactersInString:@"/"];
+                NSArray *strings = [[obj key] componentsSeparatedByCharactersInSet:delimiters];
+                NSString *trendName = [strings objectAtIndex:0];
+                if (![[[VYBMyTribeStore sharedStore] trendingTribes] objectForKey:trendName]) {
+                    VYBTribe *trb = [[VYBTribe alloc] initWithTribeName:trendName];
+                    [[[VYBMyTribeStore sharedStore] trendingTribes] setObject:trb forKey:trendName];
+                }
+                VYBTribe *tribe = [[[VYBMyTribeStore sharedStore] featuredTribes] objectForKey:trendName];
+                
+                // will be added ONLY if new
+                VYBVybe *newV = [[VYBVybe alloc] init];
+                [newV setVybeKey:[strings objectAtIndex:1]];
+                [newV setTribeName:trendName];
+                [newV setTribeVybePathWith:trendName];
+                //[newV setDeviceId:[self extractDeviceIdFrom:[obj key]]];
+                [newV setDownStatus:DOWNFRESH];
+                // Tribe will add this vybe ONLY IF NEW
+                [tribe addVybe:newV];
+                //MAKE SURE
+                //NSLog("@After insertion in FEATURE: %d",[[[[[VYBMyTribeStore sharedStore] featuredTribes] objectForKey:trendName] vybes] count]);
+            }
+            //NSLog(@"adding done");
+            [[VYBMyTribeStore sharedStore] downloadTrendingVybes];
         }
     }
 

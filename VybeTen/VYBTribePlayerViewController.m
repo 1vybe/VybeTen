@@ -9,12 +9,19 @@
 #import "VYBTribePlayerViewController.h"
 #import "VYBMyTribeStore.h"
 #import "VYBPlayerView.h"
+#import "VYBLabel.h"
 #import "GAI.h"
 #import "GAIFields.h"
 #import "GAIDictionaryBuilder.h"
 
 @implementation VYBTribePlayerViewController {
     NSInteger playIndex;
+    
+    UILabel *currentTribeLabel;
+    UILabel *locationLabel;
+    UILabel *usernameLabel;
+    
+    NSArray *peetas;
 }
 @synthesize player = _player;
 @synthesize playerView = _playerView;
@@ -35,7 +42,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    peetas = [[NSArray alloc] initWithObjects:@"Florence, Italy", @"Madrid, Spain", @"Jakarta, Indonesia", @"Athens, Greece", nil];
+    
     // Adding swipe gestures
     UISwipeGestureRecognizer *swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
     swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
@@ -43,11 +52,34 @@
     UISwipeGestureRecognizer *swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight)];
     swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipeRight];
-    /* NOTE: Origin for menu button is (0, 0) */
+    
+    // Adding TRIBE label
+    CGRect frame = CGRectMake(10, self.view.bounds.size.width - 50, 150, 50);
+    currentTribeLabel = [[VYBLabel alloc] initWithFrame:frame];
+    [currentTribeLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18]];
+    [currentTribeLabel setTextColor:[UIColor whiteColor]];
+    [currentTribeLabel setText:[self.currTribe tribeName]];
+    [self.view addSubview:currentTribeLabel];
+    
+    // Adding LOCATION label
+    frame = CGRectMake(self.view.bounds.size.height/2 - 100, 0, 200, 50);
+    locationLabel = [[VYBLabel alloc] initWithFrame:frame];
+    [locationLabel setTextColor:[UIColor whiteColor]];
+    [locationLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18.0]];
+    [locationLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.view addSubview:locationLabel];
+    if ([[self.currTribe tribeName] isEqualToString:@"MTL-NEXT"]) {
+        [locationLabel setText:@"Downtown, Montreal"];
+    } else if ([[self.currTribe tribeName] isEqualToString:@"CITY-GAS"]) {
+        [locationLabel setText:@"Griffintown, Montreal"];
+    } else if ([[self.currTribe tribeName] isEqualToString:@"PEETAPLANET"]) {
+        [locationLabel setText:[peetas objectAtIndex:(playIndex/10)]];
+    }
+    
     // Adding BACK button
-    CGRect buttonMenuFrame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
+    CGRect buttonMenuFrame = CGRectMake(0, 0, 50, 50);
     UIButton *buttonMenu = [[UIButton alloc] initWithFrame:buttonMenuFrame];
-    UIImage *menuImage = [UIImage imageNamed:@"button_back.png"];
+    UIImage *menuImage = [UIImage imageNamed:@"button_back_shadow.png"];
     [buttonMenu setContentMode:UIViewContentModeCenter];
     [buttonMenu setImage:menuImage forState:UIControlStateNormal];
     [buttonMenu addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
@@ -62,9 +94,10 @@
     [self.view addSubview:buttonCapture];
 
     // Adding time label
-    CGRect labelTimeFrame = CGRectMake(self.view.bounds.size.height/2 - 80, self.view.bounds.size.width - 48, 160, 48);
-    labelTime = [[UILabel alloc] initWithFrame:labelTimeFrame];
+    CGRect labelTimeFrame = CGRectMake(self.view.bounds.size.height/2 - 80, self.view.bounds.size.width - 50, 160, 50);
+    labelTime = [[VYBLabel alloc] initWithFrame:labelTimeFrame];
     [labelTime setTextColor:[UIColor whiteColor]];
+    [labelTime setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18.0]];
     [labelTime setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:labelTime];
 
@@ -99,6 +132,8 @@
     if (from < [[self.currTribe vybes] count]) {
         VYBVybe *v = [[self.currTribe vybes] objectAtIndex:from];
         [labelTime setText:[v howOld]];
+        if ([self.currTribe tribeName])
+            [locationLabel setText:[peetas objectAtIndex:(from/10)]];
         NSURL *url = [[NSURL alloc] initFileURLWithPath:[v tribeVideoPath]];
         
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];

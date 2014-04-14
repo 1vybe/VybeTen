@@ -12,6 +12,9 @@
 #import "VYBMyTribeStore.h"
 #import "VYBCaptureViewController.h"
 #import "VYBConstants.h"
+#import "VYBSyncTribeViewController.h"
+#import "UINavigationController+Fade.h"
+#import "VYBLabel.h"
 
 @implementation VYBReplayViewController
 
@@ -21,6 +24,7 @@
 @synthesize vybe = _vybe;
 @synthesize replayURL = _replayURL;
 @synthesize buttonDiscard, buttonSave, instruction, buttonCancel;
+@synthesize syncLabel, syncButton;
 
 - (void)loadView {
     NSLog(@"replay loadView");
@@ -68,36 +72,68 @@
     [cancelButton setImage:buttonImg forState:UIControlStateNormal];
     [self.view addSubview:cancelButton];
     
+    // Adding SYNC button
+    CGRect frame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
+    syncButton = [[UIButton alloc] initWithFrame:frame];
+    UIImage *syncNoneImg;
+    if ([self.vybe tribeName])
+        syncNoneImg= [UIImage imageNamed:@"button_sync.png"];
+    else
+        syncNoneImg = [UIImage imageNamed:@"button_sync_none.png"];
+    [syncButton setImage:syncNoneImg forState:UIControlStateNormal];
+    [syncButton addTarget:self action:@selector(changeSync:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:syncButton];
+    
+    // Adding SYNC label
+    frame = CGRectMake(50, self.view.bounds.size.width - 50, 150, 50);
+    syncLabel = [[VYBLabel alloc] initWithFrame:frame];
+    [syncLabel setTextColor:[UIColor whiteColor]];
+    [syncLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
+    //[syncLabel setTextAlignment:NSTextAlignmentLeft];
+    [self.view addSubview:syncLabel];
+    [syncLabel setText:[self.vybe tribeName]];
+    
     [self playVideo];
 }
 
+
+- (void)changeSync:(id)sender {
+    VYBSyncTribeViewController *syncVC = [[VYBSyncTribeViewController alloc] init];
+    [syncVC setCompletionBlock:^(VYBTribe *tribe){
+        [self.vybe setTribeName:[tribe tribeName]];
+        if ([self.vybe tribeName]) {
+            UIImage *image = [UIImage imageNamed:@"button_sync.png"];
+            [syncButton setImage:image forState:UIControlStateNormal];
+            [syncLabel setText:[self.vybe tribeName]];
+        }
+    }];
+    [self.navigationController pushFadeViewController:syncVC];
+}
+
 - (void)saveVybe {
-    UITableViewController *tableVC = [[UITableViewController alloc] initWithStyle:UITableViewStylePlain];
-    [tableVC.tableView setDelegate:self];
-    [tableVC.tableView setDataSource:self];
-    [tableVC.tableView setBackgroundColor:[UIColor clearColor]];
-    [tableVC.tableView setRowHeight:60.0f];
-    [tableVC.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    [tableVC.tableView setShowsVerticalScrollIndicator:NO];
-    UIToolbar* blurredView = [[UIToolbar alloc] initWithFrame:tableVC.tableView.bounds];
-    [blurredView setBarStyle:UIBarStyleBlack];
-    [tableVC.tableView setBackgroundView:blurredView];
-    // Brighten the background when blurred view lies upon
-    [self.view setBackgroundColor:[UIColor clearColor]];
+    // Promt a message to choose a vybe to sync
+    if (![self.vybe tribeName]) {
+        NSString *msg; NSString *title;
+        if ([[[VYBMyTribeStore sharedStore] myTribes] count] > 0)
+            msg = @"Choose a tribe to sync your vybe";
+        else {
+            msg = @"Congrats to your first vybe! Now create your first tribe to post your vybe.";
+            title = @"WELCOME";
+        }
     
-    // Adding CANCEL button
-    CGRect buttonCancelFrame = CGRectMake(tableVC.tableView.bounds.size.height - 50, tableVC.tableView.bounds.size.width - 50, 50, 50);
-    buttonCancel = [[UIButton alloc] initWithFrame:buttonCancelFrame];
-    UIImage *cancelImage = [UIImage imageNamed:@"button_cancel.png"];
-    [buttonCancel setImage:cancelImage forState:UIControlStateNormal];
-    [buttonCancel addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
-    // Dealing with the buttons position when table is scrolled will be done here
-    [tableVC.tableView addSubview:buttonCancel];
-    
-    [self.navigationController pushViewController:tableVC animated:NO];
-    //if ([[[VYBMyTribeStore sharedStore] myTribes] count] < 1)
-        //[[VYBMyTribeStore sharedStore] refreshTribes];
-    
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:title message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [av show];
+    }
+    else {
+        [self performSelector:@selector(uploadVybe)];
+    }
+    [self.navigationController popViewControllerAnimated:NO];
+}
+
+
+- (void)uploadVybe {
+    [[VYBMyVybeStore sharedStore] addVybe:self.vybe];
+    //[self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 - (void)discardVybe {
@@ -108,9 +144,6 @@
     [self.navigationController popViewControllerAnimated:NO];
 }
 
-- (void)goBack:(id)sender {
-    [self.navigationController popViewControllerAnimated:NO];
-}
 
 - (void)playVideo {
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:self.replayURL options:nil];
@@ -129,10 +162,47 @@
     [self.player play];
 }
 
-/**
- * Functions to act as a delegate for UITableView 
- **/
 
+/**
+ * Functions to act as a delegate for UITableView
+ **/
+/*
+ 
+- (void)saveVybe {
+    
+     UITableViewController *tableVC = [[UITableViewController alloc] initWithStyle:UITableViewStylePlain];
+     [tableVC.tableView setDelegate:self];
+     [tableVC.tableView setDataSource:self];
+     [tableVC.tableView setBackgroundColor:[UIColor clearColor]];
+     [tableVC.tableView setRowHeight:60.0f];
+     [tableVC.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+     [tableVC.tableView setShowsVerticalScrollIndicator:NO];
+     UIToolbar* blurredView = [[UIToolbar alloc] initWithFrame:tableVC.tableView.bounds];
+     [blurredView setBarStyle:UIBarStyleBlack];
+     [tableVC.tableView setBackgroundView:blurredView];
+     // Brighten the background when blurred view lies upon
+     [self.view setBackgroundColor:[UIColor clearColor]];
+     
+     // Adding CANCEL button
+     CGRect buttonCancelFrame = CGRectMake(tableVC.tableView.bounds.size.height - 50, tableVC.tableView.bounds.size.width - 50, 50, 50);
+     buttonCancel = [[UIButton alloc] initWithFrame:buttonCancelFrame];
+     UIImage *cancelImage = [UIImage imageNamed:@"button_cancel.png"];
+     [buttonCancel setImage:cancelImage forState:UIControlStateNormal];
+     [buttonCancel addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
+     // Dealing with the buttons position when table is scrolled will be done here
+     [tableVC.tableView addSubview:buttonCancel];
+     
+     [self.navigationController pushViewController:tableVC animated:NO];
+     //if ([[[VYBMyTribeStore sharedStore] myTribes] count] < 1)
+     //[[VYBMyTribeStore sharedStore] refreshTribes];
+}
+ 
+- (void)goBack:(id)sender {
+ [self.navigationController popViewControllerAnimated:NO];
+}
+ 
+ 
+ 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     //NSLog(@"[ReplayViewController]There are %d tribes", [[[[VYBMyTribeStore sharedStore] myTribesVybes] allKeys] count]);
@@ -160,37 +230,17 @@
     return cell;
 }
 
-/* Actual saving of a vybe and uploading are started when a user chooses which Tribe to upload to */
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     NSLog(@"Cell %@ selected, let's make the text big", [cell.textLabel text]);
     [cell.textLabel setFont:[UIFont systemFontOfSize:24]];
     [cell.textLabel setTextColor:[UIColor whiteColor]];
-    NSString *tribeName = [[[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]] tribeName];
-
-    [self performSelector:@selector(uploadForTribe:) withObject:tribeName afterDelay:0.2];
+ 
 }
 
-- (void)uploadForTribe:(NSString *)tribeName {
-    // Save the captured vybe in MyVybeStore
-    if (tribeName) {
-        [self.vybe setTribeName: tribeName];
-        [[VYBMyVybeStore sharedStore] addVybe:self.vybe];
-    }
-    [self.navigationController popToRootViewControllerAnimated:NO];
-}
+*/
 
-/**
- * Repositioning floating views during/after scroll
- **/
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGRect frame = self.buttonCancel.frame;
-    frame.origin.y = scrollView.contentOffset.y + [[UIScreen mainScreen] bounds].size.width - 50;
-    self.buttonCancel.frame = frame;
-    
-    [scrollView bringSubviewToFront:self.buttonCancel];
-}
 
 - (void)didReceiveMemoryWarning
 {

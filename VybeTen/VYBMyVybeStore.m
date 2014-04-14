@@ -15,7 +15,6 @@
 
 @implementation VYBMyVybeStore
 @synthesize s3 = _s3;
-@synthesize numVybes = _numVybes;
 
 + (VYBMyVybeStore *)sharedStore {
     static VYBMyVybeStore *sharedStore = nil;
@@ -41,7 +40,6 @@
         if (!myVybes)
             myVybes = [[NSMutableArray alloc] init];
         
-        self.numVybes = [myVybes count];
         // Initialize S3 client
         @try {
             self.s3 = [[AmazonS3Client alloc] initWithAccessKey:ACCESS_KEY_ID withSecretKey:SECRET_KEY];
@@ -74,8 +72,6 @@
     }@catch (NSError *err) {
         NSLog(@"Error occured while adding a vybe:%@", err);
     }
-    
-    self.numVybes++;
 }
 
 - (BOOL)removeVybe:(VYBVybe *)v {
@@ -120,7 +116,6 @@
     for (VYBVybe *vy in myVybes) {
         if ([vy vybeKey] == [v vybeKey]) {
             [myVybes removeObject:vy];
-            self.numVybes--;
             break;
         }
     }
@@ -182,7 +177,7 @@
     */
     NSString *keyString = [v vybeKey];
 
-    S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:keyString inBucket:[v tribeName] ];
+    S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:keyString inBucket:[v tribeName]];
 
     por.contentType = @"video/quicktime";
     por.data = videoData;

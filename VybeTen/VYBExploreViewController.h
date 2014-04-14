@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBExploreViewController : UIViewController
+@interface VYBExploreViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @end

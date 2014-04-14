@@ -13,6 +13,17 @@
 
 @implementation VYBTribe
 
+- (id)initWithTribeName:(NSString *)name {
+    self = [super init];
+    if (self) {
+        tribeName = name;
+        vybes = [[NSMutableArray alloc] init];
+        users = [[NSMutableArray alloc] init];
+        syncs = [[NSMutableArray alloc] init];
+    }
+    return self;
+}
+
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super init];
     if (self) {

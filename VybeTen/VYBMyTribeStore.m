@@ -55,10 +55,19 @@
         }
         // Load saved videos from Tribe's Documents directory
 
-        NSString *path = [self myTribesArchivePath];
-        myTribes = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+        NSString *myTribesPath = [self myTribesArchivePath];
+        myTribes = [NSKeyedUnarchiver unarchiveObjectWithFile:myTribesPath];
+        NSString *featuredPath = [self featuredTribesArchivePath];
+        featuredTribes = [NSKeyedUnarchiver unarchiveObjectWithFile:featuredPath];
+        NSString *trendingPath = [self trendingTribesArchivePath];
+        trendingTribes = [NSKeyedUnarchiver unarchiveObjectWithFile:trendingPath];
+        
         if (!myTribes)
             myTribes = [[NSMutableArray alloc] init];
+        if (!featuredTribes)
+            featuredTribes = [[NSMutableDictionary alloc] init];
+        if (!trendingTribes)
+            trendingTribes = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -77,8 +86,7 @@
         S3CreateBucketRequest *request = [[S3CreateBucketRequest alloc] initWithName:tribeName];
         [self.s3 createBucket:request];
         NSLog(@"A new tribe added");
-        VYBTribe *newTribe = [[VYBTribe alloc] init];
-        [newTribe setTribeName:tribeName];
+        VYBTribe *newTribe = [[VYBTribe alloc] initWithTribeName:tribeName];
         
         [myTribes addObject:newTribe];
     } @catch (AmazonServiceException *exception){
@@ -101,7 +109,6 @@
 
 - (void)syncWithCloudForTribe:(NSString *)name withCompletionBlock:(void (^)(NSError *err))block {
     //NSLog(@"Already existing %u vybes in %@ Tribe", [[myTribesVybes objectForKey:name] count], name);
-
     NSLog(@"Synching with %@ Tribe", name);
     // Tribe name is bucket name is S3
     S3ListObjectsRequest *lor = [[S3ListObjectsRequest alloc] initWithName:name];
@@ -262,6 +269,32 @@
     return nil;
 }
 
+- (NSMutableDictionary *)featuredTribes {
+    return featuredTribes;
+}
+- (NSMutableDictionary *)trendingTribes {
+    return trendingTribes;
+}
+
+- (void)downloadFeaturedWithCompletion:(void (^) (NSError *err))block {
+    NSLog(@"Synching for FEATURED");
+    // Tribe name is bucket name is S3
+    S3ListObjectsRequest *featuredReq = [[S3ListObjectsRequest alloc] initWithName:@"vybes-featured"];
+    VYBS3Connector *connector = [[VYBS3Connector alloc] initWithClient:self.s3 completionBlock:block];
+    [connector startFeaturedRequest:featuredReq];
+    
+
+}
+
+- (void)downloadTrendingWithCompletion:(void (^) (NSError *err))block {
+    NSLog(@"Synching for TRENDING");
+    S3ListObjectsRequest *trendingReq = [[S3ListObjectsRequest alloc] initWithName:@"vybes-trending"];
+    VYBS3Connector *connector = [[VYBS3Connector alloc] initWithClient:self.s3 completionBlock:block];
+    [connector startTrendingRequest:trendingReq];
+    
+}
+
+
 /*
 - (NSArray *)tribes {
     NSArray *tribes = [myTribesVybes allKeys];
@@ -279,10 +312,30 @@
     return [documentDirectory stringByAppendingPathComponent:@"myTribes.archive"];
 }
 
+- (NSString *)featuredTribesArchivePath {
+    NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    NSString *documentDirectory = [documentDirectories objectAtIndex:0];
+    
+    return [documentDirectory stringByAppendingPathComponent:@"featuredTribes.archive"];
+}
+
+- (NSString *)trendingTribesArchivePath {
+    NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    NSString *documentDirectory = [documentDirectories objectAtIndex:0];
+    
+    return [documentDirectory stringByAppendingPathComponent:@"trendingTribes.archive"];
+}
+
 - (BOOL)saveChanges {
     //NSLog(@"Tribe Store saving");
-    NSString *path = [self myTribesArchivePath];
-    return [NSKeyedArchiver archiveRootObject:myTribes toFile:path];
+    NSString *myTribesPath = [self myTribesArchivePath];
+    NSString *fTribesPath = [self featuredTribesArchivePath];
+    NSString *tTribesPath = [self trendingTribesArchivePath];
+
+    return [NSKeyedArchiver archiveRootObject:myTribes toFile:myTribesPath] && [NSKeyedArchiver archiveRootObject:featuredTribes toFile:fTribesPath]
+    && [NSKeyedArchiver archiveRootObject:trendingTribes toFile:tTribesPath];
 }
 
 /*
@@ -334,6 +387,100 @@
     [self.s3 getObject:gor];
     NSLog(@"[%@]DOWN BEGIN", [tribe tribeName]);
 }
+
+- (void)downloadFeaturedVybes {
+   /* if ([tribe hasDownloadingVybe]) {
+        NSLog(@"already downloading something for this tribe");
+        return;
+    }
+    //VYBVybe *v = [self mostRecentVybeToBeDownloadedFor:tribeName];
+    VYBVybe *v = [tribe oldestVybeToBeDownloaded];
+    
+    if (!v) {
+        NSLog(@"nothing to be downloaded");
+        return;
+    }
+    S3GetObjectRequest *gor = [[S3GetObjectRequest alloc] initWithKey:[v vybeKey] withBucket:[tribe tribeName]];
+    gor.delegate = self;
+    gor.requestTag = [v vybeKey];
+    [v setDownStatus:DOWNLOADING];
+    [self.s3 getObject:gor];
+    NSLog(@"[%@]DOWN BEGIN", [tribe tribeName]);
+    */
+}
+
+- (void)downloadTrendingVybes {
+    /*
+    if ([tribe hasDownloadingVybe]) {
+        NSLog(@"already downloading something for this tribe");
+        return;
+    }
+    //VYBVybe *v = [self mostRecentVybeToBeDownloadedFor:tribeName];
+    VYBVybe *v = [tribe oldestVybeToBeDownloaded];
+    
+    if (!v) {
+        NSLog(@"nothing to be downloaded");
+        return;
+    }
+    S3GetObjectRequest *gor = [[S3GetObjectRequest alloc] initWithKey:[v vybeKey] withBucket:[tribe tribeName]];
+    gor.delegate = self;
+    gor.requestTag = [v vybeKey];
+    [v setDownStatus:DOWNLOADING];
+    [self.s3 getObject:gor];
+    NSLog(@"[%@]DOWN BEGIN", [tribe tribeName]);
+     */
+}
+
+- (NSArray *)nonEmptyTribes {
+    NSMutableArray *arr = [[NSMutableArray alloc] init];
+    for (VYBTribe *t in myTribes) {
+        if ([[t vybes] count] > 0)
+            [arr addObject:t];
+    }
+    return arr;
+}
+
+- (NSArray *)contributingTribes {
+    NSMutableArray *arr = [[NSMutableArray alloc] init];
+    for (VYBTribe *t in myTribes) {
+        if ([[t tribeName] isEqualToString:@"PEETAPLANET"] || [[t tribeName] isEqualToString:@"CITY-GAS"]
+            || [[t tribeName] isEqualToString:@"MTL-NEXT"] || [[t tribeName] isEqualToString:@"RUSSIAN"]
+            || [[t tribeName] isEqualToString:@"THECODE20"] || [[t tribeName] isEqualToString:@"FOODEIS-MTL"]) {
+            [arr addObject:t];
+        }
+    }
+    return arr;
+}
+
+- (NSArray *)tempFeaturedTribes {
+    NSMutableArray *arr = [[NSMutableArray alloc] init];
+    for (VYBTribe *t in myTribes) {
+        if ([[t vybes] count] > 0) {
+            if ([[t tribeName] isEqualToString:@"MTLBLOG"] || [[t tribeName] isEqualToString:@"PEETAPLANET"] || [[t tribeName] isEqualToString:@"featuredbyjk1"]
+                || [[t tribeName] isEqualToString:@"featuredbyjk2"] || [[t tribeName] isEqualToString:@"featuredbyjk3"] || [[t tribeName] isEqualToString:@"featuredbyjk4"])
+                [arr addObject:t];
+        }
+    }
+    return arr;
+}
+
+- (NSArray *)tempTrendingTribes {
+    return nil;
+}
+
+- (NSArray *)allMyTribes {
+    NSMutableArray *arr = [[NSMutableArray alloc] init];
+    for (VYBTribe *t in myTribes) {
+        if ([[t vybes] count] > 0) {
+            if ([[t tribeName] isEqualToString:@"MTLBLOG"] || [[t tribeName] isEqualToString:@"PEETAPLANET"] || [[t tribeName] isEqualToString:@"RUSSIAN"]
+            || [[t tribeName] isEqualToString:@"CITY-GAS"] || [[t tribeName] isEqualToString:@"MTL-NEXT"] || [[t tribeName] isEqualToString:@"CERCLE"]
+            || [[t tribeName] isEqualToString:@"FOODIES-MTL"])
+                [arr addObject:t];
+        }
+    }
+    return arr;
+}
+
 
 /*
 - (BOOL)clear {

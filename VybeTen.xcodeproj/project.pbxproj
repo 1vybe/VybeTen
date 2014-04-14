@@ -9,9 +9,13 @@
 /* Begin PBXBuildFile section */
 		022296DA18BC506D0096BB30 /* VYBMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022296D818BC506D0096BB30 /* VYBMenuViewController.m */; };
 		022296DE18BCA24C0096BB30 /* VYBMyVybesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */; };
+		022361F818FBD266002700B8 /* VYBTribesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022361F718FBD266002700B8 /* VYBTribesViewController.m */; };
+		022361FB18FBDEAF002700B8 /* VYBCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022361FA18FBDEAF002700B8 /* VYBCollectionViewController.m */; };
 		022DE2C718F5CC140005A350 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 022DE2C618F5CC140005A350 /* CoreLocation.framework */; };
 		023373D018F50C4F00A522B3 /* VYBTribe.m in Sources */ = {isa = PBXBuildFile; fileRef = 023373CF18F50C4F00A522B3 /* VYBTribe.m */; };
 		023373D318F50C6100A522B3 /* VYBUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 023373D218F50C6100A522B3 /* VYBUser.m */; };
+		024106F118FB82DD002A1049 /* AnimatedTransitioning.m in Sources */ = {isa = PBXBuildFile; fileRef = 024106EE18FB82DD002A1049 /* AnimatedTransitioning.m */; };
+		024106F218FB82DD002A1049 /* TransitionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 024106F018FB82DD002A1049 /* TransitionDelegate.m */; };
 		0243133118F6E73600178CEB /* UINavigationController+Fade.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243133018F6E73600178CEB /* UINavigationController+Fade.m */; };
 		0243133518F6F24C00178CEB /* JSBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243133418F6F24C00178CEB /* JSBadgeView.m */; };
 		0243CC9818CC665200CA03C0 /* VYBReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */; };
@@ -20,6 +24,8 @@
 		024B0E2B18BB39E30073574E /* VYBImageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2A18BB39E30073574E /* VYBImageStore.m */; };
 		024B0E2E18BB39FF0073574E /* VYBVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2D18BB39FF0073574E /* VYBVybeStore.m */; };
 		024C28D718DBCE0600399980 /* VYBTribeVybesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */; };
+		025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 025169AC18FAF955007F34B0 /* VYBLabel.m */; };
+		025169B018FB0D2A007F34B0 /* VYBSyncTribeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 025169AF18FB0D2A007F34B0 /* VYBSyncTribeViewController.m */; };
 		025DE65718CB143D0054F739 /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65518CB143D0054F739 /* AWSRuntime.framework */; };
 		025DE65818CB143D0054F739 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65618CB143D0054F739 /* AWSS3.framework */; };
 		025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 025DE65A18CB16E30054F739 /* VYBConstants.m */; };
@@ -30,9 +36,6 @@
 		027D925318EA874500537822 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 027D925218EA874500537822 /* AdSupport.framework */; };
 		027D925518EA875D00537822 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 027D925418EA875D00537822 /* CoreData.framework */; };
 		027D925718EA876A00537822 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 027D925618EA876A00537822 /* libz.dylib */; };
-		028F37F818E3AFA900F84AB7 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 028F37F418E3AFA900F84AB7 /* HockeySDK.framework */; };
-		028F37F918E3AFA900F84AB7 /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 028F37F618E3AFA900F84AB7 /* HockeySDK.xcconfig */; };
-		028F37FA18E3AFA900F84AB7 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 028F37F718E3AFA900F84AB7 /* HockeySDKResources.bundle */; };
 		02B2030F18E3AD4C0020916A /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B2030E18E3AD4C0020916A /* CoreText.framework */; };
 		02B2031118E3AD5E0020916A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B2031018E3AD5E0020916A /* QuartzCore.framework */; };
 		02B2031318E3AD670020916A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02B2031218E3AD670020916A /* Security.framework */; };
@@ -93,11 +96,19 @@
 		022296D818BC506D0096BB30 /* VYBMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMenuViewController.m; sourceTree = "<group>"; };
 		022296DC18BCA24C0096BB30 /* VYBMyVybesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyVybesViewController.h; sourceTree = "<group>"; };
 		022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybesViewController.m; sourceTree = "<group>"; };
+		022361F618FBD266002700B8 /* VYBTribesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTribesViewController.h; sourceTree = "<group>"; };
+		022361F718FBD266002700B8 /* VYBTribesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBTribesViewController.m; sourceTree = "<group>"; };
+		022361F918FBDEAF002700B8 /* VYBCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCollectionViewController.h; sourceTree = "<group>"; };
+		022361FA18FBDEAF002700B8 /* VYBCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCollectionViewController.m; sourceTree = "<group>"; };
 		022DE2C618F5CC140005A350 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		023373CE18F50C4F00A522B3 /* VYBTribe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTribe.h; sourceTree = "<group>"; };
 		023373CF18F50C4F00A522B3 /* VYBTribe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBTribe.m; sourceTree = "<group>"; };
 		023373D118F50C6100A522B3 /* VYBUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUser.h; sourceTree = "<group>"; };
 		023373D218F50C6100A522B3 /* VYBUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUser.m; sourceTree = "<group>"; };
+		024106ED18FB82DD002A1049 /* AnimatedTransitioning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimatedTransitioning.h; sourceTree = "<group>"; };
+		024106EE18FB82DD002A1049 /* AnimatedTransitioning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimatedTransitioning.m; sourceTree = "<group>"; };
+		024106EF18FB82DD002A1049 /* TransitionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionDelegate.h; sourceTree = "<group>"; };
+		024106F018FB82DD002A1049 /* TransitionDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionDelegate.m; sourceTree = "<group>"; };
 		0243132F18F6E73600178CEB /* UINavigationController+Fade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+Fade.h"; sourceTree = "<group>"; };
 		0243133018F6E73600178CEB /* UINavigationController+Fade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Fade.m"; sourceTree = "<group>"; };
 		0243133318F6F24C00178CEB /* JSBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSBadgeView.h; sourceTree = "<group>"; };
@@ -114,6 +125,10 @@
 		024B0E2D18BB39FF0073574E /* VYBVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybeStore.m; sourceTree = "<group>"; };
 		024C28D518DBCE0600399980 /* VYBTribeVybesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTribeVybesViewController.h; sourceTree = "<group>"; };
 		024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBTribeVybesViewController.m; sourceTree = "<group>"; };
+		025169AB18FAF955007F34B0 /* VYBLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBLabel.h; sourceTree = "<group>"; };
+		025169AC18FAF955007F34B0 /* VYBLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBLabel.m; sourceTree = "<group>"; };
+		025169AE18FB0D2A007F34B0 /* VYBSyncTribeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBSyncTribeViewController.h; sourceTree = "<group>"; };
+		025169AF18FB0D2A007F34B0 /* VYBSyncTribeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBSyncTribeViewController.m; sourceTree = "<group>"; };
 		025DE65518CB143D0054F739 /* AWSRuntime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSRuntime.framework; sourceTree = "<group>"; };
 		025DE65618CB143D0054F739 /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
 		025DE65918CB16E30054F739 /* VYBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBConstants.h; sourceTree = "<group>"; };
@@ -134,9 +149,6 @@
 		027D925218EA874500537822 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		027D925418EA875D00537822 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		027D925618EA876A00537822 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		028F37F418E3AFA900F84AB7 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
-		028F37F618E3AFA900F84AB7 /* HockeySDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
-		028F37F718E3AFA900F84AB7 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
 		02B2030E18E3AD4C0020916A /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		02B2031018E3AD5E0020916A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		02B2031218E3AD670020916A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -217,7 +229,6 @@
 				604B628118B495BB00D3EF19 /* UIKit.framework in Frameworks */,
 				604B627D18B495BB00D3EF19 /* Foundation.framework in Frameworks */,
 				025DE65718CB143D0054F739 /* AWSRuntime.framework in Frameworks */,
-				028F37F818E3AFA900F84AB7 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,6 +245,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		024106EC18FB82DD002A1049 /* TransitionDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				024106ED18FB82DD002A1049 /* AnimatedTransitioning.h */,
+				024106EE18FB82DD002A1049 /* AnimatedTransitioning.m */,
+				024106EF18FB82DD002A1049 /* TransitionDelegate.h */,
+				024106F018FB82DD002A1049 /* TransitionDelegate.m */,
+			);
+			name = TransitionDelegate;
+			path = "Transition Delegate";
+			sourceTree = "<group>";
+		};
 		0243133218F6F24C00178CEB /* JSBadgeView */ = {
 			isa = PBXGroup;
 			children = (
@@ -266,6 +289,8 @@
 				6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */,
 				025EDB2018F6538B008B0CB2 /* VYBMenuView.h */,
 				025EDB2118F6538B008B0CB2 /* VYBMenuView.m */,
+				025169AB18FAF955007F34B0 /* VYBLabel.h */,
+				025169AC18FAF955007F34B0 /* VYBLabel.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -287,6 +312,8 @@
 				022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */,
 				6043968618CAD8A70090F3AE /* VYBMyTribeViewController.h */,
 				6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */,
+				022361F618FBD266002700B8 /* VYBTribesViewController.h */,
+				022361F718FBD266002700B8 /* VYBTribesViewController.m */,
 				024C28D518DBCE0600399980 /* VYBTribeVybesViewController.h */,
 				024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */,
 				025EDB1D18F650CE008B0CB2 /* VYBExploreViewController.h */,
@@ -295,6 +322,10 @@
 				0243133018F6E73600178CEB /* UINavigationController+Fade.m */,
 				024924A218E52B7200568441 /* VYBMainNavigationController.h */,
 				024924A318E52B7200568441 /* VYBMainNavigationController.m */,
+				025169AE18FB0D2A007F34B0 /* VYBSyncTribeViewController.h */,
+				025169AF18FB0D2A007F34B0 /* VYBSyncTribeViewController.m */,
+				022361F918FBDEAF002700B8 /* VYBCollectionViewController.h */,
+				022361FA18FBDEAF002700B8 /* VYBCollectionViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -314,24 +345,6 @@
 				0248BF7818FA2B0100515586 /* VYBS3Connector.m */,
 			);
 			name = Store;
-			sourceTree = "<group>";
-		};
-		028F37F318E3AFA900F84AB7 /* HockeySDK.embeddedframework */ = {
-			isa = PBXGroup;
-			children = (
-				028F37F418E3AFA900F84AB7 /* HockeySDK.framework */,
-				028F37F518E3AFA900F84AB7 /* Resources */,
-			);
-			path = HockeySDK.embeddedframework;
-			sourceTree = "<group>";
-		};
-		028F37F518E3AFA900F84AB7 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				028F37F618E3AFA900F84AB7 /* HockeySDK.xcconfig */,
-				028F37F718E3AFA900F84AB7 /* HockeySDKResources.bundle */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		02D11CF418DF62680018DA97 /* resources */ = {
@@ -394,6 +407,7 @@
 		604B627B18B495BB00D3EF19 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				024106EC18FB82DD002A1049 /* TransitionDelegate */,
 				0243133218F6F24C00178CEB /* JSBadgeView */,
 				022DE2C618F5CC140005A350 /* CoreLocation.framework */,
 				027D925618EA876A00537822 /* libz.dylib */,
@@ -406,7 +420,6 @@
 				027D924D18EA868100537822 /* GAILogger.h */,
 				027D924E18EA868100537822 /* GAITrackedViewController.h */,
 				027D924F18EA868100537822 /* GAITracker.h */,
-				028F37F318E3AFA900F84AB7 /* HockeySDK.embeddedframework */,
 				02B2031418E3AD780020916A /* SystemConfiguration.framework */,
 				02B2031218E3AD670020916A /* Security.framework */,
 				02B2031018E3AD5E0020916A /* QuartzCore.framework */,
@@ -569,8 +582,6 @@
 				02D11D1018DF62AC0018DA97 /* Montreal-RegularIta.otf in Resources */,
 				02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */,
 				02D11D0F18DF62AC0018DA97 /* Montreal-Regular.otf in Resources */,
-				028F37F918E3AFA900F84AB7 /* HockeySDK.xcconfig in Resources */,
-				028F37FA18E3AFA900F84AB7 /* HockeySDKResources.bundle in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
 				02D11D0918DF62AC0018DA97 /* Montreal-Heavy.otf in Resources */,
 				02D11D0E18DF62AC0018DA97 /* Montreal-MediumIta.otf in Resources */,
@@ -600,21 +611,27 @@
 				6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */,
 				025EDB1F18F650CE008B0CB2 /* VYBExploreViewController.m in Sources */,
 				60C0745D18CDD28700390BE1 /* VYBTribePlayerViewController.m in Sources */,
+				025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
 				024924A418E52B7200568441 /* VYBMainNavigationController.m in Sources */,
 				025EDB2218F6538B008B0CB2 /* VYBMenuView.m in Sources */,
 				60B0DCEB18BDCC4E007F4D5C /* VYBVybeCell.m in Sources */,
+				022361FB18FBDEAF002700B8 /* VYBCollectionViewController.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				0243133518F6F24C00178CEB /* JSBadgeView.m in Sources */,
+				022361F818FBD266002700B8 /* VYBTribesViewController.m in Sources */,
 				6043968B18CAE4A60090F3AE /* VYBMyTribeStore.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
 				023373D018F50C4F00A522B3 /* VYBTribe.m in Sources */,
+				025169B018FB0D2A007F34B0 /* VYBSyncTribeViewController.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
 				024C28D718DBCE0600399980 /* VYBTribeVybesViewController.m in Sources */,
 				0243133118F6E73600178CEB /* UINavigationController+Fade.m in Sources */,
 				023373D318F50C6100A522B3 /* VYBUser.m in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
+				024106F118FB82DD002A1049 /* AnimatedTransitioning.m in Sources */,
 				024B0E2E18BB39FF0073574E /* VYBVybeStore.m in Sources */,
+				024106F218FB82DD002A1049 /* TransitionDelegate.m in Sources */,
 				022296DE18BCA24C0096BB30 /* VYBMyVybesViewController.m in Sources */,
 				0248BF7918FA2B0100515586 /* VYBS3Connector.m in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,

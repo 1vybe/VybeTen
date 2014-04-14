@@ -7,7 +7,6 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
-#import <HockeySDK/HockeySDK.h>
 #import "GAI.h"
 #import "GAITracker.h"
 #import "VYBAppDelegate.h"
@@ -22,10 +21,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     /* HockeyApp Initilization */
+    /*
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_ID delegate:self];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-    
+    */
     /* Google Analytics */
     // Send uncaught exceptions to Google Anaylytics
     [GAI sharedInstance].trackUncaughtExceptions = YES;
@@ -45,7 +45,8 @@
 
     UINavigationController *navContoller = [[UINavigationController alloc] init];
     [[navContoller navigationBar] setHidden:YES];
-
+    navContoller.modalPresentationStyle = UIModalPresentationCurrentContext;
+    
     /**
      * Set navigation controller's background as preview layer from video input
      */

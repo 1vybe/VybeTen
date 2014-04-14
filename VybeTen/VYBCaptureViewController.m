@@ -9,14 +9,16 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
 #import <CoreLocation/CoreLocation.h>
+#import "VYBLabel.h"
 #import "VYBCaptureViewController.h"
 #import "VYBMenuViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBConstants.h"
 #import "VYBReplayViewController.h"
-#import "VYBMainNavigationController.h"
+#import "VYBSyncTribeViewController.h"
 #import "UINavigationController+Fade.h"
 #import "JSBadgeView.h"
+#import "VYBTribe.h"
 
 @implementation VYBCaptureViewController {
     AVCaptureSession *session;
@@ -36,7 +38,9 @@
     
     CLLocationManager *locationManager;
 }
-@synthesize syncButton, recordButton, flipButton, menuButton, flashButton, flashLabel, notificationButton;
+@synthesize syncButton, syncLabel, recordButton, countLabel, flipButton, menuButton, flashButton, flashLabel, notificationButton;
+@synthesize defaultSync;
+@synthesize transitionController;
 
 static void * XXContext = &XXContext;
 
@@ -70,6 +74,8 @@ static void * XXContext = &XXContext;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    transitionController = [[TransitionDelegate alloc] init];
+    
     // Overlay alertView will be displayed when a user entered in a portrait mode
     UIDevice *iphone = [UIDevice currentDevice];
     [iphone beginGeneratingDeviceOrientationNotifications];
@@ -96,15 +102,34 @@ static void * XXContext = &XXContext;
     [syncButton addTarget:self action:@selector(changeSync:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:syncButton];
     
+    // Adding SYNC label
+    buttonFrame = CGRectMake(50, self.view.bounds.size.width - 50, 150, 50);
+    syncLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
+    [syncLabel setTextColor:[UIColor whiteColor]];
+    [syncLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
+    //[syncLabel setTextAlignment:NSTextAlignmentLeft];
+    [self.view addSubview:syncLabel];
+    if (defaultSync)
+        [syncLabel setText:[defaultSync tribeName]];
+    
     // Adding RECORD button
     buttonFrame = CGRectMake(self.view.bounds.size.height - 70, (self.view.bounds.size.width - 60)/2, 60, 60);
     recordButton = [[UIButton alloc] initWithFrame:buttonFrame];
     UIImage *captureButtonImg = [UIImage imageNamed:@"button_record.png"];
     [recordButton setBackgroundImage:captureButtonImg forState:UIControlStateNormal];
-    [recordButton.titleLabel setFont:[UIFont fontWithName:@"Montreal-Regular" size:24]];
-    [recordButton setTintColor:[UIColor whiteColor]];
+    //[recordButton.titleLabel setFont:[UIFont fontWithName:@"Montreal-Regular" size:24]];
+    //[recordButton setTintColor:[UIColor whiteColor]];
     [recordButton addTarget:self action:@selector(startRecording) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:recordButton];
+    // Adding COUNT label to RECORD button
+    buttonFrame = CGRectMake(0, 0, 60, 60);
+    countLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
+    [countLabel setTextColor:[UIColor whiteColor]];
+    [countLabel setTextAlignment:NSTextAlignmentCenter];
+    [countLabel setFont:[UIFont fontWithName:@"Montreal-Regular" size:24.0f]];
+    [countLabel setUserInteractionEnabled:NO];
+    [recordButton addSubview:countLabel];
+    
     
     // Adding NOTIFICATION button
     buttonFrame = CGRectMake(0, 0, 50, 50);
@@ -140,7 +165,7 @@ static void * XXContext = &XXContext;
     
     // Adding FLASH label
     buttonFrame = CGRectMake(40, 0, 30, 50);
-    flashLabel = [[UILabel alloc] initWithFrame:buttonFrame];
+    flashLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
     [flashLabel setFont:[UIFont fontWithName:@"Montreal-Regular" size:14]];
     [flashLabel setTextAlignment:NSTextAlignmentLeft];
     [flashLabel setTextColor:[UIColor whiteColor]];
@@ -149,9 +174,12 @@ static void * XXContext = &XXContext;
     
 }
 
-
 - (void)viewWillDisappear:(BOOL)animated {
     [self turnOffFlash];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+     syncButton.hidden = recording; syncLabel.hidden = recording; flipButton.hidden = recording; menuButton.hidden = recording; notificationButton.hidden = recording; flashButton.hidden = (recording || frontCamera);
 }
 
 /**
@@ -184,7 +212,7 @@ static void * XXContext = &XXContext;
     NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
     int secondsLeft = 7 - (int)secondsSinceStart;
     NSString *secondsPassed = [NSString stringWithFormat:@"%d", secondsLeft];
-    [recordButton setTitle:secondsPassed forState:UIControlStateNormal];
+    [countLabel setText:secondsPassed];
 }
 
 - (BOOL)hasTorch {
@@ -200,6 +228,8 @@ static void * XXContext = &XXContext;
     if (!recording) {
         NSLog(@"Start recording");
         newVybe = [[VYBVybe alloc] initWithDeviceId:adId];
+        if (defaultSync)
+            [newVybe setTribeName:[defaultSync tribeName]];
         startTime = [newVybe timeStamp];
         
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[newVybe videoPath]];
@@ -210,7 +240,7 @@ static void * XXContext = &XXContext;
         UIImage *recordButtonEmptyImg = [UIImage imageNamed:@"button_record_empty.png"];
         [recordButton setBackgroundImage:recordButtonEmptyImg forState:UIControlStateNormal];
         
-        recording = YES; flipButton.hidden = recording; menuButton.hidden = recording; notificationButton.hidden = recording;flashButton.hidden = recording;
+        recording = YES; syncButton.hidden = recording; syncLabel.hidden = recording; flipButton.hidden = recording; menuButton.hidden = recording; notificationButton.hidden = recording; flashButton.hidden = recording;
     }
     
     /* Stop Recording */
@@ -224,7 +254,16 @@ static void * XXContext = &XXContext;
 }
 
 - (void)changeSync:(id)sender {
-    
+    VYBSyncTribeViewController *syncVC = [[VYBSyncTribeViewController alloc] init];
+    [syncVC setCompletionBlock:^(VYBTribe *tribe){
+        defaultSync = tribe;
+        if (defaultSync) {
+            UIImage *image = [UIImage imageNamed:@"button_sync.png"];
+            [syncButton setImage:image forState:UIControlStateNormal];
+            [syncLabel setText:[defaultSync tribeName]];
+        }
+    }];
+    [self.navigationController pushFadeViewController:syncVC];
 }
 
 - (void)switchFlash:(id)sender {
@@ -282,7 +321,17 @@ static void * XXContext = &XXContext;
 
 - (void)goToMenu:(id)sender {
     VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
-    [self.navigationController pushFadeViewController:menuVC];
+    menuVC.view.backgroundColor = [UIColor clearColor];
+    menuVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //[menuVC setTransitioningDelegate:transitionController];
+    //menuVC.modalPresentationStyle = UIModalPresentationCurrentContext;
+    //self.modalPresentationStyle = UIModalPresentationCurrentContext;
+    [self.navigationController presentViewController:menuVC animated:YES completion:nil];
+    
+    syncButton.hidden = YES; syncLabel.hidden = YES; flipButton.hidden = YES; menuButton.hidden = YES; notificationButton.hidden = YES; flashButton.hidden = YES;
+    
+    //[self.navigationController pushFadeViewController:menuVC];
 }
 
 - (void)displayOverlay:(NSNotification *)note {
@@ -330,11 +379,12 @@ static void * XXContext = &XXContext;
     [recordingTimer invalidate];
     recordingTimer = nil;
     // Reset record button image back to original
+    [countLabel setText:@""];
     UIImage *recordButtonImg = [UIImage imageNamed:@"button_record.png"];
     [recordButton setBackgroundImage:recordButtonImg forState:UIControlStateNormal];
     [recordButton setTitle:@"" forState:UIControlStateNormal];
     
-    recording = NO; flipButton.hidden = recording; menuButton.hidden = recording; notificationButton.hidden = recording; flashButton.hidden = (recording || frontCamera);
+    recording = NO;
     newVybe = nil;
 }
 
