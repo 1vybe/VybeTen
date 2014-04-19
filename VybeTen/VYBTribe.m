@@ -105,7 +105,7 @@
     return nil;
 }
 
-- (NSArray *)downloadedVybes {
+- (NSMutableArray *)downloadedVybes {
     NSMutableArray *downloaded = [[NSMutableArray alloc] init];
     for (VYBVybe *v in vybes) {
         if ([v downStatus] == DOWNLOADED)

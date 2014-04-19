@@ -35,6 +35,6 @@
 - (BOOL)hasDownloadingVybe;
 - (VYBVybe *)oldestVybeToBeDownloaded;
 - (VYBVybe *)newestVybeTobeDownloaded;
-- (NSArray *)downloadedVybes;
+- (NSMutableArray *)downloadedVybes;
 - (void)changeDownStatusFor:(NSString *)vyKey withStatus:(BOOL)down;
 @end

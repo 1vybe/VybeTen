@@ -17,6 +17,5 @@
 @property (nonatomic, assign) CGFloat firstY;
 
 - (void)customize;
-- (void)customizeOtherDirection;
 - (void)customizeWithTitle:(NSString *)title;
 @end

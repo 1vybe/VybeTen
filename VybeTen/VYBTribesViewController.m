@@ -8,6 +8,7 @@
 
 #import "VYBTribesViewController.h"
 #import "VYBMenuViewController.h"
+#import "VYBPlayerViewController.h"
 #import "VYBMyTribeStore.h"
 #import "VYBImageStore.h"
 #import "VYBTribeVybesViewController.h"
@@ -136,9 +137,8 @@
     collection.delegate = self;
     [self.view addSubview:collection];
 
-    tribes = [[VYBMyTribeStore sharedStore] allMyTribes];
-    NSLog(@"non-empty tribes[%d]", [tribes count]);
-    // Do any additional setup after loading the view.
+    tribes = [[VYBMyTribeStore sharedStore] myTribes];
+    
 }
 
 - (void)goToMenu:(id)sender {
@@ -174,15 +174,19 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collection dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    cell.backgroundColor = [UIColor clearColor];
+
     VYBTribe *tribe = [tribes objectAtIndex:[indexPath row]];
     VYBVybe *vybe = [[tribe vybes] lastObject];
     
     UIImage *cellImg = [[VYBImageStore sharedStore] imageWithKey:[vybe tribeThumbnailPath]];
     if (!cellImg) {
         cellImg = [UIImage imageWithContentsOfFile:[vybe tribeThumbnailPath]];
-        [[VYBImageStore sharedStore] setImage:cellImg forKey:[vybe tribeThumbnailPath]];
+        if (cellImg)
+            [[VYBImageStore sharedStore] setImage:cellImg forKey:[vybe tribeThumbnailPath]];
+        else
+            cell.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     }
-    cell.backgroundColor = [UIColor clearColor];
     UIImageView *imgView = [[UIImageView alloc] initWithImage:cellImg];
     [cell setBackgroundView:imgView];
     
@@ -226,10 +230,15 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     VYBTribe *tribe = [tribes objectAtIndex:[indexPath row]];
-    VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
-    NSLog(@"TribeVybesVC initiated for %@ Tribe", [tribe tribeName]);
-    [vybesVC setCurrTribe:tribe];
-    [self.navigationController pushViewController:vybesVC animated:NO];
+    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    [playerVC setVybePlaylist:[tribe vybes]];
+    [playerVC playFromUnwatched];
+    [self.navigationController presentViewController:playerVC animated:NO completion:^(void) {
+        VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
+        NSLog(@"TribeVybesVC initiated for %@ Tribe", [tribe tribeName]);
+        [vybesVC setCurrTribe:tribe];
+        [self.navigationController pushViewController:vybesVC animated:NO];
+    }];
 }
 
 

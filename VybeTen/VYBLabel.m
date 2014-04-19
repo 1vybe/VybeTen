@@ -23,6 +23,7 @@
 - (void)drawTextInRect:(CGRect)rect {
     CGSize myShadowOffset = CGSizeMake(0, 0);
     float colorValues[] = {0, 0, 0, .8};
+   
     
     CGContextRef myContext = UIGraphicsGetCurrentContext();
     CGContextSaveGState(myContext);

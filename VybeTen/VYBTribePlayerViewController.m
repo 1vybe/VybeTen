@@ -43,7 +43,7 @@
 {
     [super viewDidLoad];
     
-    peetas = [[NSArray alloc] initWithObjects:@"Florence, Italy", @"Madrid, Spain", @"Jakarta, Indonesia", @"Athens, Greece", nil];
+    peetas = [[NSArray alloc] initWithObjects:@"Jakarta, Indonesia", @"Madrid, Spain", @"Florence, Italy", @"Athens, Greece", nil];
     
     // Adding swipe gestures
     UISwipeGestureRecognizer *swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
@@ -68,13 +68,8 @@
     [locationLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18.0]];
     [locationLabel setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:locationLabel];
-    if ([[self.currTribe tribeName] isEqualToString:@"MTL-NEXT"]) {
-        [locationLabel setText:@"Downtown, Montreal"];
-    } else if ([[self.currTribe tribeName] isEqualToString:@"CITY-GAS"]) {
-        [locationLabel setText:@"Griffintown, Montreal"];
-    } else if ([[self.currTribe tribeName] isEqualToString:@"PEETAPLANET"]) {
-        [locationLabel setText:[peetas objectAtIndex:(playIndex/10)]];
-    }
+    [locationLabel setText:[peetas objectAtIndex:(playIndex/10)]];
+    
     
     // Adding BACK button
     CGRect buttonMenuFrame = CGRectMake(0, 0, 50, 50);
@@ -146,6 +141,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
     id tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
         NSString *value = [NSString stringWithFormat:@"TribePlayer[%@] Screen", [self.currTribe tribeName]];

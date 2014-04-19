@@ -11,7 +11,6 @@
 #import "GAITracker.h"
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
-#import "VYBMainNavigationController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBMyTribeStore.h"
 #import "VYBConstants.h"
@@ -27,6 +26,7 @@
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
     */
     /* Google Analytics */
+    
     // Send uncaught exceptions to Google Anaylytics
     [GAI sharedInstance].trackUncaughtExceptions = YES;
     // dispatch interval to 20 seconds
@@ -40,6 +40,7 @@
         // New session starts
         
     }
+    
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 

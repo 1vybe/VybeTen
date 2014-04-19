@@ -52,12 +52,12 @@
     return self;
 }
 
-- (NSArray *)myVybes {
+- (NSMutableArray *)myVybes {
     return myVybes;
 }
 
 - (void)addVybe:(VYBVybe *)v {
-    [myVybes addObject:v];
+    [myVybes insertObject:v atIndex:0];
     NSLog(@"added a new vybe");
 
     @try {

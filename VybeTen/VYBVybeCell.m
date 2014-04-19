@@ -25,15 +25,6 @@
     [self.thumbnailView setContentMode:UIViewContentModeScaleAspectFit];
 }
 
-// For vybes in MyVybes
-- (void)customizeOtherDirection {
-    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
-    // Rotate the thumbnail image clockwise
-    CGAffineTransform rotate = CGAffineTransformMakeRotation(M_PI_2);
-    self.thumbnailView.transform = rotate;
-    [self.thumbnailView setContentMode:UIViewContentModeScaleAspectFit];
-}
-
 // For tribes in MyTribes
 - (void)customizeWithTitle:(NSString *)title {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];

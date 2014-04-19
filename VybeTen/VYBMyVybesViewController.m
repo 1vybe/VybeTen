@@ -15,14 +15,19 @@
 #import "VYBVybeCell.h"
 #import "VYBImageStore.h"
 #import "VYBPlayerViewController.h"
-#import "GAI.h"
-#import "GAIFields.h"
-#import "GAIDictionaryBuilder.h"
+#import "VYBMenuViewController.h"
 
-@implementation VYBMyVybesViewController
+//#import "GAI.h"
+//#import "GAIFields.h"
+//#import "GAIDictionaryBuilder.h"
+
+@implementation VYBMyVybesViewController {
+    UIView *topBar;
+    UIButton *menuButton;
+    UIButton *friendsButton;
+}
 @synthesize buttonCapture = _buttonCapture;
 @synthesize buttonBack = _buttonBack;
-@synthesize bottomBar = _bottomBar;
 @synthesize countLabel = _countLabel;
 
 - (id)init {
@@ -46,7 +51,7 @@
     self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
     // Rotate the tableView for horizontal scrolling
     /* MyVybes rotates counter clockwise where MyTribes and MyTribeVybes rotates clockwise */
-    CGAffineTransform rotateTable = CGAffineTransformMakeRotation(-M_PI_2);
+    CGAffineTransform rotateTable = CGAffineTransformMakeRotation(M_PI_2);
     self.tableView.transform = rotateTable;
     [self.tableView setBackgroundColor:[UIColor clearColor]];
     // Remove cell separators
@@ -57,41 +62,62 @@
     [blurredView setBarStyle:UIBarStyleBlack];
     [self.tableView setBackgroundView:blurredView];
     
-    // Adding transparent bar at the bottom to fix buttons during scrolling
-    CGRect bottomBarFrame = CGRectMake(0, self.view.bounds.size.width - 50, self.view.bounds.size.height, 50);
-    self.bottomBar = [[UIView alloc] initWithFrame:bottomBarFrame];
-    [self.bottomBar setBackgroundColor:[UIColor clearColor]];
-    
-    // Adding transparent anchor bat at the top also
-    CGRect topBarFrame = CGRectMake(0, 0, self.view.bounds.size.height, 50);
-    self.topBar = [[UIView alloc] initWithFrame:topBarFrame];
-    [self.topBar setBackgroundColor:[UIColor clearColor]];
-    
-    // Adding CAPTURE button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 50, 0, 50, 50);
-    self.buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
-    UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
-    [self.buttonCapture setContentMode:UIViewContentModeCenter];
-    [self.buttonCapture setImage:captureImage forState:UIControlStateNormal];
-    [self.buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
-    [self.bottomBar addSubview:self.buttonCapture];
+    // Adding a dark TOPBAR
+    CGRect frame = CGRectMake(0, 0, 50, self.view.bounds.size.height);
+    topBar = [[UIView alloc] initWithFrame:frame];
+    [topBar setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.1]];
+    [self.view addSubview:topBar];
     // Adding BACK button
-    CGRect buttonBackFrame = CGRectMake(0, 0, 50, 50);
+    CGRect buttonBackFrame = CGRectMake(0, self.view.bounds.size.height - 50, 50, 50);
     self.buttonBack = [[UIButton alloc] initWithFrame:buttonBackFrame];
     UIImage *backImage = [UIImage imageNamed:@"button_back.png"];
     [self.buttonBack setContentMode:UIViewContentModeCenter];
     [self.buttonBack setImage:backImage forState:UIControlStateNormal];
+    CGAffineTransform counterClockwise = CGAffineTransformMakeRotation(-M_PI_2);
+    self.buttonBack.transform = counterClockwise;
     [self.buttonBack addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
-    [self.bottomBar addSubview:self.buttonBack];
-    
-    CGRect frame = CGRectMake(0, 0, 100, 50);
+    //[topBar addSubview:self.buttonBack];
+    // Adding MENU button
+    frame = CGRectMake(0, 0, 50, 50);
+    menuButton = [[UIButton alloc] initWithFrame:frame];
+    UIImage *menuImg = [UIImage imageNamed:@"button_menu.png"];
+    [menuButton setImage:menuImg forState:UIControlStateNormal];
+    menuButton.transform = counterClockwise;
+    //[menuButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
+    [menuButton addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
+    [topBar addSubview:menuButton];
+    // Adding COUNT label
+    // These frequent view related steps should be done in Model side.
+    // Count label translates the view by 35 px along x and 85px along y axis because the label is a rectangle
+    frame = CGRectMake(0, 0, 120, 50);
     self.countLabel = [[UILabel alloc] initWithFrame:frame];
     [self.countLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
-    [self.countLabel setText:[NSString stringWithFormat:@"MY VYBES"]];
-    [self.countLabel setTextColor:[UIColor colorWithWhite:1.0 alpha:0.8]];
+    [self.countLabel setText:@"MY VYBES"];
+    [self.countLabel setTextColor:[UIColor whiteColor]];
     [self.countLabel setTextAlignment:NSTextAlignmentCenter];
+    self.countLabel.transform = counterClockwise;
     [self.countLabel setBackgroundColor:[UIColor clearColor]];
-    [self.topBar addSubview:self.countLabel];
+    [self.view addSubview:self.countLabel];
+    self.countLabel.center = topBar.center;
+    
+    // Adding CAPTURE button
+    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
+    self.buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
+    UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
+    [self.buttonCapture setContentMode:UIViewContentModeCenter];
+    [self.buttonCapture setImage:captureImage forState:UIControlStateNormal];
+    self.buttonCapture.transform = counterClockwise;
+    [self.buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
+    [[self tableView] addSubview:self.buttonCapture];
+    
+    // Adding FRIENDS button
+    frame = CGRectMake(self.view.bounds.size.width - 50, self.view.bounds.size.height - 50, 50, 50);
+    friendsButton = [[UIButton alloc] initWithFrame:frame];
+    UIImage *friendsImg = [UIImage imageNamed:@"button_friends.png"];
+    [friendsButton setContentMode:UIViewContentModeCenter];
+    [friendsButton setImage:friendsImg forState:UIControlStateNormal];
+    friendsButton.transform = counterClockwise;
+    [self.tableView addSubview:friendsButton];
 
     
     [[VYBMyVybeStore sharedStore] delayedUploadsBegin];
@@ -99,34 +125,21 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     /* Google Analytics */
+    /*
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
         [tracker set:kGAIScreenName value:@"MyVybes Screen"];
         [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     }
-    
+    */
     [super viewDidAppear:animated];
-    [self.navigationController.view addSubview:self.bottomBar];
-    [self.navigationController.view addSubview:self.topBar];
     [[VYBMyVybeStore sharedStore] delayedUploadsBegin];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self.bottomBar removeFromSuperview];
-    [self.topBar removeFromSuperview];
 }
 
-
-/* Scroll down to the bottom to show recent vybes first */
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    NSInteger idx = [[[VYBMyVybeStore sharedStore] myVybes] count] - 1;
-    if (idx < 0)
-        return;
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -151,15 +164,16 @@
     }
     // Customize cell
     [cell.thumbnailView setImage:thumbImg];
-    [cell customizeOtherDirection];
+    [cell customize];
 
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    [playerVC setVybePlaylist:[[VYBMyVybeStore sharedStore] myVybes]];
     [playerVC playFrom:[indexPath row]];
-    [self.navigationController pushViewController:playerVC animated:NO];
+    [self.navigationController presentViewController:playerVC animated:NO completion:nil];
 }
 
 
@@ -196,12 +210,36 @@
     [self.navigationController popViewControllerAnimated:NO];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    [self.bottomBar removeFromSuperview];
+- (void)goToMenu:(id)sender {
+    VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
+    menuVC.view.backgroundColor = [UIColor clearColor];
+    menuVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //[menuVC setTransitioningDelegate:transitionController];
+    //menuVC.modalPresentationStyle = UIModalPresentationCurrentContext;
+    //self.modalPresentationStyle = UIModalPresentationCurrentContext;
+    [self.navigationController presentViewController:menuVC animated:YES completion:nil];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGRect frame = topBar.frame;
+    frame.origin.y = scrollView.contentOffset.y;
+    topBar.frame = frame;
     
-    // Dispose of any resources that can be recreated.
+    frame = friendsButton.frame;
+    frame.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 50;
+    friendsButton.frame = frame;
+    
+    frame = self.buttonCapture.frame;
+    frame.origin.y = scrollView.contentOffset.y;
+    self.buttonCapture.frame = frame;
+    
+    self.countLabel.center = topBar.center;
+
+    [self.view bringSubviewToFront:topBar];
+    [self.view bringSubviewToFront:friendsButton];
+    [self.view bringSubviewToFront:self.buttonCapture];
+    [self.view bringSubviewToFront:self.countLabel];
 }
 
 @end

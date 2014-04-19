@@ -18,7 +18,7 @@
 @property (nonatomic) AmazonS3Client *s3;
 
 + (VYBMyVybeStore *)sharedStore;
-- (NSArray *)myVybes;
+- (NSMutableArray *)myVybes;
 - (void)listVybes;
 - (void)addVybe:(VYBVybe *)v;
 - (BOOL)removeVybe:(VYBVybe *)v;

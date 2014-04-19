@@ -7,25 +7,24 @@
 //
 
 #import "VYBTribeVybesViewController.h"
+#import "VYBPlayerViewController.h"
 #import "VYBVybeCell.h"
 #import "VYBImageStore.h"
 #import "VYBMyTribeStore.h"
-#import "VYBTribePlayerViewController.h"
 #import "GAI.h"
 #import "GAIDictionaryBuilder.h"
 #import "GAIFields.h"
 #import "VYBMenuViewController.h"
 
 @implementation VYBTribeVybesViewController {
-    NSArray *downloadedTribeVybes;
+    NSMutableArray *downloadedTribeVybes;
     
     UIView *topBar;
-    UIButton *menuButton;
-    
+    UIButton *menuButton;    
     UIButton *friendsButton;
 }
-@synthesize buttonBack = _buttonBack;
 @synthesize buttonCapture = _buttonCapture;
+@synthesize buttonBack = _buttonBack;
 @synthesize currTribe = _currTribe;
 @synthesize countLabel = _countLabel;
 
@@ -97,7 +96,6 @@
     [self.tableView addSubview:self.countLabel];
     self.countLabel.center = topBar.center;
     
-    
     // Adding CAPTURE button
     CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
     self.buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
@@ -130,26 +128,29 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     /* Google Analytics */
+    /*
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
         NSString *value = [NSString stringWithFormat:@"Tribe[%@] Screen", [self.currTribe tribeName]];
         [tracker set:kGAIScreenName value:value];
         [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     }
+    */
 }
 
 
 /* Scroll down to the bottom to show recent vybes first */
-/*
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    NSInteger idx = [downloadedTribeVybes count] - 1;
+    NSInteger idx = [self oldestUnwatchedVybeIn:downloadedTribeVybes];
     if (idx < 0)
         return;
+    
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
-*/
+
 
 - (void)viewDidDisappear:(BOOL)animated {
     [[VYBMyTribeStore sharedStore] saveChanges];
@@ -203,14 +204,11 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    VYBTribePlayerViewController *playerVC = [[VYBTribePlayerViewController alloc] init];
-    
-    [playerVC setCurrTribe:self.currTribe];
+    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    [playerVC setVybePlaylist:downloadedTribeVybes];
     // Here d indicated the number of downloaded vybes and n is the number of vybes including the ones to be downloaded
-    NSInteger d = [downloadedTribeVybes count];
-    NSInteger n = [[self.currTribe vybes] count];
-    [playerVC playFrom:[indexPath row] - d + n];
-    [self.navigationController pushViewController:playerVC animated:NO];
+    [playerVC playFrom:[indexPath row]];
+    [self.navigationController presentViewController:playerVC animated:NO completion:nil];
 }
 
 - (void)captureVybe:(id)sender {
@@ -236,11 +234,7 @@
  * Repositioning floating views during/after scroll
  **/
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    //CGRect frame = self.buttonBack.frame;
-    //frame.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 50;
-    //self.buttonBack.frame = frame;
-    
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {    
     CGRect frameTwo = self.buttonCapture.frame;
     frameTwo.origin.y = scrollView.contentOffset.y;
     self.buttonCapture.frame = frameTwo;
@@ -256,12 +250,21 @@
     self.countLabel.center = topBar.center;
     
     [[self view] bringSubviewToFront:topBar];
-    [[self view] bringSubviewToFront:self.buttonBack];
     [[self view] bringSubviewToFront:self.buttonCapture];
     [[self view] bringSubviewToFront:self.countLabel];
     [[self view] bringSubviewToFront:friendsButton];
 }
 
+- (NSInteger)oldestUnwatchedVybeIn:(NSMutableArray *)vybes {
+    NSInteger i = [vybes count] - 1;
+    for (; i >= 0; i--) {
+        VYBVybe *v = [vybes objectAtIndex:i];
+        if (![v isWatched]) {
+            return i;
+        }
+    }
+    return [vybes count] - 1;
+}
 
 - (void)didReceiveMemoryWarning
 {

@@ -81,7 +81,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[VYBMyTribeStore sharedStore] contributingTribes] count];
+    return [[[VYBMyTribeStore sharedStore] myTribes] count];
 }
 
 
@@ -93,7 +93,7 @@
         [cell setBackgroundColor:[UIColor clearColor]];
     }
     [[cell textLabel] setFont:[UIFont fontWithName:@"Montreal-Xlight" size:16]];
-    VYBTribe *tribe = [[[VYBMyTribeStore sharedStore] contributingTribes] objectAtIndex:[indexPath row]];
+    VYBTribe *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     //[cell setExclusiveTouch:NO];
     [[cell textLabel] setTextColor:[UIColor whiteColor]];
@@ -103,7 +103,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    VYBTribe *tribe = [[[VYBMyTribeStore sharedStore] contributingTribes] objectAtIndex:[indexPath row]];
+    VYBTribe *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
     
     if (self.completionBlock)
         [self completionBlock](tribe);

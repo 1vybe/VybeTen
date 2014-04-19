@@ -11,12 +11,11 @@
 
 @interface VYBS3Connector : NSObject <AmazonServiceRequestDelegate> {
     AmazonS3Client *s3;
-    NSMutableData *container;
 }
 
 - (id)initWithClient:(AmazonS3Client *)client completionBlock:(void (^)(NSError *err))block;
 
-@property (nonatomic, copy) S3ListBucketsRequest *request;
+@property (nonatomic) S3ListBucketsRequest *request;
 @property (nonatomic, copy) void (^completionBlock) (NSError *err);
 
 - (void)startTribeListRequest:(S3ListBucketsRequest *)req;

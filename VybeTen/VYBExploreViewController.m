@@ -11,6 +11,7 @@
 #import "VYBMyTribeStore.h"
 #import "VYBTribeVybesViewController.h"
 #import "VYBImageStore.h"
+#import "VYBPlayerViewController.h"
 
 @implementation VYBExploreViewController {
     UIView *topBar;
@@ -28,7 +29,6 @@
     UICollectionView *collection;
     UICollectionViewFlowLayout *flowLayout;
     
-    NSArray *tribes;
     UIImageView *mapView;
 }
 
@@ -139,14 +139,12 @@
     [mapView setImage:mapImg];
     
     //[[VYBMyTribeStore sharedStore] downloadExplore];
-    tribes = [[VYBMyTribeStore sharedStore] tempFeaturedTribes];
 }
 
 - (void)goToMenu:(id)sender {
     VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
     menuVC.view.backgroundColor = [UIColor clearColor];
     menuVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     //[menuVC setTransitioningDelegate:transitionController];
     //menuVC.modalPresentationStyle = UIModalPresentationCurrentContext;
     //self.modalPresentationStyle = UIModalPresentationCurrentContext;
@@ -165,7 +163,6 @@
     [happeningButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
     [trendingButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
     [currentTabLabel setText:@"FEATURED"];
-    tribes = [[VYBMyTribeStore sharedStore] tempFeaturedTribes];
     [collection reloadData];
 }
 
@@ -185,7 +182,6 @@
     [happeningButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
     [featuredButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
     [currentTabLabel setText:@"TRENDING"];
-    tribes = [[VYBMyTribeStore sharedStore] tempTrendingTribes];
     [collection reloadData];
 }
 
@@ -194,69 +190,47 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [tribes count];
+    return [[[VYBMyTribeStore sharedStore] myTribes] count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collection dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    VYBTribe *tribe = [tribes objectAtIndex:[indexPath row]];
-    VYBVybe *vybe = [[tribe vybes] lastObject];
     
-    UIImage *cellImg = [[VYBImageStore sharedStore] imageWithKey:[vybe tribeThumbnailPath]];
-    if (!cellImg) {
-        cellImg = [UIImage imageWithContentsOfFile:[vybe tribeThumbnailPath]];
-        [[VYBImageStore sharedStore] setImage:cellImg forKey:[vybe tribeThumbnailPath]];
+    VYBTribe *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
+    NSString *tribeName = [tribe tribeName];
+    VYBVybe *vybe = [[tribe vybes] lastObject];
+    [cell setBackgroundColor:[UIColor colorWithWhite:0.5 alpha:0.5]];
+    UIImage *img = [[VYBImageStore sharedStore] imageWithKey:[vybe tribeThumbnailPath]];
+    if (!img) {
+        img = [UIImage imageWithContentsOfFile:[vybe tribeThumbnailPath]];
+        if (img) {
+            [[VYBImageStore sharedStore] setImage:img forKey:[vybe tribeThumbnailPath]];
+        }
     }
-    cell.backgroundColor = [UIColor clearColor];
-    UIImageView *imgView = [[UIImageView alloc] initWithImage:cellImg];
+    UIImageView *imgView = [[UIImageView alloc] initWithImage:img];
     [cell setBackgroundView:imgView];
     
-    NSString *title = [self matchFeatureTitleFor:[tribe tribeName]];
-    NSString *name = [self matchFeatureTribeNameFor:[tribe tribeName]];
-    
-    [self cell:cell setTitle:title tribeName:name indexPath:indexPath];
-
-    
+    NSString *title = [self generateFeatureName:tribeName];
+    [self cell:cell setTitle:title tribeName:tribeName indexPath:indexPath];
     return cell;
 }
 
-- (NSString *)matchFeatureTitleFor:(NSString *)tribeName {
-    NSString *str = @"";
-    
-    if ( [tribeName isEqualToString:@"PEETAPLANET"] ) {
-        str = @"Beautifully Shot";
-    } else if ( [tribeName isEqualToString:@"MTLBLOG"] ) {
-        str = @"Promoted";
-    } else if ( [tribeName isEqualToString:@"featuredbyjk1"] ) {
-        str = @"Most Viewed";
-    } else if ( [tribeName isEqualToString:@"featuredbyjk2"] ) {
-        str = @"City Arts";
-    } else if ( [tribeName isEqualToString:@"featuredbyjk3"] ) {
-        str = @"Local Stories";
-    } else if ( [tribeName isEqualToString:@"featuredbyjk4"] ) {
-        str = @"From Barcelona";
+- (NSString *)generateFeatureName:(NSString *)name {
+    NSString *featureName = @"";
+    if ([name isEqualToString:@"MTLBLOG"]) {
+        featureName = @"Promoted";
+    } else if ([name isEqualToString:@"PEETAPLANET"]) {
+        featureName = @"Beautifully Shot";
+    } else if ([name isEqualToString:@"CITY-GAS"]) {
+        featureName = @"Nightlife";
+    } else if ([name isEqualToString:@"FOODIES-MTL"]) {
+        featureName = @"Lifestyle";
+    } else if ([name isEqualToString:@"MTL-NEXT"]) {
+        featureName = @"Startup Scene";
+    } else if ([name isEqualToString:@"RUSSIAN"]) {
+        featureName = @"Opening This Week";
     }
-    return str;
-}
-
-- (NSString *)matchFeatureTribeNameFor:(NSString *)tribeName {
-    NSString *str = @"";
-    
-    if ( [tribeName isEqualToString:@"PEETAPLANET"] ) {
-        str = @"PEETAPLANET";
-    } else if ( [tribeName isEqualToString:@"MTLBLOG"] ) {
-        str = @"MTLBLOG";
-    } else if ( [tribeName isEqualToString:@"featuredbyjk1"] ) {
-        str = @"St. Paddy's";
-    } else if ( [tribeName isEqualToString:@"featuredbyjk2"] ) {
-        str = @"Underdog Grfity";
-    } else if ( [tribeName isEqualToString:@"featuredbyjk3"] ) {
-        str = @"Students United";
-    } else if ( [tribeName isEqualToString:@"featuredbyjk4"] ) {
-        str = @"Divendres Sant";
-    }
-    
-    return str;
+    return featureName;
 }
 
 
@@ -293,11 +267,19 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    VYBTribe *tribe = [tribes objectAtIndex:[indexPath row]];
+    VYBTribe *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
     VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
-    NSLog(@"TribeVybesVC initiated for %@ Tribe", [tribe tribeName]);
-    [vybesVC setCurrTribe:tribe];
-    [self.navigationController pushViewController:vybesVC animated:NO];
+    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    [playerVC setVybePlaylist:[tribe vybes]];
+    [playerVC playFromUnwatched];
+    [playerVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];\
+    [playerVC setDismissBlock:^(NSInteger i){
+        
+    }];
+    [self.navigationController presentViewController:playerVC animated:NO completion:^(void) {
+        [vybesVC setCurrTribe:tribe];
+        [self.navigationController pushViewController:vybesVC animated:NO];
+    }];
 }
 
 @end

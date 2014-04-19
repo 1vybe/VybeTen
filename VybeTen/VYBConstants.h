@@ -21,5 +21,14 @@
 
 #define HOCKEY_APP_ID   @"f6bbe32e11800913add864bbd07ebcee"
 
+#define FONT_SIZE_DEFAULT       18
+#define FONT_SIZE_BIG           20
+#define FONT_SIZE_SMALL         16
+#define DEFAULT_FONT(s)         [UIFont fontWithName:@"Montreal-Xlight" size:s]
+#define FONT_MENU               DEFAULT_FONT(FONT_SIZE_BIG)
+#define FONT_TITLE              DEFAULT_FONT(FONT_SIZE_DEFAULT)
+#define FONT_TITLE_SMALL        DEFAULT_FONT(FONT_SIZE_SMALL)
+
+
 @interface VYBConstants : NSObject
 @end

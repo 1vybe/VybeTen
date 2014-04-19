@@ -10,11 +10,10 @@
 #import "VYBVybeCell.h"
 #import "VYBImageStore.h"
 #import "VYBMyTribeStore.h"
-#import "VYBTribePlayerViewController.h"
 #import "VYBTribeVybesViewController.h"
-#import "GAI.h"
-#import "GAIDictionaryBuilder.h"
-#import "GAIFields.h"
+//#import "GAI.h"
+//#import "GAIDictionaryBuilder.h"
+//#import "GAIFields.h"
 
 @implementation VYBMyTribeViewController
 
@@ -111,11 +110,13 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     /* Google Analytics */
+    /*
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
         [tracker set:kGAIScreenName value:@"MyTribes Screen"];
         [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     }
+    */
     [super viewDidAppear:animated];
     //[[VYBMyTribeStore sharedStore] refreshTribes];
 }
@@ -179,10 +180,12 @@
 
 - (void)createTribe:(id)sender {
     /* Report this action to Google Analytics */
+    /*
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
         [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"UIAction" action:@"buttonPress" label:@"createTribeButton" value:[NSNumber numberWithInt:7]] build]];
     }
+    */
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Name your new tribe" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     [alertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
     [alertView show];

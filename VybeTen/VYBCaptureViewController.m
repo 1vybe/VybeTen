@@ -171,7 +171,6 @@ static void * XXContext = &XXContext;
     [flashLabel setTextColor:[UIColor whiteColor]];
     [flashLabel setText:@"OFF"];
     [self.flashButton addSubview:flashLabel];
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

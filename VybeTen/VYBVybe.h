@@ -20,6 +20,9 @@
     CLLocation *location;
     int upStatus; int downStatus;
 }
+/* TODO: Keep track of the time when OPENED the vybe and watched again etc */
+@property (nonatomic, getter = isWatched) BOOL watched;
+
 - (id)initWithDeviceId:(NSString *)devId;
 - (void)setDeviceId:(NSString *)devId;
 - (void)setVybeKey:(NSString *)vyKey;

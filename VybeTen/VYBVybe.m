@@ -15,6 +15,8 @@
     CLLocationManager *locationManager;
 }
 
+@synthesize watched;
+
 - (id)init {
     self = [super init];
     if (self) {
@@ -228,8 +230,8 @@
     [dateForm setTimeStyle:NSDateFormatterNoStyle];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [dateForm setLocale:usLocale];
-    NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-    [dateForm setTimeZone:gmt];
+    NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"EST"];
+    [dateForm setTimeZone:timeZone];
 
     return [dateForm stringFromDate:timeStamp];
 }
@@ -240,8 +242,8 @@
     [dateForm setDateStyle:NSDateFormatterNoStyle];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [dateForm setLocale:usLocale];
-    NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-    [dateForm setTimeZone:gmt];
+    NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"timeZone"];
+    [dateForm setTimeZone:timeZone];
     
     return [dateForm stringFromDate:timeStamp];
 }
