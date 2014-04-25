@@ -137,8 +137,10 @@
     collection.delegate = self;
     [self.view addSubview:collection];
 
-    tribes = [[VYBMyTribeStore sharedStore] myTribes];
-    
+    [[VYBMyTribeStore sharedStore] refreshTribesWithCompletion:^(NSError *err) {
+        tribes = [[VYBMyTribeStore sharedStore] myTribes];
+        [collection reloadData];
+    }];
 }
 
 - (void)goToMenu:(id)sender {
@@ -231,11 +233,20 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     VYBTribe *tribe = [tribes objectAtIndex:[indexPath row]];
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [playerVC setVybePlaylist:[tribe vybes]];
-    [playerVC playFromUnwatched];
+    [playerVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
+    
     [self.navigationController presentViewController:playerVC animated:NO completion:^(void) {
-        VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
-        NSLog(@"TribeVybesVC initiated for %@ Tribe", [tribe tribeName]);
+        if ([[tribe vybes] count] > 1) {
+            [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:[tribe tribeName] withCompletionBlock:^(NSError *err) {
+                [playerVC setVybePlaylist:[tribe vybes]];
+                [playerVC playFromUnwatched];
+            }];
+        } else {
+            [playerVC setVybePlaylist:[tribe vybes]];
+            [playerVC playFromUnwatched];
+        }
+
         [vybesVC setCurrTribe:tribe];
         [self.navigationController pushViewController:vybesVC animated:NO];
     }];

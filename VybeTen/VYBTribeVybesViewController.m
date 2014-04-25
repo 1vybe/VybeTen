@@ -125,23 +125,11 @@
     [self refreshTribeVybes:refresh];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    /* Google Analytics */
-    /*
-    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-    if (tracker) {
-        NSString *value = [NSString stringWithFormat:@"Tribe[%@] Screen", [self.currTribe tribeName]];
-        [tracker set:kGAIScreenName value:value];
-        [tracker send:[[GAIDictionaryBuilder createAppView] build]];
-    }
-    */
-}
-
-
 /* Scroll down to the bottom to show recent vybes first */
 
 - (void)viewWillAppear:(BOOL)animated {
+    downloadedTribeVybes = [self.currTribe downloadedVybes];
+    [self.tableView reloadData];
     [super viewWillAppear:animated];
     NSInteger idx = [self oldestUnwatchedVybeIn:downloadedTribeVybes];
     if (idx < 0)
@@ -161,7 +149,8 @@
 - (void)refreshTribeVybes:(UIRefreshControl *)refresh {
     // Check for new vybes
     [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:[self.currTribe tribeName] withCompletionBlock:^(NSError *err){
-        [refresh endRefreshing];
+        if (refresh)
+            [refresh endRefreshing];
         if (!err) {
             // Update so downloaded vybes are displayed
             downloadedTribeVybes = [self.currTribe downloadedVybes];
@@ -205,10 +194,12 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [playerVC setVybePlaylist:downloadedTribeVybes];
-    // Here d indicated the number of downloaded vybes and n is the number of vybes including the ones to be downloaded
-    [playerVC playFrom:[indexPath row]];
-    [self.navigationController presentViewController:playerVC animated:NO completion:nil];
+
+    [self.navigationController presentViewController:playerVC animated:NO completion:^(){
+        [playerVC setVybePlaylist:downloadedTribeVybes];
+        // Here d indicated the number of downloaded vybes and n is the number of vybes including the ones to be downloaded
+        [playerVC playFrom:[indexPath row]];
+    }];
 }
 
 - (void)captureVybe:(id)sender {

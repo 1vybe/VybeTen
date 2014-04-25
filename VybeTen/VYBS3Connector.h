@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <AWSS3/AWSS3.h>
 
+@class VYBVybe;
+
 @interface VYBS3Connector : NSObject <AmazonServiceRequestDelegate> {
     AmazonS3Client *s3;
 }
@@ -22,5 +24,6 @@
 - (void)startTribeVybesRequest:(S3ListObjectsRequest *)req;
 - (void)startFeaturedRequest:(S3ListObjectsRequest *)req;
 - (void)startTrendingRequest:(S3ListObjectsRequest *)req;
+- (void)startDownloading:(S3GetObjectRequest *)req forVybe:(VYBVybe *)v;
 
 @end

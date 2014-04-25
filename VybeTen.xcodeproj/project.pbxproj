@@ -27,6 +27,7 @@
 		024C28D718DBCE0600399980 /* VYBTribeVybesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */; };
 		025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 025169AC18FAF955007F34B0 /* VYBLabel.m */; };
 		025169B018FB0D2A007F34B0 /* VYBSyncTribeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 025169AF18FB0D2A007F34B0 /* VYBSyncTribeViewController.m */; };
+		025299ED190AACED00264C86 /* VYBUserStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 025299EC190AACED00264C86 /* VYBUserStore.m */; };
 		025DE65718CB143D0054F739 /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65518CB143D0054F739 /* AWSRuntime.framework */; };
 		025DE65818CB143D0054F739 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025DE65618CB143D0054F739 /* AWSS3.framework */; };
 		025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 025DE65A18CB16E30054F739 /* VYBConstants.m */; };
@@ -71,6 +72,7 @@
 		02D11D1018DF62AC0018DA97 /* Montreal-RegularIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0218DF62AC0018DA97 /* Montreal-RegularIta.otf */; };
 		02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */; };
 		02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */; };
+		02D5E80B190A227C007F3BFB /* VYBSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02D5E80A190A227C007F3BFB /* VYBSignUpViewController.m */; };
 		6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6035496118C88B11003F5D3E /* VYBPlayerViewController.m */; };
 		6043967D18C9FFDC0090F3AE /* VYBVybeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */; };
 		6043968818CAD8A70090F3AE /* VYBMyTribeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */; };
@@ -148,6 +150,8 @@
 		025169AC18FAF955007F34B0 /* VYBLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBLabel.m; sourceTree = "<group>"; };
 		025169AE18FB0D2A007F34B0 /* VYBSyncTribeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBSyncTribeViewController.h; sourceTree = "<group>"; };
 		025169AF18FB0D2A007F34B0 /* VYBSyncTribeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBSyncTribeViewController.m; sourceTree = "<group>"; };
+		025299EB190AACED00264C86 /* VYBUserStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUserStore.h; sourceTree = "<group>"; };
+		025299EC190AACED00264C86 /* VYBUserStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUserStore.m; sourceTree = "<group>"; };
 		025DE65518CB143D0054F739 /* AWSRuntime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSRuntime.framework; sourceTree = "<group>"; };
 		025DE65618CB143D0054F739 /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
 		025DE65918CB16E30054F739 /* VYBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBConstants.h; sourceTree = "<group>"; };
@@ -244,6 +248,8 @@
 		02D11D0218DF62AC0018DA97 /* Montreal-RegularIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-RegularIta.otf"; sourceTree = "<group>"; };
 		02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Xlight.otf"; sourceTree = "<group>"; };
 		02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-XlightIta.otf"; sourceTree = "<group>"; };
+		02D5E809190A227C007F3BFB /* VYBSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBSignUpViewController.h; sourceTree = "<group>"; };
+		02D5E80A190A227C007F3BFB /* VYBSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBSignUpViewController.m; sourceTree = "<group>"; };
 		6035496018C88B11003F5D3E /* VYBPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerViewController.h; sourceTree = "<group>"; };
 		6035496118C88B11003F5D3E /* VYBPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerViewController.m; sourceTree = "<group>"; };
 		6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBVybeCell.xib; sourceTree = "<group>"; };
@@ -406,6 +412,8 @@
 				022361F918FBDEAF002700B8 /* VYBCollectionViewController.h */,
 				022361FA18FBDEAF002700B8 /* VYBCollectionViewController.m */,
 				6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */,
+				02D5E809190A227C007F3BFB /* VYBSignUpViewController.h */,
+				02D5E80A190A227C007F3BFB /* VYBSignUpViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -425,6 +433,8 @@
 				0248BF7818FA2B0100515586 /* VYBS3Connector.m */,
 				02030D9818FF622A005723FE /* VYBS3Uploader.h */,
 				02030D9918FF622A005723FE /* VYBS3Uploader.m */,
+				025299EB190AACED00264C86 /* VYBUserStore.h */,
+				025299EC190AACED00264C86 /* VYBUserStore.m */,
 			);
 			name = Store;
 			sourceTree = "<group>";
@@ -780,6 +790,7 @@
 				027FB44318FDE32400946579 /* GTLVybeMediaMediaListResponse.m in Sources */,
 				60F1BBBC18BAB39400070EEC /* VYBVybe.m in Sources */,
 				0243CC9818CC665200CA03C0 /* VYBReplayViewController.m in Sources */,
+				025299ED190AACED00264C86 /* VYBUserStore.m in Sources */,
 				024B0E2B18BB39E30073574E /* VYBImageStore.m in Sources */,
 				6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */,
 				025EDB1F18F650CE008B0CB2 /* VYBExploreViewController.m in Sources */,
@@ -814,6 +825,7 @@
 				023373D318F50C6100A522B3 /* VYBUser.m in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				024106F118FB82DD002A1049 /* AnimatedTransitioning.m in Sources */,
+				02D5E80B190A227C007F3BFB /* VYBSignUpViewController.m in Sources */,
 				027FB48018FEC2AC00946579 /* PWProgressView.m in Sources */,
 				024B0E2E18BB39FF0073574E /* VYBVybeStore.m in Sources */,
 				024106F218FB82DD002A1049 /* TransitionDelegate.m in Sources */,
@@ -1006,6 +1018,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "CE03EC93-93F9-4AFD-8C9D-4DED413AC5BE";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

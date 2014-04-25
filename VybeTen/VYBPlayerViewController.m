@@ -13,6 +13,7 @@
 #import "GAIFields.h"
 #import "GAIDictionaryBuilder.h"
 #import "VYBVybe.h"
+#import "VYBMyTribeStore.h"
 #import "VYBConstants.h"
 
 @implementation VYBPlayerViewController {
@@ -68,7 +69,6 @@
     [buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonCapture];
 
-
     VYBVybe *v = (VYBVybe *)[self.vybePlaylist objectAtIndex:playIndex];
 
     // Adding TIME label
@@ -78,7 +78,6 @@
     [self.labelTime setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18.0]];
     [self.labelTime setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:self.labelTime];
-    [self.labelTime setText:[NSString stringWithFormat:@"%@ %@",[v dateString], [v timeString]]];
     
     // Adding LOCATION label
     CGRect frame = CGRectMake(self.view.bounds.size.height/2 - 100, 0, 200, 50);
@@ -87,7 +86,6 @@
     [locationLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18.0]];
     [locationLabel setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:locationLabel];
-    [locationLabel setText:@"Old Port, Montreal"];
     
     // Adding TRIBE label
     frame = CGRectMake(10, self.view.bounds.size.width - 50, 150, 50);
@@ -97,15 +95,19 @@
     [currentTribeLabel setText:[v tribeName]];
     [self.view addSubview:currentTribeLabel];
 
+    [self setPlayer:[AVPlayer playerWithPlayerItem:self.currItem]];
+    [self.playerView setPlayer:self.player];
+    [self.playerView setVideoFillMode];
+    
+    //[self playbackFrom:playIndex];
+    
     // Set up playerLayer
+    /*
     NSURL *url = [[NSURL alloc] initFileURLWithPath:[v tribeVideoPath]];
     if ([v upStatus] == UPLOADED || [v upStatus] == UPLOADING) {
         url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
     }
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-    NSLog(@"Let's play asset: %@", [v tribeVideoPath]);
-    NSLog(@"asset URL: %@", url);
-
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     // Registering the current playerItem to Notification center
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
@@ -114,10 +116,12 @@
     [self.playerView setVideoFillMode];
     [self.player play];
     [v setWatched:YES];
+     */
 }
 
 - (void)playFrom:(NSInteger)index {
     playIndex = index;
+    [self playbackFrom:playIndex];
 }
 
 - (void)playerItemDidReachEnd {
@@ -131,29 +135,57 @@
     if (from < [self.vybePlaylist count]) {
         VYBVybe *v = (VYBVybe *)[self.vybePlaylist objectAtIndex:from];
         [self.labelTime setText:[NSString stringWithFormat:@"%@ %@", [v dateString], [v timeString]]];
+        /* TODO: change location accordingly to the vybe playing */
+        [locationLabel setText:@"Old Port, Montreal"];
         NSURL *url = [[NSURL alloc] initFileURLWithPath:[v tribeVideoPath]];
-        if ([v upStatus] == UPLOADED || [v upStatus] == UPLOADING) {
+        if ([v upStatus] == UPLOADED || [v upStatus] == UPLOADING || [v upStatus] == UPFRESH) {
             url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
+        }
+        else if ([v downStatus] != DOWNLOADED) {
+            UIView *loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+            [loadingView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
+            UILabel *loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
+            [loadingLabel setText:@"LOADING..."];
+            [loadingLabel setFont:[UIFont fontWithName:@"Montreal-Regular" size:30.0f]];
+            [loadingLabel setTextColor:[UIColor whiteColor]];
+            [loadingView addSubview:loadingLabel];
+            loadingLabel.center = loadingView.center;
+            [self.view addSubview:loadingView];
+            [[VYBMyTribeStore sharedStore] downloadTribeVybesFor:[v tribeName] withCompletion:^(NSError *err) {
+                [loadingView removeFromSuperview];
+                AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+                self.currItem = [AVPlayerItem playerItemWithAsset:asset];
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+                [self.player replaceCurrentItemWithPlayerItem:self.currItem];
+                [self.player play];
+                /* TODO: This should set all the previous vybes as WATCHED */
+                [v setWatched:YES];
+            }];
+            return;
         }
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
         self.currItem = [AVPlayerItem playerItemWithAsset:asset];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
         [self.player replaceCurrentItemWithPlayerItem:self.currItem];
         [self.player play];
+        /* TODO: This should set all the previous vybes as WATCHED */
         [v setWatched:YES];
     }
 }
 
 - (void)playFromUnwatched {
     NSInteger i = [self.vybePlaylist count] - 1;
+    playIndex = [self.vybePlaylist count] - 1;
+
     for (; i >= 0; i--) {
         VYBVybe *v = [self.vybePlaylist objectAtIndex:i];
         if (![v isWatched]) {
             playIndex = i;
-            return;
+            break;
         }
     }
-    playIndex = [self.vybePlaylist count] - 1;
+    
+    [self playbackFrom:playIndex];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

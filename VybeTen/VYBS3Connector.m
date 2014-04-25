@@ -48,6 +48,18 @@ static NSMutableArray *sharedConnectionList = nil;
     [sharedConnectionList addObject:self];
 }
 
+- (void)startDownloading:(S3GetObjectRequest *)req forVybe:(VYBVybe *)v {
+    [req setDelegate:self];
+    [req setRequestTag:[v vybeKey]];
+    [v setDownStatus:DOWNLOADING];
+    [s3 getObject:req];
+    
+    if (!sharedConnectionList)
+        sharedConnectionList = [[NSMutableArray alloc] init];
+    
+    [sharedConnectionList addObject:self];
+}
+
 - (void)startFeaturedRequest:(S3ListObjectsRequest *)req {
     [req setDelegate:self];
     [req setRequestTag:@"FeaturedVybes"];
@@ -127,7 +139,7 @@ static NSMutableArray *sharedConnectionList = nil;
                 [tr addVybe:newV];
             }
             //NSLog(@"adding done");
-            [[VYBMyTribeStore sharedStore] downloadTribeVybesFor:tr];
+            //[[VYBMyTribeStore sharedStore] downloadTribeVybesFor:tr];
         }
     }
     
@@ -169,17 +181,45 @@ static NSMutableArray *sharedConnectionList = nil;
         }
     }
     
+    else {
+        S3GetObjectRequest *getReq = (S3GetObjectRequest *)request;
+        NSLog(@"[%@]ASYNC DOWN SUCCESS", [getReq bucket]);
+        VYBTribe *tribe = [[VYBMyTribeStore sharedStore] tribe:[getReq bucket]];
+        VYBVybe *v = [tribe vybeWithKey:request.requestTag];
+        NSString *videoPath = [v tribeVideoPath];
+        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:videoPath];
+        NSData *videoReceived = [[NSData alloc] initWithData:response.body];
+        [videoReceived writeToURL:outputURL atomically:YES];
+        
+        //[tribe changeDownStatusFor:request.requestTag withStatus:DOWNLOADED];
+        [v setDownStatus:DOWNLOADED];
+        [[VYBMyTribeStore sharedStore] saveThumbnailImageForVybe:v];
+        
+        [[VYBMyTribeStore sharedStore] downloadTribeVybesFor:tribe];
+        
+        videoReceived = nil;
+    }
+    
     [self completionBlock](nil);
     [sharedConnectionList removeObject:self];
 }
 
 - (void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error {
+    if ([request.requestTag isEqualToString:@"TribeList"]) {
+        
+    } else if ([request.requestTag isEqualToString:@"TribeVybes"]) {
+        
+    } else if ([request.requestTag isEqualToString:@"FeaturedVybes"]) {
+        
+    } else {
+        NSLog(@"Error occured while receiving a file");
+        S3GetObjectRequest *getReq = (S3GetObjectRequest *)request;
+        VYBTribe *tribe = [[VYBMyTribeStore sharedStore] tribe:[getReq bucket]];
+        [tribe changeDownStatusFor:request.requestTag withStatus:DOWNFRESH];
+
+    }
     [self completionBlock](error);
     [sharedConnectionList removeObject:self];
-    
-}
-
-- (void)request:(AmazonServiceRequest *)request didReceiveData:(NSData *)data {
     
 }
 

@@ -11,13 +11,13 @@
 #define SECRET_KEY      @"H7eB7rNQXqxs3Smy6zOErl6lyGU/WIhoQd4taL7I"
 #define BUCKET_NAME     @"amino"
 
-#define UPFRESH         0
-#define UPLOADING       1
-#define UPLOADED        2
+#define UPFRESH         1
+#define UPLOADING       2
+#define UPLOADED        3
 
-#define DOWNFRESH       0
-#define DOWNLOADING     1
-#define DOWNLOADED      2
+#define DOWNFRESH       1
+#define DOWNLOADING     2
+#define DOWNLOADED      3
 
 #define HOCKEY_APP_ID   @"f6bbe32e11800913add864bbd07ebcee"
 

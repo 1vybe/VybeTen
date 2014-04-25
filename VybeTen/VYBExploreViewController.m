@@ -138,7 +138,9 @@
     UIImage *mapImg = [UIImage imageNamed:@"map_image.png"];
     [mapView setImage:mapImg];
     
-    //[[VYBMyTribeStore sharedStore] downloadExplore];
+    [[VYBMyTribeStore sharedStore] refreshTribesWithCompletion:^(NSError *err) {
+        [collection reloadData];
+    }];
 }
 
 - (void)goToMenu:(id)sender {
@@ -270,13 +272,21 @@
     VYBTribe *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
     VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [playerVC setVybePlaylist:[tribe vybes]];
-    [playerVC playFromUnwatched];
-    [playerVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];\
-    [playerVC setDismissBlock:^(NSInteger i){
-        
-    }];
+    
+
+    //[playerVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+
     [self.navigationController presentViewController:playerVC animated:NO completion:^(void) {
+        if ([[tribe vybes] count] < 1) {
+            [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:[tribe tribeName] withCompletionBlock:^(NSError *err) {
+                [playerVC setVybePlaylist:[tribe vybes]];
+                [playerVC playFromUnwatched];
+            }];
+        }
+        else {
+            [playerVC setVybePlaylist:[tribe vybes]];
+            [playerVC playFromUnwatched];
+        }
         [vybesVC setCurrTribe:tribe];
         [self.navigationController pushViewController:vybesVC animated:NO];
     }];

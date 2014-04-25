@@ -64,6 +64,7 @@
         [self setDownStatus:[aDecoder decodeIntForKey:@"downStatus"]];
         if (downStatus == DOWNLOADING)
             downStatus = DOWNFRESH;
+        [self setWatched:[aDecoder decodeBoolForKey:@"watched"]];
     }
     return self;
 }
@@ -81,6 +82,7 @@
     if (downStatus == DOWNLOADING)
         downStatus = DOWNFRESH;
     [aCoder encodeInt:downStatus forKey:@"downStatus"];
+    [aCoder encodeBool:watched forKey:@"watched"];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {

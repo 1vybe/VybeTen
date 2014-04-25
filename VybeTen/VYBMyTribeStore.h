@@ -24,6 +24,7 @@
 - (void)refreshTribesWithCompletion:(void (^)(NSError *err))block;
 - (void)syncWithCloudForTribe:(NSString *)name withCompletionBlock:(void (^)(NSError *err))block;
 - (void)downloadTribeVybesFor:(VYBTribe *)tribe;
+- (void)downloadTribeVybesFor:(NSString *)tribeName withCompletion:(void (^)(NSError *err))block;
 - (BOOL)addNewTribe:(NSString *)tribeName;
 - (NSString *)videoPathAtIndex:(NSInteger)index forTribe:(NSString *)name;
 - (NSString *)thumbPathAtIndex:(NSInteger)index forTribe:(NSString *)name;
@@ -34,6 +35,7 @@
 - (VYBTribe *)tribe:(NSString *)name;
 - (void)listVybes;
 - (BOOL)saveChanges;
+- (void)saveThumbnailImageForVybe:(VYBVybe *)v;
 
 //- (BOOL)clear;
 //- (void)analyzeTribe:(NSString *)tribe;

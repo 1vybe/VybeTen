@@ -8,6 +8,11 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
+/**
+ * TODO: When downloading already starts from watching a vybe. User may quit and fastforward to watch something new. 
+ *       Would this cause a froen screen on PlayerVC because the downloading was initiated without the completion block?
+ **/
+
 #import <AWSRuntime/AWSRuntime.h>
 #import <AdSupport/ASIdentifierManager.h>
 #import <AVFoundation/AVFoundation.h>
@@ -116,6 +121,26 @@
     S3ListObjectsRequest *lor = [[S3ListObjectsRequest alloc] initWithName:name];
     VYBS3Connector *connector = [[VYBS3Connector alloc] initWithClient:self.s3 completionBlock:block];
     [connector startTribeVybesRequest:lor];
+}
+
+
+- (void)downloadTribeVybesFor:(NSString *)tribeName withCompletion:(void (^)(NSError *err))block {
+    VYBTribe *tribe = [self tribe:tribeName];
+    
+    if ([tribe hasDownloadingVybe]) {
+        NSLog(@"already downloading something for this tribe");
+        return;
+    }
+    //VYBVybe *v = [self mostRecentVybeToBeDownloadedFor:tribeName];
+    VYBVybe *v = [tribe oldestVybeToBeDownloaded];
+    
+    if (!v) {
+        NSLog(@"nothing to be downloaded");
+        return;
+    }
+    S3GetObjectRequest *gor = [[S3GetObjectRequest alloc] initWithKey:[v vybeKey] withBucket:[tribe tribeName]];
+    VYBS3Connector *connector = [[VYBS3Connector alloc] initWithClient:self.s3 completionBlock:block];
+    [connector startDownloading:gor forVybe:v];
 }
 
 
