@@ -1,0 +1,19 @@
+PODS:
+  - AWSS3 (0.0.1)
+  - GoogleAnalytics-iOS-SDK (3.0.6)
+  - HockeySDK (3.5.5)
+  - JSBadgeView (1.3.2)
+
+DEPENDENCIES:
+  - AWSS3 (~> 0.0)
+  - GoogleAnalytics-iOS-SDK (~> 3.0)
+  - HockeySDK (~> 3.5)
+  - JSBadgeView (~> 1.3)
+
+SPEC CHECKSUMS:
+  AWSS3: 5de5040de1d15b39aab155e73fe3574394b7ec8d
+  GoogleAnalytics-iOS-SDK: 16dfcc0c4491148bf372edc85a8470cc405ffb72
+  HockeySDK: 350ef1cf18d2fc9a13801ad077c307cece8c6c64
+  JSBadgeView: 5ee19a07f20e92b169a8ae618113fc80f973be7d
+
+COCOAPODS: 0.32.1

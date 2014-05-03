@@ -1,0 +1,3 @@
+PODS_AWSS__FRAMEWORK_SEARCH_PATHS = "$(PODS_ROOT)/AWSS3"
+PODS_AWSS__OTHER_LDFLAGS = -framework AWSRuntime -framework AWSS3
+PODS_AWSS__OTHER_LD_FLAGS = -framework AWSS3 -framework AWSRuntime

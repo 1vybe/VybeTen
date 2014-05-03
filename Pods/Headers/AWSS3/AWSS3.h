@@ -1,0 +1,1 @@
+../../AWSS3/AWSS3.framework/Versions/A/Headers/AWSS3.h
