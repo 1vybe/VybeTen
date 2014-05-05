@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "VYBVybe.h"
+#import "VYBS3Connector.h"
 
 @interface VYBTribe : NSObject <NSCoding> {
     NSString *tribeName;
@@ -16,6 +17,8 @@
     NSMutableArray *users;
     NSMutableArray *syncs;
 }
+
+@property (nonatomic) VYBS3Connector *s3Connector;
 
 - (id)initWithTribeName:(NSString *)name;
 
@@ -29,12 +32,14 @@
 - (NSMutableArray *)vybes;
 - (NSMutableArray *)users;
 - (NSMutableArray *)syncs;
+- (void)stopOldConnector;
 
 - (void)addVybe:(VYBVybe *)v;
 - (VYBVybe *)vybeWithKey:(NSString *)vyKey;
 - (BOOL)hasDownloadingVybe;
 - (VYBVybe *)oldestVybeToBeDownloaded;
 - (VYBVybe *)newestVybeTobeDownloaded;
+- (VYBVybe *)newestUnwatchedVybeTobeDownloaded;
 - (NSMutableArray *)downloadedVybes;
 - (void)changeDownStatusFor:(NSString *)vyKey withStatus:(BOOL)down;
 @end

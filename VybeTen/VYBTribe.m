@@ -60,9 +60,9 @@
             break;
         }
     }
-    NSLog(@"Adding");
+    //NSLog(@"Adding");
     [vybes insertObject:v atIndex:i];
-    NSLog(@"[%d]", [vybes count]);
+    //NSLog(@"[%d]", [vybes count]);
 }
 
 - (BOOL)hasVybe:(VYBVybe *)newV {
@@ -105,6 +105,16 @@
     return nil;
 }
 
+- (VYBVybe *)newestUnwatchedVybeTobeDownloaded {
+    NSInteger i;
+    for (i = 0; i < [vybes count]; i++) {
+        VYBVybe *v = [vybes objectAtIndex:i];
+        if ([v isWatched])
+            return v;
+    }
+    return nil;
+}
+
 - (NSMutableArray *)downloadedVybes {
     NSMutableArray *downloaded = [[NSMutableArray alloc] init];
     for (VYBVybe *v in vybes) {
@@ -121,6 +131,11 @@
             return;
         }
     }
+}
+
+- (void)stopOldConnector {
+    if (self.s3Connector)
+        [self.s3Connector stopDownloading];
 }
 
 

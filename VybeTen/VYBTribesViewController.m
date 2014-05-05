@@ -12,6 +12,7 @@
 #import "VYBMyTribeStore.h"
 #import "VYBImageStore.h"
 #import "VYBTribeVybesViewController.h"
+#import "VYBCreateTribeViewController.h"
 
 @implementation VYBTribesViewController {
     UIView *topBar;
@@ -125,7 +126,12 @@
     flowLayout.sectionInset = UIEdgeInsetsMake(50.0f, 10.0f, 20.0f, 10.0f);
     flowLayout.minimumLineSpacing = 50.0f;
     flowLayout.minimumInteritemSpacing = 20.0f;
-    flowLayout.itemSize = CGSizeMake(150.0f, 80.0f);
+    if (self.view.bounds.size.height < 500)
+        flowLayout.itemSize = CGSizeMake(120.0f, 80.0f);
+    else
+        flowLayout.itemSize = CGSizeMake(150.0f, 80.0f);
+
+
     
     CGRect collectionFrame = CGRectMake(0, 50, self.view.bounds.size.height - 50, self.view.bounds.size.width - 50);
     collection = [[UICollectionView alloc] initWithFrame:collectionFrame collectionViewLayout:flowLayout];
@@ -139,7 +145,13 @@
 
     [[VYBMyTribeStore sharedStore] refreshTribesWithCompletion:^(NSError *err) {
         tribes = [[VYBMyTribeStore sharedStore] myTribes];
-        [collection reloadData];
+        for (VYBTribe *tribe in tribes) {
+            [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:[tribe tribeName] withCompletionBlock:^(NSError *err) {
+                /* TODO: Update individual cells instead of the whole collection */
+                [collection reloadData];
+            }];
+        }
+        //[collection reloadData];
     }];
 }
 
@@ -161,9 +173,8 @@
 
 // TODO: THIS IS DUMMY
 - (void)createTribe:(id)sender {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Name your new tribe" message:@"" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-    [alertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
-    [alertView show];
+    VYBCreateTribeViewController *createTribeVC = [[VYBCreateTribeViewController alloc] init];
+    [self.navigationController presentViewController:createTribeVC animated:NO completion:nil];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -202,7 +213,11 @@
     // Get current cell size
     //CGSize itemSize = [self collectionView:collection layout:flowLayout sizeForItemAtIndexPath:indexPath];
     int top = -30;
-    int width = 150;
+    int width;
+    if (self.view.bounds.size.height < 500)
+        width = 120;
+    else
+        width = 150;
     int height = 80;
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, top, width, 30)];
@@ -237,11 +252,8 @@
     VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
     
     [self.navigationController presentViewController:playerVC animated:NO completion:^(void) {
-        if ([[tribe vybes] count] > 1) {
-            [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:[tribe tribeName] withCompletionBlock:^(NSError *err) {
-                [playerVC setVybePlaylist:[tribe vybes]];
-                [playerVC playFromUnwatched];
-            }];
+        if ([[tribe vybes] count] < 1) {
+            [self.navigationController dismissViewControllerAnimated:NO completion:nil];
         } else {
             [playerVC setVybePlaylist:[tribe vybes]];
             [playerVC playFromUnwatched];

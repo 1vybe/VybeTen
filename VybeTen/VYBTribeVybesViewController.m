@@ -17,8 +17,6 @@
 #import "VYBMenuViewController.h"
 
 @implementation VYBTribeVybesViewController {
-    NSMutableArray *downloadedTribeVybes;
-    
     UIView *topBar;
     UIButton *menuButton;    
     UIButton *friendsButton;
@@ -122,16 +120,15 @@
     [self.tableView addSubview:refresh];
     
     // Update so downloaded vybes are displayed
-    [self refreshTribeVybes:refresh];
+    //[self refreshTribeVybes:refresh];
 }
 
 /* Scroll down to the bottom to show recent vybes first */
 
 - (void)viewWillAppear:(BOOL)animated {
-    downloadedTribeVybes = [self.currTribe downloadedVybes];
     [self.tableView reloadData];
     [super viewWillAppear:animated];
-    NSInteger idx = [self oldestUnwatchedVybeIn:downloadedTribeVybes];
+    NSInteger idx = [self oldestUnwatchedVybeIn:[self.currTribe vybes]];
     if (idx < 0)
         return;
     
@@ -152,8 +149,13 @@
         if (refresh)
             [refresh endRefreshing];
         if (!err) {
+            // If there is no vybe in this tribe yet
+            if ([[self.currTribe vybes] count] < 1) {
+                NSString *msg = @"No vybe in this tribe yet. Create the FIRST vybe!";
+                UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [popUp show];
+            }
             // Update so downloaded vybes are displayed
-            downloadedTribeVybes = [self.currTribe downloadedVybes];
             [self.tableView reloadData];
         }
         else {
@@ -166,7 +168,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [downloadedTribeVybes count];
+    return [[self.currTribe vybes] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -176,8 +178,8 @@
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBVybeCell" owner:self options:nil];
         cell = [nib objectAtIndex:0];
     }
-    NSString *thumbPath = [[downloadedTribeVybes objectAtIndex:[indexPath row]] tribeThumbnailPath];
-    NSLog(@"Cell with img:%@", thumbPath);
+    NSString *thumbPath = [[[self.currTribe vybes] objectAtIndex:[indexPath row]] tribeThumbnailPath];
+    //NSLog(@"Cell with img:%@", thumbPath);
     // Cache thumbnail images into a memory
     UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:thumbPath];
     if (!thumbImg) {
@@ -196,7 +198,7 @@
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
 
     [self.navigationController presentViewController:playerVC animated:NO completion:^(){
-        [playerVC setVybePlaylist:downloadedTribeVybes];
+        [playerVC setVybePlaylist:[self.currTribe vybes]];
         // Here d indicated the number of downloaded vybes and n is the number of vybes including the ones to be downloaded
         [playerVC playFrom:[indexPath row]];
     }];

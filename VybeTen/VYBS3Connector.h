@@ -17,7 +17,7 @@
 
 - (id)initWithClient:(AmazonS3Client *)client completionBlock:(void (^)(NSError *err))block;
 
-@property (nonatomic) S3ListBucketsRequest *request;
+@property (nonatomic) S3GetObjectRequest *request;
 @property (nonatomic, copy) void (^completionBlock) (NSError *err);
 
 - (void)startTribeListRequest:(S3ListBucketsRequest *)req;
@@ -25,5 +25,6 @@
 - (void)startFeaturedRequest:(S3ListObjectsRequest *)req;
 - (void)startTrendingRequest:(S3ListObjectsRequest *)req;
 - (void)startDownloading:(S3GetObjectRequest *)req forVybe:(VYBVybe *)v;
+- (void)stopDownloading;
 
 @end

@@ -49,15 +49,11 @@ static NSMutableArray *sharedConnectionList = nil;
 }
 
 - (void)startDownloading:(S3GetObjectRequest *)req forVybe:(VYBVybe *)v {
+    self.request = req;
     [req setDelegate:self];
     [req setRequestTag:[v vybeKey]];
     [v setDownStatus:DOWNLOADING];
     [s3 getObject:req];
-    
-    if (!sharedConnectionList)
-        sharedConnectionList = [[NSMutableArray alloc] init];
-    
-    [sharedConnectionList addObject:self];
 }
 
 - (void)startFeaturedRequest:(S3ListObjectsRequest *)req {
@@ -113,20 +109,22 @@ static NSMutableArray *sharedConnectionList = nil;
              }
          }
         }
-        
         [[VYBMyTribeStore sharedStore] setMyTribes:newTribes];
+        [self completionBlock](nil);
+        [sharedConnectionList removeObject:self];
     }
-    
+    /* TODO: Should only download new vybes and apply updates/deletes */
     else if ( [request.requestTag isEqualToString:@"TribeVybes"] ) {
         S3ListObjectsResponse *listResponse = (S3ListObjectsResponse *)response;
         S3ListObjectsResult *result = listResponse.listObjectsResult;
         NSString *buckName = result.bucketName;
+        NSMutableArray *newVybes = [[NSMutableArray alloc] init];
         NSLog(@"Server has %d videos for %@ Tribe", [result.objectSummaries count], buckName);
+        VYBTribe *tr = [[VYBMyTribeStore sharedStore] tribe:buckName];
+        // Reset vybes of a tribe everytime this method is called
+        [tr setVybes:newVybes];
         //TODO: this if statement should check the total number of NEW vybes ONLY
-        if ([result.objectSummaries count] == 0)
-            return;
-        else {
-            VYBTribe *tr = [[VYBMyTribeStore sharedStore] tribe:buckName];
+        if ([result.objectSummaries count] > 0) {
             for (S3ObjectSummary *obj in result.objectSummaries) {
                 // will be added ONLY if new
                 VYBVybe *newV = [[VYBVybe alloc] init];
@@ -138,9 +136,9 @@ static NSMutableArray *sharedConnectionList = nil;
                 // Tribe will add this vybe ONLY IF NEW
                 [tr addVybe:newV];
             }
-            //NSLog(@"adding done");
-            //[[VYBMyTribeStore sharedStore] downloadTribeVybesFor:tr];
         }
+        [self completionBlock](nil);
+        [sharedConnectionList removeObject:self];
     }
     
     else if ( [request.requestTag isEqualToString:@"FeaturedVybes"] ) {
@@ -176,8 +174,6 @@ static NSMutableArray *sharedConnectionList = nil;
                 
                 //NSLog("@After insertion in FEATURE: %d",[[(VYBTribe *)[[[VYBMyTribeStore sharedStore] featuredTribes] objectForKey:featureName] vybes] count]);
             }
-            //NSLog(@"adding done");
-            //[[VYBMyTribeStore sharedStore] downloadFeaturedVybes];
         }
     }
     
@@ -194,14 +190,11 @@ static NSMutableArray *sharedConnectionList = nil;
         //[tribe changeDownStatusFor:request.requestTag withStatus:DOWNLOADED];
         [v setDownStatus:DOWNLOADED];
         [[VYBMyTribeStore sharedStore] saveThumbnailImageForVybe:v];
-        
-        [[VYBMyTribeStore sharedStore] downloadTribeVybesFor:tribe];
+        [self completionBlock](nil);
+        [[VYBMyTribeStore sharedStore] downloadNextVybeOf:v];
         
         videoReceived = nil;
     }
-    
-    [self completionBlock](nil);
-    [sharedConnectionList removeObject:self];
 }
 
 - (void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error {
@@ -221,6 +214,10 @@ static NSMutableArray *sharedConnectionList = nil;
     [self completionBlock](error);
     [sharedConnectionList removeObject:self];
     
+}
+
+- (void)stopDownloading {
+    [[self.request urlConnection] cancel];
 }
 
 @end

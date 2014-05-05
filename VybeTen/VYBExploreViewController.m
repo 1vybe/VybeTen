@@ -279,6 +279,10 @@
     [self.navigationController presentViewController:playerVC animated:NO completion:^(void) {
         if ([[tribe vybes] count] < 1) {
             [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:[tribe tribeName] withCompletionBlock:^(NSError *err) {
+                if (err) {
+                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                    [av show];
+                }
                 [playerVC setVybePlaylist:[tribe vybes]];
                 [playerVC playFromUnwatched];
             }];

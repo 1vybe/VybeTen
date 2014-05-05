@@ -9,6 +9,7 @@
 #import "VYBSyncTribeViewController.h"
 #import "VYBMyTribeStore.h"
 #import "UINavigationController+Fade.h"
+#import "VYBCreateTribeViewController.h"
 
 @implementation VYBSyncTribeViewController {
     UITableView *tribeTable;
@@ -35,6 +36,7 @@
     [createTribe.titleLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
     [createTribe setTitle:@"Create +" forState:UIControlStateNormal];
     [createTribe setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
+    [createTribe addTarget:self action:@selector(createTribePressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:createTribe];
     
     frame = CGRectMake(0, 50, 150, self.view.bounds.size.width - 100);
@@ -47,14 +49,6 @@
     [tribeTable setBackgroundColor:[UIColor clearColor]];
     [tribeTable setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.view addSubview:tribeTable];
-    
-    frame = CGRectMake(0, self.view.bounds.size.width - 50, 150, 50);
-    UIButton *aroundMeButton = [[UIButton alloc] initWithFrame:frame];
-    [aroundMeButton.titleLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
-    [aroundMeButton setTitle:@"Around Me" forState:UIControlStateNormal];
-    [aroundMeButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
-    [aroundMeButton addTarget:self action:@selector(clickAroundMe:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:aroundMeButton];
     
     if ([[[VYBMyTribeStore sharedStore] myTribes] count] == 0) {
         [[VYBMyTribeStore sharedStore] refreshTribesWithCompletion:^(NSError *err) {
@@ -69,12 +63,13 @@
     }
 }
 
-- (void)dismissSyncTribeMenu {
-    [self.navigationController fadePopViewController];
+- (void)createTribePressed:(id)sender {
+    VYBCreateTribeViewController *createTribeVC = [[VYBCreateTribeViewController alloc] init];
+    [self.navigationController presentViewController:createTribeVC animated:NO completion:nil];
 }
 
-- (void)clickAroundMe:(id)sender {
-
+- (void)dismissSyncTribeMenu {
+    [self.navigationController fadePopViewController];
 }
 
 #pragma mark - Table view data source

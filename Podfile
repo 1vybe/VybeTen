@@ -4,4 +4,4 @@ pod 'AWSS3', '~> 0.0'
 pod 'GoogleAnalytics-iOS-SDK', '~> 3.0'
 pod 'HockeySDK', '~> 3.5'
 pod 'JSBadgeView', '~> 1.3'
-
+pod 'Parse', '~> 1.2'

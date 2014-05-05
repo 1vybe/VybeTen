@@ -84,7 +84,6 @@ static void * XXContext = &XXContext;
     recording = NO;
     frontCamera = NO;
     
-    
     // Adding MENU button
     CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 50, 0, 50, 50);
     menuButton = [[UIButton alloc] initWithFrame:buttonFrame];
@@ -138,7 +137,8 @@ static void * XXContext = &XXContext;
     [notificationButton addSubview:notificationImgView];
     notificationImgView.center = notificationButton.center;
     [notificationButton addTarget:self action:@selector(notificationPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:notificationButton];
+    /* TODO: Uncomment this */
+    //[self.view addSubview:notificationButton];
     [notificationImgView setUserInteractionEnabled:NO];
     badgeView = [[JSBadgeView alloc] initWithParentView:notificationImgView alignment:JSBadgeViewAlignmentTopRight];
     // Register this class as an observer for notification change

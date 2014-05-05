@@ -22,6 +22,8 @@
     UILabel *currentTribeLabel;
     UILabel *locationLabel;
     UILabel *usernameLabel;
+    
+    UIView *loadingView;
 }
 
 @synthesize player = _player;
@@ -98,25 +100,6 @@
     [self setPlayer:[AVPlayer playerWithPlayerItem:self.currItem]];
     [self.playerView setPlayer:self.player];
     [self.playerView setVideoFillMode];
-    
-    //[self playbackFrom:playIndex];
-    
-    // Set up playerLayer
-    /*
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:[v tribeVideoPath]];
-    if ([v upStatus] == UPLOADED || [v upStatus] == UPLOADING) {
-        url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
-    }
-    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-    self.currItem = [AVPlayerItem playerItemWithAsset:asset];
-    // Registering the current playerItem to Notification center
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-    [self setPlayer:[AVPlayer playerWithPlayerItem:self.currItem]];
-    [self.playerView setPlayer:self.player];
-    [self.playerView setVideoFillMode];
-    [self.player play];
-    [v setWatched:YES];
-     */
 }
 
 - (void)playFrom:(NSInteger)index {
@@ -142,16 +125,22 @@
             url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
         }
         else if ([v downStatus] != DOWNLOADED) {
-            UIView *loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+            loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
             [loadingView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
             UILabel *loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
-            [loadingLabel setText:@"LOADING..."];
-            [loadingLabel setFont:[UIFont fontWithName:@"Montreal-Regular" size:30.0f]];
+            [loadingLabel setText:@"L O A D I N G ..."];
+            [loadingLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:24.0f]];
+            [loadingLabel setTextAlignment:NSTextAlignmentCenter];
             [loadingLabel setTextColor:[UIColor whiteColor]];
             [loadingView addSubview:loadingLabel];
             loadingLabel.center = loadingView.center;
             [self.view addSubview:loadingView];
-            [[VYBMyTribeStore sharedStore] downloadTribeVybesFor:[v tribeName] withCompletion:^(NSError *err) {
+            [[VYBMyTribeStore sharedStore] downloadTribeVybeFor:v withCompletion:^(NSError *err) {
+                if (err) {
+                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                    [av show];
+                }
+                NSLog(@"Vybe Downloaded - Loading Screen Removed");
                 [loadingView removeFromSuperview];
                 AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
                 self.currItem = [AVPlayerItem playerItemWithAsset:asset];
@@ -159,8 +148,10 @@
                 [self.player replaceCurrentItemWithPlayerItem:self.currItem];
                 [self.player play];
                 /* TODO: This should set all the previous vybes as WATCHED */
-                [v setWatched:YES];
             }];
+            
+            [v setWatched:YES];
+            
             return;
         }
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
@@ -186,16 +177,11 @@
     }
     
     [self playbackFrom:playIndex];
+    NSLog(@"Watching From %d", playIndex);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    id tracker = [[GAI sharedInstance] defaultTracker];
-    if (tracker) {
-        [tracker set:kGAIScreenName value:@"VybePlayer Screen"];
-        [tracker send:[[GAIDictionaryBuilder createAppView] build]];
-    }
 }
 
 /**
@@ -203,11 +189,15 @@
  **/
 
 - (void)swipeLeft {
+    [self.player pause];
+    [loadingView removeFromSuperview];
     playIndex--;
     [self playbackFrom:playIndex];
 }
 
 - (void)swipeRight {
+    [self.player pause];
+    [loadingView removeFromSuperview];
     playIndex++;
     [self playbackFrom:playIndex];
 }

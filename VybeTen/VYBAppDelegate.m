@@ -7,43 +7,35 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
-#import "GAI.h"
-#import "GAITracker.h"
+#import <FacebookSDK/FacebookSDK.h>
 #import "VYBAppDelegate.h"
+#import "VYBLoginViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBMyTribeStore.h"
 #import "VYBConstants.h"
+#import <HockeySDK/HockeySDK.h>
+#import <Parse/Parse.h>
 
 @implementation VYBAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     /* HockeyApp Initilization */
-    /*
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_ID delegate:self];
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_ID];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-    */
-    /* Google Analytics */
     
-    // Send uncaught exceptions to Google Anaylytics
-    [GAI sharedInstance].trackUncaughtExceptions = YES;
-    // dispatch interval to 20 seconds
-    [GAI sharedInstance].dispatchInterval = 20;
-    [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelNone];
-    [[GAI sharedInstance] trackerWithTrackingId:@"UA-49584125-1"];
-    
-    // First tracker instance ever created. Default is good enough now because we are using one property ID for one app
-    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-    if (tracker) {
-        // New session starts
-        
-    }
-    
+    /* Parse */
+    [Parse setApplicationId:@"m5Im7uDcY5rieEbPyzRfV2Dq6YegS3kAQwxiDMFZ"
+                  clientKey:@"WLqeqlf4qVVk5jF6yHSWGxw3UzUQwUtmAk9vCPfB"];
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|
+     UIRemoteNotificationTypeAlert|
+     UIRemoteNotificationTypeSound];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
+    
     UINavigationController *navContoller = [[UINavigationController alloc] init];
     [[navContoller navigationBar] setHidden:YES];
     navContoller.modalPresentationStyle = UIModalPresentationCurrentContext;
@@ -86,12 +78,12 @@
         [session addOutput:movieFileOutput];
     AVCaptureConnection *movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
     [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-
+    
     VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
     [captureVC setSession:session withVideoInput:videoInput withMovieFileOutput:movieFileOutput];
     [navContoller pushViewController:captureVC animated:NO];
     [self.window setRootViewController:navContoller];
-
+    
     [session startRunning];
     
     self.window.backgroundColor = [UIColor whiteColor];
@@ -99,9 +91,6 @@
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
-    NSLog(@"Welcome to Vybe");
-    //[[VYBMyTribeStore sharedStore] clear];
-    //[[VYBMyTribeStore sharedStore] analyzeTribe:@"CITY-GAS"];
     return YES;
 }
 
@@ -115,7 +104,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     
     BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
@@ -130,7 +119,7 @@
     else
         NSLog(@"My tribes will be lost. :(");
     //[[VYBMyTribeStore sharedStore] listVybes];
-
+    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -158,5 +147,21 @@
     //[[VYBMyTribeStore sharedStore] listVybes];
 }
 
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    [currentInstallation saveInBackground];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [PFPush handlePush:userInfo];
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    
+    BOOL wasHandled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
+    
+    return wasHandled;
+}
 
 @end

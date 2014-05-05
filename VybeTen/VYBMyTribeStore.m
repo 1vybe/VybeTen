@@ -143,6 +143,45 @@
     [connector startDownloading:gor forVybe:v];
 }
 
+- (void)downloadTribeVybeFor:(VYBVybe *)v withCompletion:(void (^)(NSError *err))block {
+    if ([v downStatus] == DOWNLOADED) {
+        block(nil);
+    } else {
+        S3GetObjectRequest *gor = [[S3GetObjectRequest alloc] initWithKey:[v vybeKey] withBucket:[v tribeName]];
+        VYBS3Connector *connector = [[VYBS3Connector alloc] initWithClient:self.s3 completionBlock:block];
+        VYBTribe *tribe = [self tribe:[v tribeName]];
+        [tribe stopOldConnector];
+        [tribe setS3Connector:connector];
+        [connector startDownloading:gor forVybe:v];
+    }
+}
+
+- (void)downloadNextVybeOf:(VYBVybe *)v {
+    VYBVybe *next = [self nextVybeOf:v];
+    [self downloadTribeVybeFor:next withCompletion:^(NSError *err){
+        if (err) {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [av show];
+        }
+        NSLog(@"Download NEXT vybe");
+    }];
+}
+
+- (VYBVybe *)nextVybeOf:(VYBVybe *)v {
+    VYBTribe *tribe = [self tribe:[v tribeName]];
+    NSInteger i;
+    for (i = 0; i < [[tribe vybes] count]; i++) {
+        VYBVybe *tempV = [[tribe vybes] objectAtIndex:i];
+        if ([[v vybeKey] isEqualToString:[tempV vybeKey]])
+            break;
+    }
+
+    NSInteger next = i - 1;
+    if (next < 0)
+        return nil;
+    else
+        return [[tribe vybes] objectAtIndex:next];
+}
 
 - (BOOL)hasTribe:(NSString *)trname {
     for (VYBTribe *t in myTribes) {
@@ -223,27 +262,6 @@
     }
 }
 
-#pragma mark AmazonServiceRequestDelegate methods
-
--(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response
-{
-    S3GetObjectRequest *getReq = (S3GetObjectRequest *)request;
-    NSLog(@"[%@]DOWN SUCCESS", [getReq bucket]);
-    VYBTribe *tribe = [self tribe:[getReq bucket]];
-    VYBVybe *v = [tribe vybeWithKey:request.requestTag];
-    NSString *videoPath = [v tribeVideoPath];
-    NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:videoPath];
-    NSData *videoReceived = [[NSData alloc] initWithData:response.body];
-    [videoReceived writeToURL:outputURL atomically:YES];
-    
-    //[tribe changeDownStatusFor:request.requestTag withStatus:DOWNLOADED];
-    [v setDownStatus:DOWNLOADED];
-    [self saveThumbnailImageForVybe:v];
-    
-    [self downloadTribeVybesFor:tribe];
-    
-    videoReceived = nil;
-}
 
 -(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error
 {
@@ -357,26 +375,6 @@
 }
 
 
-
-- (void)downloadTribeVybesFor:(VYBTribe *)tribe {
-    if ([tribe hasDownloadingVybe]) {
-        NSLog(@"already downloading something for this tribe");
-        return;
-    }
-    //VYBVybe *v = [self mostRecentVybeToBeDownloadedFor:tribeName];
-    VYBVybe *v = [tribe oldestVybeToBeDownloaded];
-    
-    if (!v) {
-        NSLog(@"nothing to be downloaded");
-        return;
-    }
-    S3GetObjectRequest *gor = [[S3GetObjectRequest alloc] initWithKey:[v vybeKey] withBucket:[tribe tribeName]];
-    gor.delegate = self;
-    gor.requestTag = [v vybeKey];
-    [v setDownStatus:DOWNLOADING];
-    [self.s3 getObject:gor];
-    NSLog(@"[%@]DOWN BEGIN", [tribe tribeName]);
-}
 
 /*
 - (BOOL)clear {

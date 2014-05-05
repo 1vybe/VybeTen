@@ -20,7 +20,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        dFormatter = [[NSDateFormatter alloc] init];
+        //dFormatter = [[NSDateFormatter alloc] init];
         dFormatter = [[VYBMyTribeStore sharedStore] presetDateFormatter];
     }
     return self;
