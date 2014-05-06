@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
+#define IS_IPHONE_5 ( [ [ UIScreen mainScreen ] bounds ].size.height == 568  )
+
 #import "VYBTribesViewController.h"
 #import "VYBMenuViewController.h"
 #import "VYBPlayerViewController.h"
@@ -126,11 +128,10 @@
     flowLayout.sectionInset = UIEdgeInsetsMake(50.0f, 10.0f, 20.0f, 10.0f);
     flowLayout.minimumLineSpacing = 50.0f;
     flowLayout.minimumInteritemSpacing = 20.0f;
-    if (self.view.bounds.size.height < 500)
-        flowLayout.itemSize = CGSizeMake(120.0f, 80.0f);
-    else
+    if (IS_IPHONE_5)
         flowLayout.itemSize = CGSizeMake(150.0f, 80.0f);
-
+    else
+        flowLayout.itemSize = CGSizeMake(120.0f, 80.0f);
 
     
     CGRect collectionFrame = CGRectMake(0, 50, self.view.bounds.size.height - 50, self.view.bounds.size.width - 50);
@@ -214,10 +215,10 @@
     //CGSize itemSize = [self collectionView:collection layout:flowLayout sizeForItemAtIndexPath:indexPath];
     int top = -30;
     int width;
-    if (self.view.bounds.size.height < 500)
-        width = 120;
-    else
+    if (IS_IPHONE_5)
         width = 150;
+    else
+        width = 120;
     int height = 80;
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, top, width, 30)];

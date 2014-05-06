@@ -108,9 +108,10 @@
 }
 
 - (void)playerItemDidReachEnd {
+    [self.player pause];
     playIndex--;
     [self playbackFrom:playIndex];
- }
+}
 
 - (void)playbackFrom:(NSInteger)from {
     // Remove the playerItem that just finished playing

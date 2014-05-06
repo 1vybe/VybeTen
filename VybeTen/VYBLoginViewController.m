@@ -25,15 +25,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     
-    FBLoginView *loginView = [[FBLoginView alloc] initWithReadPermissions:@[@"basic_info", @"email"]];
-    loginView.delegate = self;
-    
-    profileView = [[FBProfilePictureView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
-    
-    [self.view addSubview:loginView];
-    loginView.center = self.view.center;
-    [self.view addSubview:profileView];
 }
 
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)user {
