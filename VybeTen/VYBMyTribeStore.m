@@ -158,7 +158,7 @@
 
 - (void)downloadNextVybeOf:(VYBVybe *)v {
     VYBVybe *next = [self nextVybeOf:v];
-    if (!next) {
+    if (next) {
         [self downloadTribeVybeFor:next withCompletion:^(NSError *err){
             if (err) {
                 UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];

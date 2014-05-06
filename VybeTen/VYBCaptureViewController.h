@@ -9,6 +9,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
 #import <AdSupport/ASIdentifierManager.h>
+#import <Parse/Parse.h>
 #import "TransitionDelegate.h"
 
 @class VYBTribe;

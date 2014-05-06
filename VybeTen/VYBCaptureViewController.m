@@ -38,6 +38,7 @@
     
     CLLocationManager *locationManager;
 }
+
 @synthesize syncButton, syncLabel, recordButton, countLabel, flipButton, menuButton, flashButton, flashLabel, notificationButton;
 @synthesize defaultSync;
 @synthesize transitionController;
@@ -48,7 +49,7 @@ static void * XXContext = &XXContext;
     self = [super init];
     if (self) {
         locationManager = [[CLLocationManager alloc] init];
-        NSLog(@"Let's invoke the location manager");
+        //NSLog(@"Let's invoke the location manager");
         [locationManager startUpdatingLocation];
         [locationManager stopUpdatingLocation];
     }
@@ -58,7 +59,7 @@ static void * XXContext = &XXContext;
 - (void)loadView {
     // Retrieves this device's unique ID
     adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-    NSLog(@"UserID:%@", adId);
+    //NSLog(@"UserID:%@", adId);
     //NSLog(@"%@", NSStringFromCGRect([[UIScreen mainScreen] bounds]));
     UIView *theView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.view = theView;
@@ -129,7 +130,6 @@ static void * XXContext = &XXContext;
     [countLabel setUserInteractionEnabled:NO];
     [recordButton addSubview:countLabel];
     
-    
     // Adding NOTIFICATION button
     buttonFrame = CGRectMake(0, 0, 50, 50);
     notificationButton = [[UIButton alloc] initWithFrame:buttonFrame];
@@ -171,6 +171,7 @@ static void * XXContext = &XXContext;
     [flashLabel setTextColor:[UIColor whiteColor]];
     [flashLabel setText:@"OFF"];
     [self.flashButton addSubview:flashLabel];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -343,7 +344,6 @@ static void * XXContext = &XXContext;
             [overlayView setUserInteractionEnabled:YES];
             [overlayView setContentMode:UIViewContentModeCenter];
             [overlayView setImage:[UIImage imageNamed:@"screen_warning_rotate.png"]];
-            
             [window addSubview:overlayView];
         }
     } else if ( UIDeviceOrientationIsLandscape([device orientation]) ) {

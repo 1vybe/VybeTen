@@ -111,7 +111,7 @@
     [friendsButton setContentMode:UIViewContentModeCenter];
     [friendsButton setImage:friendsImg forState:UIControlStateNormal];
     friendsButton.transform = counterClockwise;
-    [self.tableView addSubview:friendsButton];
+    //[self.tableView addSubview:friendsButton];
     
     // Adding a refresh control
     UIRefreshControl *refresh = [[UIRefreshControl alloc] init];

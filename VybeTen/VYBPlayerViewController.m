@@ -204,7 +204,10 @@
 }
 
 - (void)captureVybe:(id)sender {
-    [self.navigationController popToRootViewControllerAnimated:NO];
+    UINavigationController *navController = (UINavigationController *)self.presentingViewController;
+    [navController dismissViewControllerAnimated:NO completion:^{
+        [navController popToRootViewControllerAnimated:NO];
+    }];
 }
 
 - (void)goBack:(id)sender {

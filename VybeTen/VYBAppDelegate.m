@@ -9,6 +9,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "VYBAppDelegate.h"
 #import "VYBLoginViewController.h"
+#import "VYBSignUpViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBMyTribeStore.h"
@@ -81,20 +82,40 @@
     
     VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
     [captureVC setSession:session withVideoInput:videoInput withMovieFileOutput:movieFileOutput];
-    [navContoller pushViewController:captureVC animated:NO];
     [self.window setRootViewController:navContoller];
     
-    [session startRunning];
-    
-    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
+    if (![PFUser currentUser]) { // No user logged in
+        // Create the log in view controller
+        VYBLoginViewController *logInController = [[VYBLoginViewController alloc] init];
+        [logInController setDelegate:logInController];
+        [logInController setFields:PFLogInFieldsFacebook | PFLogInFieldsTwitter];
+        [logInController setFacebookPermissions:[NSArray arrayWithObjects:@"friends_about_me", @"email", nil]];
+        // Create the sign up view controller
+        VYBSignUpViewController *signUpController = [[VYBSignUpViewController alloc] init];
+        [signUpController setDelegate:signUpController];
+        [signUpController setFields:PFSignUpFieldsUsernameAndPassword];
+        
+        // Assign our sign up controller to be displayed from the login controller
+        [logInController setSignUpController:signUpController];
+        
+        // Present the log in view controller
+        [navContoller presentViewController:logInController animated:YES completion:^{
+            [navContoller pushViewController:captureVC animated:NO];
+            [session startRunning];
+        }];
+    } else {
+        NSLog(@"Welcome Back %@", [[PFUser currentUser] username]);
+        [navContoller pushViewController:captureVC animated:NO];
+        [session startRunning];
+    }
+    
     return YES;
 }
-
-
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -127,11 +148,6 @@
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-}
-
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
@@ -147,6 +163,10 @@
     //[[VYBMyTribeStore sharedStore] listVybes];
 }
 
+/**
+ * PFPush Settigs 
+ **/
+
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:deviceToken];
@@ -157,11 +177,23 @@
     [PFPush handlePush:userInfo];
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    
-    BOOL wasHandled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
-    
-    return wasHandled;
+
+/**
+ * PFUser Session Settings
+ **/
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    return [FBAppCall handleOpenURL:url
+                  sourceApplication:sourceApplication
+                        withSession:[PFFacebookUtils session]];
 }
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
+}
+
 
 @end

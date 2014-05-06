@@ -52,7 +52,7 @@
     searchButton = [[UIButton alloc] initWithFrame:frame];
     UIImage *searchImg = [UIImage imageNamed:@"button_search.png"];
     [searchButton setImage:searchImg forState:UIControlStateNormal];
-    [topBar addSubview:searchButton];
+    //[topBar addSubview:searchButton];
     // Adding Label
     frame = CGRectMake(10, 0, 150, 50);
     currentTabLabel = [[UILabel alloc] initWithFrame:frame];
@@ -61,7 +61,7 @@
     [currentTabLabel setText:@"T R I B E S"];
     [topBar addSubview:currentTabLabel];
     // Adding CREATE button
-    frame = CGRectMake(self.view.bounds.size.height - 150, 0, 50, 50);
+    frame = CGRectMake(self.view.bounds.size.height - 100, 0, 50, 50);
     createButton = [[UILabel alloc] initWithFrame:frame];
     [createButton setText:@"+"];
     [createButton setTextColor:[UIColor whiteColor]];

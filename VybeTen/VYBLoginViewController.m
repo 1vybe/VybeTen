@@ -9,86 +9,55 @@
 #import "VYBLoginViewController.h"
 
 
-@implementation VYBLoginViewController {
-    FBProfilePictureView *profileView;
-}
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+@implementation VYBLoginViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
+    self.view.backgroundColor = [UIColor clearColor];
+    // Adding blurred background
+    UIToolbar *backView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
+    [backView setBarStyle:UIBarStyleBlack];
+    [self.view insertSubview:backView atIndex:0];
     
-}
-
-- (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)user {
-    NSLog(@"Hi %@, Welcome to Vybe", user.name);
-    [profileView setProfileID:user.id];
-}
-
-- (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
-    NSLog(@"You are logged in");
+    // Adding Vybe Logo
+    UIImageView *logoImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"vybe_logo_text.png"]];
+    [self.logInView setLogo:logoImgView];
     
+    [self.logInView.facebookButton setTitle:@" Sign in with Facebook" forState:UIControlStateNormal];
+
+    [self.logInView.twitterButton setTitle:@" Sign in with Twitter" forState:UIControlStateNormal];
 }
 
-- (void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView {
-    NSLog(@"You are not logged in");
-}
-
-- (void)loginView:(FBLoginView *)loginView handleError:(NSError *)error {
-    NSString *alertMessage, *alertTitle;
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
     
-    // If the user should perform an action outside of you app to recover,
-    // the SDK will provide a message for the user, you just need to surface it.
-    // This conveniently handles cases like Facebook password change or unverified Facebook accounts.
-    if ([FBErrorUtility shouldNotifyUserForError:error]) {
-        alertTitle = @"Facebook error";
-        alertMessage = [FBErrorUtility userMessageForError:error];
-        
-        // This code will handle session closures that happen outside of the app
-        // You can take a look at our error handling guide to know more about it
-        // https://developers.facebook.com/docs/ios/errors
-    } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryAuthenticationReopenSession) {
-        alertTitle = @"Session Error";
-        alertMessage = @"Your current session is no longer valid. Please log in again.";
-        
-        // If the user has cancelled a login, we will do nothing.
-        // You can also choose to show the user a message if cancelling login will result in
-        // the user not being able to complete a task they had initiated in your app
-        // (like accessing FB-stored information or posting to Facebook)
-    } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled) {
-        NSLog(@"user cancelled login");
-        
-        // For simplicity, this sample handles other errors with a generic message
-        // You can checkout our error handling guide for more detailed information
-        // https://developers.facebook.com/docs/ios/errors
-    } else {
-        alertTitle  = @"Something went wrong";
-        alertMessage = @"Please try again later.";
-        NSLog(@"Unexpected error:%@", error);
+    [self.logInView.logo setFrame:CGRectMake((self.view.bounds.size.width - 200)/2, 0, 200, 200)];
+    
+    CGRect frame = self.logInView.facebookButton.frame;
+    frame.origin.x = (self.view.bounds.size.width - frame.size.width) / 2;
+    frame.origin.y = 200 + 10;
+    [self.logInView.facebookButton setFrame:frame];
+    
+    frame.origin.y += 50;
+    [self.logInView.twitterButton setFrame:frame];
+}
+
+- (void)logInViewController:(PFLogInViewController *)controller
+               didLogInUser:(PFUser *)user {
+    if (user.isNew) {
+        NSLog(@"NEW User is %@", [[PFUser currentUser] username]);
+    }
+    else {
+        NSLog(@"Returning User is %@", [[PFUser currentUser] username]);
     }
     
-    if (alertMessage) {
-        [[[UIAlertView alloc] initWithTitle:alertTitle
-                                    message:alertMessage
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil] show];
-    }
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error {
+    NSLog(@"Failed to log in...");
 }
 
 @end

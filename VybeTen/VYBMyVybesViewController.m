@@ -117,7 +117,7 @@
     [friendsButton setContentMode:UIViewContentModeCenter];
     [friendsButton setImage:friendsImg forState:UIControlStateNormal];
     friendsButton.transform = counterClockwise;
-    [self.tableView addSubview:friendsButton];
+    //[self.tableView addSubview:friendsButton];
 
     
     [[VYBMyVybeStore sharedStore] delayedUploadsBegin];

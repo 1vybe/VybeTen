@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <FacebookSDK/FacebookSDK.h>
-#import <Social/Social.h>
+#import <Parse/Parse.h>
 
-@interface VYBLoginViewController : UIViewController
+@interface VYBLoginViewController : PFLogInViewController <PFLogInViewControllerDelegate>
 
 @end

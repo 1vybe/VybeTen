@@ -60,6 +60,7 @@
     [tribeNameTextField setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
     [tribeNameTextField setTextColor:[UIColor whiteColor]];
     [tribeNameTextField becomeFirstResponder];
+    [tribeNameTextField setPlaceholder:@"create a tribe"];
     [topBar addSubview:tribeNameTextField];
 }
 

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Parse/Parse.h>
 
-@interface VYBSignUpViewController : UIViewController
+@interface VYBSignUpViewController : PFSignUpViewController <PFSignUpViewControllerDelegate>
 
 @end
