@@ -9,6 +9,7 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
+#import "VYBAppDelegate.h"
 #import "VYBMyVybesViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBMyTribeStore.h"
@@ -16,6 +17,9 @@
 #import "VYBImageStore.h"
 #import "VYBPlayerViewController.h"
 #import "VYBMenuViewController.h"
+#import "VYBLoginViewController.h"
+#import "VYBSignUpViewController.h"
+#import "VYBConstants.h"
 
 //#import "GAI.h"
 //#import "GAIFields.h"
@@ -89,16 +93,17 @@
     // Adding COUNT label
     // These frequent view related steps should be done in Model side.
     // Count label translates the view by 35 px along x and 85px along y axis because the label is a rectangle
-    frame = CGRectMake(0, 0, 120, 50);
+    frame = CGRectMake(0, 0, 200, 50);
     self.countLabel = [[UILabel alloc] initWithFrame:frame];
     [self.countLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
-    [self.countLabel setText:@"MY VYBES"];
     [self.countLabel setTextColor:[UIColor whiteColor]];
     [self.countLabel setTextAlignment:NSTextAlignmentCenter];
     self.countLabel.transform = counterClockwise;
     [self.countLabel setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:self.countLabel];
     self.countLabel.center = topBar.center;
+    NSString *displayName = [[PFUser currentUser] objectForKey:kVYBUserDisplayNameKey];
+    [self.countLabel setText:displayName];
     
     // Adding CAPTURE button
     CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
@@ -110,6 +115,7 @@
     [self.buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [[self tableView] addSubview:self.buttonCapture];
     
+    /* TODO: This should actually be friends button but for now it logs out a user */
     // Adding FRIENDS button
     frame = CGRectMake(self.view.bounds.size.width - 50, self.view.bounds.size.height - 50, 50, 50);
     friendsButton = [[UIButton alloc] initWithFrame:frame];
@@ -117,7 +123,9 @@
     [friendsButton setContentMode:UIViewContentModeCenter];
     [friendsButton setImage:friendsImg forState:UIControlStateNormal];
     friendsButton.transform = counterClockwise;
-    //[self.tableView addSubview:friendsButton];
+    [friendsButton addTarget:self action:@selector(logOut:) forControlEvents:UIControlEventTouchUpInside];
+    [self.tableView addSubview:friendsButton];
+
 
     
     [[VYBMyVybeStore sharedStore] delayedUploadsBegin];
@@ -208,6 +216,10 @@
 
 - (void)goBack:(id)sender {
     [self.navigationController popViewControllerAnimated:NO];
+}
+
+- (void)logOut:(id)sender {
+    [(VYBAppDelegate *)[[UIApplication sharedApplication] delegate] logOut];
 }
 
 - (void)goToMenu:(id)sender {

@@ -30,5 +30,21 @@
 #define FONT_TITLE_SMALL        DEFAULT_FONT(FONT_SIZE_SMALL)
 
 
+#pragma mark - Cached User Attributes
+// keys
+extern NSString *const kVYBUserAttributesPhotoCountKey;
+extern NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey;
+
+#pragma mark - PFObject User Class
+// Field keys
+extern NSString *const kVYBUserDisplayNameKey;
+extern NSString *const kVYBUserFacebookIDKey;
+extern NSString *const kVYBUserPhotoIDKey;
+extern NSString *const kVYBUserProfilePicSmallKey;
+extern NSString *const kVYBUserProfilePicMediumKey;
+extern NSString *const kVYBUserFacebookFriendsKey;
+extern NSString *const kVYBUserAlreadyAutoFollowedFacebookFriendsKey;
+
+
 @interface VYBConstants : NSObject
 @end

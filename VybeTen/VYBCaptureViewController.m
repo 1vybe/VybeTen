@@ -99,6 +99,7 @@ static void * XXContext = &XXContext;
     syncButton = [[UIButton alloc] initWithFrame:buttonFrame];
     UIImage *syncNoneImg = [UIImage imageNamed:@"button_sync_none.png"];
     [syncButton setImage:syncNoneImg forState:UIControlStateNormal];
+    [syncButton setContentMode:UIViewContentModeLeft];
     [syncButton addTarget:self action:@selector(changeSync:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:syncButton];
     
@@ -108,9 +109,13 @@ static void * XXContext = &XXContext;
     [syncLabel setTextColor:[UIColor whiteColor]];
     [syncLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
     //[syncLabel setTextAlignment:NSTextAlignmentLeft];
+    [syncLabel resignFirstResponder];
     [self.view addSubview:syncLabel];
-    if (defaultSync)
+    if (defaultSync) {
         [syncLabel setText:[defaultSync tribeName]];
+    } else {
+        [syncLabel setText:@"(select)"];
+    }
     
     // Adding RECORD button
     buttonFrame = CGRectMake(self.view.bounds.size.height - 70, (self.view.bounds.size.width - 60)/2, 60, 60);
@@ -171,7 +176,7 @@ static void * XXContext = &XXContext;
     [flashLabel setTextColor:[UIColor whiteColor]];
     [flashLabel setText:@"OFF"];
     [self.flashButton addSubview:flashLabel];
-    
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -228,8 +233,9 @@ static void * XXContext = &XXContext;
     if (!recording) {
         NSLog(@"Start recording");
         newVybe = [[VYBVybe alloc] initWithDeviceId:adId];
-        if (defaultSync)
+        if (defaultSync) {
             [newVybe setTribeName:[defaultSync tribeName]];
+        }
         startTime = [newVybe timeStamp];
         
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[newVybe videoPath]];
@@ -256,14 +262,16 @@ static void * XXContext = &XXContext;
 - (void)changeSync:(id)sender {
     VYBSyncTribeViewController *syncVC = [[VYBSyncTribeViewController alloc] init];
     [syncVC setCompletionBlock:^(VYBTribe *tribe){
-        defaultSync = tribe;
-        if (defaultSync) {
+        if (tribe) {
+            defaultSync = tribe;
             UIImage *image = [UIImage imageNamed:@"button_sync.png"];
             [syncButton setImage:image forState:UIControlStateNormal];
             [syncLabel setText:[defaultSync tribeName]];
+        } else {
+            [syncLabel setText:@"(select)"];
         }
     }];
-    [self.navigationController pushFadeViewController:syncVC];
+    [self.navigationController presentViewController:syncVC animated:NO completion:nil];
 }
 
 - (void)switchFlash:(id)sender {

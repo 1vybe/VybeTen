@@ -8,6 +8,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "VYBAppDelegate.h"
+#import "VYBWelcomeViewController.h"
 #import "VYBLoginViewController.h"
 #import "VYBSignUpViewController.h"
 #import "VYBCaptureViewController.h"
@@ -15,39 +16,58 @@
 #import "VYBMyTribeStore.h"
 #import "VYBConstants.h"
 #import <HockeySDK/HockeySDK.h>
-#import <Parse/Parse.h>
 
 @implementation VYBAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+
     /* HockeyApp Initilization */
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_ID];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
     
-    /* Parse */
+    // Parse Initialization
     [Parse setApplicationId:@"m5Im7uDcY5rieEbPyzRfV2Dq6YegS3kAQwxiDMFZ"
                   clientKey:@"WLqeqlf4qVVk5jF6yHSWGxw3UzUQwUtmAk9vCPfB"];
+    
+    // Parse Analaytics
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+    // Push Notification Initialization
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|
      UIRemoteNotificationTypeAlert|
      UIRemoteNotificationTypeSound];
+    
+    // Facebook PFUSer Settings
     [PFFacebookUtils initializeFacebook];
     
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    // Twitter PFUser Settings
+    [PFTwitterUtils initializeWithConsumerKey:@"JLCtQQcGYntiTy0giykRwFzDH"
+                               consumerSecret:@"f778KywZHkqURPVirTMdANKxnaIg6dzKUAkqNeHe3sR9U794qn"];
+
+    // Clearing Push-noti Badge number
+    if (application.applicationIconBadgeNumber != 0) {
+        application.applicationIconBadgeNumber = 0;
+        [[PFInstallation currentInstallation] saveInBackground];
+    }
     
-    UINavigationController *navContoller = [[UINavigationController alloc] init];
-    [[navContoller navigationBar] setHidden:YES];
-    navContoller.modalPresentationStyle = UIModalPresentationCurrentContext;
+    // Access Control
+    PFACL *defaultACL = [PFACL ACL];
+    [defaultACL setPublicReadAccess:YES];
+    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+
     
     /**
      * Set navigation controller's background as preview layer from video input
      */
+    self.navController = [[UINavigationController alloc] init];
+    [[self.navController navigationBar] setHidden:YES];
+
     // Setup for video capturing session
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [session setSessionPreset:AVCaptureSessionPresetMedium];
-    
     // Add video input from camera
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     AVCaptureDeviceInput *videoInput = [[AVCaptureDeviceInput alloc] initWithDevice:device error:nil];
@@ -58,7 +78,7 @@
     [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
     [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     // Display preview layer
-    CALayer *rootLayer = [[navContoller view] layer];
+    CALayer *rootLayer = [[self.navController view] layer];
     [rootLayer setMasksToBounds:YES];
     [previewLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.height, rootLayer.bounds.size.width)]; // width and height are switched in landscape mode
     [rootLayer insertSublayer:previewLayer atIndex:0];
@@ -80,39 +100,23 @@
     AVCaptureConnection *movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
     [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
     
+    
     VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
     [captureVC setSession:session withVideoInput:videoInput withMovieFileOutput:movieFileOutput];
-    [self.window setRootViewController:navContoller];
+    [session startRunning];
     
+    self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
+
+    self.navController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    
+    [self.window setRootViewController:self.navController];
+    [self.navController pushViewController:captureVC animated:NO];
+    [self.navController pushViewController:self.welcomeViewController animated:NO];
+
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
-    
-    if (![PFUser currentUser]) { // No user logged in
-        // Create the log in view controller
-        VYBLoginViewController *logInController = [[VYBLoginViewController alloc] init];
-        [logInController setDelegate:logInController];
-        [logInController setFields:PFLogInFieldsFacebook | PFLogInFieldsTwitter];
-        [logInController setFacebookPermissions:[NSArray arrayWithObjects:@"friends_about_me", @"email", nil]];
-        // Create the sign up view controller
-        VYBSignUpViewController *signUpController = [[VYBSignUpViewController alloc] init];
-        [signUpController setDelegate:signUpController];
-        [signUpController setFields:PFSignUpFieldsUsernameAndPassword];
-        
-        // Assign our sign up controller to be displayed from the login controller
-        [logInController setSignUpController:signUpController];
-        
-        // Present the log in view controller
-        [navContoller presentViewController:logInController animated:YES completion:^{
-            [navContoller pushViewController:captureVC animated:NO];
-            [session startRunning];
-        }];
-    } else {
-        NSLog(@"Welcome Back %@", [[PFUser currentUser] username]);
-        [navContoller pushViewController:captureVC animated:NO];
-        [session startRunning];
-    }
     
     return YES;
 }
@@ -163,23 +167,110 @@
     //[[VYBMyTribeStore sharedStore] listVybes];
 }
 
+- (void)presentLoginViewController {
+    [self presentLoginViewControllerAnimated:YES];
+}
+
+- (void)presentLoginViewControllerAnimated:(BOOL)animated {
+    VYBLoginViewController *logInViewController = [[VYBLoginViewController alloc] init];
+    [logInViewController setDelegate:self];
+    [logInViewController setFields:PFLogInFieldsFacebook | PFLogInFieldsTwitter];
+    NSArray *permissionsArray = @[ @"user_friends", @"public_profile" ];
+    [logInViewController setFacebookPermissions:permissionsArray];
+    
+    [self.welcomeViewController presentViewController:logInViewController animated:NO completion:nil];
+}
+
+- (void)logOut {
+    /* TODO */
+    /*
+     
+    // clear cache
+    [[PAPCache sharedCache] clear];
+
+    // clear NSUserDefaults
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPAPUserDefaultsCacheFacebookFriendsKey];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPAPUserDefaultsActivityFeedViewControllerLastRefreshKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    // Unsubscribe from push notifications by removing the user association from the current installation.
+    [[PFInstallation currentInstallation] removeObjectForKey:kPAPInstallationUserKey];
+    [[PFInstallation currentInstallation] saveInBackground];
+    
+    // Clear all caches
+    [PFQuery clearAllCachedResults];
+     
+    */
+    
+    [PFUser logOut];
+    
+    [self.navController popToRootViewControllerAnimated:NO];
+    self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
+    [self.navController pushViewController:self.welcomeViewController animated:NO];
+
+    
+    [self presentLoginViewControllerAnimated:NO];
+}
+
+#pragma mark - PFLoginViewControllerDelegate
+
+- (void)logInViewController:(PFLogInViewController *)controller
+               didLogInUser:(PFUser *)user {
+    if (user.isNew) {
+        NSLog(@"NEW User is %@", [[PFUser currentUser] username]);
+    }
+    else {
+        NSLog(@"Returning User is %@", [[PFUser currentUser] username]);
+    }
+    
+    [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        if (!error) {
+            [self facebookRequestDidLoad:result];
+        } else {
+            [self facebookRequestDidFailWithError:error];
+        }
+    }];
+    
+    [self.navController popToRootViewControllerAnimated:NO];
+    [self.navController dismissViewControllerAnimated:NO completion:nil];
+}
+
+- (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error {
+    NSLog(@"Failed to log in...");
+}
+
 /**
  * PFPush Settigs 
  **/
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    if (application.applicationIconBadgeNumber != 0) {
+        application.applicationIconBadgeNumber = 0;
+    }
+    
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:deviceToken];
     [currentInstallation saveInBackground];
 }
 
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+	if (error.code != 3010) { // 3010 is for the iPhone Simulator
+        NSLog(@"Application failed to register for push notifications: %@", error);
+	}
+}
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    /* TODO: Update Badge Number */
+    if ([PFUser currentUser]) {
+        
+    }
+    
     [PFPush handlePush:userInfo];
 }
 
 
 /**
- * PFUser Session Settings
+ * PFUser Session Settings (Facebook)
  **/
 
 - (BOOL)application:(UIApplication *)application
@@ -192,8 +283,95 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+    /* TODO: Update Badge Number */
+    
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
 }
 
+/**
+ * Facebook Request methods (Friends Update)
+ **/
+
+- (void)facebookRequestDidLoad:(id)result {
+    PFUser *user = [PFUser currentUser];
+    
+    NSArray *data = [result objectForKey:@"data"];
+    
+    if (data) {
+        NSMutableArray *facebookIDs = [[NSMutableArray alloc] initWithCapacity:[data count]];
+        for (NSDictionary *friendData in data) {
+            if (friendData[@"id"]) {
+                [facebookIDs addObject:friendData[@"id"]];
+            }
+        }
+        
+        if (user) {
+            if ([user objectForKey:kVYBUserFacebookFriendsKey]) {
+                [user removeObjectForKey:kVYBUserFacebookFriendsKey];
+            }
+            // First time user's friends list is updated
+            /* TODO: Don't auto-send a friend request */
+            if (![user objectForKey:kVYBUserAlreadyAutoFollowedFacebookFriendsKey]) {
+                [user setObject:@YES forKey:kVYBUserAlreadyAutoFollowedFacebookFriendsKey];
+                
+                NSError *error = nil;
+                
+                //Facebook friends list
+                PFQuery *facebookFriendsQuery = [PFUser query];
+                [facebookFriendsQuery whereKey:kVYBUserFacebookIDKey containedIn:facebookIDs];
+                
+                NSArray *vybeFriends = [facebookFriendsQuery findObjects:&error];
+                
+                if (!error) {
+                    [vybeFriends enumerateObjectsUsingBlock:^(PFUser *newFriend, NSUInteger idx, BOOL *stop) {
+                        /* TODO: Activity */
+                        
+                        
+                    }];
+                }
+            }
+            [user saveEventually];
+        } else {
+            NSLog(@"No user info is found. Forcing logging out");
+            [self logOut];
+        }
+    }
+    else {
+        // Creating a profile
+        if (user) {
+            NSString *facebookName = result[@"name"];
+            if (facebookName && [facebookName length] != 0) {
+                [user setObject:facebookName forKey:kVYBUserDisplayNameKey];
+            }
+            
+            NSString *facebookID = result[@"id"];
+            if (facebookID && [facebookID length] != 0) {
+                [user setObject:facebookID forKey:kVYBUserFacebookIDKey];
+            }
+            
+            [user saveEventually];
+        }
+        
+        [FBRequestConnection startForMyFriendsWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error){
+            if (!error) {
+                [self facebookRequestDidLoad:result];
+            } else {
+                [self facebookRequestDidFailWithError:error];
+            }
+        }];
+        
+    }
+}
+
+- (void)facebookRequestDidFailWithError:(NSError *)error {
+    NSLog(@"Facebook error: %@", error);
+    
+    if ([PFUser currentUser]) {
+        if ( [[error userInfo][@"error"][@"type"] isEqualToString:@"OAuthException"] ) {
+            NSLog(@"OAuthException occured. Logging out");
+            [self logOut];
+        }
+    }
+}
 
 @end

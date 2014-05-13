@@ -7,9 +7,25 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Parse/Parse.h>
 
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate>
+@class VYBWelcomeViewController;
+
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, PFLogInViewControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (nonatomic, strong) UINavigationController *navController;
+@property (nonatomic, strong) VYBWelcomeViewController *welcomeViewController;
+
+/* TODO */
+@property (nonatomic, readonly) int networkStatus;
+- (BOOL)isParseReachable;
+
+- (void)facebookRequestDidLoad:(id)result;
+- (void)facebookRequestDidFailWithError:(NSError *)error;
+
+- (void)presentLoginViewController;
+- (void)presentLoginViewControllerAnimated:(BOOL)animated;
+- (void)logOut;
 
 @end

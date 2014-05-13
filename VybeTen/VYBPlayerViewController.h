@@ -12,9 +12,14 @@
 @class VYBPlayerView;
 
 @interface VYBPlayerViewController : UIViewController
-@property (nonatomic) AVPlayer *player;
+@property (nonatomic) AVPlayer *currPlayer;
+@property (nonatomic) AVPlayer *prevPlayer;
+@property (nonatomic) AVPlayer *nextPlayer;
+@property (nonatomic) VYBPlayerView *currPlayerView;
+@property (nonatomic) VYBPlayerView *prevPlayerView;
+@property (nonatomic) VYBPlayerView *nextPlayerView;
+
 @property (nonatomic) AVPlayerItem *currItem;
-@property (nonatomic) VYBPlayerView *playerView;
 @property (nonatomic) UILabel *labelTime;
 @property (nonatomic) NSMutableArray *vybePlaylist;
 

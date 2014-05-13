@@ -20,6 +20,7 @@
 
 - (void)setPlayer:(AVPlayer *)player {
     [(AVPlayerLayer *)[self layer] setPlayer:player];
+    [self setVideoFillMode];
 }
 
 - (void)setVideoFillMode {

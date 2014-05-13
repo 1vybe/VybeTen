@@ -14,6 +14,8 @@
 		022361FB18FBDEAF002700B8 /* VYBCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022361FA18FBDEAF002700B8 /* VYBCollectionViewController.m */; };
 		023373D018F50C4F00A522B3 /* VYBTribe.m in Sources */ = {isa = PBXBuildFile; fileRef = 023373CF18F50C4F00A522B3 /* VYBTribe.m */; };
 		023373D318F50C6100A522B3 /* VYBUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 023373D218F50C6100A522B3 /* VYBUser.m */; };
+		023AD83F191ADACD00AD4740 /* VYBWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 023AD83E191ADACD00AD4740 /* VYBWelcomeViewController.m */; };
+		023E538D191F142000C3CF78 /* VYBCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 023E538C191F142000C3CF78 /* VYBCache.m */; };
 		0243133118F6E73600178CEB /* UINavigationController+Fade.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243133018F6E73600178CEB /* UINavigationController+Fade.m */; };
 		0243CC9818CC665200CA03C0 /* VYBReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */; };
 		0248BF7918FA2B0100515586 /* VYBS3Connector.m in Sources */ = {isa = PBXBuildFile; fileRef = 0248BF7818FA2B0100515586 /* VYBS3Connector.m */; };
@@ -82,6 +84,10 @@
 		023373CF18F50C4F00A522B3 /* VYBTribe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBTribe.m; sourceTree = "<group>"; };
 		023373D118F50C6100A522B3 /* VYBUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUser.h; sourceTree = "<group>"; };
 		023373D218F50C6100A522B3 /* VYBUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUser.m; sourceTree = "<group>"; };
+		023AD83D191ADACD00AD4740 /* VYBWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBWelcomeViewController.h; sourceTree = "<group>"; };
+		023AD83E191ADACD00AD4740 /* VYBWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBWelcomeViewController.m; sourceTree = "<group>"; };
+		023E538B191F142000C3CF78 /* VYBCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCache.h; sourceTree = "<group>"; };
+		023E538C191F142000C3CF78 /* VYBCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCache.m; sourceTree = "<group>"; };
 		0243132F18F6E73600178CEB /* UINavigationController+Fade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+Fade.h"; sourceTree = "<group>"; };
 		0243133018F6E73600178CEB /* UINavigationController+Fade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Fade.m"; sourceTree = "<group>"; };
 		0243CC9618CC665200CA03C0 /* VYBReplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBReplayViewController.h; sourceTree = "<group>"; };
@@ -183,6 +189,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		023E538E191F143F00C3CF78 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
 		027D924618EA85E800537822 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -255,6 +268,8 @@
 				024BE32E19174FB200CDAA8D /* VYBInviteViewController.m */,
 				024BE3301917E98400CDAA8D /* VYBCreateTribeViewController.h */,
 				024BE3311917E98400CDAA8D /* VYBCreateTribeViewController.m */,
+				023AD83D191ADACD00AD4740 /* VYBWelcomeViewController.h */,
+				023AD83E191ADACD00AD4740 /* VYBWelcomeViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -360,6 +375,9 @@
 				604B628C18B495BB00D3EF19 /* VYBAppDelegate.m */,
 				025DE65918CB16E30054F739 /* VYBConstants.h */,
 				025DE65A18CB16E30054F739 /* VYBConstants.m */,
+				023E538B191F142000C3CF78 /* VYBCache.h */,
+				023E538C191F142000C3CF78 /* VYBCache.m */,
+				023E538E191F143F00C3CF78 /* Categories */,
 				027D924718EA85EE00537822 /* View */,
 				027D924618EA85E800537822 /* Model */,
 				027D924918EA85F900537822 /* Store */,
@@ -546,8 +564,10 @@
 				025169B018FB0D2A007F34B0 /* VYBSyncTribeViewController.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
 				024C28D718DBCE0600399980 /* VYBTribeVybesViewController.m in Sources */,
+				023AD83F191ADACD00AD4740 /* VYBWelcomeViewController.m in Sources */,
 				0243133118F6E73600178CEB /* UINavigationController+Fade.m in Sources */,
 				023373D318F50C6100A522B3 /* VYBUser.m in Sources */,
+				023E538D191F142000C3CF78 /* VYBCache.m in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				02D5E80B190A227C007F3BFB /* VYBSignUpViewController.m in Sources */,
 				027FB48018FEC2AC00946579 /* PWProgressView.m in Sources */,

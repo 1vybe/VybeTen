@@ -26,20 +26,59 @@
     UIView *loadingView;
 }
 
-@synthesize player = _player;
-@synthesize playerView = _playerView;
+@synthesize currPlayer = _currPlayer;
+@synthesize prevPlayer = _prevPlayer;
+@synthesize nextPlayer = _nextPlayer;
+@synthesize currPlayerView = _currPlayerView;
+@synthesize prevPlayerView = _prevPlayerView;
+@synthesize nextPlayerView = _nextPlayerView;
 @synthesize currItem = _currItem;
 @synthesize labelTime = _labelTime;
 @synthesize dismissBlock;
 
 - (void)loadView {
-    VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
     UIView *darkBackground = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [darkBackground setBackgroundColor:[UIColor blackColor]];
     self.view = darkBackground;
-    [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
-    self.playerView = playerView;
-    [self.view addSubview:playerView];
+    
+    VYBPlayerView *playerView1 = [[VYBPlayerView alloc] init];
+    VYBPlayerView *playerView2 = [[VYBPlayerView alloc] init];
+    VYBPlayerView *playerView3 = [[VYBPlayerView alloc] init];
+
+    [playerView1 setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
+    [playerView2 setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
+    [playerView3 setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
+
+    self.prevPlayerView = playerView1; 
+    self.currPlayerView = playerView2;
+    self.nextPlayerView = playerView3;
+    
+    self.currPlayer = [[AVPlayer alloc] init];
+    self.prevPlayer = [[AVPlayer alloc] init];
+    self.nextPlayer = [[AVPlayer alloc] init];
+    
+    [self.prevPlayer addObserver:self forKeyPath:@"status" options:0 context:nil];
+    [self.nextPlayer addObserver:self forKeyPath:@"status" options:0 context:nil];
+    
+    [self.currPlayerView setPlayer:self.currPlayer];
+    [self.prevPlayerView setPlayer:self.prevPlayer];
+    [self.nextPlayerView setPlayer:self.nextPlayer];
+
+    [self.view addSubview:self.currPlayerView];
+    //[self.view addSubview:self.prevPlayerView];
+    //[self.view addSubview:self.nextPlayerView];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (object == self.prevPlayer && [keyPath isEqualToString:@"status"]) {
+        if (self.prevPlayer.status == AVPlayerStatusReadyToPlay) {
+            NSLog(@"prevPlayer READY");
+        } else if (self.prevPlayer.status == AVPlayerStatusFailed) {
+            NSLog(@"prevPlayer WEIRD");
+        } else {
+            NSLog(@"prevPlayer STATUS");
+        }
+    }
 }
 
 - (void)viewDidLoad
@@ -96,36 +135,41 @@
     [currentTribeLabel setTextColor:[UIColor whiteColor]];
     [currentTribeLabel setText:[v tribeName]];
     [self.view addSubview:currentTribeLabel];
-
-    [self setPlayer:[AVPlayer playerWithPlayerItem:self.currItem]];
-    [self.playerView setPlayer:self.player];
-    [self.playerView setVideoFillMode];
 }
 
 - (void)playFrom:(NSInteger)index {
     playIndex = index;
-    [self playbackFrom:playIndex];
+    [self setUpPlayersAt:playIndex];
 }
 
 - (void)playerItemDidReachEnd {
-    [self.player pause];
+    [self.currPlayer pause];
     playIndex--;
-    [self playbackFrom:playIndex];
+    [self setUpPlayersAt:playIndex];
 }
 
-- (void)playbackFrom:(NSInteger)from {
+- (void)setUpPlayersAt:(NSInteger)from {
     // Remove the playerItem that just finished playing
     [[NSNotificationCenter defaultCenter] removeObserver:self.currItem];
     if (from < [self.vybePlaylist count]) {
-        VYBVybe *v = (VYBVybe *)[self.vybePlaylist objectAtIndex:from];
-        [self.labelTime setText:[NSString stringWithFormat:@"%@ %@", [v dateString], [v timeString]]];
+        VYBVybe *currV, *prevV, *nextV;
+        currV = (VYBVybe *)[self.vybePlaylist objectAtIndex:from];
+        prevV = (from == [self.vybePlaylist count] - 1) ? nil : (VYBVybe *)[self.vybePlaylist objectAtIndex:from + 1];
+        nextV = (from == 0) ? nil : (VYBVybe *)[self.vybePlaylist objectAtIndex:from - 1];
+        
+        [self.labelTime setText:[NSString stringWithFormat:@"%@ %@", [currV dateString], [currV timeString]]];
         /* TODO: change location accordingly to the vybe playing */
         [locationLabel setText:@"Old Port, Montreal"];
-        NSURL *url = [[NSURL alloc] initFileURLWithPath:[v tribeVideoPath]];
-        if ([v upStatus] == UPLOADED || [v upStatus] == UPLOADING || [v upStatus] == UPFRESH) {
-            url = [[NSURL alloc] initFileURLWithPath:[v videoPath]];
+        NSURL *currUrl = [[NSURL alloc] initFileURLWithPath:[currV tribeVideoPath]];
+        NSURL *prevUrl, *nextUrl;
+        if ([currV upStatus] == UPLOADED || [currV upStatus] == UPLOADING || [currV upStatus] == UPFRESH) {
+            AVMutableComposition *composition = [AVMutableComposition composition];
+            
+            currUrl = [[NSURL alloc] initFileURLWithPath:[currV videoPath]];
+            prevUrl = [[NSURL alloc] initFileURLWithPath:[prevV videoPath]];
+            nextUrl = [[NSURL alloc] initFileURLWithPath:[nextV videoPath]];
         }
-        else if ([v downStatus] != DOWNLOADED) {
+        else if ([currV downStatus] != DOWNLOADED) {
             loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
             [loadingView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
             UILabel *loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
@@ -136,32 +180,44 @@
             [loadingView addSubview:loadingLabel];
             loadingLabel.center = loadingView.center;
             [self.view addSubview:loadingView];
-            [[VYBMyTribeStore sharedStore] downloadTribeVybeFor:v withCompletion:^(NSError *err) {
+            [[VYBMyTribeStore sharedStore] downloadTribeVybeFor:currV withCompletion:^(NSError *err) {
                 if (err) {
                     UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                     [av show];
                 }
                 NSLog(@"Vybe Downloaded - Loading Screen Removed");
                 [loadingView removeFromSuperview];
-                AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-                self.currItem = [AVPlayerItem playerItemWithAsset:asset];
+                AVURLAsset *currAsset = [AVURLAsset URLAssetWithURL:currUrl options:nil];
+                self.currItem = [AVPlayerItem playerItemWithAsset:currAsset];
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-                [self.player replaceCurrentItemWithPlayerItem:self.currItem];
-                [self.player play];
+                [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
+                [self.currPlayer play];
                 /* TODO: This should set all the previous vybes as WATCHED */
             }];
             
-            [v setWatched:YES];
+            [currV setWatched:YES];
             
             return;
         }
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-        self.currItem = [AVPlayerItem playerItemWithAsset:asset];
+        AVURLAsset *currAsset = [AVURLAsset URLAssetWithURL:currUrl options:nil];
+        AVURLAsset *prevAsset = [AVURLAsset URLAssetWithURL:prevUrl options:nil];
+        AVURLAsset *nextAsset = [AVURLAsset URLAssetWithURL:nextUrl options:nil];
+
+        self.currItem = [AVPlayerItem playerItemWithAsset:currAsset];
+        AVPlayerItem *prevItem = [AVPlayerItem playerItemWithAsset:prevAsset];
+        AVPlayerItem *nextItem = [AVPlayerItem playerItemWithAsset:nextAsset];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-        [self.player replaceCurrentItemWithPlayerItem:self.currItem];
-        [self.player play];
+        [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
+        [self.prevPlayer replaceCurrentItemWithPlayerItem:prevItem];
+        [self.nextPlayer replaceCurrentItemWithPlayerItem:nextItem];
+        
+        [self.currPlayer play];
+        
+        //NSLog(@"prev: %@",[self.prevPlayer status]);
+        //NSLog(@"next: %@", [self.nextPlayer status]);
         /* TODO: This should set all the previous vybes as WATCHED */
-        [v setWatched:YES];
+        [currV setWatched:YES];
     }
 }
 
@@ -177,7 +233,7 @@
         }
     }
     
-    [self playbackFrom:playIndex];
+    [self setUpPlayersAt:playIndex];
     NSLog(@"Watching From %d", playIndex);
 }
 
@@ -190,17 +246,17 @@
  **/
 
 - (void)swipeLeft {
-    [self.player pause];
+    [self.currPlayer pause];
     [loadingView removeFromSuperview];
     playIndex--;
-    [self playbackFrom:playIndex];
+    [self setUpPlayersAt:playIndex];
 }
 
 - (void)swipeRight {
-    [self.player pause];
+    [self.currPlayer pause];
     [loadingView removeFromSuperview];
     playIndex++;
-    [self playbackFrom:playIndex];
+    [self setUpPlayersAt:playIndex];
 }
 
 - (void)captureVybe:(id)sender {

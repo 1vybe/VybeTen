@@ -13,6 +13,7 @@
 
 @implementation VYBSyncTribeViewController {
     UITableView *tribeTable;
+    
 }
 
 
@@ -69,7 +70,7 @@
 }
 
 - (void)dismissSyncTribeMenu {
-    [self.navigationController fadePopViewController];
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 #pragma mark - Table view data source
@@ -103,7 +104,7 @@
     if (self.completionBlock)
         [self completionBlock](tribe);
     
-    [self.navigationController fadePopViewController];
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 @end

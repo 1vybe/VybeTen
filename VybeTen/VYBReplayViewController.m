@@ -16,7 +16,9 @@
 #import "UINavigationController+Fade.h"
 #import "VYBLabel.h"
 
-@implementation VYBReplayViewController
+@implementation VYBReplayViewController {
+    UILabel *selectYourTribeLabel;
+}
 
 @synthesize player = _player;
 @synthesize playerItem = _playerItem;
@@ -71,27 +73,42 @@
     [cancelButton addTarget:self action:@selector(discardVybe) forControlEvents:UIControlEventTouchUpInside];
     [cancelButton setImage:buttonImg forState:UIControlStateNormal];
     [self.view addSubview:cancelButton];
-    
+
     // Adding SYNC button
     CGRect frame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
     syncButton = [[UIButton alloc] initWithFrame:frame];
     UIImage *syncNoneImg;
-    if ([self.vybe tribeName])
+    if ([self.vybe tribeName]) {
         syncNoneImg= [UIImage imageNamed:@"button_sync.png"];
-    else
+    } else {
         syncNoneImg = [UIImage imageNamed:@"button_sync_none.png"];
+    }
     [syncButton setImage:syncNoneImg forState:UIControlStateNormal];
+    [syncButton setContentMode:UIViewContentModeLeft];
     [syncButton addTarget:self action:@selector(changeSync:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:syncButton];
-    
     // Adding SYNC label
     frame = CGRectMake(50, self.view.bounds.size.width - 50, 150, 50);
     syncLabel = [[VYBLabel alloc] initWithFrame:frame];
     [syncLabel setTextColor:[UIColor whiteColor]];
     [syncLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
-    //[syncLabel setTextAlignment:NSTextAlignmentLeft];
     [self.view addSubview:syncLabel];
-    [syncLabel setText:[self.vybe tribeName]];
+    if ([self.vybe tribeName]) {
+        [syncLabel setText:[self.vybe tribeName]];
+    } else {
+        [syncLabel setText:@"(select)"];
+    }
+    
+    // Adding SELECT label
+    frame = CGRectMake((self.view.bounds.size.height - 200) / 2, (self.view.bounds.size.width - 40) / 2, 200, 40);
+    selectYourTribeLabel = [[UILabel alloc] initWithFrame:frame];
+    [selectYourTribeLabel setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
+    [selectYourTribeLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:28]];
+    [selectYourTribeLabel setTextColor:[UIColor whiteColor]];
+    [selectYourTribeLabel setTextAlignment:NSTextAlignmentCenter];
+    [selectYourTribeLabel setText:@"Select your tribe"];
+    [self.view addSubview:selectYourTribeLabel];
+    selectYourTribeLabel.hidden = YES;
     
     [self playVideo];
 }
@@ -100,34 +117,28 @@
 - (void)changeSync:(id)sender {
     VYBSyncTribeViewController *syncVC = [[VYBSyncTribeViewController alloc] init];
     [syncVC setCompletionBlock:^(VYBTribe *tribe){
-        [self.vybe setTribeName:[tribe tribeName]];
-        if ([self.vybe tribeName]) {
+        if (tribe) {
+            [self.vybe setTribeName:[tribe tribeName]];
             UIImage *image = [UIImage imageNamed:@"button_sync.png"];
             [syncButton setImage:image forState:UIControlStateNormal];
             [syncLabel setText:[self.vybe tribeName]];
+            selectYourTribeLabel.hidden = YES;
+        } else {
+            [syncLabel setText:@"(select)"];
         }
     }];
-    [self.navigationController pushFadeViewController:syncVC];
+    [self.navigationController presentViewController:syncVC animated:NO completion:nil];
 }
 
 - (void)saveVybe {
     // Promt a message to choose a vybe to sync
     if (![self.vybe tribeName]) {
-        NSString *msg; NSString *title;
-        if ([[[VYBMyTribeStore sharedStore] myTribes] count] > 0)
-            msg = @"Choose a tribe to sync your vybe";
-        else {
-            msg = @"Congrats to your first vybe! Now create your first tribe to post your vybe.";
-            title = @"WELCOME";
-        }
-    
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:title message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [av show];
+        selectYourTribeLabel.hidden = NO;
     }
     else {
         [self performSelector:@selector(uploadVybe)];
+        [self.navigationController popViewControllerAnimated:NO];
     }
-    [self.navigationController popViewControllerAnimated:NO];
 }
 
 
