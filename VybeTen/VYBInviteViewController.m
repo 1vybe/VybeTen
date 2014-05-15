@@ -6,8 +6,11 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
+#import <Parse/Parse.h>
 #import "VYBInviteViewController.h"
 #import "VYBMenuViewController.h"
+#import "VYBCache.h"
+#import "VYBConstants.h"
 
 @implementation VYBInviteViewController {
     UIView *topBar;
@@ -20,6 +23,9 @@
     UIButton *contactsTabButton;
     UIButton *facebookTabButton;
     UIButton *twitterTabButton;
+    
+    UICollectionView *collectionView;
+    UICollectionViewFlowLayout *flowLayout;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -52,10 +58,11 @@
     [backButton addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
     [topBar addSubview:backButton];
     // Adding Label
-    frame = CGRectMake(10, 0, 150, 50);
+    frame = CGRectMake(50, 0, 250, 50);
     currentTabLabel = [[UILabel alloc] initWithFrame:frame];
     [currentTabLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20.0]];
     [currentTabLabel setTextColor:[UIColor whiteColor]];
+    [currentTabLabel setTextAlignment:NSTextAlignmentLeft];
     [currentTabLabel setText:@"I N V I T E   F R I E N D S"];
     [topBar addSubview:currentTabLabel];
     
@@ -105,6 +112,33 @@
     //[captureButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
     [captureButton addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [sideBar addSubview:captureButton];
+    
+    flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
+    flowLayout.sectionInset = UIEdgeInsetsMake(50.0f, 10.0f, 20.0f, 10.0f);
+    flowLayout.minimumLineSpacing = 50.0f;
+    flowLayout.minimumInteritemSpacing = 20.0f;
+    if (IS_IPHONE_5)
+        flowLayout.itemSize = CGSizeMake(150.0f, 80.0f);
+    else
+        flowLayout.itemSize = CGSizeMake(120.0f, 80.0f);
+    
+    
+    CGRect collectionFrame = CGRectMake(0, 50, self.view.bounds.size.height - 50, self.view.bounds.size.width - 50);
+    collectionView = [[UICollectionView alloc] initWithFrame:collectionFrame collectionViewLayout:flowLayout];
+    [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
+    [collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
+    [collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
+    collectionView.backgroundColor = [UIColor clearColor];
+    collectionView.dataSource = self;
+    collectionView.delegate = self;
+    [self.view addSubview:collectionView];
+    
+    // PFQuery for retrieving FRIENDS information
+    PFQuery *friendsQuery = [PFUser query];
+    NSArray *fbFriends = [[VYBCache sharedCache] facebookFriends];
+    [friendsQuery whereKey:kVYBUserFacebookIDKey containedIn:fbFriends];
+    
 }
 
 - (void)goBack:(id)sender {
@@ -136,6 +170,21 @@
 
 - (void)captureVybe:(id)sender {
     [self.navigationController popToRootViewControllerAnimated:NO];
+}
+
+
+#pragma mark - UICollectionViewDelegateFlowLayout
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
+    return CGSizeMake(0.0f, 30.0f);
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return [[[VYBCache sharedCache] facebookFriends] count];
 }
 
 - (void)didReceiveMemoryWarning

@@ -124,15 +124,15 @@
 }
 
 - (void)goToFriends:(id)sender {
+    /*
     NSString *msg = @"COMING SOON";
     UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [popUp show];
-    /*
+    */
     VYBFriendsViewController *friendsVC = [[VYBFriendsViewController alloc] init];
     [(UINavigationController *)self.presentingViewController popToRootViewControllerAnimated:NO];
     [(UINavigationController *)self.presentingViewController pushFadeViewController:friendsVC];
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-     */
 }
 
 - (void)goToMyVybes:(id)sender {

@@ -15,9 +15,13 @@
 #import "VYBMyVybeStore.h"
 #import "VYBMyTribeStore.h"
 #import "VYBConstants.h"
+#import "VYBCache.h"
+#import "VYBUtility.h"
 #import <HockeySDK/HockeySDK.h>
 
-@implementation VYBAppDelegate
+@implementation VYBAppDelegate {
+    NSMutableData *_data;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -55,6 +59,7 @@
     
     // Access Control
     PFACL *defaultACL = [PFACL ACL];
+    // Enable public read access by default, with any newly created PFObjects belonging to the current user
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
 
@@ -181,26 +186,32 @@
     [self.welcomeViewController presentViewController:logInViewController animated:NO completion:nil];
 }
 
+- (void)fetchCurrentUserData {
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|
+     UIRemoteNotificationTypeAlert|
+     UIRemoteNotificationTypeSound];
+    
+    // Download user's profile picture
+    NSURL *profilePictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large", [[PFUser currentUser] objectForKey:kVYBUserFacebookIDKey]]];
+    NSURLRequest *profilePictureURLRequest = [NSURLRequest requestWithURL:profilePictureURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0f]; // Facebook profile picture cache policy: Expires in 2 weeks
+    [NSURLConnection connectionWithRequest:profilePictureURLRequest delegate:self];
+}
+
 - (void)logOut {
-    /* TODO */
-    /*
-     
     // clear cache
-    [[PAPCache sharedCache] clear];
+    [[VYBCache sharedCache] clear];
 
     // clear NSUserDefaults
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPAPUserDefaultsCacheFacebookFriendsKey];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPAPUserDefaultsActivityFeedViewControllerLastRefreshKey];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kVYBUserDefaultsCacheFacebookFriendsKey];
+    //[[NSUserDefaults standardUserDefaults] removeObjectForKey:kPAPUserDefaultsActivityFeedViewControllerLastRefreshKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 
     // Unsubscribe from push notifications by removing the user association from the current installation.
-    [[PFInstallation currentInstallation] removeObjectForKey:kPAPInstallationUserKey];
+    [[PFInstallation currentInstallation] removeObjectForKey:kVYBInstallationUserKey];
     [[PFInstallation currentInstallation] saveInBackground];
     
     // Clear all caches
     [PFQuery clearAllCachedResults];
-     
-    */
     
     [PFUser logOut];
     
@@ -211,6 +222,7 @@
     
     [self presentLoginViewControllerAnimated:NO];
 }
+
 
 #pragma mark - PFLoginViewControllerDelegate
 
@@ -238,6 +250,22 @@
 - (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error {
     NSLog(@"Failed to log in...");
 }
+
+
+#pragma mark - NSURLConnectionDataDelegate
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    _data = [[NSMutableData alloc] init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    [_data appendData:data];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    [VYBUtility processFacebookProfilePictureData:_data];
+}
+
 
 /**
  * PFPush Settigs 
@@ -289,7 +317,7 @@
 }
 
 /**
- * Facebook Request methods (Friends Update)
+ * Facebook Request methods
  **/
 
 - (void)facebookRequestDidLoad:(id)result {
@@ -304,6 +332,9 @@
                 [facebookIDs addObject:friendData[@"id"]];
             }
         }
+        
+        // cache friends data
+        [[VYBCache sharedCache] setFacebookFriends:facebookIDs];
         
         if (user) {
             if ([user objectForKey:kVYBUserFacebookFriendsKey]) {
@@ -350,6 +381,8 @@
             }
             
             [user saveEventually];
+            
+            [self fetchCurrentUserData];
         }
         
         [FBRequestConnection startForMyFriendsWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error){

@@ -19,7 +19,6 @@
     UIButton *searchButton;
     UIButton *captureButton;
     UIButton *menuButton;
-    
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

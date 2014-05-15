@@ -362,7 +362,7 @@ static void * XXContext = &XXContext;
 
 
 /**
- * Callback functions to conform to protocols
+ * Callback functions to conform to <AVCaptureFileOutputRecordingDelegate>
  **/
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {

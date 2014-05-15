@@ -26,6 +26,7 @@
 
 - (void)presentLoginViewController;
 - (void)presentLoginViewControllerAnimated:(BOOL)animated;
+- (void)fetchCurrentUserData;
 - (void)logOut;
 
 @end

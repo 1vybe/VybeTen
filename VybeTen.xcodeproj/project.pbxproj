@@ -34,6 +34,10 @@
 		025EDB1F18F650CE008B0CB2 /* VYBExploreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 025EDB1E18F650CE008B0CB2 /* VYBExploreViewController.m */; };
 		025EDB2218F6538B008B0CB2 /* VYBMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 025EDB2118F6538B008B0CB2 /* VYBMenuView.m */; };
 		025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 025EDB2418F65E45008B0CB2 /* VYBAnimator.m */; };
+		0275087C19252D5C00B070EE /* VYBUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275087B19252D5C00B070EE /* VYBUtility.m */; };
+		0275087F19252E0D00B070EE /* UIImage+ResizeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275087E19252E0D00B070EE /* UIImage+ResizeAdditions.m */; };
+		0275088219252E9000B070EE /* UIImage+RoundedCornerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275088119252E9000B070EE /* UIImage+RoundedCornerAdditions.m */; };
+		0275088519252EA000B070EE /* UIImage+AlphaAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275088419252EA000B070EE /* UIImage+AlphaAdditions.m */; };
 		027FB48018FEC2AC00946579 /* PWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 027FB47F18FEC2AC00946579 /* PWProgressView.m */; };
 		02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */; };
 		02D11D0618DF62AC0018DA97 /* Montreal-BoldIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */; };
@@ -124,6 +128,14 @@
 		025EDB2118F6538B008B0CB2 /* VYBMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMenuView.m; sourceTree = "<group>"; };
 		025EDB2318F65E45008B0CB2 /* VYBAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBAnimator.h; sourceTree = "<group>"; };
 		025EDB2418F65E45008B0CB2 /* VYBAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBAnimator.m; sourceTree = "<group>"; };
+		0275087A19252D5C00B070EE /* VYBUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUtility.h; sourceTree = "<group>"; };
+		0275087B19252D5C00B070EE /* VYBUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUtility.m; sourceTree = "<group>"; };
+		0275087D19252E0D00B070EE /* UIImage+ResizeAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ResizeAdditions.h"; sourceTree = "<group>"; };
+		0275087E19252E0D00B070EE /* UIImage+ResizeAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ResizeAdditions.m"; sourceTree = "<group>"; };
+		0275088019252E9000B070EE /* UIImage+RoundedCornerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RoundedCornerAdditions.h"; sourceTree = "<group>"; };
+		0275088119252E9000B070EE /* UIImage+RoundedCornerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCornerAdditions.m"; sourceTree = "<group>"; };
+		0275088319252EA000B070EE /* UIImage+AlphaAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AlphaAdditions.h"; sourceTree = "<group>"; };
+		0275088419252EA000B070EE /* UIImage+AlphaAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AlphaAdditions.m"; sourceTree = "<group>"; };
 		027FB47E18FEC2AC00946579 /* PWProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWProgressView.h; sourceTree = "<group>"; };
 		027FB47F18FEC2AC00946579 /* PWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWProgressView.m; sourceTree = "<group>"; };
 		02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Bold.otf"; sourceTree = "<group>"; };
@@ -192,6 +204,12 @@
 		023E538E191F143F00C3CF78 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				0275087D19252E0D00B070EE /* UIImage+ResizeAdditions.h */,
+				0275087E19252E0D00B070EE /* UIImage+ResizeAdditions.m */,
+				0275088019252E9000B070EE /* UIImage+RoundedCornerAdditions.h */,
+				0275088119252E9000B070EE /* UIImage+RoundedCornerAdditions.m */,
+				0275088319252EA000B070EE /* UIImage+AlphaAdditions.h */,
+				0275088419252EA000B070EE /* UIImage+AlphaAdditions.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -377,6 +395,8 @@
 				025DE65A18CB16E30054F739 /* VYBConstants.m */,
 				023E538B191F142000C3CF78 /* VYBCache.h */,
 				023E538C191F142000C3CF78 /* VYBCache.m */,
+				0275087A19252D5C00B070EE /* VYBUtility.h */,
+				0275087B19252D5C00B070EE /* VYBUtility.m */,
 				023E538E191F143F00C3CF78 /* Categories */,
 				027D924718EA85EE00537822 /* View */,
 				027D924618EA85E800537822 /* Model */,
@@ -551,6 +571,7 @@
 				024BE3321917E98400CDAA8D /* VYBCreateTribeViewController.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
 				024924A418E52B7200568441 /* VYBMainNavigationController.m in Sources */,
+				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				025EDB2218F6538B008B0CB2 /* VYBMenuView.m in Sources */,
 				60B0DCEB18BDCC4E007F4D5C /* VYBVybeCell.m in Sources */,
 				022361FB18FBDEAF002700B8 /* VYBCollectionViewController.m in Sources */,
@@ -564,7 +585,10 @@
 				025169B018FB0D2A007F34B0 /* VYBSyncTribeViewController.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
 				024C28D718DBCE0600399980 /* VYBTribeVybesViewController.m in Sources */,
+				0275088519252EA000B070EE /* UIImage+AlphaAdditions.m in Sources */,
 				023AD83F191ADACD00AD4740 /* VYBWelcomeViewController.m in Sources */,
+				0275087F19252E0D00B070EE /* UIImage+ResizeAdditions.m in Sources */,
+				0275088219252E9000B070EE /* UIImage+RoundedCornerAdditions.m in Sources */,
 				0243133118F6E73600178CEB /* UINavigationController+Fade.m in Sources */,
 				023373D318F50C6100A522B3 /* VYBUser.m in Sources */,
 				023E538D191F142000C3CF78 /* VYBCache.m in Sources */,

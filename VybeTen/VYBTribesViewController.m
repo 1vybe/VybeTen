@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#define IS_IPHONE_5 ( [ [ UIScreen mainScreen ] bounds ].size.height == 568  )
-
 #import "VYBTribesViewController.h"
 #import "VYBMenuViewController.h"
 #import "VYBPlayerViewController.h"

@@ -10,4 +10,12 @@
 
 @interface VYBCache : NSObject
 
+@property (nonatomic, strong) NSCache *cache;
+
++ (id)sharedCache;
+
+- (void)clear;
+- (void)setFacebookFriends:(NSArray *)friends;
+- (NSArray *)facebookFriends;
+
 @end

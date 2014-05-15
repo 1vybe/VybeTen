@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBInviteViewController : UIViewController
-
+@interface VYBInviteViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@property (nonatomic, readonly) NSArray *objects;
 @end

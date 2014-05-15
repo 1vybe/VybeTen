@@ -26,6 +26,8 @@
         return;
     }
     
+    [(VYBAppDelegate *)[[UIApplication sharedApplication] delegate] fetchCurrentUserData];
+    
     // Refresh current user with server side data -- checks if user is still valid and so on
     [[PFUser currentUser] refreshInBackgroundWithTarget:self selector:@selector(refreshCurrentUserCallbackWithResult:error:)];
     
