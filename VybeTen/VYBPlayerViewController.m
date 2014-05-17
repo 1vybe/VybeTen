@@ -92,6 +92,12 @@
     UISwipeGestureRecognizer *swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight)];
     swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipeRight];
+
+    // Add tap gesture
+    UITapGestureRecognizer *tapOnce = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
+    tapOnce.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tapOnce];
+
     /* NOTE: Origin for menu button is (0, 0) */
     // Adding BACK button
     CGRect buttonBackFrame = CGRectMake(0, 0, 50, 50);
@@ -257,6 +263,14 @@
     [loadingView removeFromSuperview];
     playIndex++;
     [self setUpPlayersAt:playIndex];
+}
+
+- (void)tapOnce {
+    if (self.currPlayer.rate != 0) {
+        [self.currPlayer pause];
+    } else {
+        [self.currPlayer play];
+    }
 }
 
 - (void)captureVybe:(id)sender {
