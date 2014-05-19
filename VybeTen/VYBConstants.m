@@ -47,26 +47,26 @@ NSString *const kVYBTribeTypeKey                                = @"type";
 
 #pragma mark - PFObject Activity Class
 // Class key
-extern NSString *const kVYBActivityClassKey;
+NSString *const kVYBActivityClassKey                            = @"Activity";
 
 // Field keys
-extern NSString *const kVYBActivityTypeKey;
-extern NSString *const kVYBActivityFromUserKey;
-extern NSString *const kVYBActivityToUserKey;
-extern NSString *const kVYBActivityContentKey;
-extern NSString *const kVYBActivityVybeKey;
-extern NSString *const kVYBActivityTribeKey;
+NSString *const kVYBActivityTypeKey                             = @"type";
+NSString *const kVYBActivityFromUserKey                         = @"fromUser";
+NSString *const kVYBActivityToUserKey                           = @"toUser";
+NSString *const kVYBActivityContentKey                          = @"content";
+NSString *const kVYBActivityVybeKey                             = @"vybe";
+NSString *const kVYBActivityTribeKey;
 
 // Type values
-extern NSString *const kVYBActivityTypeFollow;
-extern NSString *const kVYBActivityTypeJoined;
+NSString *const kVYBActivityTypeFollow                          = @"follow";
+NSString *const kVYBActivityTypeJoined;
 
 
 #pragma mark - Cached User Attributes
 // keys
 NSString *const kVYBUserAttributesVybeCountKey                  = @"vybeCount";
 NSString *const kVYBUserAttributesTribeCountKey                 = @"tribeCount";
-NSString *const kPAPUserAttributesIsFollowedByCurrentUserKey    = @"isFollowedByCurrentUser";
+NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey    = @"isFollowedByCurrentUser";
 
 
 #pragma mark - Installation Class

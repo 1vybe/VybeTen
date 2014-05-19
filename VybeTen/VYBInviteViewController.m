@@ -7,6 +7,7 @@
 //
 
 #import <Parse/Parse.h>
+#import "MBProgressHUD.h"
 #import "VYBInviteViewController.h"
 #import "VYBMenuViewController.h"
 #import "VYBCache.h"
@@ -27,6 +28,8 @@
     UICollectionView *collectionView;
     UICollectionViewFlowLayout *flowLayout;
 }
+
+@synthesize objects = _objects;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -79,7 +82,7 @@
     [menuButton addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
     [sideBar addSubview:menuButton];
     // Adding CONTACTS Tab button
-    frame = CGRectMake(0, 50, 50, (self.view.bounds.size.width - 100)/3);
+    frame = CGRectMake(0, 50, 50, self.view.bounds.size.width - 50);
     contactsTabButton = [[UIButton alloc] initWithFrame:frame];
     UIImage *contactsImg = [UIImage imageNamed:@"button_contacts_tab.png"];
     [contactsTabButton setImage:contactsImg forState:UIControlStateNormal];
@@ -134,10 +137,23 @@
     collectionView.delegate = self;
     [self.view addSubview:collectionView];
     
+    // Request facebook for a user's friends basic profile info
+    
+    
     // PFQuery for retrieving FRIENDS information
     PFQuery *friendsQuery = [PFUser query];
-    NSArray *fbFriends = [[VYBCache sharedCache] facebookFriends];
-    [friendsQuery whereKey:kVYBUserFacebookIDKey containedIn:fbFriends];
+    NSArray *facebookFriends = [[VYBCache sharedCache] facebookFriends];
+    [friendsQuery whereKey:kVYBUserFacebookIDKey containedIn:facebookFriends];
+    [MBProgressHUD showHUDAddedTo:collectionView animated:YES];
+    NSMutableArray *newObjects = [NSMutableArray array];
+    [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        // Get basic info of friends from facebook
+        
+        for (PFUser *user in objects) {
+            [newObjects addObject:user];
+        }
+        [MBProgressHUD hideAllHUDsForView:collectionView animated:YES];
+    }];
     
 }
 

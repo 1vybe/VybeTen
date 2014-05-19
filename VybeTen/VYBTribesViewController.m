@@ -13,6 +13,7 @@
 #import "VYBImageStore.h"
 #import "VYBTribeVybesViewController.h"
 #import "VYBCreateTribeViewController.h"
+#import "VYBConstants.h"
 
 @implementation VYBTribesViewController {
     UIView *topBar;

@@ -17,7 +17,6 @@
 #import "VYBImageStore.h"
 #import "VYBPlayerViewController.h"
 #import "VYBMenuViewController.h"
-#import "VYBLoginViewController.h"
 #import "VYBSignUpViewController.h"
 #import "VYBConstants.h"
 

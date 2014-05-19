@@ -15,6 +15,15 @@
 + (id)sharedCache;
 
 - (void)clear;
+
+- (NSDictionary *)attributesForUser:(PFUser *)user;
+- (NSNumber *)vybeCountForUser:(PFUser *)user;
+- (NSNumber *)tribeCountForUser:(PFUser *)user;
+- (BOOL)followStatusForUser:(PFUser *)user;
+- (void)setVybeCount:(NSNumber *)count user:(PFUser *)user;
+- (void)setTribeCount:(NSNumber *)count user:(PFUser *)user;
+- (void)setFollowStatus:(BOOL)following user:(PFUser *)user;
+
 - (void)setFacebookFriends:(NSArray *)friends;
 - (NSArray *)facebookFriends;
 

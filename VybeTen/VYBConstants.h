@@ -29,18 +29,19 @@
 #define FONT_TITLE              DEFAULT_FONT(FONT_SIZE_DEFAULT)
 #define FONT_TITLE_SMALL        DEFAULT_FONT(FONT_SIZE_SMALL)
 
+
 #pragma mark - NSUserDefaults
 extern NSString *const kVYBUserDefaultsCacheFacebookFriendsKey;
+
 
 #pragma mark - PFObject User Class
 // field keys
 extern NSString *const kVYBUserDisplayNameKey;
 extern NSString *const kVYBUserFacebookIDKey;
-extern NSString *const kVYBUserPhotoIDKey;
 extern NSString *const kVYBUserProfilePicSmallKey;
 extern NSString *const kVYBUserProfilePicMediumKey;
 extern NSString *const kVYBUserFacebookFriendsKey;
-extern NSString *const kVYBUserAlreadyAutoFollowedFacebookFriendsKey;
+
 
 #pragma mark - PFObject Vybe Class
 // class key
@@ -54,6 +55,7 @@ extern NSString *const kVYBVybeUserKey;
 extern NSString *const kVYBVybeTimestampKey;
 extern NSString *const kVYBVybeGeotag;
 
+
 #pragma mark - PFObject Tribe Class
 // class key
 extern NSString *const kVYBTribeClassKey;
@@ -61,6 +63,8 @@ extern NSString *const kVYBTribeClassKey;
 // field keys
 extern NSString *const kVYBTribeNameKey;
 extern NSString *const kVYBTribeTypeKey;
+extern NSString *const kVYBTribeMembersKey;
+
 
 #pragma mark - PFObject Activity Class
 // Class key
@@ -72,17 +76,25 @@ extern NSString *const kVYBActivityFromUserKey;
 extern NSString *const kVYBActivityToUserKey;
 extern NSString *const kVYBActivityContentKey;
 extern NSString *const kVYBActivityVybeKey;
-extern NSString *const kVYBActivityTribeKey;
 
 // Type values
 extern NSString *const kVYBActivityTypeFollow;
 extern NSString *const kVYBActivityTypeJoined;
 
+
 #pragma mark - Cached User Attributes
 // keys
 extern NSString *const kVYBUserAttributesVybeCountKey;
 extern NSString *const kVYBUserAttributesTribeCountKey;
-extern NSString *const kPAPUserAttributesIsFollowedByCurrentUserKey;
+extern NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey;
+
+
+#pragma mark - Cached Tribe Attributes
+// keys
+extern NSString *const kVYBTribeAttributesVybeCountKey;
+extern NSString *const kVYBTribeAttributesMemberCountKey;
+extern NSString *const kVYBTribeAttributesMembersKey;
+
 
 #pragma mark - Installation Class
 

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBFriendsViewController : UIViewController
+@interface VYBFriendsViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+
+@property (nonatomic, readonly) NSArray *objects;
 
 @end

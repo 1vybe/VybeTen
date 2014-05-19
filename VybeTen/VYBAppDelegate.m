@@ -180,7 +180,7 @@
     VYBLoginViewController *logInViewController = [[VYBLoginViewController alloc] init];
     [logInViewController setDelegate:self];
     [logInViewController setFields:PFLogInFieldsFacebook | PFLogInFieldsTwitter];
-    NSArray *permissionsArray = @[ @"user_friends", @"public_profile" ];
+    NSArray *permissionsArray = @[ @"friends_about_me", @"public_profile", @"user_friends" ];
     [logInViewController setFacebookPermissions:permissionsArray];
     
     [self.welcomeViewController presentViewController:logInViewController animated:NO completion:nil];
@@ -311,10 +311,11 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    /* TODO: Update Badge Number */
+    // TODO: Update Badge Number
     
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
 }
+
 
 /**
  * Facebook Request methods
@@ -327,7 +328,12 @@
     
     if (data) {
         NSMutableArray *facebookIDs = [[NSMutableArray alloc] initWithCapacity:[data count]];
+        BOOL flag = YES;
         for (NSDictionary *friendData in data) {
+            if (flag) {
+                NSLog(@"[f]:%@", friendData);
+                flag = NO;
+            }
             if (friendData[@"id"]) {
                 [facebookIDs addObject:friendData[@"id"]];
             }
@@ -336,38 +342,12 @@
         // cache friends data
         [[VYBCache sharedCache] setFacebookFriends:facebookIDs];
         
-        if (user) {
-            if ([user objectForKey:kVYBUserFacebookFriendsKey]) {
-                [user removeObjectForKey:kVYBUserFacebookFriendsKey];
-            }
-            // First time user's friends list is updated
-            /* TODO: Don't auto-send a friend request */
-            if (![user objectForKey:kVYBUserAlreadyAutoFollowedFacebookFriendsKey]) {
-                [user setObject:@YES forKey:kVYBUserAlreadyAutoFollowedFacebookFriendsKey];
-                
-                NSError *error = nil;
-                
-                //Facebook friends list
-                PFQuery *facebookFriendsQuery = [PFUser query];
-                [facebookFriendsQuery whereKey:kVYBUserFacebookIDKey containedIn:facebookIDs];
-                
-                NSArray *vybeFriends = [facebookFriendsQuery findObjects:&error];
-                
-                if (!error) {
-                    [vybeFriends enumerateObjectsUsingBlock:^(PFUser *newFriend, NSUInteger idx, BOOL *stop) {
-                        /* TODO: Activity */
-                        
-                        
-                    }];
-                }
-            }
-            [user saveEventually];
-        } else {
+        if (!user) {
             NSLog(@"No user info is found. Forcing logging out");
             [self logOut];
         }
-    }
-    else {
+        
+    } else {
         // Creating a profile
         if (user) {
             NSString *facebookName = result[@"name"];

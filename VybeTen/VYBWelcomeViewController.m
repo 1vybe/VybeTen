@@ -59,6 +59,7 @@
     }
     
     else {
+        
         [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
             if (!error) {
                 if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(facebookRequestDidLoad:)]) {
@@ -70,6 +71,7 @@
                 }
             }
         }];
+        
     }
 }
 

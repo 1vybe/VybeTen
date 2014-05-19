@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
+#import <Parse/Parse.h>
 #import "VYBCache.h"
 #import "VYBConstants.h"
 
@@ -29,6 +30,62 @@
     return self;
 }
 
+- (NSDictionary *)attributesForUser:(PFUser *)user {
+    NSDictionary *attributes = [self.cache objectForKey:[self keyForUser:user]];
+    return attributes;
+}
+
+- (NSNumber *)vybeCountForUser:(PFUser *)user {
+    NSDictionary *attributes = [self attributesForUser:user];
+    if (attributes) {
+        NSNumber *cnt = [attributes objectForKey:kVYBUserAttributesVybeCountKey];
+        if (cnt) {
+            return cnt;
+        }
+    }
+    return [NSNumber numberWithInt:0];
+}
+
+- (NSNumber *)tribeCountForUser:(PFUser *)user {
+    NSDictionary *attributes = [self attributesForUser:user];
+    if (attributes) {
+        NSNumber *cnt = [attributes objectForKey:kVYBUserAttributesTribeCountKey];
+        if (cnt) {
+            return cnt;
+        }
+    }
+    return [NSNumber numberWithInt:0];
+}
+
+- (BOOL)followStatusForUser:(PFUser *)user {
+    NSDictionary *attributes = [self attributesForUser:user];
+    if (attributes) {
+        NSNumber *followed = [attributes objectForKey:kVYBUserAttributesIsFollowedByCurrentUserKey];
+        if (followed) {
+            return [followed boolValue];
+        }
+    }
+    return NO;
+}
+
+- (void)setVybeCount:(NSNumber *)count user:(PFUser *)user {
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
+    [attributes setObject:count forKey:kVYBUserAttributesVybeCountKey];
+    [self setAttributes:attributes forUser:user];
+}
+
+- (void)setTribeCount:(NSNumber *)count user:(PFUser *)user {
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
+    [attributes setObject:count forKey:kVYBUserAttributesTribeCountKey];
+    [self setAttributes:attributes forUser:user];
+}
+
+- (void)setFollowStatus:(BOOL)following user:(PFUser *)user {
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
+    [attributes setObject:[NSNumber numberWithBool:following] forKey:kVYBUserAttributesIsFollowedByCurrentUserKey];
+    [self setAttributes:attributes forUser:user];
+}
+
 - (void)setFacebookFriends:(NSArray *)friends {
     NSString *key = kVYBUserDefaultsCacheFacebookFriendsKey;
     [self.cache setObject:friends forKey:key];
@@ -49,6 +106,17 @@
     }
     
     return friends;
+}
+
+#pragma mark - ()
+
+- (void)setAttributes:(NSDictionary *)attributes forUser:(PFUser *)user {
+    NSString *key = [self keyForUser:user];
+    [self.cache setObject:attributes forKey:key];
+}
+
+- (NSString *)keyForUser:(PFUser *)user {
+    return [NSString stringWithFormat:@"user_%@", [user objectId]];
 }
 
 - (void)clear {
