@@ -161,7 +161,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSArray *tribes = [[VYBMyTribeStore sharedStore] myTribes];
-    NSLog(@"there are %d keys", [tribes count]);
+    NSLog(@"there are %lu keys", (unsigned long)[tribes count]);
     VYBTribe *tribe = [tribes objectAtIndex:[indexPath row]];
     VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
     NSLog(@"TribeVybesVC initiated for %@ Tribe", [tribe tribeName]);

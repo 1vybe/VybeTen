@@ -203,7 +203,7 @@
     UIImageView *imgView = [[UIImageView alloc] initWithImage:cellImg];
     [cell setBackgroundView:imgView];
     
-    NSString *title = [NSString stringWithFormat:@"%d", [[tribe vybes] count]];
+    NSString *title = [NSString stringWithFormat:@"%lu", (unsigned long)[[tribe vybes] count]];
     
     [self cell:cell setTitle:title tribeName:[tribe tribeName] indexPath:indexPath];
     return cell;

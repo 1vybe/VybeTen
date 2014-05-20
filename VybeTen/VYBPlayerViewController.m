@@ -240,7 +240,7 @@
     }
     
     [self setUpPlayersAt:playIndex];
-    NSLog(@"Watching From %d", playIndex);
+    NSLog(@"Watching From %ld", (long)playIndex);
 }
 
 - (void)viewDidAppear:(BOOL)animated {

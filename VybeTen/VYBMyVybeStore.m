@@ -119,7 +119,7 @@
             break;
         }
     }
-    NSLog(@"after removal myVybes has %d", [myVybes count]);
+    NSLog(@"after removal myVybes has %lu", (unsigned long)[myVybes count]);
     return YES;
 }
 

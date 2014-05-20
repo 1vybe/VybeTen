@@ -90,7 +90,7 @@ static NSMutableArray *sharedConnectionList = nil;
         S3ListBucketsResponse *buckets = (S3ListBucketsResponse *)response;
         S3ListBucketsResult *result = buckets.listBucketsResult;
         
-        NSLog(@"There are %d tribes in the server", [result.buckets count]);
+        NSLog(@"There are %lu tribes in the server", (unsigned long)[result.buckets count]);
         
         NSMutableArray *newTribes = [[NSMutableArray alloc] init];
         for (S3Bucket *bucket in result.buckets) {
@@ -119,7 +119,7 @@ static NSMutableArray *sharedConnectionList = nil;
         S3ListObjectsResult *result = listResponse.listObjectsResult;
         NSString *buckName = result.bucketName;
         NSMutableArray *newVybes = [[NSMutableArray alloc] init];
-        NSLog(@"Server has %d videos for %@ Tribe", [result.objectSummaries count], buckName);
+        NSLog(@"Server has %lu videos for %@ Tribe", (unsigned long)[result.objectSummaries count], buckName);
         VYBTribe *tr = [[VYBMyTribeStore sharedStore] tribe:buckName];
         // Reset vybes of a tribe everytime this method is called
         [tr setVybes:newVybes];
@@ -145,7 +145,7 @@ static NSMutableArray *sharedConnectionList = nil;
         S3ListObjectsResponse *listResponse = (S3ListObjectsResponse *)response;
         S3ListObjectsResult *result = listResponse.listObjectsResult;
         NSString *buckName = result.bucketName;
-        NSLog(@"Server has %d videos for %@ Tribe", [result.objectSummaries count], buckName);
+        NSLog(@"Server has %lu videos for %@ Tribe", (unsigned long)[result.objectSummaries count], buckName);
         //TODO: this if statement should check the total number of NEW vybes ONLY
         if ([result.objectSummaries count] == 0)
             return;
