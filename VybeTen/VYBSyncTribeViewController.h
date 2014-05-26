@@ -8,12 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@class  VYBTribe;
-
 @interface VYBSyncTribeViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
-
-@property (nonatomic, copy) void (^completionBlock)(VYBTribe *tribe);
-
-- (void)setCompletionBlock:(void (^) (VYBTribe *tribe))block;
 
 @end

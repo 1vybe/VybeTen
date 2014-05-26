@@ -8,6 +8,8 @@
 
 #import "VYBCreateTribeViewController.h"
 #import "VYBMyTribeStore.h"
+#import "VYBTribeTimelineViewController.h"
+#import "VYBUtility.h"
 
 @implementation VYBCreateTribeViewController {
     UIView *topBar;
@@ -32,6 +34,8 @@
     [super viewDidLoad];
     UIToolbar *backView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
     [backView setBarStyle:UIBarStyleBlack];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard:)];
+    [backView addGestureRecognizer:tapGesture];
     [self.view addSubview:backView];
     
     // Adding a dark TOPBAR
@@ -60,8 +64,15 @@
     [tribeNameTextField setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
     [tribeNameTextField setTextColor:[UIColor whiteColor]];
     [tribeNameTextField becomeFirstResponder];
-    [tribeNameTextField setPlaceholder:@"create a tribe"];
+    UIColor *placeholderColor = [UIColor colorWithWhite:0.7 alpha:0.5];
+    tribeNameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Enter a tribe name"
+                                                                               attributes:@{NSForegroundColorAttributeName: placeholderColor,
+                                                                                            NSFontAttributeName : [UIFont fontWithName:@"Montreal-Xlight" size:20]}];
     [topBar addSubview:tribeNameTextField];
+}
+
+- (void)dismissKeyboard:(id)sender {
+    [tribeNameTextField resignFirstResponder];
 }
 
 - (void)cancelButtonPressed:(id)sender {
@@ -70,16 +81,47 @@
 
 - (void)createButtonPressed:(id)sender {
     NSString *tribeName = [tribeNameTextField text];
-    BOOL success = [[VYBMyTribeStore sharedStore] addNewTribe:tribeName];
-    if (success) {
-        NSString *msg = [NSString stringWithFormat:@"Awesome! Now %@ is your tribe", tribeName];
+    if ([tribeName length] < 2) {
+        NSString *msg = @"Tribe name should be at least 2 characters.";
         UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [popUp show];
-    } else {
-        NSString *msg = @"Sorry :( That tribe name is taken";
-        UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [popUp show];
+        return;
     }
+    
+    else if ([tribeName length] > 10) {
+        NSString *msg = @"Tribe name should be less than 10 characters.";
+        UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [popUp show];
+        return;
+    }
+    
+    PFObject *newTribe = [PFObject objectWithClassName:kVYBTribeClassKey];
+    [newTribe setObject:[PFUser currentUser] forKey:kVYBTribeCreatorKey];
+    [newTribe setObject:tribeName forKey:kVYBTribeNameKey];
+    [newTribe setObject:kVYBTribeTypePrivate forKey:kVYBTribeTypeKey];
+    
+    PFRelation *relation = [newTribe relationForKey:kVYBTribeMembersKey];
+    [relation addObject:[PFUser currentUser]];
+    
+    PFACL *tribeACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [tribeACL setPublicReadAccess:NO];
+    newTribe.ACL = tribeACL;
+    
+    [newTribe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            VYBTribeTimelineViewController *tribeTimelineVC = [[VYBTribeTimelineViewController alloc] init];
+            [tribeTimelineVC setCurrTribe:newTribe];
+            [(UINavigationController *)self.presentingViewController pushViewController:tribeTimelineVC animated:NO];
+            [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+            
+        } else {
+            NSString *msg = [NSString stringWithFormat:@"A tribe cannot be created at this time."];
+            UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [popUp show];
+            NSLog(@"Error while creating a tribe: %@", error);
+        }
+    }];
+    
 }
 
 - (void)didReceiveMemoryWarning

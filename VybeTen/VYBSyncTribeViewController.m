@@ -10,16 +10,21 @@
 #import "VYBMyTribeStore.h"
 #import "UINavigationController+Fade.h"
 #import "VYBCreateTribeViewController.h"
+#import "VYBCache.h"
 
 @implementation VYBSyncTribeViewController {
     UITableView *tribeTable;
-    
 }
 
+- (void)dealloc {
+    
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTribes:) name:VYBMyTribeStoreDidRefreshTribes object:nil];
     
     CGRect frame = CGRectMake(150, 0, self.view.bounds.size.height - 150, self.view.bounds.size.width);
     UIView *tapView = [[UIView alloc] initWithFrame:frame];
@@ -51,18 +56,27 @@
     [tribeTable setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.view addSubview:tribeTable];
     
-    if ([[[VYBMyTribeStore sharedStore] myTribes] count] == 0) {
-        [[VYBMyTribeStore sharedStore] refreshTribesWithCompletion:^(NSError *err) {
-            if (!err) {
+    
+    // Retries tribes for the user
+    PFQuery *tribesQuery = [PFQuery queryWithClassName:kVYBTribeClassKey];
+    [tribesQuery whereKey:kVYBTribeMembersKey equalTo:[PFUser currentUser]];
+    [tribesQuery includeKey:kVYBTribeCreatorKey];
+    //[tribesQuery includeKey:kVYBTribeMembersKey];
+    
+    [tribesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (error) {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [av show];
+            NSLog(@"Error: [SyncTribeViewController] tribe query failed.");
+        } else {
+            if ([objects count] > 0) {
+                [[VYBMyTribeStore sharedStore] setMyTribes:objects];
                 [tribeTable reloadData];
             }
-            else {
-                UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-                [av show];
-            }
-        }];
-    }
+        }
+    }];
 }
+
 
 - (void)createTribePressed:(id)sender {
     VYBCreateTribeViewController *createTribeVC = [[VYBCreateTribeViewController alloc] init];
@@ -89,22 +103,24 @@
         [cell setBackgroundColor:[UIColor clearColor]];
     }
     [[cell textLabel] setFont:[UIFont fontWithName:@"Montreal-Xlight" size:16]];
-    VYBTribe *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
+    PFObject *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     //[cell setExclusiveTouch:NO];
     [[cell textLabel] setTextColor:[UIColor whiteColor]];
-    [[cell textLabel] setText:[tribe tribeName]];
+    [[cell textLabel] setText:tribe[kVYBTribeNameKey]];
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    VYBTribe *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
     
-    if (self.completionBlock)
-        [self completionBlock](tribe);
+    PFObject *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
+    
+    [[VYBCache sharedCache] setSyncTribe:tribe user:[PFUser currentUser]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBSyncViewControllerDidChangeSyncTribe object:nil];
     
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
+
 
 @end

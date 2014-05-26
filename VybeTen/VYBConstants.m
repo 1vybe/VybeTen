@@ -8,6 +8,10 @@
 
 #import "VYBConstants.h"
 
+#pragma mark - NSNotification
+NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification = @"com.vybe.app.appDelegate.applicationDidReceiveRemoteNotification";
+NSString *const VYBSyncViewControllerDidChangeSyncTribe               = @"com.vybe.app.SyncViewController.didChangeSyncTribe";
+
 #pragma mark - NSUserDefaults
 NSString *const kVYBUserDefaultsCacheFacebookFriendsKey         = @"com.vybe.app.userDefaults.cache.facebookFriends";
 
@@ -42,8 +46,18 @@ NSString *const kVYBTribeClassKey                               = @"Tribe";
 
 // field keys
 NSString *const kVYBTribeNameKey                                = @"name";
+NSString *const kVYBTribeCreatorKey                             = @"creator";
 NSString *const kVYBTribeTypeKey                                = @"type";
+//TODO: CLOUD CODE for incrementing vybeCount key when a new PFOject(Vybe) is saved
+NSString *const kVYBTribeVybeCountKey                           = @"vybeCount";
+//TODO: CLOUD CODE for incrementing membersCount key when a new PFObject(Tribe) is saved with members or member are added later
+NSString *const kVYBTribeMembersCountKey                        = @"membersCount";
+NSString *const kVYBTribeMembersKey                             = @"members";
+NSString *const kVYBTribeThumbnailKey                           = @"thumbnail";
 
+// type values
+NSString *const kVYBTribeTypePrivate                            = @"private";
+NSString *const kVYBTribeTypePublic                             = @"public";
 
 #pragma mark - PFObject Activity Class
 // Class key
@@ -64,9 +78,19 @@ NSString *const kVYBActivityTypeJoined;
 
 #pragma mark - Cached User Attributes
 // keys
+NSString *const kVYBUserAttributesSyncTribeKey                  = @"syncTribe";
 NSString *const kVYBUserAttributesVybeCountKey                  = @"vybeCount";
 NSString *const kVYBUserAttributesTribeCountKey                 = @"tribeCount";
 NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey    = @"isFollowedByCurrentUser";
+
+
+#pragma mark - Cached Tribe Attributes
+// keys
+NSString *const kVYBTribeAttributesLastWatchedVybeKey           = @"lastWatchedVybe";
+NSString *const kVYBTribeAttributesVybeCountKey                 = @"vybeCount";
+NSString *const kVYBTribeAttributesMemberCountKey               = @"memberCount";
+NSString *const kVYBTribeAttributesMembersKey                   = @"members";
+NSString *const kVYBUserAttributesTribesKey                     = @"tribes";
 
 
 #pragma mark - Installation Class

@@ -12,5 +12,9 @@
 @interface VYBUtility : NSObject
 
 + (void)processFacebookProfilePictureData:(NSData *)data;
+//+ (void)createTribeWithName:(NSString *)aName inBackgroundWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock;
++ (NSString *)generateUniqueFileName;
++ (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
++ (NSString *)localizedDateStringFrom:(NSDate *)aDate;
 
 @end

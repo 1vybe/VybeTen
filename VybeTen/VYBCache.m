@@ -68,6 +68,17 @@
     return NO;
 }
 
+- (PFObject *)syncTribeForUser:(PFUser *)user {
+    NSDictionary *attributes = [self attributesForUser:user];
+    if (attributes) {
+        PFObject *tribe = [attributes objectForKey:kVYBUserAttributesSyncTribeKey];
+        if (tribe) {
+            return tribe;
+        }
+    }
+    return nil;
+}
+
 - (void)setVybeCount:(NSNumber *)count user:(PFUser *)user {
     NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
     [attributes setObject:count forKey:kVYBUserAttributesVybeCountKey];
@@ -83,6 +94,12 @@
 - (void)setFollowStatus:(BOOL)following user:(PFUser *)user {
     NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
     [attributes setObject:[NSNumber numberWithBool:following] forKey:kVYBUserAttributesIsFollowedByCurrentUserKey];
+    [self setAttributes:attributes forUser:user];
+}
+
+- (void)setSyncTribe:(PFObject *)tribe user:(PFUser *)user {
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
+    [attributes setObject:tribe forKey:kVYBUserAttributesSyncTribeKey];
     [self setAttributes:attributes forUser:user];
 }
 

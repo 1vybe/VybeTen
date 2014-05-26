@@ -11,16 +11,16 @@
 #import "VYBTribe.h"
 
 @interface VYBMyTribeStore : NSObject <AmazonServiceRequestDelegate> {
-    NSMutableArray *myTribes;
+    //NSArray *myTribes;
     NSMutableDictionary *trendingTribes;
     NSString *adId;
 }
 @property (nonatomic) AmazonS3Client *s3;
+@property (nonatomic, retain) NSArray *myTribes;
 
 + (VYBMyTribeStore *)sharedStore;
-- (NSArray *)myTribes;
 - (NSMutableArray *)featuredTribes;
-- (void)setMyTribes:(NSMutableArray *)tribes;
+
 - (void)refreshTribesWithCompletion:(void (^)(NSError *err))block;
 - (void)syncWithCloudForTribe:(NSString *)name withCompletionBlock:(void (^)(NSError *err))block;
 - (void)downloadTribeVybesFor:(NSString *)tribeName withCompletion:(void (^)(NSError *err))block;

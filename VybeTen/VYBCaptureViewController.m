@@ -19,6 +19,8 @@
 #import "UINavigationController+Fade.h"
 #import "JSBadgeView.h"
 #import "VYBTribe.h"
+#import "VYBCache.h"
+#import "VYBUtility.h"
 
 @implementation VYBCaptureViewController {
     AVCaptureSession *session;
@@ -28,15 +30,13 @@
     NSDate *startTime;
     NSTimer *recordingTimer;
     
-    VYBVybe *newVybe;
-    
     BOOL recording;
     BOOL frontCamera;
     
+    VYBMyVybe *currVybe;
+    
     UIImageView *overlayView;
     JSBadgeView *badgeView;
-    
-    CLLocationManager *locationManager;
 }
 
 @synthesize syncButton, syncLabel, recordButton, countLabel, flipButton, menuButton, flashButton, flashLabel, notificationButton;
@@ -48,12 +48,13 @@ static void * XXContext = &XXContext;
 - (id)init {
     self = [super init];
     if (self) {
-        locationManager = [[CLLocationManager alloc] init];
-        //NSLog(@"Let's invoke the location manager");
-        [locationManager startUpdatingLocation];
-        [locationManager stopUpdatingLocation];
     }
     return self;
+}
+
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBSyncViewControllerDidChangeSyncTribe object:nil];
 }
 
 - (void)loadView {
@@ -75,6 +76,9 @@ static void * XXContext = &XXContext;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeSyncTribeLabel:) name:VYBSyncViewControllerDidChangeSyncTribe object:nil];
+    
     transitionController = [[TransitionDelegate alloc] init];
     
     // Overlay alertView will be displayed when a user entered in a portrait mode
@@ -98,7 +102,9 @@ static void * XXContext = &XXContext;
     buttonFrame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
     syncButton = [[UIButton alloc] initWithFrame:buttonFrame];
     UIImage *syncNoneImg = [UIImage imageNamed:@"button_sync_none.png"];
+    UIImage *syncImg = [UIImage imageNamed:@"button_sync.png"];
     [syncButton setImage:syncNoneImg forState:UIControlStateNormal];
+    [syncButton setImage:syncImg forState:UIControlStateSelected];
     [syncButton setContentMode:UIViewContentModeLeft];
     [syncButton addTarget:self action:@selector(changeSync:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:syncButton];
@@ -111,10 +117,13 @@ static void * XXContext = &XXContext;
     //[syncLabel setTextAlignment:NSTextAlignmentLeft];
     [syncLabel resignFirstResponder];
     [self.view addSubview:syncLabel];
-    if (defaultSync) {
-        [syncLabel setText:[defaultSync tribeName]];
+    PFObject *tribe = [[VYBCache sharedCache] syncTribeForUser:[PFUser currentUser]];
+    if (tribe) {
+        [syncLabel setText:tribe[kVYBTribeNameKey]];
+        [syncButton setSelected:YES];
     } else {
         [syncLabel setText:@"(select)"];
+        [syncButton setSelected:NO];
     }
     
     // Adding RECORD button
@@ -187,6 +196,12 @@ static void * XXContext = &XXContext;
      syncButton.hidden = recording; syncLabel.hidden = recording; flipButton.hidden = recording; menuButton.hidden = recording; notificationButton.hidden = recording; flashButton.hidden = (recording || frontCamera);
 }
 
+- (void)changeSyncTribeLabel:(NSNotificationCenter *)note {
+    [syncButton setSelected:YES];
+    NSString *newTribeName = [[[VYBCache sharedCache] syncTribeForUser:[PFUser currentUser]] objectForKey:kVYBTribeNameKey];
+    [syncLabel setText:newTribeName];
+}
+
 /**
  * Helper functions
  **/
@@ -231,14 +246,22 @@ static void * XXContext = &XXContext;
 - (void)startRecording {
     /* Start Recording */
     if (!recording) {
-        NSLog(@"Start recording");
-        newVybe = [[VYBVybe alloc] initWithDeviceId:adId];
-        if (defaultSync) {
-            [newVybe setTribeName:[defaultSync tribeName]];
-        }
-        startTime = [newVybe timeStamp];
         
-        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[newVybe videoPath]];
+        startTime = [NSDate date];
+
+        currVybe = [[VYBMyVybe alloc] init];
+        [currVybe setTimeStamp:startTime];
+        
+        [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+            if (error || !geoPoint) {
+                NSLog(@"Cannot retrive current location at this moment.");
+            } else {
+                [currVybe setGeoTagFrom:geoPoint];
+            }
+        }];
+
+        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[currVybe videoFilePath]];
+        //NSLog(@"outputURL:%@", outputURL);
         [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
         
         recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
@@ -261,16 +284,6 @@ static void * XXContext = &XXContext;
 
 - (void)changeSync:(id)sender {
     VYBSyncTribeViewController *syncVC = [[VYBSyncTribeViewController alloc] init];
-    [syncVC setCompletionBlock:^(VYBTribe *tribe){
-        if (tribe) {
-            defaultSync = tribe;
-            UIImage *image = [UIImage imageNamed:@"button_sync.png"];
-            [syncButton setImage:image forState:UIControlStateNormal];
-            [syncLabel setText:[defaultSync tribeName]];
-        } else {
-            [syncLabel setText:@"(select)"];
-        }
-    }];
     [self.navigationController presentViewController:syncVC animated:NO completion:nil];
 }
 
@@ -361,9 +374,7 @@ static void * XXContext = &XXContext;
 }
 
 
-/**
- * Callback functions to conform to <AVCaptureFileOutputRecordingDelegate>
- **/
+#pragma mark - AVCaptureFileOutputRecordingDelegate
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
     BOOL recordSuccess = YES;
@@ -374,11 +385,12 @@ static void * XXContext = &XXContext;
     }
     
     if (recordSuccess) {
-        NSLog(@"Record succes");
+        // Saves a thumbmnail to local
+        [VYBUtility saveThumbnailImageForVybeWithFilePath:currVybe.uniqueFileName];
+        
         // Prompt a review screen to save it or not
         VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
-        [replayVC setVybe:newVybe];
-        [replayVC setReplayURL:outputFileURL];
+        [replayVC setCurrVybe:currVybe];
         [self.navigationController pushViewController:replayVC animated:NO];
     }
 
@@ -392,8 +404,8 @@ static void * XXContext = &XXContext;
     [recordButton setTitle:@"" forState:UIControlStateNormal];
     
     recording = NO;
-    newVybe = nil;
 }
+
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == XXContext) {
@@ -412,6 +424,7 @@ static void * XXContext = &XXContext;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 
 @end

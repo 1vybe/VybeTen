@@ -6,14 +6,13 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import <Parse/Parse.h>
 #import "VYBFriendsViewController.h"
 #import "VYBMenuViewController.h"
 #import "VYBInviteViewController.h"
-#import "VYBConstants.h"
 #import "VYBCache.h"
 #import "MBProgressHUD.h"
 #import "VYBImageStore.h"
+#import "VYBFriendCollectionCell.h"
 
 @implementation VYBFriendsViewController {
     UIView *topBar;
@@ -108,18 +107,20 @@
     
     flowLayout = [[UICollectionViewFlowLayout alloc] init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
-    flowLayout.sectionInset = UIEdgeInsetsMake(50.0f, 10.0f, 20.0f, 10.0f);
-    flowLayout.minimumLineSpacing = 50.0f;
-    flowLayout.minimumInteritemSpacing = 20.0f;
+    flowLayout.sectionInset = UIEdgeInsetsMake(10.0f, 10.0f, 10.0f, 10.0f);
+    //flowLayout.minimumLineSpacing = 50.0f;
+    flowLayout.minimumInteritemSpacing = 10.0f;
+    /*
     if (IS_IPHONE_5)
         flowLayout.itemSize = CGSizeMake(150.0f, 80.0f);
     else
         flowLayout.itemSize = CGSizeMake(120.0f, 80.0f);
-    
+    */
     
     CGRect collectionFrame = CGRectMake(0, 50, self.view.bounds.size.height - 50, self.view.bounds.size.width - 50);
     collectionView = [[UICollectionView alloc] initWithFrame:collectionFrame collectionViewLayout:flowLayout];
     [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
+    [collectionView registerClass:[VYBFriendCollectionCell class] forCellWithReuseIdentifier:@"FriendCell"];
     [collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
     [collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
     collectionView.backgroundColor = [UIColor clearColor];
@@ -147,15 +148,14 @@
                 [isFollowedByCurrentUser whereKey:kVYBActivityToUserKey containedIn:self.objects];
                 [isFollowedByCurrentUser whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeFollow];
                 [isFollowedByCurrentUser setCachePolicy:kPFCachePolicyNetworkOnly];
-                
-                // Already running in background so call blocking method
-                NSError *err;
-                NSArray *followings = [isFollowedByCurrentUser findObjects:&err];
-                if (followings && [followings count] > 0) {
-                    for (PFObject *following in followings) {
-                        [[VYBCache sharedCache] setFollowStatus:YES user:following[kVYBActivityToUserKey]];
+
+                [isFollowedByCurrentUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                    if (objects && [objects count] > 0) {
+                        for (PFObject *following in objects) {
+                            [[VYBCache sharedCache] setFollowStatus:YES user:following[kVYBActivityToUserKey]];
+                        }
                     }
-                }
+                }];
                 _objects = newObjects;
                 [collectionView reloadData];
             }
@@ -187,74 +187,43 @@
 
 #pragma mark - UICollectionViewDelegateFlowLayout
 
+/*
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
     return CGSizeMake(0.0f, 30.0f);
 }
+*/
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)aCollectionView {
     return 1;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+- (NSInteger)collectionView:(UICollectionView *)aCollectionView numberOfItemsInSection:(NSInteger)section {
     return [_objects count];
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-
-    cell.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
-
-    PFUser *usr = [_objects objectAtIndex:[indexPath row]];
+- (UICollectionViewCell *)collectionView:(UICollectionView *)aCollectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *FriendCellIdentifier = @"FriendCell";
     
-    [self cell:cell setDisplayName:usr[kVYBUserDisplayNameKey] profilePictureForUser:usr indexPath:indexPath];
+    PFUser *usr = [_objects objectAtIndex:[indexPath row]];
+    VYBFriendCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:FriendCellIdentifier forIndexPath:indexPath];
+    [cell setUser:usr];
+
     return cell;
 }
 
-- (void)cell:(UICollectionViewCell *)cell setDisplayName:(NSString *)name profilePictureForUser:(PFUser *)user indexPath:(NSIndexPath *)indexPath {
-    // Get current cell size
-    //CGSize itemSize = [self collectionView:collection layout:flowLayout sizeForItemAtIndexPath:indexPath];
-    int top = -30;
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     int height = 80;
     int width;
-    if (IS_IPHONE_5)
-        width = 150;
-    else
-        width = 120;
-    
-    
-    PFFile *profileFile = user[kVYBUserProfilePicSmallKey];
-    PFImageView *profileImageView = [[PFImageView alloc] initWithFrame:CGRectMake(0, 0, 64, 64)];
-    [profileImageView setImage:[UIImage imageNamed:@"user_no_thumbnail.png"]];
-    if (profileFile) {
-        [profileImageView setFile:profileFile];
-        [profileImageView loadInBackground];
-    }
-    profileImageView.tag = 77;
-    [self removeReusedLabel:cell tag:77];
-    [cell addSubview:profileImageView];
-    
-    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(70, 0, width - 70, 30)];
-    [nameLabel setBackgroundColor:[UIColor clearColor]];
-    nameLabel.tag = 33;
-    [nameLabel setTextColor:[UIColor whiteColor]];
-    [nameLabel setText:name];
-    [nameLabel setTextAlignment:NSTextAlignmentLeft];
-    [nameLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18]];
-    [self removeReusedLabel:cell tag:33];
-    [cell addSubview:nameLabel];
-    
-    UIButton *followButton = [[UIButton alloc] initWithFrame:CGRectMake(70, 50, width - 70, 30)];
-    [followButton setTitle:([[VYBCache sharedCache] followStatusForUser:user]) ? @"Following" : @"Follow" forState:UIControlStateNormal];
-    followButton.tag = 37;
-    [self removeReusedLabel:cell tag:37];
-    [cell addSubview:followButton];
+    if (IS_IPHONE_5) { width = 230; } else { width = 210; }
+        
+
+    return CGSizeMake(width, height);
 }
 
-- (void)removeReusedLabel:(UICollectionViewCell *)cell tag:(int)tag {
-    UILabel *foundLabelBackground = (UILabel *)[cell viewWithTag:tag];
-    if (foundLabelBackground) [foundLabelBackground removeFromSuperview];
-}
 
+- (void)followToggled:(id)sender {
+    
+}
 
 - (void)didReceiveMemoryWarning
 {

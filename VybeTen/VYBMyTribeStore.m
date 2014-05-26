@@ -26,6 +26,7 @@
 }
 
 @synthesize s3 = _s3;
+@synthesize myTribes;
 
 + (VYBMyTribeStore *)sharedStore {
     static VYBMyTribeStore *sharedStore = nil;
@@ -52,31 +53,20 @@
         [dFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss:SSS"];
         [dFormatter setTimeZone:timeZone];
 
-        @try {
-            // Initializing S3 client
-            self.s3 = [[AmazonS3Client alloc] initWithAccessKey:ACCESS_KEY_ID withSecretKey:SECRET_KEY];
-            self.s3.endpoint = [AmazonEndpoints s3Endpoint:US_EAST_1];
-        } @catch (AmazonServiceException *exception) {
-            NSLog(@"[MyTribe]S3 init failed: %@", exception);
-        }
         // Load saved videos from Tribe's Documents directory
-
         NSString *myTribesPath = [self myTribesArchivePath];
         myTribes = [NSKeyedUnarchiver unarchiveObjectWithFile:myTribesPath];
         NSString *trendingPath = [self trendingTribesArchivePath];
         trendingTribes = [NSKeyedUnarchiver unarchiveObjectWithFile:trendingPath];
         
         if (!myTribes)
-            myTribes = [[NSMutableArray alloc] init];
+            myTribes = [[NSArray alloc] init];
         if (!trendingTribes)
-            trendingTribes = [[NSMutableDictionary alloc] init];
+            trendingTribes = [[NSArray alloc] init];
     }
     return self;
 }
 
-- (NSArray *)myTribes {
-    return myTribes;
-}
 
 - (NSMutableArray *)featuredTribes {
     NSMutableArray *featured = [[NSMutableArray alloc] init];
@@ -84,11 +74,8 @@
     return featured;
 }
 
-- (void)setMyTribes:(NSMutableArray *)tribes {
-    myTribes = tribes;
-}
 
-
+/*
 - (BOOL)addNewTribe:(NSString *)tribeName {
     @try {
         S3CreateBucketRequest *request = [[S3CreateBucketRequest alloc] initWithName:tribeName];
@@ -105,6 +92,7 @@
     }
     return YES;
 }
+*/
 
 - (void)refreshTribesWithCompletion:(void (^)(NSError *err))block {
     NSLog(@"Async Refreshing Tribes");

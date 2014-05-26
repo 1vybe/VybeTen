@@ -11,7 +11,7 @@
 #import "VYBPlayerViewController.h"
 #import "VYBMyTribeStore.h"
 #import "VYBImageStore.h"
-#import "VYBTribeVybesViewController.h"
+#import "VYBTribeTimelineViewController.h"
 #import "VYBCreateTribeViewController.h"
 #import "VYBConstants.h"
 
@@ -30,12 +30,14 @@
     
     UICollectionView *collection;
     UICollectionViewFlowLayout *flowLayout;
-    NSArray *tribes;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //TODO: Add observer to NSNotification from AppDelegate for PUSH notification for newly created tribe that this user is invited to
+    
     UIToolbar *backView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
     [backView setBarStyle:UIBarStyleBlack];
     [self.view addSubview:backView];
@@ -143,15 +145,23 @@
     collection.delegate = self;
     [self.view addSubview:collection];
 
-    [[VYBMyTribeStore sharedStore] refreshTribesWithCompletion:^(NSError *err) {
-        tribes = [[VYBMyTribeStore sharedStore] myTribes];
-        for (VYBTribe *tribe in tribes) {
-            [[VYBMyTribeStore sharedStore] syncWithCloudForTribe:[tribe tribeName] withCompletionBlock:^(NSError *err) {
-                /* TODO: Update individual cells instead of the whole collection */
+    // Retries tribes for the user
+    PFQuery *tribesQuery = [PFQuery queryWithClassName:kVYBTribeClassKey];
+    [tribesQuery whereKey:kVYBTribeMembersKey equalTo:[PFUser currentUser]];
+    [tribesQuery includeKey:kVYBTribeCreatorKey];
+    //[tribesQuery includeKey:kVYBTribeMembersKey];
+    
+    [tribesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (error) {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [av show];
+            NSLog(@"Error: [SyncTribeViewController] tribe query failed.");
+        } else {
+            if ([objects count] > 0) {
+                [[VYBMyTribeStore sharedStore] setMyTribes:objects];
                 [collection reloadData];
-            }];
+            }
         }
-        //[collection reloadData];
     }];
 }
 
@@ -182,30 +192,26 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [tribes count];
+    return [[[VYBMyTribeStore sharedStore] myTribes] count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collection dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     cell.backgroundColor = [UIColor clearColor];
 
-    VYBTribe *tribe = [tribes objectAtIndex:[indexPath row]];
-    VYBVybe *vybe = [[tribe vybes] lastObject];
+    PFObject *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
     
-    UIImage *cellImg = [[VYBImageStore sharedStore] imageWithKey:[vybe tribeThumbnailPath]];
-    if (!cellImg) {
-        cellImg = [UIImage imageWithContentsOfFile:[vybe tribeThumbnailPath]];
-        if (cellImg)
-            [[VYBImageStore sharedStore] setImage:cellImg forKey:[vybe tribeThumbnailPath]];
-        else
-            cell.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    cell.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    PFImageView *imgView = [[PFImageView alloc] init];
+    if (tribe[kVYBTribeThumbnailKey]) {
+        [imgView setFile:tribe[kVYBTribeThumbnailKey]];
+        [imgView loadInBackground];
     }
-    UIImageView *imgView = [[UIImageView alloc] initWithImage:cellImg];
-    [cell setBackgroundView:imgView];
+    [cell.contentView addSubview:imgView];
     
-    NSString *title = [NSString stringWithFormat:@"%lu", (unsigned long)[[tribe vybes] count]];
+    NSString *title = [NSString stringWithFormat:@"%d", tribe[kVYBTribeVybeCountKey]];
     
-    [self cell:cell setTitle:title tribeName:[tribe tribeName] indexPath:indexPath];
+    [self cell:cell setTitle:title tribeName:tribe[kVYBTribeNameKey] indexPath:indexPath];
     return cell;
 }
 
@@ -246,11 +252,16 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    VYBTribe *tribe = [tribes objectAtIndex:[indexPath row]];
+    
+    PFObject *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
+
+    VYBTribeTimelineViewController *tribeTimelineVC = [[VYBTribeTimelineViewController alloc] init];
+    [tribeTimelineVC setCurrTribe:tribe];
+    [self.navigationController pushViewController:tribeTimelineVC animated:NO];
+
+    /*
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
     [playerVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
-    
     [self.navigationController presentViewController:playerVC animated:NO completion:^(void) {
         if ([[tribe vybes] count] < 1) {
             [self.navigationController dismissViewControllerAnimated:NO completion:nil];
@@ -259,9 +270,10 @@
             [playerVC playFromUnwatched];
         }
 
-        [vybesVC setCurrTribe:tribe];
-        [self.navigationController pushViewController:vybesVC animated:NO];
+        //[vybesVC setCurrTribe:tribe];
+        //[self.navigationController pushViewController:vybesVC animated:NO];
     }];
+    */
 }
 
 

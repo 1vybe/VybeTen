@@ -9,7 +9,7 @@
 #import "VYBExploreViewController.h"
 #import "VYBMenuViewController.h"
 #import "VYBMyTribeStore.h"
-#import "VYBTribeVybesViewController.h"
+#import "VYBTribeTimelineViewController.h"
 #import "VYBImageStore.h"
 #import "VYBPlayerViewController.h"
 
@@ -270,7 +270,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     VYBTribe *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
-    VYBTribeVybesViewController *vybesVC = [[VYBTribeVybesViewController alloc] init];
+    VYBTribeTimelineViewController *vybesVC = [[VYBTribeTimelineViewController alloc] init];
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
     
 

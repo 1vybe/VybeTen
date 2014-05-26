@@ -41,6 +41,7 @@
         NSDate *now = [NSDate date];
         [self setDeviceId:devId];
         [self setTimeStamp:now];
+        
         NSString *dateString = [dFormatter stringFromDate:now];
         NSString *keyString = [NSString stringWithFormat:@"[%@]%@", deviceId, dateString];
         [self setVybeKey:keyString];

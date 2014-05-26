@@ -9,7 +9,6 @@
 #import "VYBMenuViewController.h"
 #import "VYBMyVybesViewController.h"
 #import "VYBTribesViewController.h"
-#import "VYBMyTribeViewController.h"
 #import "UINavigationController+Fade.h"
 #import "VYBExploreViewController.h"
 #import "VYBFriendsViewController.h"

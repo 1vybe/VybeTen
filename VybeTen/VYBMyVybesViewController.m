@@ -150,7 +150,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[[VYBMyVybeStore sharedStore] myVybes] count];
+    //return [[[VYBMyVybeStore sharedStore] myVybes] count];
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -160,7 +161,8 @@
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBVybeCell" owner:self options:nil];
         cell = [nib objectAtIndex:0];
     }
-    VYBVybe *vybe = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
+    //VYBVybe *vybe = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
+    VYBVybe *vybe = nil;
     // Cache thumbnail images into a memory
     UIImage *thumbImg = [[VYBImageStore sharedStore] imageWithKey:[vybe thumbnailPath]];
     if (!thumbImg) {
@@ -170,15 +172,15 @@
             [[VYBImageStore sharedStore] setImage:thumbImg forKey:[vybe thumbnailPath]];
     }
     // Customize cell
-    [cell.thumbnailView setImage:thumbImg];
-    [cell customize];
+    //[cell.thumbnailView setImage:thumbImg];
+    //[cell customize];
 
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [playerVC setVybePlaylist:[[VYBMyVybeStore sharedStore] myVybes]];
+    //[playerVC setVybePlaylist:[[VYBMyVybeStore sharedStore] myVybes]];
     [playerVC playFrom:[indexPath row]];
     [self.navigationController presentViewController:playerVC animated:NO completion:nil];
 }
@@ -186,8 +188,9 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        VYBVybe *vybe = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
-        BOOL success = [[VYBMyVybeStore sharedStore] removeVybe:vybe];
+        //VYBVybe *vybe = [[[VYBMyVybeStore sharedStore] myVybes] objectAtIndex:[indexPath row]];
+        VYBVybe *vybe = nil;
+        BOOL success = NO;//[[VYBMyVybeStore sharedStore] removeVybe:vybe];
         if (!success) {
             NSLog(@"removing failed");
             return;

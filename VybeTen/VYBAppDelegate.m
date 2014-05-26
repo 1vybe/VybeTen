@@ -137,13 +137,13 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     
-    BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
+    BOOL success = NO;//[[VYBMyVybeStore sharedStore] saveChanges];
     if (success)
         NSLog(@"Vybe put to sleep. My vybes are saved. :)");
     else
         NSLog(@"Vybe put to sleep. My vybes will be lost. :(");
     
-    success = [[VYBMyTribeStore sharedStore] saveChanges];
+    success = NO;//[[VYBMyTribeStore sharedStore] saveChanges];
     if (success)
         NSLog(@"My tribes are saved. :)");
     else
@@ -160,7 +160,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
+    BOOL success = NO;//[[VYBMyVybeStore sharedStore] saveChanges];
     if (success)
         NSLog(@"Vybe terminated. My vybes are saved. :)");
     else
@@ -346,7 +346,6 @@
             NSLog(@"No user info is found. Forcing logging out");
             [self logOut];
         }
-        
     } else {
         // Creating a profile
         if (user) {

@@ -8,10 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import <AWSS3/AWSS3.h>
 
-@class VYBPlayerView;
-@class VYBVybe;
+@class VYBPlayerView, VYBMyVybe;
 
 @interface VYBReplayViewController : UIViewController
 @property (nonatomic) AVPlayer *player;
@@ -21,8 +19,7 @@
 @property (nonatomic) UIButton *buttonDiscard;
 @property (nonatomic) UIButton *buttonCancel;
 @property (nonatomic) UIImageView *instruction;
-@property (nonatomic) VYBVybe *vybe;
-@property (nonatomic) NSURL *replayURL;
+@property (nonatomic) VYBMyVybe *currVybe;
 @property (nonatomic) UIButton *syncButton;
 @property (nonatomic) UILabel *syncLabel;
 
