@@ -8,21 +8,22 @@
 
 #import <Foundation/Foundation.h>
 #import <AWSS3/AWSS3.h>
-#import "VYBVybe.h"
+#import "VYBMyVybe.h"
 
-@interface VYBMyVybeStore : NSObject <AmazonServiceRequestDelegate> {
-    NSMutableArray *myVybes;
-    NSString *adId;
+@interface VYBMyVybeStore : NSObject {
+    NSArray *myVybes;
 }
 
-@property (nonatomic) AmazonS3Client *s3;
-
 + (VYBMyVybeStore *)sharedStore;
-- (NSMutableArray *)myVybes;
-- (void)listVybes;
-- (void)addVybe:(VYBVybe *)v;
-- (BOOL)removeVybe:(VYBVybe *)v;
+- (void)addVybe:(VYBMyVybe *)aVybe;
+//- (PFObject *)vybeForKey:(NSString *)aKey;
+//- (NSString *)videoPathWithKey:(NSString *)aKey;
+//- (NSString *)thumbnailPathWithKey:(NSString *)aKey;
+- (void)uploadVybe:(VYBMyVybe *)aVybe;
+- (BOOL)removeVybeForKey:(NSString *)aKey;
 - (NSString *)myVybesArchivePath;
+
+
 - (void)delayedUploadsBegin;
 - (BOOL)saveChanges;
 

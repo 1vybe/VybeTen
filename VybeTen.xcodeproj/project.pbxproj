@@ -18,6 +18,7 @@
 		023E538D191F142000C3CF78 /* VYBCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 023E538C191F142000C3CF78 /* VYBCache.m */; };
 		0243133118F6E73600178CEB /* UINavigationController+Fade.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243133018F6E73600178CEB /* UINavigationController+Fade.m */; };
 		0243CC9818CC665200CA03C0 /* VYBReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */; };
+		024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 024520C7192FDB5F007B56A1 /* VYBMyVybe.m */; };
 		0248BF7918FA2B0100515586 /* VYBS3Connector.m in Sources */ = {isa = PBXBuildFile; fileRef = 0248BF7818FA2B0100515586 /* VYBS3Connector.m */; };
 		024924A418E52B7200568441 /* VYBMainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 024924A318E52B7200568441 /* VYBMainNavigationController.m */; };
 		024B0E2B18BB39E30073574E /* VYBImageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B0E2A18BB39E30073574E /* VYBImageStore.m */; };
@@ -26,7 +27,7 @@
 		024BE32C1917431200CDAA8D /* VYBFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 024BE32B1917431200CDAA8D /* VYBFriendsViewController.m */; };
 		024BE32F19174FB200CDAA8D /* VYBInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 024BE32E19174FB200CDAA8D /* VYBInviteViewController.m */; };
 		024BE3321917E98400CDAA8D /* VYBCreateTribeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 024BE3311917E98400CDAA8D /* VYBCreateTribeViewController.m */; };
-		024C28D718DBCE0600399980 /* VYBTribeVybesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */; };
+		024C28D718DBCE0600399980 /* VYBTribeTimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 024C28D618DBCE0600399980 /* VYBTribeTimelineViewController.m */; };
 		025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 025169AC18FAF955007F34B0 /* VYBLabel.m */; };
 		025169B018FB0D2A007F34B0 /* VYBSyncTribeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 025169AF18FB0D2A007F34B0 /* VYBSyncTribeViewController.m */; };
 		025299ED190AACED00264C86 /* VYBUserStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 025299EC190AACED00264C86 /* VYBUserStore.m */; };
@@ -39,6 +40,7 @@
 		0275088219252E9000B070EE /* UIImage+RoundedCornerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275088119252E9000B070EE /* UIImage+RoundedCornerAdditions.m */; };
 		0275088519252EA000B070EE /* UIImage+AlphaAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275088419252EA000B070EE /* UIImage+AlphaAdditions.m */; };
 		027FB48018FEC2AC00946579 /* PWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 027FB47F18FEC2AC00946579 /* PWProgressView.m */; };
+		02979900192ADF230073E705 /* VYBFriendCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 029798FF192ADF230073E705 /* VYBFriendCollectionCell.m */; };
 		02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */; };
 		02D11D0618DF62AC0018DA97 /* Montreal-BoldIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */; };
 		02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF918DF62AC0018DA97 /* Montreal-DemiBold.otf */; };
@@ -54,9 +56,9 @@
 		02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */; };
 		02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */; };
 		02D5E80B190A227C007F3BFB /* VYBSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02D5E80A190A227C007F3BFB /* VYBSignUpViewController.m */; };
+		02FDBD2F192E69C800AB2D9A /* VYBAddMemberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02FDBD2E192E69C800AB2D9A /* VYBAddMemberViewController.m */; };
 		6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6035496118C88B11003F5D3E /* VYBPlayerViewController.m */; };
 		6043967D18C9FFDC0090F3AE /* VYBVybeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */; };
-		6043968818CAD8A70090F3AE /* VYBMyTribeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */; };
 		6043968B18CAE4A60090F3AE /* VYBMyTribeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6043968A18CAE4A60090F3AE /* VYBMyTribeStore.m */; };
 		604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 604B628518B495BB00D3EF19 /* InfoPlist.strings */; };
 		604B628918B495BB00D3EF19 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 604B628818B495BB00D3EF19 /* main.m */; };
@@ -96,6 +98,8 @@
 		0243133018F6E73600178CEB /* UINavigationController+Fade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Fade.m"; sourceTree = "<group>"; };
 		0243CC9618CC665200CA03C0 /* VYBReplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBReplayViewController.h; sourceTree = "<group>"; };
 		0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBReplayViewController.m; sourceTree = "<group>"; };
+		024520C6192FDB5F007B56A1 /* VYBMyVybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyVybe.h; sourceTree = "<group>"; };
+		024520C7192FDB5F007B56A1 /* VYBMyVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybe.m; sourceTree = "<group>"; };
 		0248BF7718FA2B0100515586 /* VYBS3Connector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBS3Connector.h; sourceTree = "<group>"; };
 		0248BF7818FA2B0100515586 /* VYBS3Connector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBS3Connector.m; sourceTree = "<group>"; };
 		024924A218E52B7200568441 /* VYBMainNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMainNavigationController.h; sourceTree = "<group>"; };
@@ -112,8 +116,8 @@
 		024BE32E19174FB200CDAA8D /* VYBInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBInviteViewController.m; sourceTree = "<group>"; };
 		024BE3301917E98400CDAA8D /* VYBCreateTribeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCreateTribeViewController.h; sourceTree = "<group>"; };
 		024BE3311917E98400CDAA8D /* VYBCreateTribeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCreateTribeViewController.m; sourceTree = "<group>"; };
-		024C28D518DBCE0600399980 /* VYBTribeVybesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTribeVybesViewController.h; sourceTree = "<group>"; };
-		024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBTribeVybesViewController.m; sourceTree = "<group>"; };
+		024C28D518DBCE0600399980 /* VYBTribeTimelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTribeTimelineViewController.h; sourceTree = "<group>"; };
+		024C28D618DBCE0600399980 /* VYBTribeTimelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBTribeTimelineViewController.m; sourceTree = "<group>"; };
 		025169AB18FAF955007F34B0 /* VYBLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBLabel.h; sourceTree = "<group>"; };
 		025169AC18FAF955007F34B0 /* VYBLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBLabel.m; sourceTree = "<group>"; };
 		025169AE18FB0D2A007F34B0 /* VYBSyncTribeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBSyncTribeViewController.h; sourceTree = "<group>"; };
@@ -138,6 +142,8 @@
 		0275088419252EA000B070EE /* UIImage+AlphaAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AlphaAdditions.m"; sourceTree = "<group>"; };
 		027FB47E18FEC2AC00946579 /* PWProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWProgressView.h; sourceTree = "<group>"; };
 		027FB47F18FEC2AC00946579 /* PWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWProgressView.m; sourceTree = "<group>"; };
+		029798FE192ADF230073E705 /* VYBFriendCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBFriendCollectionCell.h; sourceTree = "<group>"; };
+		029798FF192ADF230073E705 /* VYBFriendCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBFriendCollectionCell.m; sourceTree = "<group>"; };
 		02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Bold.otf"; sourceTree = "<group>"; };
 		02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-BoldIta.otf"; sourceTree = "<group>"; };
 		02D11CF918DF62AC0018DA97 /* Montreal-DemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-DemiBold.otf"; sourceTree = "<group>"; };
@@ -154,11 +160,11 @@
 		02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-XlightIta.otf"; sourceTree = "<group>"; };
 		02D5E809190A227C007F3BFB /* VYBSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBSignUpViewController.h; sourceTree = "<group>"; };
 		02D5E80A190A227C007F3BFB /* VYBSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBSignUpViewController.m; sourceTree = "<group>"; };
+		02FDBD2D192E69C800AB2D9A /* VYBAddMemberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBAddMemberViewController.h; sourceTree = "<group>"; };
+		02FDBD2E192E69C800AB2D9A /* VYBAddMemberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBAddMemberViewController.m; sourceTree = "<group>"; };
 		6035496018C88B11003F5D3E /* VYBPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerViewController.h; sourceTree = "<group>"; };
 		6035496118C88B11003F5D3E /* VYBPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerViewController.m; sourceTree = "<group>"; };
 		6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBVybeCell.xib; sourceTree = "<group>"; };
-		6043968618CAD8A70090F3AE /* VYBMyTribeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyTribeViewController.h; sourceTree = "<group>"; };
-		6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyTribeViewController.m; sourceTree = "<group>"; };
 		6043968918CAE4A60090F3AE /* VYBMyTribeStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyTribeStore.h; sourceTree = "<group>"; };
 		6043968A18CAE4A60090F3AE /* VYBMyTribeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyTribeStore.m; sourceTree = "<group>"; };
 		604B627918B495BB00D3EF19 /* VybeTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VybeTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -223,6 +229,8 @@
 				023373CF18F50C4F00A522B3 /* VYBTribe.m */,
 				023373D118F50C6100A522B3 /* VYBUser.h */,
 				023373D218F50C6100A522B3 /* VYBUser.m */,
+				024520C6192FDB5F007B56A1 /* VYBMyVybe.h */,
+				024520C7192FDB5F007B56A1 /* VYBMyVybe.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -241,6 +249,8 @@
 				025EDB2118F6538B008B0CB2 /* VYBMenuView.m */,
 				025169AB18FAF955007F34B0 /* VYBLabel.h */,
 				025169AC18FAF955007F34B0 /* VYBLabel.m */,
+				029798FE192ADF230073E705 /* VYBFriendCollectionCell.h */,
+				029798FF192ADF230073E705 /* VYBFriendCollectionCell.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -260,11 +270,10 @@
 				022296D818BC506D0096BB30 /* VYBMenuViewController.m */,
 				022296DC18BCA24C0096BB30 /* VYBMyVybesViewController.h */,
 				022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */,
-				6043968618CAD8A70090F3AE /* VYBMyTribeViewController.h */,
 				022361F618FBD266002700B8 /* VYBTribesViewController.h */,
 				022361F718FBD266002700B8 /* VYBTribesViewController.m */,
-				024C28D518DBCE0600399980 /* VYBTribeVybesViewController.h */,
-				024C28D618DBCE0600399980 /* VYBTribeVybesViewController.m */,
+				024C28D518DBCE0600399980 /* VYBTribeTimelineViewController.h */,
+				024C28D618DBCE0600399980 /* VYBTribeTimelineViewController.m */,
 				025EDB1D18F650CE008B0CB2 /* VYBExploreViewController.h */,
 				025EDB1E18F650CE008B0CB2 /* VYBExploreViewController.m */,
 				0243132F18F6E73600178CEB /* UINavigationController+Fade.h */,
@@ -275,7 +284,6 @@
 				025169AF18FB0D2A007F34B0 /* VYBSyncTribeViewController.m */,
 				022361F918FBDEAF002700B8 /* VYBCollectionViewController.h */,
 				022361FA18FBDEAF002700B8 /* VYBCollectionViewController.m */,
-				6043968718CAD8A70090F3AE /* VYBMyTribeViewController.m */,
 				02D5E809190A227C007F3BFB /* VYBSignUpViewController.h */,
 				02D5E80A190A227C007F3BFB /* VYBSignUpViewController.m */,
 				024BE327191738B400CDAA8D /* VYBLoginViewController.h */,
@@ -288,6 +296,8 @@
 				024BE3311917E98400CDAA8D /* VYBCreateTribeViewController.m */,
 				023AD83D191ADACD00AD4740 /* VYBWelcomeViewController.h */,
 				023AD83E191ADACD00AD4740 /* VYBWelcomeViewController.m */,
+				02FDBD2D192E69C800AB2D9A /* VYBAddMemberViewController.h */,
+				02FDBD2E192E69C800AB2D9A /* VYBAddMemberViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -571,10 +581,12 @@
 				024BE3321917E98400CDAA8D /* VYBCreateTribeViewController.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
 				024924A418E52B7200568441 /* VYBMainNavigationController.m in Sources */,
+				02979900192ADF230073E705 /* VYBFriendCollectionCell.m in Sources */,
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				025EDB2218F6538B008B0CB2 /* VYBMenuView.m in Sources */,
 				60B0DCEB18BDCC4E007F4D5C /* VYBVybeCell.m in Sources */,
 				022361FB18FBDEAF002700B8 /* VYBCollectionViewController.m in Sources */,
+				024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				022361F818FBD266002700B8 /* VYBTribesViewController.m in Sources */,
 				6043968B18CAE4A60090F3AE /* VYBMyTribeStore.m in Sources */,
@@ -584,7 +596,7 @@
 				023373D018F50C4F00A522B3 /* VYBTribe.m in Sources */,
 				025169B018FB0D2A007F34B0 /* VYBSyncTribeViewController.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
-				024C28D718DBCE0600399980 /* VYBTribeVybesViewController.m in Sources */,
+				024C28D718DBCE0600399980 /* VYBTribeTimelineViewController.m in Sources */,
 				0275088519252EA000B070EE /* UIImage+AlphaAdditions.m in Sources */,
 				023AD83F191ADACD00AD4740 /* VYBWelcomeViewController.m in Sources */,
 				0275087F19252E0D00B070EE /* UIImage+ResizeAdditions.m in Sources */,
@@ -597,11 +609,11 @@
 				027FB48018FEC2AC00946579 /* PWProgressView.m in Sources */,
 				024B0E2E18BB39FF0073574E /* VYBVybeStore.m in Sources */,
 				022296DE18BCA24C0096BB30 /* VYBMyVybesViewController.m in Sources */,
+				02FDBD2F192E69C800AB2D9A /* VYBAddMemberViewController.m in Sources */,
 				0248BF7918FA2B0100515586 /* VYBS3Connector.m in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
 				02030D9A18FF622A005723FE /* VYBS3Uploader.m in Sources */,
-				6043968818CAD8A70090F3AE /* VYBMyTribeViewController.m in Sources */,
 				022296DA18BC506D0096BB30 /* VYBMenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -700,7 +712,7 @@
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6AA95ADC-4D08-48FB-8B68-D860B3024CDF";
+				PROVISIONING_PROFILE = "330FF44D-C895-40DD-95A0-6C435F89607A";
 			};
 			name = Debug;
 		};

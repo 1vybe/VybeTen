@@ -15,6 +15,7 @@
 #import "VYBSyncTribeViewController.h"
 #import "UINavigationController+Fade.h"
 #import "VYBLabel.h"
+#import "VYBCache.h"
 
 @implementation VYBReplayViewController {
     UILabel *selectYourTribeLabel;
@@ -23,10 +24,13 @@
 @synthesize player = _player;
 @synthesize playerItem = _playerItem;
 @synthesize playerView = _playerView;
-@synthesize vybe = _vybe;
-@synthesize replayURL = _replayURL;
+@synthesize currVybe;
 @synthesize buttonDiscard, buttonSave, instruction, buttonCancel;
 @synthesize syncLabel, syncButton;
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBSyncViewControllerDidChangeSyncTribe object:nil];
+}
 
 - (void)loadView {
     NSLog(@"replay loadView");
@@ -35,11 +39,13 @@
     [self.view setFrame:[[UIScreen mainScreen] bounds]];
     self.playerView = playerView;
 }
-- (void)viewDidLoad
-{
+
+- (void)viewDidLoad {
     NSLog(@"replay view loaded");
     [super viewDidLoad];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeSyncTribeLabel:) name:VYBSyncViewControllerDidChangeSyncTribe object:nil];
+    
     // Adding swipe gestures
     UISwipeGestureRecognizer *swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(saveVybe)];
     swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
@@ -77,13 +83,10 @@
     // Adding SYNC button
     CGRect frame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
     syncButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *syncNoneImg;
-    if ([self.vybe tribeName]) {
-        syncNoneImg= [UIImage imageNamed:@"button_sync.png"];
-    } else {
-        syncNoneImg = [UIImage imageNamed:@"button_sync_none.png"];
-    }
+    UIImage *syncNoneImg = [UIImage imageNamed:@"button_sync_none.png"];
+    UIImage *syncImg = [UIImage imageNamed:@"button_sync.png"];
     [syncButton setImage:syncNoneImg forState:UIControlStateNormal];
+    [syncButton setImage:syncImg forState:UIControlStateSelected];
     [syncButton setContentMode:UIViewContentModeLeft];
     [syncButton addTarget:self action:@selector(changeSync:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:syncButton];
@@ -93,10 +96,13 @@
     [syncLabel setTextColor:[UIColor whiteColor]];
     [syncLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
     [self.view addSubview:syncLabel];
-    if ([self.vybe tribeName]) {
-        [syncLabel setText:[self.vybe tribeName]];
+    PFObject *tribe = [[VYBCache sharedCache] syncTribeForUser:[PFUser currentUser]];
+    if (tribe) {
+        [syncLabel setText:tribe[kVYBTribeNameKey]];
+        [syncButton setSelected:YES];
     } else {
         [syncLabel setText:@"(select)"];
+        [syncButton setSelected:NO];
     }
     
     // Adding SELECT label
@@ -116,48 +122,46 @@
 
 - (void)changeSync:(id)sender {
     VYBSyncTribeViewController *syncVC = [[VYBSyncTribeViewController alloc] init];
-    [syncVC setCompletionBlock:^(VYBTribe *tribe){
-        if (tribe) {
-            [self.vybe setTribeName:[tribe tribeName]];
-            UIImage *image = [UIImage imageNamed:@"button_sync.png"];
-            [syncButton setImage:image forState:UIControlStateNormal];
-            [syncLabel setText:[self.vybe tribeName]];
-            selectYourTribeLabel.hidden = YES;
-        } else {
-            [syncLabel setText:@"(select)"];
-        }
-    }];
     [self.navigationController presentViewController:syncVC animated:NO completion:nil];
+}
+
+- (void)changeSyncTribeLabel:(NSNotification *)note {
+    PFObject *tribe = [[VYBCache sharedCache] syncTribeForUser:[PFUser currentUser]];
+    [syncLabel setText:tribe[kVYBTribeNameKey]];
+    [syncButton setSelected:YES];
 }
 
 - (void)saveVybe {
     // Promt a message to choose a vybe to sync
-    if (![self.vybe tribeName]) {
+    if (![[VYBCache sharedCache] syncTribeForUser:[PFUser currentUser]]) {
         selectYourTribeLabel.hidden = NO;
     }
     else {
-        [self performSelector:@selector(uploadVybe)];
+        //[[VYBMyVybeStore sharedStore] vybeForKey:self.vybeKey] setObject:[ forKey:(NSString *)
+        PFObject *tribe = [[VYBCache sharedCache] syncTribeForUser:[PFUser currentUser]];
+        [currVybe setTribeObjectID:tribe.objectId];
+        [[VYBMyVybeStore sharedStore] addVybe:currVybe];
+        [[VYBMyVybeStore sharedStore] uploadVybe:currVybe];
         [self.navigationController popViewControllerAnimated:NO];
+
     }
 }
 
-
-- (void)uploadVybe {
-    [[VYBMyVybeStore sharedStore] addVybe:self.vybe];
-    //[self.navigationController popToRootViewControllerAnimated:NO];
-}
-
 - (void)discardVybe {
+    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[currVybe videoFilePath]];
+    NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[currVybe thumbnailFilePath]];
+    
     NSError *error;
-    [[NSFileManager defaultManager] removeItemAtURL:self.replayURL error:&error];
-    if (error)
-        NSLog(@"Removing a file failed: %@", error);
+    [[NSFileManager defaultManager] removeItemAtURL:videoURL error:&error];
+    [[NSFileManager defaultManager] removeItemAtURL:thumbURL error:&error];
+    
     [self.navigationController popViewControllerAnimated:NO];
 }
 
 
 - (void)playVideo {
-    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:self.replayURL options:nil];
+    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[currVybe videoFilePath]];
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
     self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
     // For play loop
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];

@@ -30,6 +30,11 @@
 #define FONT_TITLE_SMALL        DEFAULT_FONT(FONT_SIZE_SMALL)
 
 
+#pragma mark - NSNotification
+extern NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification;
+extern NSString *const VYBSyncViewControllerDidChangeSyncTribe;
+
+
 #pragma mark - NSUserDefaults
 extern NSString *const kVYBUserDefaultsCacheFacebookFriendsKey;
 
@@ -62,8 +67,17 @@ extern NSString *const kVYBTribeClassKey;
 
 // field keys
 extern NSString *const kVYBTribeNameKey;
+extern NSString *const kVYBTribeCreatorKey;
 extern NSString *const kVYBTribeTypeKey;
+extern NSString *const kVYBTribeVybeCountKey;
+extern NSString *const kVYBTribeMembersCountKey;
 extern NSString *const kVYBTribeMembersKey;
+extern NSString *const kVYBTribeThumbnailKey;
+
+
+// type values
+extern NSString *const kVYBTribeTypePrivate;
+extern NSString *const kVYBTribeTypePublic;
 
 
 #pragma mark - PFObject Activity Class
@@ -84,16 +98,18 @@ extern NSString *const kVYBActivityTypeJoined;
 
 #pragma mark - Cached User Attributes
 // keys
+extern NSString *const kVYBUserAttributesSyncTribeKey;
 extern NSString *const kVYBUserAttributesVybeCountKey;
 extern NSString *const kVYBUserAttributesTribeCountKey;
 extern NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey;
-
+extern NSString *const kVYBUserAttributesTribesKey;
 
 #pragma mark - Cached Tribe Attributes
 // keys
 extern NSString *const kVYBTribeAttributesVybeCountKey;
 extern NSString *const kVYBTribeAttributesMemberCountKey;
 extern NSString *const kVYBTribeAttributesMembersKey;
+extern NSString *const kVYBTribeAttributesLastWatchedVybeKey;
 
 
 #pragma mark - Installation Class
