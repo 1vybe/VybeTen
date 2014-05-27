@@ -20,14 +20,32 @@
 #import "VYBCache.h"
 #import "VYBUtility.h"
 #import <HockeySDK/HockeySDK.h>
+#import "Reachability.h"
 
-@implementation VYBAppDelegate {
+@interface VYBAppDelegate () {
     NSMutableData *_data;
 }
+
+@property (nonatomic, strong) Reachability *hostReach;
+@property (nonatomic, strong) Reachability *internetReach;
+@property (nonatomic, strong) Reachability *wifiReach;
+
+@end
+
+@implementation VYBAppDelegate
+
+@synthesize networkStatus;
+@synthesize hostReach;
+@synthesize internetReach;
+@synthesize wifiReach;
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    // Use Reachability to monitor connectivity
+    [self monitorReachability];
 
     /* HockeyApp Initilization */
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_ID];
@@ -336,6 +354,42 @@
             NSLog(@"OAuthException occured. Logging out");
             [self logOut];
         }
+    }
+}
+
+#pragma mark - AppDelegate
+
+- (BOOL)isParseReachable {
+    return self.networkStatus != NotReachable;
+}
+
+#pragma mark - ()
+
+- (void)monitorReachability {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+    
+    self.hostReach = [Reachability reachabilityWithHostName: @"api.parse.com"];
+    [self.hostReach startNotifier];
+    
+    self.internetReach = [Reachability reachabilityForInternetConnection];
+    [self.internetReach startNotifier];
+    
+    self.wifiReach = [Reachability reachabilityForLocalWiFi];
+    [self.wifiReach startNotifier];
+}
+
+//Called by Reachability whenever status changes.
+- (void)reachabilityChanged:(NSNotification* )note {
+    Reachability *curReach = (Reachability *)[note object];
+    NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
+    NSLog(@"Reachability changed: %@", curReach);
+    networkStatus = [curReach currentReachabilityStatus];
+    
+    BOOL hasVybesToUpload = YES;
+
+    // Try
+    if ([self isParseReachable] && [PFUser currentUser] && hasVybesToUpload) {
+        // Parse is reachable and user has vybes to upload.
     }
 }
 

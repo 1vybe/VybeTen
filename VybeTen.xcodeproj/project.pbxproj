@@ -72,6 +72,7 @@
 		60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */; };
 		60F1BBBC18BAB39400070EEC /* VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBBB18BAB39400070EEC /* VYBVybe.m */; };
 		876FD1CBA2104ACB85FFFB93 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D4D61F35BF543039A00CFD0 /* libPods.a */; };
+		88828D9B19344AEB005CB06C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 88828D9A19344AEB005CB06C /* Reachability.m */; };
 		88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F72A111914C721007C7370 /* AnimatedTransitioning.m */; };
 		88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F72A131914C721007C7370 /* TransitionDelegate.m */; };
 /* End PBXBuildFile section */
@@ -191,6 +192,8 @@
 		60F1BBBA18BAB39400070EEC /* VYBVybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybe.h; sourceTree = "<group>"; };
 		60F1BBBB18BAB39400070EEC /* VYBVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybe.m; sourceTree = "<group>"; };
 		769685985C644864B6BDFC3D /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		88828D9919344AEB005CB06C /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		88828D9A19344AEB005CB06C /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		88F72A101914C721007C7370 /* AnimatedTransitioning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimatedTransitioning.h; sourceTree = "<group>"; };
 		88F72A111914C721007C7370 /* AnimatedTransitioning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimatedTransitioning.m; sourceTree = "<group>"; };
 		88F72A121914C721007C7370 /* TransitionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionDelegate.h; sourceTree = "<group>"; };
@@ -378,6 +381,7 @@
 		604B627018B495BB00D3EF19 = {
 			isa = PBXGroup;
 			children = (
+				88828D9D19344AFE005CB06C /* External */,
 				604B628218B495BB00D3EF19 /* VybeTen */,
 				604B627B18B495BB00D3EF19 /* Frameworks */,
 				604B627A18B495BB00D3EF19 /* Products */,
@@ -435,6 +439,23 @@
 				604B628A18B495BB00D3EF19 /* VybeTen-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		88828D9C19344AF3005CB06C /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				88828D9919344AEB005CB06C /* Reachability.h */,
+				88828D9A19344AEB005CB06C /* Reachability.m */,
+			);
+			name = Reachability;
+			sourceTree = "<group>";
+		};
+		88828D9D19344AFE005CB06C /* External */ = {
+			isa = PBXGroup;
+			children = (
+				88828D9C19344AF3005CB06C /* Reachability */,
+			);
+			name = External;
 			sourceTree = "<group>";
 		};
 		88F72A0F1914C721007C7370 /* Transition Delegate */ = {
@@ -618,6 +639,7 @@
 				02FDBD2F192E69C800AB2D9A /* VYBAddMemberViewController.m in Sources */,
 				0248BF7918FA2B0100515586 /* VYBS3Connector.m in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
+				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
 				02030D9A18FF622A005723FE /* VYBS3Uploader.m in Sources */,
 				022296DA18BC506D0096BB30 /* VYBMenuViewController.m in Sources */,
