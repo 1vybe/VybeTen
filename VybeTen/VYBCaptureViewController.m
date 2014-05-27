@@ -48,9 +48,14 @@ static void * XXContext = &XXContext;
 - (id)init {
     self = [super init];
     if (self) {
+        session = [[AVCaptureSession alloc] init];
+        movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
     }
     return self;
 }
+
+
+
 
 
 - (void)dealloc {
@@ -76,6 +81,43 @@ static void * XXContext = &XXContext;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Video input from a camera is playing in background
+    // Setup for video capturing session
+    [session setSessionPreset:AVCaptureSessionPresetMedium];
+    // Add video input from camera
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    videoInput = [[AVCaptureDeviceInput alloc] initWithDevice:device error:nil];
+    if ( [session canAddInput:videoInput] )
+        [session addInput:videoInput];
+    // Setup preview layer
+    AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
+    [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+    [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    // Display preview layer
+    CALayer *rootLayer = [self.view layer];
+    [rootLayer setMasksToBounds:YES];
+    [previewLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.height, rootLayer.bounds.size.width)]; // width and height are switched in landscape mode
+    [rootLayer insertSublayer:previewLayer atIndex:0];
+    // Add audio input from mic
+    AVCaptureDevice *inputDeviceAudio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+    AVCaptureDeviceInput *deviceAudioInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDeviceAudio error:nil];
+    if ( [session canAddInput:deviceAudioInput] )
+        [session addInput:deviceAudioInput];
+    // Add movie file output
+    /* Orientation must be set AFTER FileOutput is added to session */
+    Float64 totalSeconds = 7;
+    int32_t preferredTimeScale = 30;
+    CMTime maxDuration = CMTimeMakeWithSeconds(totalSeconds, preferredTimeScale);
+    movieFileOutput.maxRecordedDuration = maxDuration;
+    movieFileOutput.minFreeDiskSpaceLimit = 1024 * 512;
+    if ( [session canAddOutput:movieFileOutput] )
+        [session addOutput:movieFileOutput];
+    AVCaptureConnection *movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+    [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+
+    [session startRunning];
+
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeSyncTribeLabel:) name:VYBSyncViewControllerDidChangeSyncTribe object:nil];
     

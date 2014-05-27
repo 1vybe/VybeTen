@@ -12,6 +12,8 @@
 #import "VYBLoginViewController.h"
 #import "VYBSignUpViewController.h"
 #import "VYBCaptureViewController.h"
+#import "VYBTribesViewController.h"
+#import "VYBFriendsViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBMyTribeStore.h"
 #import "VYBConstants.h"
@@ -64,60 +66,11 @@
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
 
     
-    /**
-     * Set navigation controller's background as preview layer from video input
-     */
-    self.navController = [[UINavigationController alloc] init];
-    [[self.navController navigationBar] setHidden:YES];
+    self.pageController = [[VYBMainPageViewController alloc] init];
+    
 
-    // Setup for video capturing session
-    AVCaptureSession *session = [[AVCaptureSession alloc] init];
-    [session setSessionPreset:AVCaptureSessionPresetMedium];
-    // Add video input from camera
-    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    AVCaptureDeviceInput *videoInput = [[AVCaptureDeviceInput alloc] initWithDevice:device error:nil];
-    if ( [session canAddInput:videoInput] )
-        [session addInput:videoInput];
-    // Setup preview layer
-    AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
-    [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-    [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    // Display preview layer
-    CALayer *rootLayer = [[self.navController view] layer];
-    [rootLayer setMasksToBounds:YES];
-    [previewLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.height, rootLayer.bounds.size.width)]; // width and height are switched in landscape mode
-    [rootLayer insertSublayer:previewLayer atIndex:0];
-    // Add audio input from mic
-    AVCaptureDevice *inputDeviceAudio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-    AVCaptureDeviceInput *deviceAudioInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDeviceAudio error:nil];
-    if ( [session canAddInput:deviceAudioInput] )
-        [session addInput:deviceAudioInput];
-    // Add movie file output
-    /* Orientation must be set AFTER FileOutput is added to session */
-    AVCaptureMovieFileOutput *movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
-    Float64 totalSeconds = 7;
-    int32_t preferredTimeScale = 30;
-    CMTime maxDuration = CMTimeMakeWithSeconds(totalSeconds, preferredTimeScale);
-    movieFileOutput.maxRecordedDuration = maxDuration;
-    movieFileOutput.minFreeDiskSpaceLimit = 1024 * 512;
-    if ( [session canAddOutput:movieFileOutput] )
-        [session addOutput:movieFileOutput];
-    AVCaptureConnection *movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-    [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-    
-    
-    VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
-    [captureVC setSession:session withVideoInput:videoInput withMovieFileOutput:movieFileOutput];
-    [session startRunning];
-    
-    self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
 
-    self.navController.modalPresentationStyle = UIModalPresentationCurrentContext;
-    
-    [self.window setRootViewController:self.navController];
-    [self.navController pushViewController:captureVC animated:NO];
-    [self.navController pushViewController:self.welcomeViewController animated:NO];
-
+    [self.window setRootViewController:self.pageController];
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     
@@ -137,7 +90,7 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     
-    BOOL success = NO;//[[VYBMyVybeStore sharedStore] saveChanges];
+    BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
     if (success)
         NSLog(@"Vybe put to sleep. My vybes are saved. :)");
     else
@@ -160,7 +113,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    BOOL success = NO;//[[VYBMyVybeStore sharedStore] saveChanges];
+    BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
     if (success)
         NSLog(@"Vybe terminated. My vybes are saved. :)");
     else

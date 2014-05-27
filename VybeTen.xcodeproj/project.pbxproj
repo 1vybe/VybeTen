@@ -41,6 +41,7 @@
 		0275088519252EA000B070EE /* UIImage+AlphaAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275088419252EA000B070EE /* UIImage+AlphaAdditions.m */; };
 		027FB48018FEC2AC00946579 /* PWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 027FB47F18FEC2AC00946579 /* PWProgressView.m */; };
 		02979900192ADF230073E705 /* VYBFriendCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 029798FF192ADF230073E705 /* VYBFriendCollectionCell.m */; };
+		02CED7871934433E00D6BBDB /* VYBMainPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CED7861934433E00D6BBDB /* VYBMainPageViewController.m */; };
 		02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */; };
 		02D11D0618DF62AC0018DA97 /* Montreal-BoldIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */; };
 		02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF918DF62AC0018DA97 /* Montreal-DemiBold.otf */; };
@@ -144,6 +145,8 @@
 		027FB47F18FEC2AC00946579 /* PWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWProgressView.m; sourceTree = "<group>"; };
 		029798FE192ADF230073E705 /* VYBFriendCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBFriendCollectionCell.h; sourceTree = "<group>"; };
 		029798FF192ADF230073E705 /* VYBFriendCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBFriendCollectionCell.m; sourceTree = "<group>"; };
+		02CED7851934433E00D6BBDB /* VYBMainPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMainPageViewController.h; sourceTree = "<group>"; };
+		02CED7861934433E00D6BBDB /* VYBMainPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMainPageViewController.m; sourceTree = "<group>"; };
 		02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Bold.otf"; sourceTree = "<group>"; };
 		02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-BoldIta.otf"; sourceTree = "<group>"; };
 		02D11CF918DF62AC0018DA97 /* Montreal-DemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-DemiBold.otf"; sourceTree = "<group>"; };
@@ -298,6 +301,8 @@
 				023AD83E191ADACD00AD4740 /* VYBWelcomeViewController.m */,
 				02FDBD2D192E69C800AB2D9A /* VYBAddMemberViewController.h */,
 				02FDBD2E192E69C800AB2D9A /* VYBAddMemberViewController.m */,
+				02CED7851934433E00D6BBDB /* VYBMainPageViewController.h */,
+				02CED7861934433E00D6BBDB /* VYBMainPageViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -574,6 +579,7 @@
 				024BE32F19174FB200CDAA8D /* VYBInviteViewController.m in Sources */,
 				024BE32C1917431200CDAA8D /* VYBFriendsViewController.m in Sources */,
 				6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */,
+				02CED7871934433E00D6BBDB /* VYBMainPageViewController.m in Sources */,
 				025EDB1F18F650CE008B0CB2 /* VYBExploreViewController.m in Sources */,
 				60C0745D18CDD28700390BE1 /* VYBTribePlayerViewController.m in Sources */,
 				024BE329191738B400CDAA8D /* VYBLoginViewController.m in Sources */,

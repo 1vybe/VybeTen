@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import "VYBMainPageViewController.h"
 
 @class VYBWelcomeViewController;
 
@@ -15,6 +16,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong) UINavigationController *navController;
+@property (nonatomic, strong) VYBMainPageViewController *pageController;
 @property (nonatomic, strong) VYBWelcomeViewController *welcomeViewController;
 
 /* TODO */
