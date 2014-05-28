@@ -12,6 +12,7 @@
 
 @interface VYBMyVybeStore : NSObject {
     NSArray *myVybes;
+    NSMutableArray *uploadQueue;
 }
 
 + (VYBMyVybeStore *)sharedStore;
@@ -20,6 +21,7 @@
 //- (NSString *)videoPathWithKey:(NSString *)aKey;
 //- (NSString *)thumbnailPathWithKey:(NSString *)aKey;
 - (void)uploadVybe:(VYBMyVybe *)aVybe;
+- (void)uploadDelayedVybes;
 - (BOOL)removeVybeForKey:(NSString *)aKey;
 - (NSString *)myVybesArchivePath;
 

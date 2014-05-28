@@ -37,6 +37,7 @@
         myVybes = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
         if (!myVybes)
             myVybes = [[NSArray alloc] init];
+        uploadQueue = [[NSMutableArray alloc] init];
     }
     
     return self;
@@ -70,6 +71,9 @@
         return;
     }
     
+    [uploadQueue addObject:vybeToGo];
+    [self removeVybe:vybeToGo];
+    
     NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToGo thumbnailFilePath]];
     NSData *video = [NSData dataWithContentsOfFile:[vybeToGo videoFilePath]];
   
@@ -89,12 +93,70 @@
                     [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
                     [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
                     [vybe saveEventually];
-                    [self removeVybe:vybeToGo];
+                    [self clearLocalCacheForVybe:vybeToGo];
+                    [uploadQueue removeObject:vybeToGo];
+                    
+                } else {
+                    [self addVybe:vybeToGo];
+                    [uploadQueue removeObject:vybeToGo];
                 }
             }];
+        } else {
+            [self addVybe:vybeToGo];
+            [uploadQueue removeObject:vybeToGo];
         }
     }];
 }
+
+- (void)uploadDelayedVybe:(VYBMyVybe *)aVybe {
+    [uploadQueue addObject:aVybe];
+    [self removeVybe:aVybe];
+
+    NSData *thumbnail = [NSData dataWithContentsOfFile:[aVybe thumbnailFilePath]];
+    NSData *video = [NSData dataWithContentsOfFile:[aVybe videoFilePath]];
+    
+    PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
+    PFFile *videoFile = [PFFile fileWithData:video];
+    
+    PFObject *vybe = [aVybe parseObjectVybe];
+    
+    PFACL *vybeACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [vybeACL setPublicReadAccess:YES];
+    vybe.ACL = vybeACL;
+    
+    [thumbnailFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
+                    [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
+                    [vybe saveEventually];
+                    [self clearLocalCacheForVybe:aVybe];
+                    [uploadQueue removeObject:aVybe];
+                    [self uploadDelayedVybes];
+                } else {
+                    [uploadQueue removeObject:aVybe];
+                    [self addVybe:aVybe];
+                }
+            }];
+        } else {
+            [uploadQueue removeObject:aVybe];
+            [self addVybe:aVybe];
+        }
+    }];
+}
+
+
+- (void)uploadDelayedVybes {
+    if (myVybes.count < 1 ) {
+        return;
+    }
+    
+    VYBMyVybe *delayedVybe = [myVybes firstObject];
+    [self uploadDelayedVybe:delayedVybe];
+}
+
+
 
 /*
 - (void)uploadVybeForKey:(NSString *)aKey {
@@ -130,7 +192,7 @@
 }
 */
 
-- (void)removeVybe:(VYBMyVybe *)aVybe {
+- (void)clearLocalCacheForVybe:(VYBMyVybe *)aVybe {
     NSURL *thumbnailURL = [[NSURL alloc] initFileURLWithPath:[aVybe thumbnailFilePath]];
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[aVybe videoFilePath]];
     
@@ -144,6 +206,10 @@
         NSLog(@"Cached my vybe was NOT deleted");
     }
     
+
+}
+
+- (void)removeVybe:(VYBMyVybe *)aVybe {
     NSMutableArray *newArray = [NSMutableArray arrayWithArray:myVybes];
     [newArray removeObject:aVybe];
     myVybes = newArray;

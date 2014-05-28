@@ -83,12 +83,21 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
 
+    self.navController = [[UINavigationController alloc] init];
+    [self.navController.navigationBar setHidden:YES];
     
-    self.pageController = [[VYBMainPageViewController alloc] init];
+    VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
     
+    VYBWelcomeViewController *welcomeViewController = [[VYBWelcomeViewController alloc] init];
+    
+    self.navController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    
+    [self.navController pushViewController:captureVC animated:NO];
+    [self.navController pushViewController:welcomeViewController animated:NO];
 
 
-    [self.window setRootViewController:self.pageController];
+
+    [self.window setRootViewController:self.navController];
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     
@@ -385,12 +394,13 @@
     NSLog(@"Reachability changed: %@", curReach);
     networkStatus = [curReach currentReachabilityStatus];
     
-    BOOL hasVybesToUpload = YES;
 
     // Try
-    if ([self isParseReachable] && [PFUser currentUser] && hasVybesToUpload) {
-        // Parse is reachable and user has vybes to upload.
+    if ([self isParseReachable] && [PFUser currentUser] ) {
+        // Parse is reachable and calling this method will only upload a vybe if there is
+        [[VYBMyVybeStore sharedStore] uploadDelayedVybes];
     }
+
 }
 
 @end

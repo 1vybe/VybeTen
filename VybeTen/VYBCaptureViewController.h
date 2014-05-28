@@ -29,7 +29,6 @@
 @property (nonatomic) VYBTribe *defaultSync;
 @property (nonatomic, strong) TransitionDelegate *transitionController;
 
-- (void)setSession:(AVCaptureSession *)s withVideoInput:(AVCaptureDeviceInput *)vidInput withMovieFileOutput:(AVCaptureMovieFileOutput *)movieOutput;
 - (void)startRecording;
 - (AVCaptureDeviceInput *)frontCameraInput;
 - (AVCaptureDeviceInput *)backCameraInput;

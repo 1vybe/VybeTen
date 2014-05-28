@@ -26,7 +26,9 @@
     AVCaptureSession *session;
     AVCaptureDeviceInput *videoInput;
     AVCaptureMovieFileOutput *movieFileOutput;
-   
+    AVCaptureVideoPreviewLayer *cameraInputLayer;
+    AVCaptureConnection *movieConnection;
+    
     NSDate *startTime;
     NSTimer *recordingTimer;
     
@@ -82,43 +84,12 @@ static void * XXContext = &XXContext;
 {
     [super viewDidLoad];
     
-    // Video input from a camera is playing in background
-    // Setup for video capturing session
-    [session setSessionPreset:AVCaptureSessionPresetMedium];
-    // Add video input from camera
-    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    videoInput = [[AVCaptureDeviceInput alloc] initWithDevice:device error:nil];
-    if ( [session canAddInput:videoInput] )
-        [session addInput:videoInput];
-    // Setup preview layer
-    AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
-    [[previewLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-    [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    // Display preview layer
-    CALayer *rootLayer = [self.view layer];
-    [rootLayer setMasksToBounds:YES];
-    [previewLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.height, rootLayer.bounds.size.width)]; // width and height are switched in landscape mode
-    [rootLayer insertSublayer:previewLayer atIndex:0];
-    // Add audio input from mic
-    AVCaptureDevice *inputDeviceAudio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-    AVCaptureDeviceInput *deviceAudioInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDeviceAudio error:nil];
-    if ( [session canAddInput:deviceAudioInput] )
-        [session addInput:deviceAudioInput];
-    // Add movie file output
-    /* Orientation must be set AFTER FileOutput is added to session */
-    Float64 totalSeconds = 7;
-    int32_t preferredTimeScale = 30;
-    CMTime maxDuration = CMTimeMakeWithSeconds(totalSeconds, preferredTimeScale);
-    movieFileOutput.maxRecordedDuration = maxDuration;
-    movieFileOutput.minFreeDiskSpaceLimit = 1024 * 512;
-    if ( [session canAddOutput:movieFileOutput] )
-        [session addOutput:movieFileOutput];
-    AVCaptureConnection *movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-    [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+    [self setUpCameraSession];
 
     [session startRunning];
 
     
+    // NSNotification for changing SYNC label
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeSyncTribeLabel:) name:VYBSyncViewControllerDidChangeSyncTribe object:nil];
     
     transitionController = [[TransitionDelegate alloc] init];
@@ -126,7 +97,7 @@ static void * XXContext = &XXContext;
     // Overlay alertView will be displayed when a user entered in a portrait mode
     UIDevice *iphone = [UIDevice currentDevice];
     [iphone beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(displayOverlay:) name:UIDeviceOrientationDidChangeNotification object:iphone];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];
     
     recording = NO;
     frontCamera = NO;
@@ -248,6 +219,40 @@ static void * XXContext = &XXContext;
  * Helper functions
  **/
 
+- (void)setUpCameraSession {
+    // Video input from a camera is playing in background
+    // Setup for video capturing session
+    [session setSessionPreset:AVCaptureSessionPresetMedium];
+    // Add video input from camera
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    videoInput = [[AVCaptureDeviceInput alloc] initWithDevice:device error:nil];
+    if ( [session canAddInput:videoInput] )
+        [session addInput:videoInput];
+    // Setup preview layer
+    cameraInputLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
+    [cameraInputLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    // Display preview layer
+    CALayer *rootLayer = [self.view layer];
+    [rootLayer setMasksToBounds:YES];
+    [cameraInputLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.height, rootLayer.bounds.size.width)]; // width and height are switched in landscape mode
+    [rootLayer insertSublayer:cameraInputLayer atIndex:0];
+    // Add audio input from mic
+    AVCaptureDevice *inputDeviceAudio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+    AVCaptureDeviceInput *deviceAudioInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDeviceAudio error:nil];
+    if ( [session canAddInput:deviceAudioInput] )
+        [session addInput:deviceAudioInput];
+    // Add movie file output
+    /* Orientation must be set AFTER FileOutput is added to session */
+    Float64 totalSeconds = 7;
+    int32_t preferredTimeScale = 30;
+    CMTime maxDuration = CMTimeMakeWithSeconds(totalSeconds, preferredTimeScale);
+    movieFileOutput.maxRecordedDuration = maxDuration;
+    movieFileOutput.minFreeDiskSpaceLimit = 1024 * 512;
+    if ( [session canAddOutput:movieFileOutput] )
+        [session addOutput:movieFileOutput];
+    movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+}
+
 - (AVCaptureDeviceInput *)frontCameraInput {
     NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
     for (AVCaptureDevice *device in devices) {
@@ -302,6 +307,8 @@ static void * XXContext = &XXContext;
             }
         }];
 
+        [movieConnection setVideoMirrored:frontCamera];
+        
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[currVybe videoFilePath]];
         //NSLog(@"outputURL:%@", outputURL);
         [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
@@ -376,9 +383,14 @@ static void * XXContext = &XXContext;
     frontCamera = !frontCamera;
     
     // Setting orientation of AVCaptureMovieFileOutput AFTER a video input is added back to session
-    AVCaptureConnection *movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-    [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-
+    movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+    if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeLeft) {
+        [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+    } else if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeRight) {
+        [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+    }
+    
+    
     [session startRunning];
 }
 
@@ -397,7 +409,7 @@ static void * XXContext = &XXContext;
     //[self.navigationController pushFadeViewController:menuVC];
 }
 
-- (void)displayOverlay:(NSNotification *)note {
+- (void)deviceOrientationChanged:(NSNotification *)note {
     UIDevice *device = [note object];
     if ( UIDeviceOrientationIsPortrait([device orientation]) ) {
         if (!overlayView) {
@@ -412,6 +424,13 @@ static void * XXContext = &XXContext;
     } else if ( UIDeviceOrientationIsLandscape([device orientation]) ) {
         [overlayView removeFromSuperview];
         overlayView = nil;
+        if ([device orientation] == UIDeviceOrientationLandscapeLeft) {
+            [[cameraInputLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+            [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+        } else if ([device orientation] == UIDeviceOrientationLandscapeRight) {
+            [[cameraInputLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+            [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+        }
     }
 }
 
