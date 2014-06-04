@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		02030D9A18FF622A005723FE /* VYBS3Uploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 02030D9918FF622A005723FE /* VYBS3Uploader.m */; };
 		022296DA18BC506D0096BB30 /* VYBMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022296D818BC506D0096BB30 /* VYBMenuViewController.m */; };
-		022296DE18BCA24C0096BB30 /* VYBMyVybesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */; };
 		022361F818FBD266002700B8 /* VYBTribesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022361F718FBD266002700B8 /* VYBTribesViewController.m */; };
 		022361FB18FBDEAF002700B8 /* VYBCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022361FA18FBDEAF002700B8 /* VYBCollectionViewController.m */; };
 		023373D018F50C4F00A522B3 /* VYBTribe.m in Sources */ = {isa = PBXBuildFile; fileRef = 023373CF18F50C4F00A522B3 /* VYBTribe.m */; };
@@ -33,14 +32,15 @@
 		025299ED190AACED00264C86 /* VYBUserStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 025299EC190AACED00264C86 /* VYBUserStore.m */; };
 		025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 025DE65A18CB16E30054F739 /* VYBConstants.m */; };
 		025EDB1F18F650CE008B0CB2 /* VYBExploreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 025EDB1E18F650CE008B0CB2 /* VYBExploreViewController.m */; };
-		025EDB2218F6538B008B0CB2 /* VYBMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 025EDB2118F6538B008B0CB2 /* VYBMenuView.m */; };
 		025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 025EDB2418F65E45008B0CB2 /* VYBAnimator.m */; };
 		0275087C19252D5C00B070EE /* VYBUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275087B19252D5C00B070EE /* VYBUtility.m */; };
 		0275087F19252E0D00B070EE /* UIImage+ResizeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275087E19252E0D00B070EE /* UIImage+ResizeAdditions.m */; };
 		0275088219252E9000B070EE /* UIImage+RoundedCornerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275088119252E9000B070EE /* UIImage+RoundedCornerAdditions.m */; };
 		0275088519252EA000B070EE /* UIImage+AlphaAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275088419252EA000B070EE /* UIImage+AlphaAdditions.m */; };
+		027B201C193D360000D23AC7 /* VYBFriendsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 027B201B193D360000D23AC7 /* VYBFriendsCell.m */; };
 		027FB48018FEC2AC00946579 /* PWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 027FB47F18FEC2AC00946579 /* PWProgressView.m */; };
 		02979900192ADF230073E705 /* VYBFriendCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 029798FF192ADF230073E705 /* VYBFriendCollectionCell.m */; };
+		02CCF8FF1939600700B3137D /* VYBActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CCF8FE1939600700B3137D /* VYBActivityViewController.m */; };
 		02CED7871934433E00D6BBDB /* VYBMainPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CED7861934433E00D6BBDB /* VYBMainPageViewController.m */; };
 		02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */; };
 		02D11D0618DF62AC0018DA97 /* Montreal-BoldIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */; };
@@ -59,7 +59,6 @@
 		02D5E80B190A227C007F3BFB /* VYBSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02D5E80A190A227C007F3BFB /* VYBSignUpViewController.m */; };
 		02FDBD2F192E69C800AB2D9A /* VYBAddMemberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02FDBD2E192E69C800AB2D9A /* VYBAddMemberViewController.m */; };
 		6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6035496118C88B11003F5D3E /* VYBPlayerViewController.m */; };
-		6043967D18C9FFDC0090F3AE /* VYBVybeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */; };
 		6043968B18CAE4A60090F3AE /* VYBMyTribeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6043968A18CAE4A60090F3AE /* VYBMyTribeStore.m */; };
 		604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 604B628518B495BB00D3EF19 /* InfoPlist.strings */; };
 		604B628918B495BB00D3EF19 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 604B628818B495BB00D3EF19 /* main.m */; };
@@ -67,7 +66,6 @@
 		604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 604B628E18B495BB00D3EF19 /* Images.xcassets */; };
 		6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */; };
 		607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 607CA69918C5C80C0060B420 /* VYBPlayerView.m */; };
-		60B0DCEB18BDCC4E007F4D5C /* VYBVybeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60B0DCEA18BDCC4E007F4D5C /* VYBVybeCell.m */; };
 		60C0745D18CDD28700390BE1 /* VYBTribePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60C0745C18CDD28700390BE1 /* VYBTribePlayerViewController.m */; };
 		60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */; };
 		60F1BBBC18BAB39400070EEC /* VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBBB18BAB39400070EEC /* VYBVybe.m */; };
@@ -82,8 +80,6 @@
 		02030D9918FF622A005723FE /* VYBS3Uploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBS3Uploader.m; sourceTree = "<group>"; };
 		022296D718BC506D0096BB30 /* VYBMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMenuViewController.h; sourceTree = "<group>"; };
 		022296D818BC506D0096BB30 /* VYBMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMenuViewController.m; sourceTree = "<group>"; };
-		022296DC18BCA24C0096BB30 /* VYBMyVybesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyVybesViewController.h; sourceTree = "<group>"; };
-		022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybesViewController.m; sourceTree = "<group>"; };
 		022361F618FBD266002700B8 /* VYBTribesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTribesViewController.h; sourceTree = "<group>"; };
 		022361F718FBD266002700B8 /* VYBTribesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBTribesViewController.m; sourceTree = "<group>"; };
 		022361F918FBDEAF002700B8 /* VYBCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCollectionViewController.h; sourceTree = "<group>"; };
@@ -130,8 +126,6 @@
 		025DE65A18CB16E30054F739 /* VYBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBConstants.m; sourceTree = "<group>"; };
 		025EDB1D18F650CE008B0CB2 /* VYBExploreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBExploreViewController.h; sourceTree = "<group>"; };
 		025EDB1E18F650CE008B0CB2 /* VYBExploreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBExploreViewController.m; sourceTree = "<group>"; };
-		025EDB2018F6538B008B0CB2 /* VYBMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMenuView.h; sourceTree = "<group>"; };
-		025EDB2118F6538B008B0CB2 /* VYBMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMenuView.m; sourceTree = "<group>"; };
 		025EDB2318F65E45008B0CB2 /* VYBAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBAnimator.h; sourceTree = "<group>"; };
 		025EDB2418F65E45008B0CB2 /* VYBAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBAnimator.m; sourceTree = "<group>"; };
 		0275087A19252D5C00B070EE /* VYBUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUtility.h; sourceTree = "<group>"; };
@@ -142,10 +136,14 @@
 		0275088119252E9000B070EE /* UIImage+RoundedCornerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCornerAdditions.m"; sourceTree = "<group>"; };
 		0275088319252EA000B070EE /* UIImage+AlphaAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AlphaAdditions.h"; sourceTree = "<group>"; };
 		0275088419252EA000B070EE /* UIImage+AlphaAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AlphaAdditions.m"; sourceTree = "<group>"; };
+		027B201A193D360000D23AC7 /* VYBFriendsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBFriendsCell.h; sourceTree = "<group>"; };
+		027B201B193D360000D23AC7 /* VYBFriendsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBFriendsCell.m; sourceTree = "<group>"; };
 		027FB47E18FEC2AC00946579 /* PWProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWProgressView.h; sourceTree = "<group>"; };
 		027FB47F18FEC2AC00946579 /* PWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWProgressView.m; sourceTree = "<group>"; };
 		029798FE192ADF230073E705 /* VYBFriendCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBFriendCollectionCell.h; sourceTree = "<group>"; };
 		029798FF192ADF230073E705 /* VYBFriendCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBFriendCollectionCell.m; sourceTree = "<group>"; };
+		02CCF8FD1939600700B3137D /* VYBActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBActivityViewController.h; sourceTree = "<group>"; };
+		02CCF8FE1939600700B3137D /* VYBActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBActivityViewController.m; sourceTree = "<group>"; };
 		02CED7851934433E00D6BBDB /* VYBMainPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMainPageViewController.h; sourceTree = "<group>"; };
 		02CED7861934433E00D6BBDB /* VYBMainPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMainPageViewController.m; sourceTree = "<group>"; };
 		02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Bold.otf"; sourceTree = "<group>"; };
@@ -168,7 +166,6 @@
 		02FDBD2E192E69C800AB2D9A /* VYBAddMemberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBAddMemberViewController.m; sourceTree = "<group>"; };
 		6035496018C88B11003F5D3E /* VYBPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerViewController.h; sourceTree = "<group>"; };
 		6035496118C88B11003F5D3E /* VYBPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerViewController.m; sourceTree = "<group>"; };
-		6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBVybeCell.xib; sourceTree = "<group>"; };
 		6043968918CAE4A60090F3AE /* VYBMyTribeStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyTribeStore.h; sourceTree = "<group>"; };
 		6043968A18CAE4A60090F3AE /* VYBMyTribeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyTribeStore.m; sourceTree = "<group>"; };
 		604B627918B495BB00D3EF19 /* VybeTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VybeTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -183,8 +180,6 @@
 		6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCaptureViewController.m; sourceTree = "<group>"; };
 		607CA69818C5C80C0060B420 /* VYBPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerView.h; sourceTree = "<group>"; };
 		607CA69918C5C80C0060B420 /* VYBPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerView.m; sourceTree = "<group>"; };
-		60B0DCE918BDCC4E007F4D5C /* VYBVybeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybeCell.h; sourceTree = "<group>"; };
-		60B0DCEA18BDCC4E007F4D5C /* VYBVybeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybeCell.m; sourceTree = "<group>"; };
 		60C0745B18CDD28600390BE1 /* VYBTribePlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTribePlayerViewController.h; sourceTree = "<group>"; };
 		60C0745C18CDD28700390BE1 /* VYBTribePlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBTribePlayerViewController.m; sourceTree = "<group>"; };
 		60F1BBB718BAAFA900070EEC /* VYBMyVybeStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyVybeStore.h; sourceTree = "<group>"; };
@@ -248,15 +243,12 @@
 				027FB47D18FEC2AC00946579 /* PWProgressView */,
 				607CA69818C5C80C0060B420 /* VYBPlayerView.h */,
 				607CA69918C5C80C0060B420 /* VYBPlayerView.m */,
-				60B0DCE918BDCC4E007F4D5C /* VYBVybeCell.h */,
-				60B0DCEA18BDCC4E007F4D5C /* VYBVybeCell.m */,
-				6043967C18C9FFDC0090F3AE /* VYBVybeCell.xib */,
-				025EDB2018F6538B008B0CB2 /* VYBMenuView.h */,
-				025EDB2118F6538B008B0CB2 /* VYBMenuView.m */,
 				025169AB18FAF955007F34B0 /* VYBLabel.h */,
 				025169AC18FAF955007F34B0 /* VYBLabel.m */,
 				029798FE192ADF230073E705 /* VYBFriendCollectionCell.h */,
 				029798FF192ADF230073E705 /* VYBFriendCollectionCell.m */,
+				027B201A193D360000D23AC7 /* VYBFriendsCell.h */,
+				027B201B193D360000D23AC7 /* VYBFriendsCell.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -264,30 +256,20 @@
 		027D924818EA85F300537822 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				6035496018C88B11003F5D3E /* VYBPlayerViewController.h */,
-				6035496118C88B11003F5D3E /* VYBPlayerViewController.m */,
-				60C0745B18CDD28600390BE1 /* VYBTribePlayerViewController.h */,
-				60C0745C18CDD28700390BE1 /* VYBTribePlayerViewController.m */,
 				6061246B18B7862F00B0A14E /* VYBCaptureViewController.h */,
 				6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */,
 				0243CC9618CC665200CA03C0 /* VYBReplayViewController.h */,
 				0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */,
+				025169AE18FB0D2A007F34B0 /* VYBSyncTribeViewController.h */,
+				025169AF18FB0D2A007F34B0 /* VYBSyncTribeViewController.m */,
 				022296D718BC506D0096BB30 /* VYBMenuViewController.h */,
 				022296D818BC506D0096BB30 /* VYBMenuViewController.m */,
-				022296DC18BCA24C0096BB30 /* VYBMyVybesViewController.h */,
-				022296DD18BCA24C0096BB30 /* VYBMyVybesViewController.m */,
 				022361F618FBD266002700B8 /* VYBTribesViewController.h */,
 				022361F718FBD266002700B8 /* VYBTribesViewController.m */,
 				024C28D518DBCE0600399980 /* VYBTribeTimelineViewController.h */,
 				024C28D618DBCE0600399980 /* VYBTribeTimelineViewController.m */,
-				025EDB1D18F650CE008B0CB2 /* VYBExploreViewController.h */,
-				025EDB1E18F650CE008B0CB2 /* VYBExploreViewController.m */,
-				0243132F18F6E73600178CEB /* UINavigationController+Fade.h */,
-				0243133018F6E73600178CEB /* UINavigationController+Fade.m */,
-				024924A218E52B7200568441 /* VYBMainNavigationController.h */,
-				024924A318E52B7200568441 /* VYBMainNavigationController.m */,
-				025169AE18FB0D2A007F34B0 /* VYBSyncTribeViewController.h */,
-				025169AF18FB0D2A007F34B0 /* VYBSyncTribeViewController.m */,
+				6035496018C88B11003F5D3E /* VYBPlayerViewController.h */,
+				6035496118C88B11003F5D3E /* VYBPlayerViewController.m */,
 				022361F918FBDEAF002700B8 /* VYBCollectionViewController.h */,
 				022361FA18FBDEAF002700B8 /* VYBCollectionViewController.m */,
 				02D5E809190A227C007F3BFB /* VYBSignUpViewController.h */,
@@ -304,8 +286,7 @@
 				023AD83E191ADACD00AD4740 /* VYBWelcomeViewController.m */,
 				02FDBD2D192E69C800AB2D9A /* VYBAddMemberViewController.h */,
 				02FDBD2E192E69C800AB2D9A /* VYBAddMemberViewController.m */,
-				02CED7851934433E00D6BBDB /* VYBMainPageViewController.h */,
-				02CED7861934433E00D6BBDB /* VYBMainPageViewController.m */,
+				02CCF9001939609000B3137D /* NotUsed */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -338,6 +319,25 @@
 				027FB47F18FEC2AC00946579 /* PWProgressView.m */,
 			);
 			path = PWProgressView;
+			sourceTree = "<group>";
+		};
+		02CCF9001939609000B3137D /* NotUsed */ = {
+			isa = PBXGroup;
+			children = (
+				60C0745B18CDD28600390BE1 /* VYBTribePlayerViewController.h */,
+				60C0745C18CDD28700390BE1 /* VYBTribePlayerViewController.m */,
+				02CED7851934433E00D6BBDB /* VYBMainPageViewController.h */,
+				02CED7861934433E00D6BBDB /* VYBMainPageViewController.m */,
+				02CCF8FD1939600700B3137D /* VYBActivityViewController.h */,
+				02CCF8FE1939600700B3137D /* VYBActivityViewController.m */,
+				024924A218E52B7200568441 /* VYBMainNavigationController.h */,
+				024924A318E52B7200568441 /* VYBMainNavigationController.m */,
+				025EDB1D18F650CE008B0CB2 /* VYBExploreViewController.h */,
+				025EDB1E18F650CE008B0CB2 /* VYBExploreViewController.m */,
+				0243132F18F6E73600178CEB /* UINavigationController+Fade.h */,
+				0243133018F6E73600178CEB /* UINavigationController+Fade.m */,
+			);
+			name = NotUsed;
 			sourceTree = "<group>";
 		};
 		02D11CF418DF62680018DA97 /* resources */ = {
@@ -537,7 +537,6 @@
 				02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */,
 				02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */,
 				02D11D0A18DF62AC0018DA97 /* Montreal-HeavyIta.otf in Resources */,
-				6043967D18C9FFDC0090F3AE /* VYBVybeCell.xib in Resources */,
 				604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */,
 				02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */,
 				02D11D0D18DF62AC0018DA97 /* Montreal-Medium.otf in Resources */,
@@ -610,10 +609,9 @@
 				024924A418E52B7200568441 /* VYBMainNavigationController.m in Sources */,
 				02979900192ADF230073E705 /* VYBFriendCollectionCell.m in Sources */,
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
-				025EDB2218F6538B008B0CB2 /* VYBMenuView.m in Sources */,
-				60B0DCEB18BDCC4E007F4D5C /* VYBVybeCell.m in Sources */,
 				022361FB18FBDEAF002700B8 /* VYBCollectionViewController.m in Sources */,
 				024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */,
+				027B201C193D360000D23AC7 /* VYBFriendsCell.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				022361F818FBD266002700B8 /* VYBTribesViewController.m in Sources */,
 				6043968B18CAE4A60090F3AE /* VYBMyTribeStore.m in Sources */,
@@ -635,7 +633,7 @@
 				02D5E80B190A227C007F3BFB /* VYBSignUpViewController.m in Sources */,
 				027FB48018FEC2AC00946579 /* PWProgressView.m in Sources */,
 				024B0E2E18BB39FF0073574E /* VYBVybeStore.m in Sources */,
-				022296DE18BCA24C0096BB30 /* VYBMyVybesViewController.m in Sources */,
+				02CCF8FF1939600700B3137D /* VYBActivityViewController.m in Sources */,
 				02FDBD2F192E69C800AB2D9A /* VYBAddMemberViewController.m in Sources */,
 				0248BF7918FA2B0100515586 /* VYBS3Connector.m in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
@@ -756,7 +754,7 @@
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0EB23E9F-1220-41D7-AE99-EFB468565B23";
+				PROVISIONING_PROFILE = "330FF44D-C895-40DD-95A0-6C435F89607A";
 			};
 			name = Release;
 		};

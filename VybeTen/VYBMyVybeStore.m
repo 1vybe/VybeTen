@@ -49,16 +49,6 @@
     myVybes = newArray;
 }
 
-/*
-- (NSString *)videoPathWithKey:(NSString *)aKey {
-    return [aKey stringByAppendingPathExtension:@"mov"];
-}
-
-- (NSString *)thumbnailPathWithKey:(NSString *)aKey {
-    return [aKey stringByAppendingPathExtension:@"jpeg"];
-}
-*/
-
 - (void)uploadVybe:(VYBMyVybe *)aVybe {
     VYBMyVybe *vybeToGo;
     for (VYBMyVybe *v in myVybes) {
@@ -156,41 +146,6 @@
     [self uploadDelayedVybe:delayedVybe];
 }
 
-
-
-/*
-- (void)uploadVybeForKey:(NSString *)aKey {
-
-    
- 
-    
-    [thumbnailFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                                   [vybe saveE]
-                    [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                        if (succeeded) {
-                            // Send out NSNotification
-                            NSLog(@"New vybe successfully posted.");
-                            // Remove the vybe from upload queue
-                            [self removeVybeWithKey:aKey];
-                        }
-                    }];
-                } else {
-                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable. Your vybe will be posted later. :) " message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-                    [av show];
-                    NSLog(@"Error: [MyVybeStore] uploading video failed.");
-                }
-            }];
-        } else {
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable. Your vybe will be posted later. :) " message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [av show];
-            NSLog(@"Error: [MyVybeStore] uploading thumbnail failed.");
-        }
-    }];
-}
-*/
 
 - (void)clearLocalCacheForVybe:(VYBMyVybe *)aVybe {
     NSURL *thumbnailURL = [[NSURL alloc] initFileURLWithPath:[aVybe thumbnailFilePath]];

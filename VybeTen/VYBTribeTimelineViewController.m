@@ -13,7 +13,6 @@
 #import "VYBPlayerViewController.h"
 #import "VYBMenuViewController.h"
 #import "VYBAddMemberViewController.h"
-#import "VYBVybeCell.h"
 #import "GAI.h"
 #import "GAIDictionaryBuilder.h"
 #import "GAIFields.h"
@@ -229,6 +228,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object
 {
+    /*
     if (indexPath.row >= self.objects.count) {
         UITableViewCell *cell = [self tableView:tableView cellForNextPageAtIndexPath:indexPath];
         return cell;
@@ -251,6 +251,8 @@
 
         return cell;
     }
+     */
+    return nil;
 }
 
 
@@ -275,7 +277,6 @@
     }
     else {
         VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-        
         [self.navigationController presentViewController:playerVC animated:NO completion:^(){
             //[playerVC setVybePlaylist:[self.currTribe vybes]];
             // Here d indicated the number of downloaded vybes and n is the number of vybes including the ones to be downloaded

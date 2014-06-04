@@ -146,7 +146,7 @@
     CGRect collectionFrame = CGRectMake(0, 50, self.view.bounds.size.height - 50, self.view.bounds.size.width - 50);
     collectionView = [[UICollectionView alloc] initWithFrame:collectionFrame collectionViewLayout:flowLayout];
     [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
-    [collectionView registerClass:[VYBFriendCollectionCell class] forCellWithReuseIdentifier:@"FriendCell"];
+    [collectionView registerClass:[VYBFriendCollectionCell class] forCellWithReuseIdentifier:@"FriensdCell"];
     [collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
     [collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
     collectionView.backgroundColor = [UIColor clearColor];
@@ -292,10 +292,10 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)aCollectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *FriendCellIdentifier = @"FriendCell";
+    static NSString *FriendCdellIdentifier = @"FrienddCell";
     
     PFUser *usr = [_objects objectAtIndex:[indexPath row]];
-    VYBFriendCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:FriendCellIdentifier forIndexPath:indexPath];
+    VYBFriendCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:FriendCdellIdentifier forIndexPath:indexPath];
     [cell setUser:usr];
     if ([selectedIndexes containsObject:usr]) {
         [cell setSelected:YES];

@@ -29,7 +29,7 @@
     
     [self.logInView.facebookButton setTitle:@" Sign in with Facebook" forState:UIControlStateNormal];
 
-    [self.logInView.twitterButton setTitle:@" Sign in with Twitter" forState:UIControlStateNormal];
+    //[self.logInView.twitterButton setTitle:@" Sign in with Twitter" forState:UIControlStateNormal];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -47,9 +47,11 @@
     frame.origin.x = (self.view.bounds.size.width - frame.size.width) / 2;
     frame.origin.y = 200 + 10;
     [self.logInView.facebookButton setFrame:frame];
-    
+   
+    /*
     frame.origin.y += 50;
     [self.logInView.twitterButton setFrame:frame];
+    */
 }
 
 

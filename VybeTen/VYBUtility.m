@@ -8,6 +8,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "VYBUtility.h"
+#import "VYBCache.h"
 #import "VYBConstants.h"
 #import "UIImage+ResizeAdditions.h"
 #import "VYBMyVybeStore.h"
@@ -68,23 +69,6 @@
     }
 }
 
-+ (NSString *)generateUniqueFileName {
-    //Create unique filename
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *uniquePath = [[paths lastObject] stringByAppendingPathComponent:@"VybeToUpload"];
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:uniquePath])
-        [[NSFileManager defaultManager] createDirectoryAtPath:uniquePath withIntermediateDirectories:YES attributes:nil error:nil];
-    
-    CFUUIDRef newUniqueId = CFUUIDCreate(kCFAllocatorDefault);
-	CFStringRef newUniqueIdString = CFUUIDCreateString(kCFAllocatorDefault, newUniqueId);
-	uniquePath = [uniquePath stringByAppendingPathComponent:(__bridge NSString *)newUniqueIdString];
-	CFRelease(newUniqueId);
-	CFRelease(newUniqueIdString);
-    
-    return uniquePath;
-}
-
 + (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath {
     NSURL *url = [[NSURL alloc] initFileURLWithPath:[filePath stringByAppendingPathExtension:@"mov"]] ;
     // Generating and saving a thumbnail for the captured vybe
@@ -102,17 +86,76 @@
     
 }
 
+
+#pragma mark - Follow/ Unfollow Activity
+
++ (void)followUserInBackground:(PFUser *)fUser block:(void (^)(BOOL, NSError *))completionBlock {
+    PFObject *followActivity = [PFObject objectWithClassName:kVYBActivityClassKey];
+    [followActivity setObject:kVYBActivityTypeFollow forKey:kVYBActivityTypeKey];
+    [followActivity setObject:[PFUser currentUser] forKey:kVYBActivityFromUserKey];
+    [followActivity setObject:fUser forKey:kVYBActivityToUserKey];
+ 
+    PFACL *followACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [followACL setPublicReadAccess:YES];
+    followActivity.ACL = followACL;
+    
+    [followActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            if (completionBlock) {
+                completionBlock(succeeded, error);
+            }
+        }
+    }];
+    
+    [[VYBCache sharedCache] setFollowStatus:YES user:fUser];
+}
+
++ (void)unfollowUserEventually:(PFUser *)fUser {
+    PFQuery *query = [PFQuery queryWithClassName:kVYBActivityClassKey];
+    [query whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeFollow];
+    [query whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
+    [query whereKey:kVYBActivityToUserKey equalTo:fUser];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
+        if (!error) {
+            for (PFObject *activity in activities) {
+                [activity deleteEventually];
+            }
+        }
+    }];
+    
+    [[VYBCache sharedCache] setFollowStatus:NO user:fUser];
+}
+
+
+#pragma mark Display Name
+
++ (NSString *)firstNameForDisplayName:(NSString *)displayName {
+    if (!displayName || displayName.length == 0) {
+        return @"Someone";
+    }
+    
+    NSArray *displayNameComponents = [displayName componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *firstName = [displayNameComponents objectAtIndex:0];
+    if (firstName.length > 100) {
+        // truncate to 100 so that it fits in a Push payload
+        firstName = [firstName substringToIndex:100];
+    }
+    return firstName;
+}
+
+
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate {
     static NSDateFormatter *dFormatterLocalized = nil;
     if (!dFormatterLocalized) {
         dFormatterLocalized = [[NSDateFormatter alloc] init];
         // TODO: Localize timezone
-        NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"EST"];
+        NSLog(@"local timezone is %@", [NSTimeZone localTimeZone]);
+        NSTimeZone *timeZone = [NSTimeZone localTimeZone];
         [dFormatterLocalized setTimeZone:timeZone];
         [dFormatterLocalized setDateFormat:@"MM/dd HH:mm"];
     }
     return [dFormatterLocalized stringFromDate:aDate];
 }
-
 
 @end

@@ -30,12 +30,39 @@
     
     UICollectionView *collection;
     UICollectionViewFlowLayout *flowLayout;
+    
+    NSInteger _pageIndex;
 }
+
++ (VYBTribesViewController *)tribesViewControllerForPageIndex:(NSInteger)pageIndex {
+    if (pageIndex >= 0 ) {
+        return [[self alloc] initWithPageIndex:pageIndex];
+    }
+    return nil;
+}
+
+- (id)initWithPageIndex:(NSInteger)pageIndex {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        _pageIndex = pageIndex;
+    }
+    return self;
+}
+
+- (NSInteger)pageIndex {
+    return _pageIndex;
+}
+
+- (void)loadView {
+    [super loadView];
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+}
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     //TODO: Add observer to NSNotification from AppDelegate for PUSH notification for newly created tribe that this user is invited to
     
     UIToolbar *backView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
@@ -166,18 +193,11 @@
 }
 
 - (void)goToMenu:(id)sender {
-    VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
-    menuVC.view.backgroundColor = [UIColor clearColor];
-    menuVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    //[menuVC setTransitioningDelegate:transitionController];
-    //menuVC.modalPresentationStyle = UIModalPresentationCurrentContext;
-    //self.modalPresentationStyle = UIModalPresentationCurrentContext;
-    [self.navigationController presentViewController:menuVC animated:YES completion:nil];
+    [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 - (void)captureVybe:(id)sender {
-    [self.navigationController popToRootViewControllerAnimated:NO];
+    //[self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 

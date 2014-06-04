@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBMainPageViewController : UIViewController <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
+@interface VYBMainPageViewController : UIViewController
 
-@property (nonatomic, strong) UIPageViewController *pageController;
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) NSMutableArray *controllers;
 
 @end

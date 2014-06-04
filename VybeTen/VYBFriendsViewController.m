@@ -10,11 +10,12 @@
 #import "VYBMenuViewController.h"
 #import "VYBInviteViewController.h"
 #import "VYBCache.h"
+#import "VYBUtility.h"
 #import "MBProgressHUD.h"
-#import "VYBImageStore.h"
-#import "VYBFriendCollectionCell.h"
+#import "VYBFriendsCell.h"
 
 @implementation VYBFriendsViewController {
+    /*
     UIView *topBar;
     UILabel *currentTabLabel;
     UILabel *createButton;
@@ -23,33 +24,34 @@
     UIButton *searchButton;
     UIButton *captureButton;
     UIButton *menuButton;
-    
-    UICollectionView *collectionView;
-    UICollectionViewFlowLayout *flowLayout;
-    
-    PFQuery *friendsQuery;
+    */
 }
 
-@synthesize objects = _objects;
-
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (id)initWithStyle:(UITableViewStyle)style {
+    self = [super initWithStyle:style];
     if (self) {
-        // Custom initialization
+        //self.parseClassName = @"_User";
+        
+        self.paginationEnabled = YES;
+        
+        self.pullToRefreshEnabled = YES;
+        
+        self.objectsPerPage = 15;
     }
+    
     return self;
 }
+
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    UIToolbar *backView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
-    [backView setBarStyle:UIBarStyleBlack];
-    [self.view addSubview:backView];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.tableView setBackgroundColor:[UIColor greenColor]];
     
+    /*
     // Adding a dark TOPBAR
     CGRect frame = CGRectMake(0, 0, self.view.bounds.size.height - 50, 50);
     topBar = [[UIView alloc] initWithFrame:frame];
@@ -103,66 +105,60 @@
     //[captureButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
     [captureButton addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [sideBar addSubview:captureButton];
-    
-    
-    flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
-    flowLayout.sectionInset = UIEdgeInsetsMake(10.0f, 10.0f, 10.0f, 10.0f);
-    //flowLayout.minimumLineSpacing = 50.0f;
-    flowLayout.minimumInteritemSpacing = 10.0f;
-    /*
-    if (IS_IPHONE_5)
-        flowLayout.itemSize = CGSizeMake(150.0f, 80.0f);
-    else
-        flowLayout.itemSize = CGSizeMake(120.0f, 80.0f);
     */
-    
-    CGRect collectionFrame = CGRectMake(0, 50, self.view.bounds.size.height - 50, self.view.bounds.size.width - 50);
-    collectionView = [[UICollectionView alloc] initWithFrame:collectionFrame collectionViewLayout:flowLayout];
-    [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
-    [collectionView registerClass:[VYBFriendCollectionCell class] forCellWithReuseIdentifier:@"FriendCell"];
-    [collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
-    [collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
-    collectionView.backgroundColor = [UIColor clearColor];
-    collectionView.dataSource = self;
-    collectionView.delegate = self;
-    [self.view addSubview:collectionView];
+
+}
+
+#pragma mark - PFQueryTableViewController
+
+- (PFQuery *)queryForTable {
+    PFQuery *query = [PFUser query];
     
     // PFQuery for retrieving a list of friends on Vybe
     NSArray *facebookFriends = [[VYBCache sharedCache] facebookFriends];
-    friendsQuery = [PFUser query];
-    if (facebookFriends) {
-        [friendsQuery whereKey:kVYBUserFacebookIDKey containedIn:facebookFriends];
-        [MBProgressHUD showHUDAddedTo:collectionView animated:YES];
-        NSMutableArray *newObjects = [NSMutableArray array];
-        [friendsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (error) {
-                
-            } else {
-                for (PFUser *user in objects) {
-                    [newObjects addObject:user];
-                }
-                // PFQuery for follow status
-                PFQuery *isFollowedByCurrentUser = [PFQuery queryWithClassName:kVYBActivityClassKey];
-                [isFollowedByCurrentUser whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
-                [isFollowedByCurrentUser whereKey:kVYBActivityToUserKey containedIn:self.objects];
-                [isFollowedByCurrentUser whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeFollow];
-                [isFollowedByCurrentUser setCachePolicy:kPFCachePolicyNetworkOnly];
-
-                [isFollowedByCurrentUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                    if (objects && [objects count] > 0) {
-                        for (PFObject *following in objects) {
-                            [[VYBCache sharedCache] setFollowStatus:YES user:following[kVYBActivityToUserKey]];
-                        }
-                    }
-                }];
-                _objects = newObjects;
-                [collectionView reloadData];
-            }
-            [MBProgressHUD hideAllHUDsForView:collectionView animated:YES];
-        }];
+    [query whereKey:kVYBUserFacebookIDKey containedIn:facebookFriends];
+    
+    if (self.objects.count == 0) {
+        query.cachePolicy = kPFCachePolicyCacheElseNetwork;
     }
+    [query orderByAscending:kVYBUserDisplayNameKey];
+    
+    return query;
 }
+
+- (void)objectsDidLoad:(NSError *)error {
+    [super objectsDidLoad:error];
+    
+    // PFQuery for retrieving a list of friends on Vybe
+    PFQuery *isFollowedByCurrentUser = [PFQuery queryWithClassName:kVYBActivityClassKey];
+    [isFollowedByCurrentUser whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
+    [isFollowedByCurrentUser whereKey:kVYBActivityToUserKey containedIn:self.objects];
+    [isFollowedByCurrentUser whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeFollow];
+    [isFollowedByCurrentUser setCachePolicy:kPFCachePolicyNetworkOnly];
+    [isFollowedByCurrentUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *following in objects) {
+                [[VYBCache sharedCache] setFollowStatus:YES user:following[kVYBActivityToUserKey]];
+            }
+        }
+    }];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
+    static NSString *FriendCellIdentifier = @"FriendCell";
+    
+    VYBFriendsCell *cell = [self.tableView dequeueReusableCellWithIdentifier:FriendCellIdentifier];
+    if (!cell) {
+        cell = [[VYBFriendsCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:FriendCellIdentifier];
+        [cell setDelegate:self];
+    }
+    [cell setUser:(PFUser *)object];
+    cell.followButton.selected = [[VYBCache sharedCache] followStatusForUser:(PFUser *)object];
+    
+    return cell;
+}
+
+#pragma mark - ()
 
 - (void)goToMenu:(id)sender {
     VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
@@ -184,46 +180,48 @@
     [self.navigationController pushViewController:inviteVC animated:NO];
 }
 
+- (void)shouldToggleFollowFriendForCell:(VYBFriendsCell *)aCell {
+    PFUser *cellUser = aCell.user;
+    if ([aCell.followButton isSelected]) {
+        // Unfollow
+        aCell.followButton.selected = NO;
+        [VYBUtility unfollowUserEventually:cellUser];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:PAPUtilityUserFollowingChangedNotification object:nil];
+    } else {
+        // Follow
+        aCell.followButton.selected = YES;
+        [VYBUtility followUserInBackground:cellUser block:^(BOOL succeed, NSError *err) {
+            if (!err) {
+                //[[NSNotificationCenter defaultCenter] postNotificationName:PAPUtilityUserFollowingChangedNotification object:nil];
+            } else {
+                aCell.followButton.selected = NO;
+            }
+        }];
+    }
 
-#pragma mark - UICollectionViewDelegateFlowLayout
-
-/*
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
-    return CGSizeMake(0.0f, 30.0f);
-}
-*/
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)aCollectionView {
-    return 1;
-}
-
-- (NSInteger)collectionView:(UICollectionView *)aCollectionView numberOfItemsInSection:(NSInteger)section {
-    return [_objects count];
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)aCollectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *FriendCellIdentifier = @"FriendCell";
-    
-    PFUser *usr = [_objects objectAtIndex:[indexPath row]];
-    VYBFriendCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:FriendCellIdentifier forIndexPath:indexPath];
-    [cell setUser:usr];
-
-    return cell;
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    int height = 80;
-    int width;
-    if (IS_IPHONE_5) { width = 230; } else { width = 210; }
-        
-
-    return CGSizeMake(width, height);
 }
 
 
-- (void)followToggled:(id)sender {
+
+#pragma mark - UITableViewCellDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row < self.objects.count) {
+        return [VYBFriendsCell heightForCell];
+    } else {
+        return 44.0f;
+    }
+}
+
+#pragma makr - VYBFriendsCellDelegate
+- (void)cell:(VYBFriendsCell *)cellView didTapUserButton:(PFUser *)aUser {
     
 }
+
+- (void)cell:(VYBFriendsCell *)cellView didTapFollowButton:(PFUser *)aUser {
+    [self shouldToggleFollowFriendForCell:cellView];
+}
+
 
 - (void)didReceiveMemoryWarning
 {

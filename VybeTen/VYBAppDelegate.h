@@ -12,11 +12,11 @@
 
 @class VYBWelcomeViewController;
 
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, PFLogInViewControllerDelegate>
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, PFLogInViewControllerDelegate, UIPageViewControllerDataSource>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong) UINavigationController *navController;
-@property (nonatomic, strong) VYBMainPageViewController *pageController;
+@property (nonatomic, strong) UIPageViewController *pageController;
 @property (nonatomic, strong) VYBWelcomeViewController *welcomeViewController;
 
 /* TODO */

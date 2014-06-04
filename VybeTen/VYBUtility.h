@@ -13,8 +13,15 @@
 
 + (void)processFacebookProfilePictureData:(NSData *)data;
 //+ (void)createTribeWithName:(NSString *)aName inBackgroundWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock;
-+ (NSString *)generateUniqueFileName;
+//+ (NSString *)generateUniqueFileName;
 + (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate;
++ (void)followUserInBackground:(PFUser *)fUser block:(void (^) (BOOL succeed, NSError *err))completionBlock;
++ (void)unfollowUserEventually:(PFUser *)fUser;
+
+#pragma mark Display Name
+
++ (NSString *)firstNameForDisplayName:(NSString *)displayName;
+
 
 @end

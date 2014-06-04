@@ -7,7 +7,6 @@
 //
 
 #import "VYBMenuViewController.h"
-#import "VYBMyVybesViewController.h"
 #import "VYBTribesViewController.h"
 #import "UINavigationController+Fade.h"
 #import "VYBExploreViewController.h"
@@ -129,16 +128,10 @@
     [popUp show];
     */
     VYBFriendsViewController *friendsVC = [[VYBFriendsViewController alloc] init];
-    [(UINavigationController *)self.presentingViewController popToRootViewControllerAnimated:NO];
-    [(UINavigationController *)self.presentingViewController pushFadeViewController:friendsVC];
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController pushViewController:friendsVC animated:NO];
 }
 
 - (void)goToMyVybes:(id)sender {
-    VYBMyVybesViewController *myVybesVC = [[VYBMyVybesViewController alloc] init];
-    [(UINavigationController *)self.presentingViewController popToRootViewControllerAnimated:NO];
-    [(UINavigationController *)self.presentingViewController pushFadeViewController:myVybesVC];
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 

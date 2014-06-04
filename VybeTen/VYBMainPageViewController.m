@@ -12,41 +12,45 @@
 #import "VYBFriendsViewController.h"
 #import "VYBWelcomeViewController.h"
 
-@interface VYBMainPageViewController ()
-
-@end
-
 @implementation VYBMainPageViewController
-
-- (id)init {
-    self = [super init];
-    if (self) {
-        VYBTribesViewController *tribesVC = [[VYBTribesViewController alloc] init];
-        VYBFriendsViewController *friendsVC = [[VYBFriendsViewController alloc] init];
-        UINavigationController *navController = [[UINavigationController alloc] init];
-        [[navController navigationBar] setHidden:YES];
-        
-        VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
-        
-        VYBWelcomeViewController *welcomeViewController = [[VYBWelcomeViewController alloc] init];
-        
-        navController.modalPresentationStyle = UIModalPresentationCurrentContext;
-        
-        [navController pushViewController:captureVC animated:NO];
-        [navController pushViewController:welcomeViewController animated:NO];
-
-    }
-    
-    return self;
-}
+@synthesize scrollView = _scrollView;
+@synthesize controllers = _controllers;
 
 - (void)viewDidLoad {
+    NSLog(@"_view: %@", NSStringFromCGRect(self.view.frame));
     [super viewDidLoad];
+    NSLog(@"AFTER.. _view: %@", NSStringFromCGRect(self.view.frame));
+
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
+    [self.view addSubview:self.scrollView];
+    self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.height, self.view.bounds.size.width * 2);
+    self.scrollView.pagingEnabled = YES;
+
     
-    _pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationVertical options:nil];
-    _pageController.delegate = self;
-    _pageController.dataSource = self;
+    self.controllers = [[NSMutableArray alloc] init];
     
+    VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
+    //VYBTribesViewController *tribeVC = [[VYBTribesViewController alloc] initWithPosition:1];
+    //[self.scrollView addSubview:tribeVC.view];
+    [self.scrollView addSubview:captureVC.view];
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
+    [self.view addSubview:self.scrollView];
+    self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.height, self.view.bounds.size.width * 2);
+    self.scrollView.pagingEnabled = YES;
+    
+    
+    self.controllers = [[NSMutableArray alloc] init];
+    
+    VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
+    //VYBTribesViewController *tribeVC = [[VYBTribesViewController alloc] initWithPosition:1];
+    //[self.scrollView addSubview:tribeVC.view];
+    [self.scrollView addSubview:captureVC.view];
 }
 
 @end

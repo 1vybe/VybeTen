@@ -39,6 +39,8 @@
     
     UIImageView *overlayView;
     JSBadgeView *badgeView;
+    
+    NSInteger _pageIndex;
 }
 
 @synthesize syncButton, syncLabel, recordButton, countLabel, flipButton, menuButton, flashButton, flashLabel, notificationButton;
@@ -47,30 +49,29 @@
 
 static void * XXContext = &XXContext;
 
-- (id)init {
++ (VYBCaptureViewController *)captureViewControllerForPageIndex:(NSInteger)pageIndex {
+    if (pageIndex >= 0 && pageIndex < 2) {
+        return [[self alloc] initWithPageIndex:pageIndex];
+    }
+    return nil;
+}
+
+- (id)initWithPageIndex:(NSInteger)pageIndex {
     self = [super init];
     if (self) {
+        _pageIndex = pageIndex;
         session = [[AVCaptureSession alloc] init];
         movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
     }
     return self;
 }
 
-
-
-
+- (NSInteger)pageIndex {
+    return _pageIndex;
+}
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBSyncViewControllerDidChangeSyncTribe object:nil];
-}
-
-- (void)loadView {
-    // Retrieves this device's unique ID
-    adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-    //NSLog(@"UserID:%@", adId);
-    //NSLog(@"%@", NSStringFromCGRect([[UIScreen mainScreen] bounds]));
-    UIView *theView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.view = theView;
 }
 
 - (void)setSession:(AVCaptureSession *)s withVideoInput:(AVCaptureDeviceInput *)vidInput withMovieFileOutput:(AVCaptureMovieFileOutput *)movieOutput{
@@ -82,7 +83,10 @@ static void * XXContext = &XXContext;
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+    //[super viewDidLoad];
+    UIView *theView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.view = theView;
+    [self.view setBackgroundColor:[UIColor clearColor]];
     
     [self setUpCameraSession];
 
@@ -251,6 +255,15 @@ static void * XXContext = &XXContext;
     if ( [session canAddOutput:movieFileOutput] )
         [session addOutput:movieFileOutput];
     movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+    
+    if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeLeft) {
+        [[cameraInputLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+        [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+    } else if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeRight) {
+        [[cameraInputLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+        [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+    }
+
 }
 
 - (AVCaptureDeviceInput *)frontCameraInput {

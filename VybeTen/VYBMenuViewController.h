@@ -10,8 +10,5 @@
 
 @interface VYBMenuViewController : UIViewController
 
-- (void)goToMyVybes:(id)sender;
-- (void)goToMyTribes:(id)sender;
-
 @end
 

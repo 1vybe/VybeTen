@@ -16,6 +16,7 @@
 #import "VYBFriendsViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBMyTribeStore.h"
+#import "VYBMenuViewController.h"
 #import "VYBConstants.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
@@ -38,7 +39,7 @@
 @synthesize hostReach;
 @synthesize internetReach;
 @synthesize wifiReach;
-
+@synthesize pageController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -83,19 +84,24 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
 
-    self.navController = [[UINavigationController alloc] init];
+    /*
+    pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationVertical options:nil];
+    pageController.dataSource = self;
+    VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
+    UINavigationController *pageZero = [[UINavigationController alloc] initWithRootViewController:menuVC];
+    [pageZero.navigationBar setHidden:YES];
+    [pageZero pushViewController:[VYBTribesViewController tribesViewControllerForPageIndex:0] animated:NO];
+    [pageZero pushViewController:self.welcomeViewController animated:NO];
+    pageZero.modalPresentationStyle = UIModalPresentationCurrentContext;
+    [pageController setViewControllers:@[pageZero] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    */
+    
+    VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
+    self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
+    self.navController = [[UINavigationController alloc] initWithRootViewController:menuVC];
+    [self.navController pushViewController:[VYBTribesViewController tribesViewControllerForPageIndex:0] animated:NO];
+    [self.navController pushViewController:self.welcomeViewController animated:NO];
     [self.navController.navigationBar setHidden:YES];
-    
-    VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
-    
-    VYBWelcomeViewController *welcomeViewController = [[VYBWelcomeViewController alloc] init];
-    
-    self.navController.modalPresentationStyle = UIModalPresentationCurrentContext;
-    
-    [self.navController pushViewController:captureVC animated:NO];
-    [self.navController pushViewController:welcomeViewController animated:NO];
-
-
 
     [self.window setRootViewController:self.navController];
     self.window.backgroundColor = [UIColor blackColor];
@@ -103,8 +109,41 @@
     
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
+    //[self handlePush:launchOptions];
+    
     return YES;
 }
+
+#pragma mark - UIPageViewControllerDataSource
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(id)viewController {
+    if ( [viewController isMemberOfClass:[UINavigationController class]] ) {
+        viewController = [[(UINavigationController *)viewController viewControllers] firstObject];
+    }
+    NSInteger idx = [viewController pageIndex] - 1;
+    if (idx == 0) {
+        UINavigationController *pageZero = [[UINavigationController alloc] initWithRootViewController:[VYBTribesViewController tribesViewControllerForPageIndex:0]];
+        [pageZero.navigationBar setHidden:YES];
+        pageZero.modalPresentationStyle = UIModalPresentationCurrentContext;
+        
+        return pageZero;
+    }
+    return nil;
+}
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(id)viewController {
+    if ( [viewController isMemberOfClass:[UINavigationController class]] ) {
+        viewController = [[(UINavigationController *)viewController viewControllers] firstObject];
+    }
+    NSInteger idx = [viewController pageIndex] + 1;
+    if (idx == 1) {
+        return [VYBCaptureViewController captureViewControllerForPageIndex:1];
+    }
+    return nil;
+}
+
+
+
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -123,13 +162,6 @@
     else
         NSLog(@"Vybe put to sleep. My vybes will be lost. :(");
     
-    success = NO;//[[VYBMyTribeStore sharedStore] saveChanges];
-    if (success)
-        NSLog(@"My tribes are saved. :)");
-    else
-        NSLog(@"My tribes will be lost. :(");
-    //[[VYBMyTribeStore sharedStore] listVybes];
-    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -145,12 +177,9 @@
         NSLog(@"Vybe terminated. My vybes are saved. :)");
     else
         NSLog(@"Vybe terminated. My vybes will be lost. :(");
-    
-    //success = [[VYBMyTribeStore sharedStore] clear];
-    //NSLog(@"My tribes caches are cleared. :)");
-    //NSLog(@"My tribes caches are not cleared. :(");
-    //[[VYBMyTribeStore sharedStore] listVybes];
 }
+
+
 
 - (void)presentLoginViewController {
     [self presentLoginViewControllerAnimated:YES];
@@ -159,8 +188,8 @@
 - (void)presentLoginViewControllerAnimated:(BOOL)animated {
     VYBLoginViewController *logInViewController = [[VYBLoginViewController alloc] init];
     [logInViewController setDelegate:self];
-    [logInViewController setFields:PFLogInFieldsFacebook | PFLogInFieldsTwitter];
-    NSArray *permissionsArray = @[ @"friends_about_me", @"public_profile", @"user_friends" ];
+    [logInViewController setFields:PFLogInFieldsFacebook];
+    NSArray *permissionsArray = @[ @"public_profile" ];
     [logInViewController setFacebookPermissions:permissionsArray];
     
     [self.welcomeViewController presentViewController:logInViewController animated:NO completion:nil];
@@ -224,11 +253,11 @@
     }];
     
     [self.navController popToRootViewControllerAnimated:NO];
-    [self.navController dismissViewControllerAnimated:NO completion:nil];
+    [self.welcomeViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error {
-    NSLog(@"Failed to log in...");
+    NSLog(@"Failed to log in: %@", error);
 }
 
 
@@ -273,7 +302,7 @@
         
     }
     
-    [PFPush handlePush:userInfo];
+    //[PFPush handlePush:userInfo];
 }
 
 
@@ -311,7 +340,7 @@
         BOOL flag = YES;
         for (NSDictionary *friendData in data) {
             if (flag) {
-                NSLog(@"[f]:%@", friendData);
+                //NSLog(@"[f]:%@", friendData);
                 flag = NO;
             }
             if (friendData[@"id"]) {
@@ -400,7 +429,6 @@
         // Parse is reachable and calling this method will only upload a vybe if there is
         [[VYBMyVybeStore sharedStore] uploadDelayedVybes];
     }
-
 }
 
 @end

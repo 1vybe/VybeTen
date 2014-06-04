@@ -95,7 +95,6 @@ extern NSString *const kVYBActivityVybeKey;
 extern NSString *const kVYBActivityTypeFollow;
 extern NSString *const kVYBActivityTypeJoined;
 
-
 #pragma mark - Cached User Attributes
 // keys
 extern NSString *const kVYBUserAttributesSyncTribeKey;

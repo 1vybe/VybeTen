@@ -17,10 +17,27 @@
     self = [super init];
     
     if (self) {
-        uniqueFileName = [VYBUtility generateUniqueFileName];
+        uniqueFileName = [self generateUniqueFileName];
     }
     
     return self;
+}
+
+- (NSString *)generateUniqueFileName {
+    //Create unique filename
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *uniquePath = [[paths lastObject] stringByAppendingPathComponent:@"VybeToUpload"];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:uniquePath])
+        [[NSFileManager defaultManager] createDirectoryAtPath:uniquePath withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    CFUUIDRef newUniqueId = CFUUIDCreate(kCFAllocatorDefault);
+	CFStringRef newUniqueIdString = CFUUIDCreateString(kCFAllocatorDefault, newUniqueId);
+	uniquePath = [uniquePath stringByAppendingPathComponent:(__bridge NSString *)newUniqueIdString];
+	CFRelease(newUniqueId);
+	CFRelease(newUniqueIdString);
+    
+    return uniquePath;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {

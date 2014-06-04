@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBTribesViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@protocol VYBPageViewControllerProtocol;
+@interface VYBTribesViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VYBPageViewControllerProtocol>
+
++ (id)tribesViewControllerForPageIndex:(NSInteger)pageIndex;
+- (NSInteger)pageIndex;
 
 @end

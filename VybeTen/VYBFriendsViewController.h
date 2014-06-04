@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VYBFriendsCell.h"
 
-@interface VYBFriendsViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-
-@property (nonatomic, readonly) NSArray *objects;
+@interface VYBFriendsViewController : PFQueryTableViewController <VYBFriendsCellDelegate>
 
 @end
