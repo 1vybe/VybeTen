@@ -9,16 +9,17 @@
 #import "VYBAppDelegate.h"
 #import "VYBMenuViewController.h"
 #import "VYBTribesViewController.h"
-#import "UINavigationController+Fade.h"
-#import "VYBExploreViewController.h"
 #import "VYBFriendsViewController.h"
-#import "TransitionDelegate.h"
+#import "VYBCaptureViewController.h"
 
 @interface VYBMenuViewController ()
 
 @end
 
-@implementation VYBMenuViewController
+@implementation VYBMenuViewController {
+    UIImageView *overlayView;
+    VYBCaptureViewController *captureVC;
+}
 
 - (void)loadView {
     UIView *theView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -29,6 +30,11 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
+    
+    // Overlay alertView will be displayed when a user entered in a portrait mode
+    UIDevice *iphone = [UIDevice currentDevice];
+    [iphone beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];
     
     /*
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissMenu:)];
@@ -77,6 +83,32 @@
     [menuColumn addSubview:buttonMyVybes];
 }
 
+- (void)deviceOrientationChanged:(NSNotification *)note {
+    UIDevice *device = [note object];
+    if ( UIDeviceOrientationIsPortrait([device orientation]) ) {
+        /*
+        if (!overlayView) {
+            UIWindow *window = self.view.window;
+            overlayView = [[UIImageView alloc] initWithFrame:window.bounds];
+            [overlayView setBackgroundColor:[UIColor colorWithWhite:0.0f alpha:0.8f]];
+            [overlayView setUserInteractionEnabled:YES];
+            [overlayView setContentMode:UIViewContentModeCenter];
+            [overlayView setImage:[UIImage imageNamed:@"screen_warning_rotate.png"]];
+            [window addSubview:overlayView];
+        }
+        */
+        [captureVC dismissViewControllerAnimated:YES completion:nil];
+    } else if ( UIDeviceOrientationIsLandscape([device orientation]) ) {
+        /*
+        [overlayView removeFromSuperview];
+        overlayView = nil;
+         */
+        captureVC = [[VYBCaptureViewController alloc] init];
+        [self presentViewController:captureVC animated:YES completion:nil];
+    }
+}
+
+
 /**
  * Actions that are triggered by buttons
  **/
@@ -84,15 +116,6 @@
 - (void)dismissMenu:(id)sender {
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
-
-/*
-- (void)goToExplore:(id)sender {
-    VYBExploreViewController *exploreVC = [[VYBExploreViewController alloc] init];
-    [(UINavigationController *)self.presentingViewController popToRootViewControllerAnimated:NO];
-    [(UINavigationController *)self.presentingViewController pushFadeViewController:exploreVC];
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-}
-*/
 
 - (void)goToMyTribes:(id)sender {
     VYBTribesViewController *tribesVC = [[VYBTribesViewController alloc] init];
@@ -107,6 +130,7 @@
 - (void)goToMyVybes:(id)sender {
     [(VYBAppDelegate *)[[UIApplication sharedApplication] delegate] logOut];
 }
+
 
 
 

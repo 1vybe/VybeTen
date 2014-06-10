@@ -102,9 +102,9 @@
 
     self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
     self.navController = [[UINavigationController alloc] initWithRootViewController:self.welcomeViewController];
-    self.navController.navigationBar.translucent = YES;
     
-    //[self.navController.navigationBar setHidden:YES];
+    //self.navController.navigationBar.translucent = YES;
+    
 
     [self.window setRootViewController:self.navController];
     

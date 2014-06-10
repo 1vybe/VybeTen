@@ -66,6 +66,16 @@ static void * XXContext = &XXContext;
     return self;
 }
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        session = [[AVCaptureSession alloc] init];
+        movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
+    }
+    
+    return self;
+}
+
 - (NSInteger)pageIndex {
     return _pageIndex;
 }
@@ -73,13 +83,6 @@ static void * XXContext = &XXContext;
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBSyncViewControllerDidChangeSyncTribe object:nil];
 }
-
-- (void)setSession:(AVCaptureSession *)s withVideoInput:(AVCaptureDeviceInput *)vidInput withMovieFileOutput:(AVCaptureMovieFileOutput *)movieOutput{
-    session = s;
-    videoInput = vidInput;
-    movieFileOutput = movieOutput;
-}
-
 
 - (void)viewDidLoad
 {
@@ -98,11 +101,7 @@ static void * XXContext = &XXContext;
     
     transitionController = [[TransitionDelegate alloc] init];
     
-    // Overlay alertView will be displayed when a user entered in a portrait mode
-    UIDevice *iphone = [UIDevice currentDevice];
-    [iphone beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];
-    
+
     recording = NO;
     frontCamera = NO;
     
@@ -203,6 +202,7 @@ static void * XXContext = &XXContext;
     [flashLabel setText:@"OFF"];
     [self.flashButton addSubview:flashLabel];
 
+    //self.navigationController.navigationBarHidden = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -306,7 +306,6 @@ static void * XXContext = &XXContext;
 - (void)startRecording {
     /* Start Recording */
     if (!recording) {
-        
         startTime = [NSDate date];
 
         currVybe = [[VYBMyVybe alloc] init];
@@ -323,7 +322,6 @@ static void * XXContext = &XXContext;
         [movieConnection setVideoMirrored:frontCamera];
         
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[currVybe videoFilePath]];
-        //NSLog(@"outputURL:%@", outputURL);
         [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
         
         recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
@@ -403,49 +401,13 @@ static void * XXContext = &XXContext;
         [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
     }
     
-    
     [session startRunning];
 }
 
 - (void)goToMenu:(id)sender {
-    VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
-    menuVC.view.backgroundColor = [UIColor clearColor];
-    menuVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    //[menuVC setTransitioningDelegate:transitionController];
-    //menuVC.modalPresentationStyle = UIModalPresentationCurrentContext;
-    //self.modalPresentationStyle = UIModalPresentationCurrentContext;
-    [self.navigationController presentViewController:menuVC animated:YES completion:nil];
-    
-    syncButton.hidden = YES; syncLabel.hidden = YES; flipButton.hidden = YES; menuButton.hidden = YES; notificationButton.hidden = YES; flashButton.hidden = YES;
-    
-    //[self.navigationController pushFadeViewController:menuVC];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
-- (void)deviceOrientationChanged:(NSNotification *)note {
-    UIDevice *device = [note object];
-    if ( UIDeviceOrientationIsPortrait([device orientation]) ) {
-        if (!overlayView) {
-            UIWindow *window = self.view.window;
-            overlayView = [[UIImageView alloc] initWithFrame:window.bounds];
-            [overlayView setBackgroundColor:[UIColor colorWithWhite:0.0f alpha:0.8f]];
-            [overlayView setUserInteractionEnabled:YES];
-            [overlayView setContentMode:UIViewContentModeCenter];
-            [overlayView setImage:[UIImage imageNamed:@"screen_warning_rotate.png"]];
-            [window addSubview:overlayView];
-        }
-    } else if ( UIDeviceOrientationIsLandscape([device orientation]) ) {
-        [overlayView removeFromSuperview];
-        overlayView = nil;
-        if ([device orientation] == UIDeviceOrientationLandscapeLeft) {
-            [[cameraInputLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-            [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-        } else if ([device orientation] == UIDeviceOrientationLandscapeRight) {
-            [[cameraInputLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
-            [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
-        }
-    }
-}
 
 
 #pragma mark - AVCaptureFileOutputRecordingDelegate
