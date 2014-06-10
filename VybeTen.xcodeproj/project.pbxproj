@@ -37,9 +37,11 @@
 		0275087F19252E0D00B070EE /* UIImage+ResizeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275087E19252E0D00B070EE /* UIImage+ResizeAdditions.m */; };
 		0275088219252E9000B070EE /* UIImage+RoundedCornerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275088119252E9000B070EE /* UIImage+RoundedCornerAdditions.m */; };
 		0275088519252EA000B070EE /* UIImage+AlphaAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275088419252EA000B070EE /* UIImage+AlphaAdditions.m */; };
-		027B201C193D360000D23AC7 /* VYBFriendsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 027B201B193D360000D23AC7 /* VYBFriendsCell.m */; };
+		027B201C193D360000D23AC7 /* VYBFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 027B201B193D360000D23AC7 /* VYBFriendCell.m */; };
 		027FB48018FEC2AC00946579 /* PWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 027FB47F18FEC2AC00946579 /* PWProgressView.m */; };
 		02979900192ADF230073E705 /* VYBFriendCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 029798FF192ADF230073E705 /* VYBFriendCollectionCell.m */; };
+		02BD8C62193FFB1E002D91E4 /* VYBTribeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 02BD8C61193FFB1E002D91E4 /* VYBTribeCell.m */; };
+		02BD8C651940C9F3002D91E4 /* VYBVybeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 02BD8C641940C9F3002D91E4 /* VYBVybeCell.m */; };
 		02CCF8FF1939600700B3137D /* VYBActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CCF8FE1939600700B3137D /* VYBActivityViewController.m */; };
 		02CED7871934433E00D6BBDB /* VYBMainPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CED7861934433E00D6BBDB /* VYBMainPageViewController.m */; };
 		02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */; };
@@ -136,12 +138,16 @@
 		0275088119252E9000B070EE /* UIImage+RoundedCornerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCornerAdditions.m"; sourceTree = "<group>"; };
 		0275088319252EA000B070EE /* UIImage+AlphaAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AlphaAdditions.h"; sourceTree = "<group>"; };
 		0275088419252EA000B070EE /* UIImage+AlphaAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AlphaAdditions.m"; sourceTree = "<group>"; };
-		027B201A193D360000D23AC7 /* VYBFriendsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBFriendsCell.h; sourceTree = "<group>"; };
-		027B201B193D360000D23AC7 /* VYBFriendsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBFriendsCell.m; sourceTree = "<group>"; };
+		027B201A193D360000D23AC7 /* VYBFriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBFriendCell.h; sourceTree = "<group>"; };
+		027B201B193D360000D23AC7 /* VYBFriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBFriendCell.m; sourceTree = "<group>"; };
 		027FB47E18FEC2AC00946579 /* PWProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWProgressView.h; sourceTree = "<group>"; };
 		027FB47F18FEC2AC00946579 /* PWProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWProgressView.m; sourceTree = "<group>"; };
 		029798FE192ADF230073E705 /* VYBFriendCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBFriendCollectionCell.h; sourceTree = "<group>"; };
 		029798FF192ADF230073E705 /* VYBFriendCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBFriendCollectionCell.m; sourceTree = "<group>"; };
+		02BD8C60193FFB1E002D91E4 /* VYBTribeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTribeCell.h; sourceTree = "<group>"; };
+		02BD8C61193FFB1E002D91E4 /* VYBTribeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBTribeCell.m; sourceTree = "<group>"; };
+		02BD8C631940C9F3002D91E4 /* VYBVybeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybeCell.h; sourceTree = "<group>"; };
+		02BD8C641940C9F3002D91E4 /* VYBVybeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybeCell.m; sourceTree = "<group>"; };
 		02CCF8FD1939600700B3137D /* VYBActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBActivityViewController.h; sourceTree = "<group>"; };
 		02CCF8FE1939600700B3137D /* VYBActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBActivityViewController.m; sourceTree = "<group>"; };
 		02CED7851934433E00D6BBDB /* VYBMainPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMainPageViewController.h; sourceTree = "<group>"; };
@@ -247,8 +253,12 @@
 				025169AC18FAF955007F34B0 /* VYBLabel.m */,
 				029798FE192ADF230073E705 /* VYBFriendCollectionCell.h */,
 				029798FF192ADF230073E705 /* VYBFriendCollectionCell.m */,
-				027B201A193D360000D23AC7 /* VYBFriendsCell.h */,
-				027B201B193D360000D23AC7 /* VYBFriendsCell.m */,
+				027B201A193D360000D23AC7 /* VYBFriendCell.h */,
+				027B201B193D360000D23AC7 /* VYBFriendCell.m */,
+				02BD8C60193FFB1E002D91E4 /* VYBTribeCell.h */,
+				02BD8C61193FFB1E002D91E4 /* VYBTribeCell.m */,
+				02BD8C631940C9F3002D91E4 /* VYBVybeCell.h */,
+				02BD8C641940C9F3002D91E4 /* VYBVybeCell.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -592,10 +602,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02BD8C62193FFB1E002D91E4 /* VYBTribeCell.m in Sources */,
 				60F1BBBC18BAB39400070EEC /* VYBVybe.m in Sources */,
 				0243CC9818CC665200CA03C0 /* VYBReplayViewController.m in Sources */,
 				025299ED190AACED00264C86 /* VYBUserStore.m in Sources */,
 				024B0E2B18BB39E30073574E /* VYBImageStore.m in Sources */,
+				02BD8C651940C9F3002D91E4 /* VYBVybeCell.m in Sources */,
 				024BE32F19174FB200CDAA8D /* VYBInviteViewController.m in Sources */,
 				024BE32C1917431200CDAA8D /* VYBFriendsViewController.m in Sources */,
 				6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */,
@@ -611,7 +623,7 @@
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				022361FB18FBDEAF002700B8 /* VYBCollectionViewController.m in Sources */,
 				024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */,
-				027B201C193D360000D23AC7 /* VYBFriendsCell.m in Sources */,
+				027B201C193D360000D23AC7 /* VYBFriendCell.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				022361F818FBD266002700B8 /* VYBTribesViewController.m in Sources */,
 				6043968B18CAE4A60090F3AE /* VYBMyTribeStore.m in Sources */,
@@ -754,7 +766,7 @@
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "330FF44D-C895-40DD-95A0-6C435F89607A";
+				PROVISIONING_PROFILE = "088ED5BE-D121-4927-BC4D-71F71E1DDC09";
 			};
 			name = Release;
 		};

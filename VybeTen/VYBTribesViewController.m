@@ -10,30 +10,18 @@
 #import "VYBMenuViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBMyTribeStore.h"
-#import "VYBImageStore.h"
 #import "VYBTribeTimelineViewController.h"
-#import "VYBCreateTribeViewController.h"
 #import "VYBConstants.h"
+#import "VYBCache.h"
 
 @implementation VYBTribesViewController {
     UIView *topBar;
     UILabel *currentTabLabel;
     UILabel *createButton;
     
-    UIView *sideBar;
-    UIButton *searchButton;
-    UIButton *captureButton;
-    UIButton *menuButton;
-    UIButton *followingButton;
-    UIButton *contributingButton;
-    UIButton *myTribesButton;
-    
-    UICollectionView *collection;
-    UICollectionViewFlowLayout *flowLayout;
-    
-    NSInteger _pageIndex;
+    //NSInteger _pageIndex;
 }
-
+/*
 + (VYBTribesViewController *)tribesViewControllerForPageIndex:(NSInteger)pageIndex {
     if (pageIndex >= 0 ) {
         return [[self alloc] initWithPageIndex:pageIndex];
@@ -53,6 +41,23 @@
     return _pageIndex;
 }
 
+*/
+
+- (id)initWithStyle:(UITableViewStyle)style {
+    self = [super initWithStyle:style];
+    if (self) {
+        self.paginationEnabled = YES;
+        
+        self.parseClassName = kVYBTribeClassKey;
+        
+        self.pullToRefreshEnabled = YES;
+        
+        self.objectsPerPage = 20;
+    }
+    
+    return self;
+}
+
 - (void)loadView {
     [super loadView];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -65,31 +70,27 @@
 
     //TODO: Add observer to NSNotification from AppDelegate for PUSH notification for newly created tribe that this user is invited to
     
+    /*
     UIToolbar *backView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
-    [backView setBarStyle:UIBarStyleBlack];
+    [backView setBarStyle:UIBarStyleDefault];
     [self.view addSubview:backView];
+    */
     
     // Adding a dark TOPBAR
-    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.height - 50, 50);
+    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.width, 50);
     topBar = [[UIView alloc] initWithFrame:frame];
     [topBar setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.1]];
     [self.view addSubview:topBar];
     
-    // Adding SEARCH button
-    frame = CGRectMake(self.view.bounds.size.height - 100, 0, 50, 50);
-    searchButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *searchImg = [UIImage imageNamed:@"button_search.png"];
-    [searchButton setImage:searchImg forState:UIControlStateNormal];
-    //[topBar addSubview:searchButton];
     // Adding Label
-    frame = CGRectMake(10, 0, 150, 50);
+    frame = CGRectMake(0, 0, 150, 50);
     currentTabLabel = [[UILabel alloc] initWithFrame:frame];
     [currentTabLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20.0]];
     [currentTabLabel setTextColor:[UIColor whiteColor]];
     [currentTabLabel setText:@"T R I B E S"];
     [topBar addSubview:currentTabLabel];
     // Adding CREATE button
-    frame = CGRectMake(self.view.bounds.size.height - 100, 0, 50, 50);
+    frame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
     createButton = [[UILabel alloc] initWithFrame:frame];
     [createButton setText:@"+"];
     [createButton setTextColor:[UIColor whiteColor]];
@@ -99,98 +100,82 @@
     [createButton addGestureRecognizer:tap];
     [createButton setUserInteractionEnabled:YES];
     [topBar addSubview:createButton];
-    
-    // Adding a dark SIDEBAR
-    frame = CGRectMake(self.view.bounds.size.height - 50, 0, 50, self.view.bounds.size.width);
-    sideBar = [[UIView alloc] initWithFrame:frame];
-    [sideBar setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
-    [self.view addSubview:sideBar];
-    
-    frame = CGRectMake(0, 0, 50, 50);
-    menuButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *menuImg = [UIImage imageNamed:@"button_menu.png"];
-    [menuButton setImage:menuImg forState:UIControlStateNormal];
-    //[menuButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
-    [menuButton addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
-    [sideBar addSubview:menuButton];
-    
-    frame = CGRectMake(0, 50, 50, (self.view.bounds.size.width - 100)/3);
-    followingButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *followingImg = [UIImage imageNamed:@"button_following.png"];
-    [followingButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
-    [followingButton setImage:followingImg forState:UIControlStateNormal];
-    //[sideBar addSubview:followingButton];
-    CALayer *bottomBorder = [CALayer layer];
-    bottomBorder.frame = CGRectMake(10, (self.view.bounds.size.width - 100)/3, 30, 1.0f);
-    bottomBorder.backgroundColor = [UIColor colorWithWhite:1.0f alpha:0.5f].CGColor;
-    [followingButton.layer addSublayer:bottomBorder];
-    
-    frame = CGRectMake(0, 50 + (self.view.bounds.size.width - 100)/3, 50, (self.view.bounds.size.width - 100)/3);
-    contributingButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *contributingImg = [UIImage imageNamed:@"button_contributing.png"];
-    [contributingButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
-    [contributingButton setImage:contributingImg forState:UIControlStateNormal];
-    //[sideBar addSubview:contributingButton];
-    CALayer *bottomBorder2 = [CALayer layer];
-    bottomBorder2.frame = CGRectMake(10, (self.view.bounds.size.width - 100)/3, 30, 1.0f);
-    bottomBorder2.backgroundColor = [UIColor colorWithWhite:1.0f alpha:0.5f].CGColor;
-    [contributingButton.layer addSublayer:bottomBorder2];
-    
-    frame = CGRectMake(0, 50 + (self.view.bounds.size.width - 100)*2/3, 50, (self.view.bounds.size.width - 100)/3);
-    myTribesButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *myTribesImg = [UIImage imageNamed:@"button_mytribes.png"];
-    [myTribesButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
-    [myTribesButton setImage:myTribesImg forState:UIControlStateNormal];
-    //[sideBar addSubview:myTribesButton];
-    
-    frame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
-    captureButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *captureImg = [UIImage imageNamed:@"button_vybe.png"];
-    [captureButton setImage:captureImg forState:UIControlStateNormal];
-    //[captureButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
-    [captureButton addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
-    [sideBar addSubview:captureButton];
-    
-    flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
-    flowLayout.sectionInset = UIEdgeInsetsMake(50.0f, 10.0f, 20.0f, 10.0f);
-    flowLayout.minimumLineSpacing = 50.0f;
-    flowLayout.minimumInteritemSpacing = 20.0f;
-    if (IS_IPHONE_5)
-        flowLayout.itemSize = CGSizeMake(150.0f, 80.0f);
-    else
-        flowLayout.itemSize = CGSizeMake(120.0f, 80.0f);
 
-    
-    CGRect collectionFrame = CGRectMake(0, 50, self.view.bounds.size.height - 50, self.view.bounds.size.width - 50);
-    collection = [[UICollectionView alloc] initWithFrame:collectionFrame collectionViewLayout:flowLayout];
-    [collection registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
-    [collection registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
-    [collection registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
-    collection.backgroundColor = [UIColor clearColor];
-    collection.dataSource = self;
-    collection.delegate = self;
-    [self.view addSubview:collection];
-
-    // Retries tribes for the user
-    PFQuery *tribesQuery = [PFQuery queryWithClassName:kVYBTribeClassKey];
-    [tribesQuery whereKey:kVYBTribeMembersKey equalTo:[PFUser currentUser]];
-    [tribesQuery includeKey:kVYBTribeCreatorKey];
-    //[tribesQuery includeKey:kVYBTribeMembersKey];
-    
-    [tribesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (error) {
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [av show];
-            NSLog(@"Error: [SyncTribeViewController] tribe query failed.");
-        } else {
-            if ([objects count] > 0) {
-                [[VYBMyTribeStore sharedStore] setMyTribes:objects];
-                [collection reloadData];
-            }
-        }
-    }];
 }
+
+/*
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self loadObjects];
+}
+*/
+
+#pragma mark - PFQueryTableView
+
+- (PFQuery *)queryForTable {
+    PFQuery *contributingQuery = [PFQuery queryWithClassName:kVYBTribeClassKey];
+    [contributingQuery whereKey:kVYBTribeMembersKey equalTo:[PFUser currentUser]];
+    
+    PFQuery *recommendedQuery = [PFQuery queryWithClassName:kVYBTribeClassKey];
+    NSArray *followedByMe = [[VYBCache sharedCache] usersFollowedByMe];
+    [recommendedQuery whereKey:kVYBTribeMembersKey containedIn:followedByMe];
+    
+    //PFQuery *query = [PFQuery orQueryWithSubqueries:@[contributingQuery, recommendedQuery]];
+    
+    if (self.objects.count == 0) {
+        contributingQuery.cachePolicy = kPFCachePolicyCacheElseNetwork;
+    }
+    
+    [contributingQuery orderByAscending:kVYBTribeNameKey];
+    
+    return contributingQuery;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
+    static NSString *TribeCellIdentifier = @"TribeCellIdentifier";
+    
+    VYBTribeCell *cell = [tableView dequeueReusableCellWithIdentifier:TribeCellIdentifier];
+    
+    if (!cell) {
+        cell = [[VYBTribeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TribeCellIdentifier];
+        cell.delegate = self;
+    }
+    
+    [cell setTribe:object];
+    
+    return cell;
+}
+
+
+#pragma mark - VYBFriendCellDelegate
+
+- (void)cell:(VYBTribeCell *)cellView didTapTribeButton:(PFObject *)aTribe {
+    VYBTribeTimelineViewController *tribeTimeline = [[VYBTribeTimelineViewController alloc] init];
+    [tribeTimeline setTribe:aTribe];
+    [self.navigationController pushViewController:tribeTimeline animated:NO];
+}
+
+
+#pragma mark - UITableViewCellDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row < self.objects.count) {
+        return [VYBTribeCell heightForCell];
+    } else {
+        return 44.0f;
+    }
+}
+
+#pragma mark - VYBCreateTribeViewControllerDelegate
+
+- (void)createdTribe:(PFObject *)aTribe {
+    [self loadObjects];
+    VYBTribeTimelineViewController *tribeTimeline = [[VYBTribeTimelineViewController alloc] init];
+    [tribeTimeline setTribe:aTribe];
+    [self.navigationController pushViewController:tribeTimeline animated:NO];
+}
+
+#pragma mark - ()
 
 - (void)goToMenu:(id)sender {
     [self.navigationController popToRootViewControllerAnimated:NO];
@@ -201,12 +186,14 @@
 }
 
 
-// TODO: THIS IS DUMMY
 - (void)createTribe:(id)sender {
     VYBCreateTribeViewController *createTribeVC = [[VYBCreateTribeViewController alloc] init];
-    [self.navigationController presentViewController:createTribeVC animated:NO completion:nil];
+    createTribeVC.delegate = self;
+    [self.navigationController presentViewController:createTribeVC animated:YES completion:nil];
 }
 
+
+/*
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
@@ -279,7 +266,7 @@
     [tribeTimelineVC setCurrTribe:tribe];
     [self.navigationController pushViewController:tribeTimelineVC animated:NO];
 
-    /*
+ 
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
     [playerVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     [self.navigationController presentViewController:playerVC animated:NO completion:^(void) {
@@ -293,8 +280,9 @@
         //[vybesVC setCurrTribe:tribe];
         //[self.navigationController pushViewController:vybesVC animated:NO];
     }];
-    */
+ 
 }
+*/
 
 
 

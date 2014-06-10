@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import "VYBFriendsCell.h"
+#import "VYBFriendCell.h"
 
 
-@implementation VYBFriendsCell
+@implementation VYBFriendCell
 
 
 @synthesize delegate;
@@ -24,7 +24,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        //self.selectionStyle = UITableViewCellSelectionStyleNone;
         
         self.avatarImageView = [[PFImageView alloc] initWithFrame:CGRectMake(10.0f, 14.0f, 40.0f, 40.0f)];
         [self.contentView addSubview:self.avatarImageView];

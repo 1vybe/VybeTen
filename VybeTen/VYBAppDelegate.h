@@ -11,6 +11,7 @@
 #import "VYBMainPageViewController.h"
 
 @class VYBWelcomeViewController;
+@class VYBMenuViewController;
 
 @interface VYBAppDelegate : UIResponder <UIApplicationDelegate, PFLogInViewControllerDelegate, UIPageViewControllerDataSource>
 
@@ -18,6 +19,7 @@
 @property (nonatomic, strong) UINavigationController *navController;
 @property (nonatomic, strong) UIPageViewController *pageController;
 @property (nonatomic, strong) VYBWelcomeViewController *welcomeViewController;
+@property (nonatomic, strong) VYBMenuViewController *menuViewController;
 
 /* TODO */
 @property (nonatomic, readonly) int networkStatus;
@@ -28,6 +30,7 @@
 
 - (void)presentLoginViewController;
 - (void)presentLoginViewControllerAnimated:(BOOL)animated;
+- (void)presentHomeScreen;
 - (void)fetchCurrentUserData;
 - (void)logOut;
 

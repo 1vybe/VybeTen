@@ -7,11 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VYBTribeCell.h"
+#import "VYBCreateTribeViewController.h"
 
-@protocol VYBPageViewControllerProtocol;
-@interface VYBTribesViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VYBPageViewControllerProtocol>
+//@protocol VYBPageViewControllerProtocol;
+@interface VYBTribesViewController : PFQueryTableViewController <VYBTribeCellDelegate, VYBCreateTribeViewControllerDelegate>
 
+/*
 + (id)tribesViewControllerForPageIndex:(NSInteger)pageIndex;
 - (NSInteger)pageIndex;
+*/
 
 @end

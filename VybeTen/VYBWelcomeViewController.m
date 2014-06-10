@@ -31,7 +31,7 @@
     // Refresh current user with server side data -- checks if user is still valid and so on
     [[PFUser currentUser] refreshInBackgroundWithTarget:self selector:@selector(refreshCurrentUserCallbackWithResult:error:)];
     
-    [self.navigationController popViewControllerAnimated:NO];
+    [(VYBAppDelegate *)[[UIApplication sharedApplication] delegate] presentHomeScreen];
 }
 
 - (void)refreshCurrentUserCallbackWithResult:(PFObject *)refreshedObject error:(NSError *)error {

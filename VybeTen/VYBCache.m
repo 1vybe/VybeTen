@@ -68,6 +68,10 @@
     return NO;
 }
 
+- (NSArray *)usersFollowedByMe {
+    return nil;
+}
+
 - (PFObject *)syncTribeForUser:(PFUser *)user {
     NSDictionary *attributes = [self attributesForUser:user];
     if (attributes) {

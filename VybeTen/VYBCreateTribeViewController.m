@@ -10,6 +10,7 @@
 #import "VYBMyTribeStore.h"
 #import "VYBTribeTimelineViewController.h"
 #import "VYBUtility.h"
+#import "MBProgressHUD.h"
 
 @implementation VYBCreateTribeViewController {
     UIView *topBar;
@@ -32,14 +33,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIToolbar *backView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
-    [backView setBarStyle:UIBarStyleBlack];
+    UIToolbar *backView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 50, self.view.bounds.size.width, self.view.bounds.size.height)];
+    [backView setBarStyle:UIBarStyleDefault];
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard:)];
     [backView addGestureRecognizer:tapGesture];
     [self.view addSubview:backView];
     
     // Adding a dark TOPBAR
-    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.height, 50);
+    CGRect frame = CGRectMake(0, 50, self.view.bounds.size.width, 50);
     topBar = [[UIView alloc] initWithFrame:frame];
     [topBar setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.1]];
     [self.view addSubview:topBar];
@@ -52,19 +53,19 @@
     [cancelButton addTarget:self action:@selector(cancelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [topBar addSubview:cancelButton];
     // Adding CREATE button
-    frame = CGRectMake(self.view.bounds.size.height - 50, 0, 50, 50);
+    frame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
     createButton = [[UIButton alloc] initWithFrame:frame];
     UIImage *createImg = [UIImage imageNamed:@"button_check"];
     [createButton setImage:createImg forState:UIControlStateNormal];
     [createButton addTarget:self action:@selector(createButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [topBar addSubview:createButton];
     // Adding TRIBE NAME textfield
-    frame = CGRectMake(50, 0, 250, 50);
+    frame = CGRectMake(50, 0, self.view.bounds.size.width - 100, 50);
     tribeNameTextField = [[UITextField alloc] initWithFrame:frame];
     [tribeNameTextField setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
-    [tribeNameTextField setTextColor:[UIColor whiteColor]];
+    [tribeNameTextField setTextColor:[UIColor blackColor]];
     [tribeNameTextField becomeFirstResponder];
-    UIColor *placeholderColor = [UIColor colorWithWhite:0.7 alpha:0.5];
+    UIColor *placeholderColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     tribeNameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Enter a tribe name"
                                                                                attributes:@{NSForegroundColorAttributeName: placeholderColor,
                                                                                             NSFontAttributeName : [UIFont fontWithName:@"Montreal-Xlight" size:20]}];
@@ -76,7 +77,7 @@
 }
 
 - (void)cancelButtonPressed:(id)sender {
-    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)createButtonPressed:(id)sender {
@@ -107,19 +108,20 @@
     [tribeACL setPublicReadAccess:NO];
     newTribe.ACL = tribeACL;
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [newTribe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            VYBTribeTimelineViewController *tribeTimelineVC = [[VYBTribeTimelineViewController alloc] init];
-            [tribeTimelineVC setCurrTribe:newTribe];
-            [(UINavigationController *)self.presentingViewController pushViewController:tribeTimelineVC animated:NO];
-            [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
-            
+            if (self.delegate) {
+                [self.delegate createdTribe:newTribe];
+            }
+            [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
         } else {
             NSString *msg = [NSString stringWithFormat:@"A tribe cannot be created at this time."];
             UIAlertView *popUp = [[UIAlertView alloc] initWithTitle:@"" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [popUp show];
             NSLog(@"Error while creating a tribe: %@", error);
         }
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }];
     
 }

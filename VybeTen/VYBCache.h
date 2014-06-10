@@ -22,6 +22,7 @@
 - (void)clear;
 
 - (NSDictionary *)attributesForUser:(PFUser *)user;
+- (NSArray *)usersFollowedByMe;
 - (NSNumber *)vybeCountForUser:(PFUser *)user;
 - (NSNumber *)tribeCountForUser:(PFUser *)user;
 - (PFObject *)syncTribeForUser:(PFUser *)user;

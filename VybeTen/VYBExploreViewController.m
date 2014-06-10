@@ -291,7 +291,7 @@
             [playerVC setVybePlaylist:[tribe vybes]];
             [playerVC playFromUnwatched];
         }
-        [vybesVC setCurrTribe:tribe];
+        //[vybesVC setCurrTribe:tribe];
         [self.navigationController pushViewController:vybesVC animated:NO];
     }];
 }

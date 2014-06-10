@@ -96,14 +96,18 @@
     [pageController setViewControllers:@[pageZero] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     */
     
-    VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
+    //VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
+    //[self.navController pushViewController:[VYBTribesViewController tribesViewControllerForPageIndex:0] animated:NO];
+    //[self.navController pushViewController:self.welcomeViewController animated:NO];
+
     self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
-    self.navController = [[UINavigationController alloc] initWithRootViewController:menuVC];
-    [self.navController pushViewController:[VYBTribesViewController tribesViewControllerForPageIndex:0] animated:NO];
-    [self.navController pushViewController:self.welcomeViewController animated:NO];
-    [self.navController.navigationBar setHidden:YES];
+    self.navController = [[UINavigationController alloc] initWithRootViewController:self.welcomeViewController];
+    self.navController.navigationBar.translucent = YES;
+    
+    //[self.navController.navigationBar setHidden:YES];
 
     [self.window setRootViewController:self.navController];
+    
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     
@@ -114,6 +118,7 @@
     return YES;
 }
 
+/*
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(id)viewController {
@@ -141,7 +146,7 @@
     }
     return nil;
 }
-
+*/
 
 
 
@@ -192,7 +197,12 @@
     NSArray *permissionsArray = @[ @"public_profile" ];
     [logInViewController setFacebookPermissions:permissionsArray];
     
-    [self.welcomeViewController presentViewController:logInViewController animated:NO completion:nil];
+    [self.navController presentViewController:logInViewController animated:NO completion:nil];
+}
+
+- (void)presentHomeScreen {
+    self.menuViewController = [[VYBMenuViewController alloc] init];
+    [self.navController setViewControllers:@[self.menuViewController]];
 }
 
 - (void)fetchCurrentUserData {
@@ -224,10 +234,7 @@
     
     [PFUser logOut];
     
-    [self.navController popToRootViewControllerAnimated:NO];
-    self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
-    [self.navController pushViewController:self.welcomeViewController animated:NO];
-
+    [self.navController setViewControllers:@[self.welcomeViewController]];
     
     [self presentLoginViewControllerAnimated:NO];
 }
@@ -252,8 +259,8 @@
         }
     }];
     
-    [self.navController popToRootViewControllerAnimated:NO];
-    [self.welcomeViewController dismissViewControllerAnimated:NO completion:nil];
+    [self.navController dismissViewControllerAnimated:NO completion:nil];
+    [self presentHomeScreen];
 }
 
 - (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error {
@@ -420,7 +427,7 @@
 - (void)reachabilityChanged:(NSNotification* )note {
     Reachability *curReach = (Reachability *)[note object];
     NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
-    NSLog(@"Reachability changed: %@", curReach);
+    //NSLog(@"Reachability changed: %@", curReach);
     networkStatus = [curReach currentReachabilityStatus];
     
 

@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "VYBFriendsCell.h"
+#import "VYBFriendCell.h"
 
-@interface VYBFriendsViewController : PFQueryTableViewController <VYBFriendsCellDelegate>
+@interface VYBFriendsViewController : PFQueryTableViewController <VYBFriendCellDelegate>
 
 @end

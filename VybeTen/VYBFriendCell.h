@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol VYBFriendsCellDelegate;
+@protocol VYBFriendCellDelegate;
 
-@interface VYBFriendsCell : PFTableViewCell {
+@interface VYBFriendCell : PFTableViewCell {
     //id _delegate;
 }
 
-@property (nonatomic, strong) id <VYBFriendsCellDelegate> delegate;
+@property (nonatomic, strong) id <VYBFriendCellDelegate> delegate;
 
 @property (nonatomic, strong) PFUser *user;
 @property (nonatomic, strong) UILabel *tribeLabel;
@@ -31,9 +31,9 @@
 
 @end
 
-@protocol VYBFriendsCellDelegate <NSObject>
+@protocol VYBFriendCellDelegate <NSObject>
 @optional
-- (void)cell:(VYBFriendsCell *)cellView didTapUserButton:(PFUser *)aUser;
-- (void)cell:(VYBFriendsCell *)cellView didTapFollowButton:(PFUser *)aUser;
+- (void)cell:(VYBFriendCell *)cellView didTapUserButton:(PFUser *)aUser;
+- (void)cell:(VYBFriendCell *)cellView didTapFollowButton:(PFUser *)aUser;
 
 @end

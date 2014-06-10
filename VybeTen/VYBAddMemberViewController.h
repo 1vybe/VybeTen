@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VYBFriendCell.h"
 
-@interface VYBAddMemberViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface VYBAddMemberViewController : PFQueryTableViewController <VYBFriendCellDelegate>
 
-@property (nonatomic, readonly) NSArray *objects;
-@property (nonatomic) PFObject *currTribe;
+@property (nonatomic) PFObject *tribe;
+
+- (id)initWithTribe:(PFObject *)aTribe;
 
 @end

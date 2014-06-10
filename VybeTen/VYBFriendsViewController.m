@@ -12,7 +12,7 @@
 #import "VYBCache.h"
 #import "VYBUtility.h"
 #import "MBProgressHUD.h"
-#import "VYBFriendsCell.h"
+#import "VYBFriendCell.h"
 
 @implementation VYBFriendsViewController {
     /*
@@ -37,6 +37,8 @@
         self.pullToRefreshEnabled = YES;
         
         self.objectsPerPage = 15;
+        
+        self.tableView.allowsSelection = NO;
     }
     
     return self;
@@ -129,6 +131,7 @@
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
     
+    
     // PFQuery for retrieving a list of friends on Vybe
     PFQuery *isFollowedByCurrentUser = [PFQuery queryWithClassName:kVYBActivityClassKey];
     [isFollowedByCurrentUser whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
@@ -140,6 +143,7 @@
             for (PFObject *following in objects) {
                 [[VYBCache sharedCache] setFollowStatus:YES user:following[kVYBActivityToUserKey]];
             }
+            [self.tableView reloadData];
         }
     }];
 }
@@ -147,9 +151,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
     static NSString *FriendCellIdentifier = @"FriendCell";
     
-    VYBFriendsCell *cell = [self.tableView dequeueReusableCellWithIdentifier:FriendCellIdentifier];
+    VYBFriendCell *cell = [self.tableView dequeueReusableCellWithIdentifier:FriendCellIdentifier];
     if (!cell) {
-        cell = [[VYBFriendsCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:FriendCellIdentifier];
+        cell = [[VYBFriendCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:FriendCellIdentifier];
         [cell setDelegate:self];
     }
     [cell setUser:(PFUser *)object];
@@ -180,7 +184,7 @@
     [self.navigationController pushViewController:inviteVC animated:NO];
 }
 
-- (void)shouldToggleFollowFriendForCell:(VYBFriendsCell *)aCell {
+- (void)shouldToggleFollowFriendForCell:(VYBFriendCell *)aCell {
     PFUser *cellUser = aCell.user;
     if ([aCell.followButton isSelected]) {
         // Unfollow
@@ -198,7 +202,6 @@
             }
         }];
     }
-
 }
 
 
@@ -207,18 +210,18 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.objects.count) {
-        return [VYBFriendsCell heightForCell];
+        return [VYBFriendCell heightForCell];
     } else {
         return 44.0f;
     }
 }
 
 #pragma makr - VYBFriendsCellDelegate
-- (void)cell:(VYBFriendsCell *)cellView didTapUserButton:(PFUser *)aUser {
+- (void)cell:(VYBFriendCell *)cellView didTapUserButton:(PFUser *)aUser {
     
 }
 
-- (void)cell:(VYBFriendsCell *)cellView didTapFollowButton:(PFUser *)aUser {
+- (void)cell:(VYBFriendCell *)cellView didTapFollowButton:(PFUser *)aUser {
     [self shouldToggleFollowFriendForCell:cellView];
 }
 

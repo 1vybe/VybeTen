@@ -18,19 +18,21 @@
 #import "GAIFields.h"
 #import "VYBUtility.h"
 
+
 @implementation VYBTribeTimelineViewController {
+   
+    UILabel *countLabel;
+    UIButton *membersButton;
+    UIView *topBar;
+
+    /*
+    UIButton *menuButton;
     UIButton *buttonCapture;
     UIButton *buttonBack;
-    UILabel *countLabel;
-    
-    UIView *topBar;
-    UIButton *menuButton;    
-    UIButton *friendsButton;
-    
-    UILabel *centerCellLabel;
+    */
 }
 
-@synthesize currTribe = _currTribe;
+@synthesize tribe;
 
 #pragma mark - Initialization
 
@@ -52,7 +54,7 @@
         self.pullToRefreshEnabled = YES;
         
         // The number of objects to show per page
-        self.objectsPerPage = 7;
+        self.objectsPerPage = 15;
     }
     
     return self;
@@ -67,86 +69,41 @@
 
     [super viewDidLoad];
     
-    self.tableView.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
-    // Rotate the tableView clockwise for horizontal scrolling
-    CGAffineTransform rotateTable = CGAffineTransformMakeRotation(M_PI_2);
-    self.tableView.transform = rotateTable;
-    [self.tableView setBackgroundColor:[UIColor clearColor]];
-    //[self.tableView setRowHeight:200.0f];
     self.tableView.showsVerticalScrollIndicator = NO;
+  
     // Add blurredView
     UIToolbar* blurredView = [[UIToolbar alloc] initWithFrame:self.tableView.bounds];
-    [blurredView setBarStyle:UIBarStyleBlack];
+    [blurredView setBarStyle:UIBarStyleDefault];
     [self.tableView setBackgroundView:blurredView];
     
     
     // Adding a dark TOPBAR
-    CGRect frame = CGRectMake(0, 0, 50, self.view.bounds.size.height);
+    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.height - 50, 50);
     topBar = [[UIView alloc] initWithFrame:frame];
     [topBar setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.1]];
     [self.view addSubview:topBar];
     
-    // Adding BACK button
-    CGRect buttonBackFrame = CGRectMake(0, self.view.bounds.size.height - 50, 50, 50);
-    buttonBack = [[UIButton alloc] initWithFrame:buttonBackFrame];
-    UIImage *backImage = [UIImage imageNamed:@"button_back.png"];
-    [buttonBack setContentMode:UIViewContentModeCenter];
-    [buttonBack setImage:backImage forState:UIControlStateNormal];
-    CGAffineTransform counterClockwise = CGAffineTransformMakeRotation(-M_PI_2);
-    buttonBack.transform = counterClockwise;
-    [buttonBack addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
-    [topBar addSubview:buttonBack];
-    // Adding MENU button
-    frame = CGRectMake(0, 0, 50, 50);
-    menuButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *menuImg = [UIImage imageNamed:@"button_menu.png"];
-    [menuButton setImage:menuImg forState:UIControlStateNormal];
-    menuButton.transform = counterClockwise;
-    //[menuButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
-    [menuButton addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
-    [topBar addSubview:menuButton];
     // Adding COUNT label
     // These frequent view related steps should be done in Model side.
     // Count label translates the view by 35 px along x and 85px along y axis because the label is a rectangle
-    frame = CGRectMake(0, 0, 120, 50);
+    frame = CGRectMake(0, 0, 150, 50);
     countLabel = [[UILabel alloc] initWithFrame:frame];
     [countLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
-    [countLabel setText:[NSString stringWithFormat:@"%@", [self.currTribe objectForKey:kVYBTribeNameKey]]];
+    [countLabel setText:[NSString stringWithFormat:@"%@", [self.tribe objectForKey:kVYBTribeNameKey]]];
     [countLabel setTextColor:[UIColor whiteColor]];
-    [countLabel setTextAlignment:NSTextAlignmentCenter];
-    countLabel.transform = counterClockwise;
+    [countLabel setTextAlignment:NSTextAlignmentLeft];
     [countLabel setBackgroundColor:[UIColor clearColor]];
     [self.tableView addSubview:countLabel];
-    countLabel.center = topBar.center;
-    
-    // Adding CAPTURE button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
-    buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
-    UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
-    [buttonCapture setContentMode:UIViewContentModeCenter];
-    [buttonCapture setImage:captureImage forState:UIControlStateNormal];
-    buttonCapture.transform = counterClockwise;
-    [buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
-    [[self tableView] addSubview:buttonCapture];
    
     // Adding FRIENDS button
-    frame = CGRectMake(self.view.bounds.size.width - 50, self.view.bounds.size.height - 50, 50, 50);
-    friendsButton = [[UIButton alloc] initWithFrame:frame];
+    frame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
+    membersButton = [[UIButton alloc] initWithFrame:frame];
     UIImage *friendsImg = [UIImage imageNamed:@"button_friends.png"];
-    [friendsButton setContentMode:UIViewContentModeCenter];
-    [friendsButton setImage:friendsImg forState:UIControlStateNormal];
-    [friendsButton addTarget:self action:@selector(didTapOnFriendsButton:) forControlEvents:UIControlEventTouchUpInside];
-    friendsButton.transform = counterClockwise;
-    [self.tableView addSubview:friendsButton];
+    [membersButton setContentMode:UIViewContentModeCenter];
+    [membersButton setImage:friendsImg forState:UIControlStateNormal];
+    [membersButton addTarget:self action:@selector(didTapOnMembersButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self.tableView addSubview:membersButton];
     
-    // Adding Center label
-    frame = CGRectMake(self.view.bounds.size.width - 115, (self.view.bounds.size.height - 50)/2 , 180, 50);
-    centerCellLabel = [[UILabel alloc] initWithFrame:frame];
-    [centerCellLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18.0f]];
-    [centerCellLabel setTextColor:[UIColor whiteColor]];
-    [centerCellLabel setTextAlignment:NSTextAlignmentCenter];
-    centerCellLabel.transform = counterClockwise;
-    [self.tableView addSubview:centerCellLabel];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -164,7 +121,7 @@
     }
     
     PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-    [query whereKey:kVYBVybeTribeKey equalTo:self.currTribe];
+    [query whereKey:kVYBVybeTribeKey equalTo:self.tribe];
     // A pull-to-refresh should always trigger a network request.
     [query setCachePolicy:kPFCachePolicyNetworkOnly];
     [query orderByDescending:kVYBVybeTimestampKey];
@@ -205,57 +162,23 @@
     return query;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row >= self.objects.count) {
-        // Load More Section
-        return 50.0f;
-    }
-    
-    return 200.0f;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    NSInteger num = [self.objects count];
-    if (self.paginationEnabled && num != 0)
-        num++;
-    return num;
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object
 {
-    /*
-    if (indexPath.row >= self.objects.count) {
-        UITableViewCell *cell = [self tableView:tableView cellForNextPageAtIndexPath:indexPath];
-        return cell;
-    } else {
-        static NSString *VybeCell = @"VybeCell";
-        
-        VYBVybeCell *cell = (VYBVybeCell *)[tableView dequeueReusableCellWithIdentifier:VybeCell];
-        if (!cell) {
-            cell = [[VYBVybeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:VybeCell];
-        }
-        cell.imageView.image = [UIImage imageNamed:@"user_avatar.png"];
-        
-        if (object) {
-            cell.imageView.file = object[kVYBVybeThumbnailKey];
-            
-            if ([cell.imageView.file isDataAvailable]) {
-                [cell.imageView loadInBackground];
-            }
-        }
-
-        return cell;
+    static NSString *VybeCellIdentifier = @"VybeCellIdentifier";
+    
+    VYBVybeCell *cell = [tableView dequeueReusableCellWithIdentifier:VybeCellIdentifier];
+    
+    if (!cell) {
+        cell = [[VYBVybeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:VybeCellIdentifier];
+        cell.delegate = self;
     }
-     */
-    return nil;
+    
+    [cell setVybe:object];
+    
+    return cell;
 }
 
-
+/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForNextPageAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *LoadMoreCellIdentifier = @"LoadMoreCell";
     
@@ -270,129 +193,38 @@
     }
     return cell;
 }
+*/
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == self.objects.count && self.paginationEnabled) {
-        [self loadNextPage];
+/*
+ - (PFObject *)objectAtIndexPath:(NSIndexPath *)indexPath {
+ if (indexPath.row < self.objects.count) {
+ return [self.objects objectAtIndex:indexPath.row];
+ }
+ 
+ return nil;
+ }
+ */
+
+#pragma mark - UITableViewCellDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row < self.objects.count) {
+        return [VYBVybeCell heightForCell];
+    } else {
+        return 44.0f;
     }
-    else {
-        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-        [self.navigationController presentViewController:playerVC animated:NO completion:^(){
-            //[playerVC setVybePlaylist:[self.currTribe vybes]];
-            // Here d indicated the number of downloaded vybes and n is the number of vybes including the ones to be downloaded
-            [playerVC playFrom:[indexPath row]];
-        }];
-   }
 }
+
+#pragma mark - VYBVybeCellDelegate
+
 
 #pragma mark - ()
 
-- (void)didTapOnFriendsButton:(id)sender {
-    VYBAddMemberViewController *addMemberVC = [[VYBAddMemberViewController alloc] init];
+- (void)didTapOnMembersButton:(id)sender {
+    VYBAddMemberViewController *addMemberVC = [[VYBAddMemberViewController alloc] initWithTribe:self.tribe];
     [self.navigationController pushViewController:addMemberVC animated:NO];
-    [addMemberVC setCurrTribe:self.currTribe];
 }
 
-- (void)captureVybe:(id)sender {
-    [self.navigationController popToRootViewControllerAnimated:NO];
-}
-
-- (void)goBack:(id)sender {
-    [self.navigationController popViewControllerAnimated:NO];
-}
-
-- (void)goToMenu:(id)sender {
-    VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
-    menuVC.view.backgroundColor = [UIColor clearColor];
-    menuVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    //[menuVC setTransitioningDelegate:transitionController];
-    //menuVC.modalPresentationStyle = UIModalPresentationCurrentContext;
-    //self.modalPresentationStyle = UIModalPresentationCurrentContext;
-    [self.navigationController presentViewController:menuVC animated:YES completion:nil];
-}
-
-/**
- * Repositioning floating views during/after scroll
- **/
-#pragma mark - UIScrollViewDelegate 
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    // if decelerating, let scrollViewDidEndDecelerating: handle it
-    if (decelerate == NO) {
-        //[self centerTable];
-    }
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    //[self centerTable];
-}
-
-- (void)centerTable {
-    NSIndexPath *pathForCenterCell = [self.tableView indexPathForRowAtPoint:CGPointMake(CGRectGetMidX(self.tableView.bounds), CGRectGetMidY(self.tableView.bounds))];
-    
-    [self.tableView scrollToRowAtIndexPath:pathForCenterCell atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-    
-    if (pathForCenterCell.row < self.objects.count) {
-        PFObject *centerVybe = [self.objects objectAtIndex:pathForCenterCell.row];
-        NSDate *centerDate = centerVybe[kVYBVybeTimestampKey];
-        [centerCellLabel setText:[VYBUtility localizedDateStringFrom:centerDate]];
-    }
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGRect frameTwo = buttonCapture.frame;
-    frameTwo.origin.y = scrollView.contentOffset.y;
-    buttonCapture.frame = frameTwo;
-    
-    CGRect frameThree = topBar.frame;
-    frameThree.origin.y = scrollView.contentOffset.y;
-    topBar.frame = frameThree;
-    
-    CGRect frameFour = friendsButton.frame;
-    frameFour.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - 50;
-    friendsButton.frame = frameFour;
-    
-    countLabel.center = topBar.center;
-    
-    CGRect frameFive = centerCellLabel.frame;
-    frameFive.origin.y = scrollView.contentOffset.y + (self.view.bounds.size.height - 180)/2;
-    centerCellLabel.frame = frameFive;
-    
-    [[self view] bringSubviewToFront:topBar];
-    [[self view] bringSubviewToFront:buttonCapture];
-    [[self view] bringSubviewToFront:countLabel];
-    [[self view] bringSubviewToFront:friendsButton];
-    [[self view] bringSubviewToFront:centerCellLabel];
-
-    // Change the text of CENTER label
-    NSIndexPath *pathForCenterCell = [self.tableView indexPathForRowAtPoint:CGPointMake(CGRectGetMidX(self.tableView.bounds), CGRectGetMidY(self.tableView.bounds))];
-
-    if (pathForCenterCell.row < self.objects.count) {
-        PFObject *centerVybe = [self.objects objectAtIndex:pathForCenterCell.row];
-        NSDate *centerDate = centerVybe[kVYBVybeTimestampKey];
-        [centerCellLabel setText:[VYBUtility localizedDateStringFrom:centerDate]];
-    }
-}
-/*
-- (NSIndexPath *)indexPathForObject:(PFObject *)targetObject {
-    for (int i = 0; i < self.objects.count; i++) {
-        PFObject *object = [self.objects objectAtIndex:i];
-        if ([[object objectId] isEqualToString:[targetObject objectId]]) {
-            return [NSIndexPath indexPathForRow:i inSection:0];
-        }
-    }
-    
-    return nil;
-}
-*/
-- (PFObject *)objectAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row < self.objects.count) {
-        return [self.objects objectAtIndex:indexPath.row];
-    }
-    
-    return nil;
-}
 
 - (void)didReceiveMemoryWarning
 {

@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VYBVybeCell.h"
+
 @class VYBTribe;
 
-@interface VYBTribeTimelineViewController : PFQueryTableViewController
+@interface VYBTribeTimelineViewController : PFQueryTableViewController <VYBVybeCellDelegate>
 
-@property (nonatomic) PFObject *currTribe;
+@property (nonatomic, strong) PFObject *tribe;
 
 @end

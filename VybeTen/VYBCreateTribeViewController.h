@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol VYBCreateTribeViewControllerDelegate <NSObject>
+
+- (void)createdTribe:(PFObject *)aTribe;
+
+@end
+
 @interface VYBCreateTribeViewController : UIViewController
+
+@property (nonatomic, strong) id <VYBCreateTribeViewControllerDelegate> delegate;
 
 @end

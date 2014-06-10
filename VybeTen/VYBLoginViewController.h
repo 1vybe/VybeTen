@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 
-@interface VYBLoginViewController : PFLogInViewController <PFLogInViewControllerDelegate>
+@interface VYBLoginViewController : PFLogInViewController
 
 @end
