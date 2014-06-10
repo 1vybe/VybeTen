@@ -24,6 +24,8 @@
     UILabel *countLabel;
     UIButton *membersButton;
     UIView *topBar;
+    
+    VYBPlayerViewController *playerVC;
 
     /*
     UIButton *menuButton;
@@ -70,7 +72,7 @@
     [super viewDidLoad];
     
     self.tableView.showsVerticalScrollIndicator = NO;
-  
+    
     // Add blurredView
     UIToolbar* blurredView = [[UIToolbar alloc] initWithFrame:self.tableView.bounds];
     [blurredView setBarStyle:UIBarStyleDefault];
@@ -162,8 +164,14 @@
     return query;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object
-{
+- (void)objectsDidLoad:(NSError *)error {
+    [super objectsDidLoad:error];
+    NSLog(@"New number of objects: %lui", self.objects.count);
+}
+
+#pragma mark - UITableViewController
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
     static NSString *VybeCellIdentifier = @"VybeCellIdentifier";
     
     VYBVybeCell *cell = [tableView dequeueReusableCellWithIdentifier:VybeCellIdentifier];
@@ -177,6 +185,7 @@
     
     return cell;
 }
+
 
 /*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForNextPageAtIndexPath:(NSIndexPath *)indexPath {
@@ -217,6 +226,10 @@
 
 #pragma mark - VYBVybeCellDelegate
 
+- (void)cell:(VYBVybeCell *)cellView didTapVybeButton:(PFObject *)aVybe {
+    playerVC = [[VYBPlayerViewController alloc] init];
+    [playerVC setVybePlaylist:self.objects];
+}
 
 #pragma mark - ()
 

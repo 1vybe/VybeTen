@@ -31,7 +31,6 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
     
-    // Overlay alertView will be displayed when a user entered in a portrait mode
     UIDevice *iphone = [UIDevice currentDevice];
     [iphone beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];

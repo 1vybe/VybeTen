@@ -15,7 +15,6 @@
 #import "VYBTribesViewController.h"
 #import "VYBFriendsViewController.h"
 #import "VYBMyVybeStore.h"
-#import "VYBMyTribeStore.h"
 #import "VYBMenuViewController.h"
 #import "VYBConstants.h"
 #import "VYBCache.h"

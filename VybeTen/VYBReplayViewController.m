@@ -9,7 +9,6 @@
 #import "VYBReplayViewController.h"
 #import "VYBPlayerView.h"
 #import "VYBMyVybeStore.h"
-#import "VYBMyTribeStore.h"
 #import "VYBCaptureViewController.h"
 #import "VYBConstants.h"
 #import "VYBSyncTribeViewController.h"

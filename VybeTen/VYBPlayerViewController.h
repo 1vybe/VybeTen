@@ -21,7 +21,9 @@
 
 @property (nonatomic) AVPlayerItem *currItem;
 @property (nonatomic) UILabel *labelTime;
-@property (nonatomic) NSMutableArray *vybePlaylist;
+@property (nonatomic) NSArray *vybePlaylist;
+
+@property (nonatomic) PFObject *vybe;
 
 @property (nonatomic, copy) void (^dismissBlock)(NSInteger row);
 

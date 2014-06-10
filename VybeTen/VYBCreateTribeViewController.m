@@ -7,7 +7,6 @@
 //
 
 #import "VYBCreateTribeViewController.h"
-#import "VYBMyTribeStore.h"
 #import "VYBTribeTimelineViewController.h"
 #import "VYBUtility.h"
 #import "MBProgressHUD.h"

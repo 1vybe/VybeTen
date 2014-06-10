@@ -18,7 +18,6 @@
 #import "VYBSyncTribeViewController.h"
 #import "UINavigationController+Fade.h"
 #import "JSBadgeView.h"
-#import "VYBTribe.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
 

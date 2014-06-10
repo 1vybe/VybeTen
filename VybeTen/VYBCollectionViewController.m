@@ -8,7 +8,6 @@
 
 #import "VYBCollectionViewController.h"
 #import "VYBImageStore.h"
-#import "VYBTribe.h"
 
 @implementation VYBCollectionViewController {
     UICollectionView *collection;
@@ -56,22 +55,6 @@
     return [tribes count];
 }
 
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collection dequeueReusableCellWithReuseIdentifier:@"collectionCell" forIndexPath:indexPath];
-    VYBTribe *tribe = [tribes objectAtIndex:[indexPath row]];
-    VYBVybe *vybe = [[tribe vybes] firstObject];
-    
-    UIImage *cellImg = [[VYBImageStore sharedStore] imageWithKey:[vybe thumbnailPath]];
-    if (!cellImg) {
-        cellImg = [UIImage imageWithContentsOfFile:[vybe thumbnailPath]];
-        [[VYBImageStore sharedStore] setImage:cellImg forKey:[vybe thumbnailPath]];
-    }
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:cellImg];
-    cell.backgroundColor = [UIColor clearColor];
-    
-    return cell;
-}
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     

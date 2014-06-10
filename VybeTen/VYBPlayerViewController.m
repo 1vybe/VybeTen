@@ -12,18 +12,20 @@
 #import "GAI.h"
 #import "GAIFields.h"
 #import "GAIDictionaryBuilder.h"
-#import "VYBVybe.h"
-#import "VYBMyTribeStore.h"
 #import "VYBConstants.h"
 
 @implementation VYBPlayerViewController {
     NSInteger playIndex;
+    
+    UIButton *backButton;
+    UIButton *captureButton;
     
     UILabel *currentTribeLabel;
     UILabel *locationLabel;
     UILabel *usernameLabel;
     
     UIView *loadingView;
+    UILabel *loadingLabel;
 }
 
 @synthesize currPlayer = _currPlayer;
@@ -101,22 +103,20 @@
     /* NOTE: Origin for menu button is (0, 0) */
     // Adding BACK button
     CGRect buttonBackFrame = CGRectMake(0, 0, 50, 50);
-    UIButton *buttonBack = [[UIButton alloc] initWithFrame:buttonBackFrame];
+    backButton = [[UIButton alloc] initWithFrame:buttonBackFrame];
     UIImage *backImage = [UIImage imageNamed:@"button_back_shadow.png"];
-    [buttonBack setContentMode:UIViewContentModeCenter];
-    [buttonBack setImage:backImage forState:UIControlStateNormal];
-    [buttonBack addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttonBack];
+    [backButton setContentMode:UIViewContentModeCenter];
+    [backButton setImage:backImage forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:backButton];
     // Adding capture button
     CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 50, self.view.bounds.size.width - 50, 50, 50);
-    UIButton *buttonCapture = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
+    captureButton = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
     UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
-    [buttonCapture setContentMode:UIViewContentModeCenter];
-    [buttonCapture setImage:captureImage forState:UIControlStateNormal];
-    [buttonCapture addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:buttonCapture];
-
-    VYBVybe *v = (VYBVybe *)[self.vybePlaylist objectAtIndex:playIndex];
+    [captureButton setContentMode:UIViewContentModeCenter];
+    [captureButton setImage:captureImage forState:UIControlStateNormal];
+    [captureButton addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:captureButton];
 
     // Adding TIME label
     CGRect labelTimeFrame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 48, 200, 48);
@@ -139,32 +139,60 @@
     currentTribeLabel = [[VYBLabel alloc] initWithFrame:frame];
     [currentTribeLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18]];
     [currentTribeLabel setTextColor:[UIColor whiteColor]];
-    [currentTribeLabel setText:[v tribeName]];
     [self.view addSubview:currentTribeLabel];
+    
+    // LOADING screen
+    loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    [loadingView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
+    loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
+    [loadingLabel setText:@"L O A D I N G ..."];
+    [loadingLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:24.0f]];
+    [loadingLabel setTextAlignment:NSTextAlignmentCenter];
+    [loadingLabel setTextColor:[UIColor whiteColor]];
+    [loadingView addSubview:loadingLabel];
+    loadingLabel.center = loadingView.center;
+    [self.view addSubview:loadingView];
+    loadingView.hidden = YES;
+    
 }
 
 - (void)playFrom:(NSInteger)index {
     playIndex = index;
-    [self setUpPlayersAt:playIndex];
+    PFObject *currVybe = [self.vybePlaylist objectAtIndex:index];
+    PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
+    loadingView.hidden = NO;
+    [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        loadingView.hidden = YES;
+        if (!error) {
+            //self.currItem = [AVPlayerItem playerItemWithAsset: ];
+
+        } else {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [av show];
+        }
+    }];
+    //[self setUpPlayersAt:playIndex];
 }
 
 - (void)playerItemDidReachEnd {
     [self.currPlayer pause];
     playIndex--;
-    [self setUpPlayersAt:playIndex];
+    //[self setUpPlayersAt:playIndex];
 }
 
+/*
 - (void)setUpPlayersAt:(NSInteger)from {
     // Remove the playerItem that just finished playing
     [[NSNotificationCenter defaultCenter] removeObserver:self.currItem];
     if (from < [self.vybePlaylist count]) {
+        
         VYBVybe *currV, *prevV, *nextV;
         currV = (VYBVybe *)[self.vybePlaylist objectAtIndex:from];
         prevV = (from == [self.vybePlaylist count] - 1) ? nil : (VYBVybe *)[self.vybePlaylist objectAtIndex:from + 1];
         nextV = (from == 0) ? nil : (VYBVybe *)[self.vybePlaylist objectAtIndex:from - 1];
         
         [self.labelTime setText:[NSString stringWithFormat:@"%@ %@", [currV dateString], [currV timeString]]];
-        /* TODO: change location accordingly to the vybe playing */
+
         [locationLabel setText:@"Old Port, Montreal"];
         NSURL *currUrl = [[NSURL alloc] initFileURLWithPath:[currV tribeVideoPath]];
         NSURL *prevUrl, *nextUrl;
@@ -198,7 +226,6 @@
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
                 [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
                 [self.currPlayer play];
-                /* TODO: This should set all the previous vybes as WATCHED */
             }];
             
             [currV setWatched:YES];
@@ -222,12 +249,14 @@
         
         //NSLog(@"prev: %@",[self.prevPlayer status]);
         //NSLog(@"next: %@", [self.nextPlayer status]);
-        /* TODO: This should set all the previous vybes as WATCHED */
+        // TODO: This should set all the previous vybes as WATCHED
         [currV setWatched:YES];
     }
 }
+*/
 
 - (void)playFromUnwatched {
+    /*
     NSInteger i = [self.vybePlaylist count] - 1;
     playIndex = [self.vybePlaylist count] - 1;
 
@@ -241,11 +270,9 @@
     
     [self setUpPlayersAt:playIndex];
     NSLog(@"Watching From %ld", (long)playIndex);
+    */
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
 
 /**
  * User Interactions
@@ -255,14 +282,14 @@
     [self.currPlayer pause];
     [loadingView removeFromSuperview];
     playIndex--;
-    [self setUpPlayersAt:playIndex];
+    //[self setUpPlayersAt:playIndex];
 }
 
 - (void)swipeRight {
     [self.currPlayer pause];
     [loadingView removeFromSuperview];
     playIndex++;
-    [self setUpPlayersAt:playIndex];
+    //[self setUpPlayersAt:playIndex];
 }
 
 - (void)tapOnce {
@@ -274,10 +301,7 @@
 }
 
 - (void)captureVybe:(id)sender {
-    UINavigationController *navController = (UINavigationController *)self.presentingViewController;
-    [navController dismissViewControllerAnimated:NO completion:^{
-        [navController popToRootViewControllerAnimated:NO];
-    }];
+
 }
 
 - (void)goBack:(id)sender {

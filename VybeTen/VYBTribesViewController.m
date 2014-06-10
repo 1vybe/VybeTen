@@ -9,7 +9,6 @@
 #import "VYBTribesViewController.h"
 #import "VYBMenuViewController.h"
 #import "VYBPlayerViewController.h"
-#import "VYBMyTribeStore.h"
 #import "VYBTribeTimelineViewController.h"
 #import "VYBConstants.h"
 #import "VYBCache.h"

@@ -17,7 +17,7 @@
 @synthesize thumbnailImageButton;
 @synthesize thumbnailImageView;
 @synthesize nameButton;
-@synthesize followButton;
+//@synthesize followButton;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -52,6 +52,7 @@
                   forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:self.nameButton];
         
+        /*
         self.followButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.followButton.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
         self.followButton.titleEdgeInsets = UIEdgeInsetsMake( 0.0f, 10.0f, 0.0f, 0.0f);
@@ -71,6 +72,9 @@
         [self.followButton addTarget:self action:@selector(didTapFollowButtonAction:)
                     forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:self.followButton];
+        */
+        
+        
     }
     return self;
 }
@@ -96,7 +100,7 @@
     [nameButton setFrame:CGRectMake( 60.0f, 17.0f, nameSize.width, nameSize.height)];
     
     // Set follow button
-    [followButton setFrame:CGRectMake( 208.0f, 20.0f, 103.0f, 32.0f)];
+    //[followButton setFrame:CGRectMake( 208.0f, 20.0f, 103.0f, 32.0f)];
 }
 
 

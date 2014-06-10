@@ -8,7 +8,7 @@
 
 #import "VYBVybe.h"
 #import "VYBConstants.h"
-#import "VYBMyTribeStore.h"
+//#import "VYBMyTribeStore.h"
 
 @implementation VYBVybe {
     NSDateFormatter *dFormatter;
@@ -21,7 +21,7 @@
     self = [super init];
     if (self) {
         //dFormatter = [[NSDateFormatter alloc] init];
-        dFormatter = [[VYBMyTribeStore sharedStore] presetDateFormatter];
+        //dFormatter = [[VYBMyTribeStore sharedStore] presetDateFormatter];
     }
     return self;
 }

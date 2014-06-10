@@ -7,7 +7,6 @@
 //
 
 #import "VYBSyncTribeViewController.h"
-#import "VYBMyTribeStore.h"
 #import "UINavigationController+Fade.h"
 #import "VYBCreateTribeViewController.h"
 #import "VYBCache.h"
@@ -56,25 +55,6 @@
     [tribeTable setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.view addSubview:tribeTable];
     
-    
-    // Retries tribes for the user
-    PFQuery *tribesQuery = [PFQuery queryWithClassName:kVYBTribeClassKey];
-    [tribesQuery whereKey:kVYBTribeMembersKey equalTo:[PFUser currentUser]];
-    [tribesQuery includeKey:kVYBTribeCreatorKey];
-    //[tribesQuery includeKey:kVYBTribeMembersKey];
-    
-    [tribesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (error) {
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [av show];
-            NSLog(@"Error: [SyncTribeViewController] tribe query failed.");
-        } else {
-            if ([objects count] > 0) {
-                [[VYBMyTribeStore sharedStore] setMyTribes:objects];
-                [tribeTable reloadData];
-            }
-        }
-    }];
 }
 
 
@@ -86,41 +66,5 @@
 - (void)dismissSyncTribeMenu {
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
-
-#pragma mark - Table view data source
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [[[VYBMyTribeStore sharedStore] myTribes] count];
-}
-
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SyncTribeTableCell"];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SyncTribeTableCell"];
-        [cell setBackgroundColor:[UIColor clearColor]];
-    }
-    [[cell textLabel] setFont:[UIFont fontWithName:@"Montreal-Xlight" size:16]];
-    PFObject *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    //[cell setExclusiveTouch:NO];
-    [[cell textLabel] setTextColor:[UIColor whiteColor]];
-    [[cell textLabel] setText:tribe[kVYBTribeNameKey]];
-    
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    PFObject *tribe = [[[VYBMyTribeStore sharedStore] myTribes] objectAtIndex:[indexPath row]];
-    
-    [[VYBCache sharedCache] setSyncTribe:tribe user:[PFUser currentUser]];
-    [[NSNotificationCenter defaultCenter] postNotificationName:VYBSyncViewControllerDidChangeSyncTribe object:nil];
-    
-    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
-}
-
 
 @end

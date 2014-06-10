@@ -15,7 +15,7 @@
 @property (nonatomic, strong) id <VYBVybeCellDelegate> delegate;
 
 @property (nonatomic, strong) PFObject *vybe;
-@property (nonatomic, strong) UIButton *followButton;
+//@property (nonatomic, strong) UIButton *followButton;
 @property (nonatomic, strong) UIButton *nameButton;
 @property (nonatomic, strong) UIButton *thumbnailImageButton;
 @property (nonatomic, strong) PFImageView *thumbnailImageView;
@@ -31,6 +31,6 @@
 @protocol VYBVybeCellDelegate <NSObject>
 @optional
 - (void)cell:(VYBVybeCell *)cellView didTapVybeButton:(PFObject *)aVybe;
-- (void)cell:(VYBVybeCell *)cellView didTapFollowButton:(PFObject *)aVybe;
+//- (void)cell:(VYBVybeCell *)cellView didTapFollowButton:(PFObject *)aVybe;
 
 @end
