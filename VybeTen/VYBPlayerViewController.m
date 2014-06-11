@@ -13,6 +13,7 @@
 #import "GAIFields.h"
 #import "GAIDictionaryBuilder.h"
 #import "VYBConstants.h"
+#import "MBProgressHUD.h"
 
 @implementation VYBPlayerViewController {
     NSInteger playIndex;
@@ -29,59 +30,33 @@
 }
 
 @synthesize currPlayer = _currPlayer;
-@synthesize prevPlayer = _prevPlayer;
-@synthesize nextPlayer = _nextPlayer;
 @synthesize currPlayerView = _currPlayerView;
-@synthesize prevPlayerView = _prevPlayerView;
-@synthesize nextPlayerView = _nextPlayerView;
 @synthesize currItem = _currItem;
 @synthesize labelTime = _labelTime;
-@synthesize dismissBlock;
+//@synthesize dismissBlock;
+
+- (void)dealloc {
+    NSLog(@"Playerview dealloc");
+}
 
 - (void)loadView {
     UIView *darkBackground = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [darkBackground setBackgroundColor:[UIColor blackColor]];
     self.view = darkBackground;
     
-    VYBPlayerView *playerView1 = [[VYBPlayerView alloc] init];
-    VYBPlayerView *playerView2 = [[VYBPlayerView alloc] init];
-    VYBPlayerView *playerView3 = [[VYBPlayerView alloc] init];
+    VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
 
-    [playerView1 setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
-    [playerView2 setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
-    [playerView3 setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
+    [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.width, darkBackground.bounds.size.height)];
 
-    self.prevPlayerView = playerView1; 
-    self.currPlayerView = playerView2;
-    self.nextPlayerView = playerView3;
+    self.currPlayerView = playerView;
     
     self.currPlayer = [[AVPlayer alloc] init];
-    self.prevPlayer = [[AVPlayer alloc] init];
-    self.nextPlayer = [[AVPlayer alloc] init];
-    
-    [self.prevPlayer addObserver:self forKeyPath:@"status" options:0 context:nil];
-    [self.nextPlayer addObserver:self forKeyPath:@"status" options:0 context:nil];
     
     [self.currPlayerView setPlayer:self.currPlayer];
-    [self.prevPlayerView setPlayer:self.prevPlayer];
-    [self.nextPlayerView setPlayer:self.nextPlayer];
 
     [self.view addSubview:self.currPlayerView];
-    //[self.view addSubview:self.prevPlayerView];
-    //[self.view addSubview:self.nextPlayerView];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (object == self.prevPlayer && [keyPath isEqualToString:@"status"]) {
-        if (self.prevPlayer.status == AVPlayerStatusReadyToPlay) {
-            NSLog(@"prevPlayer READY");
-        } else if (self.prevPlayer.status == AVPlayerStatusFailed) {
-            NSLog(@"prevPlayer WEIRD");
-        } else {
-            NSLog(@"prevPlayer STATUS");
-        }
-    }
-}
 
 - (void)viewDidLoad
 {
@@ -156,23 +131,40 @@
     
 }
 
-- (void)playFrom:(NSInteger)index {
-    playIndex = index;
-    PFObject *currVybe = [self.vybePlaylist objectAtIndex:index];
-    PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
-    loadingView.hidden = NO;
-    [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        loadingView.hidden = YES;
-        if (!error) {
-            //self.currItem = [AVPlayerItem playerItemWithAsset: ];
-
-        } else {
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [av show];
-        }
-    }];
-    //[self setUpPlayersAt:playIndex];
+- (void)playFrom:(NSInteger)from {
+    PFObject *aVybe = [self.vybePlaylist objectAtIndex:from];
+    
+    NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
+    cacheURL = [cacheURL URLByAppendingPathComponent:[aVybe objectId]];
+    cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+        self.currItem = [AVPlayerItem playerItemWithAsset:asset];
+        [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
+        [self.currPlayer play];
+    } else {
+        PFFile *vid = [aVybe objectForKey:kVYBVybeVideoKey];
+        loadingView.hidden = NO;
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            loadingView.hidden = YES;
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            if (!error) {
+                [data writeToURL:cacheURL atomically:YES];
+                AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+                self.currItem = [AVPlayerItem playerItemWithAsset:asset];
+                [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
+                [self.currPlayer play];
+            } else {
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [av show];
+            }
+        }];
+    }
 }
+
+
 
 - (void)playerItemDidReachEnd {
     [self.currPlayer pause];
@@ -255,23 +247,6 @@
 }
 */
 
-- (void)playFromUnwatched {
-    /*
-    NSInteger i = [self.vybePlaylist count] - 1;
-    playIndex = [self.vybePlaylist count] - 1;
-
-    for (; i >= 0; i--) {
-        VYBVybe *v = [self.vybePlaylist objectAtIndex:i];
-        if (![v isWatched]) {
-            playIndex = i;
-            break;
-        }
-    }
-    
-    [self setUpPlayersAt:playIndex];
-    NSLog(@"Watching From %ld", (long)playIndex);
-    */
-}
 
 
 /**

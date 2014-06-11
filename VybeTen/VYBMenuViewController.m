@@ -96,7 +96,7 @@
             [window addSubview:overlayView];
         }
         */
-        [captureVC dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:nil];
     } else if ( UIDeviceOrientationIsLandscape([device orientation]) ) {
         /*
         [overlayView removeFromSuperview];

@@ -8,16 +8,27 @@
 
 #import "VYBSyncTribeViewController.h"
 #import "UINavigationController+Fade.h"
-#import "VYBCreateTribeViewController.h"
 #import "VYBCache.h"
 
 @implementation VYBSyncTribeViewController {
-    UITableView *tribeTable;
+    VYBCreateTribeViewController *createTribeVC;
 }
 
 - (void)dealloc {
     
 }
+
+- (id)initWithStyle:(UITableViewStyle)style {
+    self = [super initWithStyle:style];
+    if (self) {
+        self.paginationEnabled = NO;
+        
+        self.pullToRefreshEnabled = NO;
+    }
+    
+    return self;
+}
+
 
 - (void)viewDidLoad
 {
@@ -30,11 +41,6 @@
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissSyncTribeMenu)];
     [tapView addGestureRecognizer:tapRecognizer];
     [self.view addSubview:tapView];
-    
-    frame = CGRectMake(0, 0, 150, self.view.bounds.size.width);
-    UIToolbar *menuBackground = [[UIToolbar alloc] initWithFrame:frame];
-    [menuBackground setBarStyle:UIBarStyleBlack];
-    [self.view addSubview:menuBackground];
 
     frame = CGRectMake(0, 0, 150, 50);
     UIButton *createTribe = [[UIButton alloc] initWithFrame:frame];
@@ -44,27 +50,77 @@
     [createTribe addTarget:self action:@selector(createTribePressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:createTribe];
     
-    frame = CGRectMake(0, 50, 150, self.view.bounds.size.width - 100);
-    tribeTable = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
-    [tribeTable setDelegate:self];
-    [tribeTable setDataSource:self];
-    [tribeTable setUserInteractionEnabled:YES];
-    //[tribeTable setExclusiveTouch:NO];
-    //[tribeTable setAllowsSelection:YES];
-    [tribeTable setBackgroundColor:[UIColor clearColor]];
-    [tribeTable setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    [self.view addSubview:tribeTable];
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [self.tableView setSeparatorColor:[UIColor clearColor]];
+}
+
+
+
+#pragma mark - PFQueryTableViewController
+
+- (PFQuery *)queryForTable {
+    PFQuery *query = [PFQuery queryWithClassName:kVYBTribeClassKey];
     
+    [query whereKey:kVYBTribeMembersKey equalTo:[PFUser currentUser]];
+    
+    if (self.objects.count == 0) {
+        //query.cachePolicy = kPFCachePolicyCacheElseNetwork;
+    }
+    
+    [query orderByAscending:kVYBTribeNameKey];
+    
+    return query;
+}
+
+
+#pragma mark - UITableViewController 
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
+    static NSString *SyncTribeCellIdentifier = @"SyncTribeCellIdentifier";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:SyncTribeCellIdentifier];
+    
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:SyncTribeCellIdentifier];
+        cell.backgroundColor = [UIColor clearColor];
+        cell.contentView.backgroundColor = [UIColor clearColor];
+    }
+    cell.textLabel.textColor = [UIColor whiteColor];
+    cell.textLabel.text = [object objectForKey:kVYBTribeNameKey];
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    PFObject *aTribe = [self objectAtIndexPath:indexPath];
+    [[VYBCache sharedCache] setSyncTribe:aTribe user:[PFUser currentUser]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBSyncViewControllerDidChangeSyncTribe object:nil];
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 50.0f;
 }
 
 
 - (void)createTribePressed:(id)sender {
-    VYBCreateTribeViewController *createTribeVC = [[VYBCreateTribeViewController alloc] init];
-    [self.navigationController presentViewController:createTribeVC animated:NO completion:nil];
+    createTribeVC = [[VYBCreateTribeViewController alloc] init];
+    createTribeVC.delegate = self;
+    [self presentViewController:createTribeVC animated:NO completion:nil];
 }
 
 - (void)dismissSyncTribeMenu {
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
+
+#pragma mark - VYBCreateTribeViewControllerDelegate
+
+- (void)createdTribe:(PFObject *)aTribe {
+    [[VYBCache sharedCache] setSyncTribe:aTribe user:[PFUser currentUser]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBSyncViewControllerDidChangeSyncTribe object:nil];
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+}
+
 
 @end

@@ -49,14 +49,11 @@
         // The className to query on
         self.parseClassName = kVYBVybeClassKey;
         
-        // Whether the built-in pagination is enabled
-        self.paginationEnabled = YES;
+        // Infinite scrolling
+        self.paginationEnabled = NO;
         
         // Whether the built-in pull-to-refresh is enabled
         self.pullToRefreshEnabled = YES;
-        
-        // The number of objects to show per page
-        self.objectsPerPage = 15;
     }
     
     return self;
@@ -164,10 +161,6 @@
     return query;
 }
 
-- (void)objectsDidLoad:(NSError *)error {
-    [super objectsDidLoad:error];
-    NSLog(@"New number of objects: %lui", self.objects.count);
-}
 
 #pragma mark - UITableViewController
 
@@ -182,6 +175,7 @@
     }
     
     [cell setVybe:object];
+    cell.tag = indexPath.row;
     
     return cell;
 }
@@ -228,7 +222,9 @@
 
 - (void)cell:(VYBVybeCell *)cellView didTapVybeButton:(PFObject *)aVybe {
     playerVC = [[VYBPlayerViewController alloc] init];
+    [self presentViewController:playerVC animated:YES completion:nil];
     [playerVC setVybePlaylist:self.objects];
+    [playerVC playFrom:cellView.tag];
 }
 
 #pragma mark - ()

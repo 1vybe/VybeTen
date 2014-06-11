@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VYBCreateTribeViewController.h"
 
-@interface VYBSyncTribeViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface VYBSyncTribeViewController : PFQueryTableViewController <VYBCreateTribeViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @end

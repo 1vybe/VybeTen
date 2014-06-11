@@ -219,7 +219,7 @@ static void * XXContext = &XXContext;
 }
 
 /**
- * Helper functions
+ * Helper functions related to camera setup
  **/
 
 - (void)setUpCameraSession {
@@ -343,7 +343,7 @@ static void * XXContext = &XXContext;
 
 - (void)changeSync:(id)sender {
     VYBSyncTribeViewController *syncVC = [[VYBSyncTribeViewController alloc] init];
-    [self.navigationController presentViewController:syncVC animated:NO completion:nil];
+    [self presentViewController:syncVC animated:NO completion:nil];
 }
 
 - (void)switchFlash:(id)sender {
@@ -426,7 +426,7 @@ static void * XXContext = &XXContext;
         // Prompt a review screen to save it or not
         VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
         [replayVC setCurrVybe:currVybe];
-        [self.navigationController pushViewController:replayVC animated:NO];
+        [self presentViewController:replayVC animated:NO completion:nil];
     }
 
     startTime = nil;

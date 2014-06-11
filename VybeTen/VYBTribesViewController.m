@@ -122,7 +122,7 @@
     //PFQuery *query = [PFQuery orQueryWithSubqueries:@[contributingQuery, recommendedQuery]];
     
     if (self.objects.count == 0) {
-        contributingQuery.cachePolicy = kPFCachePolicyCacheElseNetwork;
+        //contributingQuery.cachePolicy = kPFCachePolicyCacheElseNetwork;
     }
     
     [contributingQuery orderByAscending:kVYBTribeNameKey];

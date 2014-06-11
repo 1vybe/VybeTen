@@ -121,7 +121,7 @@
 
 - (void)changeSync:(id)sender {
     VYBSyncTribeViewController *syncVC = [[VYBSyncTribeViewController alloc] init];
-    [self.navigationController presentViewController:syncVC animated:NO completion:nil];
+    [self presentViewController:syncVC animated:NO completion:nil];
 }
 
 - (void)changeSyncTribeLabel:(NSNotification *)note {
@@ -141,7 +141,7 @@
         [currVybe setTribeObjectID:tribe.objectId];
         [[VYBMyVybeStore sharedStore] addVybe:currVybe];
         [[VYBMyVybeStore sharedStore] uploadVybe:currVybe];
-        [self.navigationController popViewControllerAnimated:NO];
+        [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 
     }
 }
@@ -154,7 +154,7 @@
     [[NSFileManager defaultManager] removeItemAtURL:videoURL error:&error];
     [[NSFileManager defaultManager] removeItemAtURL:thumbURL error:&error];
     
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 

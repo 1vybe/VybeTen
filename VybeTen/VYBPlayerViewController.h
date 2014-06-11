@@ -13,21 +13,18 @@
 
 @interface VYBPlayerViewController : UIViewController
 @property (nonatomic) AVPlayer *currPlayer;
-@property (nonatomic) AVPlayer *prevPlayer;
-@property (nonatomic) AVPlayer *nextPlayer;
 @property (nonatomic) VYBPlayerView *currPlayerView;
-@property (nonatomic) VYBPlayerView *prevPlayerView;
-@property (nonatomic) VYBPlayerView *nextPlayerView;
-
 @property (nonatomic) AVPlayerItem *currItem;
+
 @property (nonatomic) UILabel *labelTime;
-@property (nonatomic) NSArray *vybePlaylist;
+@property (nonatomic, strong) NSArray *vybePlaylist;
+
 
 @property (nonatomic) PFObject *vybe;
 
-@property (nonatomic, copy) void (^dismissBlock)(NSInteger row);
 
-- (void)playFrom:(NSInteger)index;
-- (void)playFromUnwatched;
+//@property (nonatomic, copy) void (^dismissBlock)(NSInteger row);
+
+- (void)playFrom:(NSInteger)from;
 
 @end
