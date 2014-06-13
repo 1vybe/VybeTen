@@ -8,30 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
-#import "VYBMainPageViewController.h"
 
-@class VYBWelcomeViewController;
-@class VYBMenuViewController;
-
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, PFLogInViewControllerDelegate, UIPageViewControllerDataSource>
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (nonatomic, strong) UINavigationController *navController;
+@property (nonatomic, strong) NSArray *viewControllers;
 @property (nonatomic, strong) UIPageViewController *pageController;
-@property (nonatomic, strong) VYBWelcomeViewController *welcomeViewController;
-@property (nonatomic, strong) VYBMenuViewController *menuViewController;
 
 /* TODO */
 @property (nonatomic, readonly) int networkStatus;
 - (BOOL)isParseReachable;
 
-- (void)facebookRequestDidLoad:(id)result;
-- (void)facebookRequestDidFailWithError:(NSError *)error;
 
-- (void)presentLoginViewController;
-- (void)presentLoginViewControllerAnimated:(BOOL)animated;
-- (void)presentHomeScreen;
-- (void)fetchCurrentUserData;
-- (void)logOut;
 
 @end

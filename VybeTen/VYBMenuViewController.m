@@ -127,7 +127,7 @@
 }
 
 - (void)goToMyVybes:(id)sender {
-    [(VYBAppDelegate *)[[UIApplication sharedApplication] delegate] logOut];
+//    [(VYBAppDelegate *)[[UIApplication sharedApplication] delegate] logOut];
 }
 
 

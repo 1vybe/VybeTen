@@ -1,3 +1,4 @@
+
 //
 //  VYBCaptureViewController.m
 //  VybeTen
@@ -38,8 +39,6 @@
     
     UIImageView *overlayView;
     JSBadgeView *badgeView;
-    
-    NSInteger _pageIndex;
 }
 
 @synthesize syncButton, syncLabel, recordButton, countLabel, flipButton, menuButton, flashButton, flashLabel, notificationButton;
@@ -47,23 +46,6 @@
 @synthesize transitionController;
 
 static void * XXContext = &XXContext;
-
-+ (VYBCaptureViewController *)captureViewControllerForPageIndex:(NSInteger)pageIndex {
-    if (pageIndex >= 0 && pageIndex < 2) {
-        return [[self alloc] initWithPageIndex:pageIndex];
-    }
-    return nil;
-}
-
-- (id)initWithPageIndex:(NSInteger)pageIndex {
-    self = [super init];
-    if (self) {
-        _pageIndex = pageIndex;
-        session = [[AVCaptureSession alloc] init];
-        movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
-    }
-    return self;
-}
 
 - (id)init {
     self = [super init];
@@ -73,10 +55,6 @@ static void * XXContext = &XXContext;
     }
     
     return self;
-}
-
-- (NSInteger)pageIndex {
-    return _pageIndex;
 }
 
 - (void)dealloc {

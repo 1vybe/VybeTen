@@ -10,7 +10,6 @@
 #import "VYBTribesViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBFriendsViewController.h"
-#import "VYBWelcomeViewController.h"
 
 @implementation VYBMainPageViewController
 @synthesize scrollView = _scrollView;

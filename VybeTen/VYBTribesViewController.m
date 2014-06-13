@@ -45,14 +45,12 @@
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
-        self.paginationEnabled = YES;
+        self.paginationEnabled = NO;
         
         self.parseClassName = kVYBTribeClassKey;
         
         self.pullToRefreshEnabled = YES;
-        
-        self.objectsPerPage = 20;
-    }
+        }
     
     return self;
 }
@@ -112,6 +110,11 @@
 #pragma mark - PFQueryTableView
 
 - (PFQuery *)queryForTable {
+    // User data is not fetched yet from Home screen
+    if (![PFUser currentUser]) {
+        return nil;
+    }
+    
     PFQuery *contributingQuery = [PFQuery queryWithClassName:kVYBTribeClassKey];
     [contributingQuery whereKey:kVYBTribeMembersKey equalTo:[PFUser currentUser]];
     

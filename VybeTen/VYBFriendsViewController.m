@@ -30,15 +30,12 @@
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
-        //self.parseClassName = @"_User";
         
-        self.paginationEnabled = YES;
+        self.paginationEnabled = NO;
         
         self.pullToRefreshEnabled = YES;
-        
-        self.objectsPerPage = 15;
-        
-        self.tableView.allowsSelection = NO;
+                
+        //self.tableView.allowsSelection = NO;
     }
     
     return self;
@@ -114,6 +111,11 @@
 #pragma mark - PFQueryTableViewController
 
 - (PFQuery *)queryForTable {
+    // User data is not fetched yet from Home screen
+    if (![PFUser currentUser]) {
+        return nil;
+    }
+    
     PFQuery *query = [PFUser query];
     
     // PFQuery for retrieving a list of friends on Vybe

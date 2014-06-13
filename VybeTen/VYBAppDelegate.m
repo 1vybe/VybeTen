@@ -7,24 +7,18 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
+#import <HockeySDK/HockeySDK.h>
 #import "VYBAppDelegate.h"
-#import "VYBWelcomeViewController.h"
-#import "VYBLoginViewController.h"
-#import "VYBSignUpViewController.h"
-#import "VYBCaptureViewController.h"
+#import "VYBNavigationController.h"
+#import "VYBHomeViewController.h"
 #import "VYBTribesViewController.h"
 #import "VYBFriendsViewController.h"
 #import "VYBMyVybeStore.h"
-#import "VYBMenuViewController.h"
-#import "VYBConstants.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
-#import <HockeySDK/HockeySDK.h>
 #import "Reachability.h"
 
-@interface VYBAppDelegate () {
-    NSMutableData *_data;
-}
+@interface VYBAppDelegate ()
 
 @property (nonatomic, strong) Reachability *hostReach;
 @property (nonatomic, strong) Reachability *internetReach;
@@ -39,6 +33,8 @@
 @synthesize internetReach;
 @synthesize wifiReach;
 @synthesize pageController;
+@synthesize viewControllers;
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -82,30 +78,28 @@
     // Enable public read access by default, with any newly created PFObjects belonging to the current user
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
-
-    /*
-    pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationVertical options:nil];
+        
+    pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     pageController.dataSource = self;
-    VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
-    UINavigationController *pageZero = [[UINavigationController alloc] initWithRootViewController:menuVC];
-    [pageZero.navigationBar setHidden:YES];
-    [pageZero pushViewController:[VYBTribesViewController tribesViewControllerForPageIndex:0] animated:NO];
-    [pageZero pushViewController:self.welcomeViewController animated:NO];
-    pageZero.modalPresentationStyle = UIModalPresentationCurrentContext;
-    [pageController setViewControllers:@[pageZero] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    */
-    
-    //VYBMenuViewController *menuVC = [[VYBMenuViewController alloc] init];
-    //[self.navController pushViewController:[VYBTribesViewController tribesViewControllerForPageIndex:0] animated:NO];
-    //[self.navController pushViewController:self.welcomeViewController animated:NO];
 
-    self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
-    self.navController = [[UINavigationController alloc] initWithRootViewController:self.welcomeViewController];
+    // page0 is TRIBES
+    VYBTribesViewController *tribesVC = [[VYBTribesViewController alloc] init];
+    VYBNavigationController *page0 = [VYBNavigationController navigationControllerForPageIndex:0 withRootViewController:tribesVC];
+    // page1 is HOME and it's the Starting Page
+    VYBHomeViewController *homeVC = [VYBHomeViewController homeViewControllerForPageIndex:1];
+    VYBNavigationController *page1 = [VYBNavigationController navigationControllerForPageIndex:1 withRootViewController:homeVC];
+    // page2 is FRIENDS
+    VYBFriendsViewController *friendsVC = [[VYBFriendsViewController alloc] init];
+    VYBNavigationController *page2 = [VYBNavigationController navigationControllerForPageIndex:2 withRootViewController:friendsVC];
     
-    //self.navController.navigationBar.translucent = YES;
+    viewControllers = [NSArray arrayWithObjects:page0, page1, page2, nil];
+    [pageController setViewControllers:@[page1] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
-
-    [self.window setRootViewController:self.navController];
+    [self.window setRootViewController:pageController];
+    
+    if ([PFUser currentUser]) {
+        [homeVC refreshUserData];
+    }
     
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
@@ -117,35 +111,25 @@
     return YES;
 }
 
-/*
+
 #pragma mark - UIPageViewControllerDataSource
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(id)viewController {
-    if ( [viewController isMemberOfClass:[UINavigationController class]] ) {
-        viewController = [[(UINavigationController *)viewController viewControllers] firstObject];
-    }
     NSInteger idx = [viewController pageIndex] - 1;
-    if (idx == 0) {
-        UINavigationController *pageZero = [[UINavigationController alloc] initWithRootViewController:[VYBTribesViewController tribesViewControllerForPageIndex:0]];
-        [pageZero.navigationBar setHidden:YES];
-        pageZero.modalPresentationStyle = UIModalPresentationCurrentContext;
-        
-        return pageZero;
+    if (idx < 0) {
+        return nil;
     }
-    return nil;
+    return [viewControllers objectAtIndex:idx];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(id)viewController {
-    if ( [viewController isMemberOfClass:[UINavigationController class]] ) {
-        viewController = [[(UINavigationController *)viewController viewControllers] firstObject];
-    }
     NSInteger idx = [viewController pageIndex] + 1;
-    if (idx == 1) {
-        return [VYBCaptureViewController captureViewControllerForPageIndex:1];
+    if (idx >= viewControllers.count) {
+        return nil;
     }
-    return nil;
+    return [viewControllers objectAtIndex:idx];
 }
-*/
+
 
 
 
@@ -183,103 +167,6 @@
         NSLog(@"Vybe terminated. My vybes will be lost. :(");
 }
 
-
-
-- (void)presentLoginViewController {
-    [self presentLoginViewControllerAnimated:YES];
-}
-
-- (void)presentLoginViewControllerAnimated:(BOOL)animated {
-    VYBLoginViewController *logInViewController = [[VYBLoginViewController alloc] init];
-    [logInViewController setDelegate:self];
-    [logInViewController setFields:PFLogInFieldsFacebook];
-    NSArray *permissionsArray = @[ @"public_profile" ];
-    [logInViewController setFacebookPermissions:permissionsArray];
-    
-    [self.navController presentViewController:logInViewController animated:NO completion:nil];
-}
-
-- (void)presentHomeScreen {
-    self.menuViewController = [[VYBMenuViewController alloc] init];
-    [self.navController setViewControllers:@[self.menuViewController]];
-}
-
-- (void)fetchCurrentUserData {
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|
-     UIRemoteNotificationTypeAlert|
-     UIRemoteNotificationTypeSound];
-    
-    // Download user's profile picture
-    NSURL *profilePictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large", [[PFUser currentUser] objectForKey:kVYBUserFacebookIDKey]]];
-    NSURLRequest *profilePictureURLRequest = [NSURLRequest requestWithURL:profilePictureURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0f]; // Facebook profile picture cache policy: Expires in 2 weeks
-    [NSURLConnection connectionWithRequest:profilePictureURLRequest delegate:self];
-}
-
-- (void)logOut {
-    // clear cache
-    [[VYBCache sharedCache] clear];
-
-    // clear NSUserDefaults
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kVYBUserDefaultsCacheFacebookFriendsKey];
-    //[[NSUserDefaults standardUserDefaults] removeObjectForKey:kPAPUserDefaultsActivityFeedViewControllerLastRefreshKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-
-    // Unsubscribe from push notifications by removing the user association from the current installation.
-    [[PFInstallation currentInstallation] removeObjectForKey:kVYBInstallationUserKey];
-    [[PFInstallation currentInstallation] saveInBackground];
-    
-    // Clear all caches
-    [PFQuery clearAllCachedResults];
-    
-    [PFUser logOut];
-    
-    [self.navController setViewControllers:@[self.welcomeViewController]];
-    
-    [self presentLoginViewControllerAnimated:NO];
-}
-
-
-#pragma mark - PFLoginViewControllerDelegate
-
-- (void)logInViewController:(PFLogInViewController *)controller
-               didLogInUser:(PFUser *)user {
-    if (user.isNew) {
-        NSLog(@"NEW User is %@", [[PFUser currentUser] username]);
-    }
-    else {
-        NSLog(@"Returning User is %@", [[PFUser currentUser] username]);
-    }
-    
-    [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        if (!error) {
-            [self facebookRequestDidLoad:result];
-        } else {
-            [self facebookRequestDidFailWithError:error];
-        }
-    }];
-    
-    [self.navController dismissViewControllerAnimated:NO completion:nil];
-    [self presentHomeScreen];
-}
-
-- (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error {
-    NSLog(@"Failed to log in: %@", error);
-}
-
-
-#pragma mark - NSURLConnectionDataDelegate
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    _data = [[NSMutableData alloc] init];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [_data appendData:data];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    [VYBUtility processFacebookProfilePictureData:_data];
-}
 
 
 /**
@@ -329,76 +216,6 @@
     // TODO: Update Badge Number
     
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
-}
-
-
-/**
- * Facebook Request methods
- **/
-
-- (void)facebookRequestDidLoad:(id)result {
-    PFUser *user = [PFUser currentUser];
-    
-    NSArray *data = [result objectForKey:@"data"];
-    
-    if (data) {
-        NSMutableArray *facebookIDs = [[NSMutableArray alloc] initWithCapacity:[data count]];
-        BOOL flag = YES;
-        for (NSDictionary *friendData in data) {
-            if (flag) {
-                //NSLog(@"[f]:%@", friendData);
-                flag = NO;
-            }
-            if (friendData[@"id"]) {
-                [facebookIDs addObject:friendData[@"id"]];
-            }
-        }
-        
-        // cache friends data
-        [[VYBCache sharedCache] setFacebookFriends:facebookIDs];
-        
-        if (!user) {
-            NSLog(@"No user info is found. Forcing logging out");
-            [self logOut];
-        }
-    } else {
-        // Creating a profile
-        if (user) {
-            NSString *facebookName = result[@"name"];
-            if (facebookName && [facebookName length] != 0) {
-                [user setObject:facebookName forKey:kVYBUserDisplayNameKey];
-            }
-            
-            NSString *facebookID = result[@"id"];
-            if (facebookID && [facebookID length] != 0) {
-                [user setObject:facebookID forKey:kVYBUserFacebookIDKey];
-            }
-            
-            [user saveEventually];
-            
-            [self fetchCurrentUserData];
-        }
-        
-        [FBRequestConnection startForMyFriendsWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error){
-            if (!error) {
-                [self facebookRequestDidLoad:result];
-            } else {
-                [self facebookRequestDidFailWithError:error];
-            }
-        }];
-        
-    }
-}
-
-- (void)facebookRequestDidFailWithError:(NSError *)error {
-    NSLog(@"Facebook error: %@", error);
-    
-    if ([PFUser currentUser]) {
-        if ( [[error userInfo][@"error"][@"type"] isEqualToString:@"OAuthException"] ) {
-            NSLog(@"OAuthException occured. Logging out");
-            [self logOut];
-        }
-    }
 }
 
 #pragma mark - AppDelegate

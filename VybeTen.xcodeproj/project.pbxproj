@@ -11,8 +11,9 @@
 		022296DA18BC506D0096BB30 /* VYBMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022296D818BC506D0096BB30 /* VYBMenuViewController.m */; };
 		022361F818FBD266002700B8 /* VYBTribesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022361F718FBD266002700B8 /* VYBTribesViewController.m */; };
 		022361FB18FBDEAF002700B8 /* VYBCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 022361FA18FBDEAF002700B8 /* VYBCollectionViewController.m */; };
+		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
+		0226CBB0194A0F84005270D3 /* VYBHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAF194A0F84005270D3 /* VYBHomeViewController.m */; };
 		023373D318F50C6100A522B3 /* VYBUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 023373D218F50C6100A522B3 /* VYBUser.m */; };
-		023AD83F191ADACD00AD4740 /* VYBWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 023AD83E191ADACD00AD4740 /* VYBWelcomeViewController.m */; };
 		023E538D191F142000C3CF78 /* VYBCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 023E538C191F142000C3CF78 /* VYBCache.m */; };
 		0243133118F6E73600178CEB /* UINavigationController+Fade.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243133018F6E73600178CEB /* UINavigationController+Fade.m */; };
 		0243CC9818CC665200CA03C0 /* VYBReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */; };
@@ -81,10 +82,12 @@
 		022361F718FBD266002700B8 /* VYBTribesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBTribesViewController.m; sourceTree = "<group>"; };
 		022361F918FBDEAF002700B8 /* VYBCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCollectionViewController.h; sourceTree = "<group>"; };
 		022361FA18FBDEAF002700B8 /* VYBCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCollectionViewController.m; sourceTree = "<group>"; };
+		0226CBAB194A0339005270D3 /* VYBNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBNavigationController.h; sourceTree = "<group>"; };
+		0226CBAC194A0339005270D3 /* VYBNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBNavigationController.m; sourceTree = "<group>"; };
+		0226CBAE194A0F84005270D3 /* VYBHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBHomeViewController.h; sourceTree = "<group>"; };
+		0226CBAF194A0F84005270D3 /* VYBHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBHomeViewController.m; sourceTree = "<group>"; };
 		023373D118F50C6100A522B3 /* VYBUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUser.h; sourceTree = "<group>"; };
 		023373D218F50C6100A522B3 /* VYBUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUser.m; sourceTree = "<group>"; };
-		023AD83D191ADACD00AD4740 /* VYBWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBWelcomeViewController.h; sourceTree = "<group>"; };
-		023AD83E191ADACD00AD4740 /* VYBWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBWelcomeViewController.m; sourceTree = "<group>"; };
 		023E538B191F142000C3CF78 /* VYBCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCache.h; sourceTree = "<group>"; };
 		023E538C191F142000C3CF78 /* VYBCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCache.m; sourceTree = "<group>"; };
 		0243132F18F6E73600178CEB /* UINavigationController+Fade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+Fade.h"; sourceTree = "<group>"; };
@@ -273,10 +276,12 @@
 				024BE32E19174FB200CDAA8D /* VYBInviteViewController.m */,
 				024BE3301917E98400CDAA8D /* VYBCreateTribeViewController.h */,
 				024BE3311917E98400CDAA8D /* VYBCreateTribeViewController.m */,
-				023AD83D191ADACD00AD4740 /* VYBWelcomeViewController.h */,
-				023AD83E191ADACD00AD4740 /* VYBWelcomeViewController.m */,
 				02FDBD2D192E69C800AB2D9A /* VYBAddMemberViewController.h */,
 				02FDBD2E192E69C800AB2D9A /* VYBAddMemberViewController.m */,
+				0226CBAB194A0339005270D3 /* VYBNavigationController.h */,
+				0226CBAC194A0339005270D3 /* VYBNavigationController.m */,
+				0226CBAE194A0F84005270D3 /* VYBHomeViewController.h */,
+				0226CBAF194A0F84005270D3 /* VYBHomeViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -604,9 +609,9 @@
 				88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */,
 				025169B018FB0D2A007F34B0 /* VYBSyncTribeViewController.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
+				0226CBB0194A0F84005270D3 /* VYBHomeViewController.m in Sources */,
 				024C28D718DBCE0600399980 /* VYBTribeTimelineViewController.m in Sources */,
 				0275088519252EA000B070EE /* UIImage+AlphaAdditions.m in Sources */,
-				023AD83F191ADACD00AD4740 /* VYBWelcomeViewController.m in Sources */,
 				0275087F19252E0D00B070EE /* UIImage+ResizeAdditions.m in Sources */,
 				0275088219252E9000B070EE /* UIImage+RoundedCornerAdditions.m in Sources */,
 				0243133118F6E73600178CEB /* UINavigationController+Fade.m in Sources */,
@@ -618,6 +623,7 @@
 				024B0E2E18BB39FF0073574E /* VYBVybeStore.m in Sources */,
 				02CCF8FF1939600700B3137D /* VYBActivityViewController.m in Sources */,
 				02FDBD2F192E69C800AB2D9A /* VYBAddMemberViewController.m in Sources */,
+				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
 				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,

@@ -13,9 +13,8 @@
 #import "TransitionDelegate.h"
 
 @class VYBTribe;
-@protocol VYBPageViewControllerProtocol;
 
-@interface VYBCaptureViewController : UIViewController <AVCaptureFileOutputRecordingDelegate, VYBPageViewControllerProtocol> {
+@interface VYBCaptureViewController : UIViewController <AVCaptureFileOutputRecordingDelegate> {
     NSString *adId;
 }
 @property (nonatomic) UIButton *recordButton;
@@ -30,17 +29,8 @@
 @property (nonatomic) VYBTribe *defaultSync;
 @property (nonatomic, strong) TransitionDelegate *transitionController;
 
-+ (VYBCaptureViewController *)captureViewControllerForPageIndex:(NSInteger)pageIndex;
-- (NSInteger)pageIndex;
-
 //- (void)startRecording;
 //- (AVCaptureDeviceInput *)frontCameraInput;
 //- (AVCaptureDeviceInput *)backCameraInput;
-
-@end
-
-@protocol VYBPageViewControllerProtocol <NSObject>
-
-- (NSInteger)pageIndex;
 
 @end
