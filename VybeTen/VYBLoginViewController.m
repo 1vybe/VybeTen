@@ -40,18 +40,22 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
-    [self.logInView.logo setFrame:CGRectMake((self.view.bounds.size.width - 200)/2, 0, 200, 200)];
+    [self.logInView.logo setFrame:CGRectMake((self.view.bounds.size.width - 200)/2, self.view.bounds.size.height * 1/3 - 100, 200, 200)];
     
     CGRect frame = self.logInView.facebookButton.frame;
     frame.size.width = 200;
     frame.origin.x = (self.view.bounds.size.width - frame.size.width) / 2;
-    frame.origin.y = 200 + 10;
+    frame.origin.y = self.view.bounds.size.height * 2/3;
     [self.logInView.facebookButton setFrame:frame];
    
     /*
     frame.origin.y += 50;
     [self.logInView.twitterButton setFrame:frame];
     */
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 
