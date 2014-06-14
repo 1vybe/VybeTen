@@ -8,6 +8,7 @@
 
 #import "VYBHomeViewController.h"
 #import "VYBLoginViewController.h"
+#import "VYBCaptureViewController.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
 
@@ -18,6 +19,7 @@
 @implementation VYBHomeViewController {
     NSInteger _pageIndex;
     VYBLoginViewController *logInViewController;
+    VYBCaptureViewController *captureVC;
     NSMutableData *_data;
 }
 
@@ -48,6 +50,10 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor orangeColor];
 
+    UIDevice *iphone = [UIDevice currentDevice];
+    [iphone beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -58,6 +64,31 @@
         return;
     }
     
+}
+
+- (void)deviceOrientationChanged:(NSNotification *)note {
+    UIDevice *device = [note object];
+    if ( UIDeviceOrientationIsPortrait([device orientation]) ) {
+        /*
+         if (!overlayView) {
+         UIWindow *window = self.view.window;
+         overlayView = [[UIImageView alloc] initWithFrame:window.bounds];
+         [overlayView setBackgroundColor:[UIColor colorWithWhite:0.0f alpha:0.8f]];
+         [overlayView setUserInteractionEnabled:YES];
+         [overlayView setContentMode:UIViewContentModeCenter];
+         [overlayView setImage:[UIImage imageNamed:@"screen_warning_rotate.png"]];
+         [window addSubview:overlayView];
+         }
+         */
+        [captureVC.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    } else if ( UIDeviceOrientationIsLandscape([device orientation]) ) {
+        /*
+         [overlayView removeFromSuperview];
+         overlayView = nil;
+         */
+        captureVC = [[VYBCaptureViewController alloc] init];
+        [self presentViewController:captureVC animated:YES completion:nil];
+    }
 }
 
 - (void)presentLoginViewController {
@@ -247,6 +278,8 @@
     
     [self presentLoginViewController];
 }
+
+
 
 
 
