@@ -18,6 +18,8 @@
     UIButton *createButton;
     UIButton *menuButton;
     UITextField *tribeNameTextField;
+    UILabel *publicSwitchLabel;
+    UISwitch *publicSwitch;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -51,6 +53,7 @@
     [cancelButton setImage:cancelImg forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(cancelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [topBar addSubview:cancelButton];
+    
     // Adding CREATE button
     frame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
     createButton = [[UIButton alloc] initWithFrame:frame];
@@ -58,6 +61,7 @@
     [createButton setImage:createImg forState:UIControlStateNormal];
     [createButton addTarget:self action:@selector(createButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [topBar addSubview:createButton];
+    
     // Adding TRIBE NAME textfield
     frame = CGRectMake(50, 0, self.view.bounds.size.width - 100, 50);
     tribeNameTextField = [[UITextField alloc] initWithFrame:frame];
@@ -69,6 +73,24 @@
                                                                                attributes:@{NSForegroundColorAttributeName: placeholderColor,
                                                                                             NSFontAttributeName : [UIFont fontWithName:@"Montreal-Xlight" size:20]}];
     [topBar addSubview:tribeNameTextField];
+    
+    // Adding public switch label
+    frame = CGRectMake(50, 120, self.view.bounds.size.width - 100, 50);
+    publicSwitchLabel = [[UILabel alloc] initWithFrame:frame];
+    [publicSwitchLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:25]];
+    [publicSwitchLabel setTextColor:[UIColor blackColor]];
+    publicSwitchLabel.attributedText = [[NSAttributedString alloc] initWithString:@"PUBLIC"
+                                                                       attributes:@{NSForegroundColorAttributeName: placeholderColor,
+                                                                                    NSFontAttributeName: [UIFont fontWithName:@"Montreal-Xlight"
+                                                                                                                         size:20]}];
+    [self.view addSubview:publicSwitchLabel];
+    
+    // Adding public switch
+    frame = CGRectMake(self.view.bounds.size.width/2, 130, 50, 55);
+    publicSwitch = [[UISwitch alloc] initWithFrame:frame];
+    [publicSwitch setOn:YES];
+    [self.view addSubview:publicSwitch];
+    
 }
 
 - (void)dismissKeyboard:(id)sender {
@@ -98,7 +120,12 @@
     PFObject *newTribe = [PFObject objectWithClassName:kVYBTribeClassKey];
     [newTribe setObject:[PFUser currentUser] forKey:kVYBTribeCreatorKey];
     [newTribe setObject:tribeName forKey:kVYBTribeNameKey];
-    [newTribe setObject:kVYBTribeTypePrivate forKey:kVYBTribeTypeKey];
+    if ([publicSwitch isOn]) {
+        [newTribe setObject:kVYBTribeTypePublic forKey:kVYBTribeTypeKey];
+    } else {
+        [newTribe setObject:kVYBTribeTypePrivate forKey:kVYBTribeTypeKey];
+    }
+    
     
     PFRelation *relation = [newTribe relationForKey:kVYBTribeMembersKey];
     [relation addObject:[PFUser currentUser]];
@@ -110,6 +137,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [newTribe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
+            NSLog(@"Attempting to save a tribe: %@", newTribe);
             if (self.delegate) {
                 [self.delegate createdTribe:newTribe];
             }
