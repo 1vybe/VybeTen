@@ -176,6 +176,12 @@
     [self.player play];
 }
 
+#pragma mark - DeviceOrientation
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight;
+}
+
 
 /**
  * Functions to act as a delegate for UITableView

@@ -8,26 +8,24 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
-#import <AdSupport/ASIdentifierManager.h>
-#import <Parse/Parse.h>
-#import "TransitionDelegate.h"
 
 @class VYBTribe;
 
 @interface VYBCaptureViewController : UIViewController <AVCaptureFileOutputRecordingDelegate> {
     NSString *adId;
 }
+
+@property (nonatomic) id delegate;
 @property (nonatomic) UIButton *recordButton;
 @property (nonatomic) UILabel *countLabel;
 @property (nonatomic) UIButton *flipButton;
-@property (nonatomic) UIButton *menuButton;
+@property (nonatomic) UIButton *dismissButton;
 @property (nonatomic) UIButton *flashButton;
 @property (nonatomic) UIButton *notificationButton;
 @property (nonatomic) UIButton *syncButton;
 @property (nonatomic) UILabel *syncLabel;
 @property (nonatomic) UILabel *flashLabel;
 @property (nonatomic) VYBTribe *defaultSync;
-@property (nonatomic, strong) TransitionDelegate *transitionController;
 
 //- (void)startRecording;
 //- (AVCaptureDeviceInput *)frontCameraInput;

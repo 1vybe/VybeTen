@@ -30,6 +30,12 @@
 #define FONT_TITLE_SMALL        DEFAULT_FONT(FONT_SIZE_SMALL)
 
 
+typedef enum {
+    VYBTribesPageIndex = 0,
+    VYBHomePageIndex = 1,
+    VYBFriendsPageIndex = 2
+} VYBPageControllerViewControllerIndex;
+
 #pragma mark - NSNotification
 extern NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification;
 extern NSString *const VYBSyncViewControllerDidChangeSyncTribe;
@@ -37,6 +43,7 @@ extern NSString *const VYBSyncViewControllerDidChangeSyncTribe;
 
 #pragma mark - NSUserDefaults
 extern NSString *const kVYBUserDefaultsCacheFacebookFriendsKey;
+extern NSString *const kVYBUserDefaultsActivityLastRefreshKey;
 
 
 #pragma mark - PFObject User Class
@@ -112,9 +119,30 @@ extern NSString *const kVYBTribeAttributesLastWatchedVybeKey;
 
 
 #pragma mark - Installation Class
-
 // Field keys
 extern NSString *const kVYBInstallationUserKey;
+
+
+#pragma mark - PFPush Notification Payload Keys
+
+extern NSString *const kAPNSAlertKey;
+extern NSString *const kAPNSBadgeKey;
+extern NSString *const kAPNSSoundKey;
+
+extern NSString *const kVYBPushPayloadPayloadTypeKey;
+extern NSString *const kVYBPushPayloadPayloadTypeActivityKey;
+extern NSString *const kVYBPushPayloadPayloadTypeVyveKey;
+extern NSString *const kVYBPushPayloadPayloadTypeTribeKey;
+
+extern NSString *const kVYBPushPayloadActivityTypeKey;
+extern NSString *const kVYBPushPayloadActivityFollowKey;
+
+extern NSString *const kVYBPushPayloadActivityFromUserObjectIdKey;
+extern NSString *const kVYBPushPayloadActivityToUserObjectIdKey;
+
+extern NSString *const kVYBPushPayloadVybeObjectIdKey;
+extern NSString *const kVYBPushPayloadVybeUserKey;
+
 
 @interface VYBConstants : NSObject
 @end

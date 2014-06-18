@@ -11,6 +11,9 @@
 
 @interface VYBHomeViewController : UIViewController <VYBPageViewControllerProtocol, PFLogInViewControllerDelegate>
 
+@property (nonatomic, strong) UIButton *tribesButton;
+@property (nonatomic, strong) UIButton *friendsButton;
+
 + (VYBHomeViewController *)homeViewControllerForPageIndex:(NSInteger)pageIndex;
 - (NSInteger)pageIndex;
 
