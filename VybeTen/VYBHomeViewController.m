@@ -60,19 +60,19 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationArrived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     
-    CGRect frame = CGRectMake(0, 0, 60, 60);
+    CGRect frame = CGRectMake(self.view.bounds.size.width/2 - 30, self.view.bounds.size.height - 125, 60, 60);
     captureButton = [[UIButton alloc] initWithFrame:frame];
     [captureButton setImage:[UIImage imageNamed:@"button_record.png"] forState:UIControlStateNormal];
     [captureButton addTarget:self action:@selector(captureButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:captureButton];
     
-    frame = CGRectMake(self.view.bounds.size.width - 60, self.view.bounds.size.height - 150, 60, 60);
+    frame = CGRectMake(self.view.bounds.size.width - 60, self.view.bounds.size.height - 120, 60, 60);
     friendsButton = [[UIButton alloc] initWithFrame:frame];
     [friendsButton setBackgroundColor:[UIColor whiteColor]];
     [friendsButton setImage:[UIImage imageNamed:@"button_friends_page_default.png"] forState:UIControlStateNormal];
     [self.view addSubview:friendsButton];
     
-    frame = CGRectMake(0, self.view.bounds.size.height - 150, 60, 60);
+    frame = CGRectMake(0, self.view.bounds.size.height - 120, 60, 60);
     tribesButton = [[UIButton alloc] initWithFrame:frame];
     [tribesButton setBackgroundColor:[UIColor whiteColor]];
     [tribesButton setImage:[UIImage imageNamed:@"button_tribes_page_default.png"] forState:UIControlStateNormal];
