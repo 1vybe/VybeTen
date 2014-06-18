@@ -16,7 +16,6 @@
 @property (nonatomic) VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayerItem *currItem;
 
-@property (nonatomic) UILabel *labelTime;
 @property (nonatomic, strong) NSArray *vybePlaylist;
 
 
@@ -25,7 +24,7 @@
 
 //@property (nonatomic, copy) void (^dismissBlock)(NSInteger row);
 
-- (void)playFrom:(NSInteger)from;
+- (void)playVybeAt:(NSInteger)from;
 - (void)playVybe:(PFObject *)aVybe;
 
 @end

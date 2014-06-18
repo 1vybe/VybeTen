@@ -131,8 +131,6 @@ static void * XXContext = &XXContext;
     [countLabel setUserInteractionEnabled:NO];
     [recordButton addSubview:countLabel];
     
-
-    
     // Adding FLIP button
     buttonFrame = CGRectMake((self.view.bounds.size.height - 120)/2, 0, 50, 50);
     flipButton = [[UIButton alloc] initWithFrame:buttonFrame];

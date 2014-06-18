@@ -66,6 +66,7 @@ extern NSString *const kVYBVybeTribeKey;
 extern NSString *const kVYBVybeUserKey;
 extern NSString *const kVYBVybeTimestampKey;
 extern NSString *const kVYBVybeGeotag;
+extern NSString *const kVYBVybeLocationName;
 
 
 #pragma mark - PFObject Tribe Class

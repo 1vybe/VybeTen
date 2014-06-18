@@ -121,6 +121,8 @@
     
     PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
     [query whereKey:kVYBVybeTribeKey equalTo:self.tribe];
+    [query includeKey:kVYBVybeTribeKey];
+    [query includeKey:kVYBVybeUserKey];
     // A pull-to-refresh should always trigger a network request.
     [query setCachePolicy:kPFCachePolicyNetworkOnly];
     [query orderByDescending:kVYBVybeTimestampKey];
@@ -224,7 +226,7 @@
     playerVC = [[VYBPlayerViewController alloc] init];
     [self presentViewController:playerVC animated:YES completion:nil];
     [playerVC setVybePlaylist:self.objects];
-    [playerVC playFrom:cellView.tag];
+    [playerVC playVybeAt:cellView.tag];
 }
 
 #pragma mark - ()

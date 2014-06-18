@@ -205,6 +205,8 @@
     if (vybeObjectId && vybeObjectId.length > 0) {
         PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
         query.cachePolicy = kPFCachePolicyCacheElseNetwork;
+        [query includeKey:kVYBVybeTribeKey];
+        [query includeKey:kVYBVybeUserKey];
         [query getObjectInBackgroundWithId:vybeObjectId block:^(PFObject *object, NSError *error) {
             if (!error) {
                 VYBNavigationController *homeNavigation = self.viewControllers[VYBHomePageIndex];

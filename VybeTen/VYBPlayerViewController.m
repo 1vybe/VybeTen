@@ -7,32 +7,35 @@
 //
 
 #import "VYBPlayerViewController.h"
+#import "VYBUtility.h"
 #import "VYBPlayerView.h"
 #import "VYBLabel.h"
+#import "VYBConstants.h"
+#import "MBProgressHUD.h"
 #import "GAI.h"
 #import "GAIFields.h"
 #import "GAIDictionaryBuilder.h"
-#import "VYBConstants.h"
-#import "MBProgressHUD.h"
 
 @implementation VYBPlayerViewController {
     NSInteger playIndex;
     
-    UIButton *backButton;
+    UIButton *dismissButton;
     UIButton *captureButton;
+    UIButton *tribeTimelineButton;
     
     UILabel *currentTribeLabel;
     UILabel *locationLabel;
     UILabel *usernameLabel;
+    UILabel *timeLabel;
     
     UIView *loadingView;
     UILabel *loadingLabel;
+    
 }
 
 @synthesize currPlayer = _currPlayer;
 @synthesize currPlayerView = _currPlayerView;
 @synthesize currItem = _currItem;
-@synthesize labelTime = _labelTime;
 //@synthesize dismissBlock;
 
 - (void)dealloc {
@@ -46,7 +49,7 @@
     
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
 
-    [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.width, darkBackground.bounds.size.height)];
+    [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
 
     self.currPlayerView = playerView;
     
@@ -62,6 +65,9 @@
 {
     [super viewDidLoad];
     
+    // responds to device orientation change
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
+    
     // Adding swipe gestures
     UISwipeGestureRecognizer *swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
     swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
@@ -76,63 +82,62 @@
     [self.view addGestureRecognizer:tapOnce];
 
     /* NOTE: Origin for menu button is (0, 0) */
-    // Adding BACK button
-    CGRect buttonBackFrame = CGRectMake(0, 0, 50, 50);
-    backButton = [[UIButton alloc] initWithFrame:buttonBackFrame];
-    UIImage *backImage = [UIImage imageNamed:@"button_back_shadow.png"];
-    [backButton setContentMode:UIViewContentModeCenter];
-    [backButton setImage:backImage forState:UIControlStateNormal];
-    [backButton addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:backButton];
-    // Adding capture button
-    CGRect buttonCaptureFrame = CGRectMake(self.view.bounds.size.height - 50, self.view.bounds.size.width - 50, 50, 50);
-    captureButton = [[UIButton alloc] initWithFrame:buttonCaptureFrame];
-    UIImage *captureImage = [UIImage imageNamed:@"button_vybe.png"];
+    // Adding DISMISS button
+    CGRect frame = CGRectMake(0, 0, 50, 50);
+    dismissButton = [[UIButton alloc] initWithFrame:frame];
+    UIImage *dismissImage = [UIImage imageNamed:@"button_dismiss.png"];
+    [dismissButton setContentMode:UIViewContentModeCenter];
+    [dismissButton setImage:dismissImage forState:UIControlStateNormal];
+    [dismissButton addTarget:self action:@selector(dismissButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:dismissButton];
+    // Adding CAPTURE button
+    frame = CGRectMake(self.view.bounds.size.height - 50, self.view.bounds.size.width - 50, 50, 50);
+    captureButton = [[UIButton alloc] initWithFrame:frame];
     [captureButton setContentMode:UIViewContentModeCenter];
-    [captureButton setImage:captureImage forState:UIControlStateNormal];
+    [captureButton setImage:[UIImage imageNamed:@"button_vybe.png"] forState:UIControlStateNormal];
     [captureButton addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:captureButton];
-
+    frame = CGRectMake(self.view.bounds.size.height - 50, 0, 50, 50);
+    tribeTimelineButton = [[UIButton alloc] initWithFrame:frame];
+    [tribeTimelineButton setImage:[UIImage imageNamed:@"button_tribeTimeline.png"] forState:UIControlStateNormal];
+    [tribeTimelineButton addTarget:self action:@selector(tribeTimelineButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:tribeTimelineButton];
     // Adding TIME label
-    CGRect labelTimeFrame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 48, 200, 48);
-    self.labelTime = [[VYBLabel alloc] initWithFrame:labelTimeFrame];
-    [self.labelTime setTextColor:[UIColor whiteColor]];
-    [self.labelTime setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18.0]];
-    [self.labelTime setTextAlignment:NSTextAlignmentCenter];
-    [self.view addSubview:self.labelTime];
-    
+    frame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 48, 200, 48);
+    timeLabel = [[VYBLabel alloc] initWithFrame:frame];
+    [timeLabel setTextColor:[UIColor whiteColor]];
+    [timeLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18.0]];
+    [timeLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.view addSubview:timeLabel];
     // Adding LOCATION label
-    CGRect frame = CGRectMake(self.view.bounds.size.height/2 - 100, 0, 200, 50);
+    frame = CGRectMake(self.view.bounds.size.height/2 - 150, 0, 300, 50);
     locationLabel = [[VYBLabel alloc] initWithFrame:frame];
     [locationLabel setTextColor:[UIColor whiteColor]];
     [locationLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18.0]];
     [locationLabel setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:locationLabel];
-    
     // Adding TRIBE label
-    frame = CGRectMake(10, self.view.bounds.size.width - 50, 150, 50);
+    frame = CGRectMake(self.view.bounds.size.height - 150, 50, 150, 50);
     currentTribeLabel = [[VYBLabel alloc] initWithFrame:frame];
     [currentTribeLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18]];
     [currentTribeLabel setTextColor:[UIColor whiteColor]];
+    [currentTribeLabel setTextAlignment:NSTextAlignmentRight];
     [self.view addSubview:currentTribeLabel];
+    // Adding USERNAME label
+    frame = CGRectMake(0, self.view.bounds.size.width - 50, 150, 50);
+    usernameLabel = [[VYBLabel alloc] initWithFrame:frame];
+    [usernameLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18]];
+    [usernameLabel setTextColor:[UIColor whiteColor]];
+    [self.view addSubview:usernameLabel];
     
     // LOADING screen
-    loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-    [loadingView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
-    loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
-    [loadingLabel setText:@"L O A D I N G ..."];
-    [loadingLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:24.0f]];
-    [loadingLabel setTextAlignment:NSTextAlignmentCenter];
-    [loadingLabel setTextColor:[UIColor whiteColor]];
-    [loadingView addSubview:loadingLabel];
-    loadingLabel.center = loadingView.center;
-    [self.view addSubview:loadingView];
-    loadingView.hidden = YES;
-    
+    [self setUpLoadingScreen];
 }
 
-- (void)playFrom:(NSInteger)from {
+- (void)playVybeAt:(NSInteger)from {
     PFObject *aVybe = [self.vybePlaylist objectAtIndex:from];
+    // change Labels accordingly
+    [self syncUI:aVybe];
     
     NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
     cacheURL = [cacheURL URLByAppendingPathComponent:[aVybe objectId]];
@@ -142,7 +147,7 @@
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
         self.currItem = [AVPlayerItem playerItemWithAsset:asset];
         [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
-        [self.currPlayer play];
+        //[self.currPlayer play];
     } else {
         PFFile *vid = [aVybe objectForKey:kVYBVybeVideoKey];
         loadingView.hidden = NO;
@@ -155,7 +160,7 @@
                 AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
                 self.currItem = [AVPlayerItem playerItemWithAsset:asset];
                 [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
-                [self.currPlayer play];
+                //[self.currPlayer play];
             } else {
                 UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                 [av show];
@@ -195,13 +200,31 @@
     }   
 }
 
-
-
-
 - (void)playerItemDidReachEnd {
     [self.currPlayer pause];
     playIndex--;
     //[self setUpPlayersAt:playIndex];
+}
+
+- (void)setUpLoadingScreen {
+    loadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    [loadingView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
+    loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
+    [loadingLabel setText:@"L O A D I N G ..."];
+    [loadingLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:24.0f]];
+    [loadingLabel setTextAlignment:NSTextAlignmentCenter];
+    [loadingLabel setTextColor:[UIColor whiteColor]];
+    [loadingView addSubview:loadingLabel];
+    loadingLabel.center = loadingView.center;
+    [self.view addSubview:loadingView];
+    loadingView.hidden = YES;
+}
+
+- (void)syncUI:(PFObject *)aVybe {
+    currentTribeLabel.text = [[aVybe objectForKey:kVYBVybeTribeKey] objectForKey:kVYBTribeNameKey];
+    locationLabel.text = [aVybe objectForKey:kVYBVybeLocationName];
+    timeLabel.text = [VYBUtility localizedDateStringFrom:[aVybe objectForKey:kVYBVybeTimestampKey]];
+    usernameLabel.text = [[aVybe objectForKey:kVYBVybeUserKey] objectForKey:kVYBUserDisplayNameKey];
 }
 
 /*
@@ -311,8 +334,22 @@
 
 }
 
-- (void)goBack:(id)sender {
+- (void)dismissButtonPressed:(id)sender {
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+}
+
+- (void)tribeTimelineButtonPressed:(id)sender {
+
+}
+
+#pragma mark - UIInterfaceOrientation
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskLandscape;
+}
+
+- (void)deviceOrientationChanged:(NSNotification *)note {
+    [self tapOnce];
 }
 
 - (void)didReceiveMemoryWarning

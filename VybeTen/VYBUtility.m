@@ -146,6 +146,31 @@
     return firstName;
 }
 
++ (void)reverseGeoCode:(PFGeoPoint *)aLocation withCompletion:(void (^)(NSArray *, NSError *))completionBlock {
+    if (!aLocation) {
+        return;
+    }
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:[aLocation latitude] longitude:[aLocation longitude]];
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        completionBlock(placemarks, error);
+    }];
+}
+
++ (NSString *)convertPlacemarkToLocation:(CLPlacemark *)placemark {
+    NSString *subLocalty = placemark.subLocality; // neighborhood
+    NSString *localty = placemark.locality; // city
+    NSString *subAdminArea = placemark.subAdministrativeArea; // county
+    NSString *adminArea = placemark.administrativeArea; // state
+    NSString *country = placemark.country; // country
+    
+    NSString *location = subLocalty;
+    location = (location && location.length > 0) ? [location stringByAppendingFormat:@", %@", localty] : localty;
+    //location = (subAdminArea && subAdminArea.length > 0) ? [location stringByAppendingFormat:@", %@", subAdminArea] : location;
+    location = (adminArea && adminArea.length > 0) ? [location stringByAppendingFormat:@", %@", adminArea] : location;
+    
+    return location;
+}
 
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate {
     static NSDateFormatter *dFormatterLocalized = nil;

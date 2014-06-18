@@ -82,18 +82,36 @@
                 if (succeeded) {
                     [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
                     [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-                    [vybe saveEventually];
-                    [self clearLocalCacheForVybe:vybeToGo];
-                    [uploadQueue removeObject:vybeToGo];
-                    
+                    [VYBUtility reverseGeoCode:[vybe objectForKey:kVYBVybeGeotag] withCompletion:^(NSArray *placemarks, NSError *error) {
+                        if (!error) {
+                            NSString *location = [VYBUtility convertPlacemarkToLocation:placemarks[0]];
+                            [vybe setObject:location forKey:kVYBVybeLocationName];
+                        }
+                        [vybe saveEventually];
+                        [self clearLocalCacheForVybe:vybeToGo];
+                        [uploadQueue removeObject:vybeToGo];
+                    }];
                 } else {
+                    [self saveReverseGeocodeForVybe:vybeToGo];
                     [self addVybe:vybeToGo];
                     [uploadQueue removeObject:vybeToGo];
                 }
             }];
         } else {
+            [self saveReverseGeocodeForVybe:vybeToGo];
             [self addVybe:vybeToGo];
             [uploadQueue removeObject:vybeToGo];
+        }
+    }];
+}
+
+- (void)saveReverseGeocodeForVybe:(VYBMyVybe *)aVybe {
+    PFObject *vybePF = [aVybe parseObjectVybe];
+    
+    [VYBUtility reverseGeoCode:[vybePF objectForKey:kVYBVybeGeotag] withCompletion:^(NSArray *placemarks, NSError *error) {
+        if (!error) {
+            NSString *location = [VYBUtility convertPlacemarkToLocation:placemarks[0]];
+            [aVybe setLocationName:location];
         }
     }];
 }
@@ -141,7 +159,7 @@
     if (myVybes.count < 1 ) {
         return;
     }
-    
+    NSLog(@"There are %ui vybes to be uploaded", myVybes.count);
     VYBMyVybe *delayedVybe = [myVybes firstObject];
     [self uploadDelayedVybe:delayedVybe];
 }

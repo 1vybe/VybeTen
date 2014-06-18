@@ -39,6 +39,7 @@ NSString *const kVYBVybeTribeKey                                = @"tribe";
 NSString *const kVYBVybeUserKey                                 = @"user";
 NSString *const kVYBVybeTimestampKey                            = @"timestamp";
 NSString *const kVYBVybeGeotag                                  = @"geotag";
+NSString *const kVYBVybeLocationName                            = @"locationName";
 
 
 #pragma mark - PFObject Tribe Class
