@@ -12,18 +12,24 @@
 #import "VYBCache.h"
 #import "VYBUtility.h"
 
-@interface VYBHomeViewController ()
 
-@end
 
 @implementation VYBHomeViewController {
     NSInteger _pageIndex;
     VYBLoginViewController *logInViewController;
-    VYBCaptureViewController *captureVC;
+    VYBCaptureViewController *captureViewController;
     NSMutableData *_data;
+    
+    UIButton *captureButton;
 }
 
+@synthesize tribesButton, friendsButton;
+
 #pragma mark - VYBPageViewControllerDelegate
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+}
 
 + (VYBHomeViewController *)homeViewControllerForPageIndex:(NSInteger)pageIndex {
     if (pageIndex >= 0 && pageIndex < 3) {
@@ -49,10 +55,28 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor orangeColor];
-
-    UIDevice *iphone = [UIDevice currentDevice];
-    [iphone beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];
+    
+    self.navigationController.navigationBar.translucent = NO;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationArrived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+    
+    CGRect frame = CGRectMake(0, 0, 60, 60);
+    captureButton = [[UIButton alloc] initWithFrame:frame];
+    [captureButton setImage:[UIImage imageNamed:@"button_record.png"] forState:UIControlStateNormal];
+    [captureButton addTarget:self action:@selector(captureButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:captureButton];
+    
+    frame = CGRectMake(self.view.bounds.size.width - 60, self.view.bounds.size.height - 150, 60, 60);
+    friendsButton = [[UIButton alloc] initWithFrame:frame];
+    [friendsButton setBackgroundColor:[UIColor whiteColor]];
+    [friendsButton setImage:[UIImage imageNamed:@"button_friends_page_default.png"] forState:UIControlStateNormal];
+    [self.view addSubview:friendsButton];
+    
+    frame = CGRectMake(0, self.view.bounds.size.height - 150, 60, 60);
+    tribesButton = [[UIButton alloc] initWithFrame:frame];
+    [tribesButton setBackgroundColor:[UIColor whiteColor]];
+    [tribesButton setImage:[UIImage imageNamed:@"button_tribes_page_default.png"] forState:UIControlStateNormal];
+    [self.view addSubview:tribesButton];
     
 }
 
@@ -66,29 +90,9 @@
     
 }
 
-- (void)deviceOrientationChanged:(NSNotification *)note {
-    UIDevice *device = [note object];
-    if ( UIDeviceOrientationIsPortrait([device orientation]) ) {
-        /*
-         if (!overlayView) {
-         UIWindow *window = self.view.window;
-         overlayView = [[UIImageView alloc] initWithFrame:window.bounds];
-         [overlayView setBackgroundColor:[UIColor colorWithWhite:0.0f alpha:0.8f]];
-         [overlayView setUserInteractionEnabled:YES];
-         [overlayView setContentMode:UIViewContentModeCenter];
-         [overlayView setImage:[UIImage imageNamed:@"screen_warning_rotate.png"]];
-         [window addSubview:overlayView];
-         }
-         */
-        [captureVC.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-    } else if ( UIDeviceOrientationIsLandscape([device orientation]) ) {
-        /*
-         [overlayView removeFromSuperview];
-         overlayView = nil;
-         */
-        captureVC = [[VYBCaptureViewController alloc] init];
-        [self presentViewController:captureVC animated:YES completion:nil];
-    }
+- (void)captureButtonPressed:(id)sender {
+    captureViewController = [[VYBCaptureViewController alloc] init];
+    [self presentViewController:captureViewController animated:NO completion:nil];
 }
 
 - (void)presentLoginViewController {
@@ -101,6 +105,10 @@
     [self presentViewController:logInViewController animated:NO completion:nil];
 }
 
+
+- (void)notificationArrived:(NSNotification *)note {
+    
+}
 
 #pragma mark - PFLoginViewControllerDelegate
 
@@ -264,7 +272,7 @@
     
     // clear NSUserDefaults
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kVYBUserDefaultsCacheFacebookFriendsKey];
-    //[[NSUserDefaults standardUserDefaults] removeObjectForKey:kPAPUserDefaultsActivityFeedViewControllerLastRefreshKey];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kVYBUserDefaultsActivityLastRefreshKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     // Unsubscribe from push notifications by removing the user association from the current installation.

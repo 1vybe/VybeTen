@@ -13,6 +13,7 @@
 #import "VYBHomeViewController.h"
 #import "VYBTribesViewController.h"
 #import "VYBFriendsViewController.h"
+#import "VYBPlayerViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
@@ -68,9 +69,10 @@
                                consumerSecret:@"f778KywZHkqURPVirTMdANKxnaIg6dzKUAkqNeHe3sR9U794qn"];
 
     // Clearing Push-noti Badge number
-    if (application.applicationIconBadgeNumber != 0) {
-        application.applicationIconBadgeNumber = 0;
-        [[PFInstallation currentInstallation] saveInBackground];
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    if (currentInstallation.badge != 0) {
+        currentInstallation.badge = 0;
+        [currentInstallation saveEventually];
     }
     
     // Access Control
@@ -84,16 +86,16 @@
 
     // page0 is TRIBES
     VYBTribesViewController *tribesVC = [[VYBTribesViewController alloc] init];
-    VYBNavigationController *page0 = [VYBNavigationController navigationControllerForPageIndex:0 withRootViewController:tribesVC];
+    VYBNavigationController *tribeNavigation = [VYBNavigationController navigationControllerForPageIndex:VYBTribesPageIndex withRootViewController:tribesVC];
     // page1 is HOME and it's the Starting Page
-    VYBHomeViewController *homeVC = [VYBHomeViewController homeViewControllerForPageIndex:1];
-    VYBNavigationController *page1 = [VYBNavigationController navigationControllerForPageIndex:1 withRootViewController:homeVC];
+    VYBHomeViewController *homeVC = [[VYBHomeViewController alloc] init];
+    VYBNavigationController *homeNavigation = [VYBNavigationController navigationControllerForPageIndex:VYBHomePageIndex withRootViewController:homeVC];
     // page2 is FRIENDS
     VYBFriendsViewController *friendsVC = [[VYBFriendsViewController alloc] init];
-    VYBNavigationController *page2 = [VYBNavigationController navigationControllerForPageIndex:2 withRootViewController:friendsVC];
+    VYBNavigationController *friendsNavigation = [VYBNavigationController navigationControllerForPageIndex:VYBFriendsPageIndex withRootViewController:friendsVC];
     
-    viewControllers = [NSArray arrayWithObjects:page0, page1, page2, nil];
-    [pageController setViewControllers:@[page1] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    viewControllers = [NSArray arrayWithObjects:tribeNavigation, homeNavigation, friendsNavigation, nil];
+    [pageController setViewControllers:@[homeNavigation] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
     [self.window setRootViewController:pageController];
     
@@ -104,9 +106,13 @@
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     
-    //[self handlePush:launchOptions];
+    // If the app was launched from tapping on a push notification
+    NSDictionary *remoteNotificationPayload = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (remoteNotificationPayload) {
+        [self handlePush:remoteNotificationPayload];
+    }
     
     return YES;
 }
@@ -173,14 +179,64 @@
  * PFPush Settigs 
  **/
 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    if (application.applicationIconBadgeNumber != 0) {
-        application.applicationIconBadgeNumber = 0;
+- (void)handlePush:(NSDictionary *)remoteNotificationPayload {
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil userInfo:remoteNotificationPayload];
+    
+    if (![PFUser currentUser]) {
+        return;
     }
     
+    // Following Activity
+    NSString *fromUserObjId = [remoteNotificationPayload objectForKey:kVYBPushPayloadActivityFromUserObjectIdKey];
+    if (fromUserObjId && fromUserObjId.length > 0) {
+        PFQuery *query = [PFUser query];
+        query.cachePolicy = kPFCachePolicyCacheElseNetwork;
+        [query getObjectInBackgroundWithId:fromUserObjId block:^(PFObject *object, NSError *error) {
+            if (!error) {
+                VYBNavigationController *friendsVC = self.viewControllers[VYBFriendsPageIndex];
+                [self.pageController setViewControllers:@[friendsVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+            }
+        }];
+        return;
+    }
+    
+    // New vybe, so start playing that vybe right away
+    NSString *vybeObjectId = [remoteNotificationPayload objectForKeyedSubscript:kVYBPushPayloadVybeObjectIdKey];
+    if (vybeObjectId && vybeObjectId.length > 0) {
+        PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+        query.cachePolicy = kPFCachePolicyCacheElseNetwork;
+        [query getObjectInBackgroundWithId:vybeObjectId block:^(PFObject *object, NSError *error) {
+            if (!error) {
+                VYBNavigationController *homeNavigation = self.viewControllers[VYBHomePageIndex];
+                [self.pageController setViewControllers:@[homeNavigation] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                if (homeNavigation.presentedViewController) {
+                    [homeNavigation dismissViewControllerAnimated:NO completion:^{
+                        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+                        [homeNavigation presentViewController:playerVC animated:NO completion:^{
+                            [playerVC playVybe:object];
+                        }];
+                    }];
+                } else {
+                    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+                    [homeNavigation presentViewController:playerVC animated:NO completion:^{
+                        [playerVC playVybe:object];
+                    }];
+                }
+            }
+        }];
+        return;
+    }
+    
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    if (currentInstallation.badge != 0) {
+        currentInstallation.badge = 0;
+    }
+    
     [currentInstallation setDeviceTokenFromData:deviceToken];
-    [currentInstallation saveInBackground];
+    [currentInstallation saveEventually];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
@@ -190,12 +246,15 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    /* TODO: Update Badge Number */
-    if ([PFUser currentUser]) {
-        
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil userInfo:userInfo];
+    
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        // Tracks app open due to a push notification when the app was not active
     }
     
-    //[PFPush handlePush:userInfo];
+    if (userInfo) {
+        [self handlePush:userInfo];
+    }
 }
 
 
@@ -213,7 +272,13 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    // TODO: Update Badge Number
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    if (currentInstallation.badge != 0) {
+        currentInstallation.badge = 0;
+        [currentInstallation saveEventually];
+    }
+    
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
     
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
 }

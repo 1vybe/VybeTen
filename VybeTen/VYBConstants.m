@@ -14,6 +14,7 @@ NSString *const VYBSyncViewControllerDidChangeSyncTribe               = @"com.vy
 
 #pragma mark - NSUserDefaults
 NSString *const kVYBUserDefaultsCacheFacebookFriendsKey         = @"com.vybe.app.userDefaults.cache.facebookFriends";
+NSString *const kVYBUserDefaultsActivityLastRefreshKey                  = @"com.vybe.app.userDefaults.ActivityLastRefresh";
 
 
 #pragma mark - PFObject User Class
@@ -95,8 +96,26 @@ NSString *const kVYBUserAttributesTribesKey                     = @"tribes";
 
 #pragma mark - Installation Class
 // Field keys
-NSString *const kVYBInstallationUserKey = @"user";
+NSString *const kVYBInstallationUserKey                         = @"user";
 
-@implementation VYBConstants
 
-@end
+
+#pragma mark - PFPush Notification Payload Keys
+
+NSString *const kAPNSAlertKey                                   = @"alert";
+NSString *const kAPNSBadgeKey                                   = @"badge";
+NSString *const kAPNSSoundKey                                   = @"sound";
+
+NSString *const kVYBPushPayloadPayloadTypeKey                   = @"p";
+NSString *const kVYBPushPayloadPayloadTypeActivityKey           = @"a";
+NSString *const kVYBPushPayloadPayloadTypeVyveKey               = @"v";
+NSString *const kVYBPushPayloadPayloadTypeTribeKey              = @"t";
+
+NSString *const kVYBPushPayloadActivityTypeKey                  = @"t";
+NSString *const kVYBPushPayloadActivityFollowKey                = @"f";
+
+NSString *const kVYBPushPayloadActivityFromUserObjectIdKey      = @"fu";
+NSString *const kVYBPushPayloadActivityToUserObjectIdKey        = @"tu";
+
+NSString *const kVYBPushPayloadVybeObjectIdKey                  = @"vid";
+NSString *const kVYBPushPayloadVybeUserKey                      = @"vu";

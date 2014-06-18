@@ -10,17 +10,16 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
 #import <CoreLocation/CoreLocation.h>
-#import "VYBLabel.h"
 #import "VYBCaptureViewController.h"
-#import "VYBMenuViewController.h"
-#import "VYBMyVybeStore.h"
-#import "VYBConstants.h"
+#import "VYBHomeViewController.h"
 #import "VYBReplayViewController.h"
 #import "VYBSyncTribeViewController.h"
-#import "UINavigationController+Fade.h"
-#import "JSBadgeView.h"
+#import "VYBLabel.h"
+#import "VYBMyVybeStore.h"
+#import "VYBConstants.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
+
 
 @implementation VYBCaptureViewController {
     AVCaptureSession *session;
@@ -38,12 +37,10 @@
     VYBMyVybe *currVybe;
     
     UIImageView *overlayView;
-    JSBadgeView *badgeView;
 }
 
-@synthesize syncButton, syncLabel, recordButton, countLabel, flipButton, menuButton, flashButton, flashLabel, notificationButton;
+@synthesize syncButton, syncLabel, recordButton, countLabel, flipButton, dismissButton, flashButton, flashLabel, notificationButton;
 @synthesize defaultSync;
-@synthesize transitionController;
 
 static void * XXContext = &XXContext;
 
@@ -68,31 +65,31 @@ static void * XXContext = &XXContext;
     self.view = theView;
     [self.view setBackgroundColor:[UIColor clearColor]];
     
-    [self setUpCameraSession];
-
-    [session startRunning];
-
+    // Hide status bar
+    [self setNeedsStatusBarAppearanceUpdate];
     
     // NSNotification for changing SYNC label
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeSyncTribeLabel:) name:VYBSyncViewControllerDidChangeSyncTribe object:nil];
     
-    transitionController = [[TransitionDelegate alloc] init];
-    
+    // Device orientation detection
+    UIDevice *iphone = [UIDevice currentDevice];
+    [iphone beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];
 
     recording = NO;
     frontCamera = NO;
     
-    // Adding MENU button
-    CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 50, 0, 50, 50);
-    menuButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    UIImage *menuImage = [UIImage imageNamed:@"button_menu.png"];
-    [menuButton setContentMode:UIViewContentModeCenter];
-    [menuButton setImage:menuImage forState:UIControlStateNormal];
-    [menuButton addTarget:self action:@selector(goToMenu:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:menuButton];
+    // Adding DISMISS button
+    CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 60, 0, 50, 50);
+    dismissButton = [[UIButton alloc] initWithFrame:buttonFrame];
+    UIImage *dismissImage = [UIImage imageNamed:@"button_dismiss.png"];
+    [dismissButton setContentMode:UIViewContentModeCenter];
+    [dismissButton setImage:dismissImage forState:UIControlStateNormal];
+    [dismissButton addTarget:self action:@selector(dismissButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:dismissButton];
     
     // Adding SYNC button
-    buttonFrame = CGRectMake(0, self.view.bounds.size.width - 50, 50, 50);
+    buttonFrame = CGRectMake(self.view.bounds.size.height - 60, self.view.bounds.size.width - 50, 50, 50);
     syncButton = [[UIButton alloc] initWithFrame:buttonFrame];
     UIImage *syncNoneImg = [UIImage imageNamed:@"button_sync_none.png"];
     UIImage *syncImg = [UIImage imageNamed:@"button_sync.png"];
@@ -101,13 +98,12 @@ static void * XXContext = &XXContext;
     [syncButton setContentMode:UIViewContentModeLeft];
     [syncButton addTarget:self action:@selector(changeSync:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:syncButton];
-    
     // Adding SYNC label
-    buttonFrame = CGRectMake(50, self.view.bounds.size.width - 50, 150, 50);
+    buttonFrame = CGRectMake(self.view.bounds.size.height - 210, self.view.bounds.size.width - 50, 150, 50);
     syncLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
     [syncLabel setTextColor:[UIColor whiteColor]];
     [syncLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
-    //[syncLabel setTextAlignment:NSTextAlignmentLeft];
+    [syncLabel setTextAlignment:NSTextAlignmentRight];
     [syncLabel resignFirstResponder];
     [self.view addSubview:syncLabel];
     PFObject *tribe = [[VYBCache sharedCache] syncTribeForUser:[PFUser currentUser]];
@@ -124,8 +120,6 @@ static void * XXContext = &XXContext;
     recordButton = [[UIButton alloc] initWithFrame:buttonFrame];
     UIImage *captureButtonImg = [UIImage imageNamed:@"button_record.png"];
     [recordButton setBackgroundImage:captureButtonImg forState:UIControlStateNormal];
-    //[recordButton.titleLabel setFont:[UIFont fontWithName:@"Montreal-Regular" size:24]];
-    //[recordButton setTintColor:[UIColor whiteColor]];
     [recordButton addTarget:self action:@selector(startRecording) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:recordButton];
     // Adding COUNT label to RECORD button
@@ -137,25 +131,12 @@ static void * XXContext = &XXContext;
     [countLabel setUserInteractionEnabled:NO];
     [recordButton addSubview:countLabel];
     
-    // Adding NOTIFICATION button
-    buttonFrame = CGRectMake(0, 0, 50, 50);
-    notificationButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    UIImageView *notificationImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"button_notification.png"]];
-    [notificationButton addSubview:notificationImgView];
-    notificationImgView.center = notificationButton.center;
-    [notificationButton addTarget:self action:@selector(notificationPressed:) forControlEvents:UIControlEventTouchUpInside];
-    /* TODO: Uncomment this */
-    //[self.view addSubview:notificationButton];
-    [notificationImgView setUserInteractionEnabled:NO];
-    badgeView = [[JSBadgeView alloc] initWithParentView:notificationImgView alignment:JSBadgeViewAlignmentTopRight];
-    // Register this class as an observer for notification change
-    [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"numVybes" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:XXContext];
-    //adgeView.badgeText = @"3";
+
     
     // Adding FLIP button
     buttonFrame = CGRectMake((self.view.bounds.size.height - 120)/2, 0, 50, 50);
     flipButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    UIImage *flipImage = [UIImage imageNamed:@"button_flip.png"];
+    UIImage *flipImage = [UIImage imageNamed:@"button_switch_cam.png"];
     [flipButton setContentMode:UIViewContentModeCenter];
     [flipButton setImage:flipImage forState:UIControlStateNormal];
     [flipButton addTarget:self action:@selector(flipCamera:) forControlEvents:UIControlEventTouchUpInside];
@@ -164,7 +145,7 @@ static void * XXContext = &XXContext;
     // Adding FLASH button
     buttonFrame = CGRectMake((self.view.bounds.size.height-120)/2 + 50, 0, 70, 50);
     flashButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    UIImage *flashImage = [UIImage imageNamed:@"button_flash_on.png"];
+    UIImage *flashImage = [UIImage imageNamed:@"button_flash.png"];
     [flashButton setContentMode:UIViewContentModeLeft];
     [flashButton setImage:flashImage forState:UIControlStateNormal];
     [flashButton addTarget:self action:@selector(switchFlash:) forControlEvents:UIControlEventTouchUpInside];
@@ -180,6 +161,10 @@ static void * XXContext = &XXContext;
     [self.flashButton addSubview:flashLabel];
 
     //self.navigationController.navigationBarHidden = YES;
+    
+    [self setUpCameraSession];
+    
+    [session startRunning];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -187,7 +172,7 @@ static void * XXContext = &XXContext;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-     syncButton.hidden = recording; syncLabel.hidden = recording; flipButton.hidden = recording; menuButton.hidden = recording; notificationButton.hidden = recording; flashButton.hidden = (recording || frontCamera);
+     syncButton.hidden = recording; syncLabel.hidden = recording; flipButton.hidden = recording; dismissButton.hidden = recording; notificationButton.hidden = recording; flashButton.hidden = (recording || frontCamera);
 }
 
 - (void)changeSyncTribeLabel:(NSNotificationCenter *)note {
@@ -232,15 +217,11 @@ static void * XXContext = &XXContext;
     if ( [session canAddOutput:movieFileOutput] )
         [session addOutput:movieFileOutput];
     movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-    
-    if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeLeft) {
-        [[cameraInputLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-        [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-    } else if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeRight) {
-        [[cameraInputLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
-        [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
-    }
+}
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self adjustToOrientation:[[UIDevice currentDevice] orientation]];
 }
 
 - (AVCaptureDeviceInput *)frontCameraInput {
@@ -306,7 +287,7 @@ static void * XXContext = &XXContext;
         UIImage *recordButtonEmptyImg = [UIImage imageNamed:@"button_record_empty.png"];
         [recordButton setBackgroundImage:recordButtonEmptyImg forState:UIControlStateNormal];
         
-        recording = YES; syncButton.hidden = recording; syncLabel.hidden = recording; flipButton.hidden = recording; menuButton.hidden = recording; notificationButton.hidden = recording; flashButton.hidden = recording;
+        recording = YES; syncButton.hidden = recording; syncLabel.hidden = recording; flipButton.hidden = recording; dismissButton.hidden = recording; notificationButton.hidden = recording; flashButton.hidden = recording;
     }
     
     /* Stop Recording */
@@ -381,8 +362,8 @@ static void * XXContext = &XXContext;
     [session startRunning];
 }
 
-- (void)goToMenu:(id)sender {
-    [self.navigationController popViewControllerAnimated:NO];
+- (void)dismissButtonPressed:(id)sender {
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 
@@ -420,17 +401,46 @@ static void * XXContext = &XXContext;
 }
 
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (context == XXContext) {
-        if ( [keyPath isEqualToString:@"numVybes"] ) {
-            NSNumber *newCount = (NSNumber *)[change objectForKey:NSKeyValueChangeNewKey];
-            NSString *count = [NSString stringWithFormat:@"%@", newCount];
-            badgeView.badgeText = count;
-        }
-    }
-    //[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+#pragma mark - DeviceOrientation
+
+- (void)deviceOrientationChanged:(NSNotification *)note {
+    UIDevice *device = [note object];
+    [self adjustToOrientation:[device orientation]];
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight;
+}
+
+- (void)adjustToOrientation:(UIDeviceOrientation)orientation {
+    if (orientation == UIDeviceOrientationLandscapeLeft) {
+        [[cameraInputLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+        [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+    } else if (orientation == UIDeviceOrientationLandscapeRight) {
+        [[cameraInputLayer connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+        [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+    }
+    
+    [self displayMessageToRotate:orientation];
+}
+
+- (void)displayMessageToRotate:(UIDeviceOrientation)orientation {
+    if (overlayView) {
+        [overlayView removeFromSuperview];
+    }
+    if (UIDeviceOrientationIsPortrait(orientation)) {
+        overlayView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+        [overlayView setBackgroundColor:[UIColor colorWithWhite:0.0f alpha:0.8f]];
+        [overlayView setUserInteractionEnabled:YES];
+        [overlayView setContentMode:UIViewContentModeCenter];
+        [overlayView setImage:[UIImage imageNamed:@"screen_warning_rotate.png"]];
+        [self.view addSubview:overlayView];
+    }
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
 
 - (void)didReceiveMemoryWarning
 {

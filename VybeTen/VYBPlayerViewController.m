@@ -164,6 +164,38 @@
     }
 }
 
+- (void)playVybe:(PFObject *)aVybe {
+    NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
+    cacheURL = [cacheURL URLByAppendingPathComponent:[aVybe objectId]];
+    cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+        self.currItem = [AVPlayerItem playerItemWithAsset:asset];
+        [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
+        [self.currPlayer play];
+    } else {
+        PFFile *vid = [aVybe objectForKey:kVYBVybeVideoKey];
+        loadingView.hidden = NO;
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            loadingView.hidden = YES;
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            if (!error) {
+                [data writeToURL:cacheURL atomically:YES];
+                AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+                self.currItem = [AVPlayerItem playerItemWithAsset:asset];
+                [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
+                [self.currPlayer play];
+            } else {
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [av show];
+            }
+        }];
+    }   
+}
+
+
 
 
 - (void)playerItemDidReachEnd {

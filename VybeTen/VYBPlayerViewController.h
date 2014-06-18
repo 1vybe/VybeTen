@@ -26,5 +26,6 @@
 //@property (nonatomic, copy) void (^dismissBlock)(NSInteger row);
 
 - (void)playFrom:(NSInteger)from;
+- (void)playVybe:(PFObject *)aVybe;
 
 @end

@@ -258,8 +258,6 @@
 				0243CC9718CC665200CA03C0 /* VYBReplayViewController.m */,
 				025169AE18FB0D2A007F34B0 /* VYBSyncTribeViewController.h */,
 				025169AF18FB0D2A007F34B0 /* VYBSyncTribeViewController.m */,
-				022296D718BC506D0096BB30 /* VYBMenuViewController.h */,
-				022296D818BC506D0096BB30 /* VYBMenuViewController.m */,
 				022361F618FBD266002700B8 /* VYBTribesViewController.h */,
 				022361F718FBD266002700B8 /* VYBTribesViewController.m */,
 				024C28D518DBCE0600399980 /* VYBTribeTimelineViewController.h */,
@@ -307,6 +305,8 @@
 		02CCF9001939609000B3137D /* NotUsed */ = {
 			isa = PBXGroup;
 			children = (
+				022296D718BC506D0096BB30 /* VYBMenuViewController.h */,
+				022296D818BC506D0096BB30 /* VYBMenuViewController.m */,
 				024B0E2C18BB39FF0073574E /* VYBVybeStore.h */,
 				024B0E2D18BB39FF0073574E /* VYBVybeStore.m */,
 				024B0E2918BB39E30073574E /* VYBImageStore.h */,
@@ -726,7 +726,7 @@
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "330FF44D-C895-40DD-95A0-6C435F89607A";
+				PROVISIONING_PROFILE = "D1039B03-A6F8-4173-97E3-E0A726F91398";
 			};
 			name = Debug;
 		};

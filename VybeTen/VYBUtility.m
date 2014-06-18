@@ -104,6 +104,8 @@
             if (completionBlock) {
                 completionBlock(succeeded, error);
             }
+        } else {
+            [[VYBCache sharedCache] setFollowStatus:NO user:fUser];
         }
     }];
     
