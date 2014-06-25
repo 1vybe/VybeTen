@@ -62,21 +62,9 @@
         [self.contentView addSubview:self.tribeLabel];
         
         self.followButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.followButton.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
-        self.followButton.titleEdgeInsets = UIEdgeInsetsMake( 0.0f, 10.0f, 0.0f, 0.0f);
-        [self.followButton setTitle:NSLocalizedString(@"Follow  ", @"Follow string, with spaces added for centering")
-                           forState:UIControlStateNormal];
-        [self.followButton setTitle:@"Following"
-                           forState:UIControlStateSelected];
-        [self.followButton setTitleColor:[UIColor colorWithRed:84.0f/255.0f green:57.0f/255.0f blue:45.0f/255.0f alpha:1.0f]
-                                forState:UIControlStateNormal];
-        [self.followButton setTitleColor:[UIColor whiteColor]
-                                forState:UIControlStateSelected];
-        [self.followButton setTitleShadowColor:[UIColor colorWithRed:232.0f/255.0f green:203.0f/255.0f blue:168.0f/255.0f alpha:1.0f]
-                                      forState:UIControlStateNormal];
-        [self.followButton setTitleShadowColor:[UIColor blackColor]
-                                      forState:UIControlStateSelected];
-        self.followButton.titleLabel.shadowOffset = CGSizeMake( 0.0f, -1.0f);
+        [followButton setFrame:CGRectMake( 208.0f, 20.0f, 50.0f, 50.0f)];
+        [self.followButton setImage:[UIImage imageNamed:@"button_follow.png"] forState:UIControlStateNormal];
+        [self.followButton setImage:[UIImage imageNamed:@"button_following.png"] forState:UIControlStateSelected];
         [self.followButton addTarget:self action:@selector(didTapFollowButtonAction:)
                     forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:self.followButton];
@@ -110,9 +98,6 @@
                                                  attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:11.0f]}
                                                     context:nil].size;
     [tribeLabel setFrame:CGRectMake( 60.0f, 17.0f + nameSize.height, 140.0f, tribeLabelSize.height)];
-    
-    // Set follow button
-    [followButton setFrame:CGRectMake( 208.0f, 20.0f, 103.0f, 32.0f)];
 }
 
 

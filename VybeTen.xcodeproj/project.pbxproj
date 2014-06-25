@@ -35,6 +35,7 @@
 		0275087F19252E0D00B070EE /* UIImage+ResizeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275087E19252E0D00B070EE /* UIImage+ResizeAdditions.m */; };
 		0275088219252E9000B070EE /* UIImage+RoundedCornerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275088119252E9000B070EE /* UIImage+RoundedCornerAdditions.m */; };
 		0275088519252EA000B070EE /* UIImage+AlphaAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275088419252EA000B070EE /* UIImage+AlphaAdditions.m */; };
+		0276D13C19590CDF007292B0 /* VYBPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0276D13B19590CDF007292B0 /* VYBPageViewController.m */; };
 		027B201C193D360000D23AC7 /* VYBFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 027B201B193D360000D23AC7 /* VYBFriendCell.m */; };
 		027FB48018FEC2AC00946579 /* PWProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 027FB47F18FEC2AC00946579 /* PWProgressView.m */; };
 		02979900192ADF230073E705 /* VYBFriendCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 029798FF192ADF230073E705 /* VYBFriendCollectionCell.m */; };
@@ -130,6 +131,8 @@
 		0275088119252E9000B070EE /* UIImage+RoundedCornerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCornerAdditions.m"; sourceTree = "<group>"; };
 		0275088319252EA000B070EE /* UIImage+AlphaAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AlphaAdditions.h"; sourceTree = "<group>"; };
 		0275088419252EA000B070EE /* UIImage+AlphaAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AlphaAdditions.m"; sourceTree = "<group>"; };
+		0276D13A19590CDE007292B0 /* VYBPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPageViewController.h; sourceTree = "<group>"; };
+		0276D13B19590CDF007292B0 /* VYBPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPageViewController.m; sourceTree = "<group>"; };
 		027B201A193D360000D23AC7 /* VYBFriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBFriendCell.h; sourceTree = "<group>"; };
 		027B201B193D360000D23AC7 /* VYBFriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBFriendCell.m; sourceTree = "<group>"; };
 		027FB47E18FEC2AC00946579 /* PWProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWProgressView.h; sourceTree = "<group>"; };
@@ -280,6 +283,8 @@
 				0226CBAC194A0339005270D3 /* VYBNavigationController.m */,
 				0226CBAE194A0F84005270D3 /* VYBHomeViewController.h */,
 				0226CBAF194A0F84005270D3 /* VYBHomeViewController.m */,
+				0276D13A19590CDE007292B0 /* VYBPageViewController.h */,
+				0276D13B19590CDF007292B0 /* VYBPageViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -629,6 +634,7 @@
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
 				02030D9A18FF622A005723FE /* VYBS3Uploader.m in Sources */,
 				022296DA18BC506D0096BB30 /* VYBMenuViewController.m in Sources */,
+				0276D13C19590CDF007292B0 /* VYBPageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

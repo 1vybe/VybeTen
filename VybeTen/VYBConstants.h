@@ -80,7 +80,7 @@ extern NSString *const kVYBTribeTypeKey;
 extern NSString *const kVYBTribeVybeCountKey;
 extern NSString *const kVYBTribeMembersCountKey;
 extern NSString *const kVYBTribeMembersKey;
-extern NSString *const kVYBTribeThumbnailKey;
+extern NSString *const kVYBTribeNewestVybeKey;
 
 
 // type values

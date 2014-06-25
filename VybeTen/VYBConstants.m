@@ -55,7 +55,7 @@ NSString *const kVYBTribeVybeCountKey                           = @"vybeCount";
 //TODO: CLOUD CODE for incrementing membersCount key when a new PFObject(Tribe) is saved with members or member are added later
 NSString *const kVYBTribeMembersCountKey                        = @"membersCount";
 NSString *const kVYBTribeMembersKey                             = @"members";
-NSString *const kVYBTribeThumbnailKey                           = @"thumbnail";
+NSString *const kVYBTribeNewestVybeKey                          = @"newestVybe";
 
 // type values
 NSString *const kVYBTribeTypePrivate                            = @"private";

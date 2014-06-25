@@ -36,4 +36,8 @@
     return _pageIndex;
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return [self.topViewController supportedInterfaceOrientations];
+}
+
 @end

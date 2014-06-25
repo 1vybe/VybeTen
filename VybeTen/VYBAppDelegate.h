@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
-
+@class VYBPageViewController;
 @interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong) NSArray *viewControllers;
-@property (nonatomic, strong) UIPageViewController *pageController;
+@property (nonatomic, strong) VYBPageViewController *pageController;
 
 /* TODO */
 @property (nonatomic, readonly) int networkStatus;

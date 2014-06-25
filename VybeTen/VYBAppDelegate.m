@@ -10,6 +10,7 @@
 #import <HockeySDK/HockeySDK.h>
 #import "VYBAppDelegate.h"
 #import "VYBNavigationController.h"
+#import "VYBPageViewController.h"
 #import "VYBHomeViewController.h"
 #import "VYBTribesViewController.h"
 #import "VYBFriendsViewController.h"
@@ -81,8 +82,9 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
         
-    pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+    pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     pageController.dataSource = self;
+    
 
     // page0 is TRIBES
     VYBTribesViewController *tribesVC = [[VYBTribesViewController alloc] init];

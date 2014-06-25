@@ -131,7 +131,11 @@
     [relation addObject:[PFUser currentUser]];
     
     PFACL *tribeACL = [PFACL ACLWithUser:[PFUser currentUser]];
-    [tribeACL setPublicReadAccess:NO];
+    if ([publicSwitch isOn]) {
+        [tribeACL setPublicReadAccess:YES];
+    } else {
+        [tribeACL setPublicReadAccess:NO];
+    }
     newTribe.ACL = tribeACL;
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];

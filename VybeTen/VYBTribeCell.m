@@ -11,13 +11,11 @@
 
 @implementation VYBTribeCell
 
-
 @synthesize delegate;
 @synthesize tribe;
 @synthesize thumbnailImageButton;
 @synthesize thumbnailImageView;
 @synthesize nameButton;
-@synthesize followButton;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -31,7 +29,7 @@
         self.thumbnailImageButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.thumbnailImageButton.backgroundColor = [UIColor clearColor];
         self.thumbnailImageButton.frame = CGRectMake( 10.0f, 14.0f, 40.0f, 40.0f);
-        [self.thumbnailImageButton addTarget:self action:@selector(didTapTribeButtonAction:)
+        [self.thumbnailImageButton addTarget:self action:@selector(didTapVybeButtonAction:)
                          forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:self.thumbnailImageButton];
         
@@ -52,25 +50,6 @@
                   forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:self.nameButton];
         
-        self.followButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.followButton.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
-        self.followButton.titleEdgeInsets = UIEdgeInsetsMake( 0.0f, 10.0f, 0.0f, 0.0f);
-        [self.followButton setTitle:NSLocalizedString(@"Follow  ", @"Follow string, with spaces added for centering")
-                           forState:UIControlStateNormal];
-        [self.followButton setTitle:@"Following"
-                           forState:UIControlStateSelected];
-        [self.followButton setTitleColor:[UIColor colorWithRed:84.0f/255.0f green:57.0f/255.0f blue:45.0f/255.0f alpha:1.0f]
-                                forState:UIControlStateNormal];
-        [self.followButton setTitleColor:[UIColor whiteColor]
-                                forState:UIControlStateSelected];
-        [self.followButton setTitleShadowColor:[UIColor colorWithRed:232.0f/255.0f green:203.0f/255.0f blue:168.0f/255.0f alpha:1.0f]
-                                      forState:UIControlStateNormal];
-        [self.followButton setTitleShadowColor:[UIColor blackColor]
-                                      forState:UIControlStateSelected];
-        self.followButton.titleLabel.shadowOffset = CGSizeMake( 0.0f, -1.0f);
-        [self.followButton addTarget:self action:@selector(didTapFollowButtonAction:)
-                    forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:self.followButton];
     }
     return self;
 }
@@ -81,7 +60,8 @@
     tribe = aTribe;
     
     // Configure the cell
-    [thumbnailImageView setFile:[self.tribe objectForKey:kVYBTribeThumbnailKey]];
+    PFObject *newestVybe = [self.tribe objectForKey:kVYBTribeNewestVybeKey];
+    [thumbnailImageView setFile:[newestVybe objectForKey:kVYBVybeThumbnailKey]];
     [thumbnailImageView loadInBackground];
     
     // Set name
@@ -95,8 +75,6 @@
     
     [nameButton setFrame:CGRectMake( 60.0f, 17.0f, nameSize.width, nameSize.height)];
     
-    // Set follow button
-    [followButton setFrame:CGRectMake( 208.0f, 20.0f, 103.0f, 32.0f)];
 }
 
 
@@ -115,12 +93,10 @@
 }
 
 /* Inform delegate that the follow button was tapped */
-- (void)didTapFollowButtonAction:(id)sender {
-    /*
-    if (self.delegate && [self.delegate respondsToSelector:@selector(cell:didTapFollowButton:)]) {
-        [self.delegate cell:self didTapFollowButton:self.user];
+- (void)didTapVybeButtonAction:(id)sender {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(cell:didTapVybeButton:)]) {
+        [self.delegate cell:self didTapVybeButton:self.tribe];
     }
-    */
 }
 
 

@@ -42,13 +42,30 @@
 }
 
 
+- (void)loadView {
+    [super loadView];
+    
+    self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_friends_profile.png"] style:UIBarButtonItemStylePlain target:self action:@selector(profileButtonPressed:)];
+    self.navigationItem.leftBarButtonItem.tintColor = [UIColor grayColor];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_friends_add.png"] style:UIBarButtonItemStylePlain target:self action:@selector(addButtonPressed:)];
+    self.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
+    
+    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Vybe", @"Facebook"]];
+    segmentedControl.selectedSegmentIndex = 0;
+    self.navigationItem.titleView = segmentedControl;
+    self.navigationItem.titleView.tintColor = [UIColor grayColor];
+    
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.tableView setBackgroundColor:[UIColor greenColor]];
+    self.tableView.separatorColor = [UIColor clearColor];
     
     /*
     // Adding a dark TOPBAR
@@ -227,6 +244,10 @@
     [self shouldToggleFollowFriendForCell:cellView];
 }
 
+#pragma mark - UIDeviceOrientation
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
 
 - (void)didReceiveMemoryWarning
 {

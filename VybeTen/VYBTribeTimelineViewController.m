@@ -20,7 +20,6 @@
 
 
 @implementation VYBTribeTimelineViewController {
-   
     UILabel *countLabel;
     UIButton *membersButton;
     UIView *topBar;
@@ -62,47 +61,30 @@
 
 #pragma mark - UIViewController
 
-- (void)viewDidLoad
-{
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-
-    [super viewDidLoad];
+- (void)loadView {
+    [super loadView];
     
-    self.tableView.showsVerticalScrollIndicator = NO;
-    
-    // Add blurredView
-    UIToolbar* blurredView = [[UIToolbar alloc] initWithFrame:self.tableView.bounds];
-    [blurredView setBarStyle:UIBarStyleDefault];
-    [self.tableView setBackgroundView:blurredView];
-    
-    
-    // Adding a dark TOPBAR
-    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.height - 50, 50);
-    topBar = [[UIView alloc] initWithFrame:frame];
-    [topBar setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.1]];
-    [self.view addSubview:topBar];
-    
-    // Adding COUNT label
-    // These frequent view related steps should be done in Model side.
-    // Count label translates the view by 35 px along x and 85px along y axis because the label is a rectangle
-    frame = CGRectMake(0, 0, 150, 50);
+    CGRect frame = CGRectMake(0, 0, 150, 50);
     countLabel = [[UILabel alloc] initWithFrame:frame];
     [countLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
     [countLabel setText:[NSString stringWithFormat:@"%@", [self.tribe objectForKey:kVYBTribeNameKey]]];
-    [countLabel setTextColor:[UIColor whiteColor]];
-    [countLabel setTextAlignment:NSTextAlignmentLeft];
-    [countLabel setBackgroundColor:[UIColor clearColor]];
-    [self.tableView addSubview:countLabel];
-   
-    // Adding FRIENDS button
-    frame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
-    membersButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *friendsImg = [UIImage imageNamed:@"button_friends.png"];
-    [membersButton setContentMode:UIViewContentModeCenter];
-    [membersButton setImage:friendsImg forState:UIControlStateNormal];
-    [membersButton addTarget:self action:@selector(didTapOnMembersButton:) forControlEvents:UIControlEventTouchUpInside];
-    [self.tableView addSubview:membersButton];
+    [countLabel setTextColor:[UIColor greenColor]];
+    //[countLabel setTextAlignment:NSTextAlignmentLeft];
+    //[countLabel setBackgroundColor:[UIColor clearColor]];
+    self.navigationItem.titleView = countLabel;
     
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_friends.png"] style:UIBarButtonItemStylePlain target:self action:@selector(membersButtonPressed:)];
+    self.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.separatorColor = [UIColor clearColor];
+    
+    self.tableView.showsVerticalScrollIndicator = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -231,9 +213,13 @@
 
 #pragma mark - ()
 
-- (void)didTapOnMembersButton:(id)sender {
+- (void)membersButtonPressed:(id)sender {
     VYBAddMemberViewController *addMemberVC = [[VYBAddMemberViewController alloc] initWithTribe:self.tribe];
     [self.navigationController pushViewController:addMemberVC animated:NO];
+}
+
+- (void)backButtonPressed:(id)sender {
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 

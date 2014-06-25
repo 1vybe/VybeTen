@@ -18,8 +18,9 @@
     UIView *topBar;
     UILabel *screenTitleLabel;
     
-    UIButton *confirmButton;
-    UIButton *cancelButton;
+    UIBarButtonItem *confirmButton;
+    
+    UISegmentedControl *segmentedControl;
     UIButton *alreadyMembersTabButton;
     UIButton *nonMembersTabButton;
     
@@ -43,95 +44,39 @@
         
         selectedUsers = [[NSMutableArray alloc] init];
         
-        self.paginationEnabled = YES;
-        
-        self.objectsPerPage = 20;
-        
-        membersTabSelected = YES;
-        
-        self.tableView.allowsMultipleSelection = NO;
-        
-        self.tableView.allowsSelection = NO;
+        self.paginationEnabled = NO;
     }
     
     return self;
+}
+
+- (void)loadView {
+    [super loadView];
+    
+    segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Members", @"Friends"]];
+    segmentedControl.selectedSegmentIndex = 0;
+    [segmentedControl addTarget:self action:@selector(segmentChanged:) forControlEvents:UIControlEventValueChanged];
+    self.navigationItem.titleView = segmentedControl;
+    
+    confirmButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_check.png"]
+                                                                              style:UIBarButtonItemStylePlain target:self action:@selector(confirmButtonPressed:)];
+    self.navigationItem.rightBarButtonItem = confirmButton;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    // Adding a dark TOPBAR
-    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.height - 50, 50);
-    topBar = [[UIView alloc] initWithFrame:frame];
-    [topBar setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.1]];
-    [self.view addSubview:topBar];
-   
-    /*
-    // Adding Label
-    frame = CGRectMake(0, 0, 200, 50);
-    screenTitleLabel = [[UILabel alloc] initWithFrame:frame];
-    [screenTitleLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20.0]];
-    [screenTitleLabel setTextColor:[UIColor whiteColor]];
-    [screenTitleLabel setText:@"M E M B E R S"];
-    [topBar addSubview:screenTitleLabel];
-
-    // Adding Invite friends button
-    frame = CGRectMake(self.view.bounds.size.width - 150, 0, 50, 50);
-    inviteButton = [[UILabel alloc] initWithFrame:frame];
-    [inviteButton setText:@"+"];
-    [inviteButton setTextColor:[UIColor whiteColor]];
-    [inviteButton setTextAlignment:NSTextAlignmentCenter];
-    [inviteButton setFont:[UIFont fontWithName:@"Montreal-Xlight" size:40]];
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addFriend:)];
-    [inviteButton addGestureRecognizer:tap];
-    [inviteButton setUserInteractionEnabled:YES];
-    [topBar addSubview:inviteButton];
-    */
-    
-    // Adding CONFIRM button
-    frame = CGRectMake(self.view.bounds.size.width - 50, 0, 50, 50);
-    confirmButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *confimImg = [UIImage imageNamed:@"button_check.png"];
-    [confirmButton setImage:confimImg forState:UIControlStateNormal];
-    [confirmButton addTarget:self action:@selector(didTapConfirmButton:) forControlEvents:UIControlEventTouchUpInside];
-    [topBar addSubview:confirmButton];
-    // Adding a tab button
-    frame = CGRectMake(50, 0, 50, 50);
-    alreadyMembersTabButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *alreadyMembersImg = [UIImage imageNamed:@"button_friends.png"];
-    [alreadyMembersTabButton setImage:alreadyMembersImg forState:UIControlStateNormal];
-    [alreadyMembersTabButton addTarget:self action:@selector(alreadyMembersTabSelected:) forControlEvents:UIControlEventTouchUpInside];
-    [topBar addSubview:alreadyMembersTabButton];
-    // Adding another tab button
-    frame = CGRectMake(100, 0, 50, 50);
-    nonMembersTabButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *nonMembersImg = [UIImage imageNamed:@"button_featured.png"];
-    [nonMembersTabButton setImage:nonMembersImg forState:UIControlStateNormal];
-    [nonMembersTabButton addTarget:self action:@selector(nonMembersTabSelected:) forControlEvents:UIControlEventTouchUpInside];
-    [topBar addSubview:nonMembersTabButton];
-    // Adding CANCEL button
-    frame = CGRectMake(0, 0, 50, 50);
-    cancelButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *cancelImg = [UIImage imageNamed:@"button_cancel.png"];
-    [cancelButton setImage:cancelImg forState:UIControlStateNormal];
-    //[captureButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.3]];
-    [cancelButton addTarget:self action:@selector(didTapCancelButton:) forControlEvents:UIControlEventTouchUpInside];
-    [topBar addSubview:cancelButton];
-    
-    
-    // By default we show members only first
-    confirmButton.hidden = YES;
-    cancelButton.hidden = YES;
+    [self syncUIElementsWithSegment];
 }
 
 #pragma mark - PFQueryTableView
 
 - (PFQuery *)queryForTable {
-    if (membersTabSelected) {
+    // Members
+    if (segmentedControl.selectedSegmentIndex == 0) {
         return [self queryForMembers];
-    }
-    else {
+    } else { // Friends
         return [self queryForFriends];
     }
 }
@@ -230,31 +175,22 @@
 
 #pragma mark - ()
 
-- (void)alreadyMembersTabSelected:(id)sender {
-    membersTabSelected = YES;
-    
-    self.tableView.allowsMultipleSelection = NO;
-    
-    [nonMembersTabButton setSelected:NO];
-    
-    confirmButton.hidden = YES;
-    cancelButton.hidden = YES;
-    
+- (void)segmentChanged:(id)sender {
     [self loadObjects];
+    [self syncUIElementsWithSegment];
 }
 
-- (void)nonMembersTabSelected:(id)sender {
-    membersTabSelected = NO;
-    self.tableView.allowsMultipleSelection = YES;
-    
-    [alreadyMembersTabButton setSelected:NO];
+- (void)syncUIElementsWithSegment {
+    // Members
+    if (segmentedControl.selectedSegmentIndex == 0) {
+        self.tableView.allowsMultipleSelection = NO;
+        confirmButton.enabled = NO;
+    } else { // Friends
+        self.tableView.allowsMultipleSelection = YES;
+        confirmButton.enabled = YES;
+        [selectedUsers removeAllObjects];
+    }
 
-    [selectedUsers removeAllObjects];
-    
-    confirmButton.hidden = NO;
-    cancelButton.hidden = NO;
-    
-    [self loadObjects];
 }
 
 
@@ -262,7 +198,7 @@
     [self.navigationController popViewControllerAnimated:NO];
 }
 
-- (void)didTapConfirmButton:(id)sender {
+- (void)confirmButtonPressed:(id)sender {
     if (selectedUsers.count < 1) {
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Choose a friend" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [av show];

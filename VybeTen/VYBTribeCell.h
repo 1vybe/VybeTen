@@ -15,14 +15,13 @@
 @property (nonatomic, strong) id <VYBTribeCellDelegate> delegate;
 
 @property (nonatomic, strong) PFObject *tribe;
-@property (nonatomic, strong) UIButton *followButton;
 @property (nonatomic, strong) UIButton *nameButton;
 @property (nonatomic, strong) UIButton *thumbnailImageButton;
 @property (nonatomic, strong) PFImageView *thumbnailImageView;
 
 - (void)setTribe:(PFObject *)tribe;
 - (void)didTapTribeButtonAction:(id)sender;
-- (void)didTapFollowButtonAction:(id)sender;
+- (void)didTapVybeButtonAction:(id)sender;
 
 + (CGFloat)heightForCell;
 
@@ -31,6 +30,6 @@
 @protocol VYBTribeCellDelegate <NSObject>
 @optional
 - (void)cell:(VYBTribeCell *)cellView didTapTribeButton:(PFObject *)aTribe;
-- (void)cell:(VYBTribeCell *)cellView didTapFollowButton:(PFObject *)aTribe;
+- (void)cell:(VYBTribeCell *)cellView didTapVybeButton:(PFObject *)aVybe;
 
 @end
