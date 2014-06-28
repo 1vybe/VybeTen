@@ -28,14 +28,16 @@
     CGImageRef imageRef = self.CGImage;
     size_t width = CGImageGetWidth(imageRef);
     size_t height = CGImageGetHeight(imageRef);
+    CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     
-    // The bitsPerComponent and bitmapInfo values are hard-coded to prevent an "unsupported parameter combination" error
+    // The bitsPerComponent, bitmapInfo, and colorspace values are hard-coded to prevent an
+    // "unsupported parameter combination" error
     CGContextRef offscreenContext = CGBitmapContextCreate(NULL,
                                                           width,
                                                           height,
                                                           8,
                                                           0,
-                                                          CGImageGetColorSpace(imageRef),
+                                                          rgbColorSpace,
                                                           kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst);
     
     // Draw the image into the context and retrieve the new image, which will now have an alpha layer
@@ -46,6 +48,7 @@
     // Clean up
     CGContextRelease(offscreenContext);
     CGImageRelease(imageRefWithAlpha);
+    CGColorSpaceRelease(rgbColorSpace);
     
     return imageWithAlpha;
 }
