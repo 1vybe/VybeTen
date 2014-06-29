@@ -216,12 +216,14 @@
                 if (homeNavigation.presentedViewController) {
                     [homeNavigation dismissViewControllerAnimated:NO completion:^{
                         VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+                        playerVC.parentVC = homeNavigation;
                         [homeNavigation presentViewController:playerVC animated:NO completion:^{
                             [playerVC playVybe:object];
                         }];
                     }];
                 } else {
                     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+                    playerVC.parentVC = homeNavigation;
                     [homeNavigation presentViewController:playerVC animated:NO completion:^{
                         [playerVC playVybe:object];
                     }];

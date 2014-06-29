@@ -12,6 +12,8 @@
 @class VYBPlayerView;
 
 @interface VYBPlayerViewController : UIViewController
+@property (nonatomic, strong) id parentVC;
+
 @property (nonatomic) AVPlayer *currPlayer;
 @property (nonatomic) VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayerItem *currItem;
@@ -19,12 +21,7 @@
 @property (nonatomic, strong) NSArray *vybePlaylist;
 
 
-@property (nonatomic) PFObject *vybe;
-
-
-//@property (nonatomic, copy) void (^dismissBlock)(NSInteger row);
-
-- (void)playVybeAt:(NSInteger)from;
+- (void)beginPlayingFrom:(NSInteger)from;
 - (void)playVybe:(PFObject *)aVybe;
 
 @end

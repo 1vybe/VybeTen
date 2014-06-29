@@ -28,4 +28,8 @@
     [playerLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
 }
 
+- (void)dealloc {
+    NSLog(@"PlayerView dealloc");
+}
+
 @end

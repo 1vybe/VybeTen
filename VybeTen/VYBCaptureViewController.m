@@ -89,7 +89,7 @@ static void * XXContext = &XXContext;
     [self.view addSubview:dismissButton];
     
     // Adding SYNC button
-    buttonFrame = CGRectMake(self.view.bounds.size.height - 60, self.view.bounds.size.width - 50, 50, 50);
+    buttonFrame = CGRectMake(self.view.bounds.size.height - 50, self.view.bounds.size.width - 50, 50, 50);
     syncButton = [[UIButton alloc] initWithFrame:buttonFrame];
     UIImage *syncNoneImg = [UIImage imageNamed:@"button_sync_none.png"];
     UIImage *syncImg = [UIImage imageNamed:@"button_sync.png"];
@@ -99,13 +99,13 @@ static void * XXContext = &XXContext;
     [syncButton addTarget:self action:@selector(changeSync:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:syncButton];
     // Adding SYNC label
-    buttonFrame = CGRectMake(self.view.bounds.size.height - 210, self.view.bounds.size.width - 50, 150, 50);
+    buttonFrame = CGRectMake(-150, 0, 150, 50);
     syncLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
     [syncLabel setTextColor:[UIColor whiteColor]];
     [syncLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:20]];
     [syncLabel setTextAlignment:NSTextAlignmentRight];
     [syncLabel resignFirstResponder];
-    [self.view addSubview:syncLabel];
+    [syncButton addSubview:syncLabel];
     PFObject *tribe = [[VYBCache sharedCache] syncTribeForUser:[PFUser currentUser]];
     if (tribe) {
         [syncLabel setText:tribe[kVYBTribeNameKey]];

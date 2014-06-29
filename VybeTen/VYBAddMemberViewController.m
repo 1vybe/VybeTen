@@ -68,6 +68,8 @@
     [super viewDidLoad];
     
     [self syncUIElementsWithSegment];
+    
+    [self refreshFollowStatusForFriends];
 }
 
 #pragma mark - PFQueryTableView
@@ -175,6 +177,26 @@
 
 #pragma mark - ()
 
+- (void)refreshFollowStatusForFriends {
+    // PFQuery for retrieving a list of friends on Vybe
+    PFQuery *friendsQuery = [PFUser query];
+    NSArray *facebookFriends = [[VYBCache sharedCache] facebookFriends];
+    [friendsQuery whereKey:kVYBUserFacebookIDKey containedIn:facebookFriends];
+
+    PFQuery *isFollowedByCurrentUser = [PFQuery queryWithClassName:kVYBActivityClassKey];
+    [isFollowedByCurrentUser whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeFollow];
+    [isFollowedByCurrentUser whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
+    [isFollowedByCurrentUser whereKey:kVYBActivityToUserKey matchesQuery:friendsQuery];
+    [isFollowedByCurrentUser findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *following in objects) {
+                [[VYBCache sharedCache] setFollowStatus:YES user:following[kVYBActivityToUserKey]];
+            }
+            [self.tableView reloadData];
+        }
+    }];
+}
+
 - (void)segmentChanged:(id)sender {
     [self loadObjects];
     [self syncUIElementsWithSegment];
@@ -191,11 +213,6 @@
         [selectedUsers removeAllObjects];
     }
 
-}
-
-
-- (void)didTapBackButton:(id)sender {
-    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (void)confirmButtonPressed:(id)sender {
@@ -226,10 +243,6 @@
     }
 }
 
-- (void)didTapCancelButton:(id)sender {
-    [self.navigationController popViewControllerAnimated:NO];
-}
-
 - (void)inviteFriend:(id)sender {
     VYBInviteViewController *inviteVC = [[VYBInviteViewController alloc] init];
     [self.navigationController pushViewController:inviteVC animated:NO];
@@ -253,19 +266,13 @@
             }
         }];
     }
-    
 }
 
-/*
-- (BOOL)isAlreadyMember:(PFUser *)aUser {
-    for (PFUser *member in alreadyMembers) {
-        if ([member.objectId isEqual:aUser.objectId]) {
-            return YES;
-        }
-    }
-    return NO;
+#pragma mark - UIDeviceOrientation
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
-*/
+
 
 - (void)didReceiveMemoryWarning
 {

@@ -14,5 +14,8 @@
 @interface VYBTribeTimelineViewController : PFQueryTableViewController <VYBVybeCellDelegate>
 
 @property (nonatomic, strong) PFObject *tribe;
+@property (nonatomic, strong) PFObject *lastWatchedVybe;
+
+- (void)moveToLastWatchtedVybeCell;
 
 @end

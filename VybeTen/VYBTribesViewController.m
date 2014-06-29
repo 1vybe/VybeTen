@@ -20,30 +20,7 @@
     UISegmentedControl *segmentedControl;
     
     NSMutableDictionary *imageStore;
-    
-    //NSInteger _pageIndex;
 }
-/*
-+ (VYBTribesViewController *)tribesViewControllerForPageIndex:(NSInteger)pageIndex {
-    if (pageIndex >= 0 ) {
-        return [[self alloc] initWithPageIndex:pageIndex];
-    }
-    return nil;
-}
-
-- (id)initWithPageIndex:(NSInteger)pageIndex {
-    self = [super initWithNibName:nil bundle:nil];
-    if (self) {
-        _pageIndex = pageIndex;
-    }
-    return self;
-}
-
-- (NSInteger)pageIndex {
-    return _pageIndex;
-}
-
-*/
 
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
@@ -62,7 +39,6 @@
 
 - (void)loadView {
     [super loadView];
-    //self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_tribes_create.png"] style:UIBarButtonItemStylePlain target:self action:@selector(createButtonPressed:)];
@@ -70,6 +46,7 @@
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_tribes_activity_hollow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(activityButtonPressed:)];
     self.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     
     segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Following", @"My Tribes"]];
     segmentedControl.selectedSegmentIndex = 0;
@@ -106,16 +83,17 @@
     PFQuery *query = [PFQuery queryWithClassName:kVYBTribeClassKey];
     [query includeKey:kVYBTribeNewestVybeKey];
     NSInteger idx = segmentedControl.selectedSegmentIndex;
+    // Following Segment
     if (idx == 0) {
-        // Following tribes
         PFQuery *following = [PFQuery queryWithClassName:kVYBActivityClassKey];
         [following whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeFollow];
         [following whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
     
         [query whereKey:kVYBTribeCreatorKey matchesKey:kVYBActivityToUserKey inQuery:following];
         [query whereKey:kVYBTribeMembersKey notEqualTo:[PFUser currentUser]];
-    } else {
-        // My tribes
+    }
+    // My Tribes Segment
+    else {
         [query whereKey:kVYBTribeMembersKey equalTo:[PFUser currentUser]];
     }
     

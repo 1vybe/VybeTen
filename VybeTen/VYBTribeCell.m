@@ -61,8 +61,12 @@
     
     // Configure the cell
     PFObject *newestVybe = [self.tribe objectForKey:kVYBTribeNewestVybeKey];
-    [thumbnailImageView setFile:[newestVybe objectForKey:kVYBVybeThumbnailKey]];
-    [thumbnailImageView loadInBackground];
+    if (newestVybe) {
+        [thumbnailImageView setFile:[newestVybe objectForKey:kVYBVybeThumbnailKey]];
+        [thumbnailImageView loadInBackground];
+    } else {
+        [thumbnailImageView setImage:[UIImage imageNamed:@"button_player_capture.png"]];
+    }
     
     // Set name
     NSString *nameString = [self.tribe objectForKey:kVYBTribeNameKey];

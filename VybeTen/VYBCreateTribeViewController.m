@@ -125,11 +125,10 @@
     } else {
         [newTribe setObject:kVYBTribeTypePrivate forKey:kVYBTribeTypeKey];
     }
-    
-    
+    // Add the user as a member
     PFRelation *relation = [newTribe relationForKey:kVYBTribeMembersKey];
     [relation addObject:[PFUser currentUser]];
-    
+    // Set read access YES for public tribes
     PFACL *tribeACL = [PFACL ACLWithUser:[PFUser currentUser]];
     if ([publicSwitch isOn]) {
         [tribeACL setPublicReadAccess:YES];
