@@ -147,7 +147,7 @@
     
     NSArray *data = [result objectForKey:@"data"];
     
-    if (data) {
+    if ([data count]) {
         NSMutableArray *facebookIDs = [[NSMutableArray alloc] initWithCapacity:[data count]];
         BOOL flag = YES;
         for (NSDictionary *friendData in data) {
@@ -187,6 +187,8 @@
         
         [FBRequestConnection startForMyFriendsWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error){
             if (!error) {
+                // TODO: Handle the case where user does not give permission for friends
+                // [result objectForKey:@"data"] == @"0 objects"
                 [self facebookRequestDidLoad:result];
             } else {
                 [self facebookRequestDidFailWithError:error];
