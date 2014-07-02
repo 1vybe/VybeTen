@@ -97,10 +97,9 @@
 
 - (void)presentLoginViewController {
     logInViewController = [[VYBLoginViewController alloc] init];
-    [logInViewController setDelegate:self];
-    [logInViewController setFields:PFLogInFieldsFacebook];
-    NSArray *permissionsArray = @[ @"public_profile" ];
-    [logInViewController setFacebookPermissions:permissionsArray];
+    logInViewController.delegate = self;
+    logInViewController.fields = PFLogInFieldsFacebook;
+    logInViewController.facebookPermissions = @[ @"public_profile", @"user_friends"];
     
     [self presentViewController:logInViewController animated:NO completion:nil];
 }
