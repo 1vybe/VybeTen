@@ -10,12 +10,7 @@
 #import "VYBTribeCell.h"
 #import "VYBCreateTribeViewController.h"
 
-//@protocol VYBPageViewControllerProtocol;
 @interface VYBTribesViewController : PFQueryTableViewController <VYBTribeCellDelegate, VYBCreateTribeViewControllerDelegate>
 
-/*
-+ (id)tribesViewControllerForPageIndex:(NSInteger)pageIndex;
-- (NSInteger)pageIndex;
-*/
 
 @end

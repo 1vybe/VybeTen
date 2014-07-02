@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VYBActivityCell.h"
 
-@interface VYBActivityViewController : UIViewController
+@interface VYBActivityViewController : PFQueryTableViewController <VYBActivityCellDelegate>
+
++ (NSString *)stringForActivity:(PFObject *)aActivity;
 
 @end

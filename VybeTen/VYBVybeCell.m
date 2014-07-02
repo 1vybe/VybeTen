@@ -51,30 +51,6 @@
         [self.nameButton addTarget:self action:@selector(didTapVybeButtonAction:)
                   forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:self.nameButton];
-        
-        /*
-        self.followButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.followButton.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
-        self.followButton.titleEdgeInsets = UIEdgeInsetsMake( 0.0f, 10.0f, 0.0f, 0.0f);
-        [self.followButton setTitle:NSLocalizedString(@"Follow  ", @"Follow string, with spaces added for centering")
-                           forState:UIControlStateNormal];
-        [self.followButton setTitle:@"Following"
-                           forState:UIControlStateSelected];
-        [self.followButton setTitleColor:[UIColor colorWithRed:84.0f/255.0f green:57.0f/255.0f blue:45.0f/255.0f alpha:1.0f]
-                                forState:UIControlStateNormal];
-        [self.followButton setTitleColor:[UIColor whiteColor]
-                                forState:UIControlStateSelected];
-        [self.followButton setTitleShadowColor:[UIColor colorWithRed:232.0f/255.0f green:203.0f/255.0f blue:168.0f/255.0f alpha:1.0f]
-                                      forState:UIControlStateNormal];
-        [self.followButton setTitleShadowColor:[UIColor blackColor]
-                                      forState:UIControlStateSelected];
-        self.followButton.titleLabel.shadowOffset = CGSizeMake( 0.0f, -1.0f);
-        [self.followButton addTarget:self action:@selector(didTapFollowButtonAction:)
-                    forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:self.followButton];
-        */
-        
-        
     }
     return self;
 }

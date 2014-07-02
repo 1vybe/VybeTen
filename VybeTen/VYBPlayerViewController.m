@@ -71,6 +71,9 @@
 {
     [super viewDidLoad];
     
+    // Hide status bar
+    [self setNeedsStatusBarAppearanceUpdate];
+    
     // responds to device orientation change
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
     
@@ -378,7 +381,13 @@
 }
 
 - (void)deviceOrientationChanged:(NSNotification *)note {
+
 }
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
 
 - (void)didReceiveMemoryWarning
 {

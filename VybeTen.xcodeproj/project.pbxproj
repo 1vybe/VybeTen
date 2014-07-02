@@ -58,6 +58,7 @@
 		02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */; };
 		02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */; };
 		02D5E80B190A227C007F3BFB /* VYBSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02D5E80A190A227C007F3BFB /* VYBSignUpViewController.m */; };
+		02F6F43F1960CD21004D48C2 /* VYBActivityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F6F43E1960CD21004D48C2 /* VYBActivityCell.m */; };
 		02FDBD2F192E69C800AB2D9A /* VYBAddMemberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02FDBD2E192E69C800AB2D9A /* VYBAddMemberViewController.m */; };
 		6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6035496118C88B11003F5D3E /* VYBPlayerViewController.m */; };
 		604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 604B628518B495BB00D3EF19 /* InfoPlist.strings */; };
@@ -163,6 +164,8 @@
 		02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-XlightIta.otf"; sourceTree = "<group>"; };
 		02D5E809190A227C007F3BFB /* VYBSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBSignUpViewController.h; sourceTree = "<group>"; };
 		02D5E80A190A227C007F3BFB /* VYBSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBSignUpViewController.m; sourceTree = "<group>"; };
+		02F6F43D1960CD21004D48C2 /* VYBActivityCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBActivityCell.h; sourceTree = "<group>"; };
+		02F6F43E1960CD21004D48C2 /* VYBActivityCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBActivityCell.m; sourceTree = "<group>"; };
 		02FDBD2D192E69C800AB2D9A /* VYBAddMemberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBAddMemberViewController.h; sourceTree = "<group>"; };
 		02FDBD2E192E69C800AB2D9A /* VYBAddMemberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBAddMemberViewController.m; sourceTree = "<group>"; };
 		6035496018C88B11003F5D3E /* VYBPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerViewController.h; sourceTree = "<group>"; };
@@ -248,6 +251,8 @@
 				02BD8C61193FFB1E002D91E4 /* VYBTribeCell.m */,
 				02BD8C631940C9F3002D91E4 /* VYBVybeCell.h */,
 				02BD8C641940C9F3002D91E4 /* VYBVybeCell.m */,
+				02F6F43D1960CD21004D48C2 /* VYBActivityCell.h */,
+				02F6F43E1960CD21004D48C2 /* VYBActivityCell.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -255,6 +260,8 @@
 		027D924818EA85F300537822 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				02CCF8FD1939600700B3137D /* VYBActivityViewController.h */,
+				02CCF8FE1939600700B3137D /* VYBActivityViewController.m */,
 				6061246B18B7862F00B0A14E /* VYBCaptureViewController.h */,
 				6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */,
 				0243CC9618CC665200CA03C0 /* VYBReplayViewController.h */,
@@ -324,8 +331,6 @@
 				022361FA18FBDEAF002700B8 /* VYBCollectionViewController.m */,
 				02CED7851934433E00D6BBDB /* VYBMainPageViewController.h */,
 				02CED7861934433E00D6BBDB /* VYBMainPageViewController.m */,
-				02CCF8FD1939600700B3137D /* VYBActivityViewController.h */,
-				02CCF8FE1939600700B3137D /* VYBActivityViewController.m */,
 				024924A218E52B7200568441 /* VYBMainNavigationController.h */,
 				024924A318E52B7200568441 /* VYBMainNavigationController.m */,
 				0243132F18F6E73600178CEB /* UINavigationController+Fade.h */,
@@ -627,6 +632,7 @@
 				027FB48018FEC2AC00946579 /* PWProgressView.m in Sources */,
 				024B0E2E18BB39FF0073574E /* VYBVybeStore.m in Sources */,
 				02CCF8FF1939600700B3137D /* VYBActivityViewController.m in Sources */,
+				02F6F43F1960CD21004D48C2 /* VYBActivityCell.m in Sources */,
 				02FDBD2F192E69C800AB2D9A /* VYBAddMemberViewController.m in Sources */,
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,

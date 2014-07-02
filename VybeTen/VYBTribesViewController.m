@@ -10,6 +10,7 @@
 #import "VYBMenuViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBTribeTimelineViewController.h"
+#import "VYBActivityViewController.h"
 #import "VYBConstants.h"
 #import "VYBCache.h"
 
@@ -18,8 +19,6 @@
     UILabel *currentTabLabel;
     UILabel *createButton;
     UISegmentedControl *segmentedControl;
-    
-    NSMutableDictionary *imageStore;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style {
@@ -30,8 +29,6 @@
         self.parseClassName = kVYBTribeClassKey;
         
         self.pullToRefreshEnabled = YES;
-        
-        imageStore = [[NSMutableDictionary alloc] init];
     }
     
     return self;
@@ -46,7 +43,7 @@
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_tribes_activity_hollow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(activityButtonPressed:)];
     self.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
-    self.navigationItem.rightBarButtonItem.enabled = NO;
+    //self.navigationItem.rightBarButtonItem.enabled = NO;
     
     segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Following", @"My Tribes"]];
     segmentedControl.selectedSegmentIndex = 0;
@@ -168,7 +165,8 @@
 #pragma mark - ()
 
 - (void)activityButtonPressed:(id)sender {
-    [self.navigationController popToRootViewControllerAnimated:NO];
+    VYBActivityViewController *activityVC = [[VYBActivityViewController alloc] init];
+    [self.navigationController pushViewController:activityVC animated:NO];
 }
 
 - (void)captureVybe:(id)sender {
