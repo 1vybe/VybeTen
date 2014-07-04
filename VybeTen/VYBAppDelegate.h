@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
-@class VYBPageViewController;
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource>
+@class VYBNavigationController;
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (nonatomic, strong) NSArray *viewControllers;
-@property (nonatomic, strong) VYBPageViewController *pageController;
+@property (nonatomic, strong) VYBNavigationController *navigationVC;
 
 /* TODO */
 @property (nonatomic, readonly) int networkStatus;

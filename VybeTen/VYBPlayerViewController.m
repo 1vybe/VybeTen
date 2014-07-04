@@ -23,17 +23,14 @@
     NSInteger currVybeIndex;
     NSInteger downloadingVybeIndex;
     
-    UIButton *dismissButton;
     UIButton *captureButton;
-    UIButton *tribeTimelineButton;
-    UIButton *usernameButton;
     
     UIImageView *pauseImageView;
     
-    UILabel *currentTribeLabel;
     UILabel *locationLabel;
     UILabel *timeLabel;
     
+    PFObject *freshVybe;
 }
 
 @synthesize currPlayer = _currPlayer;
@@ -41,10 +38,7 @@
 @synthesize currItem = _currItem;
 
 - (void)dealloc {
-
-    
     NSLog(@"PlayerViewController released");
-
 }
 
 - (void)loadView {
@@ -91,33 +85,13 @@
     [self.view addGestureRecognizer:tapOnce];
 
     /* NOTE: Origin for menu button is (0, 0) */
-    // Adding DISMISS button
-    CGRect frame = CGRectMake(self.view.bounds.size.height - 50, 0, 50, 50);
-    dismissButton = [[UIButton alloc] initWithFrame:frame];
-    UIImage *dismissImage = [UIImage imageNamed:@"button_dismiss.png"];
-    [dismissButton setContentMode:UIViewContentModeCenter];
-    [dismissButton setImage:dismissImage forState:UIControlStateNormal];
-    [dismissButton addTarget:self action:@selector(dismissButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:dismissButton];
     // Adding CAPTURE button
-    frame = CGRectMake(self.view.bounds.size.height - 50, (self.view.bounds.size.width - 50)/2, 50, 50);
+    CGRect frame = CGRectMake(self.view.bounds.size.height - 50, (self.view.bounds.size.width - 50)/2, 50, 50);
     captureButton = [[UIButton alloc] initWithFrame:frame];
     [captureButton setContentMode:UIViewContentModeCenter];
     [captureButton setImage:[UIImage imageNamed:@"button_player_capture.png"] forState:UIControlStateNormal];
     [captureButton addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:captureButton];
-    // Adding TRIBE button
-    frame = CGRectMake(0, 0, 50, 50);
-    tribeTimelineButton = [[UIButton alloc] initWithFrame:frame];
-    [tribeTimelineButton setImage:[UIImage imageNamed:@"button_tribeTimeline.png"] forState:UIControlStateNormal];
-    [tribeTimelineButton addTarget:self action:@selector(tribeTimelineButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:tribeTimelineButton];
-    // Adding TRIBE label
-    currentTribeLabel = [[VYBLabel alloc] initWithFrame:CGRectMake(-50, 50, 150, 40)];
-    [currentTribeLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:16]];
-    [currentTribeLabel setTextColor:[UIColor whiteColor]];
-    [currentTribeLabel setTextAlignment:NSTextAlignmentCenter];
-    [tribeTimelineButton addSubview:currentTribeLabel];
     // Adding TIME label
     frame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 48, 200, 48);
     timeLabel = [[VYBLabel alloc] initWithFrame:frame];
@@ -133,14 +107,6 @@
     [locationLabel setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:locationLabel];
 
-    // Adding USERNAME label
-    frame = CGRectMake(0, self.view.bounds.size.width - 50, 150, 50);
-    usernameButton = [[UIButton alloc] initWithFrame:frame];
-    [usernameButton.titleLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18]];
-    [usernameButton.titleLabel setTextColor:[UIColor whiteColor]];
-    [usernameButton addTarget:self action:@selector(usernameButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:usernameButton];
-    
     frame = CGRectMake(self.view.bounds.size.height/2 - 20, self.view.bounds.size.width/2 - 20, 40, 40);
     pauseImageView = [[UIImageView alloc] initWithFrame:frame];
     [pauseImageView setImage:[UIImage imageNamed:@"button_player_pause.png"]];
@@ -150,33 +116,24 @@
     pauseImageView.hidden = YES;
 }
 
-- (void)playVybe:(PFObject *)aVybe {
-    if (!aVybe) {
-        return;
-    }
-    PFObject *aTribe = aVybe[kVYBVybeTribeKey];
-    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-    [query whereKey:kVYBVybeTribeKey equalTo:aTribe];
-    [query orderByAscending:kVYBVybeTimestampKey];
-    [query includeKey:kVYBVybeTribeKey];
-    [query includeKey:kVYBVybeUserKey];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            self.vybePlaylist = objects;
-            // Find the right current index
-            NSInteger i;
-            currVybeIndex = 0;
-            for (i = 0; i < self.vybePlaylist.count; i++) {
-                PFObject *obj = (PFObject *)self.vybePlaylist[i];
-                if ([aVybe.objectId isEqualToString:obj.objectId]) {
-                    currVybeIndex = i;
-                    break;
+    if (freshVybe) {
+        PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+        [query whereKey:kVYBVybeGeotag nearGeoPoint:freshVybe[kVYBVybeGeotag]];
+        query.limit = 7;
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            if (!error) {
+                self.vybePlaylist = objects;
+                if (self.vybePlaylist && self.vybePlaylist.count > 0) {
+                    [self beginPlayingFrom:0];
                 }
             }
-            [self beginPlayingFrom:currVybeIndex];
-        }
-    }];
+        }];
+    }
 }
 
 - (void)beginPlayingFrom:(NSInteger)from {
@@ -267,10 +224,8 @@
 }
 
 - (void)syncUI:(PFObject *)aVybe {
-    currentTribeLabel.text = [[aVybe objectForKey:kVYBVybeTribeKey] objectForKey:kVYBTribeNameKey];
     locationLabel.text = [aVybe objectForKey:kVYBVybeLocationName];
     timeLabel.text = [VYBUtility localizedDateStringFrom:[aVybe objectForKey:kVYBVybeTimestampKey]];
-    usernameButton.titleLabel.text = [[aVybe objectForKey:kVYBVybeUserKey] objectForKey:kVYBUserDisplayNameKey];
 }
 
 
@@ -313,65 +268,21 @@
 }
 
 - (void)captureVybe:(id)sender {
-    PFObject *currVybe = self.vybePlaylist[currVybeIndex];
-    [[VYBCache sharedCache] setSyncTribe:currVybe[kVYBVybeTribeKey] user:[PFUser currentUser]];
-    
+    //TODO: Based on what the user was watching, attach some information regarding that when the user take the next vybe
     if (self.currPlayer.rate != 0) {
         [self.currPlayer pause];
         pauseImageView.hidden = NO;
     }
-    //[[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
     
     VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
-    [self presentViewController:captureVC animated:NO completion:nil];
+    captureVC.delegate = self;
+    [self.navigationController pushViewController:captureVC animated:NO];
 }
 
-- (void)dismissButtonPressed:(id)sender {
-    PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
-    if (self.parentVC) {
-        if ([self.parentVC respondsToSelector:@selector(setLastWatchedVybe:)]) {
-            // If PlayerVC's parent view controller is TribeTimelineVC
-            [self.parentVC performSelector:@selector(setLastWatchedVybe:) withObject:currVybe];
-        }
-    }
-    
-    self.currPlayer = nil;
-    self.currPlayerView.player = nil;
-    self.currPlayerView = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-    self.currItem = nil;
-    
-    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
-}
+#pragma mark - VYBCaptureViewControllerDelegate
 
-- (void)tribeTimelineButtonPressed:(id)sender {
-    // If PlayerVC is presented by TribeTImelineVC, just dismiss
-    if ([self.parentVC class] == [VYBTribeTimelineViewController class]) {
-        [self dismissButtonPressed:sender];
-    }
-    else {
-        VYBTribeTimelineViewController *tribeTimelineVC = [[VYBTribeTimelineViewController alloc] init];
-        PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
-        [tribeTimelineVC setTribe:currVybe[kVYBVybeTribeKey]];
-        [tribeTimelineVC setLastWatchedVybe:currVybe];
-
-        self.currPlayer = nil;
-        self.currPlayerView.player = nil;
-        self.currPlayerView = nil;
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-        self.currItem = nil;
-        
-        [self.presentingViewController dismissViewControllerAnimated:NO completion:^{
-            // parentVC is set to a navigation controller
-            if ([self.parentVC respondsToSelector:@selector(pushViewController:animated:)]) {
-                [self.parentVC pushViewController:tribeTimelineVC animated:NO];
-            }
-        }];
-    }
-}
-
-- (void)usernameButtonPressed:(id)sender {
-    
+- (void)capturedVybe:(PFObject *)aVybe {
+    freshVybe = aVybe;
 }
 
 #pragma mark - UIInterfaceOrientation

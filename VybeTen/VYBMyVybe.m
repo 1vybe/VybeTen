@@ -11,7 +11,7 @@
 
 @implementation VYBMyVybe
 
-@synthesize uniqueFileName, geoTag, locationName, timeStamp, tribeObjectID, videoFileObjectID, thumbnailFileObjectID;
+@synthesize uniqueFileName, geoTag, locationName, timeStamp, videoFileObjectID, thumbnailFileObjectID;
 
 - (id)init {
     self = [super init];
@@ -48,7 +48,7 @@
         [self setGeoTag:[aDecoder decodeObjectForKey:kVYBVybeGeotag]];
         [self setLocationName:[aDecoder decodeObjectForKey:kVYBVybeLocationName]];
         [self setTimeStamp:[aDecoder decodeObjectForKey:kVYBVybeTimestampKey]];
-        [self setTribeObjectID:[aDecoder decodeObjectForKey:kVYBVybeTribeKey]];
+//        [self setTribeObjectID:[aDecoder decodeObjectForKey:kVYBVybeTribeKey]];
     }
     
     return self;
@@ -59,7 +59,7 @@
     [aCoder encodeObject:geoTag forKey:kVYBVybeGeotag];
     [aCoder encodeObject:locationName forKey:kVYBVybeLocationName];
     [aCoder encodeObject:timeStamp forKey:kVYBVybeTimestampKey];
-    [aCoder encodeObject:tribeObjectID forKey:kVYBVybeTribeKey];
+//    [aCoder encodeObject:tribeObjectID forKey:kVYBVybeTribeKey];
 }
 
 - (void)setGeoTagFrom:(PFGeoPoint *)aGeoPoint {
@@ -67,16 +67,9 @@
 
 }
 
-- (void)setTribeObjectID:(NSString *)tribeID {
-    tribeObjectID = tribeID;
-}
-
 
 - (PFObject *)parseObjectVybe {
     PFObject *theVybe = [PFObject objectWithClassName:kVYBVybeClassKey];
-    
-    PFObject *theTribe = [PFObject objectWithoutDataWithClassName:kVYBTribeClassKey objectId:tribeObjectID];
-    [theVybe setObject:theTribe forKey:kVYBVybeTribeKey];
     
     PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:geoTag.coordinate.latitude longitude:geoTag.coordinate.longitude];
     [theVybe setObject:geoPoint forKey:kVYBVybeGeotag];

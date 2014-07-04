@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "VYBCaptureViewController.h"
 
 @class VYBPlayerView;
 
-@interface VYBPlayerViewController : UIViewController
+@interface VYBPlayerViewController : UIViewController <VYBCaptureViewControllerDelegate>
 @property (nonatomic, strong) id parentVC;
 
 @property (nonatomic) AVPlayer *currPlayer;

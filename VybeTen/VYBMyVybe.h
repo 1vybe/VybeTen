@@ -15,7 +15,7 @@
 @property (nonatomic, strong) CLLocation *geoTag;
 @property (nonatomic, strong) NSString *locationName;
 @property (nonatomic, strong) NSDate *timeStamp;
-@property (nonatomic, strong) NSString *tribeObjectID;
+//@property (nonatomic, strong) NSString *tribeObjectID;
 @property (nonatomic, strong) NSString *videoFileObjectID;
 @property (nonatomic, strong) NSString *thumbnailFileObjectID;
 

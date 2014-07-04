@@ -10,25 +10,25 @@
 #import <UIKit/UIKit.h>
 
 @class VYBTribe;
-
+@protocol VYBCaptureViewControllerDelegate;
 @interface VYBCaptureViewController : UIViewController <AVCaptureFileOutputRecordingDelegate> {
     NSString *adId;
 }
 
-@property (nonatomic) id delegate;
+@property (nonatomic) id<VYBCaptureViewControllerDelegate> delegate;
 @property (nonatomic) UIButton *recordButton;
 @property (nonatomic) UILabel *countLabel;
 @property (nonatomic) UIButton *flipButton;
-@property (nonatomic) UIButton *dismissButton;
 @property (nonatomic) UIButton *flashButton;
-@property (nonatomic) UIButton *notificationButton;
-@property (nonatomic) UIButton *syncButton;
-@property (nonatomic) UILabel *syncLabel;
 @property (nonatomic) UILabel *flashLabel;
-@property (nonatomic) VYBTribe *defaultSync;
 
 //- (void)startRecording;
 //- (AVCaptureDeviceInput *)frontCameraInput;
 //- (AVCaptureDeviceInput *)backCameraInput;
 
+@end
+@protocol VYBCaptureViewControllerDelegate <NSObject>
+
+@optional
+- (void)capturedVybe:(PFObject *)aVybe;
 @end

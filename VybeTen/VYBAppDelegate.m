@@ -7,13 +7,11 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
+#import <AdSupport/ASIdentifierManager.h>
 #import <HockeySDK/HockeySDK.h>
 #import "VYBAppDelegate.h"
+#import "VYBCaptureViewController.h"
 #import "VYBNavigationController.h"
-#import "VYBPageViewController.h"
-#import "VYBHomeViewController.h"
-#import "VYBTribesViewController.h"
-#import "VYBFriendsViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBCache.h"
@@ -25,6 +23,7 @@
 @property (nonatomic, strong) Reachability *hostReach;
 @property (nonatomic, strong) Reachability *internetReach;
 @property (nonatomic, strong) Reachability *wifiReach;
+@property (nonatomic, strong) NSString *uniqueID;
 
 @end
 
@@ -34,8 +33,6 @@
 @synthesize hostReach;
 @synthesize internetReach;
 @synthesize wifiReach;
-@synthesize pageController;
-@synthesize viewControllers;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -62,13 +59,8 @@
      UIRemoteNotificationTypeAlert|
      UIRemoteNotificationTypeSound];
     
-    // Facebook PFUSer Settings
-    [PFFacebookUtils initializeFacebook];
+    self.uniqueID = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
     
-    // Twitter PFUser Settings
-    [PFTwitterUtils initializeWithConsumerKey:@"JLCtQQcGYntiTy0giykRwFzDH"
-                               consumerSecret:@"f778KywZHkqURPVirTMdANKxnaIg6dzKUAkqNeHe3sR9U794qn"];
-
     // Clearing Push-noti Badge number
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (currentInstallation.badge != 0) {
@@ -81,64 +73,52 @@
     // Enable public read access by default, with any newly created PFObjects belonging to the current user
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
-        
-    pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
-    pageController.dataSource = self;
     
-
-    // page0 is TRIBES
-    VYBTribesViewController *tribesVC = [[VYBTribesViewController alloc] init];
-    VYBNavigationController *tribeNavigation = [VYBNavigationController navigationControllerForPageIndex:VYBTribesPageIndex withRootViewController:tribesVC];
-    // page1 is HOME and it's the Starting Page
-    VYBHomeViewController *homeVC = [[VYBHomeViewController alloc] init];
-    VYBNavigationController *homeNavigation = [VYBNavigationController navigationControllerForPageIndex:VYBHomePageIndex withRootViewController:homeVC];
-    // page2 is FRIENDS
-    VYBFriendsViewController *friendsVC = [[VYBFriendsViewController alloc] init];
-    VYBNavigationController *friendsNavigation = [VYBNavigationController navigationControllerForPageIndex:VYBFriendsPageIndex withRootViewController:friendsVC];
+    VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
+    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    captureVC.delegate = playerVC;
+    self.navigationVC = [[VYBNavigationController alloc] initWithRootViewController:playerVC];
+    self.navigationVC.navigationBarHidden = YES;
     
-    viewControllers = [NSArray arrayWithObjects:tribeNavigation, homeNavigation, friendsNavigation, nil];
-    [pageController setViewControllers:@[homeNavigation] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    
-    [self.window setRootViewController:pageController];
-    
-    if ([PFUser currentUser]) {
-        [homeVC refreshUserData];
+    if (![PFUser currentUser]) {
+        //log in
+        [PFUser logInWithUsernameInBackground:self.uniqueID password:self.uniqueID block:^(PFUser *user, NSError *error) {
+            if (!error) {
+                if ([PFUser currentUser]) {
+                    // start vybing
+                    [self.navigationVC pushViewController:captureVC animated:NO];
+                }
+            } else {
+                // sign up
+                PFUser *newUser = [PFUser user];
+                newUser.username = self.uniqueID;
+                newUser.password = self.uniqueID;
+                [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (!error) {
+                        if ([PFUser currentUser]) {
+                            // start vybibng
+                            [self.navigationVC pushViewController:captureVC animated:NO];
+                        }
+                    } else {
+                        NSLog(@"sign up failed: %@", error);
+                    }
+                }];
+            }
+        }];
+    } else {
+        [self.navigationVC pushViewController:captureVC animated:NO];
     }
+    
+    [self.window setRootViewController:self.navigationVC];
     
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     
-    // If the app was launched from tapping on a push notification
-    NSDictionary *remoteNotificationPayload = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-    if (remoteNotificationPayload) {
-        [self handlePush:remoteNotificationPayload];
-    }
     
     return YES;
 }
-
-
-#pragma mark - UIPageViewControllerDataSource
-
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(id)viewController {
-    NSInteger idx = [viewController pageIndex] - 1;
-    if (idx < 0) {
-        return nil;
-    }
-    return [viewControllers objectAtIndex:idx];
-}
-
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(id)viewController {
-    NSInteger idx = [viewController pageIndex] + 1;
-    if (idx >= viewControllers.count) {
-        return nil;
-    }
-    return [viewControllers objectAtIndex:idx];
-}
-
-
 
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -177,64 +157,6 @@
 
 
 
-/**
- * PFPush Settigs 
- **/
-
-- (void)handlePush:(NSDictionary *)remoteNotificationPayload {
-    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil userInfo:remoteNotificationPayload];
-    
-    if (![PFUser currentUser]) {
-        return;
-    }
-    
-    // Following Activity
-    NSString *fromUserObjId = [remoteNotificationPayload objectForKey:kVYBPushPayloadActivityFromUserObjectIdKey];
-    if (fromUserObjId && fromUserObjId.length > 0) {
-        PFQuery *query = [PFUser query];
-        query.cachePolicy = kPFCachePolicyCacheElseNetwork;
-        [query getObjectInBackgroundWithId:fromUserObjId block:^(PFObject *object, NSError *error) {
-            if (!error) {
-                VYBNavigationController *friendsVC = self.viewControllers[VYBFriendsPageIndex];
-                [self.pageController setViewControllers:@[friendsVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-            }
-        }];
-        return;
-    }
-    
-    // New vybe, so start playing that vybe right away
-    NSString *vybeObjectId = [remoteNotificationPayload objectForKeyedSubscript:kVYBPushPayloadVybeObjectIdKey];
-    if (vybeObjectId && vybeObjectId.length > 0) {
-        PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-        query.cachePolicy = kPFCachePolicyCacheElseNetwork;
-        [query includeKey:kVYBVybeTribeKey];
-        [query includeKey:kVYBVybeUserKey];
-        [query getObjectInBackgroundWithId:vybeObjectId block:^(PFObject *object, NSError *error) {
-            if (!error) {
-                VYBNavigationController *homeNavigation = self.viewControllers[VYBHomePageIndex];
-                [self.pageController setViewControllers:@[homeNavigation] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-                if (homeNavigation.presentedViewController) {
-                    [homeNavigation dismissViewControllerAnimated:NO completion:^{
-                        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-                        playerVC.parentVC = homeNavigation;
-                        [homeNavigation presentViewController:playerVC animated:NO completion:^{
-                            [playerVC playVybe:object];
-                        }];
-                    }];
-                } else {
-                    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-                    playerVC.parentVC = homeNavigation;
-                    [homeNavigation presentViewController:playerVC animated:NO completion:^{
-                        [playerVC playVybe:object];
-                    }];
-                }
-            }
-        }];
-        return;
-    }
-    
-}
-
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (currentInstallation.badge != 0) {
@@ -258,24 +180,8 @@
         // Tracks app open due to a push notification when the app was not active
     }
     
-    if (userInfo) {
-        [self handlePush:userInfo];
-    }
 }
 
-
-/**
- * PFUser Session Settings (Facebook)
- **/
-
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation {
-    return [FBAppCall handleOpenURL:url
-                  sourceApplication:sourceApplication
-                        withSession:[PFFacebookUtils session]];
-}
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
@@ -285,8 +191,7 @@
     }
     
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    
-    [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
+
 }
 
 #pragma mark - AppDelegate
