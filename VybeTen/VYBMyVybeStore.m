@@ -6,7 +6,6 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
-#import <AWSRuntime/AWSRuntime.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AdSupport/ASIdentifierManager.h>
 #import "VYBMyVybeStore.h"
@@ -50,27 +49,13 @@
 }
 
 - (void)uploadVybe:(VYBMyVybe *)aVybe {
-    VYBMyVybe *vybeToGo;
-    for (VYBMyVybe *v in myVybes) {
-        if ( [aVybe.uniqueFileName isEqualToString:v.uniqueFileName] ) {
-            vybeToGo = v;
-            break;
-        }
-    }
-    if (!vybeToGo) {
-        return;
-    }
-    
-    [uploadQueue addObject:vybeToGo];
-    [self removeVybe:vybeToGo];
-    
-    NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToGo thumbnailFilePath]];
-    NSData *video = [NSData dataWithContentsOfFile:[vybeToGo videoFilePath]];
+    NSData *thumbnail = [NSData dataWithContentsOfFile:[aVybe thumbnailFilePath]];
+    NSData *video = [NSData dataWithContentsOfFile:[aVybe videoFilePath]];
   
     PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
     PFFile *videoFile = [PFFile fileWithData:video];
     
-    PFObject *vybe = [vybeToGo parseObjectVybe];
+    PFObject *vybe = [aVybe parseObjectVybe];
 
     PFACL *vybeACL = [PFACL ACLWithUser:[PFUser currentUser]];
     [vybeACL setPublicReadAccess:YES];
@@ -88,19 +73,14 @@
                             [vybe setObject:location forKey:kVYBVybeLocationName];
                         }
                         [vybe saveEventually];
-                        [self clearLocalCacheForVybe:vybeToGo];
-                        [uploadQueue removeObject:vybeToGo];
+                        [self clearLocalCacheForVybe:aVybe];
                     }];
                 } else {
-                    [self saveReverseGeocodeForVybe:vybeToGo];
-                    [self addVybe:vybeToGo];
-                    [uploadQueue removeObject:vybeToGo];
+                    [self saveReverseGeocodeForVybe:aVybe];
                 }
             }];
         } else {
-            [self saveReverseGeocodeForVybe:vybeToGo];
-            [self addVybe:vybeToGo];
-            [uploadQueue removeObject:vybeToGo];
+            [self saveReverseGeocodeForVybe:aVybe];
         }
     }];
 }
@@ -159,7 +139,7 @@
     if (myVybes.count < 1 ) {
         return;
     }
-    NSLog(@"There are %ui vybes to be uploaded", myVybes.count);
+    //NSLog(@"There are %ui vybes to be uploaded", myVybes.count);
     VYBMyVybe *delayedVybe = [myVybes firstObject];
     [self uploadDelayedVybe:delayedVybe];
 }

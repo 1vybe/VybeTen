@@ -8,7 +8,6 @@
 
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
-#import "VYBTribeTimelineViewController.h"
 #import "VYBUtility.h"
 #import "VYBCache.h"
 #import "VYBPlayerView.h"
@@ -120,20 +119,18 @@
     [super viewDidAppear:animated];
     
     if (freshVybe) {
-        PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-        [query whereKey:kVYBVybeGeotag nearGeoPoint:freshVybe[kVYBVybeGeotag]];
-        query.limit = 7;
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [PFCloud callFunctionInBackground:@"closestVybes" withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
             if (!error) {
-                self.vybePlaylist = objects;
-                if (self.vybePlaylist && self.vybePlaylist.count > 0) {
+                if (vybes && vybes.count > 0) {
+                    self.vybePlaylist = vybes;
                     [self beginPlayingFrom:0];
                 }
+            } else {
+                
             }
         }];
     }
+    
 }
 
 - (void)beginPlayingFrom:(NSInteger)from {
@@ -269,10 +266,8 @@
 
 - (void)captureVybe:(id)sender {
     //TODO: Based on what the user was watching, attach some information regarding that when the user take the next vybe
-    if (self.currPlayer.rate != 0) {
-        [self.currPlayer pause];
-        pauseImageView.hidden = NO;
-    }
+    
+    [self.currPlayer pause];
     
     VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
     captureVC.delegate = self;

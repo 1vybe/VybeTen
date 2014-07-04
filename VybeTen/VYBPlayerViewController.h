@@ -23,6 +23,6 @@
 
 
 - (void)beginPlayingFrom:(NSInteger)from;
-- (void)playVybe:(PFObject *)aVybe;
+//- (void)playVybe:(PFObject *)aVybe;
 
 @end

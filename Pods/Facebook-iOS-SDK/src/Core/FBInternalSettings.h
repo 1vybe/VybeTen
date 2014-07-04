@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-#import "FBTestSession.h"
+#ifndef FB_BUILD_ONLY
+#define FB_BUILD_ONLY
+#endif
 
-@interface FBTestSession (Internal)
+#import "FBSettings.h"
 
-// Can be used during testing to force a request for an access token refresh. This affects only the next
-// connection, when this flag is reset.
-@property (readwrite) BOOL forceAccessTokenRefresh;
-
-@property (readonly, copy) NSString *testAppClientToken;
-
-@end
+#ifdef FB_BUILD_ONLY
+#undef FB_BUILD_ONLY
+#endif

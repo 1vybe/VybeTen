@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <AWSS3/AWSS3.h>
 #import "VYBMyVybe.h"
 
 @interface VYBMyVybeStore : NSObject {
@@ -17,16 +16,11 @@
 
 + (VYBMyVybeStore *)sharedStore;
 - (void)addVybe:(VYBMyVybe *)aVybe;
-//- (PFObject *)vybeForKey:(NSString *)aKey;
-//- (NSString *)videoPathWithKey:(NSString *)aKey;
-//- (NSString *)thumbnailPathWithKey:(NSString *)aKey;
 - (void)uploadVybe:(VYBMyVybe *)aVybe;
 - (void)uploadDelayedVybes;
-- (BOOL)removeVybeForKey:(NSString *)aKey;
 - (NSString *)myVybesArchivePath;
 
 
-- (void)delayedUploadsBegin;
 - (BOOL)saveChanges;
 
 @end

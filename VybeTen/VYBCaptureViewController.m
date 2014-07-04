@@ -11,9 +11,6 @@
 #import <ImageIO/ImageIO.h>
 #import <CoreLocation/CoreLocation.h>
 #import "VYBCaptureViewController.h"
-#import "VYBHomeViewController.h"
-#import "VYBReplayViewController.h"
-#import "VYBSyncTribeViewController.h"
 #import "VYBLabel.h"
 #import "VYBMyVybeStore.h"
 #import "VYBConstants.h"
@@ -327,12 +324,12 @@ static void * XXContext = &XXContext;
         // Saves a thumbmnail to local
         [VYBUtility saveThumbnailImageForVybeWithFilePath:currVybe.uniqueFileName];
         
-        [[VYBMyVybeStore sharedStore] addVybe:currVybe];
         [[VYBMyVybeStore sharedStore] uploadVybe:currVybe];
         
         if (self.delegate) {
             [self.delegate capturedVybe:[currVybe parseObjectVybe]];
         }
+        
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
 

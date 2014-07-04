@@ -1,31 +1,25 @@
 PODS:
-  - AWSS3 (0.0.1)
   - Bolts (1.1.0)
-  - Facebook-iOS-SDK (3.14.1):
+  - Facebook-iOS-SDK (3.15.1):
     - Bolts
   - GoogleAnalytics-iOS-SDK (3.0.7)
   - HockeySDK (3.5.5)
-  - JSBadgeView (1.3.2)
   - MBProgressHUD (0.8)
   - Parse (1.2.19):
     - Facebook-iOS-SDK (~> 3.11)
 
 DEPENDENCIES:
-  - AWSS3 (~> 0.0)
   - GoogleAnalytics-iOS-SDK (~> 3.0)
   - HockeySDK (~> 3.5)
-  - JSBadgeView (~> 1.3)
   - MBProgressHUD (~> 0.8)
   - Parse (~> 1.2)
 
 SPEC CHECKSUMS:
-  AWSS3: 5de5040de1d15b39aab155e73fe3574394b7ec8d
-  Bolts: dc620a31cf67c29bce3e3d14a07a12e797a1a154
-  Facebook-iOS-SDK: 97e68fb37468bee2d90201fd0c9e4dccce5683d9
-  GoogleAnalytics-iOS-SDK: 594702aaf93e6ee497140fd31e758c2e2fa44315
-  HockeySDK: 350ef1cf18d2fc9a13801ad077c307cece8c6c64
-  JSBadgeView: 5ee19a07f20e92b169a8ae618113fc80f973be7d
-  MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
-  Parse: 3739f0b211c49115bad96d6b0969b804d4da2f24
+  Bolts: 91c2af8eae1d44e1dd75946a5b0ae04a43ea43e4
+  Facebook-iOS-SDK: 56214af8e0ef16e751eb2804250326b709e571b8
+  GoogleAnalytics-iOS-SDK: bb285d8eef15a682f1b82971becd0d22edd0e53b
+  HockeySDK: f9af97c2f5df4eb6ca6d2a9c408f2ff498edd608
+  MBProgressHUD: c356980b0cd097f19acec959b49dca5eb8ec31be
+  Parse: ffebaecaddd32cb52671010f81567c298ff93d04
 
 COCOAPODS: 0.32.1

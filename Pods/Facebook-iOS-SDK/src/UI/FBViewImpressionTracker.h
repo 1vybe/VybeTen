@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-#import "FBTestSession.h"
+#import <UIKit/UIKit.h>
 
-@interface FBTestSession (Internal)
+@class FBSession;
 
-// Can be used during testing to force a request for an access token refresh. This affects only the next
-// connection, when this flag is reset.
-@property (readwrite) BOOL forceAccessTokenRefresh;
+@interface FBViewImpressionTracker : NSObject
 
-@property (readonly, copy) NSString *testAppClientToken;
++ (instancetype)impressionTrackerWithEventName:(NSString *)eventName;
+
+@property (nonatomic, copy, readonly) NSString *eventName;
+@property (nonatomic, retain) FBSession *session;
+
+- (void)logImpressionWithView:(UIView *)view
+                   identifier:(NSString *)identifier
+                   parameters:(NSDictionary *)parameters;
 
 @end

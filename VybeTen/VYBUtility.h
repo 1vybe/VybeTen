@@ -11,15 +11,11 @@
 
 @interface VYBUtility : NSObject
 
-+ (void)processFacebookProfilePictureData:(NSData *)data;
-//+ (void)createTribeWithName:(NSString *)aName inBackgroundWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock;
-//+ (NSString *)generateUniqueFileName;
 + (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate;
 + (void)reverseGeoCode:(PFGeoPoint *)aLocation withCompletion:(void (^)(NSArray *placemarks, NSError *error))completionBlock;
 + (NSString *)convertPlacemarkToLocation:(CLPlacemark *)placemark;
-+ (void)followUserInBackground:(PFUser *)fUser block:(void (^) (BOOL succeed, NSError *err))completionBlock;
-+ (void)unfollowUserEventually:(PFUser *)fUser;
+
 
 #pragma mark Display Name
 

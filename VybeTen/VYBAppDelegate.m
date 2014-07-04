@@ -6,6 +6,16 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
+/* Release
+#define PARSE_APPLICATION_ID        @"m5Im7uDcY5rieEbPyzRfV2Dq6YegS3kAQwxiDMFZ"
+#define PARSE_CLIENT_KEY            @"WLqeqlf4qVVk5jF6yHSWGxw3UzUQwUtmAk9vCPfB"
+*/
+
+/* Debug */
+#define PARSE_APPLICATION_ID        @"gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC"
+#define PARSE_CLIENT_KEY            @"6y6eMRZq5GAa5ihS2GSjFB0xwmnuatvuJBhYQ1Af"
+
+
 #import <AVFoundation/AVFoundation.h>
 #import <AdSupport/ASIdentifierManager.h>
 #import <HockeySDK/HockeySDK.h>
@@ -48,8 +58,10 @@
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
     
     // Parse Initialization
-    [Parse setApplicationId:@"m5Im7uDcY5rieEbPyzRfV2Dq6YegS3kAQwxiDMFZ"
-                  clientKey:@"WLqeqlf4qVVk5jF6yHSWGxw3UzUQwUtmAk9vCPfB"];
+
+    [Parse setApplicationId:PARSE_APPLICATION_ID
+                  clientKey:PARSE_CLIENT_KEY];
+    NSLog(@"parse app id: %@", PARSE_APPLICATION_ID);
     
     // Parse Analaytics
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
