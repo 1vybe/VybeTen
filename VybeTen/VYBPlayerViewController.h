@@ -21,7 +21,8 @@
 
 @property (nonatomic, strong) NSArray *vybePlaylist;
 
-
++ (VYBPlayerViewController *)playerViewControllerForPageIndex:(NSInteger)idx;
+- (NSInteger)pageIndex;
 - (void)beginPlayingFrom:(NSInteger)from;
 //- (void)playVybe:(PFObject *)aVybe;
 

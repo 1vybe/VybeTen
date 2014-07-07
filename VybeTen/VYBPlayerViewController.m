@@ -6,6 +6,7 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
+#import "VYBAppDelegate.h"
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBUtility.h"
@@ -19,6 +20,8 @@
 #import "GAIDictionaryBuilder.h"
 
 @implementation VYBPlayerViewController {
+    NSInteger pageIndex;
+    
     NSInteger currVybeIndex;
     NSInteger downloadingVybeIndex;
     
@@ -38,6 +41,25 @@
 
 - (void)dealloc {
     NSLog(@"PlayerViewController released");
+}
+
++ (VYBPlayerViewController *)playerViewControllerForPageIndex:(NSInteger)idx {
+    if (idx >= 0 && idx < 2) {
+        return [[self alloc] initWithPageIndex:idx];
+    }
+    return nil;
+}
+
+- (id)initWithPageIndex:(NSInteger)idx {
+    self = [super init];
+    if (self) {
+        pageIndex = idx;
+    }
+    return self;
+}
+
+- (NSInteger)pageIndex {
+    return pageIndex;
 }
 
 - (void)loadView {
@@ -78,21 +100,15 @@
     swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipeRight];
 
+    /*
     // Add tap gesture
     UITapGestureRecognizer *tapOnce = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
     tapOnce.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapOnce];
-
-    /* NOTE: Origin for menu button is (0, 0) */
-    // Adding CAPTURE button
-    CGRect frame = CGRectMake(self.view.bounds.size.height - 50, (self.view.bounds.size.width - 50)/2, 50, 50);
-    captureButton = [[UIButton alloc] initWithFrame:frame];
-    [captureButton setContentMode:UIViewContentModeCenter];
-    [captureButton setImage:[UIImage imageNamed:@"button_player_capture.png"] forState:UIControlStateNormal];
-    [captureButton addTarget:self action:@selector(captureVybe:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:captureButton];
+    */
+    
     // Adding TIME label
-    frame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 48, 200, 48);
+    CGRect frame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 48, 200, 48);
     timeLabel = [[VYBLabel alloc] initWithFrame:frame];
     [timeLabel setTextColor:[UIColor whiteColor]];
     [timeLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18.0]];
@@ -151,6 +167,12 @@
         }];
     }
     
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.currPlayer pause];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
 }
 
 - (void)beginPlayingFrom:(NSInteger)from {
@@ -230,14 +252,14 @@
 
 - (void)playerItemDidReachEnd {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    if (currVybeIndex == self.vybePlaylist.count - 1) {
-        // Reached the end show the ENDING screen
-        return;
-    }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-    [self.currPlayer pause];
-    currVybeIndex++;
-    [self beginPlayingFrom:currVybeIndex];
+    if (currVybeIndex == self.vybePlaylist.count - 1) {
+        [self moveToCaptureScreen];
+    } else {
+        [self.currPlayer pause];
+        currVybeIndex++;
+        [self beginPlayingFrom:currVybeIndex];
+    }
 }
 
 - (void)syncUI:(PFObject *)aVybe {
@@ -274,6 +296,7 @@
     [self beginPlayingFrom:currVybeIndex];
 }
 
+/*
 - (void)tapOnce {
     if (self.currPlayer.rate != 0) {
         [self.currPlayer pause];
@@ -283,16 +306,18 @@
         [self.currPlayer play];
     }
 }
+*/
 
-- (void)captureVybe:(id)sender {
+- (void)moveToCaptureScreen {
     //TODO: Based on what the user was watching, attach some information regarding that when the user take the next vybe
     
     [self.currPlayer pause];
-    
-    VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
-    captureVC.delegate = self;
-    [self.navigationController pushViewController:captureVC animated:NO];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+
+    id appDelegate = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate swipeToCaptureViewController];
 }
+
 
 #pragma mark - VYBCaptureViewControllerDelegate
 

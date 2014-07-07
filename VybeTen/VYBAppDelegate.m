@@ -21,7 +21,6 @@
 #import <HockeySDK/HockeySDK.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
-#import "VYBNavigationController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBCache.h"
@@ -37,7 +36,10 @@
 
 @end
 
-@implementation VYBAppDelegate
+@implementation VYBAppDelegate {
+    VYBCaptureViewController *captureVC;
+    VYBPlayerViewController *playerVC;
+}
 
 @synthesize networkStatus;
 @synthesize hostReach;
@@ -86,11 +88,18 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
-    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    captureVC.delegate = playerVC;
+    captureVC = [VYBCaptureViewController captureViewControllerForPageIndex:0];
+    playerVC = [VYBPlayerViewController playerViewControllerForPageIndex:1];
+    
+    /*
     self.navigationVC = [[VYBNavigationController alloc] initWithRootViewController:playerVC];
     self.navigationVC.navigationBarHidden = YES;
+    */
+    
+    self.pageVC = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationVertical options:nil];
+    self.pageVC.dataSource = self;
+    self.viewControllers = [NSArray arrayWithObjects:captureVC, playerVC, nil];
+    [self.pageVC setViewControllers:@[captureVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
     if (![PFUser currentUser]) {
         //log in
@@ -98,7 +107,7 @@
             if (!error) {
                 if ([PFUser currentUser]) {
                     // start vybing
-                    [self.navigationVC pushViewController:captureVC animated:NO];
+                    //[self.navigationVC pushViewController:captureVC animated:NO];
                 }
             } else {
                 // sign up
@@ -109,7 +118,7 @@
                     if (!error) {
                         if ([PFUser currentUser]) {
                             // start vybibng
-                            [self.navigationVC pushViewController:captureVC animated:NO];
+                            //[self.navigationVC pushViewController:captureVC animated:NO];
                         }
                     } else {
                         NSLog(@"sign up failed: %@", error);
@@ -118,10 +127,10 @@
             }
         }];
     } else {
-        [self.navigationVC pushViewController:captureVC animated:NO];
+        //[self.navigationVC pushViewController:captureVC animated:NO];
     }
     
-    [self.window setRootViewController:self.navigationVC];
+    [self.window setRootViewController:self.pageVC];
     
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
@@ -210,6 +219,28 @@
 
 - (BOOL)isParseReachable {
     return self.networkStatus != NotReachable;
+}
+
+#pragma mark - UIPageViewControllerDataSource 
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(id)viewController {
+    NSInteger idx = [viewController pageIndex] + 1;
+    if (idx < self.viewControllers.count) {
+        return self.viewControllers[idx];
+    }
+    return nil;
+}
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(id)viewController {
+    NSInteger idx = [viewController pageIndex] - 1;
+    if (idx < 0) {
+        return nil;
+    }
+    return self.viewControllers[idx];
+}
+
+- (void)swipeToCaptureViewController {
+    [self.pageVC setViewControllers:@[self.viewControllers[0]] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
 }
 
 #pragma mark - ()

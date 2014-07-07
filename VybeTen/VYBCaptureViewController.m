@@ -19,6 +19,8 @@
 
 
 @implementation VYBCaptureViewController {
+    NSInteger pageIndex;
+    
     AVCaptureSession *session;
     AVCaptureDeviceInput *videoInput;
     AVCaptureMovieFileOutput *movieFileOutput;
@@ -42,6 +44,17 @@
 
 static void * XXContext = &XXContext;
 
+- (void)dealloc {
+    NSLog(@"CaptureVC deallocated");
+}
+
++ (VYBCaptureViewController *)captureViewControllerForPageIndex:(NSInteger)idx {
+    if (idx >= 0 && idx < 2) {
+        return [[self alloc] initWithPageIndex:idx];
+    }
+    return nil;
+}
+
 - (id)init {
     self = [super init];
     if (self) {
@@ -52,9 +65,19 @@ static void * XXContext = &XXContext;
     return self;
 }
 
-- (void)dealloc {
-    NSLog(@"CaptureVC deallocated");
+- (id)initWithPageIndex:(NSInteger)idx {
+    self = [self init];
+    if (self) {
+        pageIndex = idx;
+    }
+    
+    return self;
 }
+
+- (NSInteger)pageIndex {
+    return pageIndex;
+}
+
 
 - (void)viewDidLoad
 {
@@ -70,10 +93,6 @@ static void * XXContext = &XXContext;
     UIDevice *iphone = [UIDevice currentDevice];
     [iphone beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];
-    
-    UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapped:)];
-    doubleTapGesture.numberOfTapsRequired = 2;
-    [self.view addGestureRecognizer:doubleTapGesture];
 
     recording = NO;
     frontCamera = NO;
@@ -87,7 +106,7 @@ static void * XXContext = &XXContext;
     UIImage *captureButtonImg = [UIImage imageNamed:@"button_record.png"];
     [recordButton setBackgroundImage:captureButtonImg forState:UIControlStateNormal];
     [recordButton addTarget:self action:@selector(startRecording) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:recordButton];
+    //[self.view addSubview:recordButton];
     
     // Adding COUNT label to RECORD button
     buttonFrame = CGRectMake(0, 0, 60, 60);
@@ -317,6 +336,7 @@ static void * XXContext = &XXContext;
     [self.view addSubview:self.captureButton];
     startLocation = [[touches anyObject] locationInView:self.view];
     self.captureButton.center = startLocation;
+    [self startRecording];
     //[self.captureButton setNeedsDisplay];
 }
 
@@ -411,10 +431,6 @@ static void * XXContext = &XXContext;
 }
 
 #pragma mark - ()
-
-- (void)doubleTapped:(id)sender {
-    [self.navigationController popToRootViewControllerAnimated:YES];
-}
 
 - (BOOL)prefersStatusBarHidden {
     return YES;

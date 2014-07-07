@@ -8,15 +8,19 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
-@class VYBNavigationController;
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate>
+#import "VYBNavigationController.h"
+#import "VYBPageViewController.h"
+
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong) VYBNavigationController *navigationVC;
+@property (nonatomic, strong) VYBPageViewController *pageVC;
+@property (nonatomic, strong) NSArray *viewControllers;
 
-/* TODO */
 @property (nonatomic, readonly) int networkStatus;
 - (BOOL)isParseReachable;
+- (void)swipeToCaptureViewController;
 
 
 

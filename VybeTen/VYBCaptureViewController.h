@@ -24,9 +24,8 @@
 @property (nonatomic) UILabel *flashLabel;
 @property (nonatomic, strong) VYBCaptureButton *captureButton;
 
-//- (void)startRecording;
-//- (AVCaptureDeviceInput *)frontCameraInput;
-//- (AVCaptureDeviceInput *)backCameraInput;
++ (VYBCaptureViewController *)captureViewControllerForPageIndex:(NSInteger)idx;
+- (NSInteger)pageIndex;
 
 @end
 @protocol VYBCaptureViewControllerDelegate <NSObject>
