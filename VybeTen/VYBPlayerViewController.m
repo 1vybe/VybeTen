@@ -134,8 +134,10 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    NSString *getVybesCloudFunction = @"closestVybes}}}";
+
     if (freshVybe) {
-        [PFCloud callFunctionInBackground:@"recentNearbyVybes" withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
+        [PFCloud callFunctionInBackground:getVybesCloudFunction withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
             if (!error) {
                 if (vybes && vybes.count > 0) {
                     self.vybePlaylist = vybes;
@@ -152,7 +154,7 @@
             if (error || !geoPoint) {
                 NSLog(@"Cannot retrive current location at this moment.");
             } else {
-                [PFCloud callFunctionInBackground:@"recentNearbyVybes" withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
+                [PFCloud callFunctionInBackground:getVybesCloudFunction withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
                     if (!error) {
                         if (vybes && vybes.count > 0) {
                             self.vybePlaylist = vybes;
