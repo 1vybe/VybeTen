@@ -8,6 +8,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
+#import "VYBCaptureButton.h"
 
 @class VYBTribe;
 @protocol VYBCaptureViewControllerDelegate;
@@ -21,6 +22,7 @@
 @property (nonatomic) UIButton *flipButton;
 @property (nonatomic) UIButton *flashButton;
 @property (nonatomic) UILabel *flashLabel;
+@property (nonatomic, strong) VYBCaptureButton *captureButton;
 
 //- (void)startRecording;
 //- (AVCaptureDeviceInput *)frontCameraInput;

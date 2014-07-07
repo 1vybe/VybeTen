@@ -33,6 +33,8 @@
     
     VYBMyVybe *currVybe;
     
+    CGPoint startLocation;
+    
     //UIImageView *overlayView;
 }
 
@@ -68,20 +70,25 @@ static void * XXContext = &XXContext;
     UIDevice *iphone = [UIDevice currentDevice];
     [iphone beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];
+    
+    UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapped:)];
+    doubleTapGesture.numberOfTapsRequired = 2;
+    [self.view addGestureRecognizer:doubleTapGesture];
 
     recording = NO;
     frontCamera = NO;
     
-    // Adding DISMISS button
-    CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 60, 0, 50, 50);
-   
+    // Adding CAPTURE button
+    self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+    
     // Adding RECORD button
-    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, (self.view.bounds.size.width - 60)/2, 60, 60);
+    CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 70, (self.view.bounds.size.width - 60)/2, 60, 60);
     recordButton = [[UIButton alloc] initWithFrame:buttonFrame];
     UIImage *captureButtonImg = [UIImage imageNamed:@"button_record.png"];
     [recordButton setBackgroundImage:captureButtonImg forState:UIControlStateNormal];
     [recordButton addTarget:self action:@selector(startRecording) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:recordButton];
+    
     // Adding COUNT label to RECORD button
     buttonFrame = CGRectMake(0, 0, 60, 60);
     countLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
@@ -304,10 +311,28 @@ static void * XXContext = &XXContext;
     [session startRunning];
 }
 
-- (void)dismissButtonPressed:(id)sender {
-    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+#pragma mark - UIResponder
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view addSubview:self.captureButton];
+    startLocation = [[touches anyObject] locationInView:self.view];
+    self.captureButton.center = startLocation;
+    //[self.captureButton setNeedsDisplay];
 }
 
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
+{
+    CGPoint pt = [[touches anyObject] locationInView:self.view];
+    self.captureButton.center = pt;
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.captureButton removeFromSuperview];
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self touchesEnded:touches withEvent:event];
+}
 
 
 #pragma mark - AVCaptureFileOutputRecordingDelegate
@@ -383,6 +408,12 @@ static void * XXContext = &XXContext;
         [self.view addSubview:overlayView];
     }
     */
+}
+
+#pragma mark - ()
+
+- (void)doubleTapped:(id)sender {
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (BOOL)prefersStatusBarHidden {

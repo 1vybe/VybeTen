@@ -131,6 +131,26 @@
         }];
     }
     
+    else {
+        [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+            if (error || !geoPoint) {
+                NSLog(@"Cannot retrive current location at this moment.");
+            } else {
+                [PFCloud callFunctionInBackground:@"closestVybes" withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
+                    if (!error) {
+                        if (vybes && vybes.count > 0) {
+                            self.vybePlaylist = vybes;
+                            [self beginPlayingFrom:0];
+                        }
+                    } else {
+                        
+                    }
+                }];
+
+            }
+        }];
+    }
+    
 }
 
 - (void)beginPlayingFrom:(NSInteger)from {
