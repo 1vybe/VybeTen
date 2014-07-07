@@ -6,12 +6,7 @@ Parse.Cloud.define("closestVybes", function(request, response) {
   var userGeoPoint = request.params.location;
   var query = new Parse.Query("Vybe");
   query.near("location", userGeoPoint);
-    if (request.params.limit) {
-    console.log("limit given: " + request.params.limit);
-  } else {
-    console.log("using default limit: " + default_limit);
-    query.limit(default_limit);
-  }
+  query.limit(default_limit);
   query.find({
     success: function(vybesObjects) {
       response.success(vybesObjects);
@@ -22,16 +17,12 @@ Parse.Cloud.define("closestVybes", function(request, response) {
   });
 });
 
+// Get nearby vybes using the Parse.Query.near method
 Parse.Cloud.define("nearbyVybes", function(request, response) {
   var userGeoPoint = request.params.location;
   var query = new Parse.Query("Vybe");
   query.near("location", userGeoPoint);
-  if (request.params.limit) {
-    console.log("limit given: " + request.params.limit);
-  } else {
-    console.log("using default limit: " + default_limit);
-    query.limit(default_limit);
-  }
+  query.limit(default_limit);
   query.find({
     success: function(vybesObjects) {
       response.success(vybesObjects);
@@ -42,17 +33,12 @@ Parse.Cloud.define("nearbyVybes", function(request, response) {
   });
 });
 
+// Get most recent vybes
 Parse.Cloud.define("recentVybes", function(request, response) {
-  console.log("request.params:" + JSON.stringify(request.params));
   var userGeoPoint = request.params.location;
   var query = new Parse.Query("Vybe");
   query.descending("timestamp");
-  if (request.params.limit) {
-    console.log("limit given: " + request.params.limit);
-  } else {
-    console.log("using default limit: " + default_limit);
-    query.limit(default_limit);
-  }
+  query.limit(default_limit);
   query.find({
     success: function(vybesObjects) {
       // Sort result in chronological order
@@ -64,18 +50,13 @@ Parse.Cloud.define("recentVybes", function(request, response) {
   });
 });
 
+// Get nearby vybes using the Parse.Query.near method then sort by most recent
 Parse.Cloud.define("recentNearbyVybes", function(request, response) {
-  console.log("request.params:" + JSON.stringify(request.params));
   var userGeoPoint = request.params.location;
   var query = new Parse.Query("Vybe");
   query.near("location", userGeoPoint);
   query.addDescending("timestamp");
-  if (request.params.limit) {
-    console.log("limit given: " + request.params.limit);
-  } else {
-    console.log("using default limit: " + default_limit);
-    query.limit(default_limit);
-  }
+  query.limit(default_limit);
   query.find({
     success: function(vybesObjects) {
       // Sort result in chronological order
