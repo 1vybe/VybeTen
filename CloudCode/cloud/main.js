@@ -16,16 +16,16 @@ Parse.Cloud.define("closestVybes", function(request, response) {
 
 Parse.Cloud.afterSave("Vybe", function(request, response) {
   var userGeoPoint = request.object.get("location");
-  console.info("userGeoPoint: " + userGeoPoint);
+  console.log("userGeoPoint: " + userGeoPoint);
 
   var query = new Parse.Query("Vybe");
-  console.info("query: " + query);
+  console.log("query: " + query);
 
   query.near("location", userGeoPoint);
   query.limit(10);
   query.find({
     success: function(vybesObjects) {
-      console.info("Returning responses: " + vybesObjects);
+      console.log("Returning responses: " + vybesObjects);
       response.success(vybesObjects);
     },
     error: function(error) {
