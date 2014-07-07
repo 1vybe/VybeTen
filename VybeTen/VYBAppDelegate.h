@@ -20,7 +20,9 @@
 
 @property (nonatomic, readonly) int networkStatus;
 - (BOOL)isParseReachable;
-- (void)swipeToCaptureViewController;
+- (void)swipeToCaptureScreen;
+- (void)swipeToPlayerScreen;
+
 
 
 

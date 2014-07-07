@@ -239,9 +239,14 @@
     return self.viewControllers[idx];
 }
 
-- (void)swipeToCaptureViewController {
-    [self.pageVC setViewControllers:@[self.viewControllers[0]] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
+- (void)swipeToCaptureScreen {
+    [self.pageVC setViewControllers:@[self.viewControllers[0]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
 }
+
+- (void)swipeToPlayerScreen {
+    [self.pageVC setViewControllers:@[self.viewControllers[1]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+}
+
 
 #pragma mark - ()
 
@@ -264,7 +269,6 @@
     NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
     //NSLog(@"Reachability changed: %@", curReach);
     networkStatus = [curReach currentReachabilityStatus];
-    
 
     // Try
     if ([self isParseReachable] && [PFUser currentUser] ) {

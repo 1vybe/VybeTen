@@ -10,6 +10,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
 #import <CoreLocation/CoreLocation.h>
+#import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
 #import "VYBLabel.h"
 #import "VYBMyVybeStore.h"
@@ -98,7 +99,7 @@ static void * XXContext = &XXContext;
     frontCamera = NO;
     
     // Adding CAPTURE button
-    self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+    self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
     
     // Adding RECORD button
     CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 70, (self.view.bounds.size.width - 60)/2, 60, 60);
@@ -154,7 +155,6 @@ static void * XXContext = &XXContext;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-     flipButton.hidden = recording; flashButton.hidden = (recording || frontCamera);
 }
 
 
@@ -225,6 +225,9 @@ static void * XXContext = &XXContext;
 
 - (void)timer:(NSTimer *)timer {
     NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
+    if (secondsSinceStart >= 3.0) {
+        self.captureButton.backgroundColor = [UIColor greenColor];
+    }
     int secondsLeft = 7 - (int)secondsSinceStart;
     NSString *secondsPassed = [NSString stringWithFormat:@"%d", secondsLeft];
     [countLabel setText:secondsPassed];
@@ -347,6 +350,8 @@ static void * XXContext = &XXContext;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    [movieFileOutput stopRecording];
+    
     [self.captureButton removeFromSuperview];
 }
 
@@ -366,28 +371,36 @@ static void * XXContext = &XXContext;
     }
     
     if (recordSuccess) {
-        // Saves a thumbmnail to local
-        [VYBUtility saveThumbnailImageForVybeWithFilePath:currVybe.uniqueFileName];
-        
-        [[VYBMyVybeStore sharedStore] uploadVybe:currVybe];
-        
-        if (self.delegate) {
-            [self.delegate capturedVybe:[currVybe parseObjectVybe]];
+        NSDate *now = [NSDate date];
+        NSInteger secondsSinceStart = (NSInteger)[now timeIntervalSinceDate:startTime];
+        if (secondsSinceStart < 3.0) {
+            NSError *error;
+            [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:&error];
+            if (error) {
+                NSLog(@"Cached my vybe was NOT deleted");
+            }
         }
-        
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        else {
+            // Saves a thumbmnail to local
+            [VYBUtility saveThumbnailImageForVybeWithFilePath:currVybe.uniqueFileName];
+            
+            [[VYBMyVybeStore sharedStore] uploadVybe:currVybe];
+            
+            if (self.delegate) {
+                [self.delegate capturedVybe:[currVybe parseObjectVybe]];
+            }
+            
+            id appDelegate = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
+            [appDelegate swipeToPlayerScreen];
+        }
     }
-
+    
     startTime = nil;
     [recordingTimer invalidate];
     recordingTimer = nil;
-    // Reset record button image back to original
-    [countLabel setText:@""];
-    UIImage *recordButtonImg = [UIImage imageNamed:@"button_record.png"];
-    [recordButton setBackgroundImage:recordButtonImg forState:UIControlStateNormal];
-    [recordButton setTitle:@"" forState:UIControlStateNormal];
-    
     recording = NO;
+    
+    flipButton.hidden = recording; flashButton.hidden = (recording || frontCamera);
 }
 
 

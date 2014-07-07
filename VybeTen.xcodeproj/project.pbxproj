@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02012D9D196A4F6500039B74 /* VYBDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02012D9B196A4F6500039B74 /* VYBDebugViewController.m */; };
+		02012D9E196A4F6500039B74 /* VYBDebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02012D9C196A4F6500039B74 /* VYBDebugViewController.xib */; };
 		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
 		023E538D191F142000C3CF78 /* VYBCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 023E538C191F142000C3CF78 /* VYBCache.m */; };
 		024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 024520C7192FDB5F007B56A1 /* VYBMyVybe.m */; };
@@ -45,6 +47,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		02012D9A196A4F6500039B74 /* VYBDebugViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBDebugViewController.h; sourceTree = "<group>"; };
+		02012D9B196A4F6500039B74 /* VYBDebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBDebugViewController.m; sourceTree = "<group>"; };
+		02012D9C196A4F6500039B74 /* VYBDebugViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBDebugViewController.xib; sourceTree = "<group>"; };
 		0226CBAB194A0339005270D3 /* VYBNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBNavigationController.h; sourceTree = "<group>"; };
 		0226CBAC194A0339005270D3 /* VYBNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBNavigationController.m; sourceTree = "<group>"; };
 		023E538B191F142000C3CF78 /* VYBCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCache.h; sourceTree = "<group>"; };
@@ -156,6 +161,9 @@
 				0226CBAC194A0339005270D3 /* VYBNavigationController.m */,
 				0276D13A19590CDE007292B0 /* VYBPageViewController.h */,
 				0276D13B19590CDF007292B0 /* VYBPageViewController.m */,
+				02012D9A196A4F6500039B74 /* VYBDebugViewController.h */,
+				02012D9B196A4F6500039B74 /* VYBDebugViewController.m */,
+				02012D9C196A4F6500039B74 /* VYBDebugViewController.xib */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -365,6 +373,7 @@
 				02D11D0B18DF62AC0018DA97 /* Montreal-Light.otf in Resources */,
 				02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */,
 				02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */,
+				02012D9E196A4F6500039B74 /* VYBDebugViewController.xib in Resources */,
 				02D11D0A18DF62AC0018DA97 /* Montreal-HeavyIta.otf in Resources */,
 				604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */,
 				02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */,
@@ -432,6 +441,7 @@
 				88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */,
 				88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
+				02012D9D196A4F6500039B74 /* VYBDebugViewController.m in Sources */,
 				023E538D191F142000C3CF78 /* VYBCache.m in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,

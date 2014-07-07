@@ -158,8 +158,6 @@
     if (error) {
         NSLog(@"Cached my vybe was NOT deleted");
     }
-    
-
 }
 
 - (void)removeVybe:(VYBMyVybe *)aVybe {

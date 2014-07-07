@@ -18,12 +18,11 @@
 @property (nonatomic) AVPlayer *currPlayer;
 @property (nonatomic) VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayerItem *currItem;
-
-@property (nonatomic, strong) NSArray *vybePlaylist;
+@property (nonatomic,strong) NSArray *vybePlaylist;
+@property (nonatomic) NSInteger debugMode;
 
 + (VYBPlayerViewController *)playerViewControllerForPageIndex:(NSInteger)idx;
 - (NSInteger)pageIndex;
 - (void)beginPlayingFrom:(NSInteger)from;
-//- (void)playVybe:(PFObject *)aVybe;
 
 @end
