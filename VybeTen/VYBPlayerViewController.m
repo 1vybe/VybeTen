@@ -133,7 +133,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    NSString *functionName = @"recentNearbyVybes";
+    NSString *functionName = @"default_algorithm";
     
 #if DEBUG
     if (self.debugMode == 1) {

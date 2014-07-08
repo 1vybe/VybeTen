@@ -10,6 +10,8 @@ Parse.Cloud.define("algorithm1", nearbyVybes);
 Parse.Cloud.define("algorithm2", recentVybes);
 Parse.Cloud.define("algorithm3", recentNearbyVybes);
 
+Parse.Cloud.define("default_algorithm", recentVybes);
+
 
 var default_limit = 5;
 
