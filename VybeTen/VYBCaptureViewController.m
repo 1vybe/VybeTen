@@ -11,6 +11,7 @@
 #import <ImageIO/ImageIO.h>
 #import <CoreLocation/CoreLocation.h>
 #import "VYBAppDelegate.h"
+#import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBLabel.h"
 #import "VYBMyVybeStore.h"
@@ -31,17 +32,15 @@
     NSDate *startTime;
     NSTimer *recordingTimer;
     
-    BOOL recording;
     BOOL frontCamera;
     
     VYBMyVybe *currVybe;
     
     CGPoint startLocation;
     
-    //UIImageView *overlayView;
 }
 
-@synthesize recordButton, countLabel, flipButton, flashButton, flashLabel;
+@synthesize flipButton, flashButton, flashLabel;
 
 static void * XXContext = &XXContext;
 
@@ -95,31 +94,13 @@ static void * XXContext = &XXContext;
     [iphone beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];
 
-    recording = NO;
     frontCamera = NO;
     
     // Adding CAPTURE button
-    self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
-    
-    // Adding RECORD button
-    CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 70, (self.view.bounds.size.width - 60)/2, 60, 60);
-    recordButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    UIImage *captureButtonImg = [UIImage imageNamed:@"button_record.png"];
-    [recordButton setBackgroundImage:captureButtonImg forState:UIControlStateNormal];
-    [recordButton addTarget:self action:@selector(startRecording) forControlEvents:UIControlEventTouchUpInside];
-    //[self.view addSubview:recordButton];
-    
-    // Adding COUNT label to RECORD button
-    buttonFrame = CGRectMake(0, 0, 60, 60);
-    countLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
-    [countLabel setTextColor:[UIColor whiteColor]];
-    [countLabel setTextAlignment:NSTextAlignmentCenter];
-    [countLabel setFont:[UIFont fontWithName:@"Montreal-Regular" size:24.0f]];
-    [countLabel setUserInteractionEnabled:NO];
-    [recordButton addSubview:countLabel];
+    self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
     
     // Adding FLIP button
-    buttonFrame = CGRectMake((self.view.bounds.size.height - 120)/2, 0, 50, 50);
+    CGRect buttonFrame = CGRectMake((self.view.bounds.size.height - 120)/2, 0, 50, 50);
     flipButton = [[UIButton alloc] initWithFrame:buttonFrame];
     UIImage *flipImage = [UIImage imageNamed:@"button_switch_cam.png"];
     [flipButton setContentMode:UIViewContentModeCenter];
@@ -146,15 +127,11 @@ static void * XXContext = &XXContext;
     [self.flashButton addSubview:flashLabel];
     
     [self setUpCameraSession];
-    
-    [session startRunning];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     [self turnOffFlash];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
 }
 
 
@@ -194,6 +171,8 @@ static void * XXContext = &XXContext;
     if ( [session canAddOutput:movieFileOutput] )
         [session addOutput:movieFileOutput];
     movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+    
+    [session startRunning];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -225,56 +204,17 @@ static void * XXContext = &XXContext;
 
 - (void)timer:(NSTimer *)timer {
     NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
-    if (secondsSinceStart >= 3.0) {
-        self.captureButton.backgroundColor = [UIColor greenColor];
+    
+    if (secondsSinceStart >= 3.0 && !self.captureButton.passedMin) {
+        self.captureButton.passedMin = YES;
+        [self.captureButton setNeedsDisplay];
     }
-    int secondsLeft = 7 - (int)secondsSinceStart;
-    NSString *secondsPassed = [NSString stringWithFormat:@"%d", secondsLeft];
-    [countLabel setText:secondsPassed];
 }
 
 - (BOOL)hasTorch {
     return [[videoInput device] hasTorch];
 }
 
-/**
- * Actions that are triggered by buttons 
- **/
-
-- (void)startRecording {
-    /* Start Recording */
-    if (!recording) {
-        startTime = [NSDate date];
-
-        currVybe = [[VYBMyVybe alloc] init];
-        [currVybe setTimeStamp:startTime];
-        
-        [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-            if (error || !geoPoint) {
-                NSLog(@"Cannot retrive current location at this moment.");
-            } else {
-                [currVybe setGeoTagFrom:geoPoint];
-            }
-        }];
-
-        [movieConnection setVideoMirrored:frontCamera];
-        
-        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[currVybe videoFilePath]];
-        [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
-        
-        recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
-        // Change record button to act as a counter
-        UIImage *recordButtonEmptyImg = [UIImage imageNamed:@"button_record_empty.png"];
-        [recordButton setBackgroundImage:recordButtonEmptyImg forState:UIControlStateNormal];
-        
-        recording = YES; flipButton.hidden = recording; flashButton.hidden = recording;
-    }
-    
-    /* Stop Recording */
-    else {
-        [movieFileOutput stopRecording];
-    }
-}
 
 - (void)switchFlash:(id)sender {
     AVCaptureDevice *device = [videoInput device];
@@ -339,8 +279,10 @@ static void * XXContext = &XXContext;
     [self.view addSubview:self.captureButton];
     startLocation = [[touches anyObject] locationInView:self.view];
     self.captureButton.center = startLocation;
+    [self.captureButton setNeedsDisplay];
+
+    [self syncUIWithRecordingStatus:YES];
     [self startRecording];
-    //[self.captureButton setNeedsDisplay];
 }
 
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
@@ -351,18 +293,44 @@ static void * XXContext = &XXContext;
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     [movieFileOutput stopRecording];
-    
     [self.captureButton removeFromSuperview];
+    [self syncUIWithRecordingStatus:NO];
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     [self touchesEnded:touches withEvent:event];
 }
 
+- (void)startRecording {
+    startTime = [NSDate date];
+    currVybe = [[VYBMyVybe alloc] init];
+    [currVybe setTimeStamp:startTime];
+    
+    [movieConnection setVideoMirrored:frontCamera];
+    
+    NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[currVybe videoFilePath]];
+    
+    [movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
+}
+
 
 #pragma mark - AVCaptureFileOutputRecordingDelegate
 
+- (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections {
+
+    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+        if (error || !geoPoint) {
+            NSLog(@"Cannot retrive current location at this moment.");
+        } else {
+            [currVybe setGeoTagFrom:geoPoint];
+        }
+    }];
+
+    recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
+}
+
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
+    
     BOOL recordSuccess = YES;
     if ( [error code] != noErr ) {
         id value = [[error userInfo] objectForKey:AVErrorRecordingSuccessfullyFinishedKey];
@@ -373,34 +341,30 @@ static void * XXContext = &XXContext;
     if (recordSuccess) {
         NSDate *now = [NSDate date];
         NSInteger secondsSinceStart = (NSInteger)[now timeIntervalSinceDate:startTime];
-        if (secondsSinceStart < 3.0) {
-            NSError *error;
-            [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:&error];
-            if (error) {
-                NSLog(@"Cached my vybe was NOT deleted");
-            }
-        }
-        else {
+
+        if (secondsSinceStart >= 3.0) {
             // Saves a thumbmnail to local
             [VYBUtility saveThumbnailImageForVybeWithFilePath:currVybe.uniqueFileName];
             
             [[VYBMyVybeStore sharedStore] uploadVybe:currVybe];
             
-            if (self.delegate) {
-                [self.delegate capturedVybe:[currVybe parseObjectVybe]];
+            VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+            [playerVC setFreshVybe:[currVybe parseObjectVybe]];
+            [self.navigationController pushViewController:playerVC animated:NO];
+        }
+        else {
+            NSError *error;
+            [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:&error];
+            if (error) {
+                NSLog(@"Cached my vybe was NOT deleted");
             }
-            
-            id appDelegate = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
-            [appDelegate swipeToPlayerScreen];
+           
         }
     }
     
     startTime = nil;
     [recordingTimer invalidate];
     recordingTimer = nil;
-    recording = NO;
-    
-    flipButton.hidden = recording; flashButton.hidden = (recording || frontCamera);
 }
 
 
@@ -444,6 +408,11 @@ static void * XXContext = &XXContext;
 }
 
 #pragma mark - ()
+- (void)syncUIWithRecordingStatus:(BOOL)status {
+    flipButton.hidden = status; flashButton.hidden = (status || frontCamera);
+    [self.flipButton setNeedsDisplay];
+    [self.flashButton setNeedsDisplay];
+}
 
 - (BOOL)prefersStatusBarHidden {
     return YES;

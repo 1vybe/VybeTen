@@ -89,17 +89,19 @@
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
     captureVC = [VYBCaptureViewController captureViewControllerForPageIndex:0];
-    playerVC = [VYBPlayerViewController playerViewControllerForPageIndex:1];
+    //playerVC = [VYBPlayerViewController playerViewControllerForPageIndex:1];
+    
+    
+    self.navigationVC = [[VYBNavigationController alloc] initWithRootViewController:captureVC];
+    self.navigationVC.navigationBarHidden = YES;
+    
     
     /*
-    self.navigationVC = [[VYBNavigationController alloc] initWithRootViewController:playerVC];
-    self.navigationVC.navigationBarHidden = YES;
-    */
-    
     self.pageVC = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationVertical options:nil];
     self.pageVC.dataSource = self;
     self.viewControllers = [NSArray arrayWithObjects:captureVC, playerVC, nil];
     [self.pageVC setViewControllers:@[captureVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    */
     
     if (![PFUser currentUser]) {
         //log in
@@ -130,7 +132,7 @@
         //[self.navigationVC pushViewController:captureVC animated:NO];
     }
     
-    [self.window setRootViewController:self.pageVC];
+    [self.window setRootViewController:self.navigationVC];
     
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];

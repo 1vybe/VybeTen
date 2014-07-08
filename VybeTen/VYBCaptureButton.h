@@ -10,5 +10,6 @@
 
 @interface VYBCaptureButton : UIView
 @property (nonatomic) CGPoint center;
+@property (nonatomic) BOOL passedMin;
 //@property (nonatomic) CGPoint startLocation;
 @end

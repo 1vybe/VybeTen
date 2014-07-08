@@ -7,7 +7,6 @@
 //
 
 #import "VYBAppDelegate.h"
-#import "VYBDebugViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBUtility.h"
@@ -94,17 +93,19 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
     
     // Adding swipe gestures
-    UISwipeGestureRecognizer *swipeDown=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipteDown)];
-    swipeDown.direction=UISwipeGestureRecognizerDirectionDown;
-    [self.view addGestureRecognizer:swipeDown];
+    UISwipeGestureRecognizer *swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
+    swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
+    [self.view addGestureRecognizer:swipeLeft];
+    UISwipeGestureRecognizer *swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight)];
+    swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:swipeRight];
 
-
-#if DEBUG
+    /*
     // Add tap gesture
-    UITapGestureRecognizer *tapTwice = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapTwice)];
-    tapTwice.numberOfTapsRequired = 2;
-    [self.view addGestureRecognizer:tapTwice];
-#endif
+    UITapGestureRecognizer *tapOnce = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
+    tapOnce.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tapOnce];
+    */
     
     // Adding TIME label
     CGRect frame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 48, 200, 48);
@@ -125,7 +126,7 @@
     pauseImageView = [[UIImageView alloc] initWithFrame:frame];
     [pauseImageView setImage:[UIImage imageNamed:@"button_player_pause.png"]];
     [pauseImageView setContentMode:UIViewContentModeCenter];
-    //NSLog(@"pause imageview BEFORE: %@", NSStringFromCGRect(pauseImageView.frame));
+    NSLog(@"pause imageview BEFORE: %@", NSStringFromCGRect(pauseImageView.frame));
     [self.view addSubview:pauseImageView];
     pauseImageView.hidden = YES;
 }
@@ -133,23 +134,10 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    NSString *functionName = @"recentNearbyVybes";
-    
-#if DEBUG
-    if (self.debugMode == 1) {
-        functionName = @"algorithm1";
-    }
-    if (self.debugMode == 2) {
-        functionName = @"algorithm2";
-    }
-    if (self.debugMode == 3) {
-        functionName = @"algorithm3";
-    }
-#endif
-    
-    NSLog(@"function is %@", functionName);
+    NSString *getVybesCloudFunction = @"closestVybes}}}";
+
     if (freshVybe) {
-        [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
+        [PFCloud callFunctionInBackground:getVybesCloudFunction withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
             if (!error) {
                 if (vybes && vybes.count > 0) {
                     self.vybePlaylist = vybes;
@@ -166,7 +154,7 @@
             if (error || !geoPoint) {
                 NSLog(@"Cannot retrive current location at this moment.");
             } else {
-                [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
+                [PFCloud callFunctionInBackground:getVybesCloudFunction withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
                     if (!error) {
                         if (vybes && vybes.count > 0) {
                             self.vybePlaylist = vybes;
@@ -268,7 +256,7 @@
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
     if (currVybeIndex == self.vybePlaylist.count - 1) {
-        [self.navigationController popViewControllerAnimated:NO];
+        [self moveToCaptureScreen];
     } else {
         [self.currPlayer pause];
         currVybeIndex++;
@@ -285,10 +273,6 @@
 /**
  * User Interactions
  **/
-
-- (void)swipteDown {
-    [self.navigationController popViewControllerAnimated:NO];
-}
 
 - (void)swipeLeft {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -314,28 +298,32 @@
     [self beginPlayingFrom:currVybeIndex];
 }
 
-#if DEBUG
-- (void)tapTwice {
-    VYBDebugViewController *debugVC = [[VYBDebugViewController alloc] init];
-    debugVC.delegate = self;
-    [self presentViewController:debugVC animated:NO completion:nil];
+/*
+- (void)tapOnce {
+    if (self.currPlayer.rate != 0) {
+        [self.currPlayer pause];
+        pauseImageView.hidden = NO;
+    } else {
+        pauseImageView.hidden = YES;
+        [self.currPlayer play];
+    }
 }
-#endif
+*/
 
 - (void)moveToCaptureScreen {
     //TODO: Based on what the user was watching, attach some information regarding that when the user take the next vybe
     
-    //[self.currPlayer pause];
-    //[[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+    [self.currPlayer pause];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
 
     id appDelegate = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate swipeToCaptureScreen];
+    [appDelegate swipeToCaptureViewController];
 }
 
 
 #pragma mark - VYBCaptureViewControllerDelegate
 
-- (void)setFreshVybe:(PFObject *)aVybe {
+- (void)capturedVybe:(PFObject *)aVybe {
     freshVybe = aVybe;
 }
 

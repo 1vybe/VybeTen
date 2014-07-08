@@ -94,10 +94,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
     
     // Adding swipe gestures
-    UISwipeGestureRecognizer *swipeDown=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipteDown)];
-    swipeDown.direction=UISwipeGestureRecognizerDirectionDown;
-    [self.view addGestureRecognizer:swipeDown];
-
+    UISwipeGestureRecognizer *swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
+    swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
+    [self.view addGestureRecognizer:swipeLeft];
+    UISwipeGestureRecognizer *swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight)];
+    swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:swipeRight];
 
 #if DEBUG
     // Add tap gesture
@@ -125,7 +127,7 @@
     pauseImageView = [[UIImageView alloc] initWithFrame:frame];
     [pauseImageView setImage:[UIImage imageNamed:@"button_player_pause.png"]];
     [pauseImageView setContentMode:UIViewContentModeCenter];
-    //NSLog(@"pause imageview BEFORE: %@", NSStringFromCGRect(pauseImageView.frame));
+    NSLog(@"pause imageview BEFORE: %@", NSStringFromCGRect(pauseImageView.frame));
     [self.view addSubview:pauseImageView];
     pauseImageView.hidden = YES;
 }
@@ -133,6 +135,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+<<<<<<< HEAD
     NSString *functionName = @"recentNearbyVybes";
     
 #if DEBUG
@@ -150,6 +153,12 @@
     NSLog(@"function is %@", functionName);
     if (freshVybe) {
         [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
+=======
+    NSString *getVybesCloudFunction = @"closestVybes}}}";
+
+    if (freshVybe) {
+        [PFCloud callFunctionInBackground:getVybesCloudFunction withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
+>>>>>>> fd64d16728d06c12cfb92e1a2fe343c14891a393
             if (!error) {
                 if (vybes && vybes.count > 0) {
                     self.vybePlaylist = vybes;
@@ -166,7 +175,11 @@
             if (error || !geoPoint) {
                 NSLog(@"Cannot retrive current location at this moment.");
             } else {
+<<<<<<< HEAD
                 [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
+=======
+                [PFCloud callFunctionInBackground:getVybesCloudFunction withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
+>>>>>>> fd64d16728d06c12cfb92e1a2fe343c14891a393
                     if (!error) {
                         if (vybes && vybes.count > 0) {
                             self.vybePlaylist = vybes;
@@ -268,7 +281,7 @@
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
     if (currVybeIndex == self.vybePlaylist.count - 1) {
-        [self.navigationController popViewControllerAnimated:NO];
+        [self moveToCaptureScreen];
     } else {
         [self.currPlayer pause];
         currVybeIndex++;
@@ -285,10 +298,6 @@
 /**
  * User Interactions
  **/
-
-- (void)swipteDown {
-    [self.navigationController popViewControllerAnimated:NO];
-}
 
 - (void)swipeLeft {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -335,7 +344,7 @@
 
 #pragma mark - VYBCaptureViewControllerDelegate
 
-- (void)setFreshVybe:(PFObject *)aVybe {
+- (void)capturedVybe:(PFObject *)aVybe {
     freshVybe = aVybe;
 }
 

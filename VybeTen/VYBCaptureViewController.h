@@ -17,8 +17,6 @@
 }
 
 @property (nonatomic) id<VYBCaptureViewControllerDelegate> delegate;
-@property (nonatomic) UIButton *recordButton;
-@property (nonatomic) UILabel *countLabel;
 @property (nonatomic) UIButton *flipButton;
 @property (nonatomic) UIButton *flashButton;
 @property (nonatomic) UILabel *flashLabel;
