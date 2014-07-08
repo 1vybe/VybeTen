@@ -86,6 +86,12 @@ static void * XXContext = &XXContext;
     self.view = theView;
     [self.view setBackgroundColor:[UIColor clearColor]];
     
+#if DEBUG
+    UISwipeGestureRecognizer *swipeUp=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeUp)];
+    swipeUp.direction=UISwipeGestureRecognizerDirectionUp;
+    [self.view addGestureRecognizer:swipeUp];
+#endif
+    
     // Hide status bar
     [self setNeedsStatusBarAppearanceUpdate];
     
@@ -365,6 +371,11 @@ static void * XXContext = &XXContext;
     startTime = nil;
     [recordingTimer invalidate];
     recordingTimer = nil;
+    
+    // If screen is switched to Player screen automatically by timer, remove capture button.
+    if (self.captureButton.superview) {
+        [self.captureButton removeFromSuperview];
+    }
 }
 
 
@@ -408,11 +419,19 @@ static void * XXContext = &XXContext;
 }
 
 #pragma mark - ()
+
 - (void)syncUIWithRecordingStatus:(BOOL)status {
     flipButton.hidden = status; flashButton.hidden = (status || frontCamera);
     [self.flipButton setNeedsDisplay];
     [self.flashButton setNeedsDisplay];
 }
+
+#if DEBUG
+- (void)swipeUp {
+    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    [self.navigationController pushViewController:playerVC animated:NO];
+}
+#endif
 
 - (BOOL)prefersStatusBarHidden {
     return YES;
