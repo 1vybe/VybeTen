@@ -35,9 +35,6 @@
     BOOL frontCamera;
     
     VYBMyVybe *currVybe;
-    
-    CGPoint startLocation;
-    
 }
 
 @synthesize flipButton, flashButton, flashLabel;
@@ -169,7 +166,7 @@ static void * XXContext = &XXContext;
         [session addInput:deviceAudioInput];
     // Add movie file output
     /* Orientation must be set AFTER FileOutput is added to session */
-    Float64 totalSeconds = 7;
+    Float64 totalSeconds = VYBE_LENGTH_SEC;
     int32_t preferredTimeScale = 30;
     CMTime maxDuration = CMTimeMakeWithSeconds(totalSeconds, preferredTimeScale);
     movieFileOutput.maxRecordedDuration = maxDuration;
@@ -209,12 +206,20 @@ static void * XXContext = &XXContext;
 }
 
 - (void)timer:(NSTimer *)timer {
-    NSInteger secondsSinceStart = (NSInteger)[[NSDate date] timeIntervalSinceDate:startTime];
+    double secondsSinceStart = [[NSDate date] timeIntervalSinceDate:startTime];
     
-    if (secondsSinceStart >= 3.0 && !self.captureButton.passedMin) {
-        self.captureButton.passedMin = YES;
-        [self.captureButton setNeedsDisplay];
+    // less than 3.0 because of a delay in drawing. This guarantees user hold until red circle is full to pass the minimum
+    if (secondsSinceStart >= 2.89) {
+        if (!self.captureButton.passedMin) {
+            self.captureButton.passedMin = YES;
+        }
+        double maxPercent = (secondsSinceStart - 2.89) / (VYBE_LENGTH_SEC - 2.89);
+        [self.captureButton setMaxPercentage:maxPercent];
+    } else {
+        double minPercent = secondsSinceStart / 2.89;
+        [self.captureButton setMinPercentage:minPercent];
     }
+    [self.captureButton setNeedsDisplay];
 }
 
 - (BOOL)hasTorch {
@@ -283,8 +288,7 @@ static void * XXContext = &XXContext;
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view addSubview:self.captureButton];
-    startLocation = [[touches anyObject] locationInView:self.view];
-    self.captureButton.center = startLocation;
+    self.captureButton.center = [[touches anyObject] locationInView:self.view];
     [self.captureButton setNeedsDisplay];
 
     [self syncUIWithRecordingStatus:YES];
@@ -332,7 +336,7 @@ static void * XXContext = &XXContext;
         }
     }];
 
-    recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
+    recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
@@ -346,7 +350,7 @@ static void * XXContext = &XXContext;
     
     if (recordSuccess) {
         NSDate *now = [NSDate date];
-        NSInteger secondsSinceStart = (NSInteger)[now timeIntervalSinceDate:startTime];
+        double secondsSinceStart = [now timeIntervalSinceDate:startTime];
 
         if (secondsSinceStart >= 3.0) {
             // Saves a thumbmnail to local
