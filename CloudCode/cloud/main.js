@@ -6,9 +6,11 @@ Parse.Cloud.define("recentVybes", recentVybes);
 Parse.Cloud.define("recentNearbyVybes", recentNearbyVybes);
 
 // Algorithms that can be chosen from the debug menu
-Parse.Cloud.define("algorithm1", nearbyVybes);
-Parse.Cloud.define("algorithm2", recentVybes);
-Parse.Cloud.define("algorithm3", recentNearbyVybes);
+Parse.Cloud.define("algorithm1", recentVybes);
+Parse.Cloud.define("algorithm2", recentNearbyVybes);
+Parse.Cloud.define("algorithm3", recentNearbyVybesExcludingYou);
+
+Parse.Cloud.define("default_algorithm", recentNearbyVybesExcludingYou);
 
 
 var default_limit = 5;
@@ -53,6 +55,27 @@ function recentNearbyVybes(request, response) {
   query.near("location", userGeoPoint);
   query.addDescending("timestamp");
   query.limit(default_limit);
+  query.find({
+    success: function(vybesObjects) {
+      // Sort result in chronological order
+      response.success(vybesObjects.reverse());
+    },
+    error: function() {
+      response.error("cannot find vybes around you");
+    }
+  });
+}
+
+// Get nearby vybes using the Parse.Query.near method then sort by most recent
+// Exclugin you
+function recentNearbyVybesExcludingYou(request, response) {
+  var userGeoPoint = request.params.location;
+  var query = new Parse.Query("Vybe");
+  var currentUser = Parse.User.current();
+  query.near("location", userGeoPoint);
+  query.limit(default_limit);
+  query.addDescending("timestamp");
+  query.notEqualTo("user", currentUser);
   query.find({
     success: function(vybesObjects) {
       // Sort result in chronological order
