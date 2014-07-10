@@ -33,6 +33,7 @@
     NSTimer *recordingTimer;
     
     BOOL frontCamera;
+    BOOL flashOn;
     
     VYBMyVybe *currVybe;
 }
@@ -98,6 +99,7 @@ static void * XXContext = &XXContext;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];
 
     frontCamera = NO;
+    flashOn = NO;
     
     // Adding CAPTURE button
     self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
@@ -228,6 +230,8 @@ static void * XXContext = &XXContext;
 
 
 - (void)switchFlash:(id)sender {
+    flashOn = !flashOn;
+    
     AVCaptureDevice *device = [videoInput device];
     [session beginConfiguration];
     [device lockForConfiguration:nil];

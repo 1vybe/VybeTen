@@ -25,7 +25,7 @@
         
         //minRadius = 40.0;
         maxRadius = 45.0;
-        lineWidth = 30.0;
+        lineWidth = 25.0;
     }
     return self;
 }

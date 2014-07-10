@@ -95,14 +95,6 @@
     self.navigationVC = [[VYBNavigationController alloc] initWithRootViewController:captureVC];
     self.navigationVC.navigationBarHidden = YES;
     
-    
-    /*
-    self.pageVC = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationVertical options:nil];
-    self.pageVC.dataSource = self;
-    self.viewControllers = [NSArray arrayWithObjects:captureVC, playerVC, nil];
-    [self.pageVC setViewControllers:@[captureVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    */
-    
     if (![PFUser currentUser]) {
         //log in
         [PFUser logInWithUsernameInBackground:self.uniqueID password:self.uniqueID block:^(PFUser *user, NSError *error) {

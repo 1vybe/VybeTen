@@ -21,7 +21,7 @@
 #define DOWNLOADING     2
 #define DOWNLOADED      3
 
-#define HOCKEY_APP_ID   @"f6bbe32e11800913add864bbd07ebcee"
+#define HOCKEY_APP_ID   @"66e11a95d2af956652e5f4efa38af51e"
 
 #define FONT_SIZE_DEFAULT       18
 #define FONT_SIZE_BIG           20
