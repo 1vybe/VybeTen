@@ -11,6 +11,7 @@ Parse.Cloud.define("algorithm2", recentNearbyVybes);
 Parse.Cloud.define("algorithm3", recentNearbyVybesExcludingYou);
 
 Parse.Cloud.define("default_algorithm", recentNearbyVybesExcludingYou);
+require('cloud/yo');
 
 
 var default_limit = 5;
