@@ -17,7 +17,6 @@
 
 
 #import <AVFoundation/AVFoundation.h>
-#import <AdSupport/ASIdentifierManager.h>
 #import <HockeySDK/HockeySDK.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
@@ -73,7 +72,7 @@
      UIRemoteNotificationTypeAlert|
      UIRemoteNotificationTypeSound];
     
-    self.uniqueID = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+    self.uniqueID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     
     // Clearing Push-noti Badge number
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];

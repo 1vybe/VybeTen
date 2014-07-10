@@ -105,18 +105,18 @@ static void * XXContext = &XXContext;
     self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
     
     // Adding FLIP button
-    CGRect buttonFrame = CGRectMake((self.view.bounds.size.height - 120)/2, 0, 50, 50);
+    CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 100, 0, 50, 50);
     flipButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    UIImage *flipImage = [UIImage imageNamed:@"button_switch_cam.png"];
+    UIImage *flipImage = [UIImage imageNamed:@"button_camera_front.png"];
     [flipButton setContentMode:UIViewContentModeCenter];
     [flipButton setImage:flipImage forState:UIControlStateNormal];
     [flipButton addTarget:self action:@selector(flipCamera:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:flipButton];
     
     // Adding FLASH button
-    buttonFrame = CGRectMake((self.view.bounds.size.height-120)/2 + 50, 0, 70, 50);
+    buttonFrame = CGRectMake(self.view.bounds.size.height - 100, self.view.bounds.size.width - 50, 50, 50);
     flashButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    UIImage *flashImage = [UIImage imageNamed:@"button_flash.png"];
+    UIImage *flashImage = [UIImage imageNamed:@"button_flash_on.png"];
     [flashButton setContentMode:UIViewContentModeLeft];
     [flashButton setImage:flashImage forState:UIControlStateNormal];
     [flashButton addTarget:self action:@selector(switchFlash:) forControlEvents:UIControlEventTouchUpInside];
@@ -129,7 +129,7 @@ static void * XXContext = &XXContext;
     [flashLabel setTextAlignment:NSTextAlignmentLeft];
     [flashLabel setTextColor:[UIColor whiteColor]];
     [flashLabel setText:@"OFF"];
-    [self.flashButton addSubview:flashLabel];
+    //[self.flashButton addSubview:flashLabel];
     
     [self setUpCameraSession];
 }

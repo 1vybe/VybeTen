@@ -7,7 +7,6 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
-#import <AdSupport/ASIdentifierManager.h>
 #import "VYBMyVybeStore.h"
 #import "VYBMyVybe.h"
 #import "VYBConstants.h"
