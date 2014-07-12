@@ -23,6 +23,7 @@
 
 #define HOCKEY_APP_ID   @"66e11a95d2af956652e5f4efa38af51e"
 
+/*
 #define FONT_SIZE_DEFAULT       18
 #define FONT_SIZE_BIG           20
 #define FONT_SIZE_SMALL         16
@@ -30,7 +31,7 @@
 #define FONT_MENU               DEFAULT_FONT(FONT_SIZE_BIG)
 #define FONT_TITLE              DEFAULT_FONT(FONT_SIZE_DEFAULT)
 #define FONT_TITLE_SMALL        DEFAULT_FONT(FONT_SIZE_SMALL)
-
+*/
 
 typedef enum {
     VYBTribesPageIndex = 0,

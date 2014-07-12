@@ -13,6 +13,7 @@
 
 + (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate;
++ (NSString *)reverseTime:(NSDate *)aDate;
 + (void)reverseGeoCode:(PFGeoPoint *)aLocation withCompletion:(void (^)(NSArray *placemarks, NSError *error))completionBlock;
 + (NSString *)convertPlacemarkToLocation:(CLPlacemark *)placemark;
 

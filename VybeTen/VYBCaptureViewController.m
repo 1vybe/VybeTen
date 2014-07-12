@@ -38,11 +38,14 @@
     VYBMyVybe *currVybe;
 }
 
-@synthesize flipButton, flashButton, flashLabel;
+@synthesize flipButton, flashButton;
 
 static void * XXContext = &XXContext;
 
 - (void)dealloc {
+    session = nil;
+    movieFileOutput = nil;
+    
     NSLog(@"CaptureVC deallocated");
 }
 
@@ -104,40 +107,43 @@ static void * XXContext = &XXContext;
     // Adding CAPTURE button
     self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
     
+    CGRect buttonFrame = CGRectMake(0, self.view.bounds.size.width - 70, 70, 70);
+    self.viewButton = [[UIButton alloc] initWithFrame:buttonFrame];
+    [self.viewButton setImage:[UIImage imageNamed:@"button_local_view.png"] forState:UIControlStateNormal];
+    [self.viewButton addTarget:self action:@selector(viewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.viewButton setContentMode:UIViewContentModeLeft];
+    [self.view addSubview:self.viewButton];
+
+    
     // Adding FLIP button
-    CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 100, 0, 50, 50);
+    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
     flipButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    UIImage *flipImage = [UIImage imageNamed:@"button_camera_front.png"];
+    [flipButton setImage:[UIImage imageNamed:@"button_camera_front.png"] forState:UIControlStateNormal];
+    [flipButton setImage:[UIImage imageNamed:@"button_camera_back.png"] forState:UIControlStateSelected];
     [flipButton setContentMode:UIViewContentModeCenter];
-    [flipButton setImage:flipImage forState:UIControlStateNormal];
     [flipButton addTarget:self action:@selector(flipCamera:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:flipButton];
+    flipButton.selected = frontCamera;
     
     // Adding FLASH button
-    buttonFrame = CGRectMake(self.view.bounds.size.height - 100, self.view.bounds.size.width - 50, 50, 50);
+    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
     flashButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    UIImage *flashImage = [UIImage imageNamed:@"button_flash_on.png"];
+    [flashButton setImage:[UIImage imageNamed:@"button_flash_on.png"] forState:UIControlStateNormal];
+    [flashButton setImage:[UIImage imageNamed:@"button_flash_off.png"] forState:UIControlStateSelected];
     [flashButton setContentMode:UIViewContentModeLeft];
-    [flashButton setImage:flashImage forState:UIControlStateNormal];
     [flashButton addTarget:self action:@selector(switchFlash:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:flashButton];
-    
-    // Adding FLASH label
-    buttonFrame = CGRectMake(40, 0, 30, 50);
-    flashLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
-    [flashLabel setFont:[UIFont fontWithName:@"Montreal-Regular" size:14]];
-    [flashLabel setTextAlignment:NSTextAlignmentLeft];
-    [flashLabel setTextColor:[UIColor whiteColor]];
-    [flashLabel setText:@"OFF"];
-    //[self.flashButton addSubview:flashLabel];
-    
-    [self setUpCameraSession];
+    flashButton.selected = flashOn;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [session stopRunning];
+    [session removeInput:videoInput];
+    [session removeOutput:movieFileOutput];
     [self turnOffFlash];
 }
+
 
 
 /**
@@ -148,18 +154,25 @@ static void * XXContext = &XXContext;
     // Video input from a camera is playing in background
     // Setup for video capturing session
     [session setSessionPreset:AVCaptureSessionPresetMedium];
+    [session startRunning];
+
     // Add video input from camera
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     videoInput = [[AVCaptureDeviceInput alloc] initWithDevice:device error:nil];
-    if ( [session canAddInput:videoInput] )
+    if ( [session canAddInput:videoInput] ) {
         [session addInput:videoInput];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"Cannot load camera at the moment" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     // Setup preview layer
     cameraInputLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
     [cameraInputLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     // Display preview layer
     CALayer *rootLayer = [self.view layer];
     [rootLayer setMasksToBounds:YES];
-    [cameraInputLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.height, rootLayer.bounds.size.width)]; // width and height are switched in landscape mode
+    [cameraInputLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.width, rootLayer.bounds.size.height   )];
     [rootLayer insertSublayer:cameraInputLayer atIndex:0];
     // Add audio input from mic
     AVCaptureDevice *inputDeviceAudio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
@@ -173,15 +186,20 @@ static void * XXContext = &XXContext;
     CMTime maxDuration = CMTimeMakeWithSeconds(totalSeconds, preferredTimeScale);
     movieFileOutput.maxRecordedDuration = maxDuration;
     movieFileOutput.minFreeDiskSpaceLimit = 1024 * 512;
-    if ( [session canAddOutput:movieFileOutput] )
+    if ( [session canAddOutput:movieFileOutput] ) {
         [session addOutput:movieFileOutput];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"Cannot record at the moment" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
     
-    [session startRunning];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [self setUpCameraSession];
     [self adjustToOrientation:[[UIDevice currentDevice] orientation]];
 }
 
@@ -239,12 +257,14 @@ static void * XXContext = &XXContext;
     // Switch flash on/off
     if ([device torchMode] == AVCaptureTorchModeOn) {
         [device setTorchMode:AVCaptureTorchModeOff];
-        [self.flashLabel setText:@"OFF"];
+        //flashButton.selected = YES;
     }
     else {
         [device setTorchMode:AVCaptureTorchModeOn];
-        [self.flashLabel setText:@"ON"];
+        //flashButton.selected = NO;
     }
+    
+    flashButton.selected = flashOn;
     
     [device unlockForConfiguration];
     [session commitConfiguration];
@@ -256,10 +276,12 @@ static void * XXContext = &XXContext;
     [device lockForConfiguration:nil];
     if ( [device isTorchModeSupported:AVCaptureTorchModeOff]) {
         [device setTorchMode:AVCaptureTorchModeOff];
-        [self.flashLabel setText:@"OFF"];
+        flashOn = NO;
+        flashButton.selected = flashOn;
     }
     [device unlockForConfiguration];
     [session commitConfiguration];
+    
 }
 
 - (void)flipCamera:(id)sender {
@@ -276,6 +298,7 @@ static void * XXContext = &XXContext;
     
     [session addInput:videoInput];
     frontCamera = !frontCamera;
+    flipButton.selected = frontCamera;
     
     // Setting orientation of AVCaptureMovieFileOutput AFTER a video input is added back to session
     movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
@@ -440,6 +463,11 @@ static void * XXContext = &XXContext;
     [self.navigationController pushViewController:playerVC animated:NO];
 }
 #endif
+
+- (void)viewButtonPressed:(id)sender {
+    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    [self.navigationController pushViewController:playerVC animated:NO];
+}
 
 - (BOOL)prefersStatusBarHidden {
     return YES;

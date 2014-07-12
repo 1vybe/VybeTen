@@ -86,4 +86,33 @@
     return [dFormatterLocalized stringFromDate:aDate];
 }
 
++ (NSString *)reverseTime:(NSDate *)aDate {
+    double timePassed = [[NSDate date] timeIntervalSinceDate:aDate];
+    NSString *theTime;
+    if (timePassed < 60) {
+        int i = timePassed / 1;
+        theTime = [NSString stringWithFormat:@"%d seconds ago", i];
+    } else if (timePassed < 60 * 60) {
+        int i = timePassed / 60;
+        theTime = [NSString stringWithFormat:@"%d minutes ago", i];
+    } else if (timePassed < 360 * 24.0) {
+        int i = timePassed / 360;
+        theTime = [NSString stringWithFormat:@"%d hours ago", i];
+    } else if (timePassed < 360 * 24 * 7) {
+        int i = timePassed/ 360 / 24;
+        theTime = [NSString stringWithFormat:@"%d days ago", i];
+    } else if (timePassed < 360 * 24 * 7 * 4) {
+        int i = timePassed / 360 / 24 / 7;
+        theTime = [NSString stringWithFormat:@"%d weeks ago", i];
+    } else if (timePassed < 360 * 24 * 7 * 4 * 12) {
+        int i = timePassed / 360 / 24 / 7 / 4;
+        theTime = [NSString stringWithFormat:@"%d months ago", i];
+    } else {
+        int i = timePassed / 360 / 24 / 7 / 4 / 12;
+        theTime = [NSString stringWithFormat:@"%d years ago", i];
+    }
+    
+    return theTime;
+}
+
 @end

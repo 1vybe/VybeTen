@@ -64,7 +64,6 @@
 
 - (void)setGeoTagFrom:(PFGeoPoint *)aGeoPoint {
     geoTag = [[CLLocation alloc] initWithLatitude:aGeoPoint.latitude longitude:aGeoPoint.longitude];
-
 }
 
 

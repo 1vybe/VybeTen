@@ -13,6 +13,7 @@
 #import "VYBUtility.h"
 #import "VYBCache.h"
 #import "VYBPlayerView.h"
+#import "VYBTimerView.h"
 #import "VYBLabel.h"
 #import "VYBConstants.h"
 #import "MBProgressHUD.h"
@@ -32,6 +33,8 @@
     
     UILabel *locationLabel;
     UILabel *timeLabel;
+    
+    VYBTimerView *timerView;
     
     PFObject *freshVybe;
 }
@@ -97,6 +100,15 @@
     UISwipeGestureRecognizer *swipeDown=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeDown)];
     swipeDown.direction=UISwipeGestureRecognizerDirectionDown;
     [self.view addGestureRecognizer:swipeDown];
+    
+    UISwipeGestureRecognizer *swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
+    swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
+    [self.view addGestureRecognizer:swipeLeft];
+    
+    // Adding swipe gestures
+    UISwipeGestureRecognizer *swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight)];
+    swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:swipeRight];
 
 
 #if DEBUG
@@ -110,17 +122,25 @@
     CGRect frame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 48, 200, 48);
     timeLabel = [[VYBLabel alloc] initWithFrame:frame];
     [timeLabel setTextColor:[UIColor whiteColor]];
-    [timeLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18.0]];
+    [timeLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:18.0]];
     [timeLabel setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:timeLabel];
     // Adding LOCATION label
     frame = CGRectMake(self.view.bounds.size.height/2 - 150, 0, 300, 50);
     locationLabel = [[VYBLabel alloc] initWithFrame:frame];
     [locationLabel setTextColor:[UIColor whiteColor]];
-    [locationLabel setFont:[UIFont fontWithName:@"Montreal-Xlight" size:18.0]];
+    [locationLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book" size:18.0]];
     [locationLabel setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:locationLabel];
-
+    
+    frame = CGRectMake(0, self.view.bounds.size.width - 70, 70, 70);
+    captureButton = [[UIButton alloc] initWithFrame:frame];
+    [captureButton setImage:[UIImage imageNamed:@"button_capture.png"] forState:UIControlStateNormal];
+    [pauseImageView setContentMode:UIViewContentModeCenter];
+    [captureButton addTarget:self action:@selector(captureButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:captureButton];
+    
+    
     frame = CGRectMake(self.view.bounds.size.height/2 - 20, self.view.bounds.size.width/2 - 20, 40, 40);
     pauseImageView = [[UIImageView alloc] initWithFrame:frame];
     [pauseImageView setImage:[UIImage imageNamed:@"button_player_pause.png"]];
@@ -268,7 +288,7 @@
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
     if (currVybeIndex == self.vybePlaylist.count - 1) {
-        [self.navigationController popViewControllerAnimated:NO];
+        return;
     } else {
         [self.currPlayer pause];
         currVybeIndex++;
@@ -277,14 +297,22 @@
 }
 
 - (void)syncUI:(PFObject *)aVybe {
-    locationLabel.text = [aVybe objectForKey:kVYBVybeLocationName];
-    timeLabel.text = [VYBUtility localizedDateStringFrom:[aVybe objectForKey:kVYBVybeTimestampKey]];
+    if ([aVybe objectForKey:kVYBVybeLocationName]) {
+        locationLabel.text = [aVybe objectForKey:kVYBVybeLocationName];
+    } else {
+        locationLabel.text = @"";
+    }
+    timeLabel.text = [VYBUtility reverseTime:[aVybe objectForKey:kVYBVybeTimestampKey]];
 }
 
 
 /**
  * User Interactions
  **/
+
+- (void)captureButtonPressed:(id)sender {
+    [self.navigationController popViewControllerAnimated:NO];
+}
 
 - (void)swipeDown {
     [self.navigationController popViewControllerAnimated:NO];
