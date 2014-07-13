@@ -11,7 +11,7 @@
 #define SECRET_KEY      @"H7eB7rNQXqxs3Smy6zOErl6lyGU/WIhoQd4taL7I"
 #define BUCKET_NAME     @"amino"
 
-#define VYBE_LENGTH_SEC 10
+#define VYBE_LENGTH_SEC 15
 
 #define UPFRESH         1
 #define UPLOADING       2
