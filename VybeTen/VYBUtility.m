@@ -88,29 +88,35 @@
 
 + (NSString *)reverseTime:(NSDate *)aDate {
     double timePassed = [[NSDate date] timeIntervalSinceDate:aDate];
-    NSString *theTime;
+    NSString *unit;
+    int i;
     if (timePassed < 60) {
-        int i = timePassed / 1;
-        theTime = [NSString stringWithFormat:@"%d seconds ago", i];
+        i = timePassed / 1;
+        unit = @"second";
     } else if (timePassed < 60 * 60) {
-        int i = timePassed / 60;
-        theTime = [NSString stringWithFormat:@"%d minutes ago", i];
-    } else if (timePassed < 360 * 24.0) {
-        int i = timePassed / 360;
-        theTime = [NSString stringWithFormat:@"%d hours ago", i];
-    } else if (timePassed < 360 * 24 * 7) {
-        int i = timePassed/ 360 / 24;
-        theTime = [NSString stringWithFormat:@"%d days ago", i];
-    } else if (timePassed < 360 * 24 * 7 * 4) {
-        int i = timePassed / 360 / 24 / 7;
-        theTime = [NSString stringWithFormat:@"%d weeks ago", i];
-    } else if (timePassed < 360 * 24 * 7 * 4 * 12) {
-        int i = timePassed / 360 / 24 / 7 / 4;
-        theTime = [NSString stringWithFormat:@"%d months ago", i];
+        i = timePassed / 60;
+        unit = @"minute";
+    } else if (timePassed < 3600 * 24.0) {
+        i = timePassed / 3600;
+        unit = @"hour";
+    } else if (timePassed < 3600 * 24 * 7) {
+        i = timePassed/ 3600 / 24;
+        unit = @"day";
+    } else if (timePassed < 3600 * 24 * 7 * 4) {
+        i = timePassed / 3600 / 24 / 7;
+        unit = @"week";
+    } else if (timePassed < 3600 * 24 * 7 * 4 * 12) {
+        i = timePassed / 3600 / 24 / 7 / 4;
+        unit = @"month";
     } else {
-        int i = timePassed / 360 / 24 / 7 / 4 / 12;
-        theTime = [NSString stringWithFormat:@"%d years ago", i];
+        i = timePassed / 3600 / 24 / 7 / 4 / 12;
+        unit = @"year";
     }
+    
+    if (i > 1) {
+        unit = [unit stringByAppendingString:@"s"];
+    }
+    NSString *theTime = [NSString stringWithFormat:@"%d %@ ago", i, unit];
     
     return theTime;
 }

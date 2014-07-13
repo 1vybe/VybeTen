@@ -13,6 +13,7 @@
 #import "VYBAppDelegate.h"
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
+#import "VYBReplayViewController.h"
 #import "VYBLabel.h"
 #import "VYBMyVybeStore.h"
 #import "VYBConstants.h"
@@ -100,9 +101,6 @@ static void * XXContext = &XXContext;
     UIDevice *iphone = [UIDevice currentDevice];
     [iphone beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];
-
-    frontCamera = NO;
-    flashOn = NO;
     
     // Adding CAPTURE button
     self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
@@ -172,7 +170,7 @@ static void * XXContext = &XXContext;
     // Display preview layer
     CALayer *rootLayer = [self.view layer];
     [rootLayer setMasksToBounds:YES];
-    [cameraInputLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.width, rootLayer.bounds.size.height   )];
+    [cameraInputLayer setFrame:CGRectMake(0, 0, rootLayer.bounds.size.width, rootLayer.bounds.size.height)];
     [rootLayer insertSublayer:cameraInputLayer atIndex:0];
     // Add audio input from mic
     AVCaptureDevice *inputDeviceAudio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
@@ -194,12 +192,17 @@ static void * XXContext = &XXContext;
         return;
     }
     movieConnection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self setUpCameraSession];
+    
+    frontCamera = NO;
+    flashOn = NO;
+    flipButton.selected = frontCamera;
+    flashButton.selected = flashOn;
+    
     [self adjustToOrientation:[[UIDevice currentDevice] orientation]];
 }
 
@@ -288,6 +291,8 @@ static void * XXContext = &XXContext;
     [self turnOffFlash];
     [session stopRunning];
     [session removeInput:videoInput];
+    [session startRunning];
+
     if (frontCamera) {
         videoInput = [self backCameraInput];
         flashButton.hidden = NO;
@@ -296,7 +301,13 @@ static void * XXContext = &XXContext;
         flashButton.hidden = YES;
     }
     
-    [session addInput:videoInput];
+    if ([session canAddInput:videoInput]) {
+        [session addInput:videoInput];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"Cannot load front camera at the moment" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+    
     frontCamera = !frontCamera;
     flipButton.selected = frontCamera;
     
@@ -308,7 +319,6 @@ static void * XXContext = &XXContext;
         [movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
     }
     
-    [session startRunning];
 }
 
 #pragma mark - UIResponder
@@ -380,14 +390,9 @@ static void * XXContext = &XXContext;
         double secondsSinceStart = [now timeIntervalSinceDate:startTime];
 
         if (secondsSinceStart >= 3.0) {
-            // Saves a thumbmnail to local
-            [VYBUtility saveThumbnailImageForVybeWithFilePath:currVybe.uniqueFileName];
-            
-            [[VYBMyVybeStore sharedStore] uploadVybe:currVybe];
-            
-            VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-            [playerVC setFreshVybe:[currVybe parseObjectVybe]];
-            [self.navigationController pushViewController:playerVC animated:NO];
+            VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
+            [replayVC setCurrVybe:currVybe];
+            [self.navigationController pushViewController:replayVC animated:NO];
         }
         else {
             NSError *error;
@@ -395,7 +400,6 @@ static void * XXContext = &XXContext;
             if (error) {
                 NSLog(@"Cached my vybe was NOT deleted");
             }
-           
         }
     }
     
