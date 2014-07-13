@@ -4,20 +4,19 @@ require('cloud/yo');
 require('cloud/compatibility');
 
 
-// recentVybesExcludingYouInReverse
+// recentVybesInReverse
 var algorithm1 = utils.curry(
   get_vybes, {
     recent: true,
-    hide_user: true,
     reversed: true,
   });
 
-// recentNearbyVybesInReverse
+// recentVybesExcludingYouInReverse
 var algorithm2 = utils.curry(
   get_vybes, {
     recent: true,
-    nearby: true,
     reversed: true,
+    hide_user: true,
   });
 
 // recentNearbyVybesExcludingYou
