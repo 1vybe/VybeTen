@@ -10,6 +10,10 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
 #import <CoreLocation/CoreLocation.h>
+#import <GAI.h>
+#import <GAITracker.h>
+#import <GAIFields.h>
+#import <GAIDictionaryBuilder.h>
 #import "VYBAppDelegate.h"
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
@@ -185,6 +189,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    
     dispatch_async([self sessionQueue], ^{
         [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
         
@@ -200,24 +205,49 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		}]];
         
 		[[self session] startRunning];
+        NSLog(@"view will appear: session running");
     });
     
     flashButton.selected = flashOn;
     flipButton.selected = isFrontCamera;
+    
+    self.screenName = @"Capture Screen";
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
+    [[GAI sharedInstance].defaultTracker set:kGAIScreenName
+                                       value:@"Capture Screen"];
+    // Send the screen view.
+    [[GAI sharedInstance].defaultTracker
+     send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
- 	dispatch_async([self sessionQueue], ^{
+    [super viewWillDisappear:animated];
+    dispatch_async([self sessionQueue], ^{
 		[[self session] stopRunning];
-
+        
 		[[NSNotificationCenter defaultCenter] removeObserver:[self runtimeErrorHandlingObserver]];
 		
 		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
 		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
+        NSLog(@"view will disappear: session stopped");
 	});
-
 }
 
+- (void)stopCurrentSession {
+    dispatch_async([self sessionQueue], ^{
+		[[self session] stopRunning];
+        
+		[[NSNotificationCenter defaultCenter] removeObserver:[self runtimeErrorHandlingObserver]];
+		
+		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
+		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
+        NSLog(@"entered background: session stopped");
+	});
+}
 
 + (AVCaptureDevice *)deviceWithMediaType:(NSString *)mediaType preferringPosition:(AVCaptureDevicePosition)position
 {
@@ -468,12 +498,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 			}
 		});
 	}
-	else if (context == SessionRunningAndDeviceAuthorizedContext)
-	{
+	else if (context == SessionRunningAndDeviceAuthorizedContext) {
         
     }
-	else
-	{
+	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}
 }

@@ -11,13 +11,14 @@
 #define PARSE_CLIENT_KEY            @"WLqeqlf4qVVk5jF6yHSWGxw3UzUQwUtmAk9vCPfB"
 */
 
-/* Debug */
+/* Dev */
 #define PARSE_APPLICATION_ID        @"gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC"
 #define PARSE_CLIENT_KEY            @"6y6eMRZq5GAa5ihS2GSjFB0xwmnuatvuJBhYQ1Af"
 
 
 #import <AVFoundation/AVFoundation.h>
 #import <HockeySDK/HockeySDK.h>
+#import <GAI.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
 #import "VYBPlayerViewController.h"
@@ -59,10 +60,8 @@
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
     
     // Parse Initialization
-
     [Parse setApplicationId:PARSE_APPLICATION_ID
                   clientKey:PARSE_CLIENT_KEY];
-    NSLog(@"parse app id: %@", PARSE_APPLICATION_ID);
     
     // Parse Analaytics
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
@@ -71,6 +70,19 @@
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|
      UIRemoteNotificationTypeAlert|
      UIRemoteNotificationTypeSound];
+    
+    // Optional: automatically send uncaught exceptions to Google Analytics.
+    [GAI sharedInstance].trackUncaughtExceptions = YES;
+    
+    // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
+    [GAI sharedInstance].dispatchInterval = 20;
+    
+    // Optional: set Logger to VERBOSE for debug information.
+    [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelNone];
+    
+    // Initialize tracker. Replace with your tracking ID.
+    [[GAI sharedInstance] trackerWithTrackingId:GA_TRACKING_ID];
+
     
     self.uniqueID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     
@@ -140,10 +152,7 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    
+{    
     BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
     if (success)
         NSLog(@"Vybe put to sleep. My vybes are saved. :)");

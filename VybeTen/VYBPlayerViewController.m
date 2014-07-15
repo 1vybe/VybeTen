@@ -17,9 +17,10 @@
 #import "VYBLabel.h"
 #import "VYBConstants.h"
 #import "MBProgressHUD.h"
-#import "GAI.h"
-#import "GAIFields.h"
-#import "GAIDictionaryBuilder.h"
+#import <GAI.h>
+#import <GAITracker.h>
+#import <GAIFields.h>
+#import <GAIDictionaryBuilder.h>
 
 @implementation VYBPlayerViewController {
     NSInteger pageIndex;
@@ -145,8 +146,19 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.screenName = @"Player Screen";
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    // Google Anaylytics shit
+    [[GAI sharedInstance].defaultTracker set:kGAIScreenName
+                                       value:@"Player Screen"];
+        [[GAI sharedInstance].defaultTracker
+     send:[[GAIDictionaryBuilder createAppView] build]];
     
     NSString *functionName = @"default_algorithm";
     

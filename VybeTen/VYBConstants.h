@@ -7,10 +7,6 @@
 //
 #define IS_IPHONE_5     ( [[UIScreen mainScreen] bounds].size.height == 568 )
 
-#define ACCESS_KEY_ID   @"AKIAJVN4HPJ6VBOKP7XA"
-#define SECRET_KEY      @"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"
-#define BUCKET_NAME     @"amino"
-
 #define VYBE_LENGTH_SEC 15
 
 #define UPFRESH         1
@@ -22,6 +18,8 @@
 #define DOWNLOADED      3
 
 #define HOCKEY_APP_ID   @"66e11a95d2af956652e5f4efa38af51e"
+
+#define GA_TRACKING_ID  @"UA-49584125-3"
 
 /*
 #define FONT_SIZE_DEFAULT       18

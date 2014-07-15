@@ -9,10 +9,12 @@
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
 #import "VYBCaptureButton.h"
+#import "GAITrackedViewController.h"
+
 
 @class VYBTribe;
 @protocol VYBCaptureViewControllerDelegate;
-@interface VYBCaptureViewController : UIViewController <AVCaptureFileOutputRecordingDelegate> {
+@interface VYBCaptureViewController : GAITrackedViewController <AVCaptureFileOutputRecordingDelegate> {
     NSString *adId;
 }
 
@@ -22,6 +24,8 @@
 @property (nonatomic) UIButton *flashButton;
 @property (nonatomic) UIButton *viewButton;
 @property (nonatomic, strong) VYBCaptureButton *captureButton;
+
+- (void)stopCurrentSession;
 
 @end
 
