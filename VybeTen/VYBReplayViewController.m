@@ -76,8 +76,10 @@
 }
 
 - (void)confirmButtonPressed:(id)sender {
-    // Saves a thumbmnail to local
-    [VYBUtility saveThumbnailImageForVybeWithFilePath:self.currVybe.uniqueFileName];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // Saves a thumbmnail to local
+        [VYBUtility saveThumbnailImageForVybeWithFilePath:self.currVybe.uniqueFileName];
+    });
     
     [[VYBMyVybeStore sharedStore] uploadVybe:self.currVybe];
     
@@ -85,15 +87,22 @@
 }
 
 - (void)cancelButtonPressed:(id)sender {
-    NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
-    
-    NSError *error;
-    [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&error];
-    if (error) {
-        NSLog(@"Cached my vybe was NOT deleted");
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
+        
+        NSError *error;
+        [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&error];
+        if (error) {
+            NSLog(@"Cached my vybe was NOT deleted");
+        }
+    });
     
     [self.navigationController popViewControllerAnimated:NO];
 }
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
 
 @end

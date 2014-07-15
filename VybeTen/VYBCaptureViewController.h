@@ -17,17 +17,15 @@
 }
 
 @property (nonatomic) id<VYBCaptureViewControllerDelegate> delegate;
+
 @property (nonatomic) UIButton *flipButton;
 @property (nonatomic) UIButton *flashButton;
 @property (nonatomic) UIButton *viewButton;
 @property (nonatomic, strong) VYBCaptureButton *captureButton;
 
-+ (VYBCaptureViewController *)captureViewControllerForPageIndex:(NSInteger)idx;
-- (NSInteger)pageIndex;
-
 @end
-@protocol VYBCaptureViewControllerDelegate <NSObject>
 
+@protocol VYBCaptureViewControllerDelegate <NSObject>
 @optional
 - (void)capturedVybe:(PFObject *)aVybe;
 @end

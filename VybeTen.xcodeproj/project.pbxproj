@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		02012D9D196A4F6500039B74 /* VYBDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02012D9B196A4F6500039B74 /* VYBDebugViewController.m */; };
 		02012D9E196A4F6500039B74 /* VYBDebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02012D9C196A4F6500039B74 /* VYBDebugViewController.xib */; };
+		020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 020FB84819744EBA005C9BA9 /* VYBCameraView.m */; };
 		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
 		023E538D191F142000C3CF78 /* VYBCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 023E538C191F142000C3CF78 /* VYBCache.m */; };
 		024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 024520C7192FDB5F007B56A1 /* VYBMyVybe.m */; };
@@ -53,6 +54,8 @@
 		02012D9A196A4F6500039B74 /* VYBDebugViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBDebugViewController.h; sourceTree = "<group>"; };
 		02012D9B196A4F6500039B74 /* VYBDebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBDebugViewController.m; sourceTree = "<group>"; };
 		02012D9C196A4F6500039B74 /* VYBDebugViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBDebugViewController.xib; sourceTree = "<group>"; };
+		020FB84719744EBA005C9BA9 /* VYBCameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCameraView.h; sourceTree = "<group>"; };
+		020FB84819744EBA005C9BA9 /* VYBCameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCameraView.m; sourceTree = "<group>"; };
 		0226CBAB194A0339005270D3 /* VYBNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBNavigationController.h; sourceTree = "<group>"; };
 		0226CBAC194A0339005270D3 /* VYBNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBNavigationController.m; sourceTree = "<group>"; };
 		023E538B191F142000C3CF78 /* VYBCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCache.h; sourceTree = "<group>"; };
@@ -156,6 +159,8 @@
 				0293877C1969C1D200F41A12 /* VYBCaptureButton.m */,
 				02CEE2AB1970A46A00AC361F /* VYBTimerView.h */,
 				02CEE2AC1970A46A00AC361F /* VYBTimerView.m */,
+				020FB84719744EBA005C9BA9 /* VYBCameraView.h */,
+				020FB84819744EBA005C9BA9 /* VYBCameraView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -448,6 +453,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */,
+				020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */,
 				025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */,
 				02CEE2AD1970A46A00AC361F /* VYBTimerView.m in Sources */,
 				0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */,

@@ -87,9 +87,7 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    captureVC = [VYBCaptureViewController captureViewControllerForPageIndex:0];
-    //playerVC = [VYBPlayerViewController playerViewControllerForPageIndex:1];
-    
+    captureVC = [[VYBCaptureViewController alloc] init];    
     
     self.navigationVC = [[VYBNavigationController alloc] initWithRootViewController:captureVC];
     self.navigationVC.navigationBarHidden = YES;

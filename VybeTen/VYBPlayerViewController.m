@@ -43,9 +43,6 @@
 @synthesize currPlayerView = _currPlayerView;
 @synthesize currItem = _currItem;
 
-- (void)dealloc {
-    NSLog(@"PlayerViewController released");
-}
 
 + (VYBPlayerViewController *)playerViewControllerForPageIndex:(NSInteger)idx {
     if (idx >= 0 && idx < 2) {
@@ -145,6 +142,7 @@
     //NSLog(@"pause imageview BEFORE: %@", NSStringFromCGRect(pauseImageView.frame));
     [self.view addSubview:pauseImageView];
     pauseImageView.hidden = YES;
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -164,7 +162,6 @@
     }
 #endif
     
-    NSLog(@"function is %@", functionName);
     if (freshVybe) {
         [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
             if (!error) {
@@ -202,8 +199,11 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.currPlayer pause];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.currPlayer pause];
+    });
 }
 
 - (void)beginPlayingFrom:(NSInteger)from {
