@@ -54,11 +54,6 @@
     
     // Use Reachability to monitor connectivity
     [self monitorReachability];
-
-    /* HockeyApp Initilization */
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_ID];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
     
     // Parse Initialization
     [Parse setApplicationId:PARSE_APPLICATION_ID
@@ -205,7 +200,6 @@
     if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
         // Tracks app open due to a push notification when the app was not active
     }
-    
 }
 
 

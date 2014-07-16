@@ -18,6 +18,7 @@
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBReplayViewController.h"
+#import "VYBPermissionViewController.h"
 #import "VYBCameraView.h"
 #import "VYBLabel.h"
 #import "VYBMyVybeStore.h"
@@ -39,6 +40,7 @@
 @property (nonatomic, readonly, getter = isSessionRunningAndDeviceAuthorized) BOOL sessionRunningAndDeviceAuthorized;
 @property (nonatomic) id runtimeErrorHandlingObserver;
 
+@property (nonatomic, strong) VYBPermissionViewController *permissionVC;
 @end
 
 @implementation VYBCaptureViewController {
@@ -84,7 +86,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     VYBCameraView *cameraView = [[VYBCameraView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
     [self setCameraView:cameraView];
-    cameraView.tran
     [(AVCaptureVideoPreviewLayer *)[cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [cameraView setSession:session];
     [self.view addSubview:cameraView];
@@ -190,6 +191,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
     dispatch_async([self sessionQueue], ^{
         [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
@@ -209,6 +211,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         NSLog(@"view will appear: session running");
     });
     
+    
     flashButton.selected = flashOn;
     flipButton.selected = isFrontCamera;
     
@@ -217,6 +220,19 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
+        self.permissionVC = [[VYBPermissionViewController alloc] init];
+        [self presentViewController:self.permissionVC animated:NO completion:nil];
+    }
+    if([CLLocationManager authorizationStatus]==kCLAuthorizationStatusDenied){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Access Denied"
+                                                        message:@"Please go to Settings and turn on Location Service for this app."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName
                                        value:@"Capture Screen"];
@@ -227,6 +243,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
     dispatch_async([self sessionQueue], ^{
 		[[self session] stopRunning];
         
@@ -504,7 +521,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskLandscape;
+    return UIInterfaceOrientationMaskLandscapeRight;
 }
 
 
