@@ -1,27 +1,25 @@
 
-var utils = require('cloud/utils');
 require('cloud/yo');
-require('cloud/compatibility');
 
 
 // recentVybesInReverse
-var algorithm1 = utils.curry(
-  get_vybes, {
+var algorithm1 = get_vybes.bind(
+  this, {
     recent: true,
     reversed: true,
   });
 
 // recentVybesExcludingYouInReverse
-var algorithm2 = utils.curry(
-  get_vybes, {
+var algorithm2 = get_vybes.bind(
+  this, {
     recent: true,
     reversed: true,
     hide_user: true,
   });
 
 // recentNearbyVybesExcludingYou
-var algorithm3 = utils.curry(
-  get_vybes, {
+var algorithm3 = get_vybes.bind(
+  this, {
     recent: true,
     nearby: true,
     hide_user: true,
