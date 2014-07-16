@@ -12,38 +12,52 @@ Parse.Cloud.beforeSave('Vybe', function(request, response) {
   }
 });
 
-
-// recentVybesInReverse
-var algorithm1 = get_vybes.bind(
-  this, {
-    recent: true,
-    reversed: true,
+// Sends a Yo to all who Yo VybeDev
+Parse.Cloud.afterSave('Vybe', function(request) {
+  Parse.Cloud.httpRequest({
+    method: 'POST',
+    url: 'http://api.justyo.co/yoall/',
+    body: {
+      api_token: '04d36172-8b8a-4075-063d-5a163e13e351',
+    },
+    success: function(httpResponse) {
+      console.log('Sent a Yo!');
+    },
+    error: function(httpResponse) {
+      console.error('Request failed with response code ' + httpResponse.status);
+    }
   });
-
-// recentVybesExcludingYouInReverse
-var algorithm2 = get_vybes.bind(
-  this, {
-    recent: true,
-    reversed: true,
-    hide_user: true,
-  });
-
-// recentNearbyVybesExcludingYou
-var algorithm3 = get_vybes.bind(
-  this, {
-    recent: true,
-    nearby: true,
-    hide_user: true,
-  });
-
+});
 
 // Default algorithm used in the app
-Parse.Cloud.define("default_algorithm", algorithm1);
+Parse.Cloud.define('default_algorithm',
+    get_vybes.bind(this, {
+        recent: true,
+        reversed: true,
+    })
+);
 
 // Algorithms that can be chosen from the debug menu
-Parse.Cloud.define("algorithm1", algorithm1);
-Parse.Cloud.define("algorithm2", algorithm2);
-Parse.Cloud.define("algorithm3", algorithm3);
+Parse.Cloud.define('algorithm1',
+    get_vybes.bind(this, {
+        recent: true,
+        reversed: true,
+    })
+);
+Parse.Cloud.define('algorithm2',
+    get_vybes.bind(this, {
+        recent: true,
+        reversed: true,
+        hide_user: true,
+    })
+);
+Parse.Cloud.define('algorithm3',
+    get_vybes.bind(this, {
+        recent: true,
+        nearby: true,
+        hide_user: true,
+    })
+);
 
 
 // Generic get_vybes functions that accepts options
@@ -57,11 +71,11 @@ function get_vybes(options, request, response) {
   var userGeoPoint = request.params.location;
   var currentUser = Parse.User.current();
 
-  var query = new Parse.Query("Vybe");
+  var query = new Parse.Query('Vybe');
 
-  if (recent) query.addDescending("timestamp");
-  if (nearby) query.near("location", userGeoPoint);
-  if (hide_user) query.notEqualTo("user", currentUser);
+  if (recent) query.addDescending('timestamp');
+  if (nearby) query.near('location', userGeoPoint);
+  if (hide_user) query.notEqualTo('user', currentUser);
   if (limit) query.limit(limit);
 
   query.find({
@@ -76,7 +90,7 @@ function get_vybes(options, request, response) {
       response.success(result);
     },
     error: function() {
-      response.error("cannot find vybes around you");
+      response.error('Request to get_vybes() has failed.');
     }
   });
 }
