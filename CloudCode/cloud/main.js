@@ -1,4 +1,5 @@
 
+require('cloud/installation');
 require('cloud/yo');
 
 
