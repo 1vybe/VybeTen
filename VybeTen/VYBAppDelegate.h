@@ -11,7 +11,7 @@
 #import "VYBNavigationController.h"
 #import "VYBPageViewController.h"
 
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource>
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong) VYBNavigationController *navigationVC;
@@ -20,10 +20,5 @@
 
 @property (nonatomic, readonly) int networkStatus;
 - (BOOL)isParseReachable;
-- (void)swipeToCaptureScreen;
-- (void)swipeToPlayerScreen;
-
-
-
 
 @end

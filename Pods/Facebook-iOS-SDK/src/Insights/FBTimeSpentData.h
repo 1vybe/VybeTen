@@ -16,18 +16,11 @@
 
 #import <Foundation/Foundation.h>
 
-/*!
- @class FBDialogsParams
+// Class to encapsulate persisting of time spent data collected by [FBAppEvents activateApp].  The activate app App Event is
+// logged when restore: is called with sufficient time since the last deactivation.
+@interface FBTimeSpentData : NSObject
 
- @abstract
- This object is used as a base class for parameters passed to native dialogs that
- open in the Facebook app.
- */
-@interface FBDialogsParams : NSObject <NSCopying>
-
-/*!
- @abstract Validates the receiver to ensure that it is configured properly.
- */
-- (NSError *)validate;
++ (void)suspend;
++ (void)restore:(BOOL)calledFromActivateApp;
 
 @end

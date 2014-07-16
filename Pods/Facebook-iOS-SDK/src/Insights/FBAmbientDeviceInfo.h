@@ -16,18 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
-/*!
- @class FBDialogsParams
+@interface FBAmbientDeviceInfo : NSObject
 
- @abstract
- This object is used as a base class for parameters passed to native dialogs that
- open in the Facebook app.
- */
-@interface FBDialogsParams : NSObject <NSCopying>
-
-/*!
- @abstract Validates the receiver to ensure that it is configured properly.
- */
-- (NSError *)validate;
++ (void)extendDictionaryWithDeviceInfo:(NSMutableDictionary *)dictionary;
 
 @end

@@ -84,6 +84,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     VYBCameraView *cameraView = [[VYBCameraView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
     [self setCameraView:cameraView];
+    cameraView.tran
     [(AVCaptureVideoPreviewLayer *)[cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [cameraView setSession:session];
     [self.view addSubview:cameraView];
@@ -233,19 +234,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		
 		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
 		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
-        NSLog(@"view will disappear: session stopped");
-	});
-}
-
-- (void)stopCurrentSession {
-    dispatch_async([self sessionQueue], ^{
-		[[self session] stopRunning];
-        
-		[[NSNotificationCenter defaultCenter] removeObserver:[self runtimeErrorHandlingObserver]];
-		
-		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
-		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
-        NSLog(@"entered background: session stopped");
 	});
 }
 
@@ -277,7 +265,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 {
 	if ([device hasTorch] && [device isTorchModeSupported:torchMode])
 	{
-        NSLog(@"Hello");
 		NSError *error = nil;
 		if ([device lockForConfiguration:&error])
 		{
@@ -288,9 +275,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		{
 			NSLog(@"%@", error);
 		}
-	} else {
-        NSLog(@"THAT'S RIGHT");
-    }
+	}
 }
 
 - (void)flipCamera:(id)sender {
@@ -483,10 +468,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	if (context == RecordingContext)
 	{
 		BOOL isRecording = [change[NSKeyValueChangeNewKey] boolValue];
-        if (!isRecording) {
-            [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOff forDevice:[[self videoInput] device]];
-        }
-        
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if (isRecording)
 			{
@@ -497,9 +478,13 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 [self syncUIWithRecordingStatus:NO];
 			}
 		});
+        
+        if (!isRecording) {
+            [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOff forDevice:[[self videoInput] device]];
+        }
 	}
 	else if (context == SessionRunningAndDeviceAuthorizedContext) {
-        
+
     }
 	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -510,40 +495,17 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
+    if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+        NSLog(@"left");
+    } else if (toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+        NSLog(@"right");
+    }
 	[[(AVCaptureVideoPreviewLayer *)[[self cameraView] layer] connection] setVideoOrientation:(AVCaptureVideoOrientation)toInterfaceOrientation];
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight;
+    return UIInterfaceOrientationMaskLandscape;
 }
-
-/*
-- (void)adjustToOrientation:(UIDeviceOrientation)orientation {
-    if (orientation == UIDeviceOrientationLandscapeLeft) {
-        [[(AVCaptureVideoPreviewLayer *)[[self cameraView] layer] connection] setVideoOrientation:(AVCaptureVideoOrientation)orientation];
-        //[movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-    } else if (orientation == UIDeviceOrientationLandscapeRight) {
-        [[(AVCaptureVideoPreviewLayer *)[[self cameraView] layer] connection] setVideoOrientation:(AVCaptureVideoOrientation)orientation];
-        //[movieConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
-    }
-    
-    //[self displayMessageToRotate:orientation];
-}
-
-- (void)displayMessageToRotate:(UIDeviceOrientation)orientation {
-    if (overlayView) {
-        [overlayView removeFromSuperview];
-    }
-    if (UIDeviceOrientationIsPortrait(orientation)) {
-        overlayView = [[UIImageView alloc] initWithFrame:self.view.bounds];
-        [overlayView setBackgroundColor:[UIColor colorWithWhite:0.0f alpha:0.8f]];
-        [overlayView setUserInteractionEnabled:YES];
-        [overlayView setContentMode:UIViewContentModeCenter];
-        [overlayView setImage:[UIImage imageNamed:@"screen_warning_rotate.png"]];
-        [self.view addSubview:overlayView];
-    }
-}
-*/
 
 
 #pragma mark - ()

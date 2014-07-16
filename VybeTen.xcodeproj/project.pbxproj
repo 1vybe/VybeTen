@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		02012D9D196A4F6500039B74 /* VYBDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02012D9B196A4F6500039B74 /* VYBDebugViewController.m */; };
-		02012D9E196A4F6500039B74 /* VYBDebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02012D9C196A4F6500039B74 /* VYBDebugViewController.xib */; };
 		020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 020FB84819744EBA005C9BA9 /* VYBCameraView.m */; };
 		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
 		023E538D191F142000C3CF78 /* VYBCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 023E538C191F142000C3CF78 /* VYBCache.m */; };
@@ -51,9 +49,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		02012D9A196A4F6500039B74 /* VYBDebugViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBDebugViewController.h; sourceTree = "<group>"; };
-		02012D9B196A4F6500039B74 /* VYBDebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBDebugViewController.m; sourceTree = "<group>"; };
-		02012D9C196A4F6500039B74 /* VYBDebugViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBDebugViewController.xib; sourceTree = "<group>"; };
 		020FB84719744EBA005C9BA9 /* VYBCameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCameraView.h; sourceTree = "<group>"; };
 		020FB84819744EBA005C9BA9 /* VYBCameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCameraView.m; sourceTree = "<group>"; };
 		0226CBAB194A0339005270D3 /* VYBNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBNavigationController.h; sourceTree = "<group>"; };
@@ -176,9 +171,6 @@
 				0226CBAC194A0339005270D3 /* VYBNavigationController.m */,
 				0276D13A19590CDE007292B0 /* VYBPageViewController.h */,
 				0276D13B19590CDF007292B0 /* VYBPageViewController.m */,
-				02012D9A196A4F6500039B74 /* VYBDebugViewController.h */,
-				02012D9B196A4F6500039B74 /* VYBDebugViewController.m */,
-				02012D9C196A4F6500039B74 /* VYBDebugViewController.xib */,
 				02CEE2AE1970C2F900AC361F /* VYBReplayViewController.h */,
 				02CEE2AF1970C2F900AC361F /* VYBReplayViewController.m */,
 			);
@@ -359,6 +351,9 @@
 					604B627818B495BB00D3EF19 = {
 						DevelopmentTeam = KV65D55DL4;
 						SystemCapabilities = {
+							com.apple.DataProtection = {
+								enabled = 1;
+							};
 							com.apple.iCloud = {
 								enabled = 0;
 							};
@@ -395,7 +390,6 @@
 				02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */,
 				02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */,
 				02F80C46196F600300FB2A48 /* AvenirLTStd-Book.otf in Resources */,
-				02012D9E196A4F6500039B74 /* VYBDebugViewController.xib in Resources */,
 				02D11D0A18DF62AC0018DA97 /* Montreal-HeavyIta.otf in Resources */,
 				604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */,
 				02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */,
@@ -466,7 +460,6 @@
 				88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */,
 				88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
-				02012D9D196A4F6500039B74 /* VYBDebugViewController.m in Sources */,
 				023E538D191F142000C3CF78 /* VYBCache.m in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
@@ -566,13 +559,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jin Su Kim (HD2QK95223)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F3C26CD2-8C55-44D0-8AD0-63CD78D5BD5F";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -582,13 +576,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Jin Su Kim (KV65D55DL4)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "678B5A46-705D-409C-9695-5C38A95C663E";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

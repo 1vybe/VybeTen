@@ -25,8 +25,6 @@
 @property (nonatomic) UIButton *viewButton;
 @property (nonatomic, strong) VYBCaptureButton *captureButton;
 
-- (void)stopCurrentSession;
-
 @end
 
 @protocol VYBCaptureViewControllerDelegate <NSObject>

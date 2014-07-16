@@ -17,7 +17,9 @@
 #define DOWNLOADING     2
 #define DOWNLOADED      3
 
+#if DEBUG
 #define HOCKEY_APP_ID   @"66e11a95d2af956652e5f4efa38af51e"
+#endif
 
 #define GA_TRACKING_ID  @"UA-49584125-3"
 
@@ -54,6 +56,7 @@ extern NSString *const kVYBUserFacebookIDKey;
 extern NSString *const kVYBUserProfilePicSmallKey;
 extern NSString *const kVYBUserProfilePicMediumKey;
 extern NSString *const kVYBUserFacebookFriendsKey;
+extern NSString *const kVYBUserLastVybedTime;
 
 
 #pragma mark - PFObject Vybe Class

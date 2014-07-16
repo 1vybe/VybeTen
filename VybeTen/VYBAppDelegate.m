@@ -6,19 +6,19 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
-/* Release
 #define PARSE_APPLICATION_ID        @"m5Im7uDcY5rieEbPyzRfV2Dq6YegS3kAQwxiDMFZ"
 #define PARSE_CLIENT_KEY            @"WLqeqlf4qVVk5jF6yHSWGxw3UzUQwUtmAk9vCPfB"
-*/
 
-/* Dev */
+/* House
 #define PARSE_APPLICATION_ID        @"gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC"
 #define PARSE_CLIENT_KEY            @"6y6eMRZq5GAa5ihS2GSjFB0xwmnuatvuJBhYQ1Af"
-
+*/
 
 #import <AVFoundation/AVFoundation.h>
-#import <HockeySDK/HockeySDK.h>
 #import <GAI.h>
+#import <GAIDictionaryBuilder.h>
+#import <GAITracker.h>
+#import <GAIFields.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
 #import "VYBPlayerViewController.h"
@@ -34,12 +34,13 @@
 @property (nonatomic, strong) Reachability *wifiReach;
 @property (nonatomic, strong) NSString *uniqueID;
 
+
+@property (nonatomic, strong) VYBCaptureViewController *captureVC;
+@property (nonatomic, strong) VYBPlayerViewController *playerVC;
+
 @end
 
-@implementation VYBAppDelegate {
-    VYBCaptureViewController *captureVC;
-    VYBPlayerViewController *playerVC;
-}
+@implementation VYBAppDelegate
 
 @synthesize networkStatus;
 @synthesize hostReach;
@@ -81,7 +82,11 @@
     [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelNone];
     
     // Initialize tracker. Replace with your tracking ID.
-    [[GAI sharedInstance] trackerWithTrackingId:GA_TRACKING_ID];
+    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:GA_TRACKING_ID];
+    [tracker send:[[[GAIDictionaryBuilder createEventWithCategory:@"UX"
+                                                           action:@"appstart"
+                                                            label:nil
+                                                            value:nil] set:@"start" forKey:kGAISessionControl] build]];
 
     
     self.uniqueID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
@@ -99,9 +104,9 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    captureVC = [[VYBCaptureViewController alloc] init];    
+    self.captureVC = [[VYBCaptureViewController alloc] init];
     
-    self.navigationVC = [[VYBNavigationController alloc] initWithRootViewController:captureVC];
+    self.navigationVC = [[VYBNavigationController alloc] initWithRootViewController:self.captureVC];
     self.navigationVC.navigationBarHidden = YES;
     
     if (![PFUser currentUser]) {
@@ -219,32 +224,6 @@
 
 - (BOOL)isParseReachable {
     return self.networkStatus != NotReachable;
-}
-
-#pragma mark - UIPageViewControllerDataSource 
-
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(id)viewController {
-    NSInteger idx = [viewController pageIndex] + 1;
-    if (idx < self.viewControllers.count) {
-        return self.viewControllers[idx];
-    }
-    return nil;
-}
-
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(id)viewController {
-    NSInteger idx = [viewController pageIndex] - 1;
-    if (idx < 0) {
-        return nil;
-    }
-    return self.viewControllers[idx];
-}
-
-- (void)swipeToCaptureScreen {
-    [self.pageVC setViewControllers:@[self.viewControllers[0]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
-}
-
-- (void)swipeToPlayerScreen {
-    [self.pageVC setViewControllers:@[self.viewControllers[1]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
 }
 
 

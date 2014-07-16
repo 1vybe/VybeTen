@@ -78,7 +78,6 @@
     if (!dFormatterLocalized) {
         dFormatterLocalized = [[NSDateFormatter alloc] init];
         // TODO: Localize timezone
-        NSLog(@"local timezone is %@", [NSTimeZone localTimeZone]);
         NSTimeZone *timeZone = [NSTimeZone localTimeZone];
         [dFormatterLocalized setTimeZone:timeZone];
         [dFormatterLocalized setDateFormat:@"MM/dd HH:mm"];

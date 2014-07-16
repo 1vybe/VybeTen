@@ -7,7 +7,6 @@
 //
 
 #import "VYBAppDelegate.h"
-#import "VYBDebugViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBUtility.h"
@@ -95,9 +94,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
     
     // Adding swipe gestures
-    UISwipeGestureRecognizer *swipeDown=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeDown)];
-    swipeDown.direction=UISwipeGestureRecognizerDirectionDown;
-    [self.view addGestureRecognizer:swipeDown];
     UISwipeGestureRecognizer *swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
     swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:swipeLeft];
@@ -206,14 +202,13 @@
             }
         }];
     }
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
         [self.currPlayer pause];
     });
 }
@@ -323,9 +318,6 @@
     [self.navigationController popViewControllerAnimated:NO];
 }
 
-- (void)swipeDown {
-    [self.navigationController popViewControllerAnimated:NO];
-}
 
 - (void)swipeLeft {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -353,22 +345,8 @@
 
 #if DEBUG
 - (void)tapTwice {
-    VYBDebugViewController *debugVC = [[VYBDebugViewController alloc] init];
-    debugVC.delegate = self;
-    [self presentViewController:debugVC animated:NO completion:nil];
 }
 #endif
-
-- (void)moveToCaptureScreen {
-    //TODO: Based on what the user was watching, attach some information regarding that when the user take the next vybe
-    
-    //[self.currPlayer pause];
-    //[[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-
-    id appDelegate = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate swipeToCaptureScreen];
-}
-
 
 #pragma mark - VYBCaptureViewControllerDelegate
 
