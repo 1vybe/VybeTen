@@ -31,6 +31,16 @@
     
 }
 
++ (void)clearLocalCacheForVybe:(VYBMyVybe *)aVybe {
+    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[aVybe videoFilePath]];
+    
+    NSError *error;
+    [[NSFileManager defaultManager] removeItemAtURL:videoURL error:&error];
+    if (error) {
+        NSLog(@"Cached my vybe was NOT deleted");
+    }
+}
+
 #pragma mark Display Name
 
 + (NSString *)firstNameForDisplayName:(NSString *)displayName {

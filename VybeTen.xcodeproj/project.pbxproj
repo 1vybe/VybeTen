@@ -16,6 +16,8 @@
 		025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 025169AC18FAF955007F34B0 /* VYBLabel.m */; };
 		025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 025DE65A18CB16E30054F739 /* VYBConstants.m */; };
 		025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 025EDB2418F65E45008B0CB2 /* VYBAnimator.m */; };
+		026385EE197972BA00B377EC /* VYBLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 026385EC197972BA00B377EC /* VYBLogInViewController.m */; };
+		026385EF197972BA00B377EC /* VYBLogInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 026385ED197972BA00B377EC /* VYBLogInViewController.xib */; };
 		0275087C19252D5C00B070EE /* VYBUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275087B19252D5C00B070EE /* VYBUtility.m */; };
 		0276D13C19590CDF007292B0 /* VYBPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0276D13B19590CDF007292B0 /* VYBPageViewController.m */; };
 		0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0293877C1969C1D200F41A12 /* VYBCaptureButton.m */; };
@@ -68,6 +70,9 @@
 		025DE65A18CB16E30054F739 /* VYBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBConstants.m; sourceTree = "<group>"; };
 		025EDB2318F65E45008B0CB2 /* VYBAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBAnimator.h; sourceTree = "<group>"; };
 		025EDB2418F65E45008B0CB2 /* VYBAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBAnimator.m; sourceTree = "<group>"; };
+		026385EB197972BA00B377EC /* VYBLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBLogInViewController.h; sourceTree = "<group>"; };
+		026385EC197972BA00B377EC /* VYBLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBLogInViewController.m; sourceTree = "<group>"; };
+		026385ED197972BA00B377EC /* VYBLogInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBLogInViewController.xib; sourceTree = "<group>"; };
 		0275087A19252D5C00B070EE /* VYBUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUtility.h; sourceTree = "<group>"; };
 		0275087B19252D5C00B070EE /* VYBUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUtility.m; sourceTree = "<group>"; };
 		0276D13A19590CDE007292B0 /* VYBPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPageViewController.h; sourceTree = "<group>"; };
@@ -181,6 +186,9 @@
 				020F1C481977054900C3AA40 /* VYBPermissionViewController.h */,
 				020F1C491977054900C3AA40 /* VYBPermissionViewController.m */,
 				020F1C4A1977054900C3AA40 /* VYBPermissionViewController.xib */,
+				026385EB197972BA00B377EC /* VYBLogInViewController.h */,
+				026385EC197972BA00B377EC /* VYBLogInViewController.m */,
+				026385ED197972BA00B377EC /* VYBLogInViewController.xib */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -404,6 +412,7 @@
 				02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */,
 				02D11D0D18DF62AC0018DA97 /* Montreal-Medium.otf in Resources */,
 				02D11D0C18DF62AC0018DA97 /* Montreal-LightIta.otf in Resources */,
+				026385EF197972BA00B377EC /* VYBLogInViewController.xib in Resources */,
 				02D11D1018DF62AC0018DA97 /* Montreal-RegularIta.otf in Resources */,
 				02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */,
 				02D11D0F18DF62AC0018DA97 /* Montreal-Regular.otf in Resources */,
@@ -465,6 +474,7 @@
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
+				026385EE197972BA00B377EC /* VYBLogInViewController.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
 				88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */,
 				88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */,
@@ -557,7 +567,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = NO;
-				PROVISIONING_PROFILE = "678B5A46-705D-409C-9695-5C38A95C663E";
+				PROVISIONING_PROFILE = "DFEA8178-058F-40F6-B751-DD75883D5FFB";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -570,13 +580,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Jin Su Kim (HD2QK95223)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jin Su Kim (HD2QK95223)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F3C26CD2-8C55-44D0-8AD0-63CD78D5BD5F";
+				PROVISIONING_PROFILE = "0EB83DEB-509F-476B-AA2B-4A543AE4E859";
 			};
 			name = Debug;
 		};
@@ -587,13 +597,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Jin Su Kim (KV65D55DL4)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jin Su Kim (KV65D55DL4)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "752CDA9A-95EC-4AA5-ABA4-2B22648A3EE3";
+				PROVISIONING_PROFILE = "68AE8FFE-2710-4CC7-A332-8CA7DCBA91DE";
 			};
 			name = Release;
 		};

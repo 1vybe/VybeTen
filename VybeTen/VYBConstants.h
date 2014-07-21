@@ -17,11 +17,19 @@
 #define DOWNLOADING     2
 #define DOWNLOADED      3
 
-#if DEBUG
-#define HOCKEY_APP_ID   @"66e11a95d2af956652e5f4efa38af51e"
-#endif
 
-#define GA_TRACKING_ID  @"UA-49584125-3"
+
+/* House */
+#define PARSE_APPLICATION_ID        @"gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC"
+#define PARSE_CLIENT_KEY            @"6y6eMRZq5GAa5ihS2GSjFB0xwmnuatvuJBhYQ1Af"
+#define HOCKEY_APP_ID               @"66e11a95d2af956652e5f4efa38af51e"
+#define GA_TRACKING_ID              @"UA-49584125-4"
+
+/* WORLD
+#define GA_TRACKING_ID              @"UA-49584125-3"
+#define PARSE_APPLICATION_ID        @"m5Im7uDcY5rieEbPyzRfV2Dq6YegS3kAQwxiDMFZ"
+#define PARSE_CLIENT_KEY            @"WLqeqlf4qVVk5jF6yHSWGxw3UzUQwUtmAk9vCPfB"
+*/
 
 /*
 #define FONT_SIZE_DEFAULT       18
@@ -70,6 +78,7 @@ extern NSString *const kVYBVybeTribeKey;
 extern NSString *const kVYBVybeUserKey;
 extern NSString *const kVYBVybeTimestampKey;
 extern NSString *const kVYBVybeGeotag;
+extern NSString *const kVYBVybeTypePublicKey;
 extern NSString *const kVYBVybeLocationName;
 
 

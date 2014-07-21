@@ -124,7 +124,7 @@
     [locationLabel setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:locationLabel];
     
-    frame = CGRectMake(0, self.view.bounds.size.width - 70, 70, 70);
+    frame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
     captureButton = [[UIButton alloc] initWithFrame:frame];
     [captureButton setImage:[UIImage imageNamed:@"button_capture.png"] forState:UIControlStateNormal];
     [pauseImageView setContentMode:UIViewContentModeCenter];
@@ -144,11 +144,12 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.screenName = @"Player Screen";
-}
+    NSString *functionName = @"default_algorithm";
+    if (!self.isPublicMode) {
+        functionName = @"get_tribe_vybes";
+    }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+    self.screenName = @"Player Screen";
     
     // Google Anaylytics shit
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName
@@ -156,7 +157,6 @@
         [[GAI sharedInstance].defaultTracker
      send:[[GAIDictionaryBuilder createAppView] build]];
     
-    NSString *functionName = @"default_algorithm";
     
 #if DEBUG
     if (self.debugMode == 1) {
@@ -170,6 +170,7 @@
     }
 #endif
     
+    NSLog(@"endpoint function name is %@", functionName);
     if (freshVybe) {
         [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
             if (!error) {
@@ -301,8 +302,16 @@
 }
 
 - (void)syncUI:(PFObject *)aVybe {
-    if ([aVybe objectForKey:kVYBVybeLocationName]) {
-        locationLabel.text = [aVybe objectForKey:kVYBVybeLocationName];
+    if ([aVybe objectForKey:kVYBVybeGeotag]) {
+        PFGeoPoint *geo = [aVybe objectForKey:kVYBVybeGeotag];
+        [VYBUtility reverseGeoCode:geo withCompletion:^(NSArray *placemarks, NSError *error) {
+            if (!error) {
+                NSString *location = [VYBUtility convertPlacemarkToLocation:placemarks[0]];
+                locationLabel.text = location;
+                NSLog(@"Location Set");
+                [locationLabel setNeedsDisplay];
+            }
+        }];
     } else {
         locationLabel.text = @"";
     }
@@ -329,6 +338,7 @@
     [self.currPlayer pause];
     currVybeIndex++;
     [self beginPlayingFrom:currVybeIndex];
+
 }
 
 - (void)swipeRight {

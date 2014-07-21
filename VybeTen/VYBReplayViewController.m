@@ -8,6 +8,7 @@
 
 #import "VYBReplayViewController.h"
 #import "VYBPlayerView.h"
+#import "MBProgressHUD.h"
 #import "VYBUtility.h"
 #import "VYBMyVybeStore.h"
 
@@ -50,17 +51,32 @@
     [self setNeedsStatusBarAppearanceUpdate];
    
     // Adding CONFIRM button
-    CGRect frame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    CGRect frame = CGRectMake(0, 0, 70, 70);
     self.confirmButton = [[UIButton alloc] initWithFrame:frame];
     [self.confirmButton setImage:[UIImage imageNamed:@"button_replay_confirm.png"] forState:UIControlStateNormal];
     [self.confirmButton addTarget:self action:@selector(confirmButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.confirmButton];
     
-    frame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
+    frame = CGRectMake(0, self.view.bounds.size.width - 70, 70, 70);
     self.cancelButton = [[UIButton alloc] initWithFrame:frame];
     [self.cancelButton setImage:[UIImage imageNamed:@"button_replay_cancel.png"] forState:UIControlStateNormal];
     [self.cancelButton addTarget:self action:@selector(cancelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.cancelButton];
+    
+    // Adding toggle switch for private/public
+    frame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    self.modeToggleButton = [[UIButton alloc] initWithFrame:frame];
+    [self.modeToggleButton addTarget:self action:@selector(modeToggleButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.modeToggleButton.titleLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book" size:18.0]];
+    [self.modeToggleButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.modeToggleButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.modeToggleButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateSelected];
+    [self.modeToggleButton setTitle:@"Private" forState:UIControlStateNormal];
+    [self.modeToggleButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [self.modeToggleButton setTitle:@"Public" forState:UIControlStateSelected];
+    [self.modeToggleButton setTitleColor:[UIColor blueColor] forState:UIControlStateSelected];
+    [self.modeToggleButton setSelected:self.currVybe.isPublic];
+    [self.view addSubview:self.modeToggleButton];
 
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
@@ -76,12 +92,41 @@
 }
 
 - (void)confirmButtonPressed:(id)sender {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // Saves a thumbmnail to local
-        [VYBUtility saveThumbnailImageForVybeWithFilePath:self.currVybe.uniqueFileName];
-    });
+    NSData *video = [NSData dataWithContentsOfFile:[self.currVybe videoFilePath]];
     
-    [[VYBMyVybeStore sharedStore] uploadVybe:self.currVybe];
+    PFFile *videoFile = [PFFile fileWithData:video];
+    
+    PFObject *vybe = [self.currVybe parseObjectVybe];
+    
+    PFACL *vybeACL = [PFACL ACLWithUser:[PFUser currentUser]];
+    [vybeACL setPublicReadAccess:YES];
+    vybe.ACL = vybeACL;
+    
+    UIProgressView *uploadProgressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+    [uploadProgressView setFrame:CGRectMake(0, 0, self.view.bounds.size.width, 50)];
+    [self.navigationController.view addSubview:uploadProgressView];
+    [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
+            [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    uploadProgressView.progress = 1.0;
+                    [VYBUtility clearLocalCacheForVybe:self.currVybe];
+                }
+                else {
+                    [vybe saveEventually:^(BOOL succeeded, NSError *error) {
+                        [VYBUtility clearLocalCacheForVybe:self.currVybe];
+                    }];
+                }
+                [uploadProgressView removeFromSuperview];
+            }];
+        } else {
+            [[VYBMyVybeStore sharedStore] addVybe:self.currVybe];
+            [uploadProgressView removeFromSuperview];
+        }
+    } progressBlock:^(int percentDone) {
+        uploadProgressView.progress = (percentDone <= 90) ? percentDone / 100.0 : 0.9;
+    }];
     
     [self.navigationController popViewControllerAnimated:NO];
 }
@@ -93,11 +138,16 @@
         NSError *error;
         [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&error];
         if (error) {
-            NSLog(@"Cached my vybe was NOT deleted");
+            NSLog(@"Failed to delete the cancelled vybe.");
         }
     });
     
     [self.navigationController popViewControllerAnimated:NO];
+}
+
+- (void)modeToggleButtonPressed:(id)sender {
+    self.currVybe.isPublic = !self.currVybe.isPublic;
+    [self.modeToggleButton setSelected:self.currVybe.isPublic];
 }
 
 - (BOOL)prefersStatusBarHidden {

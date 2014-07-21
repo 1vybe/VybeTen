@@ -66,93 +66,65 @@
                 if (succeeded) {
                     [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
                     [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-                    [VYBUtility reverseGeoCode:[vybe objectForKey:kVYBVybeGeotag] withCompletion:^(NSArray *placemarks, NSError *error) {
-                        if (!error) {
-                            NSString *location = [VYBUtility convertPlacemarkToLocation:placemarks[0]];
-                            [vybe setObject:location forKey:kVYBVybeLocationName];
-                        }
-                        [vybe saveEventually];
-                        [self clearLocalCacheForVybe:aVybe];
-                    }];
-                } else {
-                    [self saveReverseGeocodeForVybe:aVybe];
+                    [vybe saveEventually];
+                    [self clearLocalCacheForVybe:aVybe];
                 }
             }];
-        } else {
-            [self saveReverseGeocodeForVybe:aVybe];
         }
     }];
 }
 
+/*
 - (void)saveReverseGeocodeForVybe:(VYBMyVybe *)aVybe {
     PFObject *vybePF = [aVybe parseObjectVybe];
     
     [VYBUtility reverseGeoCode:[vybePF objectForKey:kVYBVybeGeotag] withCompletion:^(NSArray *placemarks, NSError *error) {
         if (!error) {
             NSString *location = [VYBUtility convertPlacemarkToLocation:placemarks[0]];
-            [aVybe setLocationName:location];
+            //[aVybe setLocationName:location];
         }
     }];
 }
+*/
 
 - (void)uploadDelayedVybe:(VYBMyVybe *)aVybe {
-    [uploadQueue addObject:aVybe];
-    [self removeVybe:aVybe];
-
-    NSData *thumbnail = [NSData dataWithContentsOfFile:[aVybe thumbnailFilePath]];
     NSData *video = [NSData dataWithContentsOfFile:[aVybe videoFilePath]];
     
-    PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
     PFFile *videoFile = [PFFile fileWithData:video];
     
-    PFObject *vybe = [aVybe parseObjectVybe];
+    PFObject *pVybe = [aVybe parseObjectVybe];
     
     PFACL *vybeACL = [PFACL ACLWithUser:[PFUser currentUser]];
     [vybeACL setPublicReadAccess:YES];
-    vybe.ACL = vybeACL;
+    pVybe.ACL = vybeACL;
     
-    [thumbnailFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
-                    [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-                    [vybe saveEventually];
-                    [self clearLocalCacheForVybe:aVybe];
-                    [uploadQueue removeObject:aVybe];
-                    [self uploadDelayedVybes];
-                } else {
-                    [uploadQueue removeObject:aVybe];
-                    [self addVybe:aVybe];
-                }
-            }];
+            [pVybe setObject:videoFile forKey:kVYBVybeVideoKey];
+            [pVybe saveEventually];
+            [self clearLocalCacheForVybe:aVybe];
+            [self removeVybe:aVybe];
+            [self uploadDelayedVybes];
         } else {
-            [uploadQueue removeObject:aVybe];
-            [self addVybe:aVybe];
         }
     }];
 }
 
 
 - (void)uploadDelayedVybes {
-    if (myVybes.count < 1 ) {
+    NSLog(@"There are %ui vybes to be uploaded", myVybes.count);
+    if (myVybes.count < 1) {
         return;
     }
-    //NSLog(@"There are %ui vybes to be uploaded", myVybes.count);
     VYBMyVybe *delayedVybe = [myVybes firstObject];
     [self uploadDelayedVybe:delayedVybe];
 }
 
 
 - (void)clearLocalCacheForVybe:(VYBMyVybe *)aVybe {
-    NSURL *thumbnailURL = [[NSURL alloc] initFileURLWithPath:[aVybe thumbnailFilePath]];
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[aVybe videoFilePath]];
     
     NSError *error;
-    [[NSFileManager defaultManager] removeItemAtURL:thumbnailURL error:&error];
-    if (error) {
-        NSLog(@"Cached my vybe was NOT deleted");
-    }
     [[NSFileManager defaultManager] removeItemAtURL:videoURL error:&error];
     if (error) {
         NSLog(@"Cached my vybe was NOT deleted");

@@ -41,6 +41,7 @@ NSString *const kVYBVybeTribeKey                                = @"tribe";
 NSString *const kVYBVybeUserKey                                 = @"user";
 NSString *const kVYBVybeTimestampKey                            = @"timestamp";
 NSString *const kVYBVybeGeotag                                  = @"location";
+NSString *const kVYBVybeTypePublicKey                           = @"isPublic";
 NSString *const kVYBVybeLocationName                            = @"locationName";
 
 

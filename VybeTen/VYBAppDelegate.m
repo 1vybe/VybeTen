@@ -6,20 +6,15 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
-#define PARSE_APPLICATION_ID        @"m5Im7uDcY5rieEbPyzRfV2Dq6YegS3kAQwxiDMFZ"
-#define PARSE_CLIENT_KEY            @"WLqeqlf4qVVk5jF6yHSWGxw3UzUQwUtmAk9vCPfB"
-
-/* House
-#define PARSE_APPLICATION_ID        @"gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC"
-#define PARSE_CLIENT_KEY            @"6y6eMRZq5GAa5ihS2GSjFB0xwmnuatvuJBhYQ1Af"
-*/
 
 #import <AVFoundation/AVFoundation.h>
 #import <GAI.h>
 #import <GAIDictionaryBuilder.h>
 #import <GAITracker.h>
 #import <GAIFields.h>
+#import <HockeySDK/HockeySDK.h>
 #import "VYBAppDelegate.h"
+#import "VYBLogInViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBMyVybeStore.h"
@@ -54,6 +49,11 @@
     
     // Use Reachability to monitor connectivity
     [self monitorReachability];
+    
+    /* HockeyApp Initilization */
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_ID];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
     
     // Parse Initialization
     [Parse setApplicationId:PARSE_APPLICATION_ID
@@ -105,34 +105,12 @@
     self.navigationVC.navigationBarHidden = YES;
     
     if (![PFUser currentUser]) {
-        //log in
-        [PFUser logInWithUsernameInBackground:self.uniqueID password:self.uniqueID block:^(PFUser *user, NSError *error) {
-            if (!error) {
-                if ([PFUser currentUser]) {
-                    // start vybing
-                    //[self.navigationVC pushViewController:captureVC animated:NO];
-                }
-            } else {
-                // sign up
-                PFUser *newUser = [PFUser user];
-                newUser.username = self.uniqueID;
-                newUser.password = self.uniqueID;
-                [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    if (!error) {
-                        if ([PFUser currentUser]) {
-                            // start vybibng
-                            //[self.navigationVC pushViewController:captureVC animated:NO];
-                        }
-                    } else {
-                        NSLog(@"sign up failed: %@", error);
-                    }
-                }];
-            }
-        }];
-    } else {
-        //[self.navigationVC pushViewController:captureVC animated:NO];
+        VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
+        [self.navigationVC pushViewController:logInVC animated:NO];
     }
     
+    //[[VYBMyVybeStore sharedStore] uploadDelayedVybes];
+
     [self.window setRootViewController:self.navigationVC];
     
     self.window.backgroundColor = [UIColor blackColor];

@@ -26,6 +26,8 @@
 #import "VYBCache.h"
 #import "VYBUtility.h"
 
+#include <unistd.h>
+
 @interface VYBCaptureViewController () <AVCaptureFileOutputRecordingDelegate>
 
 @property (nonatomic, weak) VYBCameraView *cameraView;
@@ -53,8 +55,10 @@
     
     BOOL flashOn;
     BOOL isFrontCamera;
+    BOOL isPublicMode;
     
     VYBMyVybe *currVybe;
+    
 }
 
 @synthesize flipButton, flashButton;
@@ -160,9 +164,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     */
     
     // Adding CAPTURE button
+    
     self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
     
-    CGRect buttonFrame = CGRectMake(0, self.view.bounds.size.width - 70, 70, 70);
+    CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
     self.viewButton = [[UIButton alloc] initWithFrame:buttonFrame];
     [self.viewButton setImage:[UIImage imageNamed:@"button_local_view.png"] forState:UIControlStateNormal];
     [self.viewButton addTarget:self action:@selector(viewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -171,7 +176,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
     
     // Adding FLIP button
-    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
+    buttonFrame = CGRectMake(0, self.view.bounds.size.width - 70, 70, 70);
     flipButton = [[UIButton alloc] initWithFrame:buttonFrame];
     [flipButton setImage:[UIImage imageNamed:@"button_camera_front.png"] forState:UIControlStateNormal];
     [flipButton setImage:[UIImage imageNamed:@"button_camera_back.png"] forState:UIControlStateSelected];
@@ -180,7 +185,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self.view addSubview:flipButton];
     
     // Adding FLASH button
-    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    buttonFrame = CGRectMake(0, 0, 70, 70);
     flashButton = [[UIButton alloc] initWithFrame:buttonFrame];
     [flashButton setImage:[UIImage imageNamed:@"button_flash_on.png"] forState:UIControlStateNormal];
     [flashButton setImage:[UIImage imageNamed:@"button_flash_off.png"] forState:UIControlStateSelected];
@@ -188,6 +193,22 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [flashButton addTarget:self action:@selector(switchFlash:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:flashButton];
     
+    // Adding toggle switch for private/public
+    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    self.modeToggleButton = [[UIButton alloc] initWithFrame:buttonFrame];
+    [self.modeToggleButton addTarget:self action:@selector(modeToggleButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.modeToggleButton.titleLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book" size:18.0]];
+    [self.modeToggleButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.modeToggleButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.modeToggleButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateSelected];
+    [self.modeToggleButton setTitle:@"Private" forState:UIControlStateNormal];
+    [self.modeToggleButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [self.modeToggleButton setTitle:@"Public" forState:UIControlStateSelected];
+    [self.modeToggleButton setTitleColor:[UIColor blueColor] forState:UIControlStateSelected];
+    isPublicMode = YES;
+    [self.modeToggleButton setSelected:isPublicMode];
+    [self.view addSubview:self.modeToggleButton];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -349,13 +370,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 #pragma mark - UIResponder
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    if ([self isDeviceAuthorized]) {
-        [self.view addSubview:self.captureButton];
-        self.captureButton.center = [[touches anyObject] locationInView:self.view];
-        [self.captureButton setNeedsDisplay];
-        
-        [self startRecording];
-    }
+    [self.view addSubview:self.captureButton];
+    self.captureButton.center = [[touches anyObject] locationInView:self.view];
+    
+    [self startRecording];
 }
 
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
@@ -365,11 +383,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    dispatch_async([self sessionQueue], ^{
-        [self.movieFileOutput stopRecording];
-    });
-    
     [self.captureButton removeFromSuperview];
+
+    dispatch_async([self sessionQueue], ^{
+        if ([self.movieFileOutput isRecording])
+            [self.movieFileOutput stopRecording];
+    });
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -380,7 +399,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     startTime = [NSDate date];
     currVybe = [[VYBMyVybe alloc] init];
     [currVybe setTimeStamp:startTime];
-    
+    [currVybe setIsPublic:isPublicMode];
+    if (isPublicMode)
+        NSLog(@"vybing in public");
+    else
+        NSLog(@"vybing in private");
+
     [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
         if (error || !geoPoint) {
             NSLog(@"Cannot retrive current location at this moment.");
@@ -393,7 +417,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [recordingTimer invalidate];
         recordingTimer = nil;
     }
-    recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
+    recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
 
     dispatch_async([self sessionQueue], ^{
         if ([[UIDevice currentDevice] isMultitaskingSupported])
@@ -418,9 +442,13 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)timer:(NSTimer *)timer {
     double secondsSinceStart = [[NSDate date] timeIntervalSinceDate:startTime];
-    
     // less than 3.0 because of a delay in drawing. This guarantees user hold until red circle is full to pass the minimum
-    if (secondsSinceStart >= 2.89) {
+    if (secondsSinceStart >= VYBE_LENGTH_SEC) {
+        [recordingTimer invalidate];
+        recordingTimer = nil;
+        return;
+    }
+    else if (secondsSinceStart >= 2.89) {
         if (!self.captureButton.passedMin) {
             self.captureButton.passedMin = YES;
         }
@@ -435,6 +463,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 
 #pragma mark - AVCaptureFileOutputRecordingDelegate
+
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
     // If screen is switched to Player screen automatically by timer, remove capture button.
@@ -462,7 +491,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             NSError *error;
             [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:&error];
             if (error) {
-                NSLog(@"Cached my vybe was NOT deleted");
+                NSLog(@"Failed to delete a vybe under 3 seconds");
             }
         }
     }
@@ -476,7 +505,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     if (backgroundRecordingID != UIBackgroundTaskInvalid)
         [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-
+    
+    NSLog(@"didFinishRecording");
 }
 
 
@@ -488,10 +518,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if (isRecording)
 			{
+                NSLog(@"recording started");
                 [self syncUIWithRecordingStatus:YES];
 			}
 			else
 			{
+                NSLog(@"recording stopped");
                 [self syncUIWithRecordingStatus:NO];
 			}
 		});
@@ -547,12 +579,21 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }];
 }
 
+- (void)modeToggleButtonPressed:(id)sender {
+    isPublicMode = !isPublicMode;
+    [self.modeToggleButton setSelected:isPublicMode];
+}
+
 - (void)syncUIWithRecordingStatus:(BOOL)status {
     self.viewButton.hidden = status; flipButton.hidden = status; flashButton.hidden = status || isFrontCamera;
+    [self.viewButton setNeedsDisplay];
+    [self.flipButton setNeedsDisplay];
+    [self.flashButton setNeedsDisplay];
 }
 
 - (void)viewButtonPressed:(id)sender {
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    [playerVC setIsPublicMode:isPublicMode];
     [self.navigationController pushViewController:playerVC animated:NO];
 }
 

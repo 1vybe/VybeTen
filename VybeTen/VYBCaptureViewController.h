@@ -23,6 +23,7 @@
 @property (nonatomic) UIButton *flipButton;
 @property (nonatomic) UIButton *flashButton;
 @property (nonatomic) UIButton *viewButton;
+@property (nonatomic) UIButton *modeToggleButton;
 @property (nonatomic, strong) VYBCaptureButton *captureButton;
 
 @end

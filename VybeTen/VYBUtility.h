@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <Parse/Parse.h>
+@class VYBMyVybe;
 
 @interface VYBUtility : NSObject
-
++ (void)clearLocalCacheForVybe:(VYBMyVybe *)aVybe;
 + (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate;
 + (NSString *)reverseTime:(NSDate *)aDate;

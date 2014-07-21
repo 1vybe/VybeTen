@@ -13,8 +13,8 @@
 }
 @property (nonatomic, strong) NSString *uniqueFileName;
 @property (nonatomic, strong) CLLocation *geoTag;
-@property (nonatomic, strong) NSString *locationName;
 @property (nonatomic, strong) NSDate *timeStamp;
+@property (nonatomic) BOOL isPublic;
 //@property (nonatomic, strong) NSString *tribeObjectID;
 @property (nonatomic, strong) NSString *videoFileObjectID;
 @property (nonatomic, strong) NSString *thumbnailFileObjectID;
