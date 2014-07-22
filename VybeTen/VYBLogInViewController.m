@@ -45,10 +45,11 @@
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         if (!error) {
             if ([PFUser currentUser]) {
-                [self.navigationController popViewControllerAnimated:NO];
+                [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
             }
         } else {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"Log in failed. Check your username again." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[error userInfo][@"error"] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alertView show];
         }
     }];
@@ -67,10 +68,10 @@
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         if (!error) {
             if ([PFUser currentUser]) {
-                [self.navigationController popViewControllerAnimated:NO];
+                [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
             }
         } else {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"Sign up failed. Invalid or duplicate username" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[error userInfo][@"error"] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alertView show];
         }
     }];
@@ -78,9 +79,9 @@
 }
 
 #pragma mark - UIDeviceOrientation
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationPortrait;
-}
+
+
+
 
 - (void)didReceiveMemoryWarning
 {

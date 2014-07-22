@@ -14,7 +14,6 @@
 #import <GAIFields.h>
 #import <HockeySDK/HockeySDK.h>
 #import "VYBAppDelegate.h"
-#import "VYBLogInViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBMyVybeStore.h"
@@ -103,11 +102,7 @@
     
     self.navigationVC = [[VYBNavigationController alloc] initWithRootViewController:self.captureVC];
     self.navigationVC.navigationBarHidden = YES;
-    
-    if (![PFUser currentUser]) {
-        VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
-        [self.navigationVC pushViewController:logInVC animated:NO];
-    }
+
     
     //[[VYBMyVybeStore sharedStore] uploadDelayedVybes];
 

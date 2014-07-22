@@ -21,6 +21,7 @@
 - (void)dealloc {
     self.player = nil;
     self.playerView = nil;
+    self.isPublic = YES;
 }
 
 - (void)loadView {
@@ -75,8 +76,8 @@
     [self.modeToggleButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [self.modeToggleButton setTitle:@"Public" forState:UIControlStateSelected];
     [self.modeToggleButton setTitleColor:[UIColor blueColor] forState:UIControlStateSelected];
-    [self.modeToggleButton setSelected:self.currVybe.isPublic];
-    [self.view addSubview:self.modeToggleButton];
+    [self.modeToggleButton setSelected:self.isPublic];
+    //[self.view addSubview:self.modeToggleButton];
 
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
@@ -96,6 +97,7 @@
     
     PFFile *videoFile = [PFFile fileWithData:video];
     
+    [self.currVybe setIsPublic:self.isPublic];
     PFObject *vybe = [self.currVybe parseObjectVybe];
     
     PFACL *vybeACL = [PFACL ACLWithUser:[PFUser currentUser]];
@@ -111,6 +113,7 @@
             [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
                     uploadProgressView.progress = 1.0;
+                    [uploadProgressView setNeedsDisplay];
                     [VYBUtility clearLocalCacheForVybe:self.currVybe];
                 }
                 else {
@@ -146,8 +149,12 @@
 }
 
 - (void)modeToggleButtonPressed:(id)sender {
-    self.currVybe.isPublic = !self.currVybe.isPublic;
-    [self.modeToggleButton setSelected:self.currVybe.isPublic];
+    self.isPublic = !self.isPublic;
+    [self.modeToggleButton setSelected:self.isPublic];
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskLandscape;
 }
 
 - (BOOL)prefersStatusBarHidden {

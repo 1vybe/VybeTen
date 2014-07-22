@@ -102,7 +102,10 @@
     swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipeRight];
 
-
+    UITapGestureRecognizer *tapOnce = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
+    tapOnce.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tapOnce];
+    
 #if DEBUG
     // Add tap gesture
     UITapGestureRecognizer *tapTwice = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapTwice)];
@@ -158,7 +161,7 @@
         [[GAI sharedInstance].defaultTracker
      send:[[GAIDictionaryBuilder createAppView] build]];
     
-    
+/*
 #if DEBUG
     if (self.debugMode == 1) {
         functionName = @"algorithm1";
@@ -170,7 +173,7 @@
         functionName = @"algorithm3";
     }
 #endif
-    
+*/
     NSLog(@"endpoint function name is %@", functionName);
     if (freshVybe) {
         [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
@@ -354,6 +357,15 @@
     [self beginPlayingFrom:currVybeIndex];
 }
 
+- (void)tapOnce {
+    if (self.currPlayer.rate == 0.0) {
+        [self.currPlayer play];
+    }
+    else {
+        [self.currPlayer pause];
+    }
+}
+
 #if DEBUG
 - (void)tapTwice {
     UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
@@ -361,13 +373,14 @@
 }
 #endif
 
+
 #pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
         NSLog(@"Logging out");
         [PFUser logOut];
         VYBLogInViewController *loginVC = [[VYBLogInViewController alloc] init];
-        [self.navigationController pushViewController:loginVC animated:NO];
+        [self presentViewController:loginVC animated:NO completion:nil];
     } else {
         NSLog(@"Logging out cancelled");
     }

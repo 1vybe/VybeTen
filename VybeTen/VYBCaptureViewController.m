@@ -14,7 +14,8 @@
 #import <GAITracker.h>
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
-#import "VYBAppDelegate.h"
+//#import "VYBAppDelegate.h"
+#import "VYBLogInViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBReplayViewController.h"
@@ -55,7 +56,6 @@
     
     BOOL flashOn;
     BOOL isFrontCamera;
-    BOOL isPublicMode;
     
     VYBMyVybe *currVybe;
     
@@ -84,7 +84,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [self setSession:session];
     
@@ -174,7 +174,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self.viewButton setContentMode:UIViewContentModeLeft];
     [self.view addSubview:self.viewButton];
 
-    
     // Adding FLIP button
     buttonFrame = CGRectMake(0, self.view.bounds.size.width - 70, 70, 70);
     flipButton = [[UIButton alloc] initWithFrame:buttonFrame];
@@ -193,22 +192,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [flashButton addTarget:self action:@selector(switchFlash:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:flashButton];
     
-    // Adding toggle switch for private/public
-    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
-    self.modeToggleButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    [self.modeToggleButton addTarget:self action:@selector(modeToggleButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.modeToggleButton.titleLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book" size:18.0]];
-    [self.modeToggleButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.modeToggleButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.modeToggleButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateSelected];
-    [self.modeToggleButton setTitle:@"Private" forState:UIControlStateNormal];
-    [self.modeToggleButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    [self.modeToggleButton setTitle:@"Public" forState:UIControlStateSelected];
-    [self.modeToggleButton setTitleColor:[UIColor blueColor] forState:UIControlStateSelected];
-    isPublicMode = YES;
-    [self.modeToggleButton setSelected:isPublicMode];
-    [self.view addSubview:self.modeToggleButton];
-
+    if (![PFUser currentUser]) {
+        VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
+        [self presentViewController:logInVC animated:NO completion:nil];
+    }
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -242,19 +230,21 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
-        self.permissionVC = [[VYBPermissionViewController alloc] init];
-        [self presentViewController:self.permissionVC animated:NO completion:nil];
+    if ([PFUser currentUser]) {
+        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
+            self.permissionVC = [[VYBPermissionViewController alloc] init];
+            [self presentViewController:self.permissionVC animated:NO completion:nil];
+        }
+        if([CLLocationManager authorizationStatus]==kCLAuthorizationStatusDenied){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Access Denied"
+                                                            message:@"Please go to Settings and turn on Location Service for this app."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
     }
-    if([CLLocationManager authorizationStatus]==kCLAuthorizationStatusDenied){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Access Denied"
-                                                        message:@"Please go to Settings and turn on Location Service for this app."
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-    }
-
+    
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName
                                        value:@"Capture Screen"];
     // Send the screen view.
@@ -273,6 +263,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
 		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
 	});
+    
 }
 
 + (AVCaptureDevice *)deviceWithMediaType:(NSString *)mediaType preferringPosition:(AVCaptureDevicePosition)position
@@ -399,11 +390,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     startTime = [NSDate date];
     currVybe = [[VYBMyVybe alloc] init];
     [currVybe setTimeStamp:startTime];
-    [currVybe setIsPublic:isPublicMode];
-    if (isPublicMode)
-        NSLog(@"vybing in public");
-    else
-        NSLog(@"vybing in private");
 
     [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
         if (error || !geoPoint) {
@@ -541,7 +527,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 #pragma mark - DeviceOrientation
-
+/*
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
@@ -551,6 +537,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }
 	[[(AVCaptureVideoPreviewLayer *)[[self cameraView] layer] connection] setVideoOrientation:(AVCaptureVideoOrientation)toInterfaceOrientation];
 }
+*/
+
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskLandscapeRight;
@@ -579,11 +567,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }];
 }
 
-- (void)modeToggleButtonPressed:(id)sender {
-    isPublicMode = !isPublicMode;
-    [self.modeToggleButton setSelected:isPublicMode];
-}
-
 - (void)syncUIWithRecordingStatus:(BOOL)status {
     self.viewButton.hidden = status; flipButton.hidden = status; flashButton.hidden = status || isFrontCamera;
     [self.viewButton setNeedsDisplay];
@@ -593,7 +576,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)viewButtonPressed:(id)sender {
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [playerVC setIsPublicMode:isPublicMode];
     [self.navigationController pushViewController:playerVC animated:NO];
 }
 

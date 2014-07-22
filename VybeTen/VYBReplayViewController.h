@@ -21,4 +21,6 @@
 @property (nonatomic) UIButton *confirmButton;
 @property (nonatomic) UIButton *cancelButton;
 
+@property (nonatomic) BOOL isPublic;
+
 @end
