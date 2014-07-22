@@ -9,6 +9,7 @@
 #import "VYBAppDelegate.h"
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
+#import "VYBLogInViewController.h"
 #import "VYBUtility.h"
 #import "VYBCache.h"
 #import "VYBPlayerView.h"
@@ -355,8 +356,22 @@
 
 #if DEBUG
 - (void)tapTwice {
+    UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    [logOutAlert show];
 }
 #endif
+
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        NSLog(@"Logging out");
+        [PFUser logOut];
+        VYBLogInViewController *loginVC = [[VYBLogInViewController alloc] init];
+        [self.navigationController pushViewController:loginVC animated:NO];
+    } else {
+        NSLog(@"Logging out cancelled");
+    }
+}
 
 #pragma mark - VYBCaptureViewControllerDelegate
 

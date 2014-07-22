@@ -7,6 +7,7 @@
 //
 
 #import "VYBLogInViewController.h"
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @interface VYBLogInViewController ()
 
@@ -38,9 +39,10 @@
 
 - (IBAction)logInButtonPressed:(id)sender {
     NSString *username = self.usernameTextField.text;
-    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     //log in
     [PFUser logInWithUsernameInBackground:username password:username block:^(PFUser *user, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         if (!error) {
             if ([PFUser currentUser]) {
                 [self.navigationController popViewControllerAnimated:NO];
@@ -60,7 +62,9 @@
     PFUser *newUser = [PFUser user];
     newUser.username = username;
     newUser.password = username;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         if (!error) {
             if ([PFUser currentUser]) {
                 [self.navigationController popViewControllerAnimated:NO];
@@ -71,6 +75,11 @@
         }
     }];
 
+}
+
+#pragma mark - UIDeviceOrientation
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationPortrait;
 }
 
 - (void)didReceiveMemoryWarning

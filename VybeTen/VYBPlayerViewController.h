@@ -13,7 +13,7 @@
 
 @class VYBPlayerView;
 
-@interface VYBPlayerViewController : GAITrackedViewController <VYBCaptureViewControllerDelegate>
+@interface VYBPlayerViewController : GAITrackedViewController <VYBCaptureViewControllerDelegate, UIAlertViewDelegate>
 @property (nonatomic, strong) id parentVC;
 
 @property (nonatomic) AVPlayer *currPlayer;
