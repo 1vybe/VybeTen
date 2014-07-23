@@ -78,10 +78,9 @@ function get_vybes(options, request, response) {
 
   var query = new Parse.Query('Vybe');
 
-  if (recent) query.addDescending('timestamp');
-  if (nearby) query.near('location', userGeoPoint);
-  if (hide_user) query.notEqualTo('user', currentUser);
-  if (limit) query.limit(limit);
+
+  // Don't get private vybes
+  query.notEqualTo('isPublic', false);
 
   query.find({
     success: function(vybesObjects) {
