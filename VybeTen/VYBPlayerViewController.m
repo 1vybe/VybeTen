@@ -112,14 +112,12 @@
     tapTwice.numberOfTapsRequired = 2;
     [self.view addGestureRecognizer:tapTwice];
     
-    // Add Logout gesture
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressedDetected:)];
-    longPress.minimumPressDuration = 1;
-    longPress.numberOfTapsRequired = 1;
-    [self.view addGestureRecognizer:longPress];
-    
-    
 #endif
+    
+    // Add Logout gesture
+    UITapGestureRecognizer *tapThree = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapThree)];
+    tapThree.numberOfTapsRequired = 3;
+    [self.view addGestureRecognizer:tapThree];
     
     // Adding TIME label
     CGRect frame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 70, 200, 70);
@@ -377,9 +375,21 @@
     }
 }
 
+- (void)tapThree {
+    UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    [logOutAlert show];
+}
+
+- (void)longPressDetected:(id)sender {
+    UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    [logOutAlert show];
+}
+
+
+
 #if DEBUG
 
-- (void)tapTwice:(id)sender {
+- (void)tapTwice {
     NSString *deleteVybeFunction = @"delete_vybe";
     PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
 
@@ -390,11 +400,6 @@
             
         }
     }];
-}
-
-- (void)longPressDetected:(id)sender {
-    UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-    [logOutAlert show];
 }
 
 #endif
