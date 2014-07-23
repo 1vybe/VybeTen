@@ -64,6 +64,12 @@ Parse.Cloud.define('algorithm3',
     })
 );
 
+Parse.Cloud.define('get_tribe_vybes',
+    get_tribe_vybes.bind(this, {
+        recent: true,
+        reversed: true,
+    })
+);
 
 // Generic get_vybes functions that accepts options
 function get_vybes(options, request, response) {
@@ -102,5 +108,50 @@ function get_vybes(options, request, response) {
     error: function() {
       response.error('Request to get_vybes() has failed.');
     }
+  });
+}
+
+// Generic get_tribe_vybes functions that accepts options
+function get_tribe_vybes(options, request, response) {
+  var recent = options.recent || false;
+  var nearby = options.nearby || false;
+  var hide_user = options.hide_user || false;
+  var reversed = options.reversed || false;
+  var limit = options.limit || 10;
+
+  var userGeoPoint = request.params.location;
+  var currentUser = Parse.User.current();
+
+  var query = new Parse.Query(Parse.User);
+
+  var relation = currentUser.get('tribe').relation('members');
+  relation.query().find().then(function(members) {
+
+    var query = new Parse.Query('Vybe');
+
+    query.containedIn('user', members);
+
+    if (recent)
+      query.addDescending('timestamp');
+    if (nearby)
+      query.near('location', userGeoPoint);
+    if (hide_user)
+      query.notEqualTo('user', currentUser);
+    if (limit)
+      query.limit(limit);
+
+    query.find({
+      success: function(vybesObjects) {
+        if (reversed) {
+          response.success(vybesObjects);
+        } else {
+          // Sort result in chronological order
+          response.success(vybesObjects.reverse());
+        }
+      },
+      error: function() {
+        response.error('Request to get_tribe_vybes_new() has failed.');
+      }
+    });
   });
 }
