@@ -1,4 +1,4 @@
-//
+    //
 //  VYBPlayerViewController.m
 //  VybeTen
 //
@@ -107,14 +107,22 @@
     [self.view addGestureRecognizer:tapOnce];
     
 #if DEBUG
-    // Add tap gesture
+    // Add DELETE gesture
     UITapGestureRecognizer *tapTwice = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapTwice)];
     tapTwice.numberOfTapsRequired = 2;
     [self.view addGestureRecognizer:tapTwice];
+    
+    // Add Logout gesture
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressedDetected:)];
+    longPress.minimumPressDuration = 1;
+    longPress.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:longPress];
+    
+    
 #endif
     
     // Adding TIME label
-    CGRect frame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 48, 200, 48);
+    CGRect frame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 70, 200, 70);
     timeLabel = [[VYBLabel alloc] initWithFrame:frame];
     [timeLabel setTextColor:[UIColor whiteColor]];
     [timeLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:18.0]];
@@ -127,6 +135,8 @@
     [locationLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book" size:18.0]];
     [locationLabel setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:locationLabel];
+    
+    // Adding CAPTURE button
     
     frame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
     captureButton = [[UIButton alloc] initWithFrame:frame];
@@ -149,6 +159,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSString *functionName = @"default_algorithm";
+    
     if (!self.isPublicMode) {
         functionName = @"get_tribe_vybes";
     }
@@ -367,10 +378,25 @@
 }
 
 #if DEBUG
-- (void)tapTwice {
+
+- (void)tapTwice:(id)sender {
+    NSString *deleteVybeFunction = @"delete_vybe";
+    PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
+
+    [PFCloud callFunctionInBackground:deleteVybeFunction withParameters:@{@"vybeID": currVybe.objectId} block:^(id object, NSError *error) {
+        if (error) {
+            
+        } else {
+            
+        }
+    }];
+}
+
+- (void)longPressDetected:(id)sender {
     UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     [logOutAlert show];
 }
+
 #endif
 
 

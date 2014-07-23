@@ -22,7 +22,8 @@
 
 @property (nonatomic) UIButton *flipButton;
 @property (nonatomic) UIButton *flashButton;
-@property (nonatomic) UIButton *viewButton;
+@property (nonatomic) UIButton *privateViewButton;
+@property (nonatomic) UIButton *publicViewButton;
 @property (nonatomic, strong) VYBCaptureButton *captureButton;
 
 @end

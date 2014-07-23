@@ -52,33 +52,32 @@
     [self setNeedsStatusBarAppearanceUpdate];
    
     // Adding CONFIRM button
-    CGRect frame = CGRectMake(0, 0, 70, 70);
-    self.confirmButton = [[UIButton alloc] initWithFrame:frame];
-    [self.confirmButton setImage:[UIImage imageNamed:@"button_replay_confirm.png"] forState:UIControlStateNormal];
-    [self.confirmButton addTarget:self action:@selector(confirmButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.confirmButton];
+    CGRect frame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    self.acceptButton = [[UIButton alloc] initWithFrame:frame];
+    [self.acceptButton setImage:[UIImage imageNamed:@"button_replay_accept.png"] forState:UIControlStateNormal];
+    [self.acceptButton addTarget:self action:@selector(acceptButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.acceptButton];
     
-    frame = CGRectMake(0, self.view.bounds.size.width - 70, 70, 70);
-    self.cancelButton = [[UIButton alloc] initWithFrame:frame];
-    [self.cancelButton setImage:[UIImage imageNamed:@"button_replay_cancel.png"] forState:UIControlStateNormal];
-    [self.cancelButton addTarget:self action:@selector(cancelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.cancelButton];
+    frame = CGRectMake(self.view.bounds.size.height - 70, (self.view.bounds.size.width - 70)/2, 70, 70);
+    self.rejectButton = [[UIButton alloc] initWithFrame:frame];
+    [self.rejectButton setImage:[UIImage imageNamed:@"button_replay_reject.png"] forState:UIControlStateNormal];
+    [self.rejectButton addTarget:self action:@selector(rejectButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.rejectButton];
     
     // Adding toggle switch for private/public
-    frame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
-    self.modeToggleButton = [[UIButton alloc] initWithFrame:frame];
-    [self.modeToggleButton addTarget:self action:@selector(modeToggleButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.modeToggleButton.titleLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book" size:18.0]];
-    [self.modeToggleButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.modeToggleButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.modeToggleButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateSelected];
-    [self.modeToggleButton setTitle:@"Private" forState:UIControlStateNormal];
-    [self.modeToggleButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    [self.modeToggleButton setTitle:@"Public" forState:UIControlStateSelected];
-    [self.modeToggleButton setTitleColor:[UIColor blueColor] forState:UIControlStateSelected];
-    [self.modeToggleButton setSelected:self.isPublic];
-    //[self.view addSubview:self.modeToggleButton];
+    frame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
+    self.modeSwitch = [[UISwitch alloc] initWithFrame:frame];
+    [self.modeSwitch addTarget:self action:@selector(modeSwitchToggled:) forControlEvents:UIControlEventValueChanged];
+    self.modeSwitch.onTintColor = [UIColor blueColor];
+    self.modeSwitch.tintColor = [UIColor orangeColor];
+    [self.modeSwitch setOn:self.isPublic];
+    [self.view addSubview:self.modeSwitch];
 
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
@@ -87,12 +86,18 @@
     [self.player play];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.player pause];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+}
+
 - (void)playerItemDidReachEnd {
     [self.currItem seekToTime:kCMTimeZero];
     [self.player play];
 }
 
-- (void)confirmButtonPressed:(id)sender {
+- (void)acceptButtonPressed:(id)sender {
     NSData *video = [NSData dataWithContentsOfFile:[self.currVybe videoFilePath]];
     
     PFFile *videoFile = [PFFile fileWithData:video];
@@ -112,8 +117,6 @@
             [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
             [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    uploadProgressView.progress = 1.0;
-                    [uploadProgressView setNeedsDisplay];
                     [VYBUtility clearLocalCacheForVybe:self.currVybe];
                 }
                 else {
@@ -128,13 +131,13 @@
             [uploadProgressView removeFromSuperview];
         }
     } progressBlock:^(int percentDone) {
-        uploadProgressView.progress = (percentDone <= 90) ? percentDone / 100.0 : 0.9;
+        uploadProgressView.progress = percentDone / 100.0;
     }];
     
     [self.navigationController popViewControllerAnimated:NO];
 }
 
-- (void)cancelButtonPressed:(id)sender {
+- (void)rejectButtonPressed:(id)sender {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
         
@@ -148,9 +151,9 @@
     [self.navigationController popViewControllerAnimated:NO];
 }
 
-- (void)modeToggleButtonPressed:(id)sender {
+- (void)modeSwitchToggled:(id)sender {
     self.isPublic = !self.isPublic;
-    [self.modeToggleButton setSelected:self.isPublic];
+    [self.modeSwitch setOn:self.isPublic animated:YES];
 }
 
 - (NSUInteger)supportedInterfaceOrientations {

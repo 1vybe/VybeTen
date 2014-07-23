@@ -84,6 +84,13 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+     action:@selector(longPressDetected:)];
+    longPressRecognizer.minimumPressDuration = 0.3;
+    longPressRecognizer.numberOfTouchesRequired = 1;
+    [self.view addGestureRecognizer:longPressRecognizer];
+    
 
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [self setSession:session];
@@ -102,8 +109,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     dispatch_async(sessionQueue, ^{
         [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
         
-        [[self session] setSessionPreset:AVCaptureSessionPresetMedium];
-
+        [[self session] setSessionPreset:AVCaptureSessionPreset640x480];
+        
         NSError *error = nil;
         
         AVCaptureDevice *videoDevice = [VYBCaptureViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:AVCaptureDevicePositionBack];
@@ -164,16 +171,23 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     */
     
     // Adding CAPTURE button
-    
     self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
     
+    // Adding PRIVATE view button
     CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
-    self.viewButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    [self.viewButton setImage:[UIImage imageNamed:@"button_local_view.png"] forState:UIControlStateNormal];
-    [self.viewButton addTarget:self action:@selector(viewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.viewButton setContentMode:UIViewContentModeLeft];
-    [self.view addSubview:self.viewButton];
+    self.privateViewButton = [[UIButton alloc] initWithFrame:buttonFrame];
+    [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view.png"] forState:UIControlStateNormal];
+    [self.privateViewButton addTarget:self action:@selector(privateViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.privateViewButton setContentMode:UIViewContentModeLeft];
+    [self.view addSubview:self.privateViewButton];
 
+    // Adding PUBLIC view button
+    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    self.publicViewButton = [[UIButton alloc] initWithFrame:buttonFrame];
+    [self.publicViewButton setImage:[UIImage imageNamed:@"button_public_view.png"] forState:UIControlStateNormal];
+    [self.publicViewButton addTarget:self action:@selector(publicViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.publicViewButton];
+    
     // Adding FLIP button
     buttonFrame = CGRectMake(0, self.view.bounds.size.width - 70, 70, 70);
     flipButton = [[UIButton alloc] initWithFrame:buttonFrame];
@@ -192,34 +206,29 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [flashButton addTarget:self action:@selector(switchFlash:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:flashButton];
     
-    if (![PFUser currentUser]) {
-        VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
-        [self presentViewController:logInVC animated:NO completion:nil];
-    }
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    dispatch_async([self sessionQueue], ^{
-        [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
-        
-        [self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
-        
-        __weak VYBCaptureViewController *weakSelf = self;
-        [self setRuntimeErrorHandlingObserver:[[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:[self session] queue:nil usingBlock:^(NSNotification *note) {
-			VYBCaptureViewController *strongSelf = weakSelf;
-			dispatch_async([strongSelf sessionQueue], ^{
-				// Manually restarting the session since it must have been stopped due to an error.
-				[[strongSelf session] startRunning];
-			});
-		}]];
-        
-		[[self session] startRunning];
-        NSLog(@"view will appear: session running");
-    });
-    
+    if ([self session] && ![[self session] isRunning]) {
+        dispatch_async([self sessionQueue], ^{
+            [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
+            
+            [self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
+            
+            __weak VYBCaptureViewController *weakSelf = self;
+            [self setRuntimeErrorHandlingObserver:[[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:[self session] queue:nil usingBlock:^(NSNotification *note) {
+                VYBCaptureViewController *strongSelf = weakSelf;
+                dispatch_async([strongSelf sessionQueue], ^{
+                    // Manually restarting the session since it must have been stopped due to an error.
+                    [[strongSelf session] startRunning];
+                });
+            }]];
+            
+            [[self session] startRunning];
+        });
+    }
     
     flashButton.selected = flashOn;
     flipButton.selected = isFrontCamera;
@@ -230,7 +239,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-    if ([PFUser currentUser]) {
+    if (![PFUser currentUser]) {
+        VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
+        [self presentViewController:logInVC animated:NO completion:nil];
+    }
+    else {
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
             self.permissionVC = [[VYBPermissionViewController alloc] init];
             [self presentViewController:self.permissionVC animated:NO completion:nil];
@@ -254,16 +267,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
-    dispatch_async([self sessionQueue], ^{
-		[[self session] stopRunning];
-        
-		[[NSNotificationCenter defaultCenter] removeObserver:[self runtimeErrorHandlingObserver]];
-		
-		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
-		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
-	});
-    
 }
 
 + (AVCaptureDevice *)deviceWithMediaType:(NSString *)mediaType preferringPosition:(AVCaptureDevicePosition)position
@@ -279,7 +282,26 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 			break;
 		}
 	}
-	
+    NSError *error;
+    if ([captureDevice lockForConfiguration:&error]) {
+        if ([captureDevice isLowLightBoostSupported]) {
+            [captureDevice setAutomaticallyEnablesLowLightBoostWhenAvailable:YES];
+        }
+        if ([captureDevice isSmoothAutoFocusSupported]) {
+            [captureDevice setSmoothAutoFocusEnabled:YES];
+        }
+        if ([captureDevice isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
+            [captureDevice setFocusMode:AVCaptureFocusModeAutoFocus];
+        }
+        if ([captureDevice isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
+            [captureDevice setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
+        }
+        [captureDevice unlockForConfiguration];
+
+        
+    } else {
+        NSLog(@"Low light boost configuration failed: %@", error);
+    }
 	return captureDevice;
 }
 
@@ -309,7 +331,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)flipCamera:(id)sender {
     [[self flipButton] setEnabled:NO];
-    [[self viewButton] setEnabled:NO];
+    [[self privateViewButton] setEnabled:NO];
+    [[self publicViewButton] setEnabled:NO];
+
     
     dispatch_async([self sessionQueue], ^{
         AVCaptureDevice *currentVideoDevice = [[self videoInput] device];
@@ -341,6 +365,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         } else {
             [[self session] addInput:[self videoInput]];
         }
+        
+        
         [[self session] commitConfiguration];
         
         // Video should be mirrored if coming from the front camera
@@ -350,7 +376,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             isFrontCamera = [videoDevice position] == AVCaptureDevicePositionFront;
             [[self flipButton] setSelected:isFrontCamera];
             [self flashButton].hidden = isFrontCamera;
-            [[self viewButton] setEnabled:YES];
+            [[self privateViewButton] setEnabled:YES];
+            [[self publicViewButton] setEnabled:YES];
             [[self flipButton] setEnabled:YES];
         });
         
@@ -360,71 +387,25 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 #pragma mark - UIResponder
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)longPressDetected:(UILongPressGestureRecognizer *)recognizer {
     [self.view addSubview:self.captureButton];
-    self.captureButton.center = [[touches anyObject] locationInView:self.view];
+    self.captureButton.center = [recognizer locationInView:self.view];
     
-    [self startRecording];
-}
-
-- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
-{
-    CGPoint pt = [[touches anyObject] locationInView:self.view];
-    self.captureButton.center = pt;
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self.captureButton removeFromSuperview];
-
-    dispatch_async([self sessionQueue], ^{
-        if ([self.movieFileOutput isRecording])
-            [self.movieFileOutput stopRecording];
-    });
-}
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self touchesEnded:touches withEvent:event];
-}
-
-- (void)startRecording {
-    startTime = [NSDate date];
-    currVybe = [[VYBMyVybe alloc] init];
-    [currVybe setTimeStamp:startTime];
-
-    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-        if (error || !geoPoint) {
-            NSLog(@"Cannot retrive current location at this moment.");
-        } else {
-            [currVybe setGeoTagFrom:geoPoint];
-        }
-    }];
-    
-    if (recordingTimer) {
-        [recordingTimer invalidate];
-        recordingTimer = nil;
+    if (![self.movieFileOutput isRecording]) {
+        [self startRecording];
     }
-    recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
-
-    dispatch_async([self sessionQueue], ^{
-        if ([[UIDevice currentDevice] isMultitaskingSupported])
-        {
-            // Setup background task. This is needed because the captureOutput:didFinishRecordingToOutputFileAtURL: callback is not received until AVCam returns to the foreground unless you request background execution time. This also ensures that there will be time to write the file to the assets library when AVCam is backgrounded. To conclude this background execution, -endBackgroundTask is called in -recorder:recordingDidFinishToOutputFileURL:error: after the recorded file has been saved.
-            [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
-        }
-
-        [[[self movieFileOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[[self cameraView] layer] connection] videoOrientation]];
-
-        // Turning OFF flash for video recording
-        if (flashOn) {
-            [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOn forDevice:[[self videoInput] device]];
-        } else {
-            [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOff forDevice:[[self videoInput] device]];
-        }
+    
+    if (([recognizer state] == UIGestureRecognizerStateEnded) || ([recognizer state] == UIGestureRecognizerStateCancelled)) {
+        [self.captureButton removeFromSuperview];
         
-        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[currVybe videoFilePath]];
-        [self.movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
-    });
+        if ([self.movieFileOutput isRecording]) {
+            dispatch_async([self sessionQueue], ^{
+                [self.movieFileOutput stopRecording];
+            });
+        }
+    }
 }
+
 
 - (void)timer:(NSTimer *)timer {
     double secondsSinceStart = [[NSDate date] timeIntervalSinceDate:startTime];
@@ -445,6 +426,48 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [self.captureButton setMinPercentage:minPercent];
     }
     [self.captureButton setNeedsDisplay];
+}
+
+
+- (void)startRecording {
+    startTime = [NSDate date];
+    currVybe = [[VYBMyVybe alloc] init];
+    [currVybe setTimeStamp:startTime];
+    
+    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+        if (error || !geoPoint) {
+            NSLog(@"Cannot retrive current location at this moment.");
+        } else {
+            [currVybe setGeoTagFrom:geoPoint];
+        }
+    }];
+    
+    
+    if (recordingTimer) {
+        [recordingTimer invalidate];
+        recordingTimer = nil;
+    }
+    recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
+    
+    dispatch_async([self sessionQueue], ^{
+        if ([[UIDevice currentDevice] isMultitaskingSupported])
+        {
+            // Setup background task. This is needed because the captureOutput:didFinishRecordingToOutputFileAtURL: callback is not received until AVCam returns to the foreground unless you request background execution time. This also ensures that there will be time to write the file to the assets library when AVCam is backgrounded. To conclude this background execution, -endBackgroundTask is called in -recorder:recordingDidFinishToOutputFileURL:error: after the recorded file has been saved.
+            [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
+        }
+        
+        [[[self movieFileOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[[self cameraView] layer] connection] videoOrientation]];
+        
+        // Turning OFF flash for video recording
+        if (flashOn) {
+            [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOn forDevice:[[self videoInput] device]];
+        } else {
+            [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOff forDevice:[[self videoInput] device]];
+        }
+        
+        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[currVybe videoFilePath]];
+        [self.movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
+    });
 }
 
 
@@ -527,18 +550,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 #pragma mark - DeviceOrientation
-/*
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-        NSLog(@"left");
-    } else if (toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-        NSLog(@"right");
-    }
-	[[(AVCaptureVideoPreviewLayer *)[[self cameraView] layer] connection] setVideoOrientation:(AVCaptureVideoOrientation)toInterfaceOrientation];
-}
-*/
-
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskLandscapeRight;
@@ -568,14 +579,18 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)syncUIWithRecordingStatus:(BOOL)status {
-    self.viewButton.hidden = status; flipButton.hidden = status; flashButton.hidden = status || isFrontCamera;
-    [self.viewButton setNeedsDisplay];
-    [self.flipButton setNeedsDisplay];
-    [self.flashButton setNeedsDisplay];
+    self.privateViewButton.hidden = status; self.publicViewButton.hidden = status; flipButton.hidden = status; flashButton.hidden = status || isFrontCamera;
 }
 
-- (void)viewButtonPressed:(id)sender {
+- (void)privateViewButtonPressed:(id)sender {
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    [playerVC setIsPublicMode:NO];
+    [self.navigationController pushViewController:playerVC animated:NO];
+}
+
+- (void)publicViewButtonPressed:(id)sender {
+    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    [playerVC setIsPublicMode:YES];
     [self.navigationController pushViewController:playerVC animated:NO];
 }
 
@@ -586,7 +601,16 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    NSLog(@"[Capture] Memory Warning");
+    dispatch_async([self sessionQueue], ^{
+		[[self session] stopRunning];
+        
+		[[NSNotificationCenter defaultCenter] removeObserver:[self runtimeErrorHandlingObserver]];
+		
+		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
+		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
+	});
+
 }
 
 
