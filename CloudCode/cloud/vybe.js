@@ -78,20 +78,26 @@ function get_vybes(options, request, response) {
 
   var query = new Parse.Query('Vybe');
 
+  if (recent)
+    query.addDescending('timestamp');
+  if (nearby)
+    query.near('location', userGeoPoint);
+  if (hide_user)
+    query.notEqualTo('user', currentUser);
+  if (limit)
+    query.limit(limit);
 
   // Don't get private vybes
   query.notEqualTo('isPublic', false);
 
   query.find({
     success: function(vybesObjects) {
-      var result;
       if (reversed) {
-        result = vybesObjects;
+        response.success(vybesObjects);
       } else {
         // Sort result in chronological order
-        result = vybesObjects.reverse();
+        response.success(vybesObjects.reverse());
       }
-      response.success(result);
     },
     error: function() {
       response.error('Request to get_vybes() has failed.');
