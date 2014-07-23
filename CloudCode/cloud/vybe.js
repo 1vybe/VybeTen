@@ -14,6 +14,11 @@ Parse.Cloud.beforeSave('Vybe', function(request, response) {
 
 // Sends a Yo to all who Yo VybeDev
 Parse.Cloud.afterSave('Vybe', function(request) {
+  // Only send push notifications for new vybes
+  if (request.object.existed()) {
+    return;
+  }
+
   Parse.Cloud.httpRequest({
     method: 'POST',
     url: 'http://api.justyo.co/yoall/',
