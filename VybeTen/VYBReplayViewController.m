@@ -11,6 +11,7 @@
 #import "MBProgressHUD.h"
 #import "VYBUtility.h"
 #import "VYBMyVybeStore.h"
+#import "VYBNavigationController.h"
 
 @interface VYBReplayViewController ()
 
@@ -65,18 +66,19 @@
     [self.view addSubview:self.rejectButton];
     
     // Adding toggle switch for private/public
-    frame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
-    self.modeSwitch = [[UISwitch alloc] initWithFrame:frame];
-    [self.modeSwitch addTarget:self action:@selector(modeSwitchToggled:) forControlEvents:UIControlEventValueChanged];
-    self.modeSwitch.onTintColor = [UIColor blueColor];
-    self.modeSwitch.tintColor = [UIColor orangeColor];
-    [self.modeSwitch setOn:self.isPublic];
-    [self.view addSubview:self.modeSwitch];
+    frame = CGRectMake(self.view.bounds.size.height - 150, self.view.bounds.size.width - 60, 130, 40);
+    self.modeControl = [[UISegmentedControl alloc] initWithItems:@[@"Public", @"Private"]];
+    [self.modeControl setFrame:frame];
+    [self.modeControl addTarget:self action:@selector(modeChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:self.modeControl];
 
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    [self.modeControl setSelectedSegmentIndex:(self.isPublic) ? 0 : 1];
+    [self.modeControl setTintColor:(self.isPublic) ? [UIColor blueColor] : [UIColor orangeColor]];
     
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
@@ -115,20 +117,24 @@
     [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
+            [VYBUtility clearLocalCacheForVybe:self.currVybe];
             [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    [VYBUtility clearLocalCacheForVybe:self.currVybe];
+                    NSLog(@"Posted");
+                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Posted"];
                 }
                 else {
-                    [vybe saveEventually:^(BOOL succeeded, NSError *error) {
-                        [VYBUtility clearLocalCacheForVybe:self.currVybe];
-                    }];
+                    NSLog(@"Saved");
+                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
                 }
                 [uploadProgressView removeFromSuperview];
             }];
         } else {
             [[VYBMyVybeStore sharedStore] addVybe:self.currVybe];
             [uploadProgressView removeFromSuperview];
+
+            NSLog(@"Saved");
+            [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
         }
     } progressBlock:^(int percentDone) {
         uploadProgressView.progress = percentDone / 100.0;
@@ -151,9 +157,12 @@
     [self.navigationController popViewControllerAnimated:NO];
 }
 
-- (void)modeSwitchToggled:(id)sender {
-    self.isPublic = !self.isPublic;
-    [self.modeSwitch setOn:self.isPublic animated:YES];
+- (void)modeChanged:(id)sender {
+    self.isPublic = (self.modeControl.selectedSegmentIndex == 0);
+    self.modeControl.tintColor = (self.isPublic) ? [UIColor blueColor] : [UIColor orangeColor];
+    if (self.isPublic) {
+        NSLog(@"changed to public");
+    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {

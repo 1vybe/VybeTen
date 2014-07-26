@@ -16,7 +16,6 @@
 #import "VYBTimerView.h"
 #import "VYBLabel.h"
 #import "VYBConstants.h"
-#import "MBProgressHUD.h"
 #import <GAI.h>
 #import <GAITracker.h>
 #import <GAIFields.h>
@@ -106,13 +105,10 @@
     tapOnce.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapOnce];
     
-#if DEBUG
     // Add DELETE gesture
     UITapGestureRecognizer *tapTwice = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapTwice)];
     tapTwice.numberOfTapsRequired = 2;
     [self.view addGestureRecognizer:tapTwice];
-    
-#endif
     
     // Add Logout gesture
     UITapGestureRecognizer *tapThree = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapThree)];
@@ -135,7 +131,6 @@
     [self.view addSubview:locationLabel];
     
     // Adding CAPTURE button
-    
     frame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
     captureButton = [[UIButton alloc] initWithFrame:frame];
     [captureButton setImage:[UIImage imageNamed:@"button_capture.png"] forState:UIControlStateNormal];
@@ -381,39 +376,39 @@
 }
 
 - (void)longPressDetected:(id)sender {
-    UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-    [logOutAlert show];
+
 }
 
-
-
-#if DEBUG
 
 - (void)tapTwice {
-    NSString *deleteVybeFunction = @"delete_vybe";
-    PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
-
-    [PFCloud callFunctionInBackground:deleteVybeFunction withParameters:@{@"vybeID": currVybe.objectId} block:^(id object, NSError *error) {
-        if (error) {
-            
-        } else {
-            
-        }
-    }];
+    if (self.currPlayer.rate != 0.0) {
+        [self.currPlayer pause];
+    }
+    UIAlertView *deleteAlert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"This vybe will be gone." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"DELETE", nil];
+    [deleteAlert show];
 }
-
-#endif
 
 
 #pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
-        NSLog(@"Logging out");
-        [PFUser logOut];
-        VYBLogInViewController *loginVC = [[VYBLogInViewController alloc] init];
-        [self presentViewController:loginVC animated:NO completion:nil];
-    } else {
-        NSLog(@"Logging out cancelled");
+        if (alertView.title) {
+            PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [currVybe deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                if (!error) {
+                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Deleted"];
+                } else {
+                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_x.png"] title:@"Failed"];
+                }
+            }];
+        } else {
+            NSLog(@"Logging out");
+            [PFUser logOut];
+            VYBLogInViewController *loginVC = [[VYBLogInViewController alloc] init];
+            [self presentViewController:loginVC animated:NO completion:nil];
+        }
     }
 }
 

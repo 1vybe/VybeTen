@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @protocol VYBPageViewControllerProtocol <NSObject>
 
@@ -14,9 +15,11 @@
 
 @end
 
-@interface VYBNavigationController : UINavigationController <VYBPageViewControllerProtocol>
+@interface VYBNavigationController : UINavigationController <VYBPageViewControllerProtocol, MBProgressHUDDelegate>
 
 + (VYBNavigationController *)navigationControllerForPageIndex:(NSInteger)pageIndex withRootViewController:(UIViewController *)rootViewController;
 - (NSInteger)pageIndex;
+
+- (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title;
 
 @end

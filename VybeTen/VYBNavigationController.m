@@ -36,6 +36,18 @@
     return _pageIndex;
 }
 
+- (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title {
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:aIamge];
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:hud];
+    hud.mode = MBProgressHUDModeCustomView;
+    hud.customView = imageView;
+    hud.delegate = self;
+    hud.labelText = @"Posted";
+    [hud show:YES];
+    [hud hide:YES afterDelay:0.5];
+}
+
 - (BOOL)shouldAutorotate {
     return [self.topViewController shouldAutorotate];
 }

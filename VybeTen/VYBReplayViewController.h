@@ -17,7 +17,7 @@
 @property (nonatomic) VYBPlayerView *playerView;
 @property (nonatomic) AVPlayerItem *currItem;
 @property (nonatomic) VYBMyVybe *currVybe;
-@property (nonatomic) UISwitch *modeSwitch;
+@property (nonatomic) UISegmentedControl *modeControl;
 @property (nonatomic) UIButton *acceptButton;
 @property (nonatomic) UIButton *rejectButton;
 

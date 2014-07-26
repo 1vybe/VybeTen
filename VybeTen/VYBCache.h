@@ -25,8 +25,10 @@
 - (NSArray *)usersFollowedByMe;
 - (NSNumber *)vybeCountForUser:(PFUser *)user;
 - (NSNumber *)tribeCountForUser:(PFUser *)user;
+- (NSString *)firstVybeIDToWatch;
 - (PFObject *)syncTribeForUser:(PFUser *)user;
 - (BOOL)followStatusForUser:(PFUser *)user;
+- (void)setFirstVybeIDToWatch:(NSString *)vId;
 - (void)setSyncTribe:(PFObject *)tribe user:(PFUser *)user;
 - (void)setVybeCount:(NSNumber *)count user:(PFUser *)user;
 - (void)setTribeCount:(NSNumber *)count user:(PFUser *)user;

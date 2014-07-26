@@ -7,6 +7,7 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 #import "VYBUtility.h"
 #import "VYBCache.h"
 #import "VYBConstants.h"
@@ -37,7 +38,9 @@
     NSError *error;
     [[NSFileManager defaultManager] removeItemAtURL:videoURL error:&error];
     if (error) {
-        NSLog(@"Cached my vybe was NOT deleted");
+        NSLog(@"[Utility] Cached my vybe was NOT deleted");
+    } else {
+        NSLog(@"[Utility] Cached my vybe was DELETED");
     }
 }
 
@@ -128,6 +131,17 @@
     NSString *theTime = [NSString stringWithFormat:@"%d %@ ago", i, unit];
     
     return theTime;
+}
+
++ (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title {
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:aIamge];
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[[UIApplication sharedApplication] delegate].window];
+    [[[UIApplication sharedApplication] delegate].window addSubview:hud];
+    hud.mode = MBProgressHUDModeCustomView;
+    hud.customView = imageView;
+    hud.labelText = title;
+    [hud show:YES];
+    [hud hide:YES afterDelay:1.0];
 }
 
 @end

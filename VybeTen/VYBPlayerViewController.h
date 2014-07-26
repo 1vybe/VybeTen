@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "MBProgressHUD.h"
 #import "GAITrackedViewController.h"
 #import "VYBCaptureViewController.h"
 
 @class VYBPlayerView;
 
-@interface VYBPlayerViewController : GAITrackedViewController <VYBCaptureViewControllerDelegate, UIAlertViewDelegate>
+@interface VYBPlayerViewController : GAITrackedViewController <VYBCaptureViewControllerDelegate, UIAlertViewDelegate, MBProgressHUDDelegate>
 @property (nonatomic, strong) id parentVC;
 
 @property (nonatomic) AVPlayer *currPlayer;

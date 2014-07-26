@@ -17,6 +17,7 @@
 + (NSString *)reverseTime:(NSDate *)aDate;
 + (void)reverseGeoCode:(PFGeoPoint *)aLocation withCompletion:(void (^)(NSArray *placemarks, NSError *error))completionBlock;
 + (NSString *)convertPlacemarkToLocation:(CLPlacemark *)placemark;
++ (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title;
 
 
 #pragma mark Display Name

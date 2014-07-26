@@ -16,7 +16,6 @@
 
 + (VYBMyVybeStore *)sharedStore;
 - (void)addVybe:(VYBMyVybe *)aVybe;
-- (void)uploadVybe:(VYBMyVybe *)aVybe;
 - (void)uploadDelayedVybes;
 - (NSString *)myVybesArchivePath;
 

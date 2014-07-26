@@ -175,6 +175,9 @@
     }
 }
 
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+        
+}
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
