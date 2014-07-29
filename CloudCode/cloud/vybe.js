@@ -1,3 +1,5 @@
+require('cloud/tribe');
+
 // Validate Vybes have a valid owner in the "user" pointer.
 Parse.Cloud.beforeSave('Vybe', function(request, response) {
   var currentUser = request.user;
