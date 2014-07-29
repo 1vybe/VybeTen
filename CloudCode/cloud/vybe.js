@@ -146,7 +146,7 @@ function get_vybes(options, request, response) {
   var nearby = options.nearby || false;
   var hide_user = options.hide_user || false;
   var reversed = options.reversed || false;
-  var limit = options.limit || 10;
+  var limit = options.limit || 50;
 
   var userGeoPoint = request.params.location;
   var currentUser = Parse.User.current();
@@ -186,7 +186,7 @@ function get_tribe_vybes(options, request, response) {
   var nearby = options.nearby || false;
   var hide_user = options.hide_user || false;
   var reversed = options.reversed || false;
-  var limit = options.limit || 10;
+  var limit = options.limit || 50;
 
   var userGeoPoint = request.params.location;
   var currentUser = Parse.User.current();
