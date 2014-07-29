@@ -13,6 +13,8 @@
 
 
 @class VYBTribe;
+@class VYBLabel;
+
 @protocol VYBCaptureViewControllerDelegate;
 @interface VYBCaptureViewController : GAITrackedViewController <AVCaptureFileOutputRecordingDelegate> {
     NSString *adId;
@@ -23,6 +25,7 @@
 @property (nonatomic) UIButton *flipButton;
 @property (nonatomic) UIButton *flashButton;
 @property (nonatomic) UIButton *privateViewButton;
+@property (nonatomic) VYBLabel *privateCountLabel;
 @property (nonatomic) UIButton *publicViewButton;
 @property (nonatomic, strong) VYBCaptureButton *captureButton;
 

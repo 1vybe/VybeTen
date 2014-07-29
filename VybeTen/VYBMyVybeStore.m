@@ -85,6 +85,7 @@
                 }
             }];
         } else {
+            [self addVybe:aVybe];
         }
     }];
 }
@@ -95,6 +96,7 @@
         return;
     }
     VYBMyVybe *delayedVybe = [myVybes firstObject];
+    [self removeVybe:delayedVybe];
     [self uploadDelayedVybe:delayedVybe];
 }
 

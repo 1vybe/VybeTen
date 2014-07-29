@@ -114,6 +114,10 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (void)setLastRefresh:(NSDate *)aDate {
+    
+}
+
 - (NSArray *)facebookFriends {
     NSString *key = kVYBUserDefaultsCacheFacebookFriendsKey;
     if ([self.cache objectForKey:key]) {

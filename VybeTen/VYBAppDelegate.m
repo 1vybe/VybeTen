@@ -14,6 +14,7 @@
 #import <GAIFields.h>
 #import <HockeySDK/HockeySDK.h>
 #import "VYBAppDelegate.h"
+#import "VYBUserStore.h"
 #import "VYBCaptureViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBMyVybeStore.h"
@@ -85,12 +86,16 @@
     
     self.uniqueID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     
+
     // Clearing Push-noti Badge number
+    /*
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+
     if (currentInstallation.badge != 0) {
         currentInstallation.badge = 0;
         [currentInstallation saveEventually];
     }
+    */
     
     // Access Control
     PFACL *defaultACL = [PFACL ACL];
@@ -113,6 +118,8 @@
     
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     
+    // Handle push if the app is launched from notification
+    [self handlePush:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
     
     return YES;
 }
@@ -128,10 +135,15 @@
 {    
     BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
     if (success)
-        NSLog(@"Vybe put to sleep. My vybes are saved. :)");
+        NSLog(@"Vybe in bg. My vybes are saved. :)");
     else
-        NSLog(@"Vybe put to sleep. My vybes will be lost. :(");
+        NSLog(@"Vybe in bg. My vybes will be lost. :(");
     
+    success = [[VYBUserStore sharedStore] saveChanges];
+    if (success)
+        NSLog(@"Vybe in bg. User info is saved. :)");
+    else
+        NSLog(@"Vybe in bg. User info is lost. :(");
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -147,6 +159,12 @@
         NSLog(@"Vybe terminated. My vybes are saved. :)");
     else
         NSLog(@"Vybe terminated. My vybes will be lost. :(");
+    
+    success = [[VYBUserStore sharedStore] saveChanges];
+    if (success)
+        NSLog(@"Vybe terminated. User info is saved. :)");
+    else
+        NSLog(@"Vybe terminated. User info is lost. :(");
 }
 
 
@@ -168,7 +186,10 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil userInfo:userInfo];
+    if ([userInfo objectForKey:kVYBPushPayloadVybeIDKey]) {
+        [[VYBUserStore sharedStore] setNewPrivateVybeCount:[[VYBUserStore sharedStore] newPrivateVybeCount] + 1];
+        [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:self];
+    }
     
     if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
         // Tracks app open due to a push notification when the app was not active
@@ -176,18 +197,22 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-        
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+    /*
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (currentInstallation.badge != 0) {
         currentInstallation.badge = 0;
         [currentInstallation saveEventually];
     }
-    
+    */
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    
+}
 
+- (void)handlePush:(NSDictionary *)payload {
+    
 }
 
 #pragma mark - AppDelegate

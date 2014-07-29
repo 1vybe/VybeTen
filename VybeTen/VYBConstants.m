@@ -19,6 +19,7 @@ NSString *const kVYBUserDefaultsActivityLastRefreshKey                  = @"com.
 
 #pragma mark - PFObject User Class
 // field keys
+NSString *const kVYBUserUsernameKey                             = @"username";
 NSString *const kVYBUserDisplayNameKey                          = @"displayName";
 NSString *const kVYBUserFacebookIDKey                           = @"facebookId";
 NSString *const kVYBUserPhotoIDKey                              = @"photoId";
@@ -121,5 +122,5 @@ NSString *const kVYBPushPayloadActivityFollowKey                = @"f";
 NSString *const kVYBPushPayloadActivityFromUserObjectIdKey      = @"fu";
 NSString *const kVYBPushPayloadActivityToUserObjectIdKey        = @"tu";
 
-NSString *const kVYBPushPayloadVybeObjectIdKey                  = @"vid";
+NSString *const kVYBPushPayloadVybeIDKey                  = @"vid";
 NSString *const kVYBPushPayloadVybeUserKey                      = @"vu";

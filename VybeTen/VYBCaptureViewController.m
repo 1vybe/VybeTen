@@ -14,7 +14,7 @@
 #import <GAITracker.h>
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
-//#import "VYBAppDelegate.h"
+#import "VYBUserStore.h"
 #import "VYBLogInViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
@@ -48,9 +48,6 @@
 
 @implementation VYBCaptureViewController {
 
-    //AVCaptureVideoPreviewLayer *cameraInputLayer;
-    //AVCaptureConnection *movieConnection;
-    
     NSDate *startTime;
     NSTimer *recordingTimer;
     
@@ -68,6 +65,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)dealloc {
     self.session = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+    
     NSLog(@"CaptureVC deallocated");
 }
 
@@ -84,6 +83,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // AppDelegate Notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     
     UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
      action:@selector(longPressDetected:)];
@@ -174,15 +176,24 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
     
     // Adding PRIVATE view button
-    CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
+    CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
     self.privateViewButton = [[UIButton alloc] initWithFrame:buttonFrame];
     [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view.png"] forState:UIControlStateNormal];
+    [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view_new.png"] forState:UIControlStateSelected];
     [self.privateViewButton addTarget:self action:@selector(privateViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.privateViewButton setContentMode:UIViewContentModeLeft];
     [self.view addSubview:self.privateViewButton];
+    // Adding PRIVATE count label
+    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    self.privateCountLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
+    [self.privateCountLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.privateCountLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:20.0]];
+    [self.privateCountLabel setTextColor:[UIColor whiteColor]];
+    self.privateCountLabel.userInteractionEnabled = NO;
+    [self.view addSubview:self.privateCountLabel];
 
     // Adding PUBLIC view button
-    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
     self.publicViewButton = [[UIButton alloc] initWithFrame:buttonFrame];
     [self.publicViewButton setImage:[UIImage imageNamed:@"button_public_view.png"] forState:UIControlStateNormal];
     [self.publicViewButton addTarget:self action:@selector(publicViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -230,9 +241,41 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         });
     }
     
+    if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
+        [self.privateViewButton setSelected:YES];
+        [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
+    } else {
+        [self.privateViewButton setSelected:NO];
+        [self.privateCountLabel setText:@""];
+    }
+    
+    if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
+        PFObject *myTribe = [[PFUser currentUser] objectForKey:@"tribe"];
+        [myTribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            if (!error) {
+                PFRelation *members = [object relationForKey:kVYBTribeMembersKey];
+                PFQuery *countQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
+                [countQuery whereKey:kVYBVybeUserKey matchesQuery:[members query]];
+                [countQuery whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
+                [countQuery whereKey:kVYBVybeTimestampKey greaterThan:[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp]];
+                [countQuery whereKey:kVYBVybeTypePublicKey equalTo:[NSNumber numberWithBool:NO]];
+                [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+                    if (!error) {
+                        if (number > 0) {
+                            [self.privateViewButton setSelected:YES];
+                            [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", number]];
+                            [[VYBUserStore sharedStore] setNewPrivateVybeCount:number];
+                        }
+                    }
+                }];
+            }
+        }];
+    }
+    
     flashButton.selected = flashOn;
     flipButton.selected = isFrontCamera;
     
+    // Google Analytics
     self.screenName = @"Capture Screen";
 }
 
@@ -555,6 +598,14 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     return UIInterfaceOrientationMaskLandscapeRight;
 }
 
+#pragma mark - VYBAppDelegateApplicationDidReceiveRemoteNotification
+
+- (void)remoteNotificationReceived:(id)sender {
+    if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
+        [self.privateViewButton setSelected:YES];
+        [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
+    }
+}
 
 #pragma mark - ()
 
@@ -579,7 +630,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)syncUIWithRecordingStatus:(BOOL)status {
-    self.privateViewButton.hidden = status; self.publicViewButton.hidden = status; flipButton.hidden = status; flashButton.hidden = status || isFrontCamera;
+    self.privateViewButton.hidden = status;
+    self.privateCountLabel.hidden = status;
+    self.publicViewButton.hidden = status;
+    flipButton.hidden = status;
+    flashButton.hidden = status || isFrontCamera;
 }
 
 - (void)privateViewButtonPressed:(id)sender {

@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
+#import "VYBAppDelegate.h"
 #import "VYBReplayViewController.h"
 #import "VYBPlayerView.h"
 #import "MBProgressHUD.h"
@@ -22,7 +23,6 @@
 - (void)dealloc {
     self.player = nil;
     self.playerView = nil;
-    self.isPublic = YES;
 }
 
 - (void)loadView {
@@ -70,6 +70,8 @@
     self.modeControl = [[UISegmentedControl alloc] initWithItems:@[@"Public", @"Private"]];
     [self.modeControl setFrame:frame];
     [self.modeControl addTarget:self action:@selector(modeChanged:) forControlEvents:UIControlEventValueChanged];
+    // By default it's public
+    self.isPublic = YES;
     [self.view addSubview:self.modeControl];
 
 }
@@ -111,34 +113,39 @@
     [vybeACL setPublicReadAccess:YES];
     vybe.ACL = vybeACL;
     
-    UIProgressView *uploadProgressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-    [uploadProgressView setFrame:CGRectMake(0, 0, self.view.bounds.size.width, 50)];
-    [self.navigationController.view addSubview:uploadProgressView];
-    [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-            [VYBUtility clearLocalCacheForVybe:self.currVybe];
-            [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    NSLog(@"Posted");
-                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Posted"];
-                }
-                else {
-                    NSLog(@"Saved");
-                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
-                }
+    if ( [(VYBAppDelegate *)[UIApplication sharedApplication].delegate isParseReachable] ) {
+        UIProgressView *uploadProgressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+        [uploadProgressView setFrame:CGRectMake(0, 0, self.view.bounds.size.width, 50)];
+        [self.navigationController.view addSubview:uploadProgressView];
+        [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
+                [VYBUtility clearLocalCacheForVybe:self.currVybe];
+                [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        NSLog(@"Posted");
+                        [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Posted"];
+                    }
+                    else {
+                        NSLog(@"Saved");
+                        [vybe saveEventually];
+                        [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
+                    }
+                    [uploadProgressView removeFromSuperview];
+                }];
+            } else {
+                [[VYBMyVybeStore sharedStore] addVybe:self.currVybe];
                 [uploadProgressView removeFromSuperview];
-            }];
-        } else {
-            [[VYBMyVybeStore sharedStore] addVybe:self.currVybe];
-            [uploadProgressView removeFromSuperview];
-
-            NSLog(@"Saved");
-            [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
-        }
-    } progressBlock:^(int percentDone) {
-        uploadProgressView.progress = percentDone / 100.0;
-    }];
+                
+                NSLog(@"Saved");
+                [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
+            }
+        } progressBlock:^(int percentDone) {
+            uploadProgressView.progress = percentDone / 100.0;
+        }];
+    } else {
+        [[VYBMyVybeStore sharedStore] addVybe:self.currVybe];
+    }
     
     [self.navigationController popViewControllerAnimated:NO];
 }

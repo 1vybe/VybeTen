@@ -59,6 +59,7 @@ extern NSString *const kVYBUserDefaultsActivityLastRefreshKey;
 
 #pragma mark - PFObject User Class
 // field keys
+extern NSString *const kVYBUserUsernameKey;
 extern NSString *const kVYBUserDisplayNameKey;
 extern NSString *const kVYBUserFacebookIDKey;
 extern NSString *const kVYBUserProfilePicSmallKey;
@@ -94,7 +95,6 @@ extern NSString *const kVYBTribeVybeCountKey;
 extern NSString *const kVYBTribeMembersCountKey;
 extern NSString *const kVYBTribeMembersKey;
 extern NSString *const kVYBTribeNewestVybeKey;
-
 
 // type values
 extern NSString *const kVYBTribeTypePrivate;
@@ -154,7 +154,7 @@ extern NSString *const kVYBPushPayloadActivityFollowKey;
 extern NSString *const kVYBPushPayloadActivityFromUserObjectIdKey;
 extern NSString *const kVYBPushPayloadActivityToUserObjectIdKey;
 
-extern NSString *const kVYBPushPayloadVybeObjectIdKey;
+extern NSString *const kVYBPushPayloadVybeIDKey;
 extern NSString *const kVYBPushPayloadVybeUserKey;
 
 

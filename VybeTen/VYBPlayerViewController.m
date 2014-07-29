@@ -16,10 +16,19 @@
 #import "VYBTimerView.h"
 #import "VYBLabel.h"
 #import "VYBConstants.h"
+#import "VYBUserStore.h"
 #import <GAI.h>
 #import <GAITracker.h>
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
+
+@interface VYBPlayerViewController ()
+
+@property (nonatomic, strong) VYBLabel *usernameLabel;
+@property (nonatomic, strong) VYBLabel *privateCountLabel;
+@property (nonatomic, strong) UIButton *privateViewButton;
+
+@end
 
 @implementation VYBPlayerViewController {
     NSInteger pageIndex;
@@ -43,6 +52,9 @@
 @synthesize currPlayerView = _currPlayerView;
 @synthesize currItem = _currItem;
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+}
 
 + (VYBPlayerViewController *)playerViewControllerForPageIndex:(NSInteger)idx {
     if (idx >= 0 && idx < 2) {
@@ -68,7 +80,6 @@
     [darkBackground setBackgroundColor:[UIColor blackColor]];
     self.view = darkBackground;
     
-    
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
 
     [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
@@ -90,6 +101,9 @@
     // Hide status bar
     [self setNeedsStatusBarAppearanceUpdate];
     
+    // AppDelegate Notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+    
     // responds to device orientation change
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
     
@@ -101,6 +115,7 @@
     swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipeRight];
 
+    // PAUSE gesture
     UITapGestureRecognizer *tapOnce = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
     tapOnce.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapOnce];
@@ -138,15 +153,37 @@
     [captureButton addTarget:self action:@selector(captureButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:captureButton];
     
-    
     frame = CGRectMake(self.view.bounds.size.height/2 - 20, self.view.bounds.size.width/2 - 20, 40, 40);
     pauseImageView = [[UIImageView alloc] initWithFrame:frame];
     [pauseImageView setImage:[UIImage imageNamed:@"button_player_pause.png"]];
     [pauseImageView setContentMode:UIViewContentModeCenter];
-    //NSLog(@"pause imageview BEFORE: %@", NSStringFromCGRect(pauseImageView.frame));
     [self.view addSubview:pauseImageView];
     pauseImageView.hidden = YES;
     
+    // Adding PRIVATE view button
+    frame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    self.privateViewButton = [[UIButton alloc] initWithFrame:frame];
+    [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view.png"] forState:UIControlStateNormal];
+    [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view_new.png"] forState:UIControlStateSelected];
+    [self.privateViewButton addTarget:self action:@selector(privateViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.privateViewButton setContentMode:UIViewContentModeLeft];
+    [self.view addSubview:self.privateViewButton];
+    // Adding PRIVATE count label
+    frame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    self.privateCountLabel = [[VYBLabel alloc] initWithFrame:frame];
+    [self.privateCountLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.privateCountLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:20.0]];
+    [self.privateCountLabel setTextColor:[UIColor whiteColor]];
+    self.privateCountLabel.userInteractionEnabled = NO;
+    [self.view addSubview:self.privateCountLabel];
+    
+    // Adding USERNAME label
+    frame = CGRectMake(18, self.view.bounds.size.width - 70, 150, 70);
+    self.usernameLabel = [[VYBLabel alloc] initWithFrame:frame];
+    self.usernameLabel.font = [UIFont fontWithName:@"AvenirLTStd-Book.otf" size:18.0];
+    self.usernameLabel.textAlignment = NSTextAlignmentLeft;
+    self.usernameLabel.textColor = [UIColor whiteColor];
+    [self.view addSubview:self.usernameLabel];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -165,20 +202,7 @@
         [[GAI sharedInstance].defaultTracker
      send:[[GAIDictionaryBuilder createAppView] build]];
     
-/*
-#if DEBUG
-    if (self.debugMode == 1) {
-        functionName = @"algorithm1";
-    }
-    if (self.debugMode == 2) {
-        functionName = @"algorithm2";
-    }
-    if (self.debugMode == 3) {
-        functionName = @"algorithm3";
-    }
-#endif
-*/
-    NSLog(@"endpoint function name is %@", functionName);
+    
     if (freshVybe) {
         [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
             if (!error) {
@@ -211,6 +235,39 @@
             }
         }];
     }
+    
+    if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
+        [self.privateViewButton setSelected:YES];
+        [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
+    } else {
+        [self.privateViewButton setSelected:NO];
+        [self.privateCountLabel setText:@""];
+    }
+    
+    
+    if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
+        PFObject *myTribe = [[PFUser currentUser] objectForKey:@"tribe"];
+        [myTribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            if (!error) {
+                PFRelation *members = [object relationForKey:kVYBTribeMembersKey];
+                PFQuery *countQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
+                [countQuery whereKey:kVYBVybeUserKey matchesQuery:[members query]];
+                [countQuery whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
+                [countQuery whereKey:kVYBVybeTimestampKey greaterThan:[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp]];
+                [countQuery whereKey:kVYBVybeTypePublicKey equalTo:[NSNumber numberWithBool:NO]];
+                [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+                    if (!error) {
+                        if (number > 0) {
+                            [self.privateViewButton setSelected:YES];
+                            [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", number]];
+                            [[VYBUserStore sharedStore] setNewPrivateVybeCount:number];
+                        }
+                    }
+                }];
+            }
+        }];
+    }
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -228,6 +285,22 @@
     
     PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
    
+    // Keep track of the last vybe watched (for private ONLY)
+    if ( ![[currVybe objectForKey:kVYBVybeTypePublicKey] boolValue] ) {
+        if ([[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp] compare:currVybe[kVYBVybeTimestampKey]] == NSOrderedAscending) {
+            [[VYBUserStore sharedStore] setLastWatchedVybeTimeStamp:currVybe[kVYBVybeTimestampKey]];
+            
+            [[VYBUserStore sharedStore] setNewPrivateVybeCount:0];
+            
+            [self.privateViewButton setSelected:NO];
+            [self.privateCountLabel setText:@""];
+            
+            PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+            currentInstallation.badge = 0;
+            [currentInstallation saveEventually];
+        }
+    }
+    
     NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
     cacheURL = [cacheURL URLByAppendingPathComponent:[currVybe objectId]];
     cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
@@ -243,9 +316,7 @@
     } else {
         PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        //loadingView.hidden = NO;
         [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            //loadingView.hidden = YES;
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             if (!error) {
                 [data writeToURL:cacheURL atomically:YES];
@@ -316,13 +387,22 @@
             if (!error) {
                 NSString *location = [VYBUtility convertPlacemarkToLocation:placemarks[0]];
                 locationLabel.text = location;
-                NSLog(@"Location Set");
                 [locationLabel setNeedsDisplay];
             }
         }];
     } else {
         locationLabel.text = @"";
     }
+    
+    if ([aVybe objectForKey:kVYBVybeUserKey]) {
+        PFUser *aUser = [aVybe objectForKey:kVYBVybeUserKey];
+        [aUser fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            if (!error) {
+                self.usernameLabel.text = [object objectForKey:kVYBUserUsernameKey];
+            }
+        }];
+    }
+    
     timeLabel.text = [VYBUtility reverseTime:[aVybe objectForKey:kVYBVybeTimestampKey]];
 }
 
@@ -335,6 +415,9 @@
     [self.navigationController popViewControllerAnimated:NO];
 }
 
+- (void)privateViewButtonPressed:(id)sender {
+    
+}
 
 - (void)swipeLeft {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -389,7 +472,17 @@
 }
 
 
+#pragma mark - VYBAppDelegateApplicationDidReceiveRemoteNotification 
+
+- (void)remoteNotificationReceived:(id)sender {
+    if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
+        [self.privateViewButton setSelected:YES];
+        [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
+    }
+}
+
 #pragma mark - UIAlertViewDelegate
+
 - (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
         if (alertView.title) {
@@ -436,6 +529,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+    [[VYBUserStore sharedStore] saveChanges];
 }
 
 @end
