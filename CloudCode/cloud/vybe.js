@@ -192,7 +192,8 @@ function get_tribe_vybes(options, request, response) {
   var currentUser = Parse.User.current();
 
   if (!currentUser.get('tribe')) {
-    response.error('User does not belong to a tribe.');
+    // TODO: Create a tribe for this user
+    response.error('This user is not a member of a tribe.');
   }
 
   var relation = currentUser.get('tribe').relation('members');
