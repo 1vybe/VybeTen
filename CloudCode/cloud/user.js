@@ -9,7 +9,11 @@ Parse.Cloud.beforeSave(Parse.User, function(request, response) {
     query.first({
       success: function(object) {
         if (object) {
-          response.error("A User with this username already exists.");
+          if (request.object.existed()) {
+            response.success();
+          } else {
+            response.error("A User with this username already exists.");
+          }
         } else {
           // Save a lowercase version of username to test for uniqueness
           request.object.set("username_lowercase", username.toLowerCase());
