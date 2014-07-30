@@ -223,7 +223,8 @@ function get_tribe_vybes(options, request, response) {
         }
       },
       error: function() {
-        response.error('Request to get_tribe_vybes_new() has failed.');
+        response.error('Request to get_tribe_vybes() has failed.');
       }
     });
   });
+}
