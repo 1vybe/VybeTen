@@ -220,30 +220,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [flashButton addTarget:self action:@selector(switchFlash:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:flashButton];
     
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    if ([self session] && ![[self session] isRunning]) {
-        dispatch_async([self sessionQueue], ^{
-            [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
-            
-            [self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
-            
-            __weak VYBCaptureViewController *weakSelf = self;
-            [self setRuntimeErrorHandlingObserver:[[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:[self session] queue:nil usingBlock:^(NSNotification *note) {
-                VYBCaptureViewController *strongSelf = weakSelf;
-                dispatch_async([strongSelf sessionQueue], ^{
-                    // Manually restarting the session since it must have been stopped due to an error.
-                    [[strongSelf session] startRunning];
-                });
-            }]];
-            
-            [[self session] startRunning];
-        });
-    }
-    
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
         [self.privateViewButton setSelected:YES];
         [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
@@ -273,6 +249,38 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 }];
             }
         }];
+    }
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if ([self session] && ![[self session] isRunning]) {
+        dispatch_async([self sessionQueue], ^{
+            [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
+            
+            [self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
+            
+            __weak VYBCaptureViewController *weakSelf = self;
+            [self setRuntimeErrorHandlingObserver:[[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:[self session] queue:nil usingBlock:^(NSNotification *note) {
+                VYBCaptureViewController *strongSelf = weakSelf;
+                dispatch_async([strongSelf sessionQueue], ^{
+                    // Manually restarting the session since it must have been stopped due to an error.
+                    [[strongSelf session] startRunning];
+                });
+            }]];
+            
+            [[self session] startRunning];
+        });
+    }
+    
+    if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
+        self.privateViewButton.selected = YES;
+        self.privateCountLabel.text = [NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]];
+    } else {
+        self.privateViewButton.selected = NO;
+        self.privateCountLabel.text = @"";
     }
     
     flashButton.selected = flashOn;

@@ -146,6 +146,10 @@
         NSLog(@"Vybe in bg. User info is saved. :)");
     else
         NSLog(@"Vybe in bg. User info is lost. :(");
+    
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    currentInstallation.badge = [[VYBUserStore sharedStore] newPrivateVybeCount];
+    [currentInstallation saveEventually];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -177,10 +181,7 @@
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    if ([[VYBUserStore sharedStore] newPrivateVybeCount] == 0) {
-        currentInstallation.badge = 0;
-    }
-    
+
     [currentInstallation setDeviceTokenFromData:deviceToken];
     [currentInstallation saveEventually];
 }

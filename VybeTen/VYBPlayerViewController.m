@@ -36,16 +36,15 @@
     NSInteger currVybeIndex;
     NSInteger downloadingVybeIndex;
     
+    UIView *backgroundView;
     UIButton *captureButton;
-    
     UIImageView *pauseImageView;
-    
     UILabel *locationLabel;
     UILabel *timeLabel;
     
     VYBTimerView *timerView;
     
-    PFObject *freshVybe;
+    
 }
 
 @synthesize currPlayer = _currPlayer;
@@ -78,13 +77,12 @@
 }
 
 - (void)loadView {
-    UIView *darkBackground = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [darkBackground setBackgroundColor:[UIColor blackColor]];
-    self.view = darkBackground;
+    backgroundView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.view = backgroundView;
     
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
 
-    [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
+    [playerView setFrame:CGRectMake(0, 0, backgroundView.bounds.size.height, backgroundView.bounds.size.width)];
 
     self.currPlayerView = playerView;
     
@@ -129,10 +127,13 @@
     tapTwice.numberOfTapsRequired = 2;
     [self.view addGestureRecognizer:tapTwice];
     
+#if DEBUG
     // Add Logout gesture
-    UITapGestureRecognizer *tapThree = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapThree)];
-    tapThree.numberOfTapsRequired = 3;
-    [self.view addGestureRecognizer:tapThree];
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
+    longPress.numberOfTapsRequired = 1;
+    longPress.minimumPressDuration = 1;
+    [self.view addGestureRecognizer:longPress];
+#endif
     
     // Adding TIME label
     CGRect frame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 70, 200, 70);
@@ -188,12 +189,6 @@
     self.usernameLabel.textAlignment = NSTextAlignmentLeft;
     self.usernameLabel.textColor = [UIColor whiteColor];
     [self.view addSubview:self.usernameLabel];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [self loadVybes];
     
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
         [self.privateViewButton setSelected:YES];
@@ -202,7 +197,6 @@
         [self.privateViewButton setSelected:NO];
         [self.privateCountLabel setText:@""];
     }
-    
     
     if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
         PFObject *myTribe = [[PFUser currentUser] objectForKey:@"tribe"];
@@ -226,6 +220,18 @@
             }
         }];
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (self.isPublicMode) {
+        [backgroundView setBackgroundColor:[UIColor blueColor]];
+    } else {
+        [backgroundView setBackgroundColor:[UIColor orangeColor]];
+    }
+
+    [self loadVybes];
 
 }
 
@@ -254,38 +260,20 @@
      send:[[GAIDictionaryBuilder createAppView] build]];
     
     
-    if (freshVybe) {
-        [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
-            if (!error) {
-                if (vybes && vybes.count > 0) {
-                    self.vybePlaylist = vybes;
-                    [self beginPlayingFrom:0];
-                }
-            } else {
-                
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
+    PFGeoPoint *geoPoint = [PFGeoPoint geoPoint];
+    [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": geoPoint, @"startTime": [[VYBUserStore sharedStore] lastWatchedVybeTimeStamp]} block:^(NSArray *vybes, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        if (!error) {
+            if (vybes && vybes.count > 0) {
+                self.vybePlaylist = vybes;
+                [self beginPlayingFrom:0];
             }
-        }];
-    }
-    
-    else {
-        [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-            if (error || !geoPoint) {
-                NSLog(@"Cannot retrive current location at this moment.");
-            } else {
-                [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
-                    if (!error) {
-                        if (vybes && vybes.count > 0) {
-                            self.vybePlaylist = vybes;
-                            [self beginPlayingFrom:0];
-                        }
-                    } else {
-                        
-                    }
-                }];
-                
-            }
-        }];
-    }
+        } else {
+            self.vybePlaylist = nil;
+        }
+    }];
 }
 
 - (void)beginPlayingFrom:(NSInteger)from {
@@ -299,13 +287,21 @@
         if ([[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp] compare:currVybe[kVYBVybeTimestampKey]] == NSOrderedAscending) {
             [[VYBUserStore sharedStore] setLastWatchedVybeTimeStamp:currVybe[kVYBVybeTimestampKey]];
             
-            [[VYBUserStore sharedStore] setNewPrivateVybeCount:0];
+            NSInteger newCount = [[VYBUserStore sharedStore] newPrivateVybeCount] - 1;
+            if (newCount < 0)
+                newCount = 0;
+            [[VYBUserStore sharedStore] setNewPrivateVybeCount:newCount];
             
-            [self.privateViewButton setSelected:NO];
-            [self.privateCountLabel setText:@""];
-            
+            if (newCount > 0) {
+                [self.privateViewButton setSelected:YES];
+                [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)newCount]];
+            } else {
+                [self.privateViewButton setSelected:NO];
+                [self.privateCountLabel setText:@""];
+            }
+
             PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-            currentInstallation.badge = 0;
+            currentInstallation.badge = [[VYBUserStore sharedStore] newPrivateVybeCount];
             [currentInstallation saveEventually];
         }
     }
@@ -430,7 +426,7 @@
 }
 
 - (void)swipeLeft {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     if (currVybeIndex == self.vybePlaylist.count - 1) {
         // Reached the end show the ENDING screen
         return;
@@ -443,7 +439,7 @@
 }
 
 - (void)swipeRight {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     if (currVybeIndex == 0) {
         // Reached the beginning show the BEGINNING screen
         return;
@@ -463,22 +459,59 @@
     }
 }
 
-- (void)tapThree {
-    UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-    [logOutAlert show];
-}
-
-- (void)longPressDetected:(id)sender {
-
-}
-
-
 - (void)tapTwice {
     if (self.currPlayer.rate != 0.0) {
         [self.currPlayer pause];
     }
     UIAlertView *deleteAlert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"This vybe will be gone." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"DELETE", nil];
     [deleteAlert show];
+}
+
+- (void)tapThree {
+    UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    [logOutAlert show];
+}
+
+#if DEBUG
+- (void)longPressDetected:(id)sender {
+    UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    [logOutAlert show];
+}
+#endif
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        if (alertView.title) {
+            PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [currVybe deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                if (!error) {
+                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Deleted"];
+                } else {
+                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_x.png"] title:@"Failed"];
+                }
+            }];
+        } else {
+            NSLog(@"Logging out");
+            
+            // clear cache
+            [[VYBCache sharedCache] clear];
+            
+            // Unsubscribe from push notifications by removing the user association from the current installation.
+            [[PFInstallation currentInstallation] removeObjectForKey:@"user"];
+            [[PFInstallation currentInstallation] saveInBackground];
+            
+            // Clear all caches
+            [PFQuery clearAllCachedResults];
+
+            [PFUser logOut];
+            VYBLogInViewController *loginVC = [[VYBLogInViewController alloc] init];
+            [self presentViewController:loginVC animated:NO completion:nil];
+        }
+    }
 }
 
 
@@ -516,35 +549,6 @@
     }
 }
 
-#pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
-        if (alertView.title) {
-            PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            [currVybe deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                if (!error) {
-                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Deleted"];
-                } else {
-                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_x.png"] title:@"Failed"];
-                }
-            }];
-        } else {
-            NSLog(@"Logging out");
-            [PFUser logOut];
-            VYBLogInViewController *loginVC = [[VYBLogInViewController alloc] init];
-            [self presentViewController:loginVC animated:NO completion:nil];
-        }
-    }
-}
-
-#pragma mark - VYBCaptureViewControllerDelegate
-
-- (void)setFreshVybe:(PFObject *)aVybe {
-    freshVybe = aVybe;
-}
 
 #pragma mark - UIInterfaceOrientation
 
