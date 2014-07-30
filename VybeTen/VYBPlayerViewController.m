@@ -224,15 +224,14 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     if (self.isPublicMode) {
-        [backgroundView setBackgroundColor:[UIColor blueColor]];
+        // Deep sky blue
+        [backgroundView setBackgroundColor:[UIColor colorWithRed:0.0 green:191.0/255.0 blue:1.0 alpha:1.0]];
     } else {
         [backgroundView setBackgroundColor:[UIColor orangeColor]];
     }
 
     [self loadVybes];
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -427,6 +426,9 @@
 
 - (void)swipeLeft {
     //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    if (!self.vybePlaylist) {
+        return;
+    }
     if (currVybeIndex == self.vybePlaylist.count - 1) {
         // Reached the end show the ENDING screen
         return;
@@ -440,6 +442,9 @@
 
 - (void)swipeRight {
     //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    if (!self.vybePlaylist) {
+        return;
+    }
     if (currVybeIndex == 0) {
         // Reached the beginning show the BEGINNING screen
         return;

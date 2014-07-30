@@ -80,7 +80,7 @@
     [super viewDidAppear:animated];
     
     [self.modeControl setSelectedSegmentIndex:(self.isPublic) ? 0 : 1];
-    [self.modeControl setTintColor:(self.isPublic) ? [UIColor blueColor] : [UIColor orangeColor]];
+    [self.modeControl setTintColor:(self.isPublic) ? [UIColor colorWithRed:0.0 green:191.0/255.0 blue:1.0 alpha:1.0] : [UIColor orangeColor]];
     
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
@@ -166,7 +166,7 @@
 
 - (void)modeChanged:(id)sender {
     self.isPublic = (self.modeControl.selectedSegmentIndex == 0);
-    self.modeControl.tintColor = (self.isPublic) ? [UIColor blueColor] : [UIColor orangeColor];
+    self.modeControl.tintColor = (self.isPublic) ? [UIColor colorWithRed:0.0 green:191.0/255.0 blue:1.0 alpha:1.0] : [UIColor orangeColor];
     if (self.isPublic) {
         NSLog(@"changed to public");
     }
