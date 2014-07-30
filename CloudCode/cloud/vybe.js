@@ -68,6 +68,7 @@ var sendPush = function(request) {
 
     var query = new Parse.Query(Parse.Installation);
     query.containedIn('user', members);
+    query.notEqualTo('user', currentUser);
     Parse.Push.send({
       where: query, // Set our Installation query.
       data: alertPayload(request)
