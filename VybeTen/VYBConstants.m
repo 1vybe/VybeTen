@@ -9,8 +9,8 @@
 #import "VYBConstants.h"
 
 #pragma mark - NSNotification
-NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification = @"com.vybe.app.appDelegate.applicationDidReceiveRemoteNotification";
-NSString *const VYBSyncViewControllerDidChangeSyncTribe               = @"com.vybe.app.SyncViewController.didChangeSyncTribe";
+NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification = @"com.vybe.app.AppDelegate.applicationDidReceiveRemoteNotification";
+NSString *const VYBAppDelegateApplicationDidBecomeActive               = @"com.vybe.app.AppDelegate.applicationDidBecomeActive";
 
 #pragma mark - NSUserDefaults
 NSString *const kVYBUserDefaultsCacheFacebookFriendsKey         = @"com.vybe.app.userDefaults.cache.facebookFriends";

@@ -125,6 +125,8 @@
 }
 
 
+
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -167,11 +169,15 @@
         NSLog(@"Vybe terminated. User info is lost. :(");
 }
 
-
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidBecomeActive object:self];
+}
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    if (currentInstallation.badge != 0) {
+    if ([[VYBUserStore sharedStore] newPrivateVybeCount] == 0) {
         currentInstallation.badge = 0;
     }
     
@@ -186,30 +192,21 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    if ([userInfo objectForKey:kVYBPushPayloadVybeIDKey]) {
-        [[VYBUserStore sharedStore] setNewPrivateVybeCount:[[VYBUserStore sharedStore] newPrivateVybeCount] + 1];
-        [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:self];
-    }
-    
     if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
         // Tracks app open due to a push notification when the app was not active
     }
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    if ([userInfo objectForKey:kVYBPushPayloadVybeIDKey]) {
+        PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+        currentInstallation.badge = currentInstallation.badge + 1;
+        
+        [[VYBUserStore sharedStore] setNewPrivateVybeCount:[[VYBUserStore sharedStore] newPrivateVybeCount] + 1];
+        [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:self];
+    }
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    /*
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    if (currentInstallation.badge != 0) {
-        currentInstallation.badge = 0;
-        [currentInstallation saveEventually];
-    }
-    */
-    [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    
-}
 
 - (void)handlePush:(NSDictionary *)payload {
     

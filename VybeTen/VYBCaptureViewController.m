@@ -66,6 +66,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)dealloc {
     self.session = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActive object:nil];
     
     NSLog(@"CaptureVC deallocated");
 }
@@ -86,6 +87,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     // AppDelegate Notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActive object:nil];
+
     
     UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
      action:@selector(longPressDetected:)];
@@ -598,12 +601,37 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     return UIInterfaceOrientationMaskLandscapeRight;
 }
 
-#pragma mark - VYBAppDelegateApplicationDidReceiveRemoteNotification
+#pragma mark - VYBAppDelegateNotification
 
 - (void)remoteNotificationReceived:(id)sender {
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
         [self.privateViewButton setSelected:YES];
         [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
+    }
+}
+
+- (void)applicationDidBecomeActiveNotificationReceived:(id)sender {
+    if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
+        PFObject *myTribe = [[PFUser currentUser] objectForKey:@"tribe"];
+        [myTribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            if (!error) {
+                PFRelation *members = [object relationForKey:kVYBTribeMembersKey];
+                PFQuery *countQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
+                [countQuery whereKey:kVYBVybeUserKey matchesQuery:[members query]];
+                [countQuery whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
+                [countQuery whereKey:kVYBVybeTimestampKey greaterThan:[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp]];
+                [countQuery whereKey:kVYBVybeTypePublicKey equalTo:[NSNumber numberWithBool:NO]];
+                [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+                    if (!error) {
+                        if (number > 0) {
+                            [self.privateViewButton setSelected:YES];
+                            [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", number]];
+                            [[VYBUserStore sharedStore] setNewPrivateVybeCount:number];
+                        }
+                    }
+                }];
+            }
+        }];
     }
 }
 

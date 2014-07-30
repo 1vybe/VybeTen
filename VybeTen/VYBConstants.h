@@ -49,7 +49,7 @@ typedef enum {
 
 #pragma mark - NSNotification
 extern NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification;
-extern NSString *const VYBSyncViewControllerDidChangeSyncTribe;
+extern NSString *const VYBAppDelegateApplicationDidBecomeActive;
 
 
 #pragma mark - NSUserDefaults

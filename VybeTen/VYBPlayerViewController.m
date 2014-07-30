@@ -54,6 +54,8 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActive object:nil];
+
 }
 
 + (VYBPlayerViewController *)playerViewControllerForPageIndex:(NSInteger)idx {
@@ -103,6 +105,8 @@
     
     // AppDelegate Notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActive object:nil];
+
     
     // responds to device orientation change
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
@@ -188,53 +192,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    NSString *functionName = @"default_algorithm";
     
-    if (!self.isPublicMode) {
-        functionName = @"get_tribe_vybes";
-    }
-
-    self.screenName = @"Player Screen";
-    
-    // Google Anaylytics shit
-    [[GAI sharedInstance].defaultTracker set:kGAIScreenName
-                                       value:@"Player Screen"];
-        [[GAI sharedInstance].defaultTracker
-     send:[[GAIDictionaryBuilder createAppView] build]];
-    
-    
-    if (freshVybe) {
-        [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
-            if (!error) {
-                if (vybes && vybes.count > 0) {
-                    self.vybePlaylist = vybes;
-                    [self beginPlayingFrom:0];
-                }
-            } else {
-                
-            }
-        }];
-    }
-    
-    else {
-        [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-            if (error || !geoPoint) {
-                NSLog(@"Cannot retrive current location at this moment.");
-            } else {
-                [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
-                    if (!error) {
-                        if (vybes && vybes.count > 0) {
-                            self.vybePlaylist = vybes;
-                            [self beginPlayingFrom:0];
-                        }
-                    } else {
-                        
-                    }
-                }];
-
-            }
-        }];
-    }
+    [self loadVybes];
     
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
         [self.privateViewButton setSelected:YES];
@@ -277,6 +236,56 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
         [self.currPlayer pause];
     });
+}
+
+- (void)loadVybes {
+    NSString *functionName = @"default_algorithm";
+    
+    if (!self.isPublicMode) {
+        functionName = @"get_tribe_vybes";
+    }
+    
+    self.screenName = @"Player Screen";
+    
+    // Google Anaylytics shit
+    [[GAI sharedInstance].defaultTracker set:kGAIScreenName
+                                       value:@"Player Screen"];
+    [[GAI sharedInstance].defaultTracker
+     send:[[GAIDictionaryBuilder createAppView] build]];
+    
+    
+    if (freshVybe) {
+        [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": freshVybe[kVYBVybeGeotag]} block:^(NSArray *vybes, NSError *error) {
+            if (!error) {
+                if (vybes && vybes.count > 0) {
+                    self.vybePlaylist = vybes;
+                    [self beginPlayingFrom:0];
+                }
+            } else {
+                
+            }
+        }];
+    }
+    
+    else {
+        [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+            if (error || !geoPoint) {
+                NSLog(@"Cannot retrive current location at this moment.");
+            } else {
+                [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
+                    if (!error) {
+                        if (vybes && vybes.count > 0) {
+                            self.vybePlaylist = vybes;
+                            [self beginPlayingFrom:0];
+                        }
+                    } else {
+                        
+                    }
+                }];
+                
+            }
+        }];
+    }
 }
 
 - (void)beginPlayingFrom:(NSInteger)from {
@@ -416,7 +425,8 @@
 }
 
 - (void)privateViewButtonPressed:(id)sender {
-    
+    self.isPublicMode = NO;
+    [self loadVybes];
 }
 
 - (void)swipeLeft {
@@ -472,12 +482,37 @@
 }
 
 
-#pragma mark - VYBAppDelegateApplicationDidReceiveRemoteNotification 
+#pragma mark - VYBAppDelegateNotification
 
 - (void)remoteNotificationReceived:(id)sender {
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
         [self.privateViewButton setSelected:YES];
         [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
+    }
+}
+
+- (void)applicationDidBecomeActiveNotificationReceived:(id)sender {
+    if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
+        PFObject *myTribe = [[PFUser currentUser] objectForKey:@"tribe"];
+        [myTribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            if (!error) {
+                PFRelation *members = [object relationForKey:kVYBTribeMembersKey];
+                PFQuery *countQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
+                [countQuery whereKey:kVYBVybeUserKey matchesQuery:[members query]];
+                [countQuery whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
+                [countQuery whereKey:kVYBVybeTimestampKey greaterThan:[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp]];
+                [countQuery whereKey:kVYBVybeTypePublicKey equalTo:[NSNumber numberWithBool:NO]];
+                [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+                    if (!error) {
+                        if (number > 0) {
+                            [self.privateViewButton setSelected:YES];
+                            [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", number]];
+                            [[VYBUserStore sharedStore] setNewPrivateVybeCount:number];
+                        }
+                    }
+                }];
+            }
+        }];
     }
 }
 
