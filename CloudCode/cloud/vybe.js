@@ -186,7 +186,6 @@ function get_tribe_vybes(options, request, response) {
   var recent = options.recent || false;
   var nearby = options.nearby || false;
   var hide_user = options.hide_user || false;
-  var reversed = options.reversed || false;
   var limit = options.limit || 50;
 
   var userGeoPoint = request.params.location;
