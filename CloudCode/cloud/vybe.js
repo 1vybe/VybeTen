@@ -189,6 +189,7 @@ function get_tribe_vybes(options, request, response) {
   var limit = options.limit || 50;
 
   var userGeoPoint = request.params.location;
+  var startTime = request.params.startTime;
   var currentUser = Parse.User.current();
 
   if (!currentUser.get('tribe')) {
@@ -212,10 +213,12 @@ function get_tribe_vybes(options, request, response) {
       query.notEqualTo('user', currentUser);
     if (limit)
       query.limit(limit);
+    if (startTime)
+      query.greaterThan("timestamp", startTime);
 
     query.find({
       success: function(vybesObjects) {
-        if (reversed) {
+        if (!startTime) {
           response.success(vybesObjects);
         } else {
           // Sort result in chronological order
