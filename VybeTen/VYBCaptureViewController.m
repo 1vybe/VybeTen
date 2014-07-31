@@ -27,9 +27,9 @@
 #import "VYBCache.h"
 #import "VYBUtility.h"
 
-#include <unistd.h>
-
 @interface VYBCaptureViewController () <AVCaptureFileOutputRecordingDelegate>
+
+@property (nonatomic, strong) VYBMyVybe *currVybe;
 
 @property (nonatomic, weak) VYBCameraView *cameraView;
 
@@ -53,9 +53,6 @@
     
     BOOL flashOn;
     BOOL isFrontCamera;
-    
-    VYBMyVybe *currVybe;
-    
 }
 
 @synthesize flipButton, flashButton;
@@ -485,14 +482,14 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)startRecording {
     startTime = [NSDate date];
-    currVybe = [[VYBMyVybe alloc] init];
-    [currVybe setTimeStamp:startTime];
+    self.currVybe = [[VYBMyVybe alloc] init];
+    [self.currVybe setTimeStamp:startTime];
     
     [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
         if (error || !geoPoint) {
             NSLog(@"Cannot retrive current location at this moment.");
         } else {
-            [currVybe setGeoTagFrom:geoPoint];
+            [self.currVybe setGeoTagFrom:geoPoint];
         }
     }];
     
@@ -519,7 +516,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOff forDevice:[[self videoInput] device]];
         }
         
-        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[currVybe videoFilePath]];
+        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
         [self.movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
     });
 }
@@ -547,7 +544,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
         if (secondsSinceStart >= 3.0) {
             VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
-            [replayVC setCurrVybe:currVybe];
+            [replayVC setCurrVybe:self.currVybe];
             [self.navigationController pushViewController:replayVC animated:NO];
         }
         else {
@@ -618,7 +615,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }
 }
 
-- (void)applicationDidBecomeActiveNotificationReceived:(id)sender {
+- (void)applicationDidBecomeActiveNotificationReceived:(id)sender {    
     if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
         PFObject *myTribe = [[PFUser currentUser] objectForKey:@"tribe"];
         [myTribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {

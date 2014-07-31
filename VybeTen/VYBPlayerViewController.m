@@ -268,9 +268,15 @@
             if (vybes && vybes.count > 0) {
                 self.vybePlaylist = vybes;
                 [self beginPlayingFrom:0];
+            } else {
+                [[VYBUserStore sharedStore] setNewPrivateVybeCount:0];
+                PFInstallation *currentInstall = [PFInstallation currentInstallation];
+                currentInstall.badge = 0;
+                [currentInstall saveEventually];
+                
+                self.vybePlaylist = nil;
             }
         } else {
-            self.vybePlaylist = nil;
         }
     }];
 }

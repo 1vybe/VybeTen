@@ -20,6 +20,5 @@
 + (VYBNavigationController *)navigationControllerForPageIndex:(NSInteger)pageIndex withRootViewController:(UIViewController *)rootViewController;
 - (NSInteger)pageIndex;
 
-- (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title;
 
 @end
