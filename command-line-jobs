@@ -1,0 +1,24 @@
+==VybeDev==
+// Adding members to a tribe
+curl -X PUT \
+  -H "X-Parse-Application-Id: gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC" \
+  -H "X-Parse-REST-API-Key: Csx5JadzPJRaTTxclLThf4LRERPnTxgESuQWNFs0" \
+  -H "Content-Type: application/json" \
+  -d '{"members":{"__op":"AddRelation","objects":[{"__type":"Pointer","className":"_User","objectId":"KHQGSnNJzh"}]}}' \
+  https://api.parse.com/1/classes/Tribe/dszop8JDqK
+
+//Uploading a file
+curl -X POST \
+  -H "X-Parse-Application-Id: gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC" \
+  -H "X-Parse-REST-API-Key: Csx5JadzPJRaTTxclLThf4LRERPnTxgESuQWNFs0" \
+  -H "Content-Type: video/mov" \
+  --data-binary '@A4ABBAF5-0A6E-4966-88C9-A8153AD08E77.mov' \
+  https://api.parse.com/1/files/boodyrecovered.mov
+
+//Uploading a vybe
+  curl -X POST \
+  -H "X-Parse-Application-Id: gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC" \
+  -H "X-Parse-REST-API-Key: Csx5JadzPJRaTTxclLThf4LRERPnTxgESuQWNFs0" \
+  -H "Content-Type: application/json" \
+  -d '{"user":{"__type":"Pointer", "className":"_User", "objectId":"aOYeoywwgJ"}}' \
+  https://api.parse.com/1/classes/Vybe

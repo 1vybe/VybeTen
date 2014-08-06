@@ -38,6 +38,7 @@
     self.passedMin = NO;
     self.minPercentage = 0.0;
     self.maxPercentage = 0.0;
+    [self setNeedsDisplay];
 }
 
 - (void)drawRect:(CGRect)rect

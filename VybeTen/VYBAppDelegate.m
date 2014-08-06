@@ -83,10 +83,6 @@
                                                             label:nil
                                                             value:nil] set:@"start" forKey:kGAISessionControl] build]];
 
-    
-    self.uniqueID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-    
-
     // Clearing Push-noti Badge number
     /*
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
@@ -109,7 +105,7 @@
     self.navigationVC.navigationBarHidden = YES;
 
     
-    //[[VYBMyVybeStore sharedStore] uploadDelayedVybes];
+    [[VYBMyVybeStore sharedStore] uploadDelayedVybes];
 
     [self.window setRootViewController:self.navigationVC];
     

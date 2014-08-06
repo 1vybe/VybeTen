@@ -36,7 +36,15 @@
 @property (nonatomic) dispatch_queue_t sessionQueue;
 @property (nonatomic) AVCaptureSession *session;
 @property (nonatomic) AVCaptureDeviceInput *videoInput;
-@property (nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
+@property (nonatomic) AVCaptureVideoDataOutput *videoOutput;
+@property (nonatomic) AVCaptureAudioDataOutput *audioOutput;
+@property (nonatomic) AVAssetWriter *videoWriter;
+@property (nonatomic) AVAssetWriter *audioWriter;
+@property (nonatomic, strong) AVAssetWriterInput *videoWriterInput;
+@property (nonatomic) AVAssetWriterInput *audioWriterInput;
+
+
+//@property (nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
 
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundRecordingID;
 @property (nonatomic, getter = isDeviceAuthorized) BOOL deviceAuthorized;
@@ -50,9 +58,11 @@
 
     NSDate *startTime;
     NSTimer *recordingTimer;
+    CMTime lastSampleTime;
     
     BOOL flashOn;
     BOOL isFrontCamera;
+    BOOL isRecording;
 }
 
 @synthesize flipButton, flashButton;
@@ -66,6 +76,14 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActive object:nil];
     
     NSLog(@"CaptureVC deallocated");
+}
+
+- (id)init {
+    self = [super init];
+    if (self) {
+        isRecording = NO;
+    }
+    return self;
 }
 
 + (NSSet *)keyPathsForValuesAffectingSessionRunningAndDeviceAuthorized
@@ -117,11 +135,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         
         AVCaptureDevice *videoDevice = [VYBCaptureViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:AVCaptureDevicePositionBack];
         AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
-        
         if (error) {
             NSLog(@"video device input was NOT created");
         }
-        
         if ([session canAddInput:videoDeviceInput]) {
             [session addInput:videoDeviceInput];
             [self setVideoInput:videoDeviceInput];
@@ -133,7 +149,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         
         AVCaptureDevice *audioDevice = [[AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio] firstObject];
         AVCaptureDeviceInput *audioInput = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:&error];
-        
         if (error) {
             NSLog(@"audio device input was NOT created");
         }
@@ -142,24 +157,28 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             [session addInput:audioInput];
         }
         
-        AVCaptureMovieFileOutput *movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
-        if ([session canAddOutput:movieFileOutput]) {
-            [session addOutput:movieFileOutput];
+        dispatch_queue_t queue = dispatch_queue_create("MyQueue", NULL);
+        _videoOutput = [[AVCaptureVideoDataOutput alloc] init];
+        if ([session canAddOutput:_videoOutput]) {
+            [session addOutput:_videoOutput];
 
-            Float64 totalSeconds = VYBE_LENGTH_SEC;
-            int32_t preferredTimeScale = 30;
-            CMTime maxDuration = CMTimeMakeWithSeconds(totalSeconds, preferredTimeScale);
-            movieFileOutput.maxRecordedDuration = maxDuration;
-            movieFileOutput.minFreeDiskSpaceLimit = 1024 * 512;
-
-            AVCaptureConnection *connection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+            _videoOutput.alwaysDiscardsLateVideoFrames = NO;
+            _videoOutput.videoSettings = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey];
+            
+            AVCaptureConnection *connection = [_videoOutput connectionWithMediaType:AVMediaTypeVideo];
             if ([connection isVideoStabilizationSupported])
                 [connection setEnablesVideoStabilizationWhenAvailable:YES];
             
             [connection setVideoOrientation:(AVCaptureVideoOrientation)[self interfaceOrientation]];
-
-            [self setMovieFileOutput:movieFileOutput];
+            [_videoOutput setSampleBufferDelegate:self queue:queue];
         }
+        
+        _audioOutput = [[AVCaptureAudioDataOutput alloc] init];
+        if ([session canAddOutput:_audioOutput]) {
+            [session addOutput:_audioOutput];
+            [_audioOutput setSampleBufferDelegate:self queue:queue];
+        }
+        
     });
     
     // Hide status bar
@@ -256,8 +275,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     if ([self session] && ![[self session] isRunning]) {
         dispatch_async([self sessionQueue], ^{
             [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
-            
-            [self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
             
             __weak VYBCaptureViewController *weakSelf = self;
             [self setRuntimeErrorHandlingObserver:[[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:[self session] queue:nil usingBlock:^(NSNotification *note) {
@@ -385,7 +402,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [[self privateViewButton] setEnabled:NO];
     [[self publicViewButton] setEnabled:NO];
 
-    
     dispatch_async([self sessionQueue], ^{
         AVCaptureDevice *currentVideoDevice = [[self videoInput] device];
         AVCaptureDevicePosition currentPosition = [currentVideoDevice position];
@@ -421,7 +437,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [[self session] commitConfiguration];
         
         // Video should be mirrored if coming from the front camera
-        [[[self movieFileOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoMirrored:[videoDevice position] == AVCaptureDevicePositionFront];
+        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoMirrored:[videoDevice position] == AVCaptureDevicePositionFront];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             isFrontCamera = [videoDevice position] == AVCaptureDevicePositionFront;
@@ -442,29 +458,147 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self.view addSubview:self.captureButton];
     self.captureButton.center = [recognizer locationInView:self.view];
     
-    if (![self.movieFileOutput isRecording]) {
+    if (!isRecording) {
         [self startRecording];
     }
     
     if (([recognizer state] == UIGestureRecognizerStateEnded) || ([recognizer state] == UIGestureRecognizerStateCancelled)) {
         [self.captureButton removeFromSuperview];
-        
-        if ([self.movieFileOutput isRecording]) {
-            dispatch_async([self sessionQueue], ^{
-                [self.movieFileOutput stopRecording];
-            });
+
+        if (isRecording) {
+            isRecording = NO;
+            [self syncUIWithRecordingStatus:NO];
+            if (_videoWriter.status == AVAssetWriterStatusWriting) {
+                [_videoWriter finishWritingWithCompletionHandler:^{
+                    _videoWriterInput = nil;
+                    _videoWriter = nil;
+                }];
+                [self stopRecording];
+            }
         }
     }
 }
 
+- (void)startRecording {
+    isRecording = YES;
+    [self syncUIWithRecordingStatus:YES];
+
+    startTime = [NSDate date];
+    self.currVybe = [[VYBMyVybe alloc] init];
+    [self.currVybe setTimeStamp:startTime];
+    
+    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+        if (error || !geoPoint) {
+            NSLog(@"Cannot retrive current location at this moment.");
+        } else {
+            [self.currVybe setGeoTagFrom:geoPoint];
+        }
+    }];
+    
+    if (recordingTimer) {
+        [recordingTimer invalidate];
+        recordingTimer = nil;
+    }
+    recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
+    
+    if (![self setUpAssetWriter]) {
+        return;
+    }
+    
+    dispatch_async([self sessionQueue], ^{
+        if ([[UIDevice currentDevice] isMultitaskingSupported])
+        {
+            // Setup background task. This is needed because the captureOutput:didFinishRecordingToOutputFileAtURL: callback is not received until AVCam returns to the foreground unless you request background execution time. This also ensures that there will be time to write the file to the assets library when AVCam is backgrounded. To conclude this background execution, -endBackgroundTask is called in -recorder:recordingDidFinishToOutputFileURL:error: after the recorded file has been saved.
+            [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
+        }
+        
+        //TODO: Test this
+        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[[self cameraView] layer] connection] videoOrientation]];
+        
+        // Turning flash for video recording
+        if (flashOn) {
+            [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOn forDevice:[[self videoInput] device]];
+        }
+        
+    });
+}
+
+- (BOOL)setUpAssetWriter {
+    NSError *error = nil;
+    
+    NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
+    _videoWriter = [AVAssetWriter assetWriterWithURL:outputURL fileType:AVFileTypeQuickTimeMovie error:&error];
+    NSParameterAssert(_videoWriter);
+    
+    // Add video input
+    NSDictionary *videoCompressionProps = [NSDictionary dictionaryWithObjectsAndKeys:
+                                           [NSNumber numberWithDouble:700.0*1024.0], AVVideoAverageBitRateKey,
+                                           nil ];
+    
+    NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   AVVideoCodecH264, AVVideoCodecKey,
+                                   [NSNumber numberWithInt:640], AVVideoWidthKey,
+                                   [NSNumber numberWithInt:480], AVVideoHeightKey,
+                                   videoCompressionProps, AVVideoCompressionPropertiesKey,
+                                   nil];
+    
+    _videoWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
+    NSParameterAssert(_videoWriterInput);
+    _videoWriterInput.expectsMediaDataInRealTime = YES;
+    
+    
+    // Add the audio input
+    AudioChannelLayout acl;
+    bzero( &acl, sizeof(acl));
+    acl.mChannelLayoutTag = kAudioChannelLayoutTag_Mono;
+    
+    NSDictionary* audioOutputSettings = nil;
+    // Both type of audio inputs causes output video file to be corrupted.
+    if( NO ) {
+        // should work from iphone 3GS on and from ipod 3rd generation
+        audioOutputSettings = [NSDictionary dictionaryWithObjectsAndKeys:
+                               [ NSNumber numberWithInt: kAudioFormatMPEG4AAC ], AVFormatIDKey,
+                               [ NSNumber numberWithInt: 1 ], AVNumberOfChannelsKey,
+                               [ NSNumber numberWithFloat: 44100.0 ], AVSampleRateKey,
+                               [ NSNumber numberWithInt: 64000 ], AVEncoderBitRateKey,
+                               [ NSData dataWithBytes: &acl length: sizeof( acl ) ], AVChannelLayoutKey,
+                               nil];
+    } else {
+        // should work on any device requires more space
+        audioOutputSettings = [ NSDictionary dictionaryWithObjectsAndKeys:
+                               [ NSNumber numberWithInt: kAudioFormatAppleLossless ], AVFormatIDKey,
+                               [ NSNumber numberWithInt: 16 ], AVEncoderBitDepthHintKey,
+                               [ NSNumber numberWithFloat: 44100.0 ], AVSampleRateKey,
+                               [ NSNumber numberWithInt: 1 ], AVNumberOfChannelsKey,
+                               [ NSData dataWithBytes: &acl length: sizeof( acl ) ], AVChannelLayoutKey,
+                               nil ];
+    }
+    
+    _audioWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:audioOutputSettings];
+    
+    _audioWriterInput.expectsMediaDataInRealTime = YES;
+    
+    [_videoWriter addInput:_videoWriterInput];
+    [_videoWriter addInput:_audioWriterInput];
+    
+    return YES;
+}
 
 - (void)timer:(NSTimer *)timer {
     double secondsSinceStart = [[NSDate date] timeIntervalSinceDate:startTime];
     // less than 3.0 because of a delay in drawing. This guarantees user hold until red circle is full to pass the minimum
     if (secondsSinceStart >= VYBE_LENGTH_SEC) {
-        [recordingTimer invalidate];
-        recordingTimer = nil;
-        return;
+        [self.captureButton removeFromSuperview];
+        
+        isRecording = NO;
+        [self syncUIWithRecordingStatus:NO];
+        if (_videoWriter.status == AVAssetWriterStatusWriting) {
+            [_videoWriter finishWritingWithCompletionHandler:^{
+                _videoWriterInput = nil;
+                _videoWriter = nil;
+            }];
+            [self stopRecording];
+        }
     }
     else if (secondsSinceStart >= 2.89) {
         if (!self.captureButton.passedMin) {
@@ -479,121 +613,105 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self.captureButton setNeedsDisplay];
 }
 
-
-- (void)startRecording {
-    startTime = [NSDate date];
-    self.currVybe = [[VYBMyVybe alloc] init];
-    [self.currVybe setTimeStamp:startTime];
+- (void)stopRecording {
+    NSDate *now = [NSDate date];
+    double secondsSinceStart = [now timeIntervalSinceDate:startTime];
     
-    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-        if (error || !geoPoint) {
-            NSLog(@"Cannot retrive current location at this moment.");
-        } else {
-            [self.currVybe setGeoTagFrom:geoPoint];
-        }
-    }];
-    
-    
-    if (recordingTimer) {
-        [recordingTimer invalidate];
-        recordingTimer = nil;
+    if (secondsSinceStart >= 3.0) {
+        VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
+        [replayVC setCurrVybe:self.currVybe];
+        [self.navigationController pushViewController:replayVC animated:NO];
     }
-    recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
-    
-    dispatch_async([self sessionQueue], ^{
-        if ([[UIDevice currentDevice] isMultitaskingSupported])
-        {
-            // Setup background task. This is needed because the captureOutput:didFinishRecordingToOutputFileAtURL: callback is not received until AVCam returns to the foreground unless you request background execution time. This also ensures that there will be time to write the file to the assets library when AVCam is backgrounded. To conclude this background execution, -endBackgroundTask is called in -recorder:recordingDidFinishToOutputFileURL:error: after the recorded file has been saved.
-            [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
-        }
-        
-        [[[self movieFileOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[[self cameraView] layer] connection] videoOrientation]];
-        
-        // Turning OFF flash for video recording
-        if (flashOn) {
-            [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOn forDevice:[[self videoInput] device]];
-        } else {
-            [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOff forDevice:[[self videoInput] device]];
-        }
-        
+    else {
+        NSError *error;
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
-        [self.movieFileOutput startRecordingToOutputFileURL:outputURL recordingDelegate:self];
-    });
+        [[NSFileManager defaultManager] removeItemAtURL:outputURL  error:&error];
+        if (error) {
+            NSLog(@"Failed to delete a vybe under 3 seconds");
+        }
+        NSLog(@"CP2");
+    }
+    
+
+    startTime = nil;
+    [recordingTimer invalidate];
+    recordingTimer = nil;
+    
+    [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOff forDevice:[[self videoInput] device]];
+    
+//    
+//    UIBackgroundTaskIdentifier backgroundRecordingID = [self backgroundRecordingID];
+//	[self setBackgroundRecordingID:UIBackgroundTaskInvalid];
+//
+//    if (backgroundRecordingID != UIBackgroundTaskInvalid)
+//        [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
+//    
+
 }
 
 
 #pragma mark - AVCaptureFileOutputRecordingDelegate
 
-
-- (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
-    // If screen is switched to Player screen automatically by timer, remove capture button.
-    if (self.captureButton.superview) {
-        [self.captureButton removeFromSuperview];
-    }
-
-    BOOL recordSuccess = YES;
-    if ( [error code] != noErr ) {
-        id value = [[error userInfo] objectForKey:AVErrorRecordingSuccessfullyFinishedKey];
-        if (value)
-            recordSuccess = [value boolValue];
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
+    if (!CMSampleBufferDataIsReady(sampleBuffer)) {
+        return;
     }
     
-    if (recordSuccess) {
-        NSDate *now = [NSDate date];
-        double secondsSinceStart = [now timeIntervalSinceDate:startTime];
-
-        if (secondsSinceStart >= 3.0) {
-            VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
-            [replayVC setCurrVybe:self.currVybe];
-            [self.navigationController pushViewController:replayVC animated:NO];
-        }
-        else {
-            NSError *error;
-            [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:&error];
-            if (error) {
-                NSLog(@"Failed to delete a vybe under 3 seconds");
+    if (isRecording) {
+        lastSampleTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+        if(_videoWriter.status != AVAssetWriterStatusWriting)
+        {
+            if ((_videoWriter.status != AVAssetWriterStatusFailed) && (_videoWriter.status != AVAssetWriterStatusCompleted)) {
+                [_videoWriter startWriting];
+                [_videoWriter startSessionAtSourceTime:lastSampleTime];
             }
         }
+
+        if (captureOutput == _videoOutput) {
+            [self appendVideoSampleBuffer:sampleBuffer];
+        } else if (captureOutput == _audioOutput) {
+            [self appendAudioSampleBuffer:sampleBuffer];
+        }
     }
+}
+
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didDropSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
     
-    startTime = nil;
-    [recordingTimer invalidate];
-    recordingTimer = nil;
-    
-    UIBackgroundTaskIdentifier backgroundRecordingID = [self backgroundRecordingID];
-	[self setBackgroundRecordingID:UIBackgroundTaskInvalid];
-    
-    if (backgroundRecordingID != UIBackgroundTaskInvalid)
-        [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-    
-    NSLog(@"didFinishRecording");
 }
 
 
+- (void)appendVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer {
+    if (isRecording) {
+        if (_videoWriter.status > AVAssetWriterStatusWriting) {
+            if( _videoWriter.status == AVAssetWriterStatusFailed )
+                NSLog(@"Error: %@", _videoWriter.error);
+            return;
+        }
+        
+        if (![_videoWriterInput appendSampleBuffer:sampleBuffer]) {
+            NSLog(@"cannot add VIDEO sample buffer");
+        }
+    }
+}
+
+- (void)appendAudioSampleBuffer:(CMSampleBufferRef)sampleBuffer {
+    if (isRecording) {
+        if (_videoWriter.status > AVAssetWriterStatusWriting) {
+            if( _videoWriter.status == AVAssetWriterStatusFailed )
+                NSLog(@"Error: %@", _videoWriter.error);
+            return;
+        }
+        
+        if (![_audioWriterInput appendSampleBuffer:sampleBuffer]) {
+            NSLog(@"cannot add AUDIO sample buffer");
+        }
+    }
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if (context == RecordingContext)
-	{
-		BOOL isRecording = [change[NSKeyValueChangeNewKey] boolValue];
-		dispatch_async(dispatch_get_main_queue(), ^{
-			if (isRecording)
-			{
-                NSLog(@"recording started");
-                [self syncUIWithRecordingStatus:YES];
-			}
-			else
-			{
-                NSLog(@"recording stopped");
-                [self syncUIWithRecordingStatus:NO];
-			}
-		});
+	if (context == SessionRunningAndDeviceAuthorizedContext) {
         
-        if (!isRecording) {
-            [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOff forDevice:[[self videoInput] device]];
-        }
-	}
-	else if (context == SessionRunningAndDeviceAuthorizedContext) {
-
     }
 	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -696,7 +814,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		[[NSNotificationCenter defaultCenter] removeObserver:[self runtimeErrorHandlingObserver]];
 		
 		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
-		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
 	});
 
 }

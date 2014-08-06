@@ -83,6 +83,7 @@
     [self.modeControl setTintColor:(self.isPublic) ? [UIColor colorWithRed:0.0 green:191.0/255.0 blue:1.0 alpha:1.0] : [UIColor orangeColor]];
     
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
+    NSLog(@"[Replay]videoURL is %@", videoURL);
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
@@ -105,12 +106,7 @@
     NSData *video = [NSData dataWithContentsOfFile:[self.currVybe videoFilePath]];
     
     // here we do the magic to the video file to reduce its bitrate
-    [self resizeVideo:[self.currVybe videoFilePath]];
-    
-#if DEBUG
-    [self.navigationController popViewControllerAnimated:NO];
-    return;
-#endif
+    //[self resizeVideo:[self.currVybe videoFilePath]];
     
     PFFile *videoFile = [PFFile fileWithData:video];
     

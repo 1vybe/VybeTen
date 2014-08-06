@@ -1,0 +1,51 @@
+//
+//  VYBMapViewController.m
+//  VybeTen
+//
+//  Created by jinsuk on 8/6/14.
+//  Copyright (c) 2014 Vybe. All rights reserved.
+//
+
+#import <MapKit/MapKit.h>
+#import "VYBMapViewController.h"
+
+@interface VYBMapViewController ()
+@property (nonatomic, strong) MKMapView *mapView;
+@end
+
+@implementation VYBMapViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    _mapView = [[MKMapView alloc] initWithFrame:self.view.frame];
+    [self.view addSubview:_mapView];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

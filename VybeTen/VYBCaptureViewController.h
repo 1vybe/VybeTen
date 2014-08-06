@@ -15,7 +15,7 @@
 @class VYBTribe;
 @class VYBLabel;
 
-@interface VYBCaptureViewController : GAITrackedViewController <AVCaptureFileOutputRecordingDelegate>
+@interface VYBCaptureViewController : GAITrackedViewController <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate>
 
 @property (nonatomic) UIButton *flipButton;
 @property (nonatomic) UIButton *flashButton;

@@ -422,7 +422,7 @@
  **/
 
 - (void)captureButtonPressed:(id)sender {
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 - (void)privateViewButtonPressed:(id)sender {
