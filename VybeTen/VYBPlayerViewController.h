@@ -25,7 +25,6 @@
 
 + (VYBPlayerViewController *)playerViewControllerForPageIndex:(NSInteger)idx;
 - (NSInteger)pageIndex;
-- (void)setFreshVybe:(PFObject *)aVybe;
 - (void)beginPlayingFrom:(NSInteger)from;
 
 @end

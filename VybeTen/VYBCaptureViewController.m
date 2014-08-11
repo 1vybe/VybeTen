@@ -16,6 +16,7 @@
 #import <GAIDictionaryBuilder.h>
 #import "VYBUserStore.h"
 #import "VYBLogInViewController.h"
+#import "VYBMapViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBReplayViewController.h"
@@ -196,27 +197,27 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     // Adding PRIVATE view button
     CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
-    self.privateViewButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view.png"] forState:UIControlStateNormal];
-    [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view_new.png"] forState:UIControlStateSelected];
-    [self.privateViewButton addTarget:self action:@selector(privateViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.privateViewButton setContentMode:UIViewContentModeLeft];
-    [self.view addSubview:self.privateViewButton];
+    self.viewButton = [[UIButton alloc] initWithFrame:buttonFrame];
+    [self.viewButton setImage:[UIImage imageNamed:@"button_private_view.png"] forState:UIControlStateNormal];
+    [self.viewButton setImage:[UIImage imageNamed:@"button_private_view_new.png"] forState:UIControlStateSelected];
+    [self.viewButton addTarget:self action:@selector(viewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.viewButton setContentMode:UIViewContentModeLeft];
+    [self.view addSubview:self.viewButton];
     // Adding PRIVATE count label
     buttonFrame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
-    self.privateCountLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
-    [self.privateCountLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.privateCountLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:20.0]];
-    [self.privateCountLabel setTextColor:[UIColor whiteColor]];
-    self.privateCountLabel.userInteractionEnabled = NO;
-    [self.view addSubview:self.privateCountLabel];
+    self.viewCountLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
+    [self.viewCountLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.viewCountLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:20.0]];
+    [self.viewCountLabel setTextColor:[UIColor whiteColor]];
+    self.viewCountLabel.userInteractionEnabled = NO;
+    [self.view addSubview:self.viewCountLabel];
 
     // Adding PUBLIC view button
     buttonFrame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
-    self.publicViewButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    [self.publicViewButton setImage:[UIImage imageNamed:@"button_public_view.png"] forState:UIControlStateNormal];
-    [self.publicViewButton addTarget:self action:@selector(publicViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.publicViewButton];
+    self.mapViewButton = [[UIButton alloc] initWithFrame:buttonFrame];
+    [self.mapViewButton setImage:[UIImage imageNamed:@"button_public_view.png"] forState:UIControlStateNormal];
+    [self.mapViewButton addTarget:self action:@selector(mapViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.mapViewButton];
     
     // Adding FLIP button
     buttonFrame = CGRectMake(0, self.view.bounds.size.width - 70, 70, 70);
@@ -237,11 +238,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self.view addSubview:flashButton];
     
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
-        [self.privateViewButton setSelected:YES];
-        [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
+        [self.viewButton setSelected:YES];
+        [self.viewCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
     } else {
-        [self.privateViewButton setSelected:NO];
-        [self.privateCountLabel setText:@""];
+        [self.viewButton setSelected:NO];
+        [self.viewCountLabel setText:@""];
     }
     
     if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
@@ -257,8 +258,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
                     if (!error) {
                         if (number > 0) {
-                            [self.privateViewButton setSelected:YES];
-                            [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", number]];
+                            [self.viewButton setSelected:YES];
+                            [self.viewCountLabel setText:[NSString stringWithFormat:@"%d", number]];
                             [[VYBUserStore sharedStore] setNewPrivateVybeCount:number];
                         }
                     }
@@ -290,11 +291,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }
     
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
-        self.privateViewButton.selected = YES;
-        self.privateCountLabel.text = [NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]];
+        self.viewButton.selected = YES;
+        self.viewCountLabel.text = [NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]];
     } else {
-        self.privateViewButton.selected = NO;
-        self.privateCountLabel.text = @"";
+        self.viewButton.selected = NO;
+        self.viewCountLabel.text = @"";
     }
     
     flashButton.selected = flashOn;
@@ -399,8 +400,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)flipCamera:(id)sender {
     [[self flipButton] setEnabled:NO];
-    [[self privateViewButton] setEnabled:NO];
-    [[self publicViewButton] setEnabled:NO];
+    [[self viewButton] setEnabled:NO];
+    [[self mapViewButton] setEnabled:NO];
 
     dispatch_async([self sessionQueue], ^{
         AVCaptureDevice *currentVideoDevice = [[self videoInput] device];
@@ -443,8 +444,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             isFrontCamera = [videoDevice position] == AVCaptureDevicePositionFront;
             [[self flipButton] setSelected:isFrontCamera];
             [self flashButton].hidden = isFrontCamera;
-            [[self privateViewButton] setEnabled:YES];
-            [[self publicViewButton] setEnabled:YES];
+            [[self viewButton] setEnabled:YES];
+            [[self mapViewButton] setEnabled:YES];
             [[self flipButton] setEnabled:YES];
         });
         
@@ -537,8 +538,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
                                    AVVideoCodecH264, AVVideoCodecKey,
-                                   [NSNumber numberWithInt:640], AVVideoWidthKey,
-                                   [NSNumber numberWithInt:480], AVVideoHeightKey,
+                                   [NSNumber numberWithInt:480], AVVideoWidthKey,
+                                   [NSNumber numberWithInt:360], AVVideoHeightKey,
                                    videoCompressionProps, AVVideoCompressionPropertiesKey,
                                    nil];
     
@@ -679,6 +680,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
 }
 
+- (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
+    
+}
+
 
 - (void)appendVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer {
     if (isRecording) {
@@ -728,8 +733,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)remoteNotificationReceived:(id)sender {
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
-        [self.privateViewButton setSelected:YES];
-        [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
+        [self.viewButton setSelected:YES];
+        [self.viewCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
     }
 }
 
@@ -747,8 +752,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
                     if (!error) {
                         if (number > 0) {
-                            [self.privateViewButton setSelected:YES];
-                            [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", number]];
+                            [self.viewButton setSelected:YES];
+                            [self.viewCountLabel setText:[NSString stringWithFormat:@"%d", number]];
                             [[VYBUserStore sharedStore] setNewPrivateVybeCount:number];
                         }
                     }
@@ -781,23 +786,22 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)syncUIWithRecordingStatus:(BOOL)status {
-    self.privateViewButton.hidden = status;
-    self.privateCountLabel.hidden = status;
-    self.publicViewButton.hidden = status;
+    self.viewButton.hidden = status;
+    self.viewCountLabel.hidden = status;
+    self.mapViewButton.hidden = status;
     flipButton.hidden = status;
     flashButton.hidden = status || isFrontCamera;
 }
 
-- (void)privateViewButtonPressed:(id)sender {
-    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [playerVC setIsPublicMode:NO];
-    [self.navigationController pushViewController:playerVC animated:NO];
-}
-
-- (void)publicViewButtonPressed:(id)sender {
+- (void)viewButtonPressed:(id)sender {
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
     [playerVC setIsPublicMode:YES];
     [self.navigationController pushViewController:playerVC animated:NO];
+}
+
+- (void)mapViewButtonPressed:(id)sender {
+    VYBMapViewController *mapVC = [[VYBMapViewController alloc] init];
+    [self.navigationController pushViewController:mapVC animated:NO];
 }
 
 - (BOOL)prefersStatusBarHidden {

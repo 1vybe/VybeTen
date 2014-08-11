@@ -271,12 +271,7 @@
                         // your method for when the conversion is done
                         // should call finishWriting on the writer
                         //hook up audio track
-                    {
-                        NSString *path = [fullPath path];
-                        NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
-                        
-                        NSLog(@"size after compress video is %d",data.length);
-                        
+                    {                                               
                         [videoWriter startSessionAtSourceTime:kCMTimeZero];
                         
                         break;
