@@ -19,9 +19,10 @@
 
 @property (nonatomic) UIButton *flipButton;
 @property (nonatomic) UIButton *flashButton;
-@property (nonatomic) UIButton *viewButton;
-@property (nonatomic) VYBLabel *viewCountLabel;
-@property (nonatomic) UIButton *mapViewButton;
+@property (nonatomic) UIButton *publicViewButton;
+@property (nonatomic) UIButton *privateViewButton;
+@property (nonatomic) VYBLabel *privateViewCountLabel;
+//@property (nonatomic) UIButton *mapViewButton;
 @property (nonatomic, strong) VYBCaptureButton *captureButton;
 
 @end

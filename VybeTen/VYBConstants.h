@@ -83,6 +83,19 @@ extern NSString *const kVYBVybeTypePublicKey;
 extern NSString *const kVYBVybeLocationName;
 
 
+#pragma mark - PFObject City Class
+// class key
+extern NSString *const kVYBCityClassKey;
+
+// field keys
+extern NSString *const kVYBCityNameKey;
+extern NSString *const kVYBCityOriginCoordKey;
+extern NSString *const kVYBCityBoundaryKey;
+extern NSString *const kVYBCityThumbnailKey;
+extern NSString *const kVYBCityUnlockCountKey;
+
+
+
 #pragma mark - PFObject Tribe Class
 // class key
 extern NSString *const kVYBTribeClassKey;

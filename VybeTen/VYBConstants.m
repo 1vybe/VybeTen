@@ -45,6 +45,16 @@ NSString *const kVYBVybeGeotag                                  = @"location";
 NSString *const kVYBVybeTypePublicKey                           = @"isPublic";
 NSString *const kVYBVybeLocationName                            = @"locationName";
 
+#pragma mark - PFObject City Class
+// class key
+NSString *const kVYBCityClassKey                                = @"City";
+
+// field keys
+NSString *const kVYBCityNameKey                                 = @"name";
+NSString *const kVYBCityOriginCoordKey                          = @"originCoord";
+NSString *const kVYBCityBoundaryKey                             = @"boundary";
+NSString *const kVYBCityThumbnailKey                            = @"thumbnail";
+NSString *const kVYBCityUnlockCountKey                          = @"unlockCount";
 
 #pragma mark - PFObject Tribe Class
 // class key

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBMapViewController : UIViewController <MKMapViewDelegate>
+@interface VYBMapViewController : UIViewController
 
 @end
