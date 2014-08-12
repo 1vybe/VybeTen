@@ -112,6 +112,15 @@ Parse.Cloud.define('default_algorithm',
   })
 );
 
+// Retrive vybes by city
+Parse.Cloud.define('get_city_vybes',
+		   get_city_vybes.bind(this, {
+		     recent:true,
+		     reversed:true,
+		   })
+);
+
+
 // Algorithms that can be chosen from the debug menu
 Parse.Cloud.define('algorithm1',
   get_vybes.bind(this, {
@@ -149,15 +158,17 @@ function get_vybes(options, request, response) {
   var reversed = options.reversed || false;
   var limit = options.limit || 50;
 
-  var userGeoPoint = request.params.location;
+  var geoPoint = request.params.location;
+    
   var currentUser = Parse.User.current();
 
   var query = new Parse.Query('Vybe');
+  query.include('user');
 
   if (recent)
     query.addDescending('timestamp');
   if (nearby)
-    query.near('location', userGeoPoint);
+    query.near('location', geoPoint);
   if (hide_user)
     query.notEqualTo('user', currentUser);
   if (limit)
@@ -177,6 +188,52 @@ function get_vybes(options, request, response) {
     },
     error: function() {
       response.error('Request to get_vybes() has failed.');
+    }
+  });
+}
+
+function get_city_vybes(options, request, response) {
+  var recent = options.recent || false;
+  var hide_user = options.hide_user || false;
+  var reversed = options.reversed || false;
+  var limit = options.limit || 50;
+
+  var currentUser = Parse.User.current();
+
+  var City = Parse.Object.extend('City');
+  var currCity = new City();
+  currCity.id = request.params.cityID;
+
+  var query = new Parse.Query('Vybe');
+  query.include('user');
+  if (recent)
+    query.addDescending('timestamp');
+  if (hide_user)
+    query.notEqualTo('user', currentUser);
+  if (limit)
+    query.limit(limit);
+  // Don't get private vybes
+  query.notEqualTo('isPublic', false);
+
+  currCity.fetch({
+    success: function(city) {
+      query.withinKilometers('location', city.get('originCoord'), city.get('radius'));
+      query.find({
+	success: function(vybesObjects) {
+	  if (reversed) {
+            response.success(vybesObjects);
+	  } else {
+            // Sort result in chronological order
+            response.success(vybesObjects.reverse());
+	  }
+	},
+	error: function() {
+	  response.error('Request to get_city_vybes() has failed.');
+	}
+      });
+    },
+    error: function(error) {
+      response.error('Unable to access city info.');
     }
   });
 }
@@ -202,7 +259,7 @@ function get_tribe_vybes(options, request, response) {
   relation.query().find().then(function(members) {
 
     var query = new Parse.Query('Vybe');
-
+    query.include('user');
     query.containedIn('user', members);
 
     if (recent)

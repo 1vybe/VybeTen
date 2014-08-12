@@ -14,10 +14,11 @@
 #import <GAITracker.h>
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
+#import "VYBCaptureViewController.h"
+#import "VYBCityViewController.h"
 #import "VYBUserStore.h"
 #import "VYBLogInViewController.h"
 #import "VYBPlayerViewController.h"
-#import "VYBCaptureViewController.h"
 #import "VYBReplayViewController.h"
 #import "VYBPermissionViewController.h"
 #import "VYBCameraView.h"
@@ -799,9 +800,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)publicViewButtonPressed:(id)sender {
-    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [playerVC setIsPublicMode:YES];
-    [self.navigationController pushViewController:playerVC animated:NO];
+    VYBCityViewController *cityVC = [[VYBCityViewController alloc] init];
+    [self.navigationController pushViewController:cityVC animated:NO];
 }
 
 - (BOOL)prefersStatusBarHidden {

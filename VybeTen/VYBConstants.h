@@ -90,6 +90,7 @@ extern NSString *const kVYBCityClassKey;
 // field keys
 extern NSString *const kVYBCityNameKey;
 extern NSString *const kVYBCityOriginCoordKey;
+extern NSString *const kVYBCityRadiusKey;
 extern NSString *const kVYBCityBoundaryKey;
 extern NSString *const kVYBCityThumbnailKey;
 extern NSString *const kVYBCityUnlockCountKey;

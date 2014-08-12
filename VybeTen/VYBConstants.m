@@ -52,6 +52,7 @@ NSString *const kVYBCityClassKey                                = @"City";
 // field keys
 NSString *const kVYBCityNameKey                                 = @"name";
 NSString *const kVYBCityOriginCoordKey                          = @"originCoord";
+NSString *const kVYBCityRadiusKey                               = @"radius";
 NSString *const kVYBCityBoundaryKey                             = @"boundary";
 NSString *const kVYBCityThumbnailKey                            = @"thumbnail";
 NSString *const kVYBCityUnlockCountKey                          = @"unlockCount";

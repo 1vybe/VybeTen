@@ -22,6 +22,7 @@
 @property (nonatomic,strong) NSArray *vybePlaylist;
 @property (nonatomic) NSInteger debugMode;
 @property (nonatomic) BOOL isPublicMode;
+@property (nonatomic) PFObject *currCity;
 
 + (VYBPlayerViewController *)playerViewControllerForPageIndex:(NSInteger)idx;
 - (NSInteger)pageIndex;

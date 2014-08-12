@@ -244,41 +244,73 @@
 }
 
 - (void)loadVybes {
-    NSString *functionName = @"default_algorithm";
-    
-    if (!self.isPublicMode) {
-        functionName = @"get_tribe_vybes";
-    }
-    
-    self.screenName = @"Player Screen";
-    
-    // Google Anaylytics shit
-    [[GAI sharedInstance].defaultTracker set:kGAIScreenName
-                                       value:@"Player Screen"];
-    [[GAI sharedInstance].defaultTracker
-     send:[[GAIDictionaryBuilder createAppView] build]];
-    
-    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-    PFGeoPoint *geoPoint = [PFGeoPoint geoPoint];
-    [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": geoPoint, @"startTime": [[VYBUserStore sharedStore] lastWatchedVybeTimeStamp]} block:^(NSArray *vybes, NSError *error) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        if (!error) {
-            if (vybes && vybes.count > 0) {
-                self.vybePlaylist = vybes;
-                [self beginPlayingFrom:0];
+    if (!self.isPublicMode) {
+        NSString *functionName = @"get_tribe_vybes";
+        PFGeoPoint *geoPoint = [PFGeoPoint geoPoint];
+        
+        [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": geoPoint, @"startTime": [[VYBUserStore sharedStore] lastWatchedVybeTimeStamp]} block:^(NSArray *vybes, NSError *error) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            if (!error) {
+                if (vybes && vybes.count > 0) {
+                    self.vybePlaylist = vybes;
+                    [self beginPlayingFrom:0];
+                } else {
+                    [[VYBUserStore sharedStore] setNewPrivateVybeCount:0];
+                    PFInstallation *currentInstall = [PFInstallation currentInstallation];
+                    currentInstall.badge = 0;
+                    [currentInstall saveEventually];
+                    
+                    self.vybePlaylist = nil;
+                }
             } else {
-                [[VYBUserStore sharedStore] setNewPrivateVybeCount:0];
-                PFInstallation *currentInstall = [PFInstallation currentInstallation];
-                currentInstall.badge = 0;
-                [currentInstall saveEventually];
-                
-                self.vybePlaylist = nil;
             }
-        } else {
+        }];
+    } else {
+        if (self.currCity) {
+            NSString *functionName = @"get_city_vybes";
+            [PFCloud callFunctionInBackground:functionName withParameters:@{@"cityID": self.currCity.objectId} block:^(NSArray *vybes, NSError *error) {
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                if (!error) {
+                    if (vybes && vybes.count > 0) {
+                        self.vybePlaylist = vybes;
+                        [self beginPlayingFrom:0];
+                    } else {
+                        [[VYBUserStore sharedStore] setNewPrivateVybeCount:0];
+                        PFInstallation *currentInstall = [PFInstallation currentInstallation];
+                        currentInstall.badge = 0;
+                        [currentInstall saveEventually];
+                        
+                        self.vybePlaylist = nil;
+                    }
+                } else {
+                }
+            }];
         }
-    }];
+        else {
+            NSString *functionName = @"default_algorithm";
+            PFGeoPoint *geoPoint = [PFGeoPoint geoPoint];
+            [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                if (!error) {
+                    if (vybes && vybes.count > 0) {
+                        self.vybePlaylist = vybes;
+                        [self beginPlayingFrom:0];
+                    } else {
+                        [[VYBUserStore sharedStore] setNewPrivateVybeCount:0];
+                        PFInstallation *currentInstall = [PFInstallation currentInstallation];
+                        currentInstall.badge = 0;
+                        [currentInstall saveEventually];
+                        
+                        self.vybePlaylist = nil;
+                    }
+                } else {
+                }
+            }];
+
+        }
+    }
 }
 
 - (void)beginPlayingFrom:(NSInteger)from {
