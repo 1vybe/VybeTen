@@ -66,6 +66,7 @@ extern NSString *const kVYBUserProfilePicSmallKey;
 extern NSString *const kVYBUserProfilePicMediumKey;
 extern NSString *const kVYBUserFacebookFriendsKey;
 extern NSString *const kVYBUserLastVybedTime;
+extern NSString *const kVYBUserMostRecentVybeKey;
 
 
 #pragma mark - PFObject Vybe Class

@@ -28,7 +28,7 @@ NSString *const kVYBUserProfilePicMediumKey                     = @"profilePictu
 NSString *const kVYBUserFacebookFriendsKey                      = @"facebookFriends";
 NSString *const kVYBUserAlreadyAutoFollowedFacebookFriendsKey   = @"userAlreadyAutoFollowedFacebookFriends";
 NSString *const kVYBUserLastVybedTime                           = @"lastVybedTime";
-
+NSString *const kVYBUserMostRecentVybeKey                       = @"mostRecentVybe";
 
 
 #pragma mark - PFObject Vybe Class

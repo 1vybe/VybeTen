@@ -30,11 +30,20 @@ Parse.Cloud.afterSave('Vybe', function(request) {
     sendPush(request);
   }
 
-  // Send Yo's for public vybes
   if (request.object.get('isPublic')) {
+    // Send Yo's for public vybes
     console.log("This vybe is public. Sending a Yo.");
     sendYo();
+
+    // Set User's mostRecentVybe to this vybe
+    var currentUser = request.user;
+    currentUser.set('mostRecentVybe', request.object);
+    currentUser.save().then(function(result) {
+      console.log('user most recent vybe updated');
+    });
   }
+
+
 });
 
 var sendYo = function() {
@@ -164,28 +173,31 @@ function get_regions(request, response) {
     _.each(regionObjs, function(regionObj) {
       var query = new Parse.Query('Vybe');
       var countryCode = regionObj.get('code');
+      //NOTE: this limit is max but should be disregarded
       query.limit(1000);
       query.equalTo('countryCode', countryCode);
-//      query.notEqualTo('isPublic', false);
+      query.notEqualTo('isPublic', false);
       query.include('user');
       promise = promise.then(function() {
-	return query.find().then(function(vybes) {
-	  var vybeCount = vybes.length;
-	  console.log('Region: ' + regionObj.get('name'));
-	  console.log('There are ' + vybeCount + ' vybes');
-	  var userCount = count_distinct_user(vybes);
-	  var mRegion = {};
-	  mRegion['pfRegion'] = regionObj;
-	  mRegion['vybeCount'] = vybeCount;
-	  mRegion['userCount'] =  userCount;
-	  regions.push(mRegion);
+	return query.count().then(function(vCount) {
+	  var userQuery = new Parse.Query(Parse.User);
+	  //NOTE: this limit is max but should be disregarded
+	  userQuery.limit(1000);
+	  userQuery.exists('mostRecentVybe');
+	  userQuery.matchesQuery('mostRecentVybe', query);
+	  //TODO: check the TTL of vybe
+	  return userQuery.count().then(function(uCount) {
+	    var mRegion = {};
+	    mRegion['pfRegion'] = regionObj;
+	    mRegion['vybeCount'] = vCount;
+	    mRegion['userCount'] =  uCount;
+	    regions.push(mRegion);
+	  });
 	});
       });
     });
     return promise;
-
   }).then(function() {
-    console.log('regions successfully returned');
     response.success(regions);
   });
 
