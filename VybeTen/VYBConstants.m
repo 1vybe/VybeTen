@@ -42,20 +42,28 @@ NSString *const kVYBVybeTribeKey                                = @"tribe";
 NSString *const kVYBVybeUserKey                                 = @"user";
 NSString *const kVYBVybeTimestampKey                            = @"timestamp";
 NSString *const kVYBVybeGeotag                                  = @"location";
+NSString *const kVYBVybeCountryCodeKey                          = @"countryCode";
+NSString *const kVYBVybeStateNameKey                            = @"stateName";
+NSString *const kVYBVybeCityNameKey                             = @"cityName";
 NSString *const kVYBVybeTypePublicKey                           = @"isPublic";
 NSString *const kVYBVybeLocationName                            = @"locationName";
 
-#pragma mark - PFObject City Class
+#pragma mark - PFObject Region Class
 // class key
-NSString *const kVYBCityClassKey                                = @"City";
+NSString *const kVYBRegionClassKey                                = @"Region";
 
 // field keys
-NSString *const kVYBCityNameKey                                 = @"name";
-NSString *const kVYBCityOriginCoordKey                          = @"originCoord";
-NSString *const kVYBCityRadiusKey                               = @"radius";
-NSString *const kVYBCityBoundaryKey                             = @"boundary";
-NSString *const kVYBCityThumbnailKey                            = @"thumbnail";
-NSString *const kVYBCityUnlockCountKey                          = @"unlockCount";
+NSString *const kVYBRegionNameKey                                 = @"name";
+NSString *const kVYBRegionOriginCoordKey                          = @"originCoord";
+NSString *const kVYBRegionRadiusKey                               = @"radius";
+NSString *const kVYBRegionBoundaryKey                             = @"boundary";
+NSString *const kVYBRegionThumbnailKey                            = @"thumbnail";
+NSString *const kVYBRegionUnlockCountKey                          = @"unlockCount";
+
+NSString *const kVYBRegionTypeCountryKey                          = @"country";
+NSString *const kVYBRegionTypeStateKey                            = @"state";
+NSString *const kVYBRegionTypeCityKey                             = @"city";
+
 
 #pragma mark - PFObject Tribe Class
 // class key

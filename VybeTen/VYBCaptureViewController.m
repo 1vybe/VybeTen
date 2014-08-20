@@ -15,7 +15,8 @@
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
 #import "VYBCaptureViewController.h"
-#import "VYBCityViewController.h"
+#import "VYBHubViewController.h"
+#import "VYBFriendsViewController.h"
 #import "VYBUserStore.h"
 #import "VYBLogInViewController.h"
 #import "VYBPlayerViewController.h"
@@ -64,6 +65,8 @@
     BOOL flashOn;
     BOOL isFrontCamera;
     BOOL isRecording;
+    
+    CLLocationManager *locationManager;
 }
 
 @synthesize flipButton, flashButton;
@@ -100,6 +103,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    if ([CLLocationManager locationServicesEnabled]) {
+        locationManager = [[CLLocationManager alloc] init];
+        locationManager.delegate = self;
+        locationManager.desiredAccuracy=kCLLocationAccuracyBest;
+    }
     
     // AppDelegate Notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
@@ -488,13 +497,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     self.currVybe = [[VYBMyVybe alloc] init];
     [self.currVybe setTimeStamp:startTime];
     
-    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-        if (error || !geoPoint) {
-            NSLog(@"Cannot retrive current location at this moment.");
-        } else {
-            [self.currVybe setGeoTagFrom:geoPoint];
-        }
-    }];
+    [locationManager startUpdatingLocation];
     
     if (recordingTimer) {
         [recordingTimer invalidate];
@@ -723,6 +726,30 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	}
 }
 
+#pragma mark - CLLocationManagerDelegate 
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    NSLog(@"Failed to get current location");
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    CLLocation *currLocation = [locations lastObject];
+    CLGeocoder *reverseGeocoder = [[CLGeocoder alloc] init];
+
+    [self.currVybe setGeoTag:currLocation];
+
+    [reverseGeocoder reverseGeocodeLocation:currLocation completionHandler:^(NSArray *placemarks, NSError *error)
+     {
+         CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
+         NSString *countryCode = myPlacemark.ISOcountryCode;
+         [self.currVybe setCountryCode:countryCode];
+         [self.currVybe setStateName:myPlacemark.administrativeArea];
+         [self.currVybe setCityName:myPlacemark.subLocality];
+     }];
+    
+    [locationManager stopUpdatingLocation];
+}
+
 #pragma mark - DeviceOrientation
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -794,14 +821,18 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)privateViewButtonPressed:(id)sender {
+    /*
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
     [playerVC setIsPublicMode:NO];
     [self.navigationController pushViewController:playerVC animated:NO];
+    */
+    VYBFriendsViewController *friendsVC = [[VYBFriendsViewController alloc] init];
+    [self.navigationController pushViewController:friendsVC animated:NO];
 }
 
 - (void)publicViewButtonPressed:(id)sender {
-    VYBCityViewController *cityVC = [[VYBCityViewController alloc] init];
-    [self.navigationController pushViewController:cityVC animated:NO];
+    VYBHubViewController *hubVC = [[VYBHubViewController alloc] init];
+    [self.navigationController pushViewController:hubVC animated:NO];
 }
 
 - (BOOL)prefersStatusBarHidden {

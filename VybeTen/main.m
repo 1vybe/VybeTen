@@ -13,6 +13,9 @@
 int main(int argc, char * argv[])
 {
     @autoreleasepool {
+        // In order to fix language of placemark attributes (e.g. city name)
+        [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithObject:@"en"] forKey:@"AppleLanguages"];
+        
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([VYBAppDelegate class]));
     }
 }

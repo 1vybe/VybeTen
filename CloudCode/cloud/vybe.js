@@ -1,5 +1,6 @@
 require('cloud/tribe');
 
+var _ = require('underscore');
 var Vybe = Parse.Object.extend('Vybe');
 
 // Validate Vybes have a valid owner in the "user" pointer.
@@ -104,6 +105,9 @@ var alertPayload = function(request) {
   };
 };
 
+// Function that returns info about regions
+Parse.Cloud.define('get_regions', get_regions);
+
 // Default algorithm used in the app
 Parse.Cloud.define('default_algorithm',
   get_vybes.bind(this, {
@@ -150,13 +154,66 @@ Parse.Cloud.define('get_tribe_vybes',
   })
 );
 
+function get_regions(request, response) {
+  console.log('CP1');
+  var regions = [];
+  var preQuery = new Parse.Query('Region');
+
+  preQuery.find().then(function(regionObjs) {
+    var promise = Parse.Promise.as();
+    _.each(regionObjs, function(regionObj) {
+      var query = new Parse.Query('Vybe');
+      var countryCode = regionObj.get('code');
+      query.limit(1000);
+      query.equalTo('countryCode', countryCode);
+//      query.notEqualTo('isPublic', false);
+      query.include('user');
+      promise = promise.then(function() {
+	return query.find().then(function(vybes) {
+	  var vybeCount = vybes.length;
+	  console.log('Region: ' + regionObj.get('name'));
+	  console.log('There are ' + vybeCount + ' vybes');
+	  var userCount = count_distinct_user(vybes);
+	  var mRegion = {};
+	  mRegion['pfRegion'] = regionObj;
+	  mRegion['vybeCount'] = vybeCount;
+	  mRegion['userCount'] =  userCount;
+	  regions.push(mRegion);
+	});
+      });
+    });
+    return promise;
+
+  }).then(function() {
+    console.log('regions successfully returned');
+    response.success(regions);
+  });
+
+}
+
+function count_distinct_user(vybeObjs) {
+  if (vybeObjs.length == 0)
+    return 0;
+  var users = {};
+  for (i = 0; i < vybeObjs.length; i++) {
+    var aVybe = vybeObjs[i];
+    var newUser = aVybe.get('user');
+    if (newUser)
+      console.log('new user objID: ' + aVybe.id);
+    users[newUser.get('username')] = "c";
+  }
+
+  return Object.keys(users).length;
+}
+
+
 // Generic get_vybes functions that accepts options
 function get_vybes(options, request, response) {
   var recent = options.recent || false;
   var nearby = options.nearby || false;
   var hide_user = options.hide_user || false;
   var reversed = options.reversed || false;
-  var limit = options.limit || 50;
+  var limit = options.limit || 500;
 
   var geoPoint = request.params.location;
     
@@ -196,7 +253,7 @@ function get_city_vybes(options, request, response) {
   var recent = options.recent || false;
   var hide_user = options.hide_user || false;
   var reversed = options.reversed || false;
-  var limit = options.limit || 50;
+  var limit = options.limit || 500;
 
   var currentUser = Parse.User.current();
 
@@ -217,7 +274,14 @@ function get_city_vybes(options, request, response) {
 
   currCity.fetch({
     success: function(city) {
-      query.withinKilometers('location', city.get('originCoord'), city.get('radius'));
+      var lat = city.get('swLatitude') * 1.0;
+      var lon = city.get('swLongitude') * 1.0;
+      var swPoint = new Parse.GeoPoint(lat, lon);
+
+      lat = city.get('neLatitude') * 1.0;
+      lon = city.get('neLongitude') * 1.0;
+      var nePoint = new Parse.GeoPoint(lat, lon);
+      query.withinGeoBox('location', swPoint, nePoint);
       query.find({
 	success: function(vybesObjects) {
 	  if (reversed) {
@@ -227,8 +291,8 @@ function get_city_vybes(options, request, response) {
             response.success(vybesObjects.reverse());
 	  }
 	},
-	error: function() {
-	  response.error('Request to get_city_vybes() has failed.');
+	error: function(error) {
+	  response.error('Request to get_city_vybes() has failed: ' + error.code);
 	}
       });
     },
@@ -243,7 +307,7 @@ function get_tribe_vybes(options, request, response) {
   var recent = options.recent || false;
   var nearby = options.nearby || false;
   var hide_user = options.hide_user || false;
-  var limit = options.limit || 50;
+  var limit = options.limit || 500;
 
   var userGeoPoint = request.params.location;
   var startTime = request.params.startTime;

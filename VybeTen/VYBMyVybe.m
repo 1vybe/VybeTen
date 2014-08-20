@@ -11,7 +11,7 @@
 
 @implementation VYBMyVybe
 
-@synthesize uniqueFileName, geoTag, timeStamp, videoFileObjectID, thumbnailFileObjectID, isPublic;
+@synthesize uniqueFileName, geoTag, timeStamp, videoFileObjectID, thumbnailFileObjectID, isPublic, countryCode, stateName, cityName;
 
 - (id)init {
     self = [super init];
@@ -46,6 +46,9 @@
     if (self) {
         [self setUniqueFileName:[aDecoder decodeObjectForKey:@"uniqueFileName"]];
         [self setGeoTag:[aDecoder decodeObjectForKey:kVYBVybeGeotag]];
+        [self setCountryCode:[aDecoder decodeObjectForKey:kVYBVybeCountryCodeKey]];
+        [self setStateName:[aDecoder decodeObjectForKey:kVYBVybeStateNameKey]];
+        [self setCityName:[aDecoder decodeObjectForKey:kVYBVybeCityNameKey]];
         [self setTimeStamp:[aDecoder decodeObjectForKey:kVYBVybeTimestampKey]];
         [self setIsPublic:[aDecoder decodeBoolForKey:kVYBVybeTypePublicKey]];
 //        [self setTribeObjectID:[aDecoder decodeObjectForKey:kVYBVybeTribeKey]];
@@ -57,6 +60,10 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:uniqueFileName forKey:@"uniqueFileName"];
     [aCoder encodeObject:geoTag forKey:kVYBVybeGeotag];
+    [aCoder encodeObject:countryCode forKey:kVYBVybeCountryCodeKey];
+    [aCoder encodeObject:stateName forKey:kVYBVybeStateNameKey];
+    [aCoder encodeObject:cityName forKey:kVYBVybeCityNameKey];
+
     [aCoder encodeObject:timeStamp forKey:kVYBVybeTimestampKey];
     [aCoder encodeBool:isPublic forKey:kVYBVybeTypePublicKey];
 //    [aCoder encodeObject:tribeObjectID forKey:kVYBVybeTribeKey];
@@ -72,10 +79,13 @@
     
     PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:geoTag.coordinate.latitude longitude:geoTag.coordinate.longitude];
     [theVybe setObject:geoPoint forKey:kVYBVybeGeotag];
+    [theVybe setObject:countryCode forKey:kVYBVybeCountryCodeKey];
+    [theVybe setObject:stateName forKey:kVYBVybeStateNameKey];
+    [theVybe setObject:cityName forKey:kVYBVybeCityNameKey];
     [theVybe setObject:[NSNumber numberWithBool:isPublic] forKey:kVYBVybeTypePublicKey];
     [theVybe setObject:timeStamp forKey:kVYBVybeTimestampKey];
     [theVybe setObject:[PFUser currentUser] forKey:kVYBVybeUserKey];
-
+    
     return theVybe;
 }
 

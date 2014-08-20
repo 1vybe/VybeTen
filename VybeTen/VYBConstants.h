@@ -79,23 +79,29 @@ extern NSString *const kVYBVybeTribeKey;
 extern NSString *const kVYBVybeUserKey;
 extern NSString *const kVYBVybeTimestampKey;
 extern NSString *const kVYBVybeGeotag;
+extern NSString *const kVYBVybeCountryCodeKey;
+extern NSString *const kVYBVybeStateNameKey;
+extern NSString *const kVYBVybeCityNameKey;
 extern NSString *const kVYBVybeTypePublicKey;
 extern NSString *const kVYBVybeLocationName;
 
 
-#pragma mark - PFObject City Class
+#pragma mark - PFObject Region Class
 // class key
-extern NSString *const kVYBCityClassKey;
+extern NSString *const kVYBRegionClassKey;
 
 // field keys
-extern NSString *const kVYBCityNameKey;
-extern NSString *const kVYBCityOriginCoordKey;
-extern NSString *const kVYBCityRadiusKey;
-extern NSString *const kVYBCityBoundaryKey;
-extern NSString *const kVYBCityThumbnailKey;
-extern NSString *const kVYBCityUnlockCountKey;
+extern NSString *const kVYBRegionNameKey;
+extern NSString *const kVYBRegionTypeKey;
+extern NSString *const kVYBRegionOriginCoordKey;
+extern NSString *const kVYBRegionRadiusKey;
+extern NSString *const kVYBRegionBoundaryKey;
+extern NSString *const kVYBRegionThumbnailKey;
+extern NSString *const kVYBRegionUnlockCountKey;
 
-
+extern NSString *const kVYBRegionTypeCountryKey;
+extern NSString *const kVYBRegionTypeStateKey;
+extern NSString *const kVYBRegionTypeCityKey;
 
 #pragma mark - PFObject Tribe Class
 // class key

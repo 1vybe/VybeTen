@@ -1,5 +1,5 @@
 //
-//  VYBCityViewController.h
+//  VYBHubViewController.h
 //  VybeTen
 //
 //  Created by jinsuk on 8/12/14.
@@ -8,6 +8,6 @@
 
 #import <Parse/Parse.h>
 
-@interface VYBCityViewController : PFQueryTableViewController
+@interface VYBHubViewController : UITableViewController <UISearchDisplayDelegate, UISearchBarDelegate>
 
 @end

@@ -25,6 +25,7 @@
 @interface VYBPlayerViewController ()
 
 @property (nonatomic, strong) VYBLabel *usernameLabel;
+@property (nonatomic, strong) UIButton *dismissButton;
 @property (nonatomic, strong) VYBLabel *privateCountLabel;
 @property (nonatomic, strong) UIButton *privateViewButton;
 
@@ -165,6 +166,13 @@
     [self.view addSubview:pauseImageView];
     pauseImageView.hidden = YES;
     
+    frame = CGRectMake(0, 0, 70, 70);
+    self.dismissButton = [[UIButton alloc] initWithFrame:frame];
+    [self.dismissButton setImage:[UIImage imageNamed:@"button_x.png"] forState:UIControlStateNormal];
+    [self.dismissButton setContentMode:UIViewContentModeCenter];
+    [self.dismissButton addTarget:self action:@selector(dismissButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.dismissButton];
+    
     // Adding PRIVATE view button
     frame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
     self.privateViewButton = [[UIButton alloc] initWithFrame:frame];
@@ -268,9 +276,9 @@
             }
         }];
     } else {
-        if (self.currCity) {
-            NSString *functionName = @"get_city_vybes";
-            [PFCloud callFunctionInBackground:functionName withParameters:@{@"cityID": self.currCity.objectId} block:^(NSArray *vybes, NSError *error) {
+        if (self.currRegion) {
+            NSString *functionName = @"get_region_vybes";
+            [PFCloud callFunctionInBackground:functionName withParameters:@{@"regionID": self.currRegion.objectId} block:^(NSArray *vybes, NSError *error) {
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                 if (!error) {
                     if (vybes && vybes.count > 0) {
@@ -423,6 +431,9 @@
 }
 
 - (void)syncUI:(PFObject *)aVybe {
+    locationLabel.text = @"";
+    self.usernameLabel.text = @"";
+
     if ([aVybe objectForKey:kVYBVybeGeotag]) {
         PFGeoPoint *geo = [aVybe objectForKey:kVYBVybeGeotag];
         [VYBUtility reverseGeoCode:geo withCompletion:^(NSArray *placemarks, NSError *error) {
@@ -432,8 +443,6 @@
                 [locationLabel setNeedsDisplay];
             }
         }];
-    } else {
-        locationLabel.text = @"";
     }
     
     if ([aVybe objectForKey:kVYBVybeUserKey]) {
@@ -460,6 +469,10 @@
 - (void)privateViewButtonPressed:(id)sender {
     self.isPublicMode = NO;
     [self loadVybes];
+}
+
+- (void)dismissButtonPressed:(id)sender {
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (void)swipeLeft {
