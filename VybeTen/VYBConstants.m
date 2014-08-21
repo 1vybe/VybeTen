@@ -54,9 +54,8 @@ NSString *const kVYBRegionClassKey                                = @"Region";
 
 // field keys
 NSString *const kVYBRegionNameKey                                 = @"name";
-NSString *const kVYBRegionOriginCoordKey                          = @"originCoord";
-NSString *const kVYBRegionRadiusKey                               = @"radius";
-NSString *const kVYBRegionBoundaryKey                             = @"boundary";
+NSString *const kVYBRegionTypeKey                                 = @"type";
+NSString *const kVYBRegionCodeKey                                 = @"code";
 NSString *const kVYBRegionThumbnailKey                            = @"thumbnail";
 NSString *const kVYBRegionUnlockCountKey                          = @"unlockCount";
 

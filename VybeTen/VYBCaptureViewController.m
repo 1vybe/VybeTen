@@ -125,7 +125,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [self setSession:session];
     
-    VYBCameraView *cameraView = [[VYBCameraView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
+    VYBCameraView *cameraView = [[VYBCameraView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     [self setCameraView:cameraView];
     [(AVCaptureVideoPreviewLayer *)[cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [cameraView setSession:session];
@@ -194,42 +194,40 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     // Hide status bar
     [self setNeedsStatusBarAppearanceUpdate];
     
-    /*
     // Device orientation detection
     UIDevice *iphone = [UIDevice currentDevice];
     [iphone beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:iphone];
-    */
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceRotated:) name:UIDeviceOrientationDidChangeNotification object:iphone];
     
     // Adding CAPTURE button
     self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
     
     // Adding PRIVATE view button
-    CGRect buttonFrame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    CGRect buttonFrame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
     self.privateViewButton = [[UIButton alloc] initWithFrame:buttonFrame];
     [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view.png"] forState:UIControlStateNormal];
     [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view_new.png"] forState:UIControlStateSelected];
     [self.privateViewButton addTarget:self action:@selector(privateViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.privateViewButton setContentMode:UIViewContentModeLeft];
-    [self.view addSubview:self.privateViewButton];
+    //[self.view addSubview:self.privateViewButton];
     // Adding PRIVATE count label
-    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    buttonFrame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
     self.privateViewCountLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
     [self.privateViewCountLabel setTextAlignment:NSTextAlignmentCenter];
     [self.privateViewCountLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:20.0]];
     [self.privateViewCountLabel setTextColor:[UIColor whiteColor]];
     self.privateViewCountLabel.userInteractionEnabled = NO;
-    [self.view addSubview:self.privateViewCountLabel];
+    //[self.view addSubview:self.privateViewCountLabel];
 
     // Adding PUBLIC view button
-    buttonFrame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
+    buttonFrame = CGRectMake(0, self.view.bounds.size.height - 70, 70, 70);
     self.publicViewButton = [[UIButton alloc] initWithFrame:buttonFrame];
     [self.publicViewButton setImage:[UIImage imageNamed:@"button_public_view.png"] forState:UIControlStateNormal];
     [self.publicViewButton addTarget:self action:@selector(publicViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.publicViewButton];
     
     // Adding FLIP button
-    buttonFrame = CGRectMake(0, self.view.bounds.size.width - 70, 70, 70);
+    buttonFrame = CGRectMake(0, 0, 70, 70);
     flipButton = [[UIButton alloc] initWithFrame:buttonFrame];
     [flipButton setImage:[UIImage imageNamed:@"button_camera_front.png"] forState:UIControlStateNormal];
     [flipButton setImage:[UIImage imageNamed:@"button_camera_back.png"] forState:UIControlStateSelected];
@@ -238,7 +236,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self.view addSubview:flipButton];
     
     // Adding FLASH button
-    buttonFrame = CGRectMake(0, 0, 70, 70);
+    buttonFrame = CGRectMake(self.view.bounds.size.width - 70, 0, 70, 70);
     flashButton = [[UIButton alloc] initWithFrame:buttonFrame];
     [flashButton setImage:[UIImage imageNamed:@"button_flash_on.png"] forState:UIControlStateNormal];
     [flashButton setImage:[UIImage imageNamed:@"button_flash_off.png"] forState:UIControlStateSelected];
@@ -465,10 +463,33 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 #pragma mark - UIResponder
 
 - (void)longPressDetected:(UILongPressGestureRecognizer *)recognizer {
-    [self.view addSubview:self.captureButton];
-    self.captureButton.center = [recognizer locationInView:self.view];
-    
     if (!isRecording) {
+        [self.view addSubview:self.captureButton];
+        UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
+        double rotation = 0;
+        switch (currentOrientation) {
+            case UIDeviceOrientationFaceDown:
+            case UIDeviceOrientationFaceUp:
+            case UIDeviceOrientationUnknown:
+                return;
+            case UIDeviceOrientationPortrait:
+                rotation = 0;
+                break;
+            case UIDeviceOrientationPortraitUpsideDown:
+                rotation = -M_PI;
+                break;
+            case UIDeviceOrientationLandscapeLeft:
+                rotation = M_PI_2;
+                break;
+            case UIDeviceOrientationLandscapeRight:
+                rotation = -M_PI_2;
+                break;
+        }
+        self.captureButton.center = [recognizer locationInView:self.view];
+        
+        CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
+        self.captureButton.transform = transform;
+        
         [self startRecording];
     }
     
@@ -541,8 +562,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
                                    AVVideoCodecH264, AVVideoCodecKey,
-                                   [NSNumber numberWithInt:480], AVVideoWidthKey,
-                                   [NSNumber numberWithInt:360], AVVideoHeightKey,
+                                   [NSNumber numberWithInt:360], AVVideoWidthKey,
+                                   [NSNumber numberWithInt:480], AVVideoHeightKey,
                                    videoCompressionProps, AVVideoCompressionPropertiesKey,
                                    nil];
     
@@ -635,7 +656,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         }
         NSLog(@"CP2");
     }
-    
 
     startTime = nil;
     [recordingTimer invalidate];
@@ -752,9 +772,63 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 #pragma mark - DeviceOrientation
 
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskLandscapeRight;
+- (BOOL)shouldAutorotate {
+    return NO;
 }
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+
+/* for iOS6 and below
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+*/
+
+- (void)deviceRotated:(NSNotification *)notification {
+    UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
+    NSLog(@"current status bar orientation is %d", currentOrientation);
+
+    double rotation = 0;
+    switch (currentOrientation) {
+        case UIDeviceOrientationFaceDown:
+        case UIDeviceOrientationFaceUp:
+        case UIDeviceOrientationUnknown:
+            return;
+        case UIDeviceOrientationPortrait:
+            rotation = 0;
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            rotation = -M_PI;
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            rotation = M_PI_2;
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            rotation = -M_PI_2;
+            break;
+    }
+    
+    CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
+    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        [self.flipButton setTransform:transform];
+        [self.flashButton setTransform:transform];
+        [self.publicViewButton setTransform:transform];
+        [self.privateViewButton setTransform:transform];
+        [self.privateViewCountLabel setTransform:transform];
+    } completion:nil];
+
+}
+
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
 
 #pragma mark - VYBAppDelegateNotification
 
@@ -833,10 +907,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)publicViewButtonPressed:(id)sender {
     VYBHubViewController *hubVC = [[VYBHubViewController alloc] init];
     [self.navigationController pushViewController:hubVC animated:NO];
-}
-
-- (BOOL)prefersStatusBarHidden {
-    return YES;
 }
 
 - (void)didReceiveMemoryWarning

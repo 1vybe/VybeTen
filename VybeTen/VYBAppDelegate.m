@@ -101,7 +101,7 @@
     
     self.captureVC = [[VYBCaptureViewController alloc] init];
     
-    self.navigationVC = [[VYBNavigationController alloc] initWithRootViewController:self.captureVC];
+    self.navigationVC = [[UINavigationController alloc] initWithRootViewController:self.captureVC];
     self.navigationVC.navigationBarHidden = YES;
 
     

@@ -126,8 +126,8 @@ Parse.Cloud.define('default_algorithm',
 );
 
 // Retrive vybes by city
-Parse.Cloud.define('get_city_vybes',
-		   get_city_vybes.bind(this, {
+Parse.Cloud.define('get_region_vybes',
+		   get_region_vybes.bind(this, {
 		     recent:true,
 		     reversed:true,
 		   })
@@ -177,15 +177,24 @@ function get_regions(request, response) {
       query.limit(1000);
       query.equalTo('countryCode', countryCode);
       query.notEqualTo('isPublic', false);
+      // 24 hour TTL check
+      var currTime = new Date();
+      var ttlAgo = new Date();
+      ttlAgo.setHours(currTime.getHours() - 24);
+      query.greaterThanOrEqualTo('timestamp',ttlAgo);
+      query.notEqualTo('user', request.user);
       query.include('user');
       promise = promise.then(function() {
 	return query.count().then(function(vCount) {
+	  if (vCount < 1)
+	    return;
 	  var userQuery = new Parse.Query(Parse.User);
 	  //NOTE: this limit is max but should be disregarded
 	  userQuery.limit(1000);
 	  userQuery.exists('mostRecentVybe');
 	  userQuery.matchesQuery('mostRecentVybe', query);
-	  //TODO: check the TTL of vybe
+	  userQuery.notEqualTo('username', request.user.get('username'));
+	  //NOTE: we do NOT check TTL for couting active users. 
 	  return userQuery.count().then(function(uCount) {
 	    var mRegion = {};
 	    mRegion['pfRegion'] = regionObj;
@@ -245,7 +254,11 @@ function get_vybes(options, request, response) {
 
   // Don't get private vybes
   query.notEqualTo('isPublic', false);
-
+  // 24 hour TTL check
+  var currTime = new Date();
+  var ttlAgo = new Date();
+  ttlAgo.setHours(currTime.getHours() - 24);
+  query.greaterThanOrEqualTo('timestamp',ttlAgo);
   query.find({
     success: function(vybesObjects) {
       if (reversed) {
@@ -261,7 +274,7 @@ function get_vybes(options, request, response) {
   });
 }
 
-function get_city_vybes(options, request, response) {
+function get_region_vybes(options, request, response) {
   var recent = options.recent || false;
   var hide_user = options.hide_user || false;
   var reversed = options.reversed || false;
@@ -269,9 +282,9 @@ function get_city_vybes(options, request, response) {
 
   var currentUser = Parse.User.current();
 
-  var City = Parse.Object.extend('City');
-  var currCity = new City();
-  currCity.id = request.params.cityID;
+  var Region = Parse.Object.extend('Region');
+  var currRegion = new Region();
+  currRegion.id = request.params.regionID;
 
   var query = new Parse.Query('Vybe');
   query.include('user');
@@ -283,17 +296,16 @@ function get_city_vybes(options, request, response) {
     query.limit(limit);
   // Don't get private vybes
   query.notEqualTo('isPublic', false);
+  // 24 hour TTL check
+  var currTime = new Date();
+  var ttlAgo = new Date();
+  ttlAgo.setHours(currTime.getHours() - 24);
+  query.greaterThanOrEqualTo('timestamp',ttlAgo);
 
-  currCity.fetch({
-    success: function(city) {
-      var lat = city.get('swLatitude') * 1.0;
-      var lon = city.get('swLongitude') * 1.0;
-      var swPoint = new Parse.GeoPoint(lat, lon);
-
-      lat = city.get('neLatitude') * 1.0;
-      lon = city.get('neLongitude') * 1.0;
-      var nePoint = new Parse.GeoPoint(lat, lon);
-      query.withinGeoBox('location', swPoint, nePoint);
+  currRegion.fetch({
+    success: function(region) {
+      var countryCode = region.get('code');
+      query.equalTo('countryCode', countryCode);
       query.find({
 	success: function(vybesObjects) {
 	  if (reversed) {

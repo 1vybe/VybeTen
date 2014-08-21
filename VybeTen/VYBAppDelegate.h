@@ -14,7 +14,7 @@
 @interface VYBAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (nonatomic, strong) VYBNavigationController *navigationVC;
+@property (nonatomic, strong) UINavigationController *navigationVC;
 @property (nonatomic, strong) VYBPageViewController *pageVC;
 @property (nonatomic, strong) NSArray *viewControllers;
 

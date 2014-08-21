@@ -9,6 +9,7 @@
 #import "VYBHubViewController.h"
 #import "VYBRegionTableViewCell.h"
 #import "VYBPlayerViewController.h"
+#import "VYBFriendsViewController.h"
 
 @interface VYBHubViewController ()
 @property (nonatomic, strong) UISearchBar *searchBar;
@@ -22,7 +23,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -31,10 +31,18 @@
 {
     [super viewDidLoad];
     
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refreshControlPulled:) forControlEvents:UIControlEventValueChanged];
+    [self setRefreshControl:refreshControl];
+    
+    UIBarButtonItem *captureButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_capture.png"] style:UIBarButtonItemStylePlain target:self action:@selector(captureButtonPressed:)];
     UIBarButtonItem *playAllButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:self action:@selector(allButtonItemPressed:)];
     UIBarButtonItem *searchButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)];
-    self.navigationItem.rightBarButtonItems = @[playAllButton, searchButton];
+    self.navigationItem.rightBarButtonItems = @[captureButton, playAllButton];
 
+    UIBarButtonItem *profileButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_camera_front.png"] style:UIBarButtonItemStylePlain target:self action:@selector(profileButtonPressed:)];
+    self.navigationItem.leftBarButtonItem = profileButton;
+    
     self.searchBar = [[UISearchBar alloc] init];
     [self.searchBar sizeToFit];
     [self.view addSubview:self.searchBar];
@@ -46,9 +54,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+        
     self.navigationController.navigationBarHidden = NO;
-    
-    self.navigationItem.backBarButtonItem.title = @"";
     
     NSString *functionName = @"get_regions";
     
@@ -98,11 +105,17 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    PFObject *aRegion = self.regions[indexPath.row];
+    PFObject *aRegion = self.regions[indexPath.row][@"pfRegion"];
+    VYBFriendsViewController *friendsVC = [[VYBFriendsViewController alloc] init];
+    [friendsVC setCurrRegion:aRegion];
+    [self.navigationController pushViewController:friendsVC animated:NO];
+    /*
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
     [playerVC setIsPublicMode:YES];
     [playerVC setCurrRegion:aRegion];
     [self.navigationController pushViewController:playerVC animated:NO];
+    */
+    
 }
 
 - (void)allButtonItemPressed:(id)sender {
@@ -116,6 +129,38 @@
     [self.searchBar becomeFirstResponder];
 }
 
+- (void)captureButtonPressed:(id)sender {
+    [self.navigationController popViewControllerAnimated:NO];
+}
+
+- (void)profileButtonPressed:(id)sender {
+    
+}
+
+#pragma mark - DeviceOrientation
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)refreshControlPulled:(id)sender {
+    NSString *functionName = @"get_regions";
+    
+    [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *objects, NSError *error) {
+        [self.refreshControl endRefreshing];
+        if (!error) {
+            self.regions = objects;
+            NSLog(@"there are %d regions", self.regions.count);
+            [self.tableView reloadData];
+        } else {
+            NSLog(@"get_regions failed: %@", error);
+        }
+    }];
+}
 
 - (void)didReceiveMemoryWarning
 {

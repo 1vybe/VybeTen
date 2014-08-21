@@ -9,5 +9,5 @@
 #import <Parse/Parse.h>
 
 @interface VYBFriendsViewController : PFQueryTableViewController
-
+@property (nonatomic) PFObject *currRegion;
 @end

@@ -30,10 +30,9 @@
     [darkBackground setBackgroundColor:[UIColor blackColor]];
     self.view = darkBackground;
     
-    
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
     
-    [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.height, darkBackground.bounds.size.width)];
+    [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.width, darkBackground.bounds.size.height)];
     
     self.playerView = playerView;
     
@@ -51,15 +50,20 @@
     
     // Hide status bar
     [self setNeedsStatusBarAppearanceUpdate];
+    
+    // Device orientation detection
+    UIDevice *iphone = [UIDevice currentDevice];
+    [iphone beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceRotated:) name:UIDeviceOrientationDidChangeNotification object:iphone];
    
     // Adding CONFIRM button
-    CGRect frame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
+    CGRect frame = CGRectMake(0, self.view.bounds.size.height - 70, 70, 70);
     self.acceptButton = [[UIButton alloc] initWithFrame:frame];
     [self.acceptButton setImage:[UIImage imageNamed:@"button_replay_accept.png"] forState:UIControlStateNormal];
     [self.acceptButton addTarget:self action:@selector(acceptButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.acceptButton];
     
-    frame = CGRectMake(self.view.bounds.size.height - 70, (self.view.bounds.size.width - 70)/2, 70, 70);
+    frame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
     self.rejectButton = [[UIButton alloc] initWithFrame:frame];
     [self.rejectButton setImage:[UIImage imageNamed:@"button_replay_reject.png"] forState:UIControlStateNormal];
     [self.rejectButton addTarget:self action:@selector(rejectButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -72,7 +76,7 @@
     [self.modeControl addTarget:self action:@selector(modeChanged:) forControlEvents:UIControlEventValueChanged];
     // By default it's public
     self.isPublic = YES;
-    [self.view addSubview:self.modeControl];
+    //[self.view addSubview:self.modeControl];
 
 }
 
@@ -83,7 +87,7 @@
     [self.modeControl setTintColor:(self.isPublic) ? [UIColor colorWithRed:0.0 green:191.0/255.0 blue:1.0 alpha:1.0] : [UIColor orangeColor]];
     
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
-    NSLog(@"[Replay]videoURL is %@", videoURL);
+    //NSLog(@"[Replay]videoURL is %@", videoURL);
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
@@ -110,7 +114,8 @@
     
     PFFile *videoFile = [PFFile fileWithData:video];
     
-    [self.currVybe setIsPublic:self.isPublic];
+    //NOTE: vybes are ALWAYS public now
+    [self.currVybe setIsPublic:YES];
     PFObject *vybe = [self.currVybe parseObjectVybe];
     
     PFACL *vybeACL = [PFACL ACLWithUser:[PFUser currentUser]];
@@ -296,9 +301,47 @@
     }
 }
 
+#pragma mark - DeviceOrientation
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskLandscape;
+    return UIInterfaceOrientationMaskPortrait;
 }
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void)deviceRotated:(NSNotification *)notification {
+    UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
+    double rotation = 0;
+    switch (currentOrientation) {
+        case UIDeviceOrientationFaceDown:
+        case UIDeviceOrientationFaceUp:
+        case UIDeviceOrientationUnknown:
+            return;
+        case UIDeviceOrientationPortrait:
+            rotation = 0;
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            rotation = -M_PI;
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            rotation = M_PI_2;
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            rotation = -M_PI_2;
+            break;
+    }
+    
+    CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
+    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        [self.acceptButton setTransform:transform];
+        [self.rejectButton setTransform:transform];
+    } completion:nil];
+    
+}
+
 
 - (BOOL)prefersStatusBarHidden {
     return YES;

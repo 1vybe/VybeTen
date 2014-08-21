@@ -6,7 +6,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VYBFriendsViewController">
             <connections>
-                <outlet property="searchDisplayController" destination="acI-Oh-9LF" id="hp1-ML-SSY"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -18,13 +17,5 @@
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>
-        <searchDisplayController id="acI-Oh-9LF">
-            <connections>
-                <outlet property="delegate" destination="-1" id="O8F-iQ-YPo"/>
-                <outlet property="searchContentsController" destination="-1" id="Hqk-0l-56c"/>
-                <outlet property="searchResultsDataSource" destination="-1" id="dCG-y2-ACq"/>
-                <outlet property="searchResultsDelegate" destination="-1" id="gYa-rQ-Hzf"/>
-            </connections>
-        </searchDisplayController>
     </objects>
 </document>

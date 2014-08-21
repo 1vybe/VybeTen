@@ -94,9 +94,7 @@ extern NSString *const kVYBRegionClassKey;
 // field keys
 extern NSString *const kVYBRegionNameKey;
 extern NSString *const kVYBRegionTypeKey;
-extern NSString *const kVYBRegionOriginCoordKey;
-extern NSString *const kVYBRegionRadiusKey;
-extern NSString *const kVYBRegionBoundaryKey;
+extern NSString *const kVYBRegionCodeKey;
 extern NSString *const kVYBRegionThumbnailKey;
 extern NSString *const kVYBRegionUnlockCountKey;
 

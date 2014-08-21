@@ -1,4 +1,3 @@
-
 //
 //  VYBNavigationController.m
 //  VybeTen
@@ -42,6 +41,10 @@
 
 - (NSUInteger)supportedInterfaceOrientations {
     return [self.topViewController supportedInterfaceOrientations];
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return [self.presentedViewController preferredInterfaceOrientationForPresentation];
 }
 
 @end

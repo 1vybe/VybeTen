@@ -28,6 +28,8 @@
 @property (nonatomic, strong) UIButton *dismissButton;
 @property (nonatomic, strong) VYBLabel *privateCountLabel;
 @property (nonatomic, strong) UIButton *privateViewButton;
+@property (nonatomic, strong) UILabel *locationLabel;
+@property (nonatomic, strong) UILabel *timeLabel;
 
 @end
 
@@ -40,8 +42,7 @@
     UIView *backgroundView;
     UIButton *captureButton;
     UIImageView *pauseImageView;
-    UILabel *locationLabel;
-    UILabel *timeLabel;
+
     
     VYBTimerView *timerView;
     
@@ -83,7 +84,8 @@
     
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
 
-    [playerView setFrame:CGRectMake(0, 0, backgroundView.bounds.size.height, backgroundView.bounds.size.width)];
+    [playerView setFrame:[[UIScreen mainScreen] bounds]];
+    NSLog(@"[PLAYER] UIScreen mainScreen bounds: %@", NSStringFromCGRect([[UIScreen mainScreen] bounds]));
 
     self.currPlayerView = playerView;
     
@@ -105,10 +107,9 @@
     // AppDelegate Notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActive object:nil];
-
     
     // responds to device orientation change
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceRotated:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
     
     // Adding swipe gestures
     UISwipeGestureRecognizer *swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
@@ -137,33 +138,33 @@
 #endif
     
     // Adding TIME label
-    CGRect frame = CGRectMake(self.view.bounds.size.height/2 - 100, self.view.bounds.size.width - 70, 200, 70);
-    timeLabel = [[VYBLabel alloc] initWithFrame:frame];
-    [timeLabel setTextColor:[UIColor whiteColor]];
-    [timeLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:18.0]];
-    [timeLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.view addSubview:timeLabel];
+    CGRect frame = CGRectMake(self.view.bounds.size.width/2 - 50, self.view.bounds.size.height - 70, 140, 70);
+    self.timeLabel = [[VYBLabel alloc] initWithFrame:frame];
+    [self.timeLabel setTextColor:[UIColor whiteColor]];
+    [self.timeLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:18.0]];
+    [self.timeLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.view addSubview:self.timeLabel];
     // Adding LOCATION label
-    frame = CGRectMake(self.view.bounds.size.height/2 - 150, 0, 300, 50);
-    locationLabel = [[VYBLabel alloc] initWithFrame:frame];
-    [locationLabel setTextColor:[UIColor whiteColor]];
-    [locationLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book" size:18.0]];
-    [locationLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.view addSubview:locationLabel];
+    frame = CGRectMake(self.view.bounds.size.width/2 - 100, 0, 200, 70);
+    self.locationLabel = [[VYBLabel alloc] initWithFrame:frame];
+    [self.locationLabel setTextColor:[UIColor whiteColor]];
+    [self.locationLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book" size:18.0]];
+    [self.locationLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.view addSubview:self.locationLabel];
     
     // Adding CAPTURE button
-    frame = CGRectMake(self.view.bounds.size.height - 70, self.view.bounds.size.width - 70, 70, 70);
+    frame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
     captureButton = [[UIButton alloc] initWithFrame:frame];
     [captureButton setImage:[UIImage imageNamed:@"button_capture.png"] forState:UIControlStateNormal];
     [pauseImageView setContentMode:UIViewContentModeCenter];
     [captureButton addTarget:self action:@selector(captureButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:captureButton];
+    //[self.view addSubview:captureButton];
     
-    frame = CGRectMake(self.view.bounds.size.height/2 - 20, self.view.bounds.size.width/2 - 20, 40, 40);
+    frame = CGRectMake(self.view.bounds.size.width/2 - 50, self.view.bounds.size.height/2 - 50, 100, 100);
     pauseImageView = [[UIImageView alloc] initWithFrame:frame];
     [pauseImageView setImage:[UIImage imageNamed:@"button_player_pause.png"]];
     [pauseImageView setContentMode:UIViewContentModeCenter];
-    [self.view addSubview:pauseImageView];
+    //[self.view addSubview:pauseImageView];
     pauseImageView.hidden = YES;
     
     frame = CGRectMake(0, 0, 70, 70);
@@ -180,7 +181,8 @@
     [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view_new.png"] forState:UIControlStateSelected];
     [self.privateViewButton addTarget:self action:@selector(privateViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.privateViewButton setContentMode:UIViewContentModeLeft];
-    [self.view addSubview:self.privateViewButton];
+    //[self.view addSubview:self.privateViewButton];
+    
     // Adding PRIVATE count label
     frame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
     self.privateCountLabel = [[VYBLabel alloc] initWithFrame:frame];
@@ -188,10 +190,10 @@
     [self.privateCountLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:20.0]];
     [self.privateCountLabel setTextColor:[UIColor whiteColor]];
     self.privateCountLabel.userInteractionEnabled = NO;
-    [self.view addSubview:self.privateCountLabel];
+    //[self.view addSubview:self.privateCountLabel];
     
     // Adding USERNAME label
-    frame = CGRectMake(18, self.view.bounds.size.width - 70, 150, 70);
+    frame = CGRectMake(10, self.view.bounds.size.height - 70, 80, 70);
     self.usernameLabel = [[VYBLabel alloc] initWithFrame:frame];
     self.usernameLabel.font = [UIFont fontWithName:@"AvenirLTStd-Book.otf" size:18.0];
     self.usernameLabel.textAlignment = NSTextAlignmentLeft;
@@ -232,6 +234,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     if (self.isPublicMode) {
         // Deep sky blue
         [backgroundView setBackgroundColor:[UIColor colorWithRed:0.0 green:191.0/255.0 blue:1.0 alpha:1.0]];
@@ -431,7 +434,7 @@
 }
 
 - (void)syncUI:(PFObject *)aVybe {
-    locationLabel.text = @"";
+    self.locationLabel.text = @"";
     self.usernameLabel.text = @"";
 
     if ([aVybe objectForKey:kVYBVybeGeotag]) {
@@ -439,8 +442,8 @@
         [VYBUtility reverseGeoCode:geo withCompletion:^(NSArray *placemarks, NSError *error) {
             if (!error) {
                 NSString *location = [VYBUtility convertPlacemarkToLocation:placemarks[0]];
-                locationLabel.text = location;
-                [locationLabel setNeedsDisplay];
+                self.locationLabel.text = location;
+                [self.locationLabel setNeedsDisplay];
             }
         }];
     }
@@ -454,7 +457,7 @@
         }];
     }
     
-    timeLabel.text = [VYBUtility reverseTime:[aVybe objectForKey:kVYBVybeTimestampKey]];
+    self.timeLabel.text = [VYBUtility reverseTime:[aVybe objectForKey:kVYBVybeTimestampKey]];
 }
 
 
@@ -606,14 +609,46 @@
 }
 
 
-#pragma mark - UIInterfaceOrientation
+#pragma mark - DeviceOrientation
 
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskLandscape;
+- (BOOL)shouldAutorotate {
+    return NO;
 }
 
-- (void)deviceOrientationChanged:(NSNotification *)note {
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
 
+- (void)deviceRotated:(NSNotification *)notification {
+    UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
+    double rotation = 0;
+    switch (currentOrientation) {
+        case UIDeviceOrientationFaceDown:
+        case UIDeviceOrientationFaceUp:
+        case UIDeviceOrientationUnknown:
+            return;
+        case UIDeviceOrientationPortrait:
+            rotation = 0;
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            rotation = -M_PI;
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            rotation = M_PI_2;
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            rotation = -M_PI_2;
+            break;
+    }
+    
+    CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
+    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.dismissButton.transform = transform;
+        self.locationLabel.transform = transform;
+        self.timeLabel.transform = transform;
+        self.usernameLabel.transform = transform;
+    } completion:nil];
+    
 }
 
 - (BOOL)prefersStatusBarHidden {

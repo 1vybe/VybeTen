@@ -8,8 +8,10 @@
 
 #import "VYBFriendsViewController.h"
 #import "VYBPlayerViewController.h"
+#import "VYBFriendTableViewCell.h"
 
 @interface VYBFriendsViewController ()
+
 @property (nonatomic, strong) UISearchDisplayController *searchDisplay;
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) UISegmentedControl *segmentControls;
@@ -29,11 +31,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
-
-    [self.navigationController.navigationBar addSubview:self.segmentControls];
-    CGPoint center = self.segmentControls.center;
-    center.x = self.navigationController.navigationBar.center.x;
-    self.segmentControls.center = center;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -48,28 +45,44 @@
 {
     [super viewDidLoad];
     
-    UIBarButtonItem *playAllButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:self action:@selector(playAllButtonPressed:)];
-    self.navigationItem.rightBarButtonItem = playAllButton;
+    self.navigationItem.title = self.currRegion[kVYBRegionNameKey];
     
-    self.segmentControls = [[UISegmentedControl alloc] initWithItems:@[@"Following", @"Follower"]];
-    [self.segmentControls addTarget:self action:@selector(segmentControlChanged:) forControlEvents:UIControlEventValueChanged];
-
-    self.searchBar = [[UISearchBar alloc] init];
-    [self.searchBar sizeToFit];
-    self.tableView.tableHeaderView = self.searchBar;
-
-    
-    self.searchDisplay = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
-    
-    // Do any additional setup after loading the view from its nib.
-}
+ }
 
 #pragma mark - PFQueryTableViewController
 
 - (PFQuery *)queryForTable {
-    PFQuery *query = [PFQuery queryWithClassName:kVYBActivityClassKey];
+    PFQuery *query = [PFUser query];
+    
+    PFQuery *innerQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
+    NSString *countryCode = self.currRegion[kVYBRegionCodeKey];
+    // 24 TTL checking
+    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * 24];
+    [innerQuery whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
+    [innerQuery whereKey:kVYBVybeCountryCodeKey equalTo:countryCode];
+    
+    [query whereKey:kVYBUserMostRecentVybeKey matchesQuery:innerQuery];
+    // Don't include urself
+    [query whereKey:kVYBUserUsernameKey notEqualTo:[PFUser currentUser][kVYBUserUsernameKey]];
     return query;
 }
+
+#pragma mark - UITableViewController
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
+    static NSString *FriendTableCellIdentifier = @"FriendTableCellIdentifer";
+    VYBFriendTableViewCell *cell = (VYBFriendTableViewCell *)[tableView dequeueReusableCellWithIdentifier:FriendTableCellIdentifier];
+    if (!cell) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBFriendTableViewCell" owner:nil options:nil];
+        cell = [nib lastObject];
+        //NOTE: reuseIdentifier is set in xib file
+    }
+    cell.nameLabel.text = object[kVYBUserUsernameKey];
+
+    return cell;
+}
+
+
 
 #pragma mark - ()
 
