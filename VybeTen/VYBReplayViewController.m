@@ -156,6 +156,10 @@
         [[VYBMyVybeStore sharedStore] addVybe:self.currVybe];
     }
     
+    // Update user lastVybeLocation and lastVybeTime field. lastVybeLocation is updated in captureVC didUpdateLocaton
+    [[PFUser currentUser] setObject:self.currVybe.timeStamp forKey:kVYBUserLastVybedTimeKey];
+    [[PFUser currentUser] saveInBackground];
+    
     [self.navigationController popViewControllerAnimated:NO];
 }
 
@@ -302,15 +306,15 @@
 }
 
 #pragma mark - DeviceOrientation
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
 
 - (void)deviceRotated:(NSNotification *)notification {
     UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];

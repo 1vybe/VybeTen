@@ -8,6 +8,6 @@
 
 #import <Parse/Parse.h>
 
-@interface VYBHubViewController : UITableViewController <UISearchDisplayDelegate, UISearchBarDelegate>
+@interface VYBHubViewController : PFQueryTableViewController <UISearchDisplayDelegate, UISearchBarDelegate>
 
 @end

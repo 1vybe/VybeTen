@@ -26,6 +26,7 @@
 - (PFObject *)parseObjectVybe;
 - (NSString *)videoFilePath;
 - (NSString *)thumbnailFilePath;
+- (PFGeoPoint *)location;
 - (void)setGeoTagFrom:(PFGeoPoint *)aGeoPoint;
 
 @end

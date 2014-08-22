@@ -23,17 +23,10 @@
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vds-V3-Nln">
-                        <rect key="frame" x="240" y="10" width="60" height="40"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <state key="normal" title="Follow">
-                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                        </state>
-                    </button>
                 </subviews>
+                <color key="backgroundColor" red="0.89410665760869568" green="0.89410665760869568" blue="0.89410665760869568" alpha="1" colorSpace="calibratedRGB"/>
             </tableViewCellContentView>
             <connections>
-                <outlet property="followButton" destination="vds-V3-Nln" id="UzF-z0-NEf"/>
                 <outlet property="nameLabel" destination="BYC-UR-4pL" id="Jzp-Or-sqC"/>
                 <outlet property="profileImageView" destination="kru-xb-tlm" id="Duh-YA-bpR"/>
             </connections>

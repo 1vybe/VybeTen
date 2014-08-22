@@ -60,13 +60,16 @@ extern NSString *const kVYBUserDefaultsActivityLastRefreshKey;
 #pragma mark - PFObject User Class
 // field keys
 extern NSString *const kVYBUserUsernameKey;
-extern NSString *const kVYBUserDisplayNameKey;
-extern NSString *const kVYBUserFacebookIDKey;
 extern NSString *const kVYBUserProfilePicSmallKey;
 extern NSString *const kVYBUserProfilePicMediumKey;
-extern NSString *const kVYBUserFacebookFriendsKey;
-extern NSString *const kVYBUserLastVybedTime;
-extern NSString *const kVYBUserMostRecentVybeKey;
+extern NSString *const kVYBUserLastVybedLocationKey;
+extern NSString *const kVYBUserLastVybedTimeKey;
+
+//extern NSString *const kVYBUserDisplayNameKey;
+//extern NSString *const kVYBUserFacebookIDKey;
+//extern NSString *const kVYBUserFacebookFriendsKey;
+//extern NSString *const kVYBUserLastVybedTime;
+//extern NSString *const kVYBUserMostRecentVybeKey;
 
 
 #pragma mark - PFObject Vybe Class

@@ -61,7 +61,7 @@
     [innerQuery whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
     [innerQuery whereKey:kVYBVybeCountryCodeKey equalTo:countryCode];
     
-    [query whereKey:kVYBUserMostRecentVybeKey matchesQuery:innerQuery];
+    //[query whereKey:kVYBUserMostRecentVybeKey matchesQuery:innerQuery];
     // Don't include urself
     [query whereKey:kVYBUserUsernameKey notEqualTo:[PFUser currentUser][kVYBUserUsernameKey]];
     return query;

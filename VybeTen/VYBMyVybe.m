@@ -63,7 +63,6 @@
     [aCoder encodeObject:countryCode forKey:kVYBVybeCountryCodeKey];
     [aCoder encodeObject:stateName forKey:kVYBVybeStateNameKey];
     [aCoder encodeObject:cityName forKey:kVYBVybeCityNameKey];
-
     [aCoder encodeObject:timeStamp forKey:kVYBVybeTimestampKey];
     [aCoder encodeBool:isPublic forKey:kVYBVybeTypePublicKey];
 //    [aCoder encodeObject:tribeObjectID forKey:kVYBVybeTribeKey];
@@ -79,14 +78,16 @@
     
     PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:geoTag.coordinate.latitude longitude:geoTag.coordinate.longitude];
     [theVybe setObject:geoPoint forKey:kVYBVybeGeotag];
-    [theVybe setObject:countryCode forKey:kVYBVybeCountryCodeKey];
-    [theVybe setObject:stateName forKey:kVYBVybeStateNameKey];
-    [theVybe setObject:cityName forKey:kVYBVybeCityNameKey];
     [theVybe setObject:[NSNumber numberWithBool:isPublic] forKey:kVYBVybeTypePublicKey];
     [theVybe setObject:timeStamp forKey:kVYBVybeTimestampKey];
     [theVybe setObject:[PFUser currentUser] forKey:kVYBVybeUserKey];
     
     return theVybe;
+}
+
+- (PFGeoPoint *)location {
+    PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:geoTag.coordinate.latitude longitude:geoTag.coordinate.longitude];
+    return geoPoint;
 }
 
 - (NSString *)videoFilePath {

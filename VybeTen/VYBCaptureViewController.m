@@ -761,10 +761,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [reverseGeocoder reverseGeocodeLocation:currLocation completionHandler:^(NSArray *placemarks, NSError *error)
      {
          CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
-         NSString *countryCode = myPlacemark.ISOcountryCode;
-         [self.currVybe setCountryCode:countryCode];
-         [self.currVybe setStateName:myPlacemark.administrativeArea];
-         [self.currVybe setCityName:myPlacemark.subLocality];
+         NSString *city = myPlacemark.locality;
+         [[PFUser currentUser] setObject:city forKey:kVYBUserLastVybedLocationKey];
      }];
     
     [locationManager stopUpdatingLocation];

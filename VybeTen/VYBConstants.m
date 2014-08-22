@@ -20,16 +20,21 @@ NSString *const kVYBUserDefaultsActivityLastRefreshKey                  = @"com.
 #pragma mark - PFObject User Class
 // field keys
 NSString *const kVYBUserUsernameKey                             = @"username";
+NSString *const kVYBUserProfilePicSmallKey                      = @"profilePictureSmall";
+NSString *const kVYBUserProfilePicMediumKey                     = @"profilePictureMedium";
+NSString *const kVYBUserLastVybedLocationKey                    = @"lastVybedLocation";
+NSString *const kVYBUserLastVybedTimeKey                        = @"lastVybedTime";
+
+/*
 NSString *const kVYBUserDisplayNameKey                          = @"displayName";
 NSString *const kVYBUserFacebookIDKey                           = @"facebookId";
 NSString *const kVYBUserPhotoIDKey                              = @"photoId";
-NSString *const kVYBUserProfilePicSmallKey                      = @"profilePictureSmall";
-NSString *const kVYBUserProfilePicMediumKey                     = @"profilePictureMedium";
+
 NSString *const kVYBUserFacebookFriendsKey                      = @"facebookFriends";
 NSString *const kVYBUserAlreadyAutoFollowedFacebookFriendsKey   = @"userAlreadyAutoFollowedFacebookFriends";
 NSString *const kVYBUserLastVybedTime                           = @"lastVybedTime";
 NSString *const kVYBUserMostRecentVybeKey                       = @"mostRecentVybe";
-
+*/
 
 #pragma mark - PFObject Vybe Class
 // class key
