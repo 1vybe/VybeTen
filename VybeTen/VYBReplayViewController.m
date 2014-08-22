@@ -13,6 +13,7 @@
 #import "VYBUtility.h"
 #import "VYBMyVybeStore.h"
 #import "VYBNavigationController.h"
+#import "AVAsset+VideoOrientation.h"
 
 @interface VYBReplayViewController ()
 
@@ -89,6 +90,8 @@
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
     //NSLog(@"[Replay]videoURL is %@", videoURL);
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
+    NSLog(@"[REPLAY] video orientation is %d", [asset videoOrientation]);
+    
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
     [self.player replaceCurrentItemWithPlayerItem:self.currItem];

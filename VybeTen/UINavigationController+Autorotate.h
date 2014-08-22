@@ -1,5 +1,5 @@
 //
-//  UINavigationController+autorotate.h
+//  UINavigationController+Autorotate.h
 //  VybeTen
 //
 //  Created by jinsuk on 8/21/14.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UINavigationController (autorotate)
+@interface UINavigationController (Autorotate)
 - (BOOL)shouldAutorotate;
 - (NSUInteger)supportedInterfaceOrientations;
 

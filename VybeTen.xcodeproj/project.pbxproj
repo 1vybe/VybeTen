@@ -14,6 +14,7 @@
 		020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 020F1C491977054900C3AA40 /* VYBPermissionViewController.m */; };
 		020F1C4C1977054900C3AA40 /* VYBPermissionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 020F1C4A1977054900C3AA40 /* VYBPermissionViewController.xib */; };
 		020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 020FB84819744EBA005C9BA9 /* VYBCameraView.m */; };
+		021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */; };
 		021BE2BE19A2A20E00DC7865 /* VYBFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 021BE2BC19A2A20E00DC7865 /* VYBFriendsViewController.m */; };
 		021BE2BF19A2A20E00DC7865 /* VYBFriendsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 021BE2BD19A2A20E00DC7865 /* VYBFriendsViewController.xib */; };
 		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
@@ -22,7 +23,7 @@
 		025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 025169AC18FAF955007F34B0 /* VYBLabel.m */; };
 		025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 025DE65A18CB16E30054F739 /* VYBConstants.m */; };
 		025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 025EDB2418F65E45008B0CB2 /* VYBAnimator.m */; };
-		0262054419A67B3600E994F9 /* UINavigationController+autorotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0262054319A67B3600E994F9 /* UINavigationController+autorotate.m */; };
+		0262054419A67B3600E994F9 /* UINavigationController+Autorotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0262054319A67B3600E994F9 /* UINavigationController+Autorotate.m */; };
 		0262054819A69DEE00E994F9 /* VYBFriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0262054619A69DEE00E994F9 /* VYBFriendTableViewCell.m */; };
 		0262054919A69DEE00E994F9 /* VYBFriendTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0262054719A69DEE00E994F9 /* VYBFriendTableViewCell.xib */; };
 		026385EE197972BA00B377EC /* VYBSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 026385EC197972BA00B377EC /* VYBSignUpViewController.m */; };
@@ -83,6 +84,8 @@
 		020F1C4A1977054900C3AA40 /* VYBPermissionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBPermissionViewController.xib; sourceTree = "<group>"; };
 		020FB84719744EBA005C9BA9 /* VYBCameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCameraView.h; sourceTree = "<group>"; };
 		020FB84819744EBA005C9BA9 /* VYBCameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCameraView.m; sourceTree = "<group>"; };
+		021B5B6819A7B49100B906F3 /* AVAsset+VideoOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVAsset+VideoOrientation.h"; sourceTree = "<group>"; };
+		021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+VideoOrientation.m"; sourceTree = "<group>"; };
 		021BE2BB19A2A20E00DC7865 /* VYBFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBFriendsViewController.h; sourceTree = "<group>"; };
 		021BE2BC19A2A20E00DC7865 /* VYBFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBFriendsViewController.m; sourceTree = "<group>"; };
 		021BE2BD19A2A20E00DC7865 /* VYBFriendsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBFriendsViewController.xib; sourceTree = "<group>"; };
@@ -98,8 +101,8 @@
 		025DE65A18CB16E30054F739 /* VYBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBConstants.m; sourceTree = "<group>"; };
 		025EDB2318F65E45008B0CB2 /* VYBAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBAnimator.h; sourceTree = "<group>"; };
 		025EDB2418F65E45008B0CB2 /* VYBAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBAnimator.m; sourceTree = "<group>"; };
-		0262054219A67B3600E994F9 /* UINavigationController+autorotate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+autorotate.h"; sourceTree = "<group>"; };
-		0262054319A67B3600E994F9 /* UINavigationController+autorotate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+autorotate.m"; sourceTree = "<group>"; };
+		0262054219A67B3600E994F9 /* UINavigationController+Autorotate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+Autorotate.h"; sourceTree = "<group>"; };
+		0262054319A67B3600E994F9 /* UINavigationController+Autorotate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Autorotate.m"; sourceTree = "<group>"; };
 		0262054519A69DEE00E994F9 /* VYBFriendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBFriendTableViewCell.h; sourceTree = "<group>"; };
 		0262054619A69DEE00E994F9 /* VYBFriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBFriendTableViewCell.m; sourceTree = "<group>"; };
 		0262054719A69DEE00E994F9 /* VYBFriendTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBFriendTableViewCell.xib; sourceTree = "<group>"; };
@@ -189,8 +192,10 @@
 		023E538E191F143F00C3CF78 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				0262054219A67B3600E994F9 /* UINavigationController+autorotate.h */,
-				0262054319A67B3600E994F9 /* UINavigationController+autorotate.m */,
+				0262054219A67B3600E994F9 /* UINavigationController+Autorotate.h */,
+				0262054319A67B3600E994F9 /* UINavigationController+Autorotate.m */,
+				021B5B6819A7B49100B906F3 /* AVAsset+VideoOrientation.h */,
+				021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -569,6 +574,7 @@
 				026385EE197972BA00B377EC /* VYBSignUpViewController.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
 				88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */,
+				021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */,
 				88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */,
 				02F36B2C1986F5A200B7D842 /* VYBUserStore.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
@@ -580,7 +586,7 @@
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
 				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,
-				0262054419A67B3600E994F9 /* UINavigationController+autorotate.m in Sources */,
+				0262054419A67B3600E994F9 /* UINavigationController+Autorotate.m in Sources */,
 				020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
 				0276D13C19590CDF007292B0 /* VYBPageViewController.m in Sources */,

@@ -360,6 +360,24 @@
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+        CGAffineTransform firstTransform = asset.preferredTransform;
+        
+        if(firstTransform.a == 0 && firstTransform.b == 1.0 && firstTransform.c == -1.0 && firstTransform.d == 0)
+        {
+            NSLog(@"orientation RIGHT");
+        }
+        if(firstTransform.a == 0 && firstTransform.b == -1.0 && firstTransform.c == 1.0 && firstTransform.d == 0)
+        {
+            NSLog(@"orientation LEFT");
+        }
+        if(firstTransform.a == 1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == 1.0)
+        {
+            NSLog(@"orientation UP");
+        }
+        if(firstTransform.a == -1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == -1.0)
+        {
+            NSLog(@"orientation DOWN");
+        }
         self.currItem = [AVPlayerItem playerItemWithAsset:asset];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
         [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
@@ -374,6 +392,24 @@
             if (!error) {
                 [data writeToURL:cacheURL atomically:YES];
                 AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+                CGAffineTransform firstTransform = asset.preferredTransform;
+                
+                if(firstTransform.a == 0 && firstTransform.b == 1.0 && firstTransform.c == -1.0 && firstTransform.d == 0)
+                {
+                    NSLog(@"orientation RIGHT");
+                }
+                if(firstTransform.a == 0 && firstTransform.b == -1.0 && firstTransform.c == 1.0 && firstTransform.d == 0)
+                {
+                    NSLog(@"orientation LEFT");
+                }
+                if(firstTransform.a == 1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == 1.0)
+                {
+                    NSLog(@"orientation UP");
+                }
+                if(firstTransform.a == -1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == -1.0)
+                {
+                    NSLog(@"orientation DOWN");
+                }
                 self.currItem = [AVPlayerItem playerItemWithAsset:asset];
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
                 [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];

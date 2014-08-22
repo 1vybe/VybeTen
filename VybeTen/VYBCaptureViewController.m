@@ -36,6 +36,7 @@
 @property (nonatomic, weak) VYBCameraView *cameraView;
 
 @property (nonatomic) dispatch_queue_t sessionQueue;
+@property (nonatomic) dispatch_queue_t assetWriterQueue;
 @property (nonatomic) AVCaptureSession *session;
 @property (nonatomic) AVCaptureDeviceInput *videoInput;
 @property (nonatomic) AVCaptureVideoDataOutput *videoOutput;
@@ -67,6 +68,8 @@
     BOOL isRecording;
     
     CLLocationManager *locationManager;
+    
+    AVCaptureVideoOrientation lastOrientation;
 }
 
 @synthesize flipButton, flashButton;
@@ -104,6 +107,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 {
     [super viewDidLoad];
     
+    lastOrientation = AVCaptureVideoOrientationPortrait;
+    
     if ([CLLocationManager locationServicesEnabled]) {
         locationManager = [[CLLocationManager alloc] init];
         locationManager.delegate = self;
@@ -134,7 +139,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self checkDeviceAuthorizationStatus];
     
     dispatch_queue_t sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
+    dispatch_queue_t assetWriterQueue = dispatch_queue_create("assetWriter queue", DISPATCH_QUEUE_SERIAL);
     [self setSessionQueue:sessionQueue];
+    [self setAssetWriterQueue:assetWriterQueue];
     
     dispatch_async(sessionQueue, ^{
         [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
@@ -537,8 +544,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
         }
         
-        //TODO: Test this
-        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[[self cameraView] layer] connection] videoOrientation]];
+        NSLog(@"[CAPTURE] shooting in orientation %d", (int)lastOrientation);
+        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:lastOrientation];
         
         // Turning flash for video recording
         if (flashOn) {
@@ -559,11 +566,19 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     NSDictionary *videoCompressionProps = [NSDictionary dictionaryWithObjectsAndKeys:
                                            [NSNumber numberWithDouble:700.0*1024.0], AVVideoAverageBitRateKey,
                                            nil ];
+    NSNumber *width, *height;
+    if ((lastOrientation == AVCaptureVideoOrientationLandscapeLeft) || (lastOrientation == AVCaptureVideoOrientationLandscapeRight)) {
+        width = [NSNumber numberWithInt:480];
+        height = [NSNumber numberWithInt:360];
+    } else {
+        width = [NSNumber numberWithInt:360];
+        height = [NSNumber numberWithInt:480];
+    }
     
     NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
                                    AVVideoCodecH264, AVVideoCodecKey,
-                                   [NSNumber numberWithInt:360], AVVideoWidthKey,
-                                   [NSNumber numberWithInt:480], AVVideoHeightKey,
+                                   width, AVVideoWidthKey,
+                                   height, AVVideoHeightKey,
                                    videoCompressionProps, AVVideoCompressionPropertiesKey,
                                    nil];
     
@@ -789,7 +804,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)deviceRotated:(NSNotification *)notification {
     UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
-    NSLog(@"current status bar orientation is %d", currentOrientation);
 
     double rotation = 0;
     switch (currentOrientation) {
@@ -799,14 +813,18 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             return;
         case UIDeviceOrientationPortrait:
             rotation = 0;
+            lastOrientation = AVCaptureVideoOrientationPortrait;
             break;
         case UIDeviceOrientationPortraitUpsideDown:
             rotation = -M_PI;
+            lastOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
             break;
         case UIDeviceOrientationLandscapeLeft:
             rotation = M_PI_2;
+            lastOrientation = AVCaptureVideoOrientationLandscapeLeft;
             break;
         case UIDeviceOrientationLandscapeRight:
+            lastOrientation = AVCaptureVideoOrientationLandscapeRight;
             rotation = -M_PI_2;
             break;
     }
