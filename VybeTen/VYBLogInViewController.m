@@ -8,6 +8,7 @@
 
 #import "VYBLogInViewController.h"
 #import "VYBSignUpViewController.h"
+#import "NSString+Email.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 
 @interface VYBLogInViewController ()
@@ -50,6 +51,21 @@
     NSString *password = self.passwordTextField.text;
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    // Check if the user entered an email instead of a username
+    if ([username isValidEmail]) {
+        // Fetch the username corresponding to that email
+        PFQuery *query = [PFUser query];
+        [query whereKey:@"email" equalTo:username.lowercaseString];
+        NSArray *foundUsers = [query findObjects];
+        
+        if([foundUsers count]  == 1) {
+            for (PFUser *foundUser in foundUsers) {
+                username = [foundUser username];
+            }
+        }
+    }
+    
     //log in
     [PFUser logInWithUsernameInBackground:username password:password block:^(PFUser *user, NSError *error) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
