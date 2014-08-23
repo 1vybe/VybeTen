@@ -199,6 +199,18 @@
     [self.navigationController pushViewController:playerVC animated:NO];
 }
 
+#pragma mark - DeviceOrientation
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+#pragma mark -
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
