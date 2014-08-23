@@ -1,5 +1,5 @@
 #include "Pods-Bolts.xcconfig"
 GCC_PREPROCESSOR_DEFINITIONS = COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/Bolts" "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/Bolts" "${PODS_ROOT}/Headers/Facebook-iOS-SDK" "${PODS_ROOT}/Headers/Facebook-iOS-SDK/FacebookSDK" "${PODS_ROOT}/Headers/GoogleAnalytics-iOS-SDK" "${PODS_ROOT}/Headers/HockeySDK" "${PODS_ROOT}/Headers/MBProgressHUD" "${PODS_ROOT}/Headers/Parse"
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/Bolts" "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/Bolts" "${PODS_ROOT}/Headers/Facebook-iOS-SDK" "${PODS_ROOT}/Headers/Facebook-iOS-SDK/FacebookSDK" "${PODS_ROOT}/Headers/GoogleAnalytics-iOS-SDK" "${PODS_ROOT}/Headers/HockeySDK" "${PODS_ROOT}/Headers/MBProgressHUD" "${PODS_ROOT}/Headers/MotionOrientation@PTEz" "${PODS_ROOT}/Headers/Parse"
 OTHER_LDFLAGS = -ObjC
 PODS_ROOT = ${SRCROOT}

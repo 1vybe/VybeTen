@@ -5,6 +5,7 @@ PODS:
   - GoogleAnalytics-iOS-SDK (3.0.9)
   - HockeySDK (3.5.6)
   - MBProgressHUD (0.9)
+  - MotionOrientation@PTEz (1.1.0)
   - Parse (1.2.20):
     - Facebook-iOS-SDK (~> 3.11)
 
@@ -12,6 +13,7 @@ DEPENDENCIES:
   - GoogleAnalytics-iOS-SDK (~> 3.0)
   - HockeySDK (~> 3.5)
   - MBProgressHUD (~> 0.8)
+  - MotionOrientation@PTEz (~> 1.1.0)
   - Parse (~> 1.2)
 
 SPEC CHECKSUMS:
@@ -20,6 +22,7 @@ SPEC CHECKSUMS:
   GoogleAnalytics-iOS-SDK: d9e198b1f955259a72886769be7377cdfcdb2250
   HockeySDK: 27d8b411208f9d3f70c8f6695a8defa2a3465721
   MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
+  MotionOrientation@PTEz: ec58ced639faa14d30e63db9ef5cba8ded38b3b5
   Parse: 28c0dc54f30201a369d29a2f76c09fa43b2add16
 
 COCOAPODS: 0.33.1

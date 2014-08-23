@@ -36,6 +36,12 @@
 #define COCOAPODS_VERSION_MINOR_MBProgressHUD 9
 #define COCOAPODS_VERSION_PATCH_MBProgressHUD 0
 
+// MotionOrientation@PTEz
+#define COCOAPODS_POD_AVAILABLE_MotionOrientation_PTEz
+#define COCOAPODS_VERSION_MAJOR_MotionOrientation_PTEz 1
+#define COCOAPODS_VERSION_MINOR_MotionOrientation_PTEz 1
+#define COCOAPODS_VERSION_PATCH_MotionOrientation_PTEz 0
+
 // Parse
 #define COCOAPODS_POD_AVAILABLE_Parse
 #define COCOAPODS_VERSION_MAJOR_Parse 1
