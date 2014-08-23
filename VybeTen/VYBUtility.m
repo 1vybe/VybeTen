@@ -21,7 +21,7 @@
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
     AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     // To transform the snapshot to be in the orientation the video was taken with
-    //[generate setAppliesPreferredTrackTransform:YES];
+    [generate setAppliesPreferredTrackTransform:YES];
     NSError *err = NULL;
     CMTime time = CMTimeMake(1, 60);
     CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
@@ -40,7 +40,7 @@
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
     AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     // To transform the snapshot to be in the orientation the video was taken with
-    [generate setAppliesPreferredTrackTransform:YES];
+    //[generate setAppliesPreferredTrackTransform:YES];
     NSError *err = NULL;
     CMTime time = CMTimeMake(1, 60);
     CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
