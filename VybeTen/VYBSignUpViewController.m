@@ -45,6 +45,10 @@
     self.emailTextField.delegate = self;
 }
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+}
+
 - (IBAction)logInButtonPressed:(id)sender {
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
