@@ -40,6 +40,7 @@
     
     [self.view endEditing:YES];
     
+    self.usernameTextField.delegate = self;
     self.passwordTextField.delegate = self;
     
     self.passwordTextField.secureTextEntry = YES;
@@ -113,8 +114,34 @@
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    return [textField resignFirstResponder];
+    if (textField.text.length == 0) {
+        return NO;
+    }
+    
+    if (textField == self.usernameTextField) {
+        [self.passwordTextField becomeFirstResponder];
+    } else if (textField == self.passwordTextField) {
+        [self logInButtonPressed:nil];
+    }
+    return YES;
 }
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    if (textField != self.passwordTextField) {
+        textField.returnKeyType = UIReturnKeyNext;
+    } else {
+        textField.returnKeyType = UIReturnKeyGo;
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
+    [self.usernameTextField becomeFirstResponder];
+}
+
+# pragma mark -
 
 - (void)didReceiveMemoryWarning
 {
