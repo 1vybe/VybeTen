@@ -1,5 +1,5 @@
 //
-//  NSString+User.h
+//  NSString+Username.h
 //  VybeTen
 //
 //  Created by Mohammed Tangestani on 2014-08-22.
@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSString (User)
+@interface NSString (Username)
+
+- (BOOL)isValidUsername;
 
 @end
