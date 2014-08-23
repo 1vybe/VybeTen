@@ -8,6 +8,7 @@
 
 #import "VYBLogInViewController.h"
 #import "VYBSignUpViewController.h"
+#import "NSString+Email.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 
 @interface VYBLogInViewController ()
@@ -39,10 +40,15 @@
     
     [self.view endEditing:YES];
     
+    self.usernameTextField.delegate = self;
     self.passwordTextField.delegate = self;
     
     self.passwordTextField.secureTextEntry = YES;
     // Do any additional setup after loading the view from its nib.
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
 }
 
 - (IBAction)logInButtonPressed:(id)sender {
@@ -50,6 +56,21 @@
     NSString *password = self.passwordTextField.text;
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    // Check if the user entered an email instead of a username
+    if ([username isValidEmail]) {
+        // Fetch the username corresponding to that email
+        PFQuery *query = [PFUser query];
+        [query whereKey:@"email" equalTo:username.lowercaseString];
+        NSArray *foundUsers = [query findObjects];
+        
+        if([foundUsers count]  == 1) {
+            for (PFUser *foundUser in foundUsers) {
+                username = [foundUser username];
+            }
+        }
+    }
+    
     //log in
     [PFUser logInWithUsernameInBackground:username password:password block:^(PFUser *user, NSError *error) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -58,9 +79,21 @@
                 [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
             }
         } else {
-            
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[error userInfo][@"error"] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alertView show];
+            if (error.code == 101) {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed"
+                                                                    message:@"Incorrect email or password"
+                                                                   delegate:self
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+            } else {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed"
+                                                                    message:error.userInfo[@"error"]
+                                                                   delegate:self
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+            }
         }
     }];
     
@@ -81,8 +114,34 @@
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    return [textField resignFirstResponder];
+    if (textField.text.length == 0) {
+        return NO;
+    }
+    
+    if (textField == self.usernameTextField) {
+        [self.passwordTextField becomeFirstResponder];
+    } else if (textField == self.passwordTextField) {
+        [self logInButtonPressed:nil];
+    }
+    return YES;
 }
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    if (textField != self.passwordTextField) {
+        textField.returnKeyType = UIReturnKeyNext;
+    } else {
+        textField.returnKeyType = UIReturnKeyGo;
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
+    [self.usernameTextField becomeFirstResponder];
+}
+
+# pragma mark -
 
 - (void)didReceiveMemoryWarning
 {
