@@ -27,6 +27,7 @@
 #import "VYBPermissionViewController.h"
 #import "VYBCameraView.h"
 #import "VYBLabel.h"
+#import "AVAsset+VideoOrientation.h"
 #import "VYBMyVybeStore.h"
 #import "VYBConstants.h"
 #import "VYBCache.h"
@@ -518,8 +519,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 [_videoWriter finishWritingWithCompletionHandler:^{
                     _videoWriterInput = nil;
                     _videoWriter = nil;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self stopRecording];
+                    });
                 }];
-                [self stopRecording];
             }
         }
     }
@@ -541,10 +544,15 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }
     recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
     
+    
+    NSLog(@"[CAPTURE] shooting in orientation %d", (int)lastOrientation);
+    [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:lastOrientation];
+    
     if (![self setUpAssetWriter]) {
         return;
     }
     
+    /*
     dispatch_async([self sessionQueue], ^{
         if ([[UIDevice currentDevice] isMultitaskingSupported])
         {
@@ -561,6 +569,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         }
         
     });
+    */
 }
 
 - (BOOL)setUpAssetWriter {
@@ -644,8 +653,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             [_videoWriter finishWritingWithCompletionHandler:^{
                 _videoWriterInput = nil;
                 _videoWriter = nil;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self stopRecording];
+                });
             }];
-            [self stopRecording];
         }
     }
     else if (secondsSinceStart >= 2.89) {
@@ -673,11 +684,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     else {
         NSError *error;
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
+        AVAsset *asset = [AVAsset assetWithURL:outputURL];
+        NSLog(@"short video orientation is %d", (int)[asset videoOrientation]);
         [[NSFileManager defaultManager] removeItemAtURL:outputURL  error:&error];
         if (error) {
             NSLog(@"Failed to delete a vybe under 3 seconds");
         }
-        NSLog(@"CP2");
     }
 
     startTime = nil;
@@ -709,6 +721,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         if(_videoWriter.status != AVAssetWriterStatusWriting)
         {
             if ((_videoWriter.status != AVAssetWriterStatusFailed) && (_videoWriter.status != AVAssetWriterStatusCompleted)) {
+                NSLog(@"buffer orientation is %d", (int)connection.videoOrientation);
                 [_videoWriter startWriting];
                 [_videoWriter startSessionAtSourceTime:lastSampleTime];
             }

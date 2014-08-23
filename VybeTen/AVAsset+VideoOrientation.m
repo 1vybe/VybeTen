@@ -49,20 +49,5 @@ static inline CGFloat RadiansToDegrees(CGFloat radians) {
 	return orientation;
 }
 
-- (void)videoOrientationNew {
-    NSArray *videoTracks = [self tracksWithMediaType:AVMediaTypeVideo];
-    if ([videoTracks count] == 0) {
-        NSLog(@"no orientation");
-    }
-    
-    AVAssetTrack* videoTrack    = [videoTracks objectAtIndex:0];
-    CGAffineTransform txf       = [videoTrack preferredTransform];
-    
-    if (txf.a == 0 && txf.d == 0 && (txf.b == 1.0 || txf.b == -1.0) && (txf.c == 1.0 || txf.c == -1.0)) {
-        NSLog(@"portrait");
-    } else {
-        NSLog(@"landscape");
-    }
-}
 
 @end
