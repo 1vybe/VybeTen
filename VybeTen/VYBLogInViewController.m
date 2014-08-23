@@ -78,9 +78,21 @@
                 [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
             }
         } else {
-            
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[error userInfo][@"error"] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alertView show];
+            if (error.code == 101) {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed"
+                                                                    message:@"Incorrect email or password"
+                                                                   delegate:self
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+            } else {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed"
+                                                                    message:error.userInfo[@"error"]
+                                                                   delegate:self
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+            }
         }
     }];
     

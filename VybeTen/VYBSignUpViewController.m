@@ -7,6 +7,8 @@
 //
 
 #import "VYBSignUpViewController.h"
+#import "NSString+Username.h"
+#import "NSString+Email.m"
 #import <MBProgressHUD/MBProgressHUD.h>
 
 @interface VYBSignUpViewController () 
@@ -58,7 +60,55 @@
     NSString *password = self.passwordTextField.text;
     NSString *email = self.emailTextField.text;
     
-    if (username && [username length] > 0 && password && [password length] > 0 && email && [email length] > 0) {
+    if (username.length == 0) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Username Required"
+                                                            message:@"Please enter your username."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        alertView.tag = 200;
+        [alertView show];
+    } else if (![username isValidUsername]) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Valid Username Required"
+                                                            message:@"Username must only contain alphanumeric characters and underscores. Please choose different username."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        alertView.tag = 109;
+        [alertView show];
+    } else if (email.length == 0) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Email Required"
+                                                            message:@"Please enter your email."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        alertView.tag = 204;
+        [alertView show];
+    } else if (![email isValidEmail]) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Valid Email Required"
+                                                            message:@"Please enter a valid email."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        alertView.tag = 125;
+        [alertView show];
+    } else if (password.length == 0) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Password Required"
+                                                            message:@"Please enter your password."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        alertView.tag = 201;
+        [alertView show];
+    } else if (password.length < 6) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Password Too Short"
+                                                            message:@"Passwords must be at least 6 characters. Please choose a longer password."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        alertView.tag = 110;
+        [alertView show];
+    } else {
         // sign up
         PFUser *newUser = [PFUser user];
         newUser.username = username;
