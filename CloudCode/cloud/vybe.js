@@ -31,10 +31,6 @@ Parse.Cloud.afterSave('Vybe', function(request) {
   }
 
   if (request.object.get('isPublic')) {
-    // Send Yo's for public vybes
-    console.log("This vybe is public. Sending a Yo.");
-    sendYo();
-
     // Set User's mostRecentVybe to this vybe
     var currentUser = request.user;
     currentUser.set('mostRecentVybe', request.object);
@@ -45,22 +41,6 @@ Parse.Cloud.afterSave('Vybe', function(request) {
 
 
 });
-
-var sendYo = function() {
-  Parse.Cloud.httpRequest({
-    method: 'POST',
-    url: 'http://api.justyo.co/yoall/',
-    body: {
-      api_token: '04d36172-8b8a-4075-063d-5a163e13e351',
-    },
-    success: function(httpResponse) {
-      console.log('Sent a Yo!');
-    },
-    error: function(httpResponse) {
-      console.error('Request failed with response code ' + httpResponse.status);
-    }
-  });
-};
 
 var sendPush = function(request) {
   var user = request.object.get("user");
@@ -194,7 +174,7 @@ function get_regions(request, response) {
 	  userQuery.exists('mostRecentVybe');
 	  userQuery.matchesQuery('mostRecentVybe', query);
 	  userQuery.notEqualTo('username', request.user.get('username'));
-	  //NOTE: we do NOT check TTL for couting active users. 
+	  //NOTE: we do NOT check TTL for couting active users.
 	  return userQuery.count().then(function(uCount) {
 	    var mRegion = {};
 	    mRegion['pfRegion'] = regionObj;
@@ -237,7 +217,7 @@ function get_vybes(options, request, response) {
   var limit = options.limit || 500;
 
   var geoPoint = request.params.location;
-    
+
   var currentUser = Parse.User.current();
 
   var query = new Parse.Query('Vybe');
