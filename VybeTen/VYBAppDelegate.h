@@ -19,5 +19,6 @@
 
 @property (nonatomic, readonly) int networkStatus;
 - (BOOL)isParseReachable;
+- (void)moveToPage:(NSInteger)pageIdx;
 
 @end

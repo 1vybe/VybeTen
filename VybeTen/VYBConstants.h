@@ -43,10 +43,10 @@
 */
 
 typedef enum {
-    VYBTribesPageIndex = 0,
-    VYBHomePageIndex = 1,
-    VYBFriendsPageIndex = 2
-} VYBPageControllerViewControllerIndex;
+    VYBHubPageIndex = 0,
+    VYBCapturePageIndex = 1,
+    VYBActivityPageIndex = 2
+} VYBPageControllerIndex;
 
 #pragma mark - NSNotification
 extern NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification;

@@ -14,6 +14,7 @@
 #import <GAITracker.h>
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
+#import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
 #import "VYBHubViewController.h"
 #import "VYBFriendsViewController.h"
@@ -502,6 +503,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [self startRecording];
     }
     
+    if ([recognizer state] == UIGestureRecognizerStateChanged) {
+        CGPoint pt = [recognizer locationInView:self.view];
+        self.captureButton.center = pt;
+    }
+    
     if (([recognizer state] == UIGestureRecognizerStateEnded) || ([recognizer state] == UIGestureRecognizerStateCancelled)) {
         [self.captureButton removeFromSuperview];
 
@@ -914,14 +920,13 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)privateViewButtonPressed:(id)sender {
-    VYBProfileViewController *profileVC = [[VYBProfileViewController alloc] init];
-    [profileVC setUser:[PFUser currentUser]];
-    [self.navigationController pushViewController:profileVC animated:NO];
+    VYBAppDelegate *appDel = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDel moveToPage:VYBActivityPageIndex];
 }
 
 - (void)hubButtonPressed:(id)sender {
-    VYBHubViewController *hubVC = [[VYBHubViewController alloc] init];
-    [self.navigationController pushViewController:hubVC animated:NO];
+    VYBAppDelegate *appDel = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDel moveToPage:VYBHubPageIndex];
 }
 
 - (void)didReceiveMemoryWarning

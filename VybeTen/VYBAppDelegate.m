@@ -107,15 +107,15 @@
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
     self.hubVC = [[VYBHubViewController alloc] init];
-    self.hubNavigationVC = [VYBNavigationController navigationControllerForPageIndex:0 withRootViewController:self.hubVC];
+    self.hubNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBHubPageIndex withRootViewController:self.hubVC];
     
     self.captureVC = [[VYBCaptureViewController alloc] init];
-    self.captureNavigationVC = [VYBNavigationController navigationControllerForPageIndex:1 withRootViewController:self.captureVC];
+    self.captureNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBCapturePageIndex withRootViewController:self.captureVC];
     self.captureNavigationVC.navigationBarHidden = YES;
     
     self.profileVC = [[VYBProfileViewController alloc] init];
     [self.profileVC setUser:[PFUser currentUser]];
-    self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:2 withRootViewController:self.profileVC];
+    self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.profileVC];
     
     self.viewControllers = [[NSArray alloc] initWithObjects:self.hubNavigationVC, self.captureNavigationVC, self.activityNavigationVC, nil];
     
@@ -154,7 +154,20 @@
     return self.viewControllers[prevPageIndex];
 }
 
+- (void)moveToPage:(NSInteger)newPageIdx {
+    NSInteger currIdx = [self currPageIndex];
+    
+    if (currIdx < newPageIdx) {
+        [self.pageController setViewControllers:@[self.viewControllers[newPageIdx]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+    } else {
+        [self.pageController setViewControllers:@[self.viewControllers[newPageIdx]] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
+    }
+}
 
+- (NSInteger)currPageIndex {
+    VYBNavigationController *currPage = [self.pageController.viewControllers lastObject];
+    return [currPage pageIndex];
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {

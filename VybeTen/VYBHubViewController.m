@@ -7,6 +7,7 @@
 //
 
 #import "VYBHubViewController.h"
+#import "VYBAppDelegate.h"
 #import "VYBFriendTableViewCell.h"
 #import "VYBRegionHeaderButton.h"
 #import "VYBPlayerViewController.h"
@@ -228,7 +229,8 @@
 }
 
 - (void)captureButtonPressed:(id)sender {
-    [self.navigationController popViewControllerAnimated:NO];
+    VYBAppDelegate *appDel = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDel moveToPage:VYBCapturePageIndex];
 }
 
 
