@@ -59,7 +59,7 @@
         PFUser *newUser = [PFUser user];
         newUser.username = username;
         newUser.password = password;
-        newUser.email = email;
+        newUser.email = email.lowercaseString;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
