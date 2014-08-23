@@ -14,6 +14,7 @@
 #import <GAITracker.h>
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
+#import <MotionOrientation@PTEz/MotionOrientation.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
 #import "VYBHubViewController.h"
@@ -204,9 +205,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self setNeedsStatusBarAppearanceUpdate];
     
     // Device orientation detection
-    UIDevice *iphone = [UIDevice currentDevice];
-    [iphone beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceRotated:) name:UIDeviceOrientationDidChangeNotification object:iphone];
+    [MotionOrientation initialize];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(deviceRotated:)
+                                                 name:MotionOrientationChangedNotification
+                                               object:nil];
     
     // Adding CAPTURE button
     self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
@@ -475,25 +478,22 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)longPressDetected:(UILongPressGestureRecognizer *)recognizer {
     if (!isRecording) {
         [self.view addSubview:self.captureButton];
-        UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
         double rotation = 0;
-        switch (currentOrientation) {
-            case UIDeviceOrientationFaceDown:
-            case UIDeviceOrientationFaceUp:
-            case UIDeviceOrientationUnknown:
-                return;
-            case UIDeviceOrientationPortrait:
+        switch (lastOrientation) {
+            case AVCaptureVideoOrientationPortrait:
                 rotation = 0;
                 break;
-            case UIDeviceOrientationPortraitUpsideDown:
+            case AVCaptureVideoOrientationPortraitUpsideDown:
                 rotation = -M_PI;
                 break;
-            case UIDeviceOrientationLandscapeLeft:
+            case AVCaptureVideoOrientationLandscapeLeft:
                 rotation = M_PI_2;
                 break;
-            case UIDeviceOrientationLandscapeRight:
+            case AVCaptureVideoOrientationLandscapeRight:
                 rotation = -M_PI_2;
                 break;
+            default:
+                return;
         }
         self.captureButton.center = [recognizer locationInView:self.view];
         
@@ -812,7 +812,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 */
 
 - (void)deviceRotated:(NSNotification *)notification {
-    UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
+    UIDeviceOrientation currentOrientation = [MotionOrientation sharedInstance].deviceOrientation;
 
     double rotation = 0;
     switch (currentOrientation) {
