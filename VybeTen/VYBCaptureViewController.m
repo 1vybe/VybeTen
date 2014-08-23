@@ -162,7 +162,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             [self setVideoInput:videoDeviceInput];
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[(AVCaptureVideoPreviewLayer *)[[self cameraView] layer] connection] setVideoOrientation:(AVCaptureVideoOrientation)[self interfaceOrientation]];
+                [[(AVCaptureVideoPreviewLayer *)[[self cameraView] layer] connection] setVideoOrientation:AVCaptureVideoOrientationPortrait];
             });
         }
         
@@ -188,7 +188,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             if ([connection isVideoStabilizationSupported])
                 [connection setEnablesVideoStabilizationWhenAvailable:YES];
             
-            [connection setVideoOrientation:(AVCaptureVideoOrientation)[self interfaceOrientation]];
+            [connection setVideoOrientation:lastOrientation];
             [_videoOutput setSampleBufferDelegate:self queue:queue];
         }
         

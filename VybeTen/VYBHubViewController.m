@@ -61,8 +61,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-        
-    self.navigationController.navigationBarHidden = NO;
     
     NSString *functionName = @"get_regions";
     
@@ -77,11 +75,6 @@
         }
     }];
     */
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    self.navigationController.navigationBarHidden = YES;
 }
 
 #pragma mark - PFQueryTableViewController

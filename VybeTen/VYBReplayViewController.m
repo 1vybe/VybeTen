@@ -91,6 +91,7 @@
     //NSLog(@"[Replay]videoURL is %@", videoURL);
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
     NSLog(@"[REPLAY] video orientation is %d", [asset videoOrientation]);
+    [asset videoOrientationNew];
     
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];

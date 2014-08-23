@@ -25,5 +25,6 @@ typedef enum {
  @return A LBVideoOrientation that is the orientation of the video
  */
 @property (nonatomic, readonly) VYBVideoOrientation videoOrientation;
+- (void)videoOrientationNew;
 
 @end
