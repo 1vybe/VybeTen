@@ -1,11 +1,11 @@
 PODS:
-  - Bolts (1.1.0)
-  - Facebook-iOS-SDK (3.16):
+  - Bolts (1.1.2)
+  - Facebook-iOS-SDK (3.17.0):
     - Bolts
-  - GoogleAnalytics-iOS-SDK (3.0.7)
-  - HockeySDK (3.5.5)
-  - MBProgressHUD (0.8)
-  - Parse (1.2.19):
+  - GoogleAnalytics-iOS-SDK (3.0.9)
+  - HockeySDK (3.5.6)
+  - MBProgressHUD (0.9)
+  - Parse (1.2.20):
     - Facebook-iOS-SDK (~> 3.11)
 
 DEPENDENCIES:
@@ -15,11 +15,11 @@ DEPENDENCIES:
   - Parse (~> 1.2)
 
 SPEC CHECKSUMS:
-  Bolts: 91c2af8eae1d44e1dd75946a5b0ae04a43ea43e4
-  Facebook-iOS-SDK: 82ad03cb9ce568855057e20a099054cf1e34ef12
-  GoogleAnalytics-iOS-SDK: bb285d8eef15a682f1b82971becd0d22edd0e53b
-  HockeySDK: f9af97c2f5df4eb6ca6d2a9c408f2ff498edd608
-  MBProgressHUD: c356980b0cd097f19acec959b49dca5eb8ec31be
-  Parse: ffebaecaddd32cb52671010f81567c298ff93d04
+  Bolts: 2635e8698a630774689441047f3465d78c48d485
+  Facebook-iOS-SDK: f20274d809f112ba540842e2b6cbe50128d51b7b
+  GoogleAnalytics-iOS-SDK: d9e198b1f955259a72886769be7377cdfcdb2250
+  HockeySDK: 27d8b411208f9d3f70c8f6695a8defa2a3465721
+  MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
+  Parse: 28c0dc54f30201a369d29a2f76c09fa43b2add16
 
-COCOAPODS: 0.32.1
+COCOAPODS: 0.33.1
