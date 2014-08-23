@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBFriendTableViewCell : UITableViewCell
+@interface VYBFriendTableViewCell : PFTableViewCell
 @property (nonatomic, strong) IBOutlet UIImageView *profileImageView;
 @property (nonatomic, strong) IBOutlet UILabel *nameLabel;
 @property (nonatomic, strong) IBOutlet UIButton *followButton;

@@ -17,6 +17,7 @@
 #import "VYBCaptureViewController.h"
 #import "VYBHubViewController.h"
 #import "VYBFriendsViewController.h"
+#import "VYBProfileViewController.h"
 #import "VYBUserStore.h"
 #import "VYBLogInViewController.h"
 #import "VYBPlayerViewController.h"
@@ -209,14 +210,15 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     // Adding CAPTURE button
     self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
     
-    // Adding PRIVATE view button
+    // Adding PRIVATE button
     CGRect buttonFrame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
     self.privateViewButton = [[UIButton alloc] initWithFrame:buttonFrame];
     [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view.png"] forState:UIControlStateNormal];
-    [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view_new.png"] forState:UIControlStateSelected];
+    //[self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view_new.png"] forState:UIControlStateSelected];
     [self.privateViewButton addTarget:self action:@selector(privateViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.privateViewButton setContentMode:UIViewContentModeLeft];
-    //[self.view addSubview:self.privateViewButton];
+    [self.view addSubview:self.privateViewButton];
+    
     // Adding PRIVATE count label
     buttonFrame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
     self.privateViewCountLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
@@ -226,12 +228,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     self.privateViewCountLabel.userInteractionEnabled = NO;
     //[self.view addSubview:self.privateViewCountLabel];
 
-    // Adding PUBLIC view button
+    // Adding HUB button
     buttonFrame = CGRectMake(0, self.view.bounds.size.height - 70, 70, 70);
-    self.publicViewButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    [self.publicViewButton setImage:[UIImage imageNamed:@"button_public_view.png"] forState:UIControlStateNormal];
-    [self.publicViewButton addTarget:self action:@selector(publicViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.publicViewButton];
+    self.hubButton = [[UIButton alloc] initWithFrame:buttonFrame];
+    [self.hubButton setImage:[UIImage imageNamed:@"button_hub.png"] forState:UIControlStateNormal];
+    [self.hubButton addTarget:self action:@selector(hubButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.hubButton];
     
     // Adding FLIP button
     buttonFrame = CGRectMake(0, 0, 70, 70);
@@ -415,7 +417,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)flipCamera:(id)sender {
     [[self flipButton] setEnabled:NO];
     [[self privateViewButton] setEnabled:NO];
-    [[self publicViewButton] setEnabled:NO];
+    [[self hubButton] setEnabled:NO];
 
     dispatch_async([self sessionQueue], ^{
         AVCaptureDevice *currentVideoDevice = [[self videoInput] device];
@@ -459,7 +461,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             [[self flipButton] setSelected:isFrontCamera];
             [self flashButton].hidden = isFrontCamera;
             [[self privateViewButton] setEnabled:YES];
-            [[self publicViewButton] setEnabled:YES];
+            [[self hubButton] setEnabled:YES];
             [[self flipButton] setEnabled:YES];
         });
         
@@ -777,6 +779,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
      {
          CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
          NSString *city = myPlacemark.locality;
+         [self.currVybe setLocationString:city];
          [[PFUser currentUser] setObject:city forKey:kVYBUserLastVybedLocationKey];
      }];
     
@@ -833,7 +836,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         [self.flipButton setTransform:transform];
         [self.flashButton setTransform:transform];
-        [self.publicViewButton setTransform:transform];
+        [self.hubButton setTransform:transform];
         [self.privateViewButton setTransform:transform];
         [self.privateViewCountLabel setTransform:transform];
     } completion:nil];
@@ -905,22 +908,18 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)syncUIWithRecordingStatus:(BOOL)status {
     self.privateViewButton.hidden = status;
     self.privateViewCountLabel.hidden = status;
-    self.publicViewButton.hidden = status;
+    self.hubButton.hidden = status;
     flipButton.hidden = status;
     flashButton.hidden = status || isFrontCamera;
 }
 
 - (void)privateViewButtonPressed:(id)sender {
-    /*
-    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [playerVC setIsPublicMode:NO];
-    [self.navigationController pushViewController:playerVC animated:NO];
-    */
-    VYBFriendsViewController *friendsVC = [[VYBFriendsViewController alloc] init];
-    [self.navigationController pushViewController:friendsVC animated:NO];
+    VYBProfileViewController *profileVC = [[VYBProfileViewController alloc] init];
+    [profileVC setUser:[PFUser currentUser]];
+    [self.navigationController pushViewController:profileVC animated:NO];
 }
 
-- (void)publicViewButtonPressed:(id)sender {
+- (void)hubButtonPressed:(id)sender {
     VYBHubViewController *hubVC = [[VYBHubViewController alloc] init];
     [self.navigationController pushViewController:hubVC animated:NO];
 }

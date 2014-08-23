@@ -36,7 +36,6 @@
 @implementation VYBPlayerViewController {
     NSInteger pageIndex;
     
-    NSInteger currVybeIndex;
     NSInteger downloadingVybeIndex;
     
     UIView *backgroundView;
@@ -48,7 +47,7 @@
     
     
 }
-
+@synthesize currVybeIndex;
 @synthesize currPlayer = _currPlayer;
 @synthesize currPlayerView = _currPlayerView;
 @synthesize currItem = _currItem;
@@ -208,6 +207,7 @@
         [self.privateCountLabel setText:@""];
     }
     
+    /*
     if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
         PFObject *myTribe = [[PFUser currentUser] objectForKey:@"tribe"];
         [myTribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
@@ -230,17 +230,13 @@
             }
         }];
     }
+    */
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if (self.isPublicMode) {
-        // Deep sky blue
-        [backgroundView setBackgroundColor:[UIColor colorWithRed:0.0 green:191.0/255.0 blue:1.0 alpha:1.0]];
-    } else {
-        [backgroundView setBackgroundColor:[UIColor orangeColor]];
-    }
+    [backgroundView setBackgroundColor:[UIColor orangeColor]];
 
     [self loadVybes];
 }
@@ -255,13 +251,11 @@
 }
 
 - (void)loadVybes {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    if (self.currRegion) {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-    if (!self.isPublicMode) {
-        NSString *functionName = @"get_tribe_vybes";
-        PFGeoPoint *geoPoint = [PFGeoPoint geoPoint];
-        
-        [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": geoPoint, @"startTime": [[VYBUserStore sharedStore] lastWatchedVybeTimeStamp]} block:^(NSArray *vybes, NSError *error) {
+        NSString *functionName = @"get_region_vybes";
+        [PFCloud callFunctionInBackground:functionName withParameters:@{@"regionID": self.currRegion.objectId} block:^(NSArray *vybes, NSError *error) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             if (!error) {
                 if (vybes && vybes.count > 0) {
@@ -278,49 +272,34 @@
             } else {
             }
         }];
+    }
+    else if (self.currUser) {
+        if (self.vybePlaylist.count > 0) {
+            [self beginPlayingFrom:currVybeIndex];
+        }
     } else {
-        if (self.currRegion) {
-            NSString *functionName = @"get_region_vybes";
-            [PFCloud callFunctionInBackground:functionName withParameters:@{@"regionID": self.currRegion.objectId} block:^(NSArray *vybes, NSError *error) {
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                if (!error) {
-                    if (vybes && vybes.count > 0) {
-                        self.vybePlaylist = vybes;
-                        [self beginPlayingFrom:0];
-                    } else {
-                        [[VYBUserStore sharedStore] setNewPrivateVybeCount:0];
-                        PFInstallation *currentInstall = [PFInstallation currentInstallation];
-                        currentInstall.badge = 0;
-                        [currentInstall saveEventually];
-                        
-                        self.vybePlaylist = nil;
-                    }
-                } else {
-                }
-            }];
-        }
-        else {
-            NSString *functionName = @"default_algorithm";
-            PFGeoPoint *geoPoint = [PFGeoPoint geoPoint];
-            [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                if (!error) {
-                    if (vybes && vybes.count > 0) {
-                        self.vybePlaylist = vybes;
-                        [self beginPlayingFrom:0];
-                    } else {
-                        [[VYBUserStore sharedStore] setNewPrivateVybeCount:0];
-                        PFInstallation *currentInstall = [PFInstallation currentInstallation];
-                        currentInstall.badge = 0;
-                        [currentInstall saveEventually];
-                        
-                        self.vybePlaylist = nil;
-                    }
-                } else {
-                }
-            }];
+        NSString *functionName = @"default_algorithm";
+        PFGeoPoint *geoPoint = [PFGeoPoint geoPoint];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-        }
+        [PFCloud callFunctionInBackground:functionName withParameters:@{@"location": geoPoint} block:^(NSArray *vybes, NSError *error) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            if (!error) {
+                if (vybes && vybes.count > 0) {
+                    self.vybePlaylist = vybes;
+                    [self beginPlayingFrom:0];
+                } else {
+                    [[VYBUserStore sharedStore] setNewPrivateVybeCount:0];
+                    PFInstallation *currentInstall = [PFInstallation currentInstallation];
+                    currentInstall.badge = 0;
+                    [currentInstall saveEventually];
+                    
+                    self.vybePlaylist = nil;
+                }
+            } else {
+            }
+        }];
+
     }
 }
 
@@ -330,28 +309,25 @@
     
     PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
    
-    // Keep track of the last vybe watched (for private ONLY)
-    if ( ![[currVybe objectForKey:kVYBVybeTypePublicKey] boolValue] ) {
-        if ([[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp] compare:currVybe[kVYBVybeTimestampKey]] == NSOrderedAscending) {
-            [[VYBUserStore sharedStore] setLastWatchedVybeTimeStamp:currVybe[kVYBVybeTimestampKey]];
-            
-            NSInteger newCount = [[VYBUserStore sharedStore] newPrivateVybeCount] - 1;
-            if (newCount < 0)
-                newCount = 0;
-            [[VYBUserStore sharedStore] setNewPrivateVybeCount:newCount];
-            
-            if (newCount > 0) {
-                [self.privateViewButton setSelected:YES];
-                [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)newCount]];
-            } else {
-                [self.privateViewButton setSelected:NO];
-                [self.privateCountLabel setText:@""];
-            }
-
-            PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-            currentInstallation.badge = [[VYBUserStore sharedStore] newPrivateVybeCount];
-            [currentInstallation saveEventually];
+    if ([[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp] compare:currVybe[kVYBVybeTimestampKey]] == NSOrderedAscending) {
+        [[VYBUserStore sharedStore] setLastWatchedVybeTimeStamp:currVybe[kVYBVybeTimestampKey]];
+        
+        NSInteger newCount = [[VYBUserStore sharedStore] newPrivateVybeCount] - 1;
+        if (newCount < 0)
+            newCount = 0;
+        [[VYBUserStore sharedStore] setNewPrivateVybeCount:newCount];
+        
+        if (newCount > 0) {
+            [self.privateViewButton setSelected:YES];
+            [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)newCount]];
+        } else {
+            [self.privateViewButton setSelected:NO];
+            [self.privateCountLabel setText:@""];
         }
+
+        PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+        currentInstallation.badge = [[VYBUserStore sharedStore] newPrivateVybeCount];
+        [currentInstallation saveEventually];
     }
     
     NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
@@ -506,7 +482,6 @@
 }
 
 - (void)privateViewButtonPressed:(id)sender {
-    self.isPublicMode = NO;
     [self loadVybes];
 }
 

@@ -21,8 +21,9 @@
 @property (nonatomic) AVPlayerItem *currItem;
 @property (nonatomic,strong) NSArray *vybePlaylist;
 @property (nonatomic) NSInteger debugMode;
-@property (nonatomic) BOOL isPublicMode;
+@property (nonatomic) NSInteger currVybeIndex;
 @property (nonatomic) PFObject *currRegion;
+@property (nonatomic) PFObject *currUser;
 
 + (VYBPlayerViewController *)playerViewControllerForPageIndex:(NSInteger)idx;
 - (NSInteger)pageIndex;

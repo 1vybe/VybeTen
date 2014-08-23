@@ -112,10 +112,11 @@
 - (void)acceptButtonPressed:(id)sender {
     NSData *video = [NSData dataWithContentsOfFile:[self.currVybe videoFilePath]];
     
-    // here we do the magic to the video file to reduce its bitrate
-    //[self resizeVideo:[self.currVybe videoFilePath]];
+    [VYBUtility saveThumbnailImageForVybe:self.currVybe];
+    NSData *thumbnail = [NSData dataWithContentsOfFile:[self.currVybe thumbnailFilePath]];
     
     PFFile *videoFile = [PFFile fileWithData:video];
+    PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
     
     //NOTE: vybes are ALWAYS public now
     [self.currVybe setIsPublic:YES];
@@ -125,25 +126,40 @@
     [vybeACL setPublicReadAccess:YES];
     vybe.ACL = vybeACL;
     
+    
     if ( [(VYBAppDelegate *)[UIApplication sharedApplication].delegate isParseReachable] ) {
         UIProgressView *uploadProgressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
         [uploadProgressView setFrame:CGRectMake(0, 0, self.view.bounds.size.width, 50)];
         [self.navigationController.view addSubview:uploadProgressView];
-        [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (succeeded) {
-                [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-                [VYBUtility clearLocalCacheForVybe:self.currVybe];
-                [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        
+        [thumbnailFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (!error) {
+                [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     if (succeeded) {
-                        NSLog(@"Posted");
-                        [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Posted"];
-                    }
-                    else {
+                        [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
+                        [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
+                        [VYBUtility clearLocalCacheForVybe:self.currVybe];
+                        [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                            if (succeeded) {
+                                NSLog(@"Posted");
+                                [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Posted"];
+                            }
+                            else {
+                                NSLog(@"Saved");
+                                [vybe saveEventually];
+                                [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
+                            }
+                            [uploadProgressView removeFromSuperview];
+                        }];
+                    } else {
+                        [[VYBMyVybeStore sharedStore] addVybe:self.currVybe];
+                        [uploadProgressView removeFromSuperview];
+                        
                         NSLog(@"Saved");
-                        [vybe saveEventually];
                         [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
                     }
-                    [uploadProgressView removeFromSuperview];
+                } progressBlock:^(int percentDone) {
+                    uploadProgressView.progress = percentDone / 100.0;
                 }];
             } else {
                 [[VYBMyVybeStore sharedStore] addVybe:self.currVybe];
@@ -152,8 +168,6 @@
                 NSLog(@"Saved");
                 [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
             }
-        } progressBlock:^(int percentDone) {
-            uploadProgressView.progress = percentDone / 100.0;
         }];
     } else {
         [[VYBMyVybeStore sharedStore] addVybe:self.currVybe];
@@ -162,6 +176,7 @@
     // Update user lastVybeLocation and lastVybeTime field. lastVybeLocation is updated in captureVC didUpdateLocaton
     [[PFUser currentUser] setObject:self.currVybe.timeStamp forKey:kVYBUserLastVybedTimeKey];
     [[PFUser currentUser] saveInBackground];
+    
     
     [self.navigationController popViewControllerAnimated:NO];
 }

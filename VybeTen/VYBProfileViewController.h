@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBProfileViewController : UITableViewController
+@interface VYBProfileViewController : PFQueryTableViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@property (nonatomic, strong) PFObject *user;
 
 @end

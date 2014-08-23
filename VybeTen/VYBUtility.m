@@ -21,26 +21,54 @@
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
     AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     // To transform the snapshot to be in the orientation the video was taken with
-    [generate setAppliesPreferredTrackTransform:YES];
+    //[generate setAppliesPreferredTrackTransform:YES];
     NSError *err = NULL;
     CMTime time = CMTimeMake(1, 60);
     CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
+    if (imgRef) {
+        NSLog(@"good");
+    }
     UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
     NSData *thumbData = UIImageJPEGRepresentation(thumb, 0.3);
     NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[filePath stringByAppendingPathExtension:@"jpeg"]];
     [thumbData writeToURL:thumbURL atomically:YES];
-    
+}
+
++ (void)saveThumbnailImageForVybe:(VYBMyVybe *)mVybe {
+    NSURL *url = [[NSURL alloc] initFileURLWithPath:[mVybe videoFilePath]] ;
+    // Generating and saving a thumbnail for the captured vybe
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
+    AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    // To transform the snapshot to be in the orientation the video was taken with
+    //[generate setAppliesPreferredTrackTransform:YES];
+    NSError *err = NULL;
+    CMTime time = CMTimeMake(1, 60);
+    CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
+    if (imgRef) {
+        NSLog(@"good");
+    }
+    UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
+    NSData *thumbData = UIImageJPEGRepresentation(thumb, 0.3);
+    NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[mVybe thumbnailFilePath]];
+    [thumbData writeToURL:thumbURL atomically:YES];
 }
 
 + (void)clearLocalCacheForVybe:(VYBMyVybe *)aVybe {
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[aVybe videoFilePath]];
-    
+    NSURL *thumbnailURL = [[NSURL alloc] initFileURLWithPath:[aVybe thumbnailFilePath]];
     NSError *error;
     [[NSFileManager defaultManager] removeItemAtURL:videoURL error:&error];
     if (error) {
-        NSLog(@"[Utility] Cached my vybe was NOT deleted");
+        NSLog(@"[Utility] Cached video was NOT deleted");
     } else {
-        NSLog(@"[Utility] Cached my vybe was DELETED");
+        NSLog(@"[Utility] Cached video was DELETED");
+    }
+    
+    [[NSFileManager defaultManager] removeItemAtURL:thumbnailURL error:&error];
+    if (error) {
+        NSLog(@"[Utility] Cached thumbnail image was NOT deleted");
+    } else {
+        NSLog(@"[Utility] Cached thumbnail image was DELETED");
     }
 }
 

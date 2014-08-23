@@ -13,9 +13,7 @@
 }
 @property (nonatomic, strong) NSString *uniqueFileName;
 @property (nonatomic, strong) CLLocation *geoTag;
-@property (nonatomic, strong) NSString *countryCode;
-@property (nonatomic, strong) NSString *stateName;
-@property (nonatomic, strong) NSString *cityName;
+@property (nonatomic, strong) NSString *locationString;
 @property (nonatomic, strong) NSDate *timeStamp;
 @property (nonatomic) BOOL isPublic;
 //@property (nonatomic, strong) NSString *tribeObjectID;

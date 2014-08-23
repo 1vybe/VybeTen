@@ -8,7 +8,7 @@
 #define IS_IPHONE_5     ( [[UIScreen mainScreen] bounds].size.height == 568 )
 
 #define VYBE_LENGTH_SEC 15
-
+#define VYBE_TTL_HOURS  24
 #define UPFRESH         1
 #define UPLOADING       2
 #define UPLOADED        3
@@ -16,6 +16,7 @@
 #define DOWNFRESH       1
 #define DOWNLOADING     2
 #define DOWNLOADED      3
+
 
 
 
@@ -79,16 +80,18 @@ extern NSString *const kVYBVybeClassKey;
 // field keys
 extern NSString *const kVYBVybeVideoKey;
 extern NSString *const kVYBVybeThumbnailKey;
-extern NSString *const kVYBVybeTribeKey;
 extern NSString *const kVYBVybeUserKey;
 extern NSString *const kVYBVybeTimestampKey;
 extern NSString *const kVYBVybeGeotag;
+extern NSString *const kVYBVybeTypePublicKey;
+extern NSString *const kVYBVybeLocationStringKey;
+
+/*
+extern NSString *const kVYBVybeTribeKey;
 extern NSString *const kVYBVybeCountryCodeKey;
 extern NSString *const kVYBVybeStateNameKey;
 extern NSString *const kVYBVybeCityNameKey;
-extern NSString *const kVYBVybeTypePublicKey;
-extern NSString *const kVYBVybeLocationName;
-
+*/
 
 #pragma mark - PFObject Region Class
 // class key

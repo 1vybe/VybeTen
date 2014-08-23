@@ -27,7 +27,7 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.82019680282825735" green="0.92266049592391308" blue="0.48451389261209293" alpha="1" colorSpace="calibratedRGB"/>
             <connections>
                 <outlet property="regionNameLabel" destination="9ut-Jh-oMJ" id="GO2-Fz-pOB"/>
                 <outlet property="regionUserCountLabel" destination="ec5-bT-CLX" id="Lo7-Ft-W8B"/>

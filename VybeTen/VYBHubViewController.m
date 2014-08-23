@@ -29,6 +29,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        
     }
     return self;
 }
@@ -39,13 +40,12 @@
     
     selectedSection = -1;
     
+    self.navigationItem.hidesBackButton = YES;
+    
     UIBarButtonItem *captureButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_capture.png"] style:UIBarButtonItemStylePlain target:self action:@selector(captureButtonPressed:)];
     UIBarButtonItem *playAllButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:self action:@selector(allButtonItemPressed:)];
     UIBarButtonItem *searchButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)];
     self.navigationItem.rightBarButtonItems = @[captureButton, playAllButton];
-
-    UIBarButtonItem *profileButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_camera_front.png"] style:UIBarButtonItemStylePlain target:self action:@selector(profileButtonPressed:)];
-    self.navigationItem.leftBarButtonItem = profileButton;
     
     self.searchBar = [[UISearchBar alloc] init];
     [self.searchBar sizeToFit];
@@ -54,6 +54,8 @@
     //self.tableView.tableHeaderView = self.searchBar;
     
     self.searchDisplay = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -86,7 +88,7 @@
 - (PFQuery *)queryForTable {
     PFQuery *query = [PFUser query];
     // 24 TTL checking
-    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * 24];
+    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
     [query whereKey:kVYBUserLastVybedTimeKey greaterThanOrEqualTo:someTimeAgo];
     // Don't include urself
     [query whereKey:kVYBUserUsernameKey notEqualTo:[PFUser currentUser][kVYBUserUsernameKey]];
@@ -144,6 +146,10 @@
     return 60.0; // whatever height you want
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 60.0;
+}
+
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     VYBRegionHeaderButton *headerButton = [VYBRegionHeaderButton VYBRegionHeaderButton];
     NSString *location = self.sections.allKeys[section];
@@ -179,11 +185,30 @@
     NSArray *users = self.sections[locationName];
     PFObject *aUser = users[indexPath.row];
     NSString *lowerUsername = [(NSString *)aUser[kVYBUserUsernameKey] lowercaseString];
+    
+    // TODO: user PFImageView of PFTableViewCell
     [cell.nameLabel setText:lowerUsername];
-    //[cell setVybeCount:vybeCount];
-    //[cell setUserCount:[NSNumber numberWithUnsignedInteger:users.count]];
 
+    PFFile *profile = aUser[kVYBUserProfilePicMediumKey];
+    [profile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        if (!error) {
+            UIImage *profileImg = [UIImage imageWithData:data];
+            cell.profileImageView.image = profileImg;
+        }
+    }];
+    
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *locationKey = self.sections.allKeys[indexPath.section];
+    NSArray *users = self.sections[locationKey];
+    PFUser *aUser = users[indexPath.row];
+    
+    VYBProfileViewController *profileVC = [[VYBProfileViewController alloc] init];
+    [profileVC setUser:aUser];
+    
+    [self.navigationController pushViewController:profileVC animated:NO];
 }
 
 /*
@@ -194,7 +219,6 @@
 
 - (void)allButtonItemPressed:(id)sender {
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [playerVC setIsPublicMode:YES];
     [self.navigationController pushViewController:playerVC animated:NO];
 }
 
@@ -207,10 +231,6 @@
     [self.navigationController popViewControllerAnimated:NO];
 }
 
-- (void)profileButtonPressed:(id)sender {
-    VYBProfileViewController *profileVC = [[VYBProfileViewController alloc] init];
-    [self.navigationController pushViewController:profileVC animated:NO];
-}
 
 - (void)headerButtonPressed:(VYBRegionHeaderButton *)sender {
     if (selectedSection == sender.sectionNumber) {

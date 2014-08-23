@@ -57,9 +57,9 @@
     PFQuery *innerQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
     NSString *countryCode = self.currRegion[kVYBRegionCodeKey];
     // 24 TTL checking
-    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * 24];
+    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
     [innerQuery whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
-    [innerQuery whereKey:kVYBVybeCountryCodeKey equalTo:countryCode];
+    //[innerQuery whereKey:kVYBVybeCountryCodeKey equalTo:countryCode];
     
     //[query whereKey:kVYBUserMostRecentVybeKey matchesQuery:innerQuery];
     // Don't include urself
@@ -92,7 +92,6 @@
 
 - (void)playAllButtonPressed:(id)sender {
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [playerVC setIsPublicMode:NO];
     [self.navigationController pushViewController:playerVC animated:NO];
 }
 

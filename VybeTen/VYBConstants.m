@@ -47,11 +47,14 @@ NSString *const kVYBVybeTribeKey                                = @"tribe";
 NSString *const kVYBVybeUserKey                                 = @"user";
 NSString *const kVYBVybeTimestampKey                            = @"timestamp";
 NSString *const kVYBVybeGeotag                                  = @"location";
-NSString *const kVYBVybeCountryCodeKey                          = @"countryCode";
-NSString *const kVYBVybeStateNameKey                            = @"stateName";
-NSString *const kVYBVybeCityNameKey                             = @"cityName";
 NSString *const kVYBVybeTypePublicKey                           = @"isPublic";
-NSString *const kVYBVybeLocationName                            = @"locationName";
+NSString *const kVYBVybeLocationStringKey                       = @"locationString";
+
+/*
+ NSString *const kVYBVybeCountryCodeKey                          = @"countryCode";
+ NSString *const kVYBVybeStateNameKey                            = @"stateName";
+ NSString *const kVYBVybeCityNameKey                             = @"cityName";
+*/
 
 #pragma mark - PFObject Region Class
 // class key

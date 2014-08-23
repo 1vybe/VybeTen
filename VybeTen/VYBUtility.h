@@ -12,7 +12,8 @@
 
 @interface VYBUtility : NSObject
 + (void)clearLocalCacheForVybe:(VYBMyVybe *)aVybe;
-+ (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
+//+ (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
++ (void)saveThumbnailImageForVybe:(VYBMyVybe *)mVybe;
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate;
 + (NSString *)reverseTime:(NSDate *)aDate;
 + (void)reverseGeoCode:(PFGeoPoint *)aLocation withCompletion:(void (^)(NSArray *placemarks, NSError *error))completionBlock;

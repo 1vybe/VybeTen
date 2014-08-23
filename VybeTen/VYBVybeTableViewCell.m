@@ -1,14 +1,14 @@
 //
-//  VYBFriendTableViewCell.m
+//  VYBVybeTableViewCell.m
 //  VybeTen
 //
-//  Created by jinsuk on 8/21/14.
+//  Created by jinsuk on 8/22/14.
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import "VYBFriendTableViewCell.h"
+#import "VYBVybeTableViewCell.h"
 
-@implementation VYBFriendTableViewCell
+@implementation VYBVybeTableViewCell
 
 - (void)awakeFromNib
 {
@@ -18,6 +18,7 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
+
     // Configure the view for the selected state
 }
 
