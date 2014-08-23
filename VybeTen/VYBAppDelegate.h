@@ -11,11 +11,10 @@
 #import "VYBNavigationController.h"
 #import "VYBPageViewController.h"
 
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate>
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (nonatomic, strong) UINavigationController *navigationVC;
-@property (nonatomic, strong) VYBPageViewController *pageVC;
+
 @property (nonatomic, strong) NSArray *viewControllers;
 
 @property (nonatomic, readonly) int networkStatus;

@@ -16,6 +16,8 @@
 #import "VYBAppDelegate.h"
 #import "VYBUserStore.h"
 #import "VYBCaptureViewController.h"
+#import "VYBHubViewController.h"
+#import "VYBProfileViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBCache.h"
@@ -29,8 +31,13 @@
 @property (nonatomic, strong) Reachability *wifiReach;
 @property (nonatomic, strong) NSString *uniqueID;
 
-
+@property (nonatomic, strong) VYBPageViewController *pageController;
+@property (nonatomic, strong) VYBNavigationController *hubNavigationVC;
+@property (nonatomic, strong) VYBNavigationController *captureNavigationVC;
+@property (nonatomic, strong) VYBNavigationController *activityNavigationVC;
 @property (nonatomic, strong) VYBCaptureViewController *captureVC;
+@property (nonatomic, strong) VYBHubViewController *hubVC;
+@property (nonatomic, strong) VYBProfileViewController *profileVC;
 @property (nonatomic, strong) VYBPlayerViewController *playerVC;
 
 @end
@@ -99,15 +106,26 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    self.captureVC = [[VYBCaptureViewController alloc] init];
+    self.hubVC = [[VYBHubViewController alloc] init];
+    self.hubNavigationVC = [VYBNavigationController navigationControllerForPageIndex:0 withRootViewController:self.hubVC];
     
-    self.navigationVC = [[UINavigationController alloc] initWithRootViewController:self.captureVC];
-    self.navigationVC.navigationBarHidden = YES;
-
+    self.captureVC = [[VYBCaptureViewController alloc] init];
+    self.captureNavigationVC = [VYBNavigationController navigationControllerForPageIndex:1 withRootViewController:self.captureVC];
+    self.captureNavigationVC.navigationBarHidden = YES;
+    
+    self.profileVC = [[VYBProfileViewController alloc] init];
+    [self.profileVC setUser:[PFUser currentUser]];
+    self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:2 withRootViewController:self.profileVC];
+    
+    self.viewControllers = [[NSArray alloc] initWithObjects:self.hubNavigationVC, self.captureNavigationVC, self.activityNavigationVC, nil];
+    
+    self.pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+    [self.pageController setViewControllers:@[self.captureNavigationVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    self.pageController.dataSource = self;
     
     [[VYBMyVybeStore sharedStore] uploadDelayedVybes];
 
-    [self.window setRootViewController:self.navigationVC];
+    [self.window setRootViewController:self.pageController];
     
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
@@ -120,6 +138,21 @@
     return YES;
 }
 
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(id)viewController {
+    NSInteger nextPageIndex = [viewController pageIndex] + 1;
+    if (nextPageIndex == self.viewControllers.count)
+        return nil;
+    
+    return self.viewControllers[nextPageIndex];
+}
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(id)viewController {
+    NSInteger prevPageIndex = [viewController pageIndex] - 1;
+    if (prevPageIndex < 0)
+        return nil;
+    
+    return self.viewControllers[prevPageIndex];
+}
 
 
 

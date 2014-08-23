@@ -86,6 +86,10 @@
 
 #pragma mark - UITableViewController 
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 60.0f;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
     static NSString *VybeTableViewCellIdentifier = @"VybeTableViewCellIdentifier";
     VYBVybeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:VybeTableViewCellIdentifier];

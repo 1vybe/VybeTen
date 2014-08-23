@@ -40,6 +40,10 @@
     return [self.viewControllers.firstObject supportedInterfaceOrientations];
 }
 
+- (BOOL)shouldAutorotate {
+    return [self.viewControllers.firstObject shouldAutorotate];
+}
+
 - (BOOL)prefersStatusBarHidden {
     return YES;
 }
