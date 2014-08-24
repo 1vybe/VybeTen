@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <Parse/Parse.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+
 @class VYBMyVybe;
 
 @interface VYBUtility : NSObject
@@ -18,8 +20,8 @@
 + (NSString *)reverseTime:(NSDate *)aDate;
 + (void)reverseGeoCode:(PFGeoPoint *)aLocation withCompletion:(void (^)(NSArray *placemarks, NSError *error))completionBlock;
 + (NSString *)convertPlacemarkToLocation:(CLPlacemark *)placemark;
++ (CGAffineTransform)getTransformFromOrientation:(NSInteger)orientation;
 + (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title;
-
 
 #pragma mark Display Name
 

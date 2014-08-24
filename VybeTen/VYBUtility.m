@@ -40,7 +40,7 @@
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
     AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     // To transform the snapshot to be in the orientation the video was taken with
-    //[generate setAppliesPreferredTrackTransform:YES];
+    [generate setAppliesPreferredTrackTransform:YES];
     NSError *err = NULL;
     CMTime time = CMTimeMake(1, 60);
     CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
@@ -170,6 +170,27 @@
     hud.labelText = title;
     [hud show:YES];
     [hud hide:YES afterDelay:1.0];
+}
+
++ (CGAffineTransform)getTransformFromOrientation:(AVCaptureVideoOrientation)orientation {
+    CGAffineTransform transform;
+    switch (orientation) {
+        case AVCaptureVideoOrientationPortrait:
+            transform = CGAffineTransformMakeRotation(0);
+            break;
+        case AVCaptureVideoOrientationPortraitUpsideDown:
+            transform = CGAffineTransformMakeRotation(-M_PI);
+            break;
+        case AVCaptureVideoOrientationLandscapeLeft:
+            transform = CGAffineTransformMakeRotation(-M_PI_2);
+            break;
+        case AVCaptureVideoOrientationLandscapeRight:
+            transform = CGAffineTransformMakeRotation(M_PI_2);
+            break;
+
+    }
+    
+    return transform;
 }
 
 @end

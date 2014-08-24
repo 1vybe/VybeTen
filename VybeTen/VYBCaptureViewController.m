@@ -602,6 +602,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     _videoWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
     NSParameterAssert(_videoWriterInput);
     _videoWriterInput.expectsMediaDataInRealTime = YES;
+    //NOTE: When writing a file by AVAssetWriter, we need to change its input's transform 
+    _videoWriterInput.transform = [VYBUtility getTransformFromOrientation:lastOrientation];
     
     
     // Add the audio input
@@ -637,6 +639,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     [_videoWriter addInput:_videoWriterInput];
     [_videoWriter addInput:_audioWriterInput];
+    
     
     return YES;
 }
@@ -684,8 +687,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     else {
         NSError *error;
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
-        AVAsset *asset = [AVAsset assetWithURL:outputURL];
-        NSLog(@"short video orientation is %d", (int)[asset videoOrientation]);
         [[NSFileManager defaultManager] removeItemAtURL:outputURL  error:&error];
         if (error) {
             NSLog(@"Failed to delete a vybe under 3 seconds");
