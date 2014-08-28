@@ -8,7 +8,7 @@
 #define IS_IPHONE_5     ( [[UIScreen mainScreen] bounds].size.height == 568 )
 
 #define VYBE_LENGTH_SEC 15
-#define VYBE_TTL_HOURS  200
+#define VYBE_TTL_HOURS  24
 #define UPFRESH         1
 #define UPLOADING       2
 #define UPLOADED        3

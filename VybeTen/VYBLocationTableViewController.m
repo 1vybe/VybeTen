@@ -8,27 +8,23 @@
 
 #import "VYBLocationTableViewController.h"
 #import "VYBAppDelegate.h"
-#import "VYBUserTableViewCell.h"
-#import "VYBRegionHeaderButton.h"
+#import "VYBLocationTableViewCell.h"
 #import "VYBPlayerViewController.h"
 #import "VYBProfileViewController.h"
 
 @interface VYBLocationTableViewController ()
 @property (nonatomic, strong) NSArray *regions;
-@property (nonatomic, strong) NSDictionary *sections;
+@property (nonatomic, strong) NSDictionary *vybeByLocation;
+@property (nonatomic, strong) NSDictionary *userByLocation;
 @end
 
 @implementation VYBLocationTableViewController {
-    NSInteger selectedSection;
-    VYBRegionHeaderButton *selectedHeaderButton;
 }
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    selectedSection = -1;
-
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -43,127 +39,17 @@
 }
 
 
-#pragma mark - UITableViewController
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.sections.allKeys.count;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (selectedSection < 0) {
-        return 0;
-    }
-    
-    if (section == selectedSection) {
-        NSArray *keyStr = self.sections.allKeys[section];
-        NSArray *arr = self.sections[keyStr];
-        return arr.count;
-    }
-    
-    return 0;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 60.0; // whatever height you want
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60.0;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    VYBRegionHeaderButton *headerButton = [VYBRegionHeaderButton VYBRegionHeaderButton];
-    NSString *location = self.sections.allKeys[section];
-    NSArray *array = [location componentsSeparatedByString:@","];
-    NSString *cityName;
-    NSString *countryCode;
-    if (array.count == 3) {
-        countryCode = array[2];
-        cityName = array[1];
-    } else {
-        cityName = location;
-        if ([location isEqualToString:@"Seoul"]) {
-            countryCode = @"KR";
-        }
-        if ([location isEqualToString:@"Montréal"]) {
-            countryCode = @"CA";
-        }
-        if ([location isEqualToString:@"Cairo"]) {
-            countryCode = @"EG";
-        }
-        if ([location isEqualToString:@"Istanbul"]) {
-            countryCode = @"TR";
-        }
-    }
-    UIImage *flagImg = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",countryCode]];
-    if (flagImg) {
-        headerButton.flagImageView.image = flagImg;
-    }
-    
-    NSArray *arr = self.sections[location];
-    headerButton.followingCountLabel.text = [NSString stringWithFormat:@"%d Following", (int)arr.count];
-    headerButton.cityNameLabel.text = cityName;
-    
-    headerButton.sectionNumber = section;
-    [headerButton addTarget:self action:@selector(headerButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    
-    //[headerButton.unwatchedVybeButton.imageView setImage:[UIImage imageNamed:@"button_circle_blue.png"]];
-    [headerButton.unwatchedVybeButton setContentMode:UIViewContentModeScaleAspectFit];
-    return headerButton;
-}
-
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *UserTableViewCellIdentifier = @"UserTableViewCellIdentifier";
-    VYBUserTableViewCell *cell = (VYBUserTableViewCell *)[tableView dequeueReusableCellWithIdentifier:UserTableViewCellIdentifier];
-    if (!cell) {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBUserTableViewCell" owner:nil options:nil];
-        cell = [nib lastObject];
-        //NOTE: reuseIdentifier is set in xib file
-    }
-    NSString *locationName = self.sections.allKeys[indexPath.section];
-    NSArray *users = self.sections[locationName];
-    PFObject *aUser = users[indexPath.row];
-    NSString *lowerUsername = [(NSString *)aUser[kVYBUserUsernameKey] lowercaseString];
-    
-    // TODO: user PFImageView of PFTableViewCell
-    [cell.nameLabel setText:lowerUsername];
-    
-    PFFile *profile = aUser[kVYBUserProfilePicMediumKey];
-    [profile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        if (!error) {
-            UIImage *profileImg = [UIImage imageWithData:data];
-            cell.profileImageView.image = profileImg;
-        }
-    }];
-    
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *locationKey = self.sections.allKeys[indexPath.section];
-    NSArray *users = self.sections[locationKey];
-    PFUser *aUser = users[indexPath.row];
-    
-    VYBProfileViewController *profileVC = [[VYBProfileViewController alloc] init];
-    [profileVC setUser:aUser];
-    
-    [self.navigationController pushViewController:profileVC animated:NO];
-}
-
-
 #pragma mark - PFQueryTableViewController
 
 - (PFQuery *)queryForTable {
-    PFQuery *query = [PFUser query];
+    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
     // 24 TTL checking
     NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
-    [query whereKey:kVYBUserLastVybedTimeKey greaterThanOrEqualTo:someTimeAgo];
+    [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
     // Don't include urself
-    [query whereKey:kVYBUserUsernameKey notEqualTo:[PFUser currentUser][kVYBUserUsernameKey]];
-    [query whereKey:kVYBUserLastVybedLocationKey notEqualTo:@""];
-    [query orderByAscending:kVYBUserLastVybedLocationKey];
+    [query whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
+    [query whereKeyExists:kVYBVybeLocationStringKey];
+    [query whereKey:kVYBVybeLocationStringKey notEqualTo:@""];
     
     return query;
 }
@@ -171,38 +57,96 @@
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
     
-    [self parseObjectsToSections];
+    [self getUserCountByLocation];
+    [self parseVybesToSections];
 }
 
-- (void)parseObjectsToSections {
-    NSMutableDictionary *sectionDict = [[NSMutableDictionary alloc] init];
+- (void)getUserCountByLocation {
+    PFQuery *query = [PFUser query];
+    // 24 TTL checking
+    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
+    [query whereKey:kVYBUserLastVybedTimeKey greaterThanOrEqualTo:someTimeAgo];
+    [query whereKey:kVYBUserUsernameKey notEqualTo:[PFUser currentUser][kVYBUserUsernameKey]];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            NSMutableDictionary *newDict = [[NSMutableDictionary alloc] init];
+            for (PFObject *aUser in objects) {
+                NSArray *token = [aUser[kVYBUserLastVybedLocationKey] componentsSeparatedByString:@","];
+                if (token.count != 3)
+                    continue;
+                
+                //NOTE: we discard the first location field (neighborhood)
+                NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
+                if ([newDict objectForKey:keyString]) {
+                    NSNumber *newCount = newDict[keyString] + 1;
+                    [newDict set forKey:keyString];
+                } else {
+                    
+                }
+            }
+        }
+    }];
+}
+
+- (void)parseVybesToSections {
+    NSMutableDictionary *aDict = [[NSMutableDictionary alloc] init];
     for (PFObject *obj in self.objects) {
-        NSString *newLocation = obj[kVYBUserLastVybedLocationKey];
-        if ([sectionDict objectForKey:newLocation]) {
-            NSMutableArray *arr = (NSMutableArray *)sectionDict[newLocation];
+        NSString *locString = obj[kVYBVybeLocationStringKey];
+        NSArray *token = [locString componentsSeparatedByString:@","];
+        if (token.count != 3)
+            continue;
+        
+        //NOTE: we discard the first location field (neighborhood)
+        NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
+        if ([aDict objectForKey:keyString]) {
+            NSMutableArray *arr = (NSMutableArray *)aDict[keyString];
             [arr addObject:obj];
         } else {
             NSMutableArray *newArr = [[NSMutableArray alloc] init];
             [newArr addObject:obj];
-            [sectionDict setObject:newArr forKey:newLocation];
+            [aDict setObject:newArr forKey:keyString];
         }
     }
-    self.sections = [NSDictionary dictionaryWithDictionary:sectionDict];
+    self.vybeByLocation = [NSDictionary dictionaryWithDictionary:aDict];
     [self.tableView reloadData];
 }
 
 
+#pragma mark - UITableViewController
 
-- (void)headerButtonPressed:(VYBRegionHeaderButton *)sender {
-    if (selectedSection == sender.sectionNumber) {
-        selectedSection = -1;
-    } else {
-        selectedSection = sender.sectionNumber;
-    }
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (!self.vybeByLocation)
+        return 0;
     
-    [self.tableView reloadData];
+    return self.vybeByLocation.count;
 }
 
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *LocationTableCellIdentifier = @"LocationTableCellIdentifier";
+
+    VYBLocationTableViewCell *cell = (VYBLocationTableViewCell *)[tableView dequeueReusableCellWithIdentifier:LocationTableCellIdentifier];
+
+    NSString *locationStr = self.vybeByLocation.allKeys[indexPath.row];
+
+    [cell setLocationString:locationStr];
+    [cell setVybeCount:[self.vybeByLocation[locationStr] count]];
+    
+    //[cell.unwatchedVybeButton setContentMode:UIViewContentModeScaleAspectFit];
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *locationKey = self.vybeByLocation.allKeys[indexPath.section];
+    NSArray *users = self.vybeByLocation[locationKey];
+    PFUser *aUser = users[indexPath.row];
+    
+    VYBProfileViewController *profileVC = [[VYBProfileViewController alloc] init];
+    [profileVC setUser:aUser];
+    
+    [self.navigationController pushViewController:profileVC animated:NO];
+}
 
 /*
 #pragma mark - Table view delegate

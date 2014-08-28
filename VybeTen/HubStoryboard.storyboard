@@ -93,7 +93,6 @@
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" id="PVB-b5-GFd"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
@@ -115,7 +114,7 @@
                         <viewControllerLayoutGuide type="bottom" id="95X-dP-qO4"/>
                     </layoutGuides>
                     <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="yaF-FU-2gb">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -135,14 +134,112 @@
         <scene sceneID="bOm-vs-sP1">
             <objects>
                 <viewController id="7wG-oW-1Pl" customClass="VYBLocationTableViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Egf-fN-Ky3"/>
-                        <viewControllerLayoutGuide type="bottom" id="Bjk-15-ZaQ"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="aSn-YB-GoE" customClass="UITableView">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="Cyj-nF-bX9">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    </view>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LocationTableCellIdentifier" rowHeight="60" id="eAk-Yj-OBR" customClass="VYBLocationTableViewCell">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eAk-Yj-OBR" id="fcr-rY-KEx">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HdK-ko-jHn" userLabel="flagImage">
+                                            <rect key="frame" x="8" y="5" width="50" height="50"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="50" id="2HJ-Sw-kqw"/>
+                                                <constraint firstAttribute="height" constant="50" id="aVu-mL-fLW"/>
+                                            </constraints>
+                                            <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                                                <rect key="frame" x="8" y="5" width="50" height="50"/>
+                                            </variation>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sde-yv-DEa" userLabel="followingCountLabel">
+                                            <rect key="frame" x="66" y="34" width="96" height="20"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="highlightedColor"/>
+                                            <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                                                <rect key="frame" x="71" y="35" width="96" height="20"/>
+                                            </variation>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OMU-Xa-mlO" userLabel="cityNameLabel">
+                                            <rect key="frame" x="66" y="5" width="166" height="30"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="highlightedColor"/>
+                                            <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                                                <rect key="frame" x="71" y="5" width="166" height="30"/>
+                                            </variation>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sk3-yq-u82" userLabel="unwatchedVybeButton">
+                                            <rect key="frame" x="272" y="6" width="47" height="47"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="40" id="eMy-bL-d3v"/>
+                                                <constraint firstAttribute="height" constant="40" id="vUG-ae-Wuq"/>
+                                            </constraints>
+                                            <state key="normal" image="button_circle_blue">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                                                <rect key="frame" x="345" y="6" width="47" height="47"/>
+                                            </variation>
+                                        </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qth-PW-6ZF" userLabel="vybeCountLabel">
+                                            <rect key="frame" x="177" y="34" width="87" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                            <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                                                <rect key="frame" x="215" y="35" width="87" height="21"/>
+                                            </variation>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="OMU-Xa-mlO" firstAttribute="leading" secondItem="Sde-yv-DEa" secondAttribute="leading" id="Zoq-4n-Il6"/>
+                                        <constraint firstItem="OMU-Xa-mlO" firstAttribute="top" secondItem="HdK-ko-jHn" secondAttribute="top" id="aVS-kO-YoZ"/>
+                                        <constraint firstItem="qth-PW-6ZF" firstAttribute="leading" secondItem="Sde-yv-DEa" secondAttribute="trailing" constant="10" id="iP7-pN-3h3"/>
+                                        <constraint firstItem="OMU-Xa-mlO" firstAttribute="leading" secondItem="HdK-ko-jHn" secondAttribute="trailing" constant="10" id="rIM-f5-9vF"/>
+                                    </constraints>
+                                    <variation key="default">
+                                        <mask key="subviews">
+                                            <exclude reference="HdK-ko-jHn"/>
+                                            <exclude reference="Sde-yv-DEa"/>
+                                            <exclude reference="OMU-Xa-mlO"/>
+                                            <exclude reference="Sk3-yq-u82"/>
+                                            <exclude reference="qth-PW-6ZF"/>
+                                        </mask>
+                                        <mask key="constraints">
+                                            <exclude reference="Zoq-4n-Il6"/>
+                                            <exclude reference="aVS-kO-YoZ"/>
+                                            <exclude reference="rIM-f5-9vF"/>
+                                            <exclude reference="iP7-pN-3h3"/>
+                                        </mask>
+                                    </variation>
+                                    <variation key="widthClass=compact">
+                                        <mask key="subviews">
+                                            <include reference="HdK-ko-jHn"/>
+                                            <include reference="Sde-yv-DEa"/>
+                                            <include reference="OMU-Xa-mlO"/>
+                                            <include reference="Sk3-yq-u82"/>
+                                            <include reference="qth-PW-6ZF"/>
+                                        </mask>
+                                        <mask key="constraints">
+                                            <include reference="Zoq-4n-Il6"/>
+                                            <include reference="aVS-kO-YoZ"/>
+                                            <include reference="rIM-f5-9vF"/>
+                                            <include reference="iP7-pN-3h3"/>
+                                        </mask>
+                                    </variation>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="cityNameLabel" destination="OMU-Xa-mlO" id="sXx-g7-Hp6"/>
+                                    <outlet property="flagImageView" destination="HdK-ko-jHn" id="Cor-A6-Mcu"/>
+                                    <outlet property="followingCountLabel" destination="Sde-yv-DEa" id="csq-Ag-mse"/>
+                                    <outlet property="unwatchedVybeButton" destination="Sk3-yq-u82" id="u1j-GG-1nX"/>
+                                    <outlet property="vybeCountLabel" destination="qth-PW-6ZF" id="sk2-Ft-4bT"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                    </tableView>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fAl-lW-j7j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -167,6 +264,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="button_circle_blue" width="47" height="47"/>
         <image name="hub_control_tab_button" width="156" height="48"/>
         <image name="hub_control_tab_button_2" width="156" height="48"/>
         <image name="hub_control_tab_container" width="315" height="52"/>
