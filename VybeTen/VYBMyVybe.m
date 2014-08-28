@@ -47,6 +47,7 @@
         [self setUniqueFileName:[aDecoder decodeObjectForKey:@"uniqueFileName"]];
         [self setGeoTag:[aDecoder decodeObjectForKey:kVYBVybeGeotag]];
         [self setLocationString:[aDecoder decodeObjectForKey:kVYBVybeLocationStringKey]];
+        //[self setCountryCode:[aDecoder decodeObjectForKey:kVYBVybeCountryCodeKey]];
         [self setTimeStamp:[aDecoder decodeObjectForKey:kVYBVybeTimestampKey]];
         [self setIsPublic:[aDecoder decodeBoolForKey:kVYBVybeTypePublicKey]];
 //        [self setTribeObjectID:[aDecoder decodeObjectForKey:kVYBVybeTribeKey]];
@@ -59,9 +60,9 @@
     [aCoder encodeObject:uniqueFileName forKey:@"uniqueFileName"];
     [aCoder encodeObject:geoTag forKey:kVYBVybeGeotag];
     [aCoder encodeObject:locationString forKey:kVYBVybeLocationStringKey];
+    //[aCoder encodeObject:countryCode forKey:kVYBVybeCountryCodeKey];
     [aCoder encodeObject:timeStamp forKey:kVYBVybeTimestampKey];
     [aCoder encodeBool:isPublic forKey:kVYBVybeTypePublicKey];
-//    [aCoder encodeObject:tribeObjectID forKey:kVYBVybeTribeKey];
 }
 
 - (void)setGeoTagFrom:(PFGeoPoint *)aGeoPoint {

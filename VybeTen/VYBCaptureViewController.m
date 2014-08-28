@@ -138,7 +138,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self setCameraView:cameraView];
     [(AVCaptureVideoPreviewLayer *)[cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [cameraView setSession:session];
-    [self.view addSubview:cameraView];
+    [self.view insertSubview:cameraView atIndex:0];
     
     [self checkDeviceAuthorizationStatus];
     
@@ -215,55 +215,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     // Adding CAPTURE button
     self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
     
-    // Adding PRIVATE button
-    CGRect buttonFrame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
-    self.privateViewButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view.png"] forState:UIControlStateNormal];
-    //[self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view_new.png"] forState:UIControlStateSelected];
-    [self.privateViewButton addTarget:self action:@selector(privateViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.privateViewButton setContentMode:UIViewContentModeLeft];
-    [self.view addSubview:self.privateViewButton];
-    
-    // Adding PRIVATE count label
-    buttonFrame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
-    self.privateViewCountLabel = [[VYBLabel alloc] initWithFrame:buttonFrame];
-    [self.privateViewCountLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.privateViewCountLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:20.0]];
-    [self.privateViewCountLabel setTextColor:[UIColor whiteColor]];
-    self.privateViewCountLabel.userInteractionEnabled = NO;
-    //[self.view addSubview:self.privateViewCountLabel];
-
-    // Adding HUB button
-    buttonFrame = CGRectMake(0, self.view.bounds.size.height - 70, 70, 70);
-    self.hubButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    [self.hubButton setImage:[UIImage imageNamed:@"button_hub.png"] forState:UIControlStateNormal];
-    [self.hubButton addTarget:self action:@selector(hubButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.hubButton];
-    
-    // Adding FLIP button
-    buttonFrame = CGRectMake(0, 0, 70, 70);
-    flipButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    [flipButton setImage:[UIImage imageNamed:@"button_camera_front.png"] forState:UIControlStateNormal];
-    [flipButton setImage:[UIImage imageNamed:@"button_camera_back.png"] forState:UIControlStateSelected];
-    [flipButton setContentMode:UIViewContentModeCenter];
-    [flipButton addTarget:self action:@selector(flipCamera:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:flipButton];
-    
-    // Adding FLASH button
-    buttonFrame = CGRectMake(self.view.bounds.size.width - 70, 0, 70, 70);
-    flashButton = [[UIButton alloc] initWithFrame:buttonFrame];
-    [flashButton setImage:[UIImage imageNamed:@"button_flash_on.png"] forState:UIControlStateNormal];
-    [flashButton setImage:[UIImage imageNamed:@"button_flash_off.png"] forState:UIControlStateSelected];
-    [flashButton setContentMode:UIViewContentModeLeft];
-    [flashButton addTarget:self action:@selector(switchFlash:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:flashButton];
-    
+      
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
-        [self.privateViewButton setSelected:YES];
-        [self.privateViewCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
+        [self.activityCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
     } else {
-        [self.privateViewButton setSelected:NO];
-        [self.privateViewCountLabel setText:@""];
+        [self.activityCountLabel setText:@""];
     }
     
     if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
@@ -279,8 +235,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
                     if (!error) {
                         if (number > 0) {
-                            [self.privateViewButton setSelected:YES];
-                            [self.privateViewCountLabel setText:[NSString stringWithFormat:@"%d", number]];
+                            [self.activityCountLabel setText:[NSString stringWithFormat:@"%d", number]];
                             [[VYBUserStore sharedStore] setNewPrivateVybeCount:number];
                         }
                     }
@@ -312,11 +267,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }
     
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
-        self.privateViewButton.selected = YES;
-        self.privateViewCountLabel.text = [NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]];
+        self.activityCountLabel.text = [NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]];
     } else {
-        self.privateViewButton.selected = NO;
-        self.privateViewCountLabel.text = @"";
+        self.activityCountLabel.text = @"";
     }
     
     flashButton.selected = flashOn;
@@ -396,7 +349,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 
-- (void)switchFlash:(id)sender {
+- (IBAction)flashButtonPressed:(id)sender {
     flashOn = !flashOn;
     flashButton.selected = flashOn;
 }
@@ -419,9 +372,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	}
 }
 
-- (void)flipCamera:(id)sender {
+- (IBAction)flipButtonPressed:(id)sender {
     [[self flipButton] setEnabled:NO];
-    [[self privateViewButton] setEnabled:NO];
+    [[self activityButton] setEnabled:NO];
     [[self hubButton] setEnabled:NO];
 
     dispatch_async([self sessionQueue], ^{
@@ -465,7 +418,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             isFrontCamera = [videoDevice position] == AVCaptureDevicePositionFront;
             [[self flipButton] setSelected:isFrontCamera];
             [self flashButton].hidden = isFrontCamera;
-            [[self privateViewButton] setEnabled:YES];
+            [[self activityButton] setEnabled:YES];
             [[self hubButton] setEnabled:YES];
             [[self flipButton] setEnabled:YES];
         });
@@ -552,7 +505,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         return;
     }
     
-    /*
     dispatch_async([self sessionQueue], ^{
         if ([[UIDevice currentDevice] isMultitaskingSupported])
         {
@@ -569,7 +521,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         }
         
     });
-    */
+
 }
 
 - (BOOL)setUpAssetWriter {
@@ -602,8 +554,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     _videoWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
     NSParameterAssert(_videoWriterInput);
     _videoWriterInput.expectsMediaDataInRealTime = YES;
-    //NOTE: When writing a file by AVAssetWriter, we need to change its input's transform 
-    _videoWriterInput.transform = [VYBUtility getTransformFromOrientation:lastOrientation];
     
     
     // Add the audio input
@@ -640,6 +590,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [_videoWriter addInput:_videoWriterInput];
     [_videoWriter addInput:_audioWriterInput];
     
+    //NOTE: When writing a file by AVAssetWriter, we need to change its input's transform to set video orientation (not by setting videoOrientation of AVCaptureConnection
+    _videoWriterInput.transform = [VYBUtility getTransformFromOrientation:lastOrientation];
     
     return YES;
 }
@@ -747,7 +699,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)appendVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer {
     if (isRecording) {
-        if (_videoWriter.status > AVAssetWriterStatusWriting) {
+        if (_videoWriter.status > AVAssetWriterStatusWriting || _videoWriter.status == 0) {
             if( _videoWriter.status == AVAssetWriterStatusFailed )
                 NSLog(@"Error: %@", _videoWriter.error);
             return;
@@ -761,7 +713,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)appendAudioSampleBuffer:(CMSampleBufferRef)sampleBuffer {
     if (isRecording) {
-        if (_videoWriter.status > AVAssetWriterStatusWriting) {
+        if (_videoWriter.status > AVAssetWriterStatusWriting || _videoWriter.status == 0) {
             if( _videoWriter.status == AVAssetWriterStatusFailed )
                 NSLog(@"Error: %@", _videoWriter.error);
             return;
@@ -798,9 +750,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [reverseGeocoder reverseGeocodeLocation:currLocation completionHandler:^(NSArray *placemarks, NSError *error)
      {
          CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
+         NSString *neighborhood = myPlacemark.subLocality;
          NSString *city = myPlacemark.locality;
-         [self.currVybe setLocationString:city];
-         [[PFUser currentUser] setObject:city forKey:kVYBUserLastVybedLocationKey];
+         NSString *isoCountryCode = myPlacemark.ISOcountryCode;
+         NSString *locationStr = [NSString stringWithFormat:@"%@,%@,%@",neighborhood, city, isoCountryCode];
+         [self.currVybe setLocationString:locationStr];
+         [[PFUser currentUser] setObject:locationStr forKey:kVYBUserLastVybedLocationKey];
      }];
     
     [locationManager stopUpdatingLocation];
@@ -857,8 +812,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [self.flipButton setTransform:transform];
         [self.flashButton setTransform:transform];
         [self.hubButton setTransform:transform];
-        [self.privateViewButton setTransform:transform];
-        [self.privateViewCountLabel setTransform:transform];
+        [self.activityButton setTransform:transform];
+        [self.activityCountLabel setTransform:transform];
     } completion:nil];
 
 }
@@ -873,8 +828,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)remoteNotificationReceived:(id)sender {
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
-        [self.privateViewButton setSelected:YES];
-        [self.privateViewCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
+        [self.activityButton setSelected:YES];
+        [self.activityCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
     }
 }
 
@@ -892,8 +847,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
                     if (!error) {
                         if (number > 0) {
-                            [self.privateViewButton setSelected:YES];
-                            [self.privateViewCountLabel setText:[NSString stringWithFormat:@"%d", number]];
+                            [self.activityButton setSelected:YES];
+                            [self.activityCountLabel setText:[NSString stringWithFormat:@"%d", number]];
                             [[VYBUserStore sharedStore] setNewPrivateVybeCount:number];
                         }
                     }
@@ -926,19 +881,19 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)syncUIWithRecordingStatus:(BOOL)status {
-    self.privateViewButton.hidden = status;
-    self.privateViewCountLabel.hidden = status;
+    self.activityButton.hidden = status;
+    self.activityCountLabel.hidden = status;
     self.hubButton.hidden = status;
     flipButton.hidden = status;
     flashButton.hidden = status || isFrontCamera;
 }
 
-- (void)privateViewButtonPressed:(id)sender {
+- (IBAction)activityButtonPressed:(id)sender {
     VYBAppDelegate *appDel = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
     [appDel moveToPage:VYBActivityPageIndex];
 }
 
-- (void)hubButtonPressed:(id)sender {
+- (IBAction)hubButtonPressed:(id)sender {
     VYBAppDelegate *appDel = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
     [appDel moveToPage:VYBHubPageIndex];
 }

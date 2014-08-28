@@ -8,7 +8,9 @@
 
 #import "VYBRegionHeaderButton.h"
 
-@implementation VYBRegionHeaderButton
+@implementation VYBRegionHeaderButton {
+    
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -21,7 +23,6 @@
 
 + (id)VYBRegionHeaderButton {
     VYBRegionHeaderButton *theView = [[[NSBundle mainBundle] loadNibNamed:@"VYBRegionHeaderButton" owner:nil options:nil] lastObject];
-    
     if ( [theView isKindOfClass:[VYBRegionHeaderButton class]] ) {
         return theView;
     }
@@ -31,6 +32,13 @@
 
 - (void)setSelected:(BOOL)selected {
     [super setSelected:selected];
+}
+
+- (IBAction)unwatchedVybeButtonPressed:(id)sender {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(watchNewVybesFrom:)]) {
+        [self.delegate performSelector:@selector(watchNewVybesFrom:) withObject:nil];
+    
+    }
 }
 
 /*

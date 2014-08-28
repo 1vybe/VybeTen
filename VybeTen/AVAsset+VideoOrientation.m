@@ -16,6 +16,7 @@ static inline CGFloat RadiansToDegrees(CGFloat radians) {
 @implementation AVAsset (VideoOrientation)
 @dynamic videoOrientation;
 
+/*
 - (VYBVideoOrientation)videoOrientation
 {
     NSArray *videoTracks = [self tracksWithMediaType:AVMediaTypeVideo];
@@ -46,6 +47,35 @@ static inline CGFloat RadiansToDegrees(CGFloat radians) {
             break;
 	}
 	
+	return orientation;
+}
+*/
+
+- (AVCaptureVideoOrientation)videoOrientation
+{
+    NSArray *videoTracks = [self tracksWithMediaType:AVMediaTypeVideo];
+    if ([videoTracks count] == 0) {
+        return -1;
+    }
+    
+    AVCaptureVideoOrientation orientation = 0;
+    
+    AVAssetTrack* videoTrack = [videoTracks objectAtIndex:0];
+    CGAffineTransform firstTransform = [videoTrack preferredTransform];
+    
+    if (firstTransform.a == 0 && firstTransform.b == 1.0 && firstTransform.c == -1.0 && firstTransform.d == 0) {
+        orientation = AVCaptureVideoOrientationLandscapeRight;
+    }
+    if (firstTransform.a == 0 && firstTransform.b == -1.0 && firstTransform.c == 1.0 && firstTransform.d == 0) {
+        orientation =  AVCaptureVideoOrientationLandscapeLeft;
+    }
+    if (firstTransform.a == 1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == 1.0) {
+        orientation =  AVCaptureVideoOrientationPortrait;
+    }
+    if (firstTransform.a == -1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == -1.0) {
+        orientation = AVCaptureVideoOrientationPortraitUpsideDown;
+    }
+ 	
 	return orientation;
 }
 

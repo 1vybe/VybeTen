@@ -9,9 +9,15 @@
 #import <UIKit/UIKit.h>
 
 @interface VYBRegionHeaderButton : UIButton
-@property (nonatomic, strong) IBOutlet UILabel *regionNameLabel;
-@property (nonatomic, strong) IBOutlet UILabel *regionUserCountLabel;
+@property (nonatomic, weak) id delegate;
+@property (nonatomic, strong) IBOutlet UILabel *cityNameLabel;
+@property (nonatomic, strong) IBOutlet UILabel *followingCountLabel;
+@property (nonatomic, strong) IBOutlet UIButton *unwatchedVybeButton;
+@property (nonatomic, strong) IBOutlet UILabel *vybeCountLabel;
+@property (nonatomic, strong) IBOutlet UIImageView *flagImageView;
+
 @property (nonatomic) NSInteger sectionNumber;
 
 + (id)VYBRegionHeaderButton;
+//- (IBAction)unwatchedVybeButtonPressed:(id)sender;
 @end

@@ -99,17 +99,17 @@
         [currentInstallation saveEventually];
     }
     */
-    
+        
     // Access Control
     PFACL *defaultACL = [PFACL ACL];
     // Enable public read access by default, with any newly created PFObjects belonging to the current user
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    self.hubVC = [[VYBHubViewController alloc] init];
+    self.hubVC = [[VYBHubViewController alloc] initWithNibName:@"VYBHubViewController" bundle:nil];
     self.hubNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBHubPageIndex withRootViewController:self.hubVC];
     
-    self.captureVC = [[VYBCaptureViewController alloc] init];
+    self.captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
     self.captureNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBCapturePageIndex withRootViewController:self.captureVC];
     self.captureNavigationVC.navigationBarHidden = YES;
     

@@ -8,6 +8,8 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <MBProgressHUD/MBProgressHUD.h>
+#import "AVAsset+VideoOrientation.h"
+#import "UIImage+FixOrientation.h"
 #import "VYBUtility.h"
 #import "VYBCache.h"
 #import "VYBConstants.h"
@@ -15,30 +17,12 @@
 
 @implementation VYBUtility
 
-+ (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath {
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:[filePath stringByAppendingPathExtension:@"mov"]] ;
-    // Generating and saving a thumbnail for the captured vybe
-    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
-    AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-    // To transform the snapshot to be in the orientation the video was taken with
-    [generate setAppliesPreferredTrackTransform:YES];
-    NSError *err = NULL;
-    CMTime time = CMTimeMake(1, 60);
-    CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
-    if (imgRef) {
-        NSLog(@"good");
-    }
-    UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
-    NSData *thumbData = UIImageJPEGRepresentation(thumb, 0.3);
-    NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[filePath stringByAppendingPathExtension:@"jpeg"]];
-    [thumbData writeToURL:thumbURL atomically:YES];
-}
-
 + (void)saveThumbnailImageForVybe:(VYBMyVybe *)mVybe {
     NSURL *url = [[NSURL alloc] initFileURLWithPath:[mVybe videoFilePath]] ;
     // Generating and saving a thumbnail for the captured vybe
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
     AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    NSLog(@"saving thumbnmail image in orientation %d", (int)[asset videoOrientation]);
     // To transform the snapshot to be in the orientation the video was taken with
     [generate setAppliesPreferredTrackTransform:YES];
     NSError *err = NULL;
@@ -47,7 +31,8 @@
     if (imgRef) {
         NSLog(@"good");
     }
-    UIImage *thumb = [[UIImage alloc] initWithCGImage:imgRef];
+    UIImage *tempImg = [[UIImage alloc] initWithCGImage:imgRef];
+    UIImage *thumb = [tempImg fixOrientation:[asset videoOrientation]];
     NSData *thumbData = UIImageJPEGRepresentation(thumb, 0.3);
     NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[mVybe thumbnailFilePath]];
     [thumbData writeToURL:thumbURL atomically:YES];
@@ -172,14 +157,14 @@
     [hud hide:YES afterDelay:1.0];
 }
 
-+ (CGAffineTransform)getTransformFromOrientation:(AVCaptureVideoOrientation)orientation {
++ (CGAffineTransform)getTransformFromOrientation:(NSInteger)orientation {
     CGAffineTransform transform;
     switch (orientation) {
         case AVCaptureVideoOrientationPortrait:
             transform = CGAffineTransformMakeRotation(0);
             break;
         case AVCaptureVideoOrientationPortraitUpsideDown:
-            transform = CGAffineTransformMakeRotation(-M_PI);
+            transform = CGAffineTransformMakeRotation(M_PI);
             break;
         case AVCaptureVideoOrientationLandscapeLeft:
             transform = CGAffineTransformMakeRotation(-M_PI_2);

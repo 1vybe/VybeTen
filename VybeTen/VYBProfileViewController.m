@@ -57,6 +57,7 @@
     [query whereKey:kVYBVybeUserKey equalTo:self.user];
     NSDate *someTimeAgo = [NSDate dateWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
     [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
+    [query orderByDescending:kVYBVybeTimestampKey];
     
     return query;
 }
@@ -102,11 +103,11 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [playerVC setVybePlaylist:self.objects];
-    [playerVC setCurrVybeIndex:indexPath.row];
+    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+    [playerVC setVybePlaylist:[[self.objects reverseObjectEnumerator] allObjects]];
+    [playerVC setCurrVybeIndex:self.objects.count - indexPath.row - 1];
     [playerVC setCurrUser:self.user];
-    [self.navigationController pushViewController:playerVC animated:NO];
+    [self presentViewController:playerVC animated:NO completion:nil];
 }
 
 
@@ -181,11 +182,11 @@
 
 
 - (void)watchAllButtonPressed:(id)sender {
-    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-    [playerVC setVybePlaylist:self.objects];
+    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+    [playerVC setVybePlaylist:[self.objects.reverseObjectEnumerator allObjects]];
     [playerVC setCurrVybeIndex:0];
     [playerVC setCurrUser:self.user];
-    [self.navigationController pushViewController:playerVC animated:NO];
+    [self presentViewController:playerVC animated:NO completion:nil];
 }
 
 #pragma mark - DeviceOrientation

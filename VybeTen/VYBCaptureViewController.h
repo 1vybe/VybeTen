@@ -17,11 +17,16 @@
 
 @interface VYBCaptureViewController : GAITrackedViewController <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, CLLocationManagerDelegate>
 
-@property (nonatomic) UIButton *flipButton;
-@property (nonatomic) UIButton *flashButton;
-@property (nonatomic) UIButton *hubButton;
-@property (nonatomic) UIButton *privateViewButton;
-@property (nonatomic) VYBLabel *privateViewCountLabel;
+@property (nonatomic, strong) IBOutlet UIButton *flipButton;
+@property (nonatomic, strong) IBOutlet UIButton *flashButton;
+@property (nonatomic, strong) IBOutlet UIButton *hubButton;
+@property (nonatomic, strong) IBOutlet UIButton *activityButton;
+@property (nonatomic, strong) IBOutlet UILabel *activityCountLabel;
+
+- (IBAction)hubButtonPressed:(id)sender;
+- (IBAction)activityButtonPressed:(id)sender;
+- (IBAction)flipButtonPressed:(id)sender;
+- (IBAction)flashButtonPressed:(id)sender;
 //@property (nonatomic) UIButton *mapViewButton;
 @property (nonatomic, strong) VYBCaptureButton *captureButton;
 

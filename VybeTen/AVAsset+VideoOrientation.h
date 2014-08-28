@@ -9,10 +9,10 @@
 #import <AVFoundation/AVFoundation.h>
 
 typedef enum {
-    VYBVideoOrientationUp,               //Device starts recording in Portrait
-	VYBVideoOrientationDown,             //Device starts recording in Portrait upside down
-	VYBVideoOrientationLeft,             //Device Landscape Left  (home button on the left side)
-	VYBVideoOrientationRight,            //Device Landscape Right (home button on the Right side)
+    VYBVideoOrientationUp = 1,             //Device starts recording in Portrait
+	VYBVideoOrientationDown = 2,             //Device starts recording in Portrait upside down
+    VYBVideoOrientationRight = 3,            //Device Landscape Right (home button on the Right side)
+    VYBVideoOrientationLeft = 4,             //Device Landscape Left  (home button on the left side)
     VYBVideoOrientationNotFound = 99     //An Error occurred or AVAsset doesn't contains video track
 } VYBVideoOrientation;
 
@@ -24,7 +24,6 @@ typedef enum {
  
  @return A LBVideoOrientation that is the orientation of the video
  */
-@property (nonatomic, readonly) VYBVideoOrientation videoOrientation;
-- (void)videoOrientationNew;
+@property (nonatomic, readonly) AVCaptureVideoOrientation videoOrientation;
 
 @end

@@ -8,7 +8,7 @@
 #define IS_IPHONE_5     ( [[UIScreen mainScreen] bounds].size.height == 568 )
 
 #define VYBE_LENGTH_SEC 15
-#define VYBE_TTL_HOURS  24
+#define VYBE_TTL_HOURS  200
 #define UPFRESH         1
 #define UPLOADING       2
 #define UPLOADED        3
@@ -32,7 +32,8 @@
 #define PARSE_CLIENT_KEY            @"WLqeqlf4qVVk5jF6yHSWGxw3UzUQwUtmAk9vCPfB"
 */
 
-/*
+#define COLOR_MAIN              [UIColor color
+
 #define FONT_SIZE_DEFAULT       18
 #define FONT_SIZE_BIG           20
 #define FONT_SIZE_SMALL         16
@@ -40,7 +41,7 @@
 #define FONT_MENU               DEFAULT_FONT(FONT_SIZE_BIG)
 #define FONT_TITLE              DEFAULT_FONT(FONT_SIZE_DEFAULT)
 #define FONT_TITLE_SMALL        DEFAULT_FONT(FONT_SIZE_SMALL)
-*/
+
 
 typedef enum {
     VYBHubPageIndex = 0,
@@ -85,6 +86,7 @@ extern NSString *const kVYBVybeTimestampKey;
 extern NSString *const kVYBVybeGeotag;
 extern NSString *const kVYBVybeTypePublicKey;
 extern NSString *const kVYBVybeLocationStringKey;
+extern NSString *const kVYBVybeCountryCodeKey;
 
 /*
 extern NSString *const kVYBVybeTribeKey;

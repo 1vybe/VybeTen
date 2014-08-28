@@ -32,7 +32,7 @@
     self.view = darkBackground;
     
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
-    
+
     [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.width, darkBackground.bounds.size.height)];
     
     self.playerView = playerView;
@@ -51,20 +51,16 @@
     
     // Hide status bar
     [self setNeedsStatusBarAppearanceUpdate];
-    
-    // Device orientation detection
-    UIDevice *iphone = [UIDevice currentDevice];
-    [iphone beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceRotated:) name:UIDeviceOrientationDidChangeNotification object:iphone];
    
     // Adding CONFIRM button
-    CGRect frame = CGRectMake(0, self.view.bounds.size.height - 70, 70, 70);
+    CGRect frame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
+
     self.acceptButton = [[UIButton alloc] initWithFrame:frame];
     [self.acceptButton setImage:[UIImage imageNamed:@"button_replay_accept.png"] forState:UIControlStateNormal];
     [self.acceptButton addTarget:self action:@selector(acceptButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.acceptButton];
     
-    frame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
+    frame = CGRectMake(0, self.view.bounds.size.height - 70, 70, 70);
     self.rejectButton = [[UIButton alloc] initWithFrame:frame];
     [self.rejectButton setImage:[UIImage imageNamed:@"button_replay_reject.png"] forState:UIControlStateNormal];
     [self.rejectButton addTarget:self action:@selector(rejectButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -88,9 +84,10 @@
     [self.modeControl setTintColor:(self.isPublic) ? [UIColor colorWithRed:0.0 green:191.0/255.0 blue:1.0 alpha:1.0] : [UIColor orangeColor]];
     
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
-    //NSLog(@"[Replay]videoURL is %@", videoURL);
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
-    NSLog(@"[REPLAY] video orientation is %d", [asset videoOrientation]);
+
+    NSLog(@"[REPLAY] orientation is %d", (int)[asset videoOrientation]);
+    [self rotateUIElementsForOrientation:[asset videoOrientation]];
     
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
@@ -102,6 +99,30 @@
     [super viewWillDisappear:animated];
     [self.player pause];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+}
+
+- (void)rotateUIElementsForOrientation:(VYBVideoOrientation)orientation {
+    CGAffineTransform transform;
+    switch (orientation) {
+        case VYBVideoOrientationUp:
+            transform = CGAffineTransformMakeRotation(0);
+            break;
+        case VYBVideoOrientationDown:
+            transform = CGAffineTransformMakeRotation(M_PI);
+            break;
+        case VYBVideoOrientationLeft:
+            transform = CGAffineTransformMakeRotation(M_PI_2);
+            break;
+        case VYBVideoOrientationRight:
+            transform = CGAffineTransformMakeRotation(-M_PI_2);
+            break;
+        case VYBVideoOrientationNotFound:
+            transform = CGAffineTransformMakeRotation(0);
+
+    }
+    
+    self.acceptButton.transform = transform;
+    self.rejectButton.transform = transform;
 }
 
 - (void)playerItemDidReachEnd {
@@ -331,37 +352,6 @@
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
-}
-
-
-- (void)deviceRotated:(NSNotification *)notification {
-    UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
-    double rotation = 0;
-    switch (currentOrientation) {
-        case UIDeviceOrientationFaceDown:
-        case UIDeviceOrientationFaceUp:
-        case UIDeviceOrientationUnknown:
-            return;
-        case UIDeviceOrientationPortrait:
-            rotation = 0;
-            break;
-        case UIDeviceOrientationPortraitUpsideDown:
-            rotation = -M_PI;
-            break;
-        case UIDeviceOrientationLandscapeLeft:
-            rotation = M_PI_2;
-            break;
-        case UIDeviceOrientationLandscapeRight:
-            rotation = -M_PI_2;
-            break;
-    }
-    
-    CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
-    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        [self.acceptButton setTransform:transform];
-        [self.rejectButton setTransform:transform];
-    } completion:nil];
-    
 }
 
 

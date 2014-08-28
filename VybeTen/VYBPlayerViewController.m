@@ -10,6 +10,7 @@
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBLogInViewController.h"
+#import "AVAsset+VideoOrientation.h"
 #import "VYBUtility.h"
 #import "VYBCache.h"
 #import "VYBPlayerView.h"
@@ -24,12 +25,23 @@
 
 @interface VYBPlayerViewController ()
 
-@property (nonatomic, strong) VYBLabel *usernameLabel;
-@property (nonatomic, strong) UIButton *dismissButton;
+@property (nonatomic, strong) IBOutlet UILabel *usernameLabel;
+@property (nonatomic, strong) IBOutlet PFImageView *profileImageView;
+@property (nonatomic, strong) IBOutlet UIImageView *funnySquareFrame;
+@property (nonatomic, strong) IBOutlet UIImageView *countryFlagImageView;
+@property (nonatomic, strong) IBOutlet UILabel *cityNameLabel;
+@property (nonatomic, strong) IBOutlet UILabel *countLabel;
+@property (nonatomic, strong) IBOutlet UIButton *dismissButton;
+
+- (IBAction)dismissButtonPressed:(id)sender;
+
+/*
 @property (nonatomic, strong) VYBLabel *privateCountLabel;
 @property (nonatomic, strong) UIButton *privateViewButton;
 @property (nonatomic, strong) UILabel *locationLabel;
 @property (nonatomic, strong) UILabel *timeLabel;
+*/
+
 
 @end
 
@@ -39,18 +51,18 @@
     NSInteger downloadingVybeIndex;
     
     UIView *backgroundView;
-    UIButton *captureButton;
-    UIImageView *pauseImageView;
-
     
     VYBTimerView *timerView;
     
-    
+    // Forward time by swiping to the left
+    UISwipeGestureRecognizer *swipeLeft;
+    UISwipeGestureRecognizer *swipeRight;
 }
 @synthesize currVybeIndex;
 @synthesize currPlayer = _currPlayer;
 @synthesize currPlayerView = _currPlayerView;
 @synthesize currItem = _currItem;
+@synthesize usernameLabel, profileImageView, funnySquareFrame, countryFlagImageView, cityNameLabel, countLabel, dismissButton;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
@@ -78,9 +90,8 @@
 }
 
 - (void)loadView {
-    backgroundView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.view = backgroundView;
-    
+    [super loadView];
+
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
 
     [playerView setFrame:[[UIScreen mainScreen] bounds]];
@@ -92,7 +103,7 @@
     
     [self.currPlayerView setPlayer:self.currPlayer];
 
-    [self.view addSubview:self.currPlayerView];
+    [self.view insertSubview:self.currPlayerView atIndex:0];
 }
 
 
@@ -111,13 +122,20 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceRotated:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
     
     // Adding swipe gestures
-    UISwipeGestureRecognizer *swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
+    swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
     swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:swipeLeft];
-    UISwipeGestureRecognizer *swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight)];
+    swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight)];
     swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipeRight];
-
+    //NOTE: all landscape videos are played in landscape right
+    UISwipeGestureRecognizer *swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft)];
+    swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
+    UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight)];
+    swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
+    
+    
+    
     // PAUSE gesture
     UITapGestureRecognizer *tapOnce = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
     tapOnce.numberOfTapsRequired = 1;
@@ -135,109 +153,13 @@
     longPress.minimumPressDuration = 1;
     [self.view addGestureRecognizer:longPress];
 #endif
-    
-    // Adding TIME label
-    CGRect frame = CGRectMake(self.view.bounds.size.width/2 - 50, self.view.bounds.size.height - 70, 140, 70);
-    self.timeLabel = [[VYBLabel alloc] initWithFrame:frame];
-    [self.timeLabel setTextColor:[UIColor whiteColor]];
-    [self.timeLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:18.0]];
-    [self.timeLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.view addSubview:self.timeLabel];
-    // Adding LOCATION label
-    frame = CGRectMake(self.view.bounds.size.width/2 - 100, 0, 200, 70);
-    self.locationLabel = [[VYBLabel alloc] initWithFrame:frame];
-    [self.locationLabel setTextColor:[UIColor whiteColor]];
-    [self.locationLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book" size:18.0]];
-    [self.locationLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.view addSubview:self.locationLabel];
-    
-    // Adding CAPTURE button
-    frame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
-    captureButton = [[UIButton alloc] initWithFrame:frame];
-    [captureButton setImage:[UIImage imageNamed:@"button_capture.png"] forState:UIControlStateNormal];
-    [pauseImageView setContentMode:UIViewContentModeCenter];
-    [captureButton addTarget:self action:@selector(captureButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    //[self.view addSubview:captureButton];
-    
-    frame = CGRectMake(self.view.bounds.size.width/2 - 50, self.view.bounds.size.height/2 - 50, 100, 100);
-    pauseImageView = [[UIImageView alloc] initWithFrame:frame];
-    [pauseImageView setImage:[UIImage imageNamed:@"button_player_pause.png"]];
-    [pauseImageView setContentMode:UIViewContentModeCenter];
-    //[self.view addSubview:pauseImageView];
-    pauseImageView.hidden = YES;
-    
-    frame = CGRectMake(0, 0, 70, 70);
-    self.dismissButton = [[UIButton alloc] initWithFrame:frame];
-    [self.dismissButton setImage:[UIImage imageNamed:@"button_x.png"] forState:UIControlStateNormal];
-    [self.dismissButton setContentMode:UIViewContentModeCenter];
-    [self.dismissButton addTarget:self action:@selector(dismissButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.dismissButton];
-    
-    // Adding PRIVATE view button
-    frame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
-    self.privateViewButton = [[UIButton alloc] initWithFrame:frame];
-    [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view.png"] forState:UIControlStateNormal];
-    [self.privateViewButton setImage:[UIImage imageNamed:@"button_private_view_new.png"] forState:UIControlStateSelected];
-    [self.privateViewButton addTarget:self action:@selector(privateViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.privateViewButton setContentMode:UIViewContentModeLeft];
-    //[self.view addSubview:self.privateViewButton];
-    
-    // Adding PRIVATE count label
-    frame = CGRectMake(self.view.bounds.size.height - 70, 0, 70, 70);
-    self.privateCountLabel = [[VYBLabel alloc] initWithFrame:frame];
-    [self.privateCountLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.privateCountLabel setFont:[UIFont fontWithName:@"AvenirLTStd-Book.otf" size:20.0]];
-    [self.privateCountLabel setTextColor:[UIColor whiteColor]];
-    self.privateCountLabel.userInteractionEnabled = NO;
-    //[self.view addSubview:self.privateCountLabel];
-    
-    // Adding USERNAME label
-    frame = CGRectMake(10, self.view.bounds.size.height - 70, 80, 70);
-    self.usernameLabel = [[VYBLabel alloc] initWithFrame:frame];
-    self.usernameLabel.font = [UIFont fontWithName:@"AvenirLTStd-Book.otf" size:18.0];
-    self.usernameLabel.textAlignment = NSTextAlignmentLeft;
-    self.usernameLabel.textColor = [UIColor whiteColor];
-    [self.view addSubview:self.usernameLabel];
-    
-    if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
-        [self.privateViewButton setSelected:YES];
-        [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
-    } else {
-        [self.privateViewButton setSelected:NO];
-        [self.privateCountLabel setText:@""];
-    }
-    
-    /*
-    if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
-        PFObject *myTribe = [[PFUser currentUser] objectForKey:@"tribe"];
-        [myTribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-            if (!error) {
-                PFRelation *members = [object relationForKey:kVYBTribeMembersKey];
-                PFQuery *countQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
-                [countQuery whereKey:kVYBVybeUserKey matchesQuery:[members query]];
-                [countQuery whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
-                [countQuery whereKey:kVYBVybeTimestampKey greaterThan:[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp]];
-                [countQuery whereKey:kVYBVybeTypePublicKey equalTo:[NSNumber numberWithBool:NO]];
-                [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-                    if (!error) {
-                        if (number > 0) {
-                            [self.privateViewButton setSelected:YES];
-                            [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", number]];
-                            [[VYBUserStore sharedStore] setNewPrivateVybeCount:number];
-                        }
-                    }
-                }];
-            }
-        }];
-    }
-    */
+ 
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [backgroundView setBackgroundColor:[UIColor orangeColor]];
-
     [self loadVybes];
 }
 
@@ -305,10 +227,14 @@
 
 - (void)beginPlayingFrom:(NSInteger)from {
     currVybeIndex = from;
+    
+    self.countLabel.text = [NSString stringWithFormat:@"%d", self.vybePlaylist.count - currVybeIndex - 1];
+    
     downloadingVybeIndex = currVybeIndex + 1;
     
     PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
-   
+
+    
     if ([[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp] compare:currVybe[kVYBVybeTimestampKey]] == NSOrderedAscending) {
         [[VYBUserStore sharedStore] setLastWatchedVybeTimeStamp:currVybe[kVYBVybeTimestampKey]];
         
@@ -316,14 +242,6 @@
         if (newCount < 0)
             newCount = 0;
         [[VYBUserStore sharedStore] setNewPrivateVybeCount:newCount];
-        
-        if (newCount > 0) {
-            [self.privateViewButton setSelected:YES];
-            [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)newCount]];
-        } else {
-            [self.privateViewButton setSelected:NO];
-            [self.privateCountLabel setText:@""];
-        }
 
         PFInstallation *currentInstallation = [PFInstallation currentInstallation];
         currentInstallation.badge = [[VYBUserStore sharedStore] newPrivateVybeCount];
@@ -336,24 +254,11 @@
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
-        CGAffineTransform firstTransform = asset.preferredTransform;
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self syncUIElementsForOrientation:[asset videoOrientation]];
+        });
         
-        if(firstTransform.a == 0 && firstTransform.b == 1.0 && firstTransform.c == -1.0 && firstTransform.d == 0)
-        {
-            NSLog(@"orientation RIGHT");
-        }
-        if(firstTransform.a == 0 && firstTransform.b == -1.0 && firstTransform.c == 1.0 && firstTransform.d == 0)
-        {
-            NSLog(@"orientation LEFT");
-        }
-        if(firstTransform.a == 1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == 1.0)
-        {
-            NSLog(@"orientation UP");
-        }
-        if(firstTransform.a == -1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == -1.0)
-        {
-            NSLog(@"orientation DOWN");
-        }
         self.currItem = [AVPlayerItem playerItemWithAsset:asset];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
         [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
@@ -368,24 +273,11 @@
             if (!error) {
                 [data writeToURL:cacheURL atomically:YES];
                 AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
-                CGAffineTransform firstTransform = asset.preferredTransform;
-                
-                if(firstTransform.a == 0 && firstTransform.b == 1.0 && firstTransform.c == -1.0 && firstTransform.d == 0)
-                {
-                    NSLog(@"orientation RIGHT");
-                }
-                if(firstTransform.a == 0 && firstTransform.b == -1.0 && firstTransform.c == 1.0 && firstTransform.d == 0)
-                {
-                    NSLog(@"orientation LEFT");
-                }
-                if(firstTransform.a == 1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == 1.0)
-                {
-                    NSLog(@"orientation UP");
-                }
-                if(firstTransform.a == -1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == -1.0)
-                {
-                    NSLog(@"orientation DOWN");
-                }
+               
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self syncUIElementsForOrientation:[asset videoOrientation]];
+                });
+
                 self.currItem = [AVPlayerItem playerItemWithAsset:asset];
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
                 [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
@@ -421,6 +313,9 @@
                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                     [data writeToURL:cacheURL atomically:YES];
                     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+
+                    [self syncUIElementsForOrientation:[asset videoOrientation]];
+
                     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
                     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
                     [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
@@ -446,30 +341,35 @@
 }
 
 - (void)syncUI:(PFObject *)aVybe {
-    self.locationLabel.text = @"";
-    self.usernameLabel.text = @"";
-
-    if ([aVybe objectForKey:kVYBVybeGeotag]) {
-        PFGeoPoint *geo = [aVybe objectForKey:kVYBVybeGeotag];
-        [VYBUtility reverseGeoCode:geo withCompletion:^(NSArray *placemarks, NSError *error) {
-            if (!error) {
-                NSString *location = [VYBUtility convertPlacemarkToLocation:placemarks[0]];
-                self.locationLabel.text = location;
-                [self.locationLabel setNeedsDisplay];
-            }
-        }];
+    
+    NSString *locationStr = aVybe[kVYBVybeLocationStringKey];
+    NSArray *arr = [locationStr componentsSeparatedByString:@","];
+    NSString *countryCode = @"";
+    self.cityNameLabel.text = @"";
+    if (arr.count == 3) {
+        countryCode = arr[2];
+        cityNameLabel.text = arr[1];
+    } else if (aVybe[kVYBVybeCountryCodeKey]) {
+        countryCode = aVybe[kVYBVybeCountryCodeKey];
+    }
+    UIImage *countryFlagImg = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", countryCode]];
+    if (countryFlagImg) {
+        self.countryFlagImageView.image = countryFlagImg;
     }
     
+    self.usernameLabel.text = @"";
     if ([aVybe objectForKey:kVYBVybeUserKey]) {
         PFUser *aUser = [aVybe objectForKey:kVYBVybeUserKey];
         [aUser fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
             if (!error) {
                 self.usernameLabel.text = [object objectForKey:kVYBUserUsernameKey];
+                PFFile *profileFile = aUser[kVYBUserProfilePicMediumKey];
+                self.profileImageView.file = profileFile;
+                [self.profileImageView loadInBackground];
             }
         }];
     }
     
-    self.timeLabel.text = [VYBUtility reverseTime:[aVybe objectForKey:kVYBVybeTimestampKey]];
 }
 
 
@@ -477,16 +377,8 @@
  * User Interactions
  **/
 
-- (void)captureButtonPressed:(id)sender {
-    [self.navigationController popToRootViewControllerAnimated:NO];
-}
-
-- (void)privateViewButtonPressed:(id)sender {
-    [self loadVybes];
-}
-
 - (void)dismissButtonPressed:(id)sender {
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (void)swipeLeft {
@@ -589,8 +481,7 @@
 
 - (void)remoteNotificationReceived:(id)sender {
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
-        [self.privateViewButton setSelected:YES];
-        [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
+        //[self.privateCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
     }
 }
 
@@ -608,8 +499,7 @@
                 [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
                     if (!error) {
                         if (number > 0) {
-                            [self.privateViewButton setSelected:YES];
-                            [self.privateCountLabel setText:[NSString stringWithFormat:@"%d", number]];
+                            //[self.privateCountLabel setText:[NSString stringWithFormat:@"%d", number]];
                             [[VYBUserStore sharedStore] setNewPrivateVybeCount:number];
                         }
                     }
@@ -640,14 +530,22 @@
             return;
         case UIDeviceOrientationPortrait:
             rotation = 0;
+            [swipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+            [swipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
             break;
         case UIDeviceOrientationPortraitUpsideDown:
+            [swipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+            [swipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
             rotation = -M_PI;
             break;
         case UIDeviceOrientationLandscapeLeft:
+            [swipeLeft setDirection:UISwipeGestureRecognizerDirectionUp];
+            [swipeRight setDirection:UISwipeGestureRecognizerDirectionDown];
             rotation = M_PI_2;
             break;
         case UIDeviceOrientationLandscapeRight:
+            [swipeLeft setDirection:UISwipeGestureRecognizerDirectionUp];
+            [swipeRight setDirection:UISwipeGestureRecognizerDirectionDown];
             rotation = -M_PI_2;
             break;
     }
@@ -655,12 +553,30 @@
     CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
     [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.dismissButton.transform = transform;
-        self.locationLabel.transform = transform;
-        self.timeLabel.transform = transform;
-        self.usernameLabel.transform = transform;
     } completion:nil];
-    
 }
+
+- (void)syncUIElementsForOrientation:(NSInteger)orientation {
+    double rotation = 0;
+    switch (orientation) {
+        case AVCaptureVideoOrientationPortrait:
+            rotation = 0;
+
+            break;
+        case AVCaptureVideoOrientationPortraitUpsideDown:
+            rotation = -M_PI;
+            break;
+        case AVCaptureVideoOrientationLandscapeLeft:
+            rotation = 0;
+            break;
+        case AVCaptureVideoOrientationLandscapeRight:
+            rotation = -M_PI;
+            break;
+    }
+    CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
+    self.currPlayerView.transform = transform;
+}
+
 
 - (BOOL)prefersStatusBarHidden {
     return YES;

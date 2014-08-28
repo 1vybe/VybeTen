@@ -6,8 +6,8 @@
 //
 
 #import "MotionOrientation.h"
-
 #define MO_degreesToRadian(x) (M_PI * (x) / 180.0)
+
 
 NSString* const MotionOrientationChangedNotification = @"MotionOrientationChangedNotification";
 NSString* const MotionOrientationInterfaceOrientationChangedNotification = @"MotionOrientationInterfaceOrientationChangedNotification";
@@ -94,7 +94,7 @@ NSString* const kMotionOrientationKey = @"kMotionOrientationKey";
         default:
             break;
     }
-    NSLog(@"affineTransform degree: %d", rotationDegree);
+    //NSLog(@"affineTransform degree: %d", rotationDegree);
     return CGAffineTransformMakeRotation(MO_degreesToRadian(rotationDegree));
 }
 
@@ -199,10 +199,12 @@ NSString* const kMotionOrientationKey = @"kMotionOrientationKey";
                                                           userInfo:@{kMotionOrientationKey: self}];
         });
 #ifdef DEBUG
-        NSLog(@"didAccelerate: absoluteZ: %f angle: %f (x: %f, y: %f, z: %f), orientationString: %@", 
+        /*
+        NSLog(@"didAccelerate: absoluteZ: %f angle: %f (x: %f, y: %f, z: %f), orientationString: %@",
               absoluteZ, angle, 
               acceleration.x, acceleration.y, acceleration.z, 
               orientationString);
+        */
 #endif
     }
     if ( interfaceOrientationChanged ) {
