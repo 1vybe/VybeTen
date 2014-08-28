@@ -8,7 +8,7 @@
 
 #import "VYBLocationTableViewController.h"
 #import "VYBAppDelegate.h"
-#import "VYBFriendTableViewCell.h"
+#import "VYBUserTableViewCell.h"
 #import "VYBRegionHeaderButton.h"
 #import "VYBPlayerViewController.h"
 #import "VYBProfileViewController.h"
@@ -82,6 +82,7 @@
         countryCode = array[2];
         cityName = array[1];
     } else {
+        cityName = location;
         if ([location isEqualToString:@"Seoul"]) {
             countryCode = @"KR";
         }
@@ -90,6 +91,9 @@
         }
         if ([location isEqualToString:@"Cairo"]) {
             countryCode = @"EG";
+        }
+        if ([location isEqualToString:@"Istanbul"]) {
+            countryCode = @"TR";
         }
     }
     UIImage *flagImg = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",countryCode]];
@@ -111,10 +115,10 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *FriendTableViewCellIdentifier = @"FriendTableViewCellIdentifier";
-    VYBFriendTableViewCell *cell = (VYBFriendTableViewCell *)[tableView dequeueReusableCellWithIdentifier:FriendTableViewCellIdentifier];
+    static NSString *UserTableViewCellIdentifier = @"UserTableViewCellIdentifier";
+    VYBUserTableViewCell *cell = (VYBUserTableViewCell *)[tableView dequeueReusableCellWithIdentifier:UserTableViewCellIdentifier];
     if (!cell) {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBFriendTableViewCell" owner:nil options:nil];
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"VYBUserTableViewCell" owner:nil options:nil];
         cell = [nib lastObject];
         //NOTE: reuseIdentifier is set in xib file
     }
@@ -199,50 +203,6 @@
     [self.tableView reloadData];
 }
 
-
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
-    return cell;
-}
-*/
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 /*
 #pragma mark - Table view delegate

@@ -18,7 +18,6 @@
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
 #import "VYBHubViewController.h"
-#import "VYBFriendsViewController.h"
 #import "VYBProfileViewController.h"
 #import "VYBUserStore.h"
 #import "VYBLogInViewController.h"

@@ -7,16 +7,26 @@
 //
 
 #import "VYBHubViewController.h"
-
+#import "VYBSwapContainerViewController.h"
 
 @interface VYBHubViewController ()
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) UISearchDisplayController *searchDisplay;
+
+@property (nonatomic, strong) IBOutlet UIView *controlView;
+@property (nonatomic, strong) IBOutlet UIButton *locationButton;
+@property (nonatomic, strong) IBOutlet UIButton *followingButton;
+@property (nonatomic, weak) VYBSwapContainerViewController *swapContainerController;
+
+- (IBAction)locationButtonPressed:(id)sender;
+- (IBAction)followingButtonPressed:(id)sender;
+
+
 @end
 
 @implementation VYBHubViewController
 
-@synthesize controlView, followingButton, locationButton, tableView;
+@synthesize controlView, followingButton, locationButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,8 +41,7 @@
 {
     [super viewDidLoad];
     
-    VYBLocationTableViewController *locationViewController = [[VYBLocationTableViewController alloc] initWithNibName:@"VYBLocationTableViewController" bundle:nil];
-    self.tableView = locationViewController.tableView;
+    [locationButton setSelected:YES];
     
     /*
     self.navigationItem.hidesBackButton = YES;
@@ -51,6 +60,30 @@
     self.searchDisplay = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
     */
     
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"embedContainer"]) {
+        self.swapContainerController = segue.destinationViewController;
+    }
+}
+
+- (IBAction)locationButtonPressed:(id)sender
+{
+    if (!locationButton.selected) {
+        [locationButton setSelected:YES];
+        [followingButton setSelected:NO];
+        [self.swapContainerController swapViewControllers];
+    }
+}
+
+- (IBAction)followingButtonPressed:(id)sender {
+    if (!followingButton.selected) {
+        [followingButton setSelected:YES];
+        [locationButton setSelected:NO];
+        [self.swapContainerController swapViewControllers];
+    }
 }
 
 

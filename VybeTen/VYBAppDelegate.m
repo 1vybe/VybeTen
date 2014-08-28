@@ -106,7 +106,8 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    self.hubVC = [[VYBHubViewController alloc] initWithNibName:@"VYBHubViewController" bundle:nil];
+    UIStoryboard *hubStory = [UIStoryboard storyboardWithName:@"HubStoryboard" bundle:nil];
+    self.hubVC = [hubStory instantiateInitialViewController];
     self.hubNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBHubPageIndex withRootViewController:self.hubVC];
     
     self.captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];

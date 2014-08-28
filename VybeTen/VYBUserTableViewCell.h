@@ -1,5 +1,5 @@
 //
-//  VYBFriendTableViewCell.h
+//  VYBUserTableViewCell.h
 //  VybeTen
 //
 //  Created by jinsuk on 8/21/14.
@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBFriendTableViewCell : PFTableViewCell
+@interface VYBUserTableViewCell : PFTableViewCell
 @property (nonatomic, strong) IBOutlet UIImageView *profileImageView;
 @property (nonatomic, strong) IBOutlet UILabel *nameLabel;
-@property (nonatomic, strong) IBOutlet UIButton *followButton;
+@property (nonatomic, strong) IBOutlet UIButton *watchNewButton;
 @end
