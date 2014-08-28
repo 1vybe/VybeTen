@@ -6,12 +6,17 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import <Parse/Parse.h>
 #import "VYBCache.h"
-#import "VYBConstants.h"
+
+@interface VYBCache()
+@property (nonatomic, strong) NSCache *cache;
+- (void)setAttributes:(NSDictionary *)attributes forVybe:(PFObject *)vybe;
+@end
 
 @implementation VYBCache
 @synthesize cache;
+
+#pragma mark - Initialization
 
 + (id)sharedCache {
     static dispatch_once_t pred = 0;
@@ -28,6 +33,37 @@
         self.cache = [[NSCache alloc] init];
     }
     return self;
+}
+
+#pragma mark - VYBCache
+
+- (void)clear {
+    [self.cache removeAllObjects];
+}
+
+- (void)setAttributesForVybe:(PFObject *)vybe likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser {
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                [NSNumber numberWithBool:likedByCurrentUser],kVYBVybeAttributesIsLikedByCurrentUserKey,
+                                @([likers count]),kVYBVybeAttributesLikeCountKey,
+                                likers,kVYBVybeAttributesLikersKey,
+                                @([commenters count]),kVYBVybeAttributesCommentCountKey,
+                                commenters,kVYBVybeAttributesCommentersKey,
+                                nil];
+    [self setAttributes:attributes forVybe:vybe];
+}
+
+- (NSDictionary *)attributesForVybe:(PFObject *)vybe {
+    NSString *key = [self keyForVybe:vybe];
+    return [self.cache objectForKey:key];
+}
+
+- (NSNumber *)likeCountForVybe:(PFObject *)vybe {
+    NSDictionary *attributes = [self attributesForVybe:vybe];
+    if (attributes) {
+        return [attributes objectForKey:kVYBVybeAttributesLikeCountKey];
+    }
+    
+    return [NSNumber numberWithInt:0];
 }
 
 - (NSDictionary *)attributesForUser:(PFUser *)user {
@@ -135,17 +171,22 @@
 
 #pragma mark - ()
 
+- (void)setAttributes:(NSDictionary *)attributes forVybe:(PFObject *)vybe {
+    NSString *key = [self keyForVybe:vybe];
+    [self.cache setObject:attributes forKey:key];
+}
+
 - (void)setAttributes:(NSDictionary *)attributes forUser:(PFUser *)user {
     NSString *key = [self keyForUser:user];
     [self.cache setObject:attributes forKey:key];
 }
 
-- (NSString *)keyForUser:(PFUser *)user {
-    return [NSString stringWithFormat:@"user_%@", [user objectId]];
+- (NSString *)keyForVybe:(PFObject *)vybe {
+    return [NSString stringWithFormat:@"vybe_%@", [vybe objectId]];
 }
 
-- (void)clear {
-    
+- (NSString *)keyForUser:(PFUser *)user {
+    return [NSString stringWithFormat:@"user_%@", [user objectId]];
 }
 
 @end

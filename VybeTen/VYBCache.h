@@ -15,12 +15,13 @@
 
 @interface VYBCache : NSObject
 
-@property (nonatomic, strong) NSCache *cache;
-
 + (id)sharedCache;
 
 - (void)clear;
 
+- (void)setAttributesForVybe:(PFObject *)vybe likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser;
+- (NSDictionary *)attributesForVybe:(PFObject *)vybe;
+- (NSNumber *)likeCountForVybe:(PFObject *)vybe;
 - (NSDictionary *)attributesForUser:(PFUser *)user;
 - (NSArray *)usersFollowedByMe;
 - (NSNumber *)vybeCountForUser:(PFUser *)user;

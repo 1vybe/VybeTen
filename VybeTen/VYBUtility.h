@@ -13,6 +13,12 @@
 @class VYBMyVybe;
 
 @interface VYBUtility : NSObject
+
++ (void)likeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
++ (void)unlikeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
++ (PFQuery *)queryForActivitiesOnVybe:(PFObject *)vybe cachePolicy:(PFCachePolicy)cachePolicy;
+
 + (void)clearLocalCacheForVybe:(VYBMyVybe *)aVybe;
 //+ (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
 + (void)saveThumbnailImageForVybe:(VYBMyVybe *)mVybe;

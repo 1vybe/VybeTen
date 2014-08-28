@@ -17,6 +17,149 @@
 
 @implementation VYBUtility
 
+#pragma mark - VYBUtility
+#pragma mark Like Vybes
+
++ (void)likeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock {
+    PFQuery *queryExistingLikes = [PFQuery queryWithClassName:kVYBActivityClassKey];
+    [queryExistingLikes whereKey:kVYBActivityVybeKey equalTo:vybe];
+    [queryExistingLikes whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
+    [queryExistingLikes whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
+    [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
+    [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
+        if (!error) {
+            for (PFObject *activity in activities) {
+                [activity delete];
+            }
+        }
+        
+        // proceed to creating new like
+        PFObject *likeActivity = [PFObject objectWithClassName:kVYBActivityClassKey];
+        [likeActivity setObject:kVYBActivityTypeLike forKey:kVYBActivityTypeKey];
+        [likeActivity setObject:[PFUser currentUser] forKey:kVYBActivityFromUserKey];
+        [likeActivity setObject:[vybe objectForKey:kVYBVybeUserKey] forKey:kVYBActivityToUserKey];
+        [likeActivity setObject:vybe forKey:kVYBActivityVybeKey];
+        
+        PFACL *likeACL = [PFACL ACLWithUser:[PFUser currentUser]];
+        [likeACL setPublicReadAccess:YES];
+        [likeACL setWriteAccess:YES forUser:[vybe objectForKey:kVYBVybeUserKey]];
+        likeActivity.ACL = likeACL;
+        
+        [likeActivity saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (completionBlock) {
+                completionBlock(succeeded,error);
+            }
+            
+            // refresh cache
+            PFQuery *query = [VYBUtility queryForActivitiesOnVybe:vybe cachePolicy:kPFCachePolicyNetworkOnly];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error) {
+                    
+                    NSMutableArray *likers = [NSMutableArray array];
+                    NSMutableArray *commenters = [NSMutableArray array];
+                    
+                    BOOL isLikedByCurrentUser = NO;
+                    
+                    for (PFObject *activity in objects) {
+                        if ([[activity objectForKey:kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeLike] && [activity objectForKey:kVYBActivityFromUserKey]) {
+                            [likers addObject:[activity objectForKey:kVYBActivityFromUserKey]];
+                        } else if ([[activity objectForKey:kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeComment] && [activity objectForKey:kVYBActivityFromUserKey]) {
+                            [commenters addObject:[activity objectForKey:kVYBActivityFromUserKey]];
+                        }
+                        
+                        if ([[[activity objectForKey:kVYBActivityFromUserKey] objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
+                            if ([[activity objectForKey:kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeLike]) {
+                                isLikedByCurrentUser = YES;
+                            }
+                        }
+                    }
+                    
+                    [[VYBCache sharedCache] setAttributesForVybe:vybe likers:likers commenters:commenters likedByCurrentUser:isLikedByCurrentUser];
+                }
+                
+//                [[NSNotificationCenter defaultCenter] postNotificationName:VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification object:vybe userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:succeeded] forKey:VYBVybeDetailsViewControllerUserLikedUnlikedVybeNotificationUserInfoLikedKey]];
+            }];
+            
+        }];
+    }];
+    
+}
+
++ (void)unlikeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock {
+    PFQuery *queryExistingLikes = [PFQuery queryWithClassName:kVYBActivityClassKey];
+    [queryExistingLikes whereKey:kVYBActivityVybeKey equalTo:vybe];
+    [queryExistingLikes whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
+    [queryExistingLikes whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
+    [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
+    [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
+        if (!error) {
+            for (PFObject *activity in activities) {
+                [activity delete];
+            }
+            
+            if (completionBlock) {
+                completionBlock(YES,nil);
+            }
+            
+            // refresh cache
+            PFQuery *query = [VYBUtility queryForActivitiesOnVybe:vybe cachePolicy:kPFCachePolicyNetworkOnly];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error) {
+                    
+                    NSMutableArray *likers = [NSMutableArray array];
+                    NSMutableArray *commenters = [NSMutableArray array];
+                    
+                    BOOL isLikedByCurrentUser = NO;
+                    
+                    for (PFObject *activity in objects) {
+                        if ([[activity objectForKey:kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeLike]) {
+                            [likers addObject:[activity objectForKey:kVYBActivityFromUserKey]];
+                        } else if ([[activity objectForKey:kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeComment]) {
+                            [commenters addObject:[activity objectForKey:kVYBActivityFromUserKey]];
+                        }
+                        
+                        if ([[[activity objectForKey:kVYBActivityFromUserKey] objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
+                            if ([[activity objectForKey:kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeLike]) {
+                                isLikedByCurrentUser = YES;
+                            }
+                        }
+                    }
+                    
+                    [[VYBCache sharedCache] setAttributesForVybe:vybe likers:likers commenters:commenters likedByCurrentUser:isLikedByCurrentUser];
+                }
+                
+//                [[NSNotificationCenter defaultCenter] postNotificationName:PAPUtilityUserLikedUnlikedPhotoCallbackFinishedNotification object:vybe userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:PAPPhotoDetailsViewControllerUserLikedUnlikedPhotoNotificationUserInfoLikedKey]];
+            }];
+            
+        } else {
+            if (completionBlock) {
+                completionBlock(NO,error);
+            }
+        }
+    }];  
+}
+
+#pragma mark Activities
+
++ (PFQuery *)queryForActivitiesOnVybe:(PFObject *)vybe cachePolicy:(PFCachePolicy)cachePolicy {
+    PFQuery *queryLikes = [PFQuery queryWithClassName:kVYBActivityClassKey];
+    [queryLikes whereKey:kVYBActivityVybeKey equalTo:vybe];
+    [queryLikes whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
+    
+    PFQuery *queryComments = [PFQuery queryWithClassName:kVYBActivityClassKey];
+    [queryComments whereKey:kVYBActivityVybeKey equalTo:vybe];
+    [queryComments whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeComment];
+    
+    PFQuery *query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:queryLikes,queryComments,nil]];
+    [query setCachePolicy:cachePolicy];
+    [query includeKey:kVYBActivityFromUserKey];
+    [query includeKey:kVYBActivityVybeKey];
+    
+    return query;
+}
+
+#pragma mark Thumbnail
+
 + (void)saveThumbnailImageForVybe:(VYBMyVybe *)mVybe {
     NSURL *url = [[NSURL alloc] initFileURLWithPath:[mVybe videoFilePath]] ;
     // Generating and saving a thumbnail for the captured vybe
