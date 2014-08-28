@@ -9,7 +9,9 @@
 #import "VYBConstants.h"
 
 #pragma mark - NSNotification
+
 NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification = @"com.vybe.app.AppDelegate.applicationDidReceiveRemoteNotification";
+NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification     = @"com.vybe.app.utility.userLikedUnlikedVybeCallbackFinished";
 NSString *const VYBAppDelegateApplicationDidBecomeActive               = @"com.vybe.app.AppDelegate.applicationDidBecomeActive";
 
 #pragma mark - NSUserDefaults
@@ -57,6 +59,14 @@ NSString *const kVYBVybeCountryCodeKey                          = @"countryCode"
  NSString *const kVYBVybeCityNameKey                             = @"cityName";
 */
 
+#pragma mark - Cached Photo Attributes
+// keys
+NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey = @"isLikedByCurrentUser";
+NSString *const kVYBVybeAttributesLikeCountKey            = @"likeCount";
+NSString *const kVYBVybeAttributesLikersKey               = @"likers";
+NSString *const kVYBVybeAttributesCommentCountKey         = @"commentCount";
+NSString *const kVYBVybeAttributesCommentersKey           = @"commenters";
+
 #pragma mark - PFObject Region Class
 // class key
 NSString *const kVYBRegionClassKey                                = @"Region";
@@ -92,6 +102,7 @@ NSString *const kVYBTribeNewestVybeKey                          = @"newestVybe";
 NSString *const kVYBTribeTypePrivate                            = @"private";
 NSString *const kVYBTribeTypePublic                             = @"public";
 
+
 #pragma mark - PFObject Activity Class
 // Class key
 NSString *const kVYBActivityClassKey                            = @"Activity";
@@ -102,11 +113,11 @@ NSString *const kVYBActivityFromUserKey                         = @"fromUser";
 NSString *const kVYBActivityToUserKey                           = @"toUser";
 NSString *const kVYBActivityContentKey                          = @"content";
 NSString *const kVYBActivityVybeKey                             = @"vybe";
-NSString *const kVYBActivityTribeKey;
 
 // Type values
 NSString *const kVYBActivityTypeFollow                          = @"follow";
-NSString *const kVYBActivityTypeJoined;
+NSString *const kVYBActivityTypeLike                            = @"like";
+NSString *const kVYBActivityTypeComment                         = @"comment";
 
 
 #pragma mark - Cached User Attributes
@@ -131,7 +142,6 @@ NSString *const kVYBUserAttributesTribesKey                     = @"tribes";
 NSString *const kVYBInstallationUserKey                         = @"user";
 
 
-
 #pragma mark - PFPush Notification Payload Keys
 
 NSString *const kAPNSAlertKey                                   = @"alert";
@@ -145,9 +155,10 @@ NSString *const kVYBPushPayloadPayloadTypeTribeKey              = @"t";
 
 NSString *const kVYBPushPayloadActivityTypeKey                  = @"t";
 NSString *const kVYBPushPayloadActivityFollowKey                = @"f";
+NSString *const kPAPPushPayloadActivityLikeKey                  = @"l";
 
 NSString *const kVYBPushPayloadActivityFromUserObjectIdKey      = @"fu";
 NSString *const kVYBPushPayloadActivityToUserObjectIdKey        = @"tu";
 
-NSString *const kVYBPushPayloadVybeIDKey                  = @"vid";
+NSString *const kVYBPushPayloadVybeIDKey                        = @"vid";
 NSString *const kVYBPushPayloadVybeUserKey                      = @"vu";

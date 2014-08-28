@@ -8,7 +8,7 @@
 #define IS_IPHONE_5     ( [[UIScreen mainScreen] bounds].size.height == 568 )
 
 #define VYBE_LENGTH_SEC 15
-#define VYBE_TTL_HOURS  200
+#define VYBE_TTL_HOURS  24
 #define UPFRESH         1
 #define UPLOADING       2
 #define UPLOADED        3
@@ -51,6 +51,7 @@ typedef enum {
 
 #pragma mark - NSNotification
 extern NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification;
+extern NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification;
 extern NSString *const VYBAppDelegateApplicationDidBecomeActive;
 
 
@@ -94,6 +95,14 @@ extern NSString *const kVYBVybeCountryCodeKey;
 extern NSString *const kVYBVybeStateNameKey;
 extern NSString *const kVYBVybeCityNameKey;
 */
+
+#pragma mark - Cached Vybe Attributes
+// keys
+extern NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey;
+extern NSString *const kVYBVybeAttributesLikeCountKey;
+extern NSString *const kVYBVybeAttributesLikersKey;
+extern NSString *const kVYBVybeAttributesCommentCountKey;
+extern NSString *const kVYBVybeAttributesCommentersKey;
 
 #pragma mark - PFObject Region Class
 // class key
@@ -141,7 +150,8 @@ extern NSString *const kVYBActivityVybeKey;
 
 // Type values
 extern NSString *const kVYBActivityTypeFollow;
-extern NSString *const kVYBActivityTypeJoined;
+extern NSString *const kVYBActivityTypeLike;
+extern NSString *const kVYBActivityTypeComment;
 
 #pragma mark - Cached User Attributes
 // keys
@@ -149,14 +159,15 @@ extern NSString *const kVYBUserAttributesSyncTribeKey;
 extern NSString *const kVYBUserAttributesVybeCountKey;
 extern NSString *const kVYBUserAttributesTribeCountKey;
 extern NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey;
-extern NSString *const kVYBUserAttributesTribesKey;
+
 
 #pragma mark - Cached Tribe Attributes
 // keys
+extern NSString *const kVYBTribeAttributesLastWatchedVybeKey;
 extern NSString *const kVYBTribeAttributesVybeCountKey;
 extern NSString *const kVYBTribeAttributesMemberCountKey;
 extern NSString *const kVYBTribeAttributesMembersKey;
-extern NSString *const kVYBTribeAttributesLastWatchedVybeKey;
+extern NSString *const kVYBUserAttributesTribesKey;
 
 
 #pragma mark - Installation Class
@@ -177,6 +188,7 @@ extern NSString *const kVYBPushPayloadPayloadTypeTribeKey;
 
 extern NSString *const kVYBPushPayloadActivityTypeKey;
 extern NSString *const kVYBPushPayloadActivityFollowKey;
+extern NSString *const kPAPPushPayloadActivityLikeKey;
 
 extern NSString *const kVYBPushPayloadActivityFromUserObjectIdKey;
 extern NSString *const kVYBPushPayloadActivityToUserObjectIdKey;
