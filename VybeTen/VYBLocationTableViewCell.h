@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface VYBLocationTableViewCell : UITableViewCell
-@property (nonatomic, strong) NSString *locationString;
+@property (nonatomic, strong) NSString *locationKey;
 @property (nonatomic) NSInteger vybeCount;
 @end

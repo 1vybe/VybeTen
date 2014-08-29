@@ -59,7 +59,7 @@
 
 - (void)swapViewControllers
 {
-    self.currentSegueIdentifier = (self.currentSegueIdentifier == SegueIdentifierFirst) ? SegueIdentifierSecond : SegueIdentifierFirst;
+    self.currentSegueIdentifier = ([self.currentSegueIdentifier isEqualToString: SegueIdentifierFirst]) ? SegueIdentifierSecond : SegueIdentifierFirst;
     [self performSegueWithIdentifier:self.currentSegueIdentifier sender:nil];
 }
 

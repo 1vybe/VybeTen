@@ -41,6 +41,89 @@
     [self.cache removeAllObjects];
 }
 
+- (void)addUser:(PFObject *)user forLocation:(NSString *)location {
+    NSDictionary *usersByLocation = [self.cache objectForKey:@"usersByLocation"];
+    NSMutableDictionary *newDict;
+    
+    if (!usersByLocation) {
+        newDict = [NSMutableDictionary dictionary];
+        NSArray *newUser = [NSArray arrayWithObject:user];
+        [newDict setObject:newUser forKey:location];
+    } else {
+        newDict = [NSMutableDictionary dictionaryWithDictionary:usersByLocation];
+        if (![usersByLocation objectForKey:location]) {
+            NSArray *newUser = [NSArray arrayWithObject:user];
+            [newDict setObject:newUser forKey:location];
+        } else {
+            NSArray *currUsers = [usersByLocation objectForKey:location];
+            [newDict setObject:[currUsers arrayByAddingObject:user] forKey:location];
+        }
+        
+    }
+    [self.cache setObject:newDict forKey:@"usersByLocation"];
+}
+
+- (void)addVybe:(PFObject *)vybe forLocation:(NSString *)location {
+    NSDictionary *vybesByLocation = [self.cache objectForKey:@"vybesByLocation"];
+    NSMutableDictionary *newDict;
+    
+    if (!vybesByLocation) {
+        newDict = [NSMutableDictionary dictionary];
+        NSArray *newVybe = [NSArray arrayWithObject:vybe];
+        [newDict setObject:newVybe forKey:location];
+    } else {
+        newDict = [NSMutableDictionary dictionaryWithDictionary:vybesByLocation];
+        if (![vybesByLocation objectForKey:location]) {
+            NSArray *newVybe = [NSArray arrayWithObject:vybe];
+            [newDict setObject:newVybe forKey:location];
+        } else {
+            NSArray *newVybes = [vybesByLocation objectForKey:location];
+            [newDict setObject:[newVybes arrayByAddingObject:vybe] forKey:location];
+        }
+        
+    }
+    [self.cache setObject:newDict forKey:@"vybesByLocation"];
+}
+
+
+
+- (NSArray *)usersForLocation:(NSString *)location {
+    NSDictionary *usersByLocation = [self.cache objectForKey:@"usersByLocation"];
+    NSArray *users = [usersByLocation objectForKey:location];
+    
+    return users;
+}
+
+- (NSArray *)vybesForLocation:(NSString *)location {
+    NSDictionary *vybesByLocation = [self.cache objectForKey:@"vybesByLocation"];
+    NSArray *vybes = [vybesByLocation objectForKey:location];
+    
+    return vybes;
+}
+
+- (NSDictionary *)usersByLocation {
+    return [self.cache objectForKey:@"usersByLocation"];
+}
+
+- (NSDictionary *)vybesByLocation {
+    return [self.cache objectForKey:@"vybesByLocation"];
+}
+
+
+
+- (NSInteger)numberOfLocations {
+    NSDictionary *vybesByLocation = [self.cache objectForKey:@"vybesByLocation"];
+    NSDictionary *usersByLocation = [self.cache objectForKey:@"usersByLocation"];
+    
+    if (vybesByLocation.allKeys.count != usersByLocation.allKeys.count) {
+        NSLog(@"SOMETHING IS WRONG");
+    }
+    
+    return vybesByLocation.count;
+}
+
+
+
 - (void)setAttributesForVybe:(PFObject *)vybe likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser {
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                 [NSNumber numberWithBool:likedByCurrentUser],kVYBVybeAttributesIsLikedByCurrentUserKey,

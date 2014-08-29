@@ -20,8 +20,57 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jPK-KL-Kst" userLabel="flashButton">
-                    <rect key="frame" x="412" y="20" width="80" height="25"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7vo-Gu-Tx0" userLabel="flipButton">
+                    <rect key="frame" x="420" y="20" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="1Kg-cq-LXx"/>
+                        <constraint firstAttribute="height" constant="40" id="Jai-6O-dj2"/>
+                    </constraints>
+                    <state key="normal" image="button_flip_camera">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="flipButtonPressed:" destination="-1" eventType="touchUpInside" id="ql3-4B-Gaq"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iNU-2f-whX" userLabel="hubButton">
+                    <rect key="frame" x="20" y="420" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="lhl-En-2tR"/>
+                        <constraint firstAttribute="width" constant="40" id="tqO-zy-7gD"/>
+                    </constraints>
+                    <state key="normal" image="button_hub">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="hubButtonPressed:" destination="-1" eventType="touchUpInside" id="gJq-54-tww"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rNG-mo-RpY" userLabel="activityButton">
+                    <rect key="frame" x="420" y="420" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="Kxa-aY-GbR"/>
+                        <constraint firstAttribute="height" constant="40" id="ikO-tx-GP2"/>
+                    </constraints>
+                    <state key="normal" image="button_activity">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="activityButtonPressed:" destination="-1" eventType="touchUpInside" id="Q7F-jd-feC"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J80-Uv-NSZ" userLabel="activityCountLabel">
+                    <rect key="frame" x="425" y="425" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="63f-Ld-mg7"/>
+                        <constraint firstAttribute="width" constant="30" id="xk4-jz-q8o"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jPK-KL-Kst" userLabel="flashButton">
+                    <rect key="frame" x="372" y="20" width="40" height="40"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="40" id="cIx-uw-lK6"/>
                         <constraint firstAttribute="height" constant="40" id="tGR-UE-dbK"/>
@@ -34,66 +83,17 @@
                         <action selector="flashButtonPressed:" destination="-1" eventType="touchUpInside" id="uRm-bw-HO3"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7vo-Gu-Tx0" userLabel="flipButton">
-                    <rect key="frame" x="358" y="15" width="85" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="40" id="1Kg-cq-LXx"/>
-                        <constraint firstAttribute="height" constant="40" id="Jai-6O-dj2"/>
-                    </constraints>
-                    <state key="normal" image="button_flip_camera">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="flipButtonPressed:" destination="-1" eventType="touchUpInside" id="ql3-4B-Gaq"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iNU-2f-whX" userLabel="hubButton">
-                    <rect key="frame" x="25" y="434" width="35" height="35"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="40" id="lhl-En-2tR"/>
-                        <constraint firstAttribute="width" constant="40" id="tqO-zy-7gD"/>
-                    </constraints>
-                    <state key="normal" image="button_hub">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="hubButtonPressed:" destination="-1" eventType="touchUpInside" id="gJq-54-tww"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rNG-mo-RpY" userLabel="activityButton">
-                    <rect key="frame" x="405" y="404" width="94" height="95"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="40" id="Kxa-aY-GbR"/>
-                        <constraint firstAttribute="height" constant="40" id="ikO-tx-GP2"/>
-                    </constraints>
-                    <state key="normal" image="button_activity">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="activityButtonPressed:" destination="-1" eventType="touchUpInside" id="Q7F-jd-feC"/>
-                    </connections>
-                </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J80-Uv-NSZ" userLabel="activityCountLabel">
-                    <rect key="frame" x="450" y="437" width="30" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="30" id="63f-Ld-mg7"/>
-                        <constraint firstAttribute="width" constant="30" id="xk4-jz-q8o"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="J80-Uv-NSZ" firstAttribute="centerY" secondItem="rNG-mo-RpY" secondAttribute="centerY" id="BFy-fm-fLm"/>
-                <constraint firstItem="jPK-KL-Kst" firstAttribute="leading" secondItem="7vo-Gu-Tx0" secondAttribute="trailing" constant="10" id="G4U-WD-Dt5"/>
                 <constraint firstAttribute="trailing" secondItem="rNG-mo-RpY" secondAttribute="trailing" constant="20" id="Qhj-1t-5kT"/>
                 <constraint firstAttribute="bottom" secondItem="iNU-2f-whX" secondAttribute="bottom" constant="20" id="RQy-50-9rZ"/>
-                <constraint firstAttribute="trailing" secondItem="jPK-KL-Kst" secondAttribute="trailing" constant="20" id="SAz-1F-S54"/>
+                <constraint firstAttribute="trailing" secondItem="7vo-Gu-Tx0" secondAttribute="trailing" constant="20" id="SOR-De-6sf"/>
                 <constraint firstAttribute="bottom" secondItem="rNG-mo-RpY" secondAttribute="bottom" constant="20" id="SZh-wp-Ta5"/>
                 <constraint firstItem="jPK-KL-Kst" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="Tcb-3B-fDL"/>
                 <constraint firstItem="jPK-KL-Kst" firstAttribute="top" secondItem="7vo-Gu-Tx0" secondAttribute="top" id="abL-1i-gYu"/>
+                <constraint firstItem="7vo-Gu-Tx0" firstAttribute="leading" secondItem="jPK-KL-Kst" secondAttribute="trailing" constant="8" id="jZz-ci-Ldc"/>
                 <constraint firstItem="iNU-2f-whX" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="lgk-04-6fM"/>
                 <constraint firstItem="J80-Uv-NSZ" firstAttribute="centerX" secondItem="rNG-mo-RpY" secondAttribute="centerX" id="pRS-6p-cr6"/>
             </constraints>

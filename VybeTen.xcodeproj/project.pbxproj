@@ -57,7 +57,6 @@
 		02D11D1018DF62AC0018DA97 /* Montreal-RegularIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0218DF62AC0018DA97 /* Montreal-RegularIta.otf */; };
 		02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */; };
 		02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */; };
-		02D255DF1992A4570053B89F /* VYBMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02D255DE1992A4570053B89F /* VYBMapViewController.m */; };
 		02D255E11992A4DE0053B89F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02D255E01992A4DE0053B89F /* MapKit.framework */; };
 		02E4556A1989727200B22554 /* VYBLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E455681989727200B22554 /* VYBLogInViewController.m */; };
 		02E4556B1989727200B22554 /* VYBLogInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E455691989727200B22554 /* VYBLogInViewController.xib */; };
@@ -158,8 +157,6 @@
 		02D11D0218DF62AC0018DA97 /* Montreal-RegularIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-RegularIta.otf"; sourceTree = "<group>"; };
 		02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Xlight.otf"; sourceTree = "<group>"; };
 		02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-XlightIta.otf"; sourceTree = "<group>"; };
-		02D255DD1992A4570053B89F /* VYBMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMapViewController.h; sourceTree = "<group>"; };
-		02D255DE1992A4570053B89F /* VYBMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMapViewController.m; sourceTree = "<group>"; };
 		02D255E01992A4DE0053B89F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		02E455671989727200B22554 /* VYBLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBLogInViewController.h; sourceTree = "<group>"; };
 		02E455681989727200B22554 /* VYBLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBLogInViewController.m; sourceTree = "<group>"; };
@@ -313,8 +310,6 @@
 				02E455671989727200B22554 /* VYBLogInViewController.h */,
 				02E455681989727200B22554 /* VYBLogInViewController.m */,
 				02E455691989727200B22554 /* VYBLogInViewController.xib */,
-				02D255DD1992A4570053B89F /* VYBMapViewController.h */,
-				02D255DE1992A4570053B89F /* VYBMapViewController.m */,
 				0299EC81199A9254004E97CF /* VYBHubViewController.h */,
 				0299EC82199A9254004E97CF /* VYBHubViewController.m */,
 				020CC65B19A701D900B2F794 /* VYBProfileViewController.h */,
@@ -641,7 +636,6 @@
 				027F18D019AFC7030045BFEF /* VYBLocationTableViewCell.m in Sources */,
 				020CC65E19A701D900B2F794 /* VYBProfileViewController.m in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
-				02D255DF1992A4570053B89F /* VYBMapViewController.m in Sources */,
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
 				021B5B7219A7F21C00B906F3 /* VYBProfileInfoView.m in Sources */,
 				023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */,

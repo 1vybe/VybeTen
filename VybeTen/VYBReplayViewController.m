@@ -87,7 +87,7 @@
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
 
     NSLog(@"[REPLAY] orientation is %d", (int)[asset videoOrientation]);
-    [self rotateUIElementsForOrientation:[asset videoOrientation]];
+    [self rotateUIElementsForOrientation:(NSInteger)[asset videoOrientation]];
     
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
@@ -215,125 +215,6 @@
     });
     
     [self.navigationController popViewControllerAnimated:NO];
-}
-
-- (void)resizeVideo:(NSString *)aVideoPath {
-    NSString *newName = [aVideoPath stringByAppendingString:@".resized"];
-    NSURL *fullPath = [NSURL fileURLWithPath:newName];
-    NSURL *path = [NSURL fileURLWithPath:aVideoPath];
-    
-    
-    NSError *error = nil;
-    
-    AVAssetWriter *videoWriter = [[AVAssetWriter alloc] initWithURL:fullPath fileType:AVFileTypeQuickTimeMovie error:&error];
-    NSParameterAssert(videoWriter);
-    AVAsset *avAsset = [[AVURLAsset alloc] initWithURL:path options:nil] ;
-    
-    
-    
-    NSDictionary *videoCleanApertureSettings = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                [NSNumber numberWithInt:480], AVVideoCleanApertureWidthKey,
-                                                [NSNumber numberWithInt:640], AVVideoCleanApertureHeightKey,
-                                                [NSNumber numberWithInt:10], AVVideoCleanApertureHorizontalOffsetKey,
-                                                [NSNumber numberWithInt:10], AVVideoCleanApertureVerticalOffsetKey,
-                                                nil];
-    
-    
-    NSDictionary *codecSettings = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   [NSNumber numberWithInt:1960000], AVVideoAverageBitRateKey,
-                                   [NSNumber numberWithInt:24],AVVideoMaxKeyFrameIntervalKey,
-                                   videoCleanApertureSettings, AVVideoCleanApertureKey,
-                                   nil];
-    
-    
-    
-    NSDictionary *videoCompressionSettings = [NSDictionary dictionaryWithObjectsAndKeys:
-                                              AVVideoCodecH264, AVVideoCodecKey,
-                                              codecSettings,AVVideoCompressionPropertiesKey,
-                                              [NSNumber numberWithInt:480], AVVideoWidthKey,
-                                              [NSNumber numberWithInt:640], AVVideoHeightKey,
-                                              nil];
-    
-    AVAssetWriterInput* videoWriterInput = [AVAssetWriterInput
-                                            assetWriterInputWithMediaType:AVMediaTypeVideo
-                                            outputSettings:videoCompressionSettings];
-    
-    NSParameterAssert(videoWriterInput);
-    NSParameterAssert([videoWriter canAddInput:videoWriterInput]);
-    videoWriterInput.expectsMediaDataInRealTime = YES;
-    [videoWriter addInput:videoWriterInput];
-    NSError *aerror = nil;
-    AVAssetReader *reader = [[AVAssetReader alloc] initWithAsset:avAsset error:&aerror];
-    AVAssetTrack *videoTrack = [[avAsset tracksWithMediaType:AVMediaTypeVideo]objectAtIndex:0];
-    
-    videoWriterInput.transform = videoTrack.preferredTransform;
-    NSDictionary *videoOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey];
-    AVAssetReaderTrackOutput *asset_reader_output = [[AVAssetReaderTrackOutput alloc] initWithTrack:videoTrack outputSettings:videoOptions];
-    [reader addOutput:asset_reader_output];
-    //audio setup
-    
-    AVAssetWriterInput* audioWriterInput = [AVAssetWriterInput
-                                            assetWriterInputWithMediaType:AVMediaTypeAudio
-                                            outputSettings:nil];
-    
-    
-    AVAssetReader *audioReader = [AVAssetReader assetReaderWithAsset:avAsset error:&error];
-    AVAssetTrack* audioTrack = [[avAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
-    AVAssetReaderOutput *readerOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:audioTrack outputSettings:nil];
-    
-    [audioReader addOutput:readerOutput];
-    NSParameterAssert(audioWriterInput);
-    NSParameterAssert([videoWriter canAddInput:audioWriterInput]);
-    audioWriterInput.expectsMediaDataInRealTime = NO;
-    [videoWriter addInput:audioWriterInput];
-    [videoWriter startWriting];
-    [videoWriter startSessionAtSourceTime:kCMTimeZero];
-    [reader startReading];
-    dispatch_queue_t _processingQueue = dispatch_queue_create("assetAudioWriterQueue", NULL);
-    [videoWriterInput requestMediaDataWhenReadyOnQueue:_processingQueue usingBlock:^{
-        while ([videoWriterInput isReadyForMoreMediaData]) {
-            
-            CMSampleBufferRef sampleBuffer;
-            
-            if ([reader status] == AVAssetReaderStatusReading) {
-                
-                if(![videoWriterInput isReadyForMoreMediaData])
-                    continue;
-                
-                sampleBuffer = [asset_reader_output copyNextSampleBuffer];
-                NSLog(@"READING");
-                
-                if(sampleBuffer)
-                    [videoWriterInput appendSampleBuffer:sampleBuffer];
-                
-                NSLog(@"WRITTING...");
-            } else {
-                [videoWriterInput markAsFinished];
-                
-                switch ([reader status]) {
-                    case AVAssetReaderStatusReading:
-                        // the reader has more for other tracks, even if this one is done
-                        break;
-                        
-                    case AVAssetReaderStatusCompleted:
-                        // your method for when the conversion is done
-                        // should call finishWriting on the writer
-                        //hook up audio track
-                    {                                               
-                        [videoWriter startSessionAtSourceTime:kCMTimeZero];
-                        
-                        break;
-                    }
-                    case AVAssetReaderStatusFailed:
-                    {
-                        [videoWriter cancelWriting];
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-    }];
 }
 
 - (void)modeChanged:(id)sender {

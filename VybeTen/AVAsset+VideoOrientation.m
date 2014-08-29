@@ -8,10 +8,11 @@
 
 #import "AVAsset+VideoOrientation.h"
 
-
+/*
 static inline CGFloat RadiansToDegrees(CGFloat radians) {
     return radians * 180 / M_PI;
 };
+*/
 
 @implementation AVAsset (VideoOrientation)
 @dynamic videoOrientation;

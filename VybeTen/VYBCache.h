@@ -19,6 +19,15 @@
 
 - (void)clear;
 
+- (void)addUser:(PFObject *)user forLocation:(NSString *)location;
+- (void)addVybe:(PFObject *)vybe forLocation:(NSString *)location;
+- (NSArray *)usersForLocation:(NSString *)location;
+- (NSArray *)vybesForLocation:(NSString *)location;
+- (NSDictionary *)usersByLocation;
+- (NSDictionary *)vybesByLocation;
+- (NSInteger)numberOfLocations;
+
+
 - (void)setAttributesForVybe:(PFObject *)vybe likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser;
 - (NSDictionary *)attributesForVybe:(PFObject *)vybe;
 - (NSNumber *)likeCountForVybe:(PFObject *)vybe;
@@ -35,5 +44,6 @@
 
 - (void)setFacebookFriends:(NSArray *)friends;
 - (NSArray *)facebookFriends;
+
 
 @end

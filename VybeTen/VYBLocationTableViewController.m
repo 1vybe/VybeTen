@@ -11,11 +11,12 @@
 #import "VYBLocationTableViewCell.h"
 #import "VYBPlayerViewController.h"
 #import "VYBProfileViewController.h"
+#import "VYBCache.h"
 
 @interface VYBLocationTableViewController ()
 @property (nonatomic, strong) NSArray *regions;
-@property (nonatomic, strong) NSDictionary *vybeByLocation;
-@property (nonatomic, strong) NSDictionary *userByLocation;
+//@property (nonatomic, strong) NSDictionary *vybeByLocation;
+//@property (nonatomic, strong) NSDictionary *userByLocation;
 @end
 
 @implementation VYBLocationTableViewController {
@@ -70,7 +71,6 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            NSMutableDictionary *newDict = [[NSMutableDictionary alloc] init];
             for (PFObject *aUser in objects) {
                 NSArray *token = [aUser[kVYBUserLastVybedLocationKey] componentsSeparatedByString:@","];
                 if (token.count != 3)
@@ -78,19 +78,13 @@
                 
                 //NOTE: we discard the first location field (neighborhood)
                 NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
-                if ([newDict objectForKey:keyString]) {
-                    NSNumber *newCount = newDict[keyString] + 1;
-                    [newDict set forKey:keyString];
-                } else {
-                    
-                }
+                [[VYBCache sharedCache] addUser:aUser forLocation:keyString];
             }
         }
     }];
 }
 
 - (void)parseVybesToSections {
-    NSMutableDictionary *aDict = [[NSMutableDictionary alloc] init];
     for (PFObject *obj in self.objects) {
         NSString *locString = obj[kVYBVybeLocationStringKey];
         NSArray *token = [locString componentsSeparatedByString:@","];
@@ -99,16 +93,9 @@
         
         //NOTE: we discard the first location field (neighborhood)
         NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
-        if ([aDict objectForKey:keyString]) {
-            NSMutableArray *arr = (NSMutableArray *)aDict[keyString];
-            [arr addObject:obj];
-        } else {
-            NSMutableArray *newArr = [[NSMutableArray alloc] init];
-            [newArr addObject:obj];
-            [aDict setObject:newArr forKey:keyString];
-        }
+        [[VYBCache sharedCache] addVybe:obj forLocation:keyString];
     }
-    self.vybeByLocation = [NSDictionary dictionaryWithDictionary:aDict];
+
     [self.tableView reloadData];
 }
 
@@ -116,10 +103,9 @@
 #pragma mark - UITableViewController
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (!self.vybeByLocation)
-        return 0;
     
-    return self.vybeByLocation.count;
+    return [[VYBCache sharedCache] numberOfLocations];
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -127,10 +113,9 @@
 
     VYBLocationTableViewCell *cell = (VYBLocationTableViewCell *)[tableView dequeueReusableCellWithIdentifier:LocationTableCellIdentifier];
 
-    NSString *locationStr = self.vybeByLocation.allKeys[indexPath.row];
+    NSString *locationKey = [[[VYBCache sharedCache] vybesByLocation] allKeys][indexPath.row];
 
-    [cell setLocationString:locationStr];
-    [cell setVybeCount:[self.vybeByLocation[locationStr] count]];
+    [cell setLocationKey:locationKey];
     
     //[cell.unwatchedVybeButton setContentMode:UIViewContentModeScaleAspectFit];
     
@@ -138,14 +123,11 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *locationKey = self.vybeByLocation.allKeys[indexPath.section];
-    NSArray *users = self.vybeByLocation[locationKey];
-    PFUser *aUser = users[indexPath.row];
-    
+    /*
     VYBProfileViewController *profileVC = [[VYBProfileViewController alloc] init];
-    [profileVC setUser:aUser];
     
     [self.navigationController pushViewController:profileVC animated:NO];
+    */
 }
 
 /*

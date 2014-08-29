@@ -7,6 +7,7 @@
 //
 
 #import "VYBLocationTableViewCell.h"
+#import "VYBCache.h"
 
 @interface VYBLocationTableViewCell ()
 @property (nonatomic, weak) id delegate;
@@ -25,21 +26,22 @@
     // Initialization code
 }
 
-- (void)setLocationString:(NSString *)locationString {
+- (void)setLocationKey:(NSString *)keyStr {
     //_locationString = locationString;
     
-    NSArray *arr = [locationString componentsSeparatedByString:@","];
-    if (arr.count == 3) {
-        cityNameLabel.text = arr[1];
-        NSString *countryCode = arr[2];
+    NSArray *arr = [keyStr componentsSeparatedByString:@","];
+    if (arr.count == 2) {
+        cityNameLabel.text = arr[0];
+        NSString *countryCode = arr[1];
         UIImage *flagImg = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", countryCode]];
         [flagImageView setImage:flagImg];
+        
+        NSArray *vybes = [[VYBCache sharedCache] vybesForLocation:keyStr];
+        vybeCountLabel.text = [NSString stringWithFormat:@"%d", vybes.count];
+        
+        NSArray *users = [[VYBCache sharedCache] usersForLocation:keyStr];
+        followingCountLabel.text = [NSString stringWithFormat:@"%d", users.count];
     }
-}
-
-- (void)setVybeCount:(NSInteger)vybeCount {
-    //_vybeCount = vybeCount;
-    vybeCountLabel.text = [NSString stringWithFormat:@"%d Vybes", vybeCount];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
