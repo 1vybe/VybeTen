@@ -75,6 +75,9 @@
 		8861F0D019A81C8C000249DB /* NSString+Username.m in Sources */ = {isa = PBXBuildFile; fileRef = 8861F0CF19A81C8C000249DB /* NSString+Username.m */; };
 		8861F0D319A81E08000249DB /* NSString+Email.m in Sources */ = {isa = PBXBuildFile; fileRef = 8861F0D219A81E08000249DB /* NSString+Email.m */; };
 		88828D9B19344AEB005CB06C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 88828D9A19344AEB005CB06C /* Reachability.m */; };
+		888F1FE719B2740B00546643 /* ProximaNovaSoft-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 888F1FE419B2740B00546643 /* ProximaNovaSoft-Bold.otf */; };
+		888F1FE819B2740B00546643 /* ProximaNovaSoft-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 888F1FE519B2740B00546643 /* ProximaNovaSoft-Regular.otf */; };
+		888F1FE919B2740B00546643 /* ProximaNovaSoft-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 888F1FE619B2740B00546643 /* ProximaNovaSoft-Semibold.otf */; };
 		88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F72A111914C721007C7370 /* AnimatedTransitioning.m */; };
 		88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F72A131914C721007C7370 /* TransitionDelegate.m */; };
 /* End PBXBuildFile section */
@@ -189,6 +192,9 @@
 		8861F0D219A81E08000249DB /* NSString+Email.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Email.m"; sourceTree = "<group>"; };
 		88828D9919344AEB005CB06C /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = External/Reachability/Reachability.h; sourceTree = "<group>"; };
 		88828D9A19344AEB005CB06C /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = External/Reachability/Reachability.m; sourceTree = "<group>"; };
+		888F1FE419B2740B00546643 /* ProximaNovaSoft-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNovaSoft-Bold.otf"; sourceTree = "<group>"; };
+		888F1FE519B2740B00546643 /* ProximaNovaSoft-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNovaSoft-Regular.otf"; sourceTree = "<group>"; };
+		888F1FE619B2740B00546643 /* ProximaNovaSoft-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNovaSoft-Semibold.otf"; sourceTree = "<group>"; };
 		88F72A101914C721007C7370 /* AnimatedTransitioning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimatedTransitioning.h; sourceTree = "<group>"; };
 		88F72A111914C721007C7370 /* AnimatedTransitioning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimatedTransitioning.m; sourceTree = "<group>"; };
 		88F72A121914C721007C7370 /* TransitionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionDelegate.h; sourceTree = "<group>"; };
@@ -345,6 +351,7 @@
 		02D11CF518DF62710018DA97 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
+				888F1FE319B2740B00546643 /* ProximaNovaSoft */,
 				02F80C45196F600300FB2A48 /* AvenirLTStd-Book.otf */,
 				02D11CF618DF62AC0018DA97 /* Montreal */,
 			);
@@ -455,6 +462,16 @@
 			name = External;
 			sourceTree = "<group>";
 		};
+		888F1FE319B2740B00546643 /* ProximaNovaSoft */ = {
+			isa = PBXGroup;
+			children = (
+				888F1FE419B2740B00546643 /* ProximaNovaSoft-Bold.otf */,
+				888F1FE519B2740B00546643 /* ProximaNovaSoft-Regular.otf */,
+				888F1FE619B2740B00546643 /* ProximaNovaSoft-Semibold.otf */,
+			);
+			path = ProximaNovaSoft;
+			sourceTree = "<group>";
+		};
 		88F72A0F1914C721007C7370 /* Transition Delegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -556,12 +573,15 @@
 				02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */,
 				021B5B7419A7F23800B906F3 /* VYBProfileInfoView.xib in Resources */,
 				02D11D0F18DF62AC0018DA97 /* Montreal-Regular.otf in Resources */,
+				888F1FE819B2740B00546643 /* ProximaNovaSoft-Regular.otf in Resources */,
+				888F1FE919B2740B00546643 /* ProximaNovaSoft-Semibold.otf in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
 				02D11D0918DF62AC0018DA97 /* Montreal-Heavy.otf in Resources */,
 				02D11D0E18DF62AC0018DA97 /* Montreal-MediumIta.otf in Resources */,
 				02D11D0818DF62AC0018DA97 /* Montreal-DemiBoldIta.otf in Resources */,
 				021B5B6F19A7D0E300B906F3 /* VYBVybeTableViewCell.xib in Resources */,
 				02D11D0618DF62AC0018DA97 /* Montreal-BoldIta.otf in Resources */,
+				888F1FE719B2740B00546643 /* ProximaNovaSoft-Bold.otf in Resources */,
 				0262054919A69DEE00E994F9 /* VYBUserTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
