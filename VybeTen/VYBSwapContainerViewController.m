@@ -43,6 +43,8 @@
     {
         [self swapFromViewController:[self.childViewControllers objectAtIndex:0] toViewController:segue.destinationViewController];
     }
+    
+    self.currentViewController = segue.destinationViewController;
 }
 
 - (void)swapFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController

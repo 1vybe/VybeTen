@@ -40,6 +40,10 @@
 		027F18D019AFC7030045BFEF /* VYBLocationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 027F18CF19AFC7030045BFEF /* VYBLocationTableViewCell.m */; };
 		0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0293877C1969C1D200F41A12 /* VYBCaptureButton.m */; };
 		0299EC84199A9254004E97CF /* VYBHubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0299EC82199A9254004E97CF /* VYBHubViewController.m */; };
+		02A28A4D19B15A67007C8FFA /* VYBTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A28A4C19B15A67007C8FFA /* VYBTitleView.xib */; };
+		02B0A7AE19B262BA0074627A /* VYBWatchAllButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02B0A7AD19B262BA0074627A /* VYBWatchAllButton.xib */; };
+		02B0A7B119B264FD0074627A /* VYBWatchAllButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 02B0A7B019B264FD0074627A /* VYBWatchAllButton.m */; };
+		02B0C5DA19B13C5E003404BF /* VYBNavigationBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02B0C5D919B13C5E003404BF /* VYBNavigationBar.xib */; };
 		02B6AC2619AF843B00A0C44D /* EmptySegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 02B6AC2519AF843B00A0C44D /* EmptySegue.m */; };
 		02CEE2AD1970A46A00AC361F /* VYBTimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CEE2AC1970A46A00AC361F /* VYBTimerView.m */; };
 		02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CEE2AF1970C2F900AC361F /* VYBReplayViewController.m */; };
@@ -60,6 +64,9 @@
 		02D255E11992A4DE0053B89F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02D255E01992A4DE0053B89F /* MapKit.framework */; };
 		02E4556A1989727200B22554 /* VYBLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E455681989727200B22554 /* VYBLogInViewController.m */; };
 		02E4556B1989727200B22554 /* VYBLogInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E455691989727200B22554 /* VYBLogInViewController.xib */; };
+		02E45EC819B0131200A55079 /* VYBUsersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E45EC719B0131200A55079 /* VYBUsersTableViewController.m */; };
+		02E45ECB19B0156400A55079 /* VYBHubControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E45ECA19B0156400A55079 /* VYBHubControlView.m */; };
+		02E45ECD19B0158100A55079 /* VYBHubControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E45ECC19B0158100A55079 /* VYBHubControlView.xib */; };
 		02F36B2C1986F5A200B7D842 /* VYBUserStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F36B2B1986F5A200B7D842 /* VYBUserStore.m */; };
 		02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F36B2E1986F62800B7D842 /* VYBUser.m */; };
 		02F80C46196F600300FB2A48 /* AvenirLTStd-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02F80C45196F600300FB2A48 /* AvenirLTStd-Book.otf */; };
@@ -137,6 +144,11 @@
 		0293877C1969C1D200F41A12 /* VYBCaptureButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCaptureButton.m; sourceTree = "<group>"; };
 		0299EC81199A9254004E97CF /* VYBHubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBHubViewController.h; sourceTree = "<group>"; };
 		0299EC82199A9254004E97CF /* VYBHubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBHubViewController.m; sourceTree = "<group>"; };
+		02A28A4C19B15A67007C8FFA /* VYBTitleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBTitleView.xib; sourceTree = "<group>"; };
+		02B0A7AD19B262BA0074627A /* VYBWatchAllButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBWatchAllButton.xib; sourceTree = "<group>"; };
+		02B0A7AF19B264FD0074627A /* VYBWatchAllButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBWatchAllButton.h; sourceTree = "<group>"; };
+		02B0A7B019B264FD0074627A /* VYBWatchAllButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBWatchAllButton.m; sourceTree = "<group>"; };
+		02B0C5D919B13C5E003404BF /* VYBNavigationBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBNavigationBar.xib; sourceTree = "<group>"; };
 		02B6AC2419AF843B00A0C44D /* EmptySegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptySegue.h; sourceTree = "<group>"; };
 		02B6AC2519AF843B00A0C44D /* EmptySegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmptySegue.m; sourceTree = "<group>"; };
 		02CEE2AB1970A46A00AC361F /* VYBTimerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTimerView.h; sourceTree = "<group>"; };
@@ -161,6 +173,11 @@
 		02E455671989727200B22554 /* VYBLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBLogInViewController.h; sourceTree = "<group>"; };
 		02E455681989727200B22554 /* VYBLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBLogInViewController.m; sourceTree = "<group>"; };
 		02E455691989727200B22554 /* VYBLogInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBLogInViewController.xib; sourceTree = "<group>"; };
+		02E45EC619B0131200A55079 /* VYBUsersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUsersTableViewController.h; sourceTree = "<group>"; };
+		02E45EC719B0131200A55079 /* VYBUsersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUsersTableViewController.m; sourceTree = "<group>"; };
+		02E45EC919B0156400A55079 /* VYBHubControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBHubControlView.h; sourceTree = "<group>"; };
+		02E45ECA19B0156400A55079 /* VYBHubControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBHubControlView.m; sourceTree = "<group>"; };
+		02E45ECC19B0158100A55079 /* VYBHubControlView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBHubControlView.xib; sourceTree = "<group>"; };
 		02F36B2A1986F5A200B7D842 /* VYBUserStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUserStore.h; sourceTree = "<group>"; };
 		02F36B2B1986F5A200B7D842 /* VYBUserStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUserStore.m; sourceTree = "<group>"; };
 		02F36B2D1986F62800B7D842 /* VYBUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUser.h; sourceTree = "<group>"; };
@@ -281,6 +298,14 @@
 				021B5B7319A7F23800B906F3 /* VYBProfileInfoView.xib */,
 				027F18CE19AFC7030045BFEF /* VYBLocationTableViewCell.h */,
 				027F18CF19AFC7030045BFEF /* VYBLocationTableViewCell.m */,
+				02E45EC919B0156400A55079 /* VYBHubControlView.h */,
+				02E45ECA19B0156400A55079 /* VYBHubControlView.m */,
+				02E45ECC19B0158100A55079 /* VYBHubControlView.xib */,
+				02B0C5D919B13C5E003404BF /* VYBNavigationBar.xib */,
+				02B0A7AF19B264FD0074627A /* VYBWatchAllButton.h */,
+				02B0A7B019B264FD0074627A /* VYBWatchAllButton.m */,
+				02B0A7AD19B262BA0074627A /* VYBWatchAllButton.xib */,
+				02A28A4C19B15A67007C8FFA /* VYBTitleView.xib */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -319,6 +344,8 @@
 				02267C2619AEDE00007C659C /* VYBLocationTableViewController.m */,
 				027C707A19AF0400007BB8FE /* VYBFollowingTableViewController.h */,
 				027C707B19AF0400007BB8FE /* VYBFollowingTableViewController.m */,
+				02E45EC619B0131200A55079 /* VYBUsersTableViewController.h */,
+				02E45EC719B0131200A55079 /* VYBUsersTableViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -537,15 +564,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				02D11D0B18DF62AC0018DA97 /* Montreal-Light.otf in Resources */,
+				02A28A4D19B15A67007C8FFA /* VYBTitleView.xib in Resources */,
 				020F1C4C1977054900C3AA40 /* VYBPermissionViewController.xib in Resources */,
 				020CC65F19A701D900B2F794 /* VYBProfileViewController.xib in Resources */,
 				027C707919AEFE68007BB8FE /* HubStoryboard.storyboard in Resources */,
 				02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */,
+				02B0A7AE19B262BA0074627A /* VYBWatchAllButton.xib in Resources */,
+				02E45ECD19B0158100A55079 /* VYBHubControlView.xib in Resources */,
 				02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */,
 				02F80C46196F600300FB2A48 /* AvenirLTStd-Book.otf in Resources */,
 				02D11D0A18DF62AC0018DA97 /* Montreal-HeavyIta.otf in Resources */,
 				604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */,
 				02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */,
+				02B0C5DA19B13C5E003404BF /* VYBNavigationBar.xib in Resources */,
 				02E4556B1989727200B22554 /* VYBLogInViewController.xib in Resources */,
 				023F0FD019AB9BC00055D3B7 /* VYBPlayerViewController.xib in Resources */,
 				02D11D0D18DF62AC0018DA97 /* Montreal-Medium.otf in Resources */,
@@ -619,6 +650,7 @@
 				02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */,
 				0299EC84199A9254004E97CF /* VYBHubViewController.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
+				02E45ECB19B0156400A55079 /* VYBHubControlView.m in Sources */,
 				02E4556A1989727200B22554 /* VYBLogInViewController.m in Sources */,
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */,
@@ -632,12 +664,14 @@
 				027C707C19AF0400007BB8FE /* VYBFollowingTableViewController.m in Sources */,
 				02F36B2C1986F5A200B7D842 /* VYBUserStore.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
+				02B0A7B119B264FD0074627A /* VYBWatchAllButton.m in Sources */,
 				023E538D191F142000C3CF78 /* VYBCache.m in Sources */,
 				027F18D019AFC7030045BFEF /* VYBLocationTableViewCell.m in Sources */,
 				020CC65E19A701D900B2F794 /* VYBProfileViewController.m in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
 				021B5B7219A7F21C00B906F3 /* VYBProfileInfoView.m in Sources */,
+				02E45EC819B0131200A55079 /* VYBUsersTableViewController.m in Sources */,
 				023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
 				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,

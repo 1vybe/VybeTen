@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6206.8" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VYBHubViewController">
+            <connections>
+                <outlet property="followingButton" destination="Sav-2z-tyf" id="d8h-wl-teq"/>
+                <outlet property="locationButton" destination="FeC-Cb-jXg" id="rnu-jo-sMH"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="VYBHubControlView">
+            <rect key="frame" x="0.0" y="0.0" width="307" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hub_control_tab_container" translatesAutoresizingMaskIntoConstraints="NO" id="JqQ-4t-e7B">
+                    <rect key="frame" x="77" y="5" width="154" height="34"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="154" id="mcQ-z3-tYX"/>
+                        <constraint firstAttribute="height" constant="34" id="nGD-Bk-zeH" userLabel="Height - (28) - hub_control_tab_container"/>
+                    </constraints>
+                    <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                        <rect key="frame" x="0.0" y="-1" width="154" height="31"/>
+                    </variation>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sav-2z-tyf" userLabel="followingButton">
+                    <rect key="frame" x="154" y="11" width="70" height="22"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="22" id="1Md-l2-O2M" userLabel="Height - (26) - followingButton"/>
+                        <constraint firstAttribute="width" constant="70" id="f7U-ic-kdP"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <state key="normal" title="Following">
+                        <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" red="0.89410665759999997" green="0.89410665759999997" blue="0.89410665759999997" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <state key="selected" backgroundImage="hub_control_tab_button_2">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                        <rect key="frame" x="89" y="-1" width="62" height="29"/>
+                    </variation>
+                    <connections>
+                        <action selector="followingButtonPressed:" destination="-1" eventType="touchUpInside" id="iw6-lX-eer"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FeC-Cb-jXg" userLabel="locationButton">
+                    <rect key="frame" x="84" y="11" width="70" height="22"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="22" id="84S-2i-lgf" userLabel="Height - (26) - locationButton"/>
+                        <constraint firstAttribute="width" constant="70" id="xFQ-2J-jLc"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <state key="normal" title="Location">
+                        <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" red="0.89410665759999997" green="0.89410665759999997" blue="0.89410665759999997" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <state key="selected" title="Location" backgroundImage="hub_control_tab_button">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                        <rect key="frame" x="25" y="0.0" width="56" height="29"/>
+                    </variation>
+                    <connections>
+                        <action selector="locationButtonPressed:" destination="-1" eventType="touchUpInside" id="iLN-Lu-ACp"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="JqQ-4t-e7B" secondAttribute="centerX" id="LBa-Rx-Pad"/>
+                <constraint firstAttribute="centerX" secondItem="FeC-Cb-jXg" secondAttribute="centerX" constant="35" id="NJP-QL-3wj"/>
+                <constraint firstAttribute="centerY" secondItem="JqQ-4t-e7B" secondAttribute="centerY" id="Wh1-bf-vuf"/>
+                <constraint firstAttribute="centerY" secondItem="Sav-2z-tyf" secondAttribute="centerY" id="fRV-6S-Vdt"/>
+                <constraint firstAttribute="centerX" secondItem="Sav-2z-tyf" secondAttribute="centerX" constant="-35" id="oMj-vV-76X"/>
+                <constraint firstAttribute="centerY" secondItem="FeC-Cb-jXg" secondAttribute="centerY" id="yZ0-jd-aIu"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="52.5" y="-64"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="hub_control_tab_button" width="156" height="48"/>
+        <image name="hub_control_tab_button_2" width="156" height="48"/>
+        <image name="hub_control_tab_container" width="315" height="52"/>
+    </resources>
+</document>

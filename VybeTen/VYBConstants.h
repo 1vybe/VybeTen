@@ -32,14 +32,18 @@
 #define PARSE_CLIENT_KEY            @"WLqeqlf4qVVk5jF6yHSWGxw3UzUQwUtmAk9vCPfB"
 */
 
-#define COLOR_MAIN              [UIColor color
+#define COLOR_MAIN              [UIColor colorWithRed:255.0/255.0 green:81.0/255.0 blue:81.0/255.0 alpha:1]
+#define COLOR_LOC_NAME_LABEL    [UIColor colorWithRed:76.0/255.0 green:76.0/255.0 blue:76.0/255.0 alpha:1]
+#define COLOR_CONTROL_BG        [UIColor colorWithRed:224.0/255.0 green:224.0/255.0 blue:224.0/255.0 alpha:1]
+#define COLOR_CONTROL_LINE      [UIColor colorWithRed:157.0/255.0 green:157.0/255.0 blue:157.0/255.0 alpha:1]
+
 
 #define FONT_SIZE_DEFAULT       18
 #define FONT_SIZE_BIG           20
 #define FONT_SIZE_SMALL         16
 #define DEFAULT_FONT(s)         [UIFont fontWithName:@"Montreal-Xlight" size:s]
 #define FONT_MENU               DEFAULT_FONT(FONT_SIZE_BIG)
-#define FONT_TITLE              DEFAULT_FONT(FONT_SIZE_DEFAULT)
+#define FONT_LOC_NAME_LABEL     DEFAULT_FONT(FONT_SIZE_DEFAULT)
 #define FONT_TITLE_SMALL        DEFAULT_FONT(FONT_SIZE_SMALL)
 
 

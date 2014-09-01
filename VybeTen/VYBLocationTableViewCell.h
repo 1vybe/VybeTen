@@ -10,5 +10,4 @@
 
 @interface VYBLocationTableViewCell : UITableViewCell
 @property (nonatomic, strong) NSString *locationKey;
-@property (nonatomic) NSInteger vybeCount;
 @end

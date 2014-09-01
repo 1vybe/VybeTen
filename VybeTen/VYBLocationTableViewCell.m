@@ -37,10 +37,14 @@
         [flagImageView setImage:flagImg];
         
         NSArray *vybes = [[VYBCache sharedCache] vybesForLocation:keyStr];
-        vybeCountLabel.text = [NSString stringWithFormat:@"%d", vybes.count];
+        if (vybes.count > 1)
+            vybeCountLabel.text = [NSString stringWithFormat:@"%d Vybes", vybes.count];
+        else
+            vybeCountLabel.text = [NSString stringWithFormat:@"%d Vybe", vybes.count];
+
         
         NSArray *users = [[VYBCache sharedCache] usersForLocation:keyStr];
-        followingCountLabel.text = [NSString stringWithFormat:@"%d", users.count];
+        followingCountLabel.text = [NSString stringWithFormat:@"%d Following", users.count];
     }
 }
 

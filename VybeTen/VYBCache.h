@@ -26,6 +26,8 @@
 - (NSDictionary *)usersByLocation;
 - (NSDictionary *)vybesByLocation;
 - (NSInteger)numberOfLocations;
+- (void)clearUsersByLocation;
+- (void)clearVybesByLocation;
 
 
 - (void)setAttributesForVybe:(PFObject *)vybe likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser;

@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.8" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7I9-fc-Jih">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -17,94 +18,77 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I8O-eo-BTX" userLabel="controlView">
-                                <rect key="frame" x="97" y="83" width="323" height="44"/>
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="hub_control_tab_container" translatesAutoresizingMaskIntoConstraints="NO" id="2Qy-hm-j1M">
-                                        <rect key="frame" x="84" y="7" width="154" height="30"/>
-                                        <variation key="widthClass=compact" fixedFrame="YES">
-                                            <rect key="frame" x="123" y="7" width="154" height="30"/>
-                                        </variation>
-                                    </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sjx-iI-MSb" userLabel="locationButton">
-                                        <rect key="frame" x="90" y="10" width="70" height="24"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <state key="normal" title="Location">
-                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" red="0.89410665759999997" green="0.89410665759999997" blue="0.89410665759999997" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <state key="selected" title="Location" backgroundImage="hub_control_tab_button">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <variation key="widthClass=compact" fixedFrame="YES">
-                                            <rect key="frame" x="129" y="10" width="70" height="24"/>
-                                        </variation>
-                                        <connections>
-                                            <action selector="locationButtonPressed:" destination="7I9-fc-Jih" eventType="touchUpInside" id="Zt4-t2-7VC"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g0q-2J-qAn" userLabel="followingButton">
-                                        <rect key="frame" x="162" y="10" width="70" height="24"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <state key="normal" title="Following">
-                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" red="0.89410665759999997" green="0.89410665759999997" blue="0.89410665759999997" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <state key="selected" backgroundImage="hub_control_tab_button_2">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <variation key="widthClass=compact" fixedFrame="YES">
-                                            <rect key="frame" x="201" y="10" width="70" height="24"/>
-                                        </variation>
-                                        <connections>
-                                            <action selector="followingButtonPressed:" destination="7I9-fc-Jih" eventType="touchUpInside" id="EhB-9e-a1w"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" red="0.89410665759999997" green="0.89410665759999997" blue="0.89410665759999997" alpha="1" colorSpace="calibratedRGB"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5tC-aS-WZ0" customClass="VYBHubControlView">
+                                <rect key="frame" x="0.0" y="44" width="600" height="44"/>
                                 <variation key="widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="45" width="400" height="44"/>
-                                </variation>
-                                <variation key="heightClass=compact-widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="0.0" y="44" width="400" height="44"/>
                                 </variation>
                             </view>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Wb-Ek-0b2">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KZX-rZ-Gc1">
+                                <rect key="frame" x="0.0" y="88" width="600" height="512"/>
                                 <variation key="widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="89" width="400" height="519"/>
-                                </variation>
-                                <variation key="heightClass=compact-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="5" y="96" width="391" height="304"/>
+                                    <rect key="frame" x="0.0" y="90" width="400" height="510"/>
                                 </variation>
                                 <connections>
-                                    <segue destination="RuQ-kf-Gi5" kind="embed" identifier="embedContainer" id="GPM-2h-g1V"/>
+                                    <segue destination="RuQ-kf-Gi5" kind="embed" identifier="embedContainer" id="W5K-cU-0rx"/>
                                 </connections>
                             </containerView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R3E-A8-BN2" customClass="VYBWatchAllButton">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="47" id="OAS-K2-yl1"/>
+                                    <constraint firstAttribute="width" constant="169" id="bY8-vc-5md"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="OAS-K2-yl1"/>
+                                        <exclude reference="bY8-vc-5md"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="OAS-K2-yl1"/>
+                                        <include reference="bY8-vc-5md"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="watchAllButtonPressed:" destination="7I9-fc-Jih" eventType="touchUpInside" id="FRl-j4-Tb1"/>
+                                </connections>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="R3E-A8-BN2" secondAttribute="trailing" constant="10" id="NPC-Gx-2aE"/>
+                            <constraint firstItem="Dyz-dk-YQ8" firstAttribute="top" secondItem="R3E-A8-BN2" secondAttribute="bottom" constant="20" id="PJa-t3-DJp"/>
+                        </constraints>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="1Wb-Ek-0b2"/>
+                                <exclude reference="R3E-A8-BN2"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="NPC-Gx-2aE"/>
+                                <exclude reference="PJa-t3-DJp"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
-                                <include reference="1Wb-Ek-0b2"/>
+                                <include reference="R3E-A8-BN2"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="NPC-Gx-2aE"/>
+                                <include reference="PJa-t3-DJp"/>
                             </mask>
                         </variation>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
-                        <outlet property="controlView" destination="I8O-eo-BTX" id="E2D-zb-A0c"/>
-                        <outlet property="followingButton" destination="g0q-2J-qAn" id="qDF-aV-gIe"/>
-                        <outlet property="locationButton" destination="Sjx-iI-MSb" id="Tjv-IO-p6j"/>
+                        <outlet property="watchAllButton" destination="R3E-A8-BN2" id="7an-NU-BoV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1dO-oP-h80" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-175.5" y="-162"/>
+            <point key="canvasLocation" x="-243" y="-210"/>
         </scene>
         <!--Swap Container View Controller-->
         <scene sceneID="MNh-RP-BZH">
@@ -129,7 +113,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0fo-09-Y0q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="566.25" y="-162"/>
+            <point key="canvasLocation" x="373.5" y="-210"/>
         </scene>
         <!--Location Table View Controller-->
         <scene sceneID="bOm-vs-sP1">
@@ -210,7 +194,7 @@
                                         <constraint firstAttribute="centerY" secondItem="HdK-ko-jHn" secondAttribute="centerY" id="6ic-TF-AAv"/>
                                         <constraint firstItem="Sde-yv-DEa" firstAttribute="leading" secondItem="HdK-ko-jHn" secondAttribute="trailing" constant="5" id="ELw-pm-pEO"/>
                                         <constraint firstItem="HdK-ko-jHn" firstAttribute="top" secondItem="OMU-Xa-mlO" secondAttribute="top" id="I5V-CA-K0e"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="Sk3-yq-u82" secondAttribute="trailing" constant="10" id="Mlz-hE-bSx"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Sk3-yq-u82" secondAttribute="trailing" constant="5" id="Mlz-hE-bSx"/>
                                         <constraint firstAttribute="centerY" secondItem="Sk3-yq-u82" secondAttribute="centerY" id="epb-Ja-dZm"/>
                                         <constraint firstItem="Sde-yv-DEa" firstAttribute="bottom" secondItem="HdK-ko-jHn" secondAttribute="bottom" id="lrD-a6-dNq"/>
                                         <constraint firstItem="qth-PW-6ZF" firstAttribute="leading" secondItem="Sde-yv-DEa" secondAttribute="trailing" constant="5" id="uXA-qP-rpJ"/>
@@ -258,6 +242,7 @@
                                         </mask>
                                     </variation>
                                 </tableViewCellContentView>
+                                <inset key="separatorInset" minX="60" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <outlet property="cityNameLabel" destination="OMU-Xa-mlO" id="sXx-g7-Hp6"/>
                                     <outlet property="flagImageView" destination="HdK-ko-jHn" id="Cor-A6-Mcu"/>
@@ -271,7 +256,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fAl-lW-j7j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1149" y="-512"/>
+            <point key="canvasLocation" x="993" y="-632"/>
         </scene>
         <!--Following Table View Controller-->
         <scene sceneID="YaZ-vR-VhK">
@@ -288,13 +273,10 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lSU-hD-KVz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1332" y="157"/>
+            <point key="canvasLocation" x="1170" y="57"/>
         </scene>
     </scenes>
     <resources>
         <image name="button_circle_blue" width="47" height="47"/>
-        <image name="hub_control_tab_button" width="156" height="48"/>
-        <image name="hub_control_tab_button_2" width="156" height="48"/>
-        <image name="hub_control_tab_container" width="315" height="52"/>
     </resources>
 </document>

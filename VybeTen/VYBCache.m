@@ -109,6 +109,15 @@
     return [self.cache objectForKey:@"vybesByLocation"];
 }
 
+- (void)clearUsersByLocation {
+    NSDictionary *emptyDict = [[NSDictionary alloc] init];
+    [self.cache setObject:emptyDict forKey:@"usersByLocation"];
+}
+
+- (void)clearVybesByLocation {
+    NSDictionary *emptyDict = [[NSDictionary alloc] init];
+    [self.cache setObject:emptyDict forKey:@"vybesByLocation"];
+}
 
 
 - (NSInteger)numberOfLocations {

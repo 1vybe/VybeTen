@@ -27,8 +27,24 @@
     self = [self initWithRootViewController:rootViewController];
     if (self) {
         _pageIndex = pageIndex;
+        
+        // navigation bar color
+        [self.navigationBar setBarTintColor:COLOR_MAIN];
+        
+        [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+        
+        // back button image
+        [[UINavigationBar appearance] setBackIndicatorImage:[UIImage imageNamed:@"button_navi_back.png"]];
+        [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
+
     }
     return self;
+}
+
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    // To remove a navigation bar's back button text 
+    self.navigationBar.topItem.title = @"";
+    [super pushViewController:viewController animated:animated];
 }
 
 - (NSInteger)pageIndex {

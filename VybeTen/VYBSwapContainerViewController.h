@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface VYBSwapContainerViewController : UIViewController
+@property (nonatomic) id currentViewController;
 - (void)swapViewControllers;
 @end

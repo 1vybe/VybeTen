@@ -10,17 +10,18 @@
 #import "VYBAppDelegate.h"
 #import "VYBLocationTableViewCell.h"
 #import "VYBPlayerViewController.h"
+#import "VYBUsersTableViewController.h"
 #import "VYBProfileViewController.h"
 #import "VYBCache.h"
 
 @interface VYBLocationTableViewController ()
 @property (nonatomic, strong) NSArray *regions;
+
 //@property (nonatomic, strong) NSDictionary *vybeByLocation;
 //@property (nonatomic, strong) NSDictionary *userByLocation;
 @end
 
-@implementation VYBLocationTableViewController {
-}
+@implementation VYBLocationTableViewController
 
 
 - (void)viewDidLoad {
@@ -38,6 +39,11 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+}
+
 
 
 #pragma mark - PFQueryTableViewController
@@ -58,11 +64,13 @@
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
     
-    [self getUserCountByLocation];
+    [[VYBCache sharedCache] clearUsersByLocation];
+    [[VYBCache sharedCache] clearVybesByLocation];
+    [self getUsersByLocation];
     [self parseVybesToSections];
 }
 
-- (void)getUserCountByLocation {
+- (void)getUsersByLocation {
     PFQuery *query = [PFUser query];
     // 24 TTL checking
     NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
@@ -123,11 +131,31 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    /*
-    VYBProfileViewController *profileVC = [[VYBProfileViewController alloc] init];
+    NSString *locationKey = [[[VYBCache sharedCache] vybesByLocation] allKeys][indexPath.row];
     
-    [self.navigationController pushViewController:profileVC animated:NO];
-    */
+    VYBUsersTableViewController *usersTable = [[VYBUsersTableViewController alloc] init];
+    [usersTable setLocationKey:locationKey];
+    [self.navigationController pushViewController:usersTable animated:NO];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    CGPoint translation = [scrollView.panGestureRecognizer translationInView:scrollView.superview];
+    
+    if(translation.y > 0)
+    {
+        // react to dragging down (scroll up), shrink WATCH button
+    } else
+    {
+        // react to dragging up (scroll down)
+    }
+}
+
+#pragma mark - ()
+
+- (void)watchAll {
+    
 }
 
 /*

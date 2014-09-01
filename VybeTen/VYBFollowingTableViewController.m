@@ -8,9 +8,10 @@
 
 #import "VYBFollowingTableViewController.h"
 #import "VYBUserTableViewCell.h"
+#import "VYBProfileViewController.h"
 
 @interface VYBFollowingTableViewController ()
-
+- (IBAction)watchAllButtonPressed:(id)sender;
 @end
 
 @implementation VYBFollowingTableViewController
@@ -60,6 +61,13 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    PFObject *aUser = self.objects[indexPath.row];
+    VYBProfileViewController *profileVC = [[VYBProfileViewController alloc] init];
+    [profileVC setUser:aUser];
+    [self.navigationController pushViewController:profileVC animated:NO];
+}
+
 #pragma mark - PFQueryTableViewController 
 
 - (PFQuery *)queryForTable {
@@ -74,6 +82,13 @@
     
     return query;
 }
+
+#pragma amrk - ()
+
+- (void)watchAll {
+    
+}
+
 /*
 #pragma mark - Navigation
 
