@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.8" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7I9-fc-Jih">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
@@ -66,8 +67,8 @@
                                 <exclude reference="R3E-A8-BN2"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="NPC-Gx-2aE"/>
                                 <exclude reference="PJa-t3-DJp"/>
+                                <exclude reference="NPC-Gx-2aE"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -75,8 +76,8 @@
                                 <include reference="R3E-A8-BN2"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="NPC-Gx-2aE"/>
                                 <include reference="PJa-t3-DJp"/>
+                                <include reference="NPC-Gx-2aE"/>
                             </mask>
                         </variation>
                     </view>
@@ -150,7 +151,7 @@
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sde-yv-DEa" userLabel="followingCountLabel">
                                             <rect key="frame" x="66" y="34" width="96" height="20"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OMU-Xa-mlO" userLabel="cityNameLabel">
@@ -256,7 +257,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fAl-lW-j7j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="993" y="-632"/>
+            <point key="canvasLocation" x="1233" y="-618"/>
         </scene>
         <!--Following Table View Controller-->
         <scene sceneID="YaZ-vR-VhK">
@@ -273,7 +274,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lSU-hD-KVz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1170" y="57"/>
+            <point key="canvasLocation" x="1182" y="79"/>
         </scene>
     </scenes>
     <resources>

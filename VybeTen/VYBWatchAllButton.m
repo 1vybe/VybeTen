@@ -9,13 +9,30 @@
 #import "VYBWatchAllButton.h"
 @implementation VYBWatchAllButton
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        VYBWatchAllButton *watchXib = [[[NSBundle mainBundle] loadNibNamed:@"VYBWatchAllButton" owner:self options:nil] objectAtIndex:0];
-        [self addSubview:watchXib];
+- (id)awakeAfterUsingCoder:(NSCoder *)aDecoder {
+    if (![self.subviews count]) {
+        VYBWatchAllButton *theOne = (VYBWatchAllButton *)[[[NSBundle mainBundle] loadNibNamed:@"VYBWatchAllButton" owner:nil options:nil] firstObject];
+        
+        theOne.frame = self.frame;
+        theOne.autoresizingMask = self.autoresizingMask;
+        theOne.translatesAutoresizingMaskIntoConstraints = self.translatesAutoresizingMaskIntoConstraints;
+        
+        for (NSLayoutConstraint *constraint in self.constraints) {
+            id firstItem = constraint.firstItem;
+            if (firstItem == self)
+                firstItem = theOne;
+            
+            id secondItem = constraint.secondItem;
+            if (secondItem == self)
+                secondItem = theOne;
+            
+            [theOne addConstraint:[NSLayoutConstraint constraintWithItem:firstItem attribute:constraint.firstAttribute
+                                                               relatedBy:constraint.relation
+                                                                  toItem:secondItem attribute:constraint.secondAttribute multiplier:constraint.multiplier constant:constraint.constant]];
+        }
+        
+        return theOne;
     }
-    
     return self;
 }
 
