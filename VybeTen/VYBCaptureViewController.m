@@ -280,25 +280,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-
-    if (![PFUser currentUser]) {
-        VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
-        [self presentViewController:logInVC animated:NO completion:nil];
-    }
-    else {
-        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
-            self.permissionVC = [[VYBPermissionViewController alloc] init];
-            [self presentViewController:self.permissionVC animated:NO completion:nil];
-        }
-        if([CLLocationManager authorizationStatus]==kCLAuthorizationStatusDenied){
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Access Denied"
-                                                            message:@"Please go to Settings and turn on Location Service for this app."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-        }
-    }
     
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName
                                        value:@"Capture Screen"];

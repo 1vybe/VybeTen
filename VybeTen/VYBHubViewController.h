@@ -9,5 +9,5 @@
 #import <Parse/Parse.h>
 
 @interface VYBHubViewController : UIViewController <UISearchDisplayDelegate, UISearchBarDelegate>
-
+- (void)scrollViewBeganDragging:(UIScrollView *)scrollView;
 @end

@@ -16,6 +16,8 @@
 #import "VYBAppDelegate.h"
 #import "VYBUserStore.h"
 #import "VYBCaptureViewController.h"
+#import "VYBLogInViewController.h"
+#import "VYBPermissionViewController.h"
 #import "VYBHubViewController.h"
 #import "VYBProfileViewController.h"
 #import "VYBPlayerViewController.h"
@@ -113,6 +115,20 @@
     self.captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
     self.captureNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBCapturePageIndex withRootViewController:self.captureVC];
     self.captureNavigationVC.navigationBarHidden = YES;
+    
+    // Checking permissions
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+        VYBPermissionViewController *permission = [[VYBPermissionViewController alloc] init];
+        [self.captureNavigationVC pushViewController:permission animated:NO];
+    }
+    
+    // Checking login status
+    if (![PFUser currentUser]) {
+        VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
+        [self.captureNavigationVC pushViewController:logInVC animated:NO];
+    }
+
+
     
     self.profileVC = [[VYBProfileViewController alloc] init];
     [self.profileVC setUser:[PFUser currentUser]];

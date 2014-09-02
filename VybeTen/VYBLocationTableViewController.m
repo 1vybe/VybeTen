@@ -8,6 +8,7 @@
 
 #import "VYBLocationTableViewController.h"
 #import "VYBAppDelegate.h"
+#import "VYBHubViewController.h"
 #import "VYBLocationTableViewCell.h"
 #import "VYBPlayerViewController.h"
 #import "VYBUsersTableViewController.h"
@@ -27,6 +28,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // To remove empty cells
+    self.tableView.tableFooterView = [[UIView alloc] init];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -141,15 +144,11 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    CGPoint translation = [scrollView.panGestureRecognizer translationInView:scrollView.superview];
+    VYBHubViewController *hubVC = (VYBHubViewController *)self.parentViewController.parentViewController;
+    if (!hubVC)
+        return;
     
-    if(translation.y > 0)
-    {
-        // react to dragging down (scroll up), shrink WATCH button
-    } else
-    {
-        // react to dragging up (scroll down)
-    }
+    [hubVC scrollViewBeganDragging:scrollView];
 }
 
 #pragma mark - ()

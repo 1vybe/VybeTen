@@ -54,7 +54,7 @@
 }
 
 - (IBAction)logInButtonPressed:(id)sender {
-    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (IBAction)signUpButtonPressed:(id)sender {

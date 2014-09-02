@@ -48,17 +48,19 @@
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     [self.locationManager startUpdatingLocation];
+    // for iOS 8
+    [self.locationManager requestAlwaysAuthorization];
 }
 
 - (IBAction)laterButtonPressed:(id)sender {
-    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     if (status == kCLAuthorizationStatusAuthorized || status == kCLAuthorizationStatusDenied) {
         [self.locationManager stopUpdatingLocation];
         self.locationManager = nil;
-        [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+        [self.navigationController popViewControllerAnimated:NO];
     }
 }
 

@@ -113,6 +113,23 @@
     [appDel moveToPage:VYBCapturePageIndex];
 }
 
+#pragma mark - Child View Controllers delegate
+
+- (void)scrollViewBeganDragging:(UIScrollView *)scrollView {
+    CGPoint translation = [scrollView.panGestureRecognizer translationInView:scrollView.superview];
+    
+    if(translation.y > 0)
+    {
+        // react to dragging down (scroll up), shrink WATCH button
+        [self.watchAllButton shrink];
+        
+    } else
+    {
+        // react to dragging up (scroll down)
+        [self.watchAllButton expand];
+    }
+}
+
 #pragma mark - DeviceOrientation
 
 - (BOOL)shouldAutorotate {

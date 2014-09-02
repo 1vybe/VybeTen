@@ -7,7 +7,12 @@
 //
 
 #import "VYBWatchAllButton.h"
+@interface VYBWatchAllButton ()
+@property (nonatomic, weak) IBOutlet UIButton *watchButton;
+@property (nonatomic, weak) IBOutlet UIButton *counterButton;
+@end
 @implementation VYBWatchAllButton
+
 
 - (id)awakeAfterUsingCoder:(NSCoder *)aDecoder {
     if (![self.subviews count]) {
@@ -35,6 +40,15 @@
     }
     return self;
 }
+
+- (void)shrink {
+    self.watchButton.hidden = YES;
+}
+
+- (void)expand {
+    self.watchButton.hidden = NO;
+}
+
 
 
 /*

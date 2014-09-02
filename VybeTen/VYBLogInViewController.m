@@ -76,7 +76,7 @@
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         if (!error) {
             if ([PFUser currentUser]) {
-                [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+                [self.navigationController popViewControllerAnimated:NO];
             }
         } else {
             if (error.code == 101) {
@@ -107,7 +107,7 @@
 
 - (void)signUpCompleted {
     [self dismissViewControllerAnimated:NO completion:^{
-        [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+        [self.navigationController popViewControllerAnimated:NO];
     }];
 }
 
