@@ -67,13 +67,13 @@
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
     
-    [[VYBCache sharedCache] clearUsersByLocation];
-    [[VYBCache sharedCache] clearVybesByLocation];
     [self getUsersByLocation];
     [self parseVybesToSections];
 }
 
 - (void)getUsersByLocation {
+    [[VYBCache sharedCache] clearUsersByLocation];
+
     PFQuery *query = [PFUser query];
     // 24 TTL checking
     NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
@@ -91,11 +91,14 @@
                 NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
                 [[VYBCache sharedCache] addUser:aUser forLocation:keyString];
             }
+            [self.tableView reloadData];
         }
     }];
 }
 
 - (void)parseVybesToSections {
+    [[VYBCache sharedCache] clearVybesByLocation];
+
     for (PFObject *obj in self.objects) {
         NSString *locString = obj[kVYBVybeLocationStringKey];
         NSArray *token = [locString componentsSeparatedByString:@","];

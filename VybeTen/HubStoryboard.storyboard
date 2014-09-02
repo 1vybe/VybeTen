@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.8" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7I9-fc-Jih">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
         <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
     </dependencies>
@@ -106,8 +105,8 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eAk-Yj-OBR" id="fcr-rY-KEx">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9IV-PT-20q" userLabel="flagImage">
-                                            <rect key="frame" x="28" y="10" width="40" height="40"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9IV-PT-20q" userLabel="flagImage">
+                                            <rect key="frame" x="18" y="15" width="40" height="40"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="40" id="KLC-os-Ghy"/>
                                                 <constraint firstAttribute="width" constant="40" id="Oc6-xj-EZd"/>
@@ -117,7 +116,7 @@
                                             </variation>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Sh-Ut-YVe" userLabel="followingCountLabel">
-                                            <rect key="frame" x="88" y="34" width="41" height="21"/>
+                                            <rect key="frame" x="78" y="34" width="41" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="C6D-CM-Mw6"/>
                                             </constraints>
@@ -129,7 +128,7 @@
                                             </variation>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Montreal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4tc-RQ-TJe" userLabel="cityNameLabel">
-                                            <rect key="frame" x="88" y="8" width="92" height="25"/>
+                                            <rect key="frame" x="78" y="8" width="92" height="25"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="25" id="Kke-91-SAU"/>
                                             </constraints>
@@ -141,7 +140,7 @@
                                             </variation>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="roc-4G-49i" userLabel="vybeCountLabel">
-                                            <rect key="frame" x="149" y="34" width="41" height="21"/>
+                                            <rect key="frame" x="139" y="34" width="41" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="1YV-By-U0w"/>
                                             </constraints>
@@ -152,13 +151,13 @@
                                                 <rect key="frame" x="120" y="34" width="42" height="21"/>
                                             </variation>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wUz-PL-xLQ" userLabel="unwatchedVybeButton">
-                                            <rect key="frame" x="547" y="15" width="30" height="30"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wUz-PL-xLQ" userLabel="unwatchedVybeButton">
+                                            <rect key="frame" x="552" y="20" width="30" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="30" id="55n-H2-oGQ"/>
                                                 <constraint firstAttribute="height" constant="30" id="McN-o6-GWH"/>
                                             </constraints>
-                                            <state key="normal" image="button_circle_blue">
+                                            <state key="normal" backgroundImage="button_circle_blue">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <variation key="widthClass=compact" fixedFrame="YES">
@@ -170,7 +169,7 @@
                                         <constraint firstItem="4tc-RQ-TJe" firstAttribute="leading" secondItem="9IV-PT-20q" secondAttribute="trailing" constant="20" id="2F1-aK-kSj"/>
                                         <constraint firstItem="5Sh-Ut-YVe" firstAttribute="leading" secondItem="4tc-RQ-TJe" secondAttribute="leading" id="D1t-hi-MgC"/>
                                         <constraint firstAttribute="centerY" secondItem="9IV-PT-20q" secondAttribute="centerY" id="X6u-Ui-Fs5"/>
-                                        <constraint firstItem="9IV-PT-20q" firstAttribute="leading" secondItem="fcr-rY-KEx" secondAttribute="leadingMargin" constant="20" id="bwg-xx-X3y"/>
+                                        <constraint firstItem="9IV-PT-20q" firstAttribute="leading" secondItem="fcr-rY-KEx" secondAttribute="leadingMargin" constant="10" id="bwg-xx-X3y"/>
                                         <constraint firstItem="roc-4G-49i" firstAttribute="leading" secondItem="5Sh-Ut-YVe" secondAttribute="trailing" constant="20" id="hNX-Um-q4O"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="wUz-PL-xLQ" secondAttribute="trailing" constant="10" id="m49-Ux-8Cl"/>
                                         <constraint firstAttribute="centerY" secondItem="wUz-PL-xLQ" secondAttribute="centerY" id="x7B-vG-bS4"/>
