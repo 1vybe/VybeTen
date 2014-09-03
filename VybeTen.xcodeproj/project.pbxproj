@@ -40,7 +40,7 @@
 		027F18D019AFC7030045BFEF /* VYBLocationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 027F18CF19AFC7030045BFEF /* VYBLocationTableViewCell.m */; };
 		0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0293877C1969C1D200F41A12 /* VYBCaptureButton.m */; };
 		0299EC84199A9254004E97CF /* VYBHubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0299EC82199A9254004E97CF /* VYBHubViewController.m */; };
-		02A28A4D19B15A67007C8FFA /* VYBTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A28A4C19B15A67007C8FFA /* VYBTitleView.xib */; };
+		02A28A4D19B15A67007C8FFA /* VYBHubTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A28A4C19B15A67007C8FFA /* VYBHubTitleView.xib */; };
 		02B0A7AE19B262BA0074627A /* VYBWatchAllButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02B0A7AD19B262BA0074627A /* VYBWatchAllButton.xib */; };
 		02B0A7B119B264FD0074627A /* VYBWatchAllButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 02B0A7B019B264FD0074627A /* VYBWatchAllButton.m */; };
 		02B0C5DA19B13C5E003404BF /* VYBNavigationBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02B0C5D919B13C5E003404BF /* VYBNavigationBar.xib */; };
@@ -147,7 +147,7 @@
 		0293877C1969C1D200F41A12 /* VYBCaptureButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCaptureButton.m; sourceTree = "<group>"; };
 		0299EC81199A9254004E97CF /* VYBHubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBHubViewController.h; sourceTree = "<group>"; };
 		0299EC82199A9254004E97CF /* VYBHubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBHubViewController.m; sourceTree = "<group>"; };
-		02A28A4C19B15A67007C8FFA /* VYBTitleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBTitleView.xib; sourceTree = "<group>"; };
+		02A28A4C19B15A67007C8FFA /* VYBHubTitleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBHubTitleView.xib; sourceTree = "<group>"; };
 		02B0A7AD19B262BA0074627A /* VYBWatchAllButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBWatchAllButton.xib; sourceTree = "<group>"; };
 		02B0A7AF19B264FD0074627A /* VYBWatchAllButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBWatchAllButton.h; sourceTree = "<group>"; };
 		02B0A7B019B264FD0074627A /* VYBWatchAllButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBWatchAllButton.m; sourceTree = "<group>"; };
@@ -311,7 +311,7 @@
 				02B0A7AF19B264FD0074627A /* VYBWatchAllButton.h */,
 				02B0A7B019B264FD0074627A /* VYBWatchAllButton.m */,
 				02B0A7AD19B262BA0074627A /* VYBWatchAllButton.xib */,
-				02A28A4C19B15A67007C8FFA /* VYBTitleView.xib */,
+				02A28A4C19B15A67007C8FFA /* VYBHubTitleView.xib */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -581,7 +581,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				02D11D0B18DF62AC0018DA97 /* Montreal-Light.otf in Resources */,
-				02A28A4D19B15A67007C8FFA /* VYBTitleView.xib in Resources */,
+				02A28A4D19B15A67007C8FFA /* VYBHubTitleView.xib in Resources */,
 				020F1C4C1977054900C3AA40 /* VYBPermissionViewController.xib in Resources */,
 				020CC65F19A701D900B2F794 /* VYBProfileViewController.xib in Resources */,
 				027C707919AEFE68007BB8FE /* HubStoryboard.storyboard in Resources */,

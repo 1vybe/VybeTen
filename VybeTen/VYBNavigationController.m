@@ -36,6 +36,8 @@
         // back button image
         [[UINavigationBar appearance] setBackIndicatorImage:[UIImage imageNamed:@"button_navi_back.png"]];
         [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
+        
+        [self.navigationBar setTranslucent:NO];
 
     }
     return self;

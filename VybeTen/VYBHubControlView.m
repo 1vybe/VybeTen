@@ -9,20 +9,44 @@
 #import "VYBHubControlView.h"
 
 @interface VYBHubControlView ()
-@property (nonatomic, weak) id delegate;
-/*
+
 @property (nonatomic, strong) IBOutlet UIButton *locationButton;
 @property (nonatomic, strong) IBOutlet UIButton *followingButton;
 - (IBAction)locationButtonPressed:(id)sender;
 - (IBAction)followingButtonPressed:(id)sender;
- */
+
 @end
 
 @implementation VYBHubControlView
+@synthesize locationButton, followingButton;
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    [self setBackgroundColor:COLOR_CONTROL_BG];
+- (id)awakeAfterUsingCoder:(NSCoder *)aDecoder {
+    if (![self.subviews count]) {
+        VYBHubControlView *theOne = [[[NSBundle mainBundle] loadNibNamed:@"VYBHubControlView" owner:nil options:nil] firstObject];
+        theOne.frame = self.frame;
+        theOne.autoresizingMask = self.autoresizingMask;
+        theOne.translatesAutoresizingMaskIntoConstraints = self.translatesAutoresizingMaskIntoConstraints;
+        
+        for (NSLayoutConstraint *constraint in self.constraints) {
+            id firstItem = constraint.firstItem;
+            if (firstItem == self)
+                firstItem = theOne;
+            
+            id secondItem = constraint.secondItem;
+            if (secondItem == self)
+                secondItem = theOne;
+            
+            [theOne addConstraint:[NSLayoutConstraint constraintWithItem:firstItem attribute:constraint.firstAttribute
+                                                               relatedBy:constraint.relation
+                                                                  toItem:secondItem attribute:constraint.secondAttribute multiplier:constraint.multiplier constant:constraint.constant]];
+            
+            // By default location tab is selected at the beginning
+            theOne.locationButton.selected = YES;
+        }
+        
+        return theOne;
+    }
+    return self;
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -38,6 +62,26 @@
     
     CGContextSetStrokeColorWithColor(ctx, COLOR_CONTROL_LINE.CGColor);
     CGContextStrokePath(ctx);
+}
+
+- (IBAction)locationButtonPressed:(id)sender {
+    if (!locationButton.selected) {
+        [locationButton setSelected:YES];
+        [followingButton setSelected:NO];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(locationButtonPressed:)]) {
+            [self.delegate performSelector:@selector(locationButtonPressed:) withObject:sender];
+        }
+    }
+}
+
+- (IBAction)followingButtonPressed:(id)sender {
+    if (!followingButton.selected) {
+        [followingButton setSelected:YES];
+        [locationButton setSelected:NO];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(followingButtonPressed:)]) {
+            [self.delegate performSelector:@selector(followingButtonPressed:) withObject:sender];
+        }
+    }
 }
 
 /*
@@ -60,8 +104,6 @@
     }
 }
 */
-- (CGSize)intrinsicContentSize {
-    return self.frame.size;
-}
+
 
 @end

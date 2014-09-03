@@ -3,23 +3,28 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="ProximaNovaSoft-Bold.otf">
+            <string>ProximaNovaSoft-Bold</string>
+        </mutableArray>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="81" height="40"/>
+            <rect key="frame" x="0.0" y="0.0" width="92" height="44"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="vybe" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uD6-5t-yBO">
-                    <rect key="frame" x="0.0" y="0.0" width="81" height="40"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="29"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="VYBE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uD6-5t-yBO">
+                    <rect key="frame" x="8" y="5" width="85" height="34"/>
+                    <fontDescription key="fontDescription" name="ProximaNovaSoft-Bold" family="Proxima Nova Soft" pointSize="32"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="266.5" y="147"/>
+            <point key="canvasLocation" x="272" y="149"/>
         </view>
     </objects>
 </document>

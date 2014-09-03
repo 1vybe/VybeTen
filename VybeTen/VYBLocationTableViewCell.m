@@ -36,16 +36,21 @@
         UIImage *flagImg = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", countryCode]];
         [flagImageView setImage:flagImg];
         
-        NSArray *vybes = [[VYBCache sharedCache] vybesForLocation:keyStr];
-        if (vybes.count > 1)
-            vybeCountLabel.text = [NSString stringWithFormat:@"%d Vybes", vybes.count];
-        else
-            vybeCountLabel.text = [NSString stringWithFormat:@"%d Vybe", vybes.count];
-
-        
-        NSArray *users = [[VYBCache sharedCache] usersForLocation:keyStr];
-        followingCountLabel.text = [NSString stringWithFormat:@"%d Following", users.count];
     }
+}
+
+- (void)setVybeCount:(NSInteger)vybeCount {
+    _vybeCount = vybeCount;
+    if ( _vybeCount > 1)
+        vybeCountLabel.text = [NSString stringWithFormat:@"%d Vybes", _vybeCount];
+    else
+        vybeCountLabel.text = [NSString stringWithFormat:@"%d Vybe", _vybeCount];
+}
+
+- (void)setUserCount:(NSInteger)userCount {
+    _userCount = userCount;
+    
+    followingCountLabel.text = [NSString stringWithFormat:@"%d Following", _userCount];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

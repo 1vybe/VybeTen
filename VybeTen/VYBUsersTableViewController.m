@@ -17,6 +17,7 @@
 
 @implementation VYBUsersTableViewController {
     NSArray *users;
+    UIImageView *countryFlagImageView;
 }
 
 - (void)loadView {
@@ -27,12 +28,30 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSString *cityName = [self.locationKey componentsSeparatedByString:@","][0];
+    self.navigationItem.title = cityName;
+    
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [countryFlagImageView removeFromSuperview];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    NSString *countryCode = [self.locationKey componentsSeparatedByString:@","][1];
+    // NOTE: This assumes that the navigation bar height is 44pt
+    countryFlagImageView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - 40 - 10, 2, 40, 40)];
+    [countryFlagImageView setImage:[UIImage imageNamed:countryCode]];
+    [self.navigationController.navigationBar addSubview:countryFlagImageView];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

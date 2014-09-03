@@ -128,7 +128,7 @@
         NSLog(@"SOMETHING IS WRONG");
     }
     
-    return vybesByLocation.count;
+    return usersByLocation.allKeys.count;
 }
 
 

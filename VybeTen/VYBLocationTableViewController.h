@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBLocationTableViewController : PFQueryTableViewController
+@interface VYBLocationTableViewController : UITableViewController
 
 @end

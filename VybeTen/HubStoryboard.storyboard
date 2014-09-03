@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.8" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7I9-fc-Jih">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
         <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="ProximaNovaSoft-Regular.otf">
+            <string>ProximaNovaSoft-Regular</string>
             <string>ProximaNovaSoft-Regular</string>
             <string>ProximaNovaSoft-Regular</string>
         </mutableArray>
@@ -26,14 +28,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5tC-aS-WZ0" customClass="VYBHubControlView">
-                                <rect key="frame" x="0.0" y="44" width="600" height="44"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5tC-aS-WZ0" customClass="VYBHubControlView">
+                                <rect key="frame" x="0.0" y="39" width="600" height="40"/>
+                                <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="OLr-aA-ApU"/>
+                                </constraints>
                                 <variation key="widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="0.0" y="44" width="400" height="44"/>
                                 </variation>
                             </view>
-                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KZX-rZ-Gc1">
-                                <rect key="frame" x="0.0" y="88" width="600" height="512"/>
+                            <containerView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KZX-rZ-Gc1">
+                                <rect key="frame" x="-85" y="84" width="3" height="94"/>
                                 <variation key="widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="0.0" y="90" width="400" height="510"/>
                                 </variation>
@@ -48,10 +54,16 @@
                                     <constraint firstAttribute="width" constant="169" id="5G8-j9-spN"/>
                                     <constraint firstAttribute="height" constant="47" id="70o-SZ-jcU"/>
                                 </constraints>
+                                <connections>
+                                    <action selector="watchAllButtonPressed:" destination="7I9-fc-Jih" eventType="touchUpInside" id="SOZ-gh-zCj"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="centerX" secondItem="5tC-aS-WZ0" secondAttribute="centerX" id="ChO-9R-g20"/>
+                            <constraint firstItem="5tC-aS-WZ0" firstAttribute="top" secondItem="Tsl-NH-05c" secondAttribute="bottom" id="MiJ-Au-d39"/>
+                            <constraint firstItem="KZX-rZ-Gc1" firstAttribute="top" secondItem="5tC-aS-WZ0" secondAttribute="bottom" id="YJJ-P2-VZx"/>
                             <constraint firstAttribute="trailingMargin" secondItem="aLu-CG-CR3" secondAttribute="trailing" constant="15" id="YlO-4F-7Dq"/>
                             <constraint firstItem="Dyz-dk-YQ8" firstAttribute="top" secondItem="aLu-CG-CR3" secondAttribute="bottom" constant="20" id="q3Y-9P-M0j"/>
                         </constraints>
@@ -59,12 +71,13 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="controlView" destination="5tC-aS-WZ0" id="6ev-dL-7fb"/>
                         <outlet property="watchAllButton" destination="aLu-CG-CR3" id="z1b-V3-aGR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1dO-oP-h80" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-243" y="-210"/>
+            <point key="canvasLocation" x="-244" y="-210"/>
         </scene>
         <!--Swap Container View Controller-->
         <scene sceneID="MNh-RP-BZH">
@@ -157,7 +170,8 @@
                                                 <constraint firstAttribute="width" constant="30" id="55n-H2-oGQ"/>
                                                 <constraint firstAttribute="height" constant="30" id="McN-o6-GWH"/>
                                             </constraints>
-                                            <state key="normal" backgroundImage="button_circle_blue">
+                                            <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="13"/>
+                                            <state key="normal" title="0" backgroundImage="button_circle_blue">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <variation key="widthClass=compact" fixedFrame="YES">

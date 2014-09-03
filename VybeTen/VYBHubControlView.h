@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface VYBHubControlView : UIView
-
+@property (nonatomic, weak) id delegate;
 @end

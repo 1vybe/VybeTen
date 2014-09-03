@@ -18,8 +18,9 @@
 @interface VYBLocationTableViewController ()
 @property (nonatomic, strong) NSArray *regions;
 
-//@property (nonatomic, strong) NSDictionary *vybeByLocation;
-//@property (nonatomic, strong) NSDictionary *userByLocation;
+@property (nonatomic, copy) NSDictionary *vybesByLocation;
+@property (nonatomic, copy) NSDictionary *usersByLocation;
+@property (nonatomic) NSArray *sortedKeys;
 @end
 
 @implementation VYBLocationTableViewController
@@ -31,11 +32,14 @@
     // To remove empty cells
     self.tableView.tableFooterView = [[UIView alloc] init];
     
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refreshControlPulled:) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
+    
+    [self getUsersByLocation];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -47,29 +51,10 @@
     [super viewDidAppear:animated];
 }
 
-
-
-#pragma mark - PFQueryTableViewController
-
-- (PFQuery *)queryForTable {
-    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-    // 24 TTL checking
-    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
-    [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
-    // Don't include urself
-    [query whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
-    [query whereKeyExists:kVYBVybeLocationStringKey];
-    [query whereKey:kVYBVybeLocationStringKey notEqualTo:@""];
-    
-    return query;
-}
-
-- (void)objectsDidLoad:(NSError *)error {
-    [super objectsDidLoad:error];
-    
+- (void)refreshControlPulled:(id)sender {
     [self getUsersByLocation];
-    [self parseVybesToSections];
 }
+
 
 - (void)getUsersByLocation {
     [[VYBCache sharedCache] clearUsersByLocation];
@@ -91,35 +76,57 @@
                 NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
                 [[VYBCache sharedCache] addUser:aUser forLocation:keyString];
             }
-            [self.tableView reloadData];
+            self.usersByLocation = [[VYBCache sharedCache] usersByLocation];
+            self.sortedKeys = [self.usersByLocation.allKeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                return [self.usersByLocation[obj1] count] < [self.usersByLocation[obj2] count];
+            }];
+            
         }
+        [self getVybesByLocation];
     }];
 }
 
-- (void)parseVybesToSections {
+
+- (void)getVybesByLocation {
     [[VYBCache sharedCache] clearVybesByLocation];
-
-    for (PFObject *obj in self.objects) {
-        NSString *locString = obj[kVYBVybeLocationStringKey];
-        NSArray *token = [locString componentsSeparatedByString:@","];
-        if (token.count != 3)
-            continue;
-        
-        //NOTE: we discard the first location field (neighborhood)
-        NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
-        [[VYBCache sharedCache] addVybe:obj forLocation:keyString];
-    }
-
-    [self.tableView reloadData];
+    
+    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+    // 24 TTL checking
+    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
+    [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
+    // Don't include urself
+    [query whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
+    [query whereKeyExists:kVYBVybeLocationStringKey];
+    [query whereKey:kVYBVybeLocationStringKey notEqualTo:@""];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *obj in objects) {
+                NSString *locString = obj[kVYBVybeLocationStringKey];
+                NSArray *token = [locString componentsSeparatedByString:@","];
+                if (token.count != 3)
+                    continue;
+                
+                //NOTE: we discard the first location field (neighborhood)
+                NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
+                [[VYBCache sharedCache] addVybe:obj forLocation:keyString];
+            }
+            self.vybesByLocation = [[VYBCache sharedCache] vybesByLocation];
+            [self.tableView reloadData];
+        }
+        [self.refreshControl endRefreshing];
+    }];
+    
 }
+
 
 
 #pragma mark - UITableViewController
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    return [[VYBCache sharedCache] numberOfLocations];
-
+    if (!self.sortedKeys)
+        return 0;
+    return self.sortedKeys.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -127,9 +134,14 @@
 
     VYBLocationTableViewCell *cell = (VYBLocationTableViewCell *)[tableView dequeueReusableCellWithIdentifier:LocationTableCellIdentifier];
 
-    NSString *locationKey = [[[VYBCache sharedCache] vybesByLocation] allKeys][indexPath.row];
-
+    // NOTE: vybesByLocation
+    NSString *locationKey = self.sortedKeys[indexPath.row];
+    NSInteger vyCnt = [[self.vybesByLocation objectForKey:locationKey] count];
+    NSInteger usrCnt = [[self.usersByLocation objectForKey:locationKey] count];
+    
     [cell setLocationKey:locationKey];
+    [cell setVybeCount:vyCnt];
+    [cell setUserCount:usrCnt];
     
     //[cell.unwatchedVybeButton setContentMode:UIViewContentModeScaleAspectFit];
     
@@ -137,7 +149,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *locationKey = [[[VYBCache sharedCache] vybesByLocation] allKeys][indexPath.row];
+    NSString *locationKey = self.sortedKeys[indexPath.row];
     
     VYBUsersTableViewController *usersTable = [[VYBUsersTableViewController alloc] init];
     [usersTable setLocationKey:locationKey];
