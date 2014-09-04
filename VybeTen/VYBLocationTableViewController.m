@@ -20,7 +20,8 @@
 
 @property (nonatomic, copy) NSDictionary *vybesByLocation;
 @property (nonatomic, copy) NSDictionary *usersByLocation;
-@property (nonatomic) NSArray *sortedKeys;
+@property (nonatomic, copy) NSDictionary *freshVybesByLocation;
+@property (nonatomic, strong) NSArray *sortedKeys;
 @end
 
 @implementation VYBLocationTableViewController
@@ -36,7 +37,9 @@
     [refreshControl addTarget:self action:@selector(refreshControlPulled:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
     
-    [self getUsersByLocation];
+    self.sortedKeys = [[NSArray alloc] init];
+    
+    [self getFreshVybes];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -52,9 +55,34 @@
 }
 
 - (void)refreshControlPulled:(id)sender {
-    [self getUsersByLocation];
+    [self getFreshVybes];
 }
 
+- (void)getFreshVybes {
+    [[VYBCache sharedCache] clearFreshVybes];
+    
+    NSString *functionName = @"get_fresh_vybes";
+    [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *aVybe in objects) {
+                NSString *locString = aVybe[kVYBVybeLocationStringKey];
+                NSArray *token = [locString componentsSeparatedByString:@","];
+                if (token.count != 3)
+                    continue;
+                
+                //NOTE: we discard the first location field (neighborhood)
+                NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
+                [[VYBCache sharedCache] addFreshVybe:aVybe forLocation:keyString];
+                [[VYBCache sharedCache] addFreshVybe:aVybe forUser:aVybe[kVYBVybeUserKey]];
+            }
+            self.freshVybesByLocation = [[VYBCache sharedCache] freshVybesByLocation];
+            [self getUsersByLocation];
+        }
+        else {
+            NSLog(@"%@", error);
+        }
+    }];
+}
 
 - (void)getUsersByLocation {
     [[VYBCache sharedCache] clearUsersByLocation];
@@ -77,12 +105,8 @@
                 [[VYBCache sharedCache] addUser:aUser forLocation:keyString];
             }
             self.usersByLocation = [[VYBCache sharedCache] usersByLocation];
-            self.sortedKeys = [self.usersByLocation.allKeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                return [self.usersByLocation[obj1] count] < [self.usersByLocation[obj2] count];
-            }];
-            
+            [self getVybesByLocation];
         }
-        [self getVybesByLocation];
     }];
 }
 
@@ -112,7 +136,15 @@
                 [[VYBCache sharedCache] addVybe:obj forLocation:keyString];
             }
             self.vybesByLocation = [[VYBCache sharedCache] vybesByLocation];
+            // Sort by the number of FRESH vybes (descending)
+            self.sortedKeys = [self.usersByLocation.allKeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                return [self.freshVybesByLocation[obj1] count] < [self.freshVybesByLocation[obj2] count];
+            }];
+            
             [self.tableView reloadData];
+            // NOTE: this should be called on the main thread
+            [self setWatchAllButtonCount:self.freshVybesByLocation.allValues.count];
+            
         }
         [self.refreshControl endRefreshing];
     }];
@@ -124,8 +156,6 @@
 #pragma mark - UITableViewController
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (!self.sortedKeys)
-        return 0;
     return self.sortedKeys.count;
 }
 
@@ -138,10 +168,11 @@
     NSString *locationKey = self.sortedKeys[indexPath.row];
     NSInteger vyCnt = [[self.vybesByLocation objectForKey:locationKey] count];
     NSInteger usrCnt = [[self.usersByLocation objectForKey:locationKey] count];
-    
+    NSInteger newVyCnt = [[self.freshVybesByLocation objectForKey:locationKey] count];
     [cell setLocationKey:locationKey];
     [cell setVybeCount:vyCnt];
     [cell setUserCount:usrCnt];
+    [cell setFreshVybeCount:newVyCnt];
     
     //[cell.unwatchedVybeButton setContentMode:UIViewContentModeScaleAspectFit];
     
@@ -170,6 +201,14 @@
 
 - (void)watchAll {
     
+}
+
+- (void)setWatchAllButtonCount:(NSInteger)count {
+    VYBHubViewController *hubVC = (VYBHubViewController *)self.parentViewController.parentViewController;
+    if (!hubVC)
+        return;
+    
+    [hubVC setWatchAllButtonCount:count];
 }
 
 /*

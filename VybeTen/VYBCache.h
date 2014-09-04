@@ -19,6 +19,15 @@
 
 - (void)clear;
 
+- (void)addFreshVybe:(PFObject *)nVybe forLocation:(NSString *)location;
+- (void)addFreshVybe:(PFObject *)nVybe forUser:(PFObject *)aUser;
+- (NSDictionary *)freshVybesByLocation;
+- (NSDictionary *)freshVybesByUser;
+- (NSArray *)freshVybesForLocation:(NSString *)location;
+- (NSArray *)freshVybesForUser:(PFObject *)aUser;
+- (void)clearFreshVybes;
+
+// TODO: These should not be cached but only the counter should be
 - (void)addUser:(PFObject *)user forLocation:(NSString *)location;
 - (void)addVybe:(PFObject *)vybe forLocation:(NSString *)location;
 - (NSArray *)usersForLocation:(NSString *)location;

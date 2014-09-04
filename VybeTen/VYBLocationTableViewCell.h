@@ -12,4 +12,5 @@
 @property (nonatomic, strong) NSString *locationKey;
 @property (nonatomic) NSInteger vybeCount;
 @property (nonatomic) NSInteger userCount;
+@property (nonatomic) NSInteger freshVybeCount;
 @end

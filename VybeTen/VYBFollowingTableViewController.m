@@ -9,8 +9,11 @@
 #import "VYBFollowingTableViewController.h"
 #import "VYBUserTableViewCell.h"
 #import "VYBProfileViewController.h"
+#import "VYBHubViewController.h"
+#import "VYBCache.h"
 
 @interface VYBFollowingTableViewController ()
+@property (nonatomic, copy) NSDictionary *freshVybesByUser;
 - (IBAction)watchAllButtonPressed:(id)sender;
 @end
 
@@ -18,6 +21,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // TODO: freshVybesByUser should be updated by refresh control
+    self.freshVybesByUser = [[VYBCache sharedCache] freshVybesByUser];
+    
+    [self setWatchAllButtonCount:self.freshVybesByUser.allValues.count];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -45,8 +53,11 @@
         //NOTE: reuseIdentifier is set in xib file
     }
 
-    NSString *lowerUsername = [(NSString *)object[kVYBUserUsernameKey] lowercaseString];
+    // NOTE: freshVybesByUser dictionary take PFUser object's objectID as a key
+    NSInteger freshCount = (self.freshVybesByUser) ? ([[self.freshVybesByUser objectForKey:object.objectId] count]) : 0;
+    [cell setFreshVybeCount:freshCount];
     
+    NSString *lowerUsername = [(NSString *)object[kVYBUserUsernameKey] lowercaseString];
     // TODO: user PFImageView of PFTableViewCell
     [cell.nameLabel setText:lowerUsername];
     
@@ -84,6 +95,14 @@
 }
 
 #pragma amrk - ()
+
+- (void)setWatchAllButtonCount:(NSInteger)count {
+    VYBHubViewController *hubVC = (VYBHubViewController *)self.parentViewController.parentViewController;
+    if (!hubVC)
+        return;
+    
+    [hubVC setWatchAllButtonCount:count];
+}
 
 - (void)watchAll {
     

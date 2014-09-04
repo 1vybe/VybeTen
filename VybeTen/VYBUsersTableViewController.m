@@ -27,11 +27,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSString *cityName = [self.locationKey componentsSeparatedByString:@","][0];
-    self.navigationItem.title = cityName;
-    
-    
+
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
 }
@@ -44,6 +40,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    
+    NSString *cityName = [self.locationKey componentsSeparatedByString:@","][0];
+    self.navigationItem.title = cityName;
     
     NSString *countryCode = [self.locationKey componentsSeparatedByString:@","][1];
     // NOTE: This assumes that the navigation bar height is 44pt
@@ -60,8 +60,8 @@
 
 #pragma mark - Table view data source
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60.0f;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 70.0;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

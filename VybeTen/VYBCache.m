@@ -41,6 +41,80 @@
     [self.cache removeAllObjects];
 }
 
+- (void)addFreshVybe:(PFObject *)nVybe forLocation:(NSString *)location {
+    NSDictionary *freshByLocation = [self.cache objectForKey:@"freshByLocation"];
+    NSMutableDictionary *newDict;
+    
+    if (!freshByLocation) {
+        newDict = [NSMutableDictionary dictionary];
+        NSArray *newVybe = [NSArray arrayWithObject:nVybe];
+        [newDict setObject:newVybe forKey:location];
+    } else {
+        newDict = [NSMutableDictionary dictionaryWithDictionary:freshByLocation];
+        if (![freshByLocation objectForKey:location]) {
+            NSArray *newVybe = [NSArray arrayWithObject:nVybe];
+            [newDict setObject:newVybe forKey:location];
+        } else {
+            NSArray *currItems = [freshByLocation objectForKey:location];
+            [newDict setObject:[currItems arrayByAddingObject:nVybe] forKey:location];
+        }
+        
+    }
+    [self.cache setObject:newDict forKey:@"freshByLocation"];
+}
+
+
+
+- (void)addFreshVybe:(PFObject *)nVybe forUser:(PFObject *)aUser {
+    NSDictionary *freshByUser = [self.cache objectForKey:@"freshByUser"];
+    NSMutableDictionary *newDict;
+    
+    if (!freshByUser) {
+        newDict = [NSMutableDictionary dictionary];
+        NSArray *newVybe = [NSArray arrayWithObject:nVybe];
+        [newDict setObject:newVybe forKey:aUser.objectId];
+    } else {
+        newDict = [NSMutableDictionary dictionaryWithDictionary:freshByUser];
+        if (![freshByUser objectForKey:aUser.objectId]) {
+            NSArray *newVybe = [NSArray arrayWithObject:nVybe];
+            [newDict setObject:newVybe forKey:aUser.objectId];
+        } else {
+            NSArray *currItems = [freshByUser objectForKey:aUser.objectId];
+            [newDict setObject:[currItems arrayByAddingObject:nVybe] forKey:aUser.objectId];
+        }
+        
+    }
+    [self.cache setObject:newDict forKey:@"freshByUser"];
+}
+
+- (NSArray *)freshVybesForLocation:(NSString *)location {
+    NSDictionary *dictionary = [self.cache objectForKey:@"freshByLocation"];
+    NSArray *vybes = [dictionary objectForKey:location];
+    
+    return vybes;
+}
+
+- (NSArray *)freshVybesForUser:(PFObject *)aUser {
+    NSDictionary *dictionary = [self.cache objectForKey:@"freshByUser"];
+    NSArray *vybes = [dictionary objectForKey:aUser.objectId];
+    
+    return vybes;
+}
+
+- (NSDictionary *)freshVybesByLocation {
+    return [self.cache objectForKey:@"freshByLocation"];
+}
+
+- (NSDictionary *)freshVybesByUser{
+    return [self.cache objectForKey:@"freshByUser"];
+}
+
+- (void)clearFreshVybes {
+    NSDictionary *emptyDict = [[NSDictionary alloc] init];
+    [self.cache setObject:emptyDict forKey:@"freshByLocation"];
+    [self.cache setObject:emptyDict forKey:@"freshByUser"];
+}
+
 - (void)addUser:(PFObject *)user forLocation:(NSString *)location {
     NSDictionary *usersByLocation = [self.cache objectForKey:@"usersByLocation"];
     NSMutableDictionary *newDict;

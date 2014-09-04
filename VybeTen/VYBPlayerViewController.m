@@ -228,7 +228,7 @@
 - (void)beginPlayingFrom:(NSInteger)from {
     currVybeIndex = from;
     
-    self.countLabel.text = [NSString stringWithFormat:@"%d", self.vybePlaylist.count - currVybeIndex - 1];
+    self.countLabel.text = [NSString stringWithFormat:@"%ld", self.vybePlaylist.count - currVybeIndex - 1];
     
     downloadingVybeIndex = currVybeIndex + 1;
     

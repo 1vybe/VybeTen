@@ -15,6 +15,14 @@
     // Initialization code
 }
 
+- (void)setFreshVybeCount:(NSInteger)freshVybeCount {
+    _freshVybeCount = freshVybeCount;
+
+    self.watchNewButton.hidden = !_freshVybeCount;
+    
+    [self.watchNewButton setTitle:[NSString stringWithFormat:@"%ld", (long)_freshVybeCount] forState:UIControlStateNormal];
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];

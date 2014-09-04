@@ -28,8 +28,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5tC-aS-WZ0" customClass="VYBHubControlView">
-                                <rect key="frame" x="0.0" y="39" width="600" height="40"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5tC-aS-WZ0" customClass="VYBHubControlView">
+                                <rect key="frame" x="0.0" y="44" width="600" height="40"/>
                                 <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="OLr-aA-ApU"/>
@@ -38,8 +38,8 @@
                                     <rect key="frame" x="0.0" y="44" width="400" height="44"/>
                                 </variation>
                             </view>
-                            <containerView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KZX-rZ-Gc1">
-                                <rect key="frame" x="-85" y="84" width="3" height="94"/>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KZX-rZ-Gc1">
+                                <rect key="frame" x="0.0" y="84" width="600" height="516"/>
                                 <variation key="widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="0.0" y="90" width="400" height="510"/>
                                 </variation>
@@ -49,7 +49,7 @@
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aLu-CG-CR3" customClass="VYBWatchAllButton">
                                 <rect key="frame" x="400" y="533" width="169" height="47"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.82019680279999996" green="0.92266049589999999" blue="0.4845138926" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="169" id="5G8-j9-spN"/>
                                     <constraint firstAttribute="height" constant="47" id="70o-SZ-jcU"/>
@@ -63,9 +63,13 @@
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="5tC-aS-WZ0" secondAttribute="centerX" id="ChO-9R-g20"/>
                             <constraint firstItem="5tC-aS-WZ0" firstAttribute="top" secondItem="Tsl-NH-05c" secondAttribute="bottom" id="MiJ-Au-d39"/>
+                            <constraint firstItem="Dyz-dk-YQ8" firstAttribute="top" secondItem="KZX-rZ-Gc1" secondAttribute="bottom" id="UzX-Vt-hHD"/>
+                            <constraint firstAttribute="width" secondItem="KZX-rZ-Gc1" secondAttribute="width" id="WbJ-6i-Ab2"/>
                             <constraint firstItem="KZX-rZ-Gc1" firstAttribute="top" secondItem="5tC-aS-WZ0" secondAttribute="bottom" id="YJJ-P2-VZx"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="aLu-CG-CR3" secondAttribute="trailing" constant="15" id="YlO-4F-7Dq"/>
-                            <constraint firstItem="Dyz-dk-YQ8" firstAttribute="top" secondItem="aLu-CG-CR3" secondAttribute="bottom" constant="20" id="q3Y-9P-M0j"/>
+                            <constraint firstItem="Dyz-dk-YQ8" firstAttribute="top" secondItem="aLu-CG-CR3" secondAttribute="bottom" constant="20" id="idi-Wk-8eC"/>
+                            <constraint firstAttribute="width" secondItem="5tC-aS-WZ0" secondAttribute="width" id="mLv-8Q-XWj"/>
+                            <constraint firstAttribute="centerX" secondItem="KZX-rZ-Gc1" secondAttribute="centerX" id="pv6-io-EA8"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="aLu-CG-CR3" secondAttribute="trailing" constant="15" id="zMq-hc-sTc"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
@@ -171,7 +175,8 @@
                                                 <constraint firstAttribute="height" constant="30" id="McN-o6-GWH"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="13"/>
-                                            <state key="normal" title="0" backgroundImage="button_circle_blue">
+                                            <state key="normal" backgroundImage="button_circle_blue">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <variation key="widthClass=compact" fixedFrame="YES">

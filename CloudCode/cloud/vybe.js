@@ -39,6 +39,30 @@ Parse.Cloud.afterSave('Vybe', function(request) {
     });
   }
 
+  // Insert this new vybe to each user's freshFeed
+  var query = new Parse.Query(Parse.User);
+  query.notEqualTo('username', request.user.get('username'));
+  query.find().then(function(users) {
+    Parse.Cloud.useMasterKey();
+    _.each(users, function(aUser) {
+      var feed = aUser.get('freshFeed');
+      if (!feed) {
+	feed = [];
+      }
+
+      feed.push(request.object);
+      aUser.set('freshFeed', feed);
+      aUser.save(null, {
+	success: function(obj) {
+	  console.log('success!!');
+	},
+	error: function(error) {
+	  console.log('failed[' + error.code + '] ' + error.message);
+	}
+      });
+    });
+  });
+
 
 });
 
@@ -105,7 +129,10 @@ Parse.Cloud.define('default_algorithm',
   })
 );
 
-// Retrive vybes by city
+// Retrieve only fresh vybes for the requesting user
+Parse.Cloud.define('get_fresh_vybes', get_fresh_vybes); 
+
+// Retrieve vybes by city
 Parse.Cloud.define('get_region_vybes',
 		   get_region_vybes.bind(this, {
 		     recent:true,
@@ -143,8 +170,26 @@ Parse.Cloud.define('get_tribe_vybes',
   })
 );
 
+function get_fresh_vybes(request, response) {
+  var currUser = request.user;
+  var query = new Parse.Query(Parse.User);
+
+  query.include('freshFeed');
+  query.equalTo('username', currUser.get('username'));
+  query.first({
+    success: function(aUser) {
+      var freshVybes = aUser.get('freshFeed');
+      if (!freshVybes)
+	freshVybes = [];
+      response.success(freshVybes);
+    },
+    error: function(error) {
+      response.error(error);
+    }
+  });
+}
+
 function get_regions(request, response) {
-  console.log('CP1');
   var regions = [];
   var preQuery = new Parse.Query('Region');
 

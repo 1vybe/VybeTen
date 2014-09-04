@@ -42,15 +42,23 @@
 - (void)setVybeCount:(NSInteger)vybeCount {
     _vybeCount = vybeCount;
     if ( _vybeCount > 1)
-        vybeCountLabel.text = [NSString stringWithFormat:@"%d Vybes", _vybeCount];
+        vybeCountLabel.text = [NSString stringWithFormat:@"%ld Vybes", (long)_vybeCount];
     else
-        vybeCountLabel.text = [NSString stringWithFormat:@"%d Vybe", _vybeCount];
+        vybeCountLabel.text = [NSString stringWithFormat:@"%ld Vybe", (long)_vybeCount];
 }
 
 - (void)setUserCount:(NSInteger)userCount {
     _userCount = userCount;
     
-    followingCountLabel.text = [NSString stringWithFormat:@"%d Following", _userCount];
+    followingCountLabel.text = [NSString stringWithFormat:@"%ld Following", (long)_userCount];
+}
+
+- (void)setFreshVybeCount:(NSInteger)freshVybeCount {
+    _freshVybeCount = freshVybeCount;
+    
+    unwatchedVybeButton.hidden = !_freshVybeCount;
+    
+    [unwatchedVybeButton setTitle:[NSString stringWithFormat:@"%ld", _freshVybeCount] forState:UIControlStateNormal];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

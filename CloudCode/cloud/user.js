@@ -1,5 +1,6 @@
 // Check if username is set, and enforce uniqueness based on the username column.
 Parse.Cloud.beforeSave(Parse.User, function(request, response) {
+
   var username = request.object.get("username");
   if (!username) {
     response.error('A User must have a username.');

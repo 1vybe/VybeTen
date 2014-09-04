@@ -11,4 +11,5 @@
 @interface VYBWatchAllButton : UIButton
 - (void)shrink;
 - (void)expand;
+- (void)setCounterText:(NSString *)aText;
 @end

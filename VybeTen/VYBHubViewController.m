@@ -99,6 +99,11 @@
     }
 }
 
+- (void)setWatchAllButtonCount:(NSInteger)count {
+    [self.watchAllButton setCounterText:[NSString stringWithFormat:@"%ld", count]];
+}
+
+
 
 - (void)captureButtonPressed:(id)sender {
     VYBAppDelegate *appDel = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;

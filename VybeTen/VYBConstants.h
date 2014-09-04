@@ -8,7 +8,7 @@
 #define IS_IPHONE_5     ( [[UIScreen mainScreen] bounds].size.height == 568 )
 
 #define VYBE_LENGTH_SEC 15
-#define VYBE_TTL_HOURS  24
+#define VYBE_TTL_HOURS  48
 #define UPFRESH         1
 #define UPLOADING       2
 #define UPLOADED        3
@@ -71,6 +71,7 @@ extern NSString *const kVYBUserProfilePicSmallKey;
 extern NSString *const kVYBUserProfilePicMediumKey;
 extern NSString *const kVYBUserLastVybedLocationKey;
 extern NSString *const kVYBUserLastVybedTimeKey;
+extern NSString *const kVYBUserFreshFeedKey;
 
 //extern NSString *const kVYBUserDisplayNameKey;
 //extern NSString *const kVYBUserFacebookIDKey;

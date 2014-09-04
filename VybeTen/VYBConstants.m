@@ -26,6 +26,8 @@ NSString *const kVYBUserProfilePicSmallKey                      = @"profilePictu
 NSString *const kVYBUserProfilePicMediumKey                     = @"profilePictureMedium";
 NSString *const kVYBUserLastVybedLocationKey                    = @"lastVybedLocation";
 NSString *const kVYBUserLastVybedTimeKey                        = @"lastVybedTime";
+NSString *const kVYBUserFreshFeedKey                            = @"freshFeed";
+
 
 /*
 NSString *const kVYBUserDisplayNameKey                          = @"displayName";

@@ -49,6 +49,10 @@
     self.watchButton.hidden = NO;
 }
 
+- (void)setCounterText:(NSString *)aText {
+    [self.counterButton setTitle:aText forState:UIControlStateNormal];
+}
+
 
 
 /*
