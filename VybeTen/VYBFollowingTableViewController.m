@@ -24,8 +24,7 @@
     
     // TODO: freshVybesByUser should be updated by refresh control
     self.freshVybesByUser = [[VYBCache sharedCache] freshVybesByUser];
-    
-    [self setWatchAllButtonCount:self.freshVybesByUser.allValues.count];
+    [self setWatchAllButtonCount:[[[VYBCache sharedCache] freshVybes] count]];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -102,10 +101,6 @@
         return;
     
     [hubVC setWatchAllButtonCount:count];
-}
-
-- (void)watchAll {
-    
 }
 
 /*

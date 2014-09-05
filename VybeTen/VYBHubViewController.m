@@ -12,6 +12,9 @@
 #import "VYBHubControlView.h"
 #import "VYBAppDelegate.h"
 #import "VYBWatchAllButton.h"
+#import "VYBPlayerViewController.h"
+#import "VYBCache.h"
+#import "VYBUtility.h"
 
 @interface VYBHubViewController ()
 @property (nonatomic, strong) UISearchBar *searchBar;
@@ -93,9 +96,13 @@
 }
 
 - (IBAction)watchAllButtonPressed:(id)sender {
-    id currentVC = [self.swapContainerController currentViewController];
-    if (currentVC && [currentVC respondsToSelector:@selector(watchAll)]) {
-        [currentVC performSelector:@selector(watchAll) withObject:nil];
+    if ([[[VYBCache sharedCache] freshVybes] count]) {
+        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+        [playerVC setVybePlaylist:[[VYBCache sharedCache] freshVybes]];
+        [self presentViewController:playerVC animated:NO completion:nil];
+    }
+    else {
+        [VYBUtility showToastWithImage:nil title:@"You are watching from the first vybe of the day"];
     }
 }
 

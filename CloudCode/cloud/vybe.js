@@ -17,7 +17,6 @@ Parse.Cloud.beforeSave('Vybe', function(request, response) {
   }
 });
 
-// Sends a Yo to all who Yo VybeDev
 Parse.Cloud.afterSave('Vybe', function(request) {
   // Only send push notifications for new vybes
   if (request.object.existed()) {
@@ -26,7 +25,6 @@ Parse.Cloud.afterSave('Vybe', function(request) {
 
   // Send iOS push notifications to tribe members
   if (request.user.has('tribe')) {
-    console.log("This dude's got a tribe.");
     sendPush(request);
   }
 
@@ -34,9 +32,14 @@ Parse.Cloud.afterSave('Vybe', function(request) {
     // Set User's mostRecentVybe to this vybe
     var currentUser = request.user;
     currentUser.set('mostRecentVybe', request.object);
-    currentUser.save().then(function(result) {
-      console.log('user most recent vybe updated');
-    });
+    currentUser.save().then(
+      function(result) {
+	console.log('user most recent vybe updated');
+      },
+      function(error) {
+	console.log('user most recent vybe NOT updated');
+      }
+    );
   }
 
   // Insert this new vybe to each user's freshFeed
@@ -44,6 +47,7 @@ Parse.Cloud.afterSave('Vybe', function(request) {
   query.notEqualTo('username', request.user.get('username'));
   query.find().then(function(users) {
     Parse.Cloud.useMasterKey();
+    console.log('lets feed to ' + users.length + ' users');
     _.each(users, function(aUser) {
       var feed = aUser.get('freshFeed');
       if (!feed) {
@@ -52,14 +56,7 @@ Parse.Cloud.afterSave('Vybe', function(request) {
 
       feed.push(request.object);
       aUser.set('freshFeed', feed);
-      aUser.save(null, {
-	success: function(obj) {
-	  console.log('success!!');
-	},
-	error: function(error) {
-	  console.log('failed[' + error.code + '] ' + error.message);
-	}
-      });
+      aUser.save();
     });
   });
 
@@ -132,6 +129,8 @@ Parse.Cloud.define('default_algorithm',
 // Retrieve only fresh vybes for the requesting user
 Parse.Cloud.define('get_fresh_vybes', get_fresh_vybes); 
 
+Parse.Cloud.define('remove_from_feed', remove_from_feed);
+
 // Retrieve vybes by city
 Parse.Cloud.define('get_region_vybes',
 		   get_region_vybes.bind(this, {
@@ -182,6 +181,36 @@ function get_fresh_vybes(request, response) {
       if (!freshVybes)
 	freshVybes = [];
       response.success(freshVybes);
+    },
+    error: function(error) {
+      response.error(error);
+    }
+  });
+}
+
+function remove_from_feed(request, response) {
+  var wVybeID = request.params.vybeID;
+  
+  var currUser = request.user;
+  var query = new Parse.Query(Parse.User);
+
+  query.equalTo('username', currUser.get('username'));
+  query.first({
+    success: function(aUser) {
+      var oldFreshVybes = aUser.get('freshFeed');
+      if (oldFreshVybes) {
+	var newFreshVybes = [];
+	_.each(oldFreshVybes, function(oVybe) {
+	  if (oVybe.id != wVybeID) {
+	    newFreshVybes.push(oVybe);
+	  } else {
+	    console.log('removed from feed!');
+	  }
+	}); 
+	aUser.set('freshFeed', newFreshVybes);
+	aUser.save();
+      }
+      response.success(wVybeID);
     },
     error: function(error) {
       response.error(error);

@@ -19,7 +19,7 @@
 @property (nonatomic) AVPlayer *currPlayer;
 @property (nonatomic) VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayerItem *currItem;
-@property (nonatomic,strong) NSArray *vybePlaylist;
+@property (nonatomic, copy) NSArray *vybePlaylist;
 @property (nonatomic) NSInteger debugMode;
 @property (nonatomic) NSInteger currVybeIndex;
 @property (nonatomic) PFObject *currRegion;

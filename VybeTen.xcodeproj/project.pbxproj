@@ -25,6 +25,8 @@
 		023F0FD019AB9BC00055D3B7 /* VYBPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 023F0FCF19AB9BC00055D3B7 /* VYBPlayerViewController.xib */; };
 		024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 024520C7192FDB5F007B56A1 /* VYBMyVybe.m */; };
 		025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 025169AC18FAF955007F34B0 /* VYBLabel.m */; };
+		025408E119BA0FD7009C7C71 /* NSArray+PFObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 025408E019BA0FD7009C7C71 /* NSArray+PFObject.m */; };
+		025408E419BA10E5009C7C71 /* NSMutableArray+PFObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 025408E319BA10E5009C7C71 /* NSMutableArray+PFObject.m */; };
 		025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 025DE65A18CB16E30054F739 /* VYBConstants.m */; };
 		025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 025EDB2418F65E45008B0CB2 /* VYBAnimator.m */; };
 		0262054419A67B3600E994F9 /* UINavigationController+Autorotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0262054319A67B3600E994F9 /* UINavigationController+Autorotate.m */; };
@@ -120,6 +122,10 @@
 		024520C7192FDB5F007B56A1 /* VYBMyVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybe.m; sourceTree = "<group>"; };
 		025169AB18FAF955007F34B0 /* VYBLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBLabel.h; sourceTree = "<group>"; };
 		025169AC18FAF955007F34B0 /* VYBLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBLabel.m; sourceTree = "<group>"; };
+		025408DF19BA0FD7009C7C71 /* NSArray+PFObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PFObject.h"; sourceTree = "<group>"; };
+		025408E019BA0FD7009C7C71 /* NSArray+PFObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+PFObject.m"; sourceTree = "<group>"; };
+		025408E219BA10E5009C7C71 /* NSMutableArray+PFObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+PFObject.h"; sourceTree = "<group>"; };
+		025408E319BA10E5009C7C71 /* NSMutableArray+PFObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+PFObject.m"; sourceTree = "<group>"; };
 		025DE65918CB16E30054F739 /* VYBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBConstants.h; sourceTree = "<group>"; };
 		025DE65A18CB16E30054F739 /* VYBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBConstants.m; sourceTree = "<group>"; };
 		025EDB2318F65E45008B0CB2 /* VYBAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBAnimator.h; sourceTree = "<group>"; };
@@ -245,6 +251,10 @@
 				8861F0D219A81E08000249DB /* NSString+Email.m */,
 				023F0FCC19AA6BFA0055D3B7 /* UIImage+FixOrientation.h */,
 				023F0FCD19AA6BFA0055D3B7 /* UIImage+FixOrientation.m */,
+				025408DF19BA0FD7009C7C71 /* NSArray+PFObject.h */,
+				025408E019BA0FD7009C7C71 /* NSArray+PFObject.m */,
+				025408E219BA10E5009C7C71 /* NSMutableArray+PFObject.h */,
+				025408E319BA10E5009C7C71 /* NSMutableArray+PFObject.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -673,6 +683,7 @@
 				02E45ECB19B0156400A55079 /* VYBHubControlView.m in Sources */,
 				02E4556A1989727200B22554 /* VYBLogInViewController.m in Sources */,
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
+				025408E419BA10E5009C7C71 /* NSMutableArray+PFObject.m in Sources */,
 				024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */,
 				027C707F19AF0705007BB8FE /* VYBSwapContainerViewController.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
@@ -693,6 +704,7 @@
 				021B5B7219A7F21C00B906F3 /* VYBProfileInfoView.m in Sources */,
 				02E45EC819B0131200A55079 /* VYBUsersTableViewController.m in Sources */,
 				023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */,
+				025408E119BA0FD7009C7C71 /* NSArray+PFObject.m in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
 				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,
 				02B6AC2619AF843B00A0C44D /* EmptySegue.m in Sources */,

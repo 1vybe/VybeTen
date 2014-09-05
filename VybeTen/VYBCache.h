@@ -18,9 +18,11 @@
 + (id)sharedCache;
 
 - (void)clear;
-
-- (void)addFreshVybe:(PFObject *)nVybe forLocation:(NSString *)location;
-- (void)addFreshVybe:(PFObject *)nVybe forUser:(PFObject *)aUser;
+- (void)addFreshVybe:(PFObject *)nVybe;
+- (void)removeFreshVybe:(PFObject *)oVybe;
+//- (void)addFreshVybe:(PFObject *)nVybe forLocation:(NSString *)location;
+//- (void)addFreshVybe:(PFObject *)nVybe forUser:(PFObject *)aUser;
+- (NSArray *)freshVybes;
 - (NSDictionary *)freshVybesByLocation;
 - (NSDictionary *)freshVybesByUser;
 - (NSArray *)freshVybesForLocation:(NSString *)location;

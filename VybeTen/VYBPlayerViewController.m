@@ -95,7 +95,6 @@
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
 
     [playerView setFrame:[[UIScreen mainScreen] bounds]];
-    NSLog(@"[PLAYER] UIScreen mainScreen bounds: %@", NSStringFromCGRect([[UIScreen mainScreen] bounds]));
 
     self.currPlayerView = playerView;
     
@@ -129,10 +128,10 @@
     swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipeRight];
     //NOTE: all landscape videos are played in landscape right
-    UISwipeGestureRecognizer *swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft)];
-    swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
-    UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight)];
-    swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
+    //UISwipeGestureRecognizer *swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft)];
+    //swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
+    //UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight)];
+    //swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
     
     
     
@@ -199,6 +198,9 @@
         if (self.vybePlaylist.count > 0) {
             [self beginPlayingFrom:currVybeIndex];
         }
+    } else if (self.vybePlaylist){
+        currVybeIndex = 0;
+        [self beginPlayingFrom:currVybeIndex];
     } else {
         NSString *functionName = @"default_algorithm";
         PFGeoPoint *geoPoint = [PFGeoPoint geoPoint];
@@ -234,7 +236,7 @@
     
     PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
 
-    
+    /*
     if ([[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp] compare:currVybe[kVYBVybeTimestampKey]] == NSOrderedAscending) {
         [[VYBUserStore sharedStore] setLastWatchedVybeTimeStamp:currVybe[kVYBVybeTimestampKey]];
         
@@ -247,6 +249,7 @@
         currentInstallation.badge = [[VYBUserStore sharedStore] newPrivateVybeCount];
         [currentInstallation saveEventually];
     }
+    */
     
     NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
     cacheURL = [cacheURL URLByAppendingPathComponent:[currVybe objectId]];
@@ -282,6 +285,7 @@
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
                 [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
                 [self.currPlayer play];
+                [[VYBCache sharedCache] removeFreshVybe:currVybe];
                 [self syncUI:currVybe];
                 [self prepareVybeAt:downloadingVybeIndex];
             } else {
@@ -320,6 +324,7 @@
                     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
                     [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
                     [self.currPlayer play];
+                    [[VYBCache sharedCache] removeFreshVybe:aVybe];
                     [self syncUI:aVybe];
                     [self prepareVybeAt:downloadingVybeIndex + 1];
                 }

@@ -21,7 +21,7 @@
         theOne.frame = self.frame;
         theOne.autoresizingMask = self.autoresizingMask;
         theOne.translatesAutoresizingMaskIntoConstraints = self.translatesAutoresizingMaskIntoConstraints;
-        
+
         for (NSLayoutConstraint *constraint in self.constraints) {
             id firstItem = constraint.firstItem;
             if (firstItem == self)

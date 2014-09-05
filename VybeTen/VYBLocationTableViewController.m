@@ -50,8 +50,19 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    //TODO: the following operations should happen when PLAYER screen is dismissed
+    self.freshVybesByLocation = [[VYBCache sharedCache] freshVybesByLocation];
+    self.sortedKeys = [self.usersByLocation.allKeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        return [self.freshVybesByLocation[obj1] count] < [self.freshVybesByLocation[obj2] count];
+    }];
+    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self setWatchAllButtonCount:[[[VYBCache sharedCache] freshVybes] count]];
+    });
+    
 }
 
 - (void)refreshControlPulled:(id)sender {
@@ -65,15 +76,7 @@
     [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *objects, NSError *error) {
         if (!error) {
             for (PFObject *aVybe in objects) {
-                NSString *locString = aVybe[kVYBVybeLocationStringKey];
-                NSArray *token = [locString componentsSeparatedByString:@","];
-                if (token.count != 3)
-                    continue;
-                
-                //NOTE: we discard the first location field (neighborhood)
-                NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
-                [[VYBCache sharedCache] addFreshVybe:aVybe forLocation:keyString];
-                [[VYBCache sharedCache] addFreshVybe:aVybe forUser:aVybe[kVYBVybeUserKey]];
+                [[VYBCache sharedCache] addFreshVybe:aVybe];
             }
             self.freshVybesByLocation = [[VYBCache sharedCache] freshVybesByLocation];
             [self getUsersByLocation];
@@ -142,9 +145,10 @@
             }];
             
             [self.tableView reloadData];
-            // NOTE: this should be called on the main thread
-            [self setWatchAllButtonCount:self.freshVybesByLocation.allValues.count];
             
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self setWatchAllButtonCount:[[[VYBCache sharedCache] freshVybes] count]];
+            });
         }
         [self.refreshControl endRefreshing];
     }];
@@ -198,10 +202,6 @@
 }
 
 #pragma mark - ()
-
-- (void)watchAll {
-    
-}
 
 - (void)setWatchAllButtonCount:(NSInteger)count {
     VYBHubViewController *hubVC = (VYBHubViewController *)self.parentViewController.parentViewController;

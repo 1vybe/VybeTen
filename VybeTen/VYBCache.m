@@ -7,6 +7,8 @@
 //
 
 #import "VYBCache.h"
+#import "NSArray+PFObject.h"
+#import "NSMutableArray+PFObject.h"
 
 @interface VYBCache()
 @property (nonatomic, strong) NSCache *cache;
@@ -39,6 +41,91 @@
 
 - (void)clear {
     [self.cache removeAllObjects];
+}
+
+- (void)addFreshVybe:(PFObject *)nVybe {
+    NSString *locString = nVybe[kVYBVybeLocationStringKey];
+    NSArray *token = [locString componentsSeparatedByString:@","];
+    if (token.count != 3)
+        return;
+    
+    NSArray *watchedVybes = [self.cache objectForKey:@"watchedVybes"];
+    if ( [watchedVybes containsPFObject:nVybe] )
+        return;
+    
+    NSArray *freshVybes = [self.cache objectForKey:@"freshVybes"];
+    NSArray *newArr;
+    if (freshVybes) {
+        newArr = [freshVybes arrayByAddingObject:nVybe];
+    } else {
+        newArr = [NSArray arrayWithObject:nVybe];
+    }
+    [self.cache setObject:newArr forKey:@"freshVybes"];
+
+    
+    
+    //NOTE: we discard the first location field (neighborhood)
+    NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
+    [self addFreshVybe:nVybe forLocation:keyString];
+    [self addFreshVybe:nVybe forUser:nVybe[kVYBVybeUserKey]];
+
+}
+
+- (void)removeFreshVybe:(PFObject *)oVybe {
+    NSString *removeFromFeed = @"remove_from_feed";
+    [PFCloud callFunctionInBackground:removeFromFeed withParameters:@{@"vybeID": oVybe.objectId}
+                                block:^(id object, NSError *error) {
+                                    if (!error) {
+                                        
+                                    }
+                                }];
+    
+    [self addWatchedVybe:oVybe];
+    
+    NSArray *oldFreshVybes = [self.cache objectForKey:@"freshVybes"];
+    if (oldFreshVybes) {
+        NSMutableArray *newFreshVybes = [NSMutableArray arrayWithArray:oldFreshVybes];
+        [newFreshVybes removePFObject:oVybe];
+        [self.cache setObject:newFreshVybes forKey:@"freshVybes"];
+    }
+    
+    NSDictionary *oldFreshByLocation = [self.cache objectForKey:@"freshByLocation"];
+    if (oldFreshByLocation) {
+        NSString *locString = oVybe[kVYBVybeLocationStringKey];
+        NSArray *token = [locString componentsSeparatedByString:@","];
+        NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
+        NSArray *oldArr = [oldFreshByLocation objectForKey:keyString];
+        if (oldArr) {
+            NSMutableArray *newArr = [NSMutableArray arrayWithArray:oldArr];
+            [newArr removePFObject:oVybe];
+            NSMutableDictionary *newDict = [NSMutableDictionary dictionaryWithDictionary:oldFreshByLocation];
+            [newDict setObject:newArr forKey:keyString];
+            [self.cache setObject:newDict forKey:@"freshByLocation"];
+        }
+    }
+    
+    NSDictionary *oldFreshByUser = [self.cache objectForKey:@"freshByUser"];
+    if (oldFreshByUser) {
+        NSArray *oldArr = [oldFreshByLocation objectForKey:oVybe[kVYBVybeUserKey]];
+        if (oldArr) {
+            NSMutableArray *newArr = [NSMutableArray arrayWithArray:oldArr];
+            [newArr removePFObject:oVybe];
+            NSMutableDictionary *newDict = [NSMutableDictionary dictionaryWithDictionary:oldFreshByUser];
+            [newDict setObject:newArr forKey:oVybe[kVYBVybeUserKey]];
+            [self.cache setObject:newDict forKey:@"freshByUser"];
+        }
+    }
+}
+
+- (void)addWatchedVybe:(PFObject *)oVybe {
+    NSArray *watchedVybes = [self.cache objectForKey:@"watchedVybes"];
+    NSArray *newArr;
+    if (watchedVybes && ![watchedVybes containsPFObject:oVybe]) {
+        newArr = [watchedVybes arrayByAddingObject:oVybe];
+    } else {
+        newArr = [NSArray arrayWithObject:oVybe];
+    }
+    [self.cache setObject:newArr forKey:@"watchedVybes"];
 }
 
 - (void)addFreshVybe:(PFObject *)nVybe forLocation:(NSString *)location {
@@ -87,6 +174,22 @@
     [self.cache setObject:newDict forKey:@"freshByUser"];
 }
 
+- (NSArray *)freshVybes {
+    return [self.cache objectForKey:@"freshVybes"];
+}
+
+- (NSArray *)watchedVybes {
+    return [self.cache objectForKey:@"watchedVybes"];
+}
+
+- (NSDictionary *)freshVybesByLocation {
+    return [self.cache objectForKey:@"freshByLocation"];
+}
+
+- (NSDictionary *)freshVybesByUser{
+    return [self.cache objectForKey:@"freshByUser"];
+}
+
 - (NSArray *)freshVybesForLocation:(NSString *)location {
     NSDictionary *dictionary = [self.cache objectForKey:@"freshByLocation"];
     NSArray *vybes = [dictionary objectForKey:location];
@@ -101,18 +204,15 @@
     return vybes;
 }
 
-- (NSDictionary *)freshVybesByLocation {
-    return [self.cache objectForKey:@"freshByLocation"];
-}
 
-- (NSDictionary *)freshVybesByUser{
-    return [self.cache objectForKey:@"freshByUser"];
-}
 
 - (void)clearFreshVybes {
     NSDictionary *emptyDict = [[NSDictionary alloc] init];
     [self.cache setObject:emptyDict forKey:@"freshByLocation"];
     [self.cache setObject:emptyDict forKey:@"freshByUser"];
+    
+    NSArray *emptyArr = [[NSArray alloc] init];
+    [self.cache setObject:emptyArr forKey:@"freshVybes"];
 }
 
 - (void)addUser:(PFObject *)user forLocation:(NSString *)location {
