@@ -16,16 +16,19 @@
 #import "VYBCache.h"
 
 @interface VYBLocationTableViewController ()
-@property (nonatomic, strong) NSArray *regions;
 
 @property (nonatomic, copy) NSDictionary *vybesByLocation;
 @property (nonatomic, copy) NSDictionary *usersByLocation;
 @property (nonatomic, copy) NSDictionary *freshVybesByLocation;
 @property (nonatomic, strong) NSArray *sortedKeys;
+
 @end
 
 @implementation VYBLocationTableViewController
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheFreshVybeCountChangedNotification object:nil];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -36,6 +39,8 @@
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refreshControlPulled:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
     
     self.sortedKeys = [[NSArray alloc] init];
     
@@ -53,16 +58,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    //TODO: the following operations should happen when PLAYER screen is dismissed
-    self.freshVybesByLocation = [[VYBCache sharedCache] freshVybesByLocation];
-    self.sortedKeys = [self.usersByLocation.allKeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        return [self.freshVybesByLocation[obj1] count] < [self.freshVybesByLocation[obj2] count];
-    }];
-    [self.tableView reloadData];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self setWatchAllButtonCount:[[[VYBCache sharedCache] freshVybes] count]];
-    });
-    
 }
 
 - (void)refreshControlPulled:(id)sender {
@@ -78,11 +73,10 @@
             for (PFObject *aVybe in objects) {
                 [[VYBCache sharedCache] addFreshVybe:aVybe];
             }
-            self.freshVybesByLocation = [[VYBCache sharedCache] freshVybesByLocation];
             [self getUsersByLocation];
         }
         else {
-            NSLog(@"%@", error);
+            [self.refreshControl endRefreshing];
         }
     }];
 }
@@ -107,15 +101,17 @@
                 NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
                 [[VYBCache sharedCache] addUser:aUser forLocation:keyString];
             }
-            self.usersByLocation = [[VYBCache sharedCache] usersByLocation];
-            [self getVybesByLocation];
+            [self getVybesByLocationAndByUser];
+        } else {
+            [self.refreshControl endRefreshing];
         }
     }];
 }
 
 
-- (void)getVybesByLocation {
+- (void)getVybesByLocationAndByUser {
     [[VYBCache sharedCache] clearVybesByLocation];
+    [[VYBCache sharedCache] clearVybesByUser];
     
     PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
     // 24 TTL checking
@@ -137,18 +133,12 @@
                 //NOTE: we discard the first location field (neighborhood)
                 NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
                 [[VYBCache sharedCache] addVybe:obj forLocation:keyString];
+                [[VYBCache sharedCache] addVybe:obj forUser:obj[kVYBVybeUserKey]];
             }
-            self.vybesByLocation = [[VYBCache sharedCache] vybesByLocation];
-            // Sort by the number of FRESH vybes (descending)
-            self.sortedKeys = [self.usersByLocation.allKeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                return [self.freshVybesByLocation[obj1] count] < [self.freshVybesByLocation[obj2] count];
-            }];
-            
-            [self.tableView reloadData];
-            
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self setWatchAllButtonCount:[[[VYBCache sharedCache] freshVybes] count]];
+                [[NSNotificationCenter defaultCenter] postNotificationName:VYBCacheFreshVybeCountChangedNotification object:nil];
             });
+            
         }
         [self.refreshControl endRefreshing];
     }];
@@ -173,10 +163,13 @@
     NSInteger vyCnt = [[self.vybesByLocation objectForKey:locationKey] count];
     NSInteger usrCnt = [[self.usersByLocation objectForKey:locationKey] count];
     NSInteger newVyCnt = [[self.freshVybesByLocation objectForKey:locationKey] count];
+
     [cell setLocationKey:locationKey];
     [cell setVybeCount:vyCnt];
     [cell setUserCount:usrCnt];
     [cell setFreshVybeCount:newVyCnt];
+    
+    [cell setDelegate:self];
     
     //[cell.unwatchedVybeButton setContentMode:UIViewContentModeScaleAspectFit];
     
@@ -203,12 +196,26 @@
 
 #pragma mark - ()
 
-- (void)setWatchAllButtonCount:(NSInteger)count {
-    VYBHubViewController *hubVC = (VYBHubViewController *)self.parentViewController.parentViewController;
-    if (!hubVC)
-        return;
-    
-    [hubVC setWatchAllButtonCount:count];
+- (void)watchNewVybesFromLocation:(NSString *)locationKey {
+    NSArray *vybes = [self.freshVybesByLocation objectForKey:locationKey];
+    if (vybes && vybes.count > 0) {
+        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+        [playerVC setPresentingVC:self];
+        [playerVC setVybePlaylist:vybes];
+        [self presentViewController:playerVC animated:NO completion:nil];
+    }
+}
+
+- (void)freshVybeCountChanged {
+    self.freshVybesByLocation = [[VYBCache sharedCache] freshVybesByLocation];
+    self.usersByLocation = [[VYBCache sharedCache] usersByLocation];
+    self.vybesByLocation = [[VYBCache sharedCache] vybesByLocation];
+
+    // Sort by the number of FRESH vybes (descending)
+    self.sortedKeys = [self.usersByLocation.allKeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        return [self.freshVybesByLocation[obj1] count] < [self.freshVybesByLocation[obj2] count];
+    }];
+    [self.tableView reloadData];
 }
 
 /*

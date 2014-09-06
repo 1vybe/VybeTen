@@ -8,12 +8,22 @@
 
 #import "VYBUserTableViewCell.h"
 
+@interface VYBUserTableViewCell ()
+- (IBAction)watchNewButtonPressed:(id)sender;
+@end
 @implementation VYBUserTableViewCell
 
 - (void)awakeFromNib
 {
     // Initialization code
 }
+
+- (IBAction)watchNewButtonPressed:(id)sender {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(watchNewVybesFromUser:)]) {
+        [self.delegate performSelector:@selector(watchNewVybesFromUser:) withObject:self.userObjID];
+    }
+}
+
 
 - (void)setFreshVybeCount:(NSInteger)freshVybeCount {
     _freshVybeCount = freshVybeCount;
@@ -23,10 +33,6 @@
     [self.watchNewButton setTitle:[NSString stringWithFormat:@"%ld", (long)_freshVybeCount] forState:UIControlStateNormal];
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-    // Configure the view for the selected state
-}
+
 
 @end

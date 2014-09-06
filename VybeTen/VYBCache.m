@@ -68,7 +68,6 @@
     NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
     [self addFreshVybe:nVybe forLocation:keyString];
     [self addFreshVybe:nVybe forUser:nVybe[kVYBVybeUserKey]];
-
 }
 
 - (void)removeFreshVybe:(PFObject *)oVybe {
@@ -79,6 +78,7 @@
                                         
                                     }
                                 }];
+    
     
     [self addWatchedVybe:oVybe];
     
@@ -106,15 +106,18 @@
     
     NSDictionary *oldFreshByUser = [self.cache objectForKey:@"freshByUser"];
     if (oldFreshByUser) {
-        NSArray *oldArr = [oldFreshByLocation objectForKey:oVybe[kVYBVybeUserKey]];
+        PFObject *user = oVybe[kVYBVybeUserKey];
+        NSArray *oldArr = [oldFreshByUser objectForKey:user.objectId];
         if (oldArr) {
             NSMutableArray *newArr = [NSMutableArray arrayWithArray:oldArr];
             [newArr removePFObject:oVybe];
             NSMutableDictionary *newDict = [NSMutableDictionary dictionaryWithDictionary:oldFreshByUser];
-            [newDict setObject:newArr forKey:oVybe[kVYBVybeUserKey]];
+            [newDict setObject:newArr forKey:user.objectId];
             [self.cache setObject:newDict forKey:@"freshByUser"];
         }
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBCacheFreshVybeCountChangedNotification object:nil];
 }
 
 - (void)addWatchedVybe:(PFObject *)oVybe {
@@ -205,7 +208,6 @@
 }
 
 
-
 - (void)clearFreshVybes {
     NSDictionary *emptyDict = [[NSDictionary alloc] init];
     [self.cache setObject:emptyDict forKey:@"freshByLocation"];
@@ -259,6 +261,27 @@
     [self.cache setObject:newDict forKey:@"vybesByLocation"];
 }
 
+- (void)addVybe:(PFObject *)vybe forUser:(PFObject *)aUser {
+    NSDictionary *vybesByUser = [self.cache objectForKey:@"vybesByUser"];
+    NSMutableDictionary *newDict;
+    
+    if (!vybesByUser) {
+        newDict = [NSMutableDictionary dictionary];
+        NSArray *newVybe = [NSArray arrayWithObject:vybe];
+        [newDict setObject:newVybe forKey:aUser.objectId];
+    } else {
+        newDict = [NSMutableDictionary dictionaryWithDictionary:vybesByUser];
+        if (![vybesByUser objectForKey:aUser.objectId]) {
+            NSArray *newVybe = [NSArray arrayWithObject:vybe];
+            [newDict setObject:newVybe forKey:aUser.objectId];
+        } else {
+            NSArray *newVybes = [vybesByUser objectForKey:aUser.objectId];
+            [newDict setObject:[newVybes arrayByAddingObject:vybe] forKey:aUser.objectId];
+        }
+        
+    }
+    [self.cache setObject:newDict forKey:@"vybesByUser"];
+}
 
 
 - (NSArray *)usersForLocation:(NSString *)location {
@@ -275,12 +298,23 @@
     return vybes;
 }
 
+- (NSArray *)vybesForUser:(PFObject *)aUser {
+    NSDictionary *vybesByUser = [self.cache objectForKey:@"vybesByUser"];
+    NSArray *vybes = [vybesByUser objectForKey:aUser.objectId];
+    
+    return vybes;
+}
+
 - (NSDictionary *)usersByLocation {
     return [self.cache objectForKey:@"usersByLocation"];
 }
 
 - (NSDictionary *)vybesByLocation {
     return [self.cache objectForKey:@"vybesByLocation"];
+}
+
+- (NSDictionary *)vybesByUser {
+    return [self.cache objectForKey:@"vybesByUser"];
 }
 
 - (void)clearUsersByLocation {
@@ -291,6 +325,11 @@
 - (void)clearVybesByLocation {
     NSDictionary *emptyDict = [[NSDictionary alloc] init];
     [self.cache setObject:emptyDict forKey:@"vybesByLocation"];
+}
+
+- (void)clearVybesByUser {
+    NSDictionary *emptyDict = [[NSDictionary alloc] init];
+    [self.cache setObject:emptyDict forKey:@"vybesByUser"];
 }
 
 

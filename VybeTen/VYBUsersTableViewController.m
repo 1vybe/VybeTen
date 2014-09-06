@@ -9,27 +9,30 @@
 #import "VYBUsersTableViewController.h"
 #import "VYBUserTableViewCell.h"
 #import "VYBProfileViewController.h"
+#import "VYBPlayerViewController.h"
 #import "VYBCache.h"
 
 @interface VYBUsersTableViewController ()
-
+@property (nonatomic, copy) NSArray *users;
+@property (nonatomic, copy) NSArray *vybes;
+@property (nonatomic, strong) NSMutableDictionary *vybesFromHereByUser;
 @end
 
 @implementation VYBUsersTableViewController {
-    NSArray *users;
     UIImageView *countryFlagImageView;
 }
+@synthesize users, vybes, vybesFromHereByUser;
 
-- (void)loadView {
-    [super loadView];
-    users = [[VYBCache sharedCache] usersForLocation:self.locationKey];
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheFreshVybeCountChangedNotification object:nil];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    [self freshVybeCountChanged];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -85,6 +88,12 @@
     }
     
     PFObject *aUser = users[indexPath.row];
+    
+    // NOTE: freshVybesByUser dictionary take PFUser object's objectID as a key
+    NSArray *freshVybeFromHereByThisUser = [self.vybesFromHereByUser objectForKey:aUser.objectId];
+    NSInteger freshCount = (freshVybeFromHereByThisUser) ? ([freshVybeFromHereByThisUser count]) : 0;
+    [cell setFreshVybeCount:freshCount];
+    
     NSString *lowerUsername = [(NSString *)aUser[kVYBUserUsernameKey] lowercaseString];
     
     // TODO: user PFImageView of PFTableViewCell
@@ -98,6 +107,9 @@
         }
     }];
     
+    [cell setDelegate:self];
+    [cell setUserObjID:aUser.objectId];
+    
     return cell;
 }
 
@@ -107,39 +119,43 @@
     [profileVC setUser:aUser];
     [self.navigationController pushViewController:profileVC animated:NO];
 }
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
+#pragma mark - ()
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
+- (void)watchNewVybesFromUser:(NSString *)aUserID {
+    NSArray *arr = [vybesFromHereByUser objectForKey:aUserID];
+    if (arr && arr.count > 0) {
+        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+        [playerVC setPresentingVC:self];
+        [playerVC setVybePlaylist:arr];
+        [self presentViewController:playerVC animated:NO completion:nil];
+    }
 }
-*/
+
+#pragma mark - VYBCacheFreshVybeCountChangedNotification
+
+- (void)freshVybeCountChanged {
+    users = [[VYBCache sharedCache] usersForLocation:self.locationKey];
+    vybes = [[VYBCache sharedCache] freshVybesForLocation:self.locationKey];
+    
+    vybesFromHereByUser = [[NSMutableDictionary alloc] init];
+    for (PFObject *aVybe in vybes) {
+        PFObject *aUser = aVybe[kVYBVybeUserKey];
+        NSArray *arr = [vybesFromHereByUser objectForKey:aUser.objectId];
+        if (!arr)
+            arr = [NSArray arrayWithObject:aVybe];
+        else
+            arr = [arr arrayByAddingObject:aVybe];
+        [vybesFromHereByUser setObject:arr forKey:aUser.objectId];
+    }
+    
+    users = [users sortedArrayUsingComparator:^NSComparisonResult(PFObject *user1, PFObject *user2) {
+        return [[vybesFromHereByUser objectForKey:user1.objectId] count] < [[vybesFromHereByUser objectForKey:user2.objectId] count];
+    }];
+    
+    [self.tableView reloadData];
+}
 
 /*
 #pragma mark - Navigation

@@ -30,16 +30,21 @@
 - (void)clearFreshVybes;
 
 // TODO: These should not be cached but only the counter should be
-- (void)addUser:(PFObject *)user forLocation:(NSString *)location;
 - (void)addVybe:(PFObject *)vybe forLocation:(NSString *)location;
-- (NSArray *)usersForLocation:(NSString *)location;
-- (NSArray *)vybesForLocation:(NSString *)location;
-- (NSDictionary *)usersByLocation;
+- (void)addVybe:(PFObject *)vybe forUser:(PFObject *)aUser;
 - (NSDictionary *)vybesByLocation;
-- (NSInteger)numberOfLocations;
-- (void)clearUsersByLocation;
+- (NSDictionary *)vybesByUser;
+- (NSArray *)vybesForLocation:(NSString *)location;
+- (NSArray *)vybesForUser:(PFObject *)aUser;
 - (void)clearVybesByLocation;
+- (void)clearVybesByUser;
 
+- (void)addUser:(PFObject *)user forLocation:(NSString *)location;
+- (NSDictionary *)usersByLocation;
+- (NSArray *)usersForLocation:(NSString *)location;
+- (void)clearUsersByLocation;
+
+- (NSInteger)numberOfLocations;
 
 - (void)setAttributesForVybe:(PFObject *)vybe likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser;
 - (NSDictionary *)attributesForVybe:(PFObject *)vybe;

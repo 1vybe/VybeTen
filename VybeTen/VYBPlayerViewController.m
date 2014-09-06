@@ -230,7 +230,7 @@
 - (void)beginPlayingFrom:(NSInteger)from {
     currVybeIndex = from;
     
-    self.countLabel.text = [NSString stringWithFormat:@"%ld", self.vybePlaylist.count - currVybeIndex - 1];
+    self.countLabel.text = [NSString stringWithFormat:@"%u", self.vybePlaylist.count - currVybeIndex - 1];
     
     downloadingVybeIndex = currVybeIndex + 1;
     
@@ -266,6 +266,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
         [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
         [self.currPlayer play];
+        [[VYBCache sharedCache] removeFreshVybe:currVybe];
         [self syncUI:currVybe];
         [self prepareVybeAt:downloadingVybeIndex];
     } else {
@@ -383,7 +384,11 @@
  **/
 
 - (void)dismissButtonPressed:(id)sender {
-    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:^{
+        if (self.presentingVC && [self.presentingVC respondsToSelector:@selector(playerDismissed)]) {
+            [self.presentingVC performSelector:@selector(playerDismissed) withObject:nil];
+        }
+    }];
 }
 
 - (void)swipeLeft {

@@ -9,5 +9,4 @@
 #import <UIKit/UIKit.h>
 
 @interface VYBFollowingTableViewController : PFQueryTableViewController
-@property (nonatomic) IBOutlet id delegate;
 @end

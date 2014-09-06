@@ -10,5 +10,4 @@
 
 @interface VYBHubViewController : UIViewController <UISearchDisplayDelegate, UISearchBarDelegate>
 - (void)scrollViewBeganDragging:(UIScrollView *)scrollView;
-- (void)setWatchAllButtonCount:(NSInteger)count;
 @end

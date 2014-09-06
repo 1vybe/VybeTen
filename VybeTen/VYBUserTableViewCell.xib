@@ -51,12 +51,13 @@
                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                         </state>
+                        <connections>
+                            <action selector="watchNewButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="1UP-yz-lcg"/>
+                        </connections>
                     </button>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vybes from" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ZS-o0-Gvg" userLabel="countLabel">
-                        <rect key="frame" x="78" y="34" width="85" height="20"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ZS-o0-Gvg" userLabel="countLabel">
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="NQu-ap-f7s"/>
-                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="20" id="tpA-I9-iYo"/>
                         </constraints>
                         <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="17"/>
                         <color key="textColor" red="0.59607843140000005" green="0.59607843140000005" blue="0.59607843140000005" alpha="1" colorSpace="calibratedRGB"/>
@@ -76,6 +77,7 @@
             </tableViewCellContentView>
             <inset key="separatorInset" minX="80" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
+                <outlet property="countLabel" destination="5ZS-o0-Gvg" id="gJx-g5-kdL"/>
                 <outlet property="nameLabel" destination="BYC-UR-4pL" id="0VB-O3-KPR"/>
                 <outlet property="profileImageView" destination="kru-xb-tlm" id="aRB-BL-xpr"/>
                 <outlet property="watchNewButton" destination="BgW-IN-zEd" id="Koh-kb-rzv"/>

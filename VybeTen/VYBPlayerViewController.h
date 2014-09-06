@@ -14,7 +14,7 @@
 @class VYBPlayerView;
 
 @interface VYBPlayerViewController : GAITrackedViewController <UIAlertViewDelegate, MBProgressHUDDelegate>
-@property (nonatomic, strong) id parentVC;
+@property (nonatomic, weak) id presentingVC;
 
 @property (nonatomic) AVPlayer *currPlayer;
 @property (nonatomic) VYBPlayerView *currPlayerView;

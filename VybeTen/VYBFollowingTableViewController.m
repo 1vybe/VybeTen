@@ -9,41 +9,41 @@
 #import "VYBFollowingTableViewController.h"
 #import "VYBUserTableViewCell.h"
 #import "VYBProfileViewController.h"
+#import "VYBPlayerViewController.h"
 #import "VYBHubViewController.h"
 #import "VYBCache.h"
 
 @interface VYBFollowingTableViewController ()
+@property (nonatomic, copy) NSDictionary *vybesByUser;
 @property (nonatomic, copy) NSDictionary *freshVybesByUser;
-- (IBAction)watchAllButtonPressed:(id)sender;
+@property (nonatomic, strong) NSArray *sortedUsers;
 @end
 
 @implementation VYBFollowingTableViewController
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheFreshVybeCountChangedNotification object:nil];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // TODO: freshVybesByUser should be updated by refresh control
-    self.freshVybesByUser = [[VYBCache sharedCache] freshVybesByUser];
-    [self setWatchAllButtonCount:[[[VYBCache sharedCache] freshVybes] count]];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 #pragma mark - UITableViewController
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 70.0;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *UserTableViewCellIdentifier = @"UserTableViewCellIdentifier";
     VYBUserTableViewCell *cell = (VYBUserTableViewCell *)[tableView dequeueReusableCellWithIdentifier:UserTableViewCellIdentifier];
     if (!cell) {
@@ -52,15 +52,16 @@
         //NOTE: reuseIdentifier is set in xib file
     }
 
+    PFObject *aUser = self.sortedUsers[indexPath.row];
     // NOTE: freshVybesByUser dictionary take PFUser object's objectID as a key
-    NSInteger freshCount = (self.freshVybesByUser) ? ([[self.freshVybesByUser objectForKey:object.objectId] count]) : 0;
+    NSInteger freshCount = (self.freshVybesByUser) ? ([[self.freshVybesByUser objectForKey:aUser.objectId] count]) : 0;
     [cell setFreshVybeCount:freshCount];
     
-    NSString *lowerUsername = [(NSString *)object[kVYBUserUsernameKey] lowercaseString];
+    NSString *lowerUsername = [(NSString *)aUser[kVYBUserUsernameKey] lowercaseString];
     // TODO: user PFImageView of PFTableViewCell
     [cell.nameLabel setText:lowerUsername];
     
-    PFFile *profile = object[kVYBUserProfilePicMediumKey];
+    PFFile *profile = aUser[kVYBUserProfilePicMediumKey];
     [profile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         if (!error) {
             UIImage *profileImg = [UIImage imageWithData:data];
@@ -68,11 +69,18 @@
         }
     }];
     
+    NSInteger allVybeCount = [[self.vybesByUser objectForKey:aUser.objectId] count];
+    NSArray *locations = [aUser[kVYBUserLastVybedLocationKey] componentsSeparatedByString:@","];
+    NSString *cityName = locations[1];
+    [cell.countLabel setText:[NSString stringWithFormat:@"%ld Vybes From %@", (long)allVybeCount, cityName]];
+    
+    [cell setUserObjID:aUser.objectId];
+    [cell setDelegate:self];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    PFObject *aUser = self.objects[indexPath.row];
+    PFObject *aUser = self.sortedUsers[indexPath.row];
     VYBProfileViewController *profileVC = [[VYBProfileViewController alloc] init];
     [profileVC setUser:aUser];
     [self.navigationController pushViewController:profileVC animated:NO];
@@ -93,14 +101,34 @@
     return query;
 }
 
+- (void)objectsDidLoad:(NSError *)error {
+    [super objectsDidLoad:error];
+    
+    // TODO: freshVybesByUser should be updated by refresh control
+    [self freshVybeCountChanged];
+}
+
 #pragma amrk - ()
 
-- (void)setWatchAllButtonCount:(NSInteger)count {
-    VYBHubViewController *hubVC = (VYBHubViewController *)self.parentViewController.parentViewController;
-    if (!hubVC)
-        return;
+- (void)freshVybeCountChanged {
+    self.vybesByUser = [[VYBCache sharedCache] vybesByUser];
+    self.freshVybesByUser = [[VYBCache sharedCache] freshVybesByUser];
     
-    [hubVC setWatchAllButtonCount:count];
+    self.sortedUsers = [self.objects sortedArrayUsingComparator:^NSComparisonResult(PFObject *user1, PFObject *user2) {
+        return [[self.freshVybesByUser objectForKey:user1.objectId] count] < [[self.freshVybesByUser objectForKey:user2.objectId] count];
+    }];
+    
+    [self.tableView reloadData];
+}
+
+- (void)watchNewVybesFromUser:(NSString *)aUserID {
+    NSArray *vybes = [self.freshVybesByUser objectForKey:aUserID];
+    if (vybes && vybes.count > 0) {
+        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+        [playerVC setPresentingVC:self];
+        [playerVC setVybePlaylist:vybes];
+        [self presentViewController:playerVC animated:NO completion:nil];
+    }
 }
 
 /*

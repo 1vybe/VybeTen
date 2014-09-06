@@ -12,5 +12,9 @@
 @property (nonatomic, strong) IBOutlet UIImageView *profileImageView;
 @property (nonatomic, strong) IBOutlet UILabel *nameLabel;
 @property (nonatomic, strong) IBOutlet UIButton *watchNewButton;
+@property (nonatomic, strong) IBOutlet UILabel *countLabel;
+@property (nonatomic, weak) id delegate;
+@property (nonatomic) NSString *userObjID;
 @property (nonatomic) NSInteger freshVybeCount;
+
 @end

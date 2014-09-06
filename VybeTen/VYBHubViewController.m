@@ -31,6 +31,10 @@
 
 @synthesize controlView;
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheFreshVybeCountChangedNotification object:nil];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -47,6 +51,7 @@
     self.navigationItem.rightBarButtonItem = captureButton;
 
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
     /*
     self.navigationItem.hidesBackButton = YES;
     
@@ -106,15 +111,17 @@
     }
 }
 
-- (void)setWatchAllButtonCount:(NSInteger)count {
-    [self.watchAllButton setCounterText:[NSString stringWithFormat:@"%ld", count]];
-}
-
-
 
 - (void)captureButtonPressed:(id)sender {
     VYBAppDelegate *appDel = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
     [appDel moveToPage:VYBCapturePageIndex];
+}
+
+#pragma mark - VYBCacheFreshVybeCountChangedNotification
+
+- (void)freshVybeCountChanged {
+    NSInteger count = [[[VYBCache sharedCache] freshVybes] count];
+    [self.watchAllButton setCounterText:[NSString stringWithFormat:@"%ld", (long)count]];
 }
 
 #pragma mark - Child View Controllers delegate

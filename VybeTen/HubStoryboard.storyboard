@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.8" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7I9-fc-Jih">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
         <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
     </dependencies>
@@ -167,7 +168,7 @@
                                                 <rect key="frame" x="120" y="34" width="42" height="21"/>
                                             </variation>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wUz-PL-xLQ" userLabel="unwatchedVybeButton">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wUz-PL-xLQ" userLabel="watchFreshButton">
                                             <rect key="frame" x="552" y="20" width="30" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="30" id="55n-H2-oGQ"/>
@@ -181,6 +182,9 @@
                                             <variation key="widthClass=compact" fixedFrame="YES">
                                                 <rect key="frame" x="347" y="10" width="40" height="40"/>
                                             </variation>
+                                            <connections>
+                                                <action selector="watchFreshButtonPressed:" destination="eAk-Yj-OBR" eventType="touchUpInside" id="0tH-KQ-Gwn"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                     <constraints>
@@ -201,8 +205,8 @@
                                     <outlet property="cityNameLabel" destination="4tc-RQ-TJe" id="zAj-3P-lhJ"/>
                                     <outlet property="flagImageView" destination="9IV-PT-20q" id="hKh-ws-XWu"/>
                                     <outlet property="followingCountLabel" destination="5Sh-Ut-YVe" id="JVX-Xw-wbB"/>
-                                    <outlet property="unwatchedVybeButton" destination="wUz-PL-xLQ" id="slc-fU-nhc"/>
                                     <outlet property="vybeCountLabel" destination="roc-4G-49i" id="m3a-0X-xe9"/>
+                                    <outlet property="watchFreshButton" destination="wUz-PL-xLQ" id="L0O-cm-0gh"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

@@ -8,7 +8,7 @@
 #define IS_IPHONE_5     ( [[UIScreen mainScreen] bounds].size.height == 568 )
 
 #define VYBE_LENGTH_SEC 15
-#define VYBE_TTL_HOURS  48
+#define VYBE_TTL_HOURS  300
 #define UPFRESH         1
 #define UPLOADING       2
 #define UPLOADED        3
@@ -55,6 +55,7 @@ typedef enum {
 
 #pragma mark - NSNotification
 extern NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification;
+extern NSString *const VYBCacheFreshVybeCountChangedNotification;
 extern NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification;
 extern NSString *const VYBAppDelegateApplicationDidBecomeActive;
 
