@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.8" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7I9-fc-Jih">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
         <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
     </dependencies>
@@ -44,7 +43,7 @@
                                     <rect key="frame" x="0.0" y="90" width="400" height="510"/>
                                 </variation>
                                 <connections>
-                                    <segue destination="RuQ-kf-Gi5" kind="embed" identifier="embedContainer" id="W5K-cU-0rx"/>
+                                    <segue destination="RuQ-kf-Gi5" kind="embed" identifier="embedContainer" id="mfa-1Z-R45"/>
                                 </connections>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aLu-CG-CR3" customClass="VYBWatchAllButton">
@@ -63,7 +62,7 @@
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="5tC-aS-WZ0" secondAttribute="centerX" id="ChO-9R-g20"/>
                             <constraint firstItem="5tC-aS-WZ0" firstAttribute="top" secondItem="Tsl-NH-05c" secondAttribute="bottom" id="MiJ-Au-d39"/>
-                            <constraint firstItem="Dyz-dk-YQ8" firstAttribute="top" secondItem="KZX-rZ-Gc1" secondAttribute="bottom" id="UzX-Vt-hHD"/>
+                            <constraint firstItem="Dyz-dk-YQ8" firstAttribute="top" secondItem="KZX-rZ-Gc1" secondAttribute="bottom" id="Vmk-ix-K7q"/>
                             <constraint firstAttribute="width" secondItem="KZX-rZ-Gc1" secondAttribute="width" id="WbJ-6i-Ab2"/>
                             <constraint firstItem="KZX-rZ-Gc1" firstAttribute="top" secondItem="5tC-aS-WZ0" secondAttribute="bottom" id="YJJ-P2-VZx"/>
                             <constraint firstItem="Dyz-dk-YQ8" firstAttribute="top" secondItem="aLu-CG-CR3" secondAttribute="bottom" constant="20" id="idi-Wk-8eC"/>
@@ -75,6 +74,7 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="containerView" destination="KZX-rZ-Gc1" id="1fv-hS-XQi"/>
                         <outlet property="controlView" destination="5tC-aS-WZ0" id="6ev-dL-7fb"/>
                         <outlet property="watchAllButton" destination="aLu-CG-CR3" id="z1b-V3-aGR"/>
                     </connections>
@@ -112,7 +112,7 @@
         <scene sceneID="bOm-vs-sP1">
             <objects>
                 <viewController id="7wG-oW-1Pl" customClass="VYBLocationTableViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="70" sectionHeaderHeight="1" sectionFooterHeight="22" id="Cyj-nF-bX9">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="1" id="Cyj-nF-bX9">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -211,6 +211,8 @@
                             </tableViewCell>
                         </prototypes>
                     </tableView>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="600"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fAl-lW-j7j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -220,14 +222,11 @@
         <scene sceneID="YaZ-vR-VhK">
             <objects>
                 <viewController id="pKh-nA-wM6" customClass="VYBFollowingTableViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="3jR-qg-g1y"/>
-                        <viewControllerLayoutGuide type="bottom" id="cg4-n0-Z4I"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="3gW-nY-63W" customClass="UITableView">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="tea-SH-e1e">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    </view>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </tableView>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lSU-hD-KVz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

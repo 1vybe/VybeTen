@@ -19,8 +19,9 @@
 @interface VYBHubViewController ()
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) UISearchDisplayController *searchDisplay;
-@property (nonatomic, strong) IBOutlet VYBHubControlView *controlView;
-@property (nonatomic, strong) IBOutlet VYBWatchAllButton *watchAllButton;
+@property (nonatomic, weak) IBOutlet VYBHubControlView *controlView;
+@property (nonatomic, weak) IBOutlet VYBWatchAllButton *watchAllButton;
+@property (nonatomic, weak) IBOutlet UIView *containerView;
 @property (nonatomic, weak) VYBSwapContainerViewController *swapContainerController;
 @property (nonatomic) UIView *titleView;
 - (IBAction)watchAllButtonPressed:(id)sender;
@@ -52,6 +53,7 @@
 
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
+    
     /*
     self.navigationItem.hidesBackButton = YES;
     
@@ -70,6 +72,7 @@
     */
     
 }
+
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

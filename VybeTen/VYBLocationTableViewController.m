@@ -33,8 +33,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // To remove empty cells
-    self.tableView.tableFooterView = [[UIView alloc] init];
+    //NOTE: To remove empty cells.
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refreshControlPulled:) forControlEvents:UIControlEventValueChanged];
@@ -149,6 +149,10 @@
 
 #pragma mark - UITableViewController
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 70.0;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.sortedKeys.count;
 }
@@ -217,6 +221,7 @@
     }];
     [self.tableView reloadData];
 }
+
 
 /*
 #pragma mark - Table view delegate

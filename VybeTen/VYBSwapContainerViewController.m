@@ -20,9 +20,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    //NOTE: swap will be called at the beginning, so actually the initial segueID will be FIRST
     self.currentSegueIdentifier = SegueIdentifierFirst;
-    [self performSegueWithIdentifier:self.currentSegueIdentifier sender:nil];
 }
+
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    // This should be called only once when a view controller is embedded for the first time. Calling this now rather than in viewDidLoad will adjust the frame size of self according to the autolayout constraints.
+    if (self.childViewControllers.count == 0)
+        [self performSegueWithIdentifier:self.currentSegueIdentifier sender:nil];
+}
+
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

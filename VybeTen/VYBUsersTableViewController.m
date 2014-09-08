@@ -14,14 +14,14 @@
 
 @interface VYBUsersTableViewController ()
 @property (nonatomic, copy) NSArray *users;
-@property (nonatomic, copy) NSArray *vybes;
-@property (nonatomic, strong) NSMutableDictionary *vybesFromHereByUser;
+@property (nonatomic) NSMutableDictionary *vybesFromHereByUser;
+@property (nonatomic) NSMutableDictionary *freshVybesFromHereByUser;
 @end
 
 @implementation VYBUsersTableViewController {
     UIImageView *countryFlagImageView;
 }
-@synthesize users, vybes, vybesFromHereByUser;
+@synthesize users, vybesFromHereByUser, freshVybesFromHereByUser;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheFreshVybeCountChangedNotification object:nil];
@@ -29,6 +29,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //NOTE: To remove empty cells.
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
 
@@ -52,6 +55,7 @@
     // NOTE: This assumes that the navigation bar height is 44pt
     countryFlagImageView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - 40 - 10, 2, 40, 40)];
     [countryFlagImageView setImage:[UIImage imageNamed:countryCode]];
+    [countryFlagImageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.navigationController.navigationBar addSubview:countryFlagImageView];
 }
 
@@ -90,7 +94,7 @@
     PFObject *aUser = users[indexPath.row];
     
     // NOTE: freshVybesByUser dictionary take PFUser object's objectID as a key
-    NSArray *freshVybeFromHereByThisUser = [self.vybesFromHereByUser objectForKey:aUser.objectId];
+    NSArray *freshVybeFromHereByThisUser = [self.freshVybesFromHereByUser objectForKey:aUser.objectId];
     NSInteger freshCount = (freshVybeFromHereByThisUser) ? ([freshVybeFromHereByThisUser count]) : 0;
     [cell setFreshVybeCount:freshCount];
     
@@ -106,6 +110,9 @@
             cell.profileImageView.image = profileImg;
         }
     }];
+    
+    NSInteger allVybeCount = [[self.vybesFromHereByUser objectForKey:aUser.objectId] count];
+    [cell setVybeCount:allVybeCount];
     
     [cell setDelegate:self];
     [cell setUserObjID:aUser.objectId];
@@ -136,9 +143,8 @@
 #pragma mark - VYBCacheFreshVybeCountChangedNotification
 
 - (void)freshVybeCountChanged {
-    users = [[VYBCache sharedCache] usersForLocation:self.locationKey];
-    vybes = [[VYBCache sharedCache] freshVybesForLocation:self.locationKey];
     
+    NSArray *vybes = [[VYBCache sharedCache] vybesForLocation:self.locationKey];
     vybesFromHereByUser = [[NSMutableDictionary alloc] init];
     for (PFObject *aVybe in vybes) {
         PFObject *aUser = aVybe[kVYBVybeUserKey];
@@ -150,8 +156,22 @@
         [vybesFromHereByUser setObject:arr forKey:aUser.objectId];
     }
     
+    NSArray *freshVybes = [[VYBCache sharedCache] freshVybesForLocation:self.locationKey];
+    freshVybesFromHereByUser = [[NSMutableDictionary alloc] init];
+    for (PFObject *fVybe in freshVybes) {
+        PFObject *aUser = fVybe[kVYBVybeUserKey];
+        NSArray *arr = [freshVybesFromHereByUser objectForKey:aUser.objectId];
+        if (!arr)
+            arr = [NSArray arrayWithObject:fVybe];
+        else
+            arr = [arr arrayByAddingObject:fVybe];
+        [freshVybesFromHereByUser setObject:arr forKey:aUser.objectId];
+    }
+    
+    
+    users = [[VYBCache sharedCache] usersForLocation:self.locationKey];
     users = [users sortedArrayUsingComparator:^NSComparisonResult(PFObject *user1, PFObject *user2) {
-        return [[vybesFromHereByUser objectForKey:user1.objectId] count] < [[vybesFromHereByUser objectForKey:user2.objectId] count];
+        return [[freshVybesFromHereByUser objectForKey:user1.objectId] count] < [[freshVybesFromHereByUser objectForKey:user2.objectId] count];
     }];
     
     [self.tableView reloadData];

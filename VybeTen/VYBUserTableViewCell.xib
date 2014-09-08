@@ -55,7 +55,7 @@
                             <action selector="watchNewButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="1UP-yz-lcg"/>
                         </connections>
                     </button>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ZS-o0-Gvg" userLabel="countLabel">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ZS-o0-Gvg" userLabel="countLabel">
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="NQu-ap-f7s"/>
                         </constraints>

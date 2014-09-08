@@ -15,6 +15,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *countLabel;
 @property (nonatomic, weak) id delegate;
 @property (nonatomic) NSString *userObjID;
+@property (nonatomic) NSInteger vybeCount;
 @property (nonatomic) NSInteger freshVybeCount;
 
 @end

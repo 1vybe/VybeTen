@@ -33,6 +33,16 @@
     [self.watchNewButton setTitle:[NSString stringWithFormat:@"%ld", (long)_freshVybeCount] forState:UIControlStateNormal];
 }
 
+- (void)setVybeCount:(NSInteger)vybeCount {
+    _vybeCount = vybeCount;
+    
+    if (_freshVybeCount > 1)
+        [self.countLabel setText:[NSString stringWithFormat:@"%ld Vybes", (long)_freshVybeCount]];
+    else
+        [self.countLabel setText:[NSString stringWithFormat:@"%ld Vybe", (long)_freshVybeCount]];
+}
+
+
 
 
 @end
