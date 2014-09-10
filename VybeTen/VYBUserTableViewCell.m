@@ -28,7 +28,7 @@
 - (void)setFreshVybeCount:(NSInteger)freshVybeCount {
     _freshVybeCount = freshVybeCount;
 
-    self.watchNewButton.hidden = !_freshVybeCount;
+    //self.watchNewButton.hidden = !_freshVybeCount;
     
     [self.watchNewButton setTitle:[NSString stringWithFormat:@"%ld", (long)_freshVybeCount] forState:UIControlStateNormal];
 }
@@ -37,9 +37,9 @@
     _vybeCount = vybeCount;
     
     if (_freshVybeCount > 1)
-        [self.countLabel setText:[NSString stringWithFormat:@"%ld Vybes", (long)_freshVybeCount]];
+        [self.countLabel setText:[NSString stringWithFormat:@"%ld Vybes", (long)_vybeCount]];
     else
-        [self.countLabel setText:[NSString stringWithFormat:@"%ld Vybe", (long)_freshVybeCount]];
+        [self.countLabel setText:[NSString stringWithFormat:@"%ld Vybe", (long)_vybeCount]];
 }
 
 

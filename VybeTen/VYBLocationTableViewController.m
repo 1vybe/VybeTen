@@ -13,6 +13,7 @@
 #import "VYBPlayerViewController.h"
 #import "VYBUsersTableViewController.h"
 #import "VYBProfileViewController.h"
+#import "VYBContainerWatchButtonController.h"
 #import "VYBCache.h"
 
 @interface VYBLocationTableViewController ()
@@ -180,14 +181,28 @@
     return cell;
 }
 
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ( [segue.identifier isEqualToString: @"PushUsersTableView"] ) {
+        VYBLocationTableViewCell *cell = (VYBLocationTableViewCell *)sender;
+        VYBContainerWatchButtonController *container = (VYBContainerWatchButtonController *)segue.destinationViewController;
+        //VYBUsersTableViewController *usersTable = (VYBUsersTableViewController *)container.embeddedController;
+        NSString *locationKey = [cell locationKey];
+        [container setLocationKey:locationKey];
+    }
+}
+
+/*
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+  
     NSString *locationKey = self.sortedKeys[indexPath.row];
     
     VYBUsersTableViewController *usersTable = [[VYBUsersTableViewController alloc] init];
     [usersTable setLocationKey:locationKey];
     [self.navigationController pushViewController:usersTable animated:NO];
 }
-
+*/
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -204,7 +219,6 @@
     NSArray *vybes = [self.freshVybesByLocation objectForKey:locationKey];
     if (vybes && vybes.count > 0) {
         VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-        [playerVC setPresentingVC:self];
         [playerVC setVybePlaylist:vybes];
         [self presentViewController:playerVC animated:NO completion:nil];
     }

@@ -63,8 +63,8 @@
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="counterButton" destination="PGO-Bg-tC8" id="URH-W5-zZi"/>
-                <outlet property="watchButton" destination="tGM-Qk-Hce" id="7B1-Eb-5WY"/>
+                <outlet property="counterButton" destination="PGO-Bg-tC8" id="dHf-I7-zM6"/>
+                <outlet property="watchButton" destination="tGM-Qk-Hce" id="OOD-xG-T79"/>
             </connections>
             <point key="canvasLocation" x="-408.5" y="-854.5"/>
         </view>

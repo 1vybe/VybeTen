@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6206.8" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
-        <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="ProximaNovaSoft-Regular.otf">
@@ -75,7 +75,7 @@
                     <constraint firstAttribute="trailingMargin" secondItem="BgW-IN-zEd" secondAttribute="trailing" constant="10" id="zOW-ct-R6X"/>
                 </constraints>
             </tableViewCellContentView>
-            <inset key="separatorInset" minX="80" minY="0.0" maxX="0.0" maxY="0.0"/>
+            <inset key="separatorInset" minX="80" minY="0.0" maxX="20" maxY="0.0"/>
             <connections>
                 <outlet property="countLabel" destination="5ZS-o0-Gvg" id="gJx-g5-kdL"/>
                 <outlet property="nameLabel" destination="BYC-UR-4pL" id="0VB-O3-KPR"/>

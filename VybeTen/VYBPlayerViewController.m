@@ -384,11 +384,7 @@
  **/
 
 - (void)dismissButtonPressed:(id)sender {
-    [self.presentingViewController dismissViewControllerAnimated:NO completion:^{
-        if (self.presentingVC && [self.presentingVC respondsToSelector:@selector(playerDismissed)]) {
-            [self.presentingVC performSelector:@selector(playerDismissed) withObject:nil];
-        }
-    }];
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (void)swipeLeft {

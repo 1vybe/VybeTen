@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface VYBUsersTableViewController : UITableViewController
+@property (nonatomic, weak) id delegate;
 @property (nonatomic) NSString *locationKey;
+@property (nonatomic) NSArray *freshVybes;
 @end

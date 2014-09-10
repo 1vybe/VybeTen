@@ -21,42 +21,22 @@
 @implementation VYBUsersTableViewController {
     UIImageView *countryFlagImageView;
 }
-@synthesize users, vybesFromHereByUser, freshVybesFromHereByUser;
+@synthesize users, vybesFromHereByUser, freshVybesFromHereByUser, freshVybes;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheFreshVybeCountChangedNotification object:nil];
 }
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+        
     //NOTE: To remove empty cells.
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
 
     [self freshVybeCountChanged];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    [countryFlagImageView removeFromSuperview];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    
-    NSString *cityName = [self.locationKey componentsSeparatedByString:@","][0];
-    self.navigationItem.title = cityName;
-    
-    NSString *countryCode = [self.locationKey componentsSeparatedByString:@","][1];
-    // NOTE: This assumes that the navigation bar height is 44pt
-    countryFlagImageView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - 40 - 10, 2, 40, 40)];
-    [countryFlagImageView setImage:[UIImage imageNamed:countryCode]];
-    [countryFlagImageView setContentMode:UIViewContentModeScaleAspectFit];
-    [self.navigationController.navigationBar addSubview:countryFlagImageView];
 }
 
 
@@ -134,11 +114,11 @@
     NSArray *arr = [vybesFromHereByUser objectForKey:aUserID];
     if (arr && arr.count > 0) {
         VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-        [playerVC setPresentingVC:self];
         [playerVC setVybePlaylist:arr];
         [self presentViewController:playerVC animated:NO completion:nil];
     }
 }
+
 
 #pragma mark - VYBCacheFreshVybeCountChangedNotification
 
@@ -156,7 +136,7 @@
         [vybesFromHereByUser setObject:arr forKey:aUser.objectId];
     }
     
-    NSArray *freshVybes = [[VYBCache sharedCache] freshVybesForLocation:self.locationKey];
+    freshVybes = [[VYBCache sharedCache] freshVybesForLocation:self.locationKey];
     freshVybesFromHereByUser = [[NSMutableDictionary alloc] init];
     for (PFObject *fVybe in freshVybes) {
         PFObject *aUser = fVybe[kVYBVybeUserKey];
@@ -173,6 +153,11 @@
     users = [users sortedArrayUsingComparator:^NSComparisonResult(PFObject *user1, PFObject *user2) {
         return [[freshVybesFromHereByUser objectForKey:user1.objectId] count] < [[freshVybesFromHereByUser objectForKey:user2.objectId] count];
     }];
+    
+    // Send a msg to container controller to update watchAllCount
+    if (self.delegate && [self.delegate respondsToSelector:@selector(freshVybeCountChanged)]) {
+        [self.delegate performSelector:@selector(freshVybeCountChanged) withObject:nil];
+    }
     
     [self.tableView reloadData];
 }
