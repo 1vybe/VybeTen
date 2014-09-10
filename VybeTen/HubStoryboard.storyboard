@@ -263,7 +263,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GzW-2Y-rPb">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GzW-2Y-rPb">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <connections>
                                     <segue destination="aH3-2y-i1Z" kind="embed" identifier="embedUsersTable" id="6XV-Yt-T12"/>
@@ -283,8 +283,12 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="centerY" secondItem="GzW-2Y-rPb" secondAttribute="centerY" id="AO6-ae-wEz"/>
+                            <constraint firstAttribute="centerX" secondItem="GzW-2Y-rPb" secondAttribute="centerX" id="B6H-18-SpM"/>
                             <constraint firstItem="dTI-wO-sOZ" firstAttribute="top" secondItem="4Ws-19-IoP" secondAttribute="bottom" constant="15" id="CpA-MP-HsQ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="4Ws-19-IoP" secondAttribute="trailing" constant="15" id="F95-6T-ALq"/>
+                            <constraint firstAttribute="width" secondItem="GzW-2Y-rPb" secondAttribute="width" id="sCX-H9-XzM"/>
+                            <constraint firstAttribute="height" secondItem="GzW-2Y-rPb" secondAttribute="height" id="xpr-B7-Qkn"/>
                         </constraints>
                     </view>
                     <connections>
