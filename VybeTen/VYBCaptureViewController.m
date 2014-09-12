@@ -332,6 +332,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (IBAction)flipButtonPressed:(id)sender {
     [[self flipButton] setEnabled:NO];
+    [[self flashButton] setEnabled:NO];
     [[self activityButton] setEnabled:NO];
     [[self hubButton] setEnabled:NO];
 
@@ -375,7 +376,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         dispatch_async(dispatch_get_main_queue(), ^{
             isFrontCamera = [videoDevice position] == AVCaptureDevicePositionFront;
             [[self flipButton] setSelected:isFrontCamera];
-            [[self flashButton] setEnabled:!isFrontCamera];
+            [[self flashButton] setEnabled:YES];
             [[self activityButton] setEnabled:YES];
             [[self hubButton] setEnabled:YES];
             [[self flipButton] setEnabled:YES];

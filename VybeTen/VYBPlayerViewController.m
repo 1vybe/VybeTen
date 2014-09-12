@@ -519,7 +519,7 @@
 #pragma mark - DeviceOrientation
 
 - (BOOL)shouldAutorotate {
-    return YES;
+    return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -527,7 +527,6 @@
 }
 
 - (void)deviceRotated:(NSNotification *)notification {
-    /*
     UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
     double rotation = 0;
     switch (currentOrientation) {
@@ -561,7 +560,6 @@
     [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.dismissButton.transform = transform;
     } completion:nil];
-    */
 }
 
 - (void)syncUIElementsForOrientation:(NSInteger)orientation {
