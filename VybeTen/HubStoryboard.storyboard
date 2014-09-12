@@ -149,7 +149,7 @@
                                                 <rect key="frame" x="18" y="5" width="50" height="50"/>
                                             </variation>
                                         </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Sh-Ut-YVe" userLabel="followingCountLabel">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Sh-Ut-YVe" userLabel="followingCountLabel">
                                             <rect key="frame" x="78" y="34" width="41" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="C6D-CM-Mw6"/>
@@ -161,7 +161,7 @@
                                                 <rect key="frame" x="73" y="35" width="42" height="20"/>
                                             </variation>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Montreal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4tc-RQ-TJe" userLabel="cityNameLabel">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Montreal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4tc-RQ-TJe" userLabel="cityNameLabel">
                                             <rect key="frame" x="78" y="8" width="92" height="25"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="25" id="Kke-91-SAU"/>
@@ -173,7 +173,7 @@
                                                 <rect key="frame" x="73" y="5" width="42" height="21"/>
                                             </variation>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="roc-4G-49i" userLabel="vybeCountLabel">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="roc-4G-49i" userLabel="vybeCountLabel">
                                             <rect key="frame" x="139" y="34" width="41" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="1YV-By-U0w"/>
