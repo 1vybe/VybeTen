@@ -20,6 +20,7 @@
 #import "VYBPermissionViewController.h"
 #import "VYBHubViewController.h"
 #import "VYBProfileViewController.h"
+#import "VYBActivityTableViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBCache.h"
@@ -40,6 +41,7 @@
 @property (nonatomic, strong) VYBCaptureViewController *captureVC;
 @property (nonatomic, strong) VYBHubViewController *hubVC;
 @property (nonatomic, strong) VYBProfileViewController *profileVC;
+@property (nonatomic, strong) VYBActivityTableViewController *activityVC;
 @property (nonatomic, strong) VYBPlayerViewController *playerVC;
 
 @end
@@ -130,9 +132,15 @@
 
 
     
-    self.profileVC = [[VYBProfileViewController alloc] init];
-    [self.profileVC setUser:[PFUser currentUser]];
-    self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.profileVC];
+    self.activityVC = [[VYBActivityTableViewController alloc] init];
+    self.activityVC.user = [PFUser currentUser];
+    self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.activityVC];
+    
+    // Set the title font for all UINavigationControllers
+    NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
+    [titleBarAttributes setValue:[UIFont fontWithName:@"ProximaNovaSoft-Regular" size:20.0] forKey:NSFontAttributeName];
+    [titleBarAttributes setValue:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
+    [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
     
     self.viewControllers = [[NSArray alloc] initWithObjects:self.hubNavigationVC, self.captureNavigationVC, self.activityNavigationVC, nil];
     

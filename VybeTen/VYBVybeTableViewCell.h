@@ -10,5 +10,6 @@
 
 @interface VYBVybeTableViewCell : UITableViewCell
 @property (nonatomic, strong) IBOutlet UILabel *timestampLabel;
+@property (nonatomic, strong) IBOutlet UILabel *locationLabel;
 @property (nonatomic, strong) IBOutlet UIImageView *thumbnailImageView;
 @end
