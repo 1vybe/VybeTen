@@ -34,8 +34,17 @@
 
 @interface VYBCaptureViewController () <AVCaptureFileOutputRecordingDelegate>
 
-@property (nonatomic, strong) VYBMyVybe *currVybe;
+@property (nonatomic, strong) IBOutlet UIButton *flipButton;
+@property (nonatomic, strong) IBOutlet UIButton *flashButton;
+@property (nonatomic, strong) IBOutlet UIButton *hubButton;
+@property (nonatomic, strong) IBOutlet UIButton *activityButton;
 
+- (IBAction)hubButtonPressed:(id)sender;
+- (IBAction)activityButtonPressed:(id)sender;
+- (IBAction)flipButtonPressed:(id)sender;
+- (IBAction)flashButtonPressed:(id)sender;
+
+@property (nonatomic, strong) VYBMyVybe *currVybe;
 @property (nonatomic, weak) VYBCameraView *cameraView;
 
 @property (nonatomic) dispatch_queue_t sessionQueue;
@@ -84,6 +93,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     self.session = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActive object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheFreshVybeCountChangedNotification object:nil];
     
     NSLog(@"CaptureVC deallocated");
 }
@@ -121,6 +131,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     // AppDelegate Notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActive object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
 
     
     UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
@@ -214,35 +226,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     // Adding CAPTURE button
     self.captureButton = [[VYBCaptureButton alloc] initWithFrame:CGRectMake(0, 0, 144, 144)];
     
-      
-    if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
-        [self.activityCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
-    } else {
-        [self.activityCountLabel setText:@""];
-    }
-    
-    if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
-        PFObject *myTribe = [[PFUser currentUser] objectForKey:@"tribe"];
-        [myTribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-            if (!error) {
-                PFRelation *members = [object relationForKey:kVYBTribeMembersKey];
-                PFQuery *countQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
-                [countQuery whereKey:kVYBVybeUserKey matchesQuery:[members query]];
-                [countQuery whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
-                [countQuery whereKey:kVYBVybeTimestampKey greaterThan:[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp]];
-                [countQuery whereKey:kVYBVybeTypePublicKey equalTo:[NSNumber numberWithBool:NO]];
-                [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-                    if (!error) {
-                        if (number > 0) {
-                            [self.activityCountLabel setText:[NSString stringWithFormat:@"%d", number]];
-                            [[VYBUserStore sharedStore] setNewPrivateVybeCount:number];
-                        }
-                    }
-                }];
-            }
-        }];
-    }
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -265,11 +248,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         });
     }
     
-    if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
-        self.activityCountLabel.text = [NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]];
-    } else {
-        self.activityCountLabel.text = @"";
-    }
     
     flashButton.selected = flashOn;
     flipButton.selected = isFrontCamera;
@@ -377,27 +355,27 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         AVCaptureDevice *videoDevice = [VYBCaptureViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:prefferedPosition];
         AVCaptureDeviceInput *videoInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:nil];
         
-        [[self session] beginConfiguration];
+        //[[self session] beginConfiguration];
         
         [[self session] removeInput:[self videoInput]];
+
         if ( [[self session] canAddInput:videoInput] ) {
+            NSLog(@"session added video input");
             [[self session] addInput:videoInput];
-            [self setVideoInput:videoInput];
-            
         } else {
-            [[self session] addInput:[self videoInput]];
+            NSLog(@"session could NOT add video input");
         }
-        
-        
-        [[self session] commitConfiguration];
+        [self setVideoInput:videoInput];
+
+        //[[self session] commitConfiguration];
         
         // Video should be mirrored if coming from the front camera
-        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoMirrored:[videoDevice position] == AVCaptureDevicePositionFront];
+        //[[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoMirrored:[videoDevice position] == AVCaptureDevicePositionFront];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             isFrontCamera = [videoDevice position] == AVCaptureDevicePositionFront;
             [[self flipButton] setSelected:isFrontCamera];
-            [self flashButton].hidden = isFrontCamera;
+            [[self flashButton] setEnabled:!isFrontCamera];
             [[self activityButton] setEnabled:YES];
             [[self hubButton] setEnabled:YES];
             [[self flipButton] setEnabled:YES];
@@ -412,6 +390,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)longPressDetected:(UILongPressGestureRecognizer *)recognizer {
     if (!isRecording) {
         [self.view addSubview:self.captureButton];
+        /*
         double rotation = 0;
         switch (lastOrientation) {
             case AVCaptureVideoOrientationPortrait:
@@ -433,7 +412,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         
         CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
         self.captureButton.transform = transform;
-        
+        */
         [self startRecording];
     }
     
@@ -475,15 +454,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [recordingTimer invalidate];
         recordingTimer = nil;
     }
+    
     recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
     
-    
-    NSLog(@"[CAPTURE] shooting in orientation %d", (int)lastOrientation);
-    [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:lastOrientation];
-    
-    if (![self setUpAssetWriter]) {
-        return;
-    }
     
     dispatch_async([self sessionQueue], ^{
         if ([[UIDevice currentDevice] isMultitaskingSupported])
@@ -492,12 +465,18 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
         }
         
-        NSLog(@"[CAPTURE] shooting in orientation %d", (int)lastOrientation);
-        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:lastOrientation];
-        
         // Turning flash for video recording
         if (flashOn) {
             [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOn forDevice:[[self videoInput] device]];
+        }
+        
+        //NSLog(@"[CAPTURE] shooting in orientation %d", (int)lastOrientation);
+        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:lastOrientation];
+        
+        
+        if (![self setUpAssetWriter]) {
+            NSLog(@"setupAssetWriter FAILED :(");
+            return;
         }
         
     });
@@ -567,8 +546,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     _audioWriterInput.expectsMediaDataInRealTime = YES;
     
-    [_videoWriter addInput:_videoWriterInput];
-    [_videoWriter addInput:_audioWriterInput];
+    if ( [_videoWriter canAddInput:_videoWriterInput] )
+        [_videoWriter addInput:_videoWriterInput];
+    if ( [_videoWriter canAddInput:_audioWriterInput] )
+        [_videoWriter addInput:_audioWriterInput];
     
     //NOTE: When writing a file by AVAssetWriter, we need to change its input's transform to set video orientation (not by setting videoOrientation of AVCaptureConnection
     _videoWriterInput.transform = [VYBUtility getTransformFromOrientation:lastOrientation];
@@ -581,7 +562,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     // less than 3.0 because of a delay in drawing. This guarantees user hold until red circle is full to pass the minimum
     if (secondsSinceStart >= VYBE_LENGTH_SEC) {
         [self.captureButton removeFromSuperview];
-        
         isRecording = NO;
         [self syncUIWithRecordingStatus:NO];
         if (_videoWriter.status == AVAssetWriterStatusWriting) {
@@ -654,7 +634,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         if(_videoWriter.status != AVAssetWriterStatusWriting)
         {
             if ((_videoWriter.status != AVAssetWriterStatusFailed) && (_videoWriter.status != AVAssetWriterStatusCompleted)) {
-                NSLog(@"buffer orientation is %d", (int)connection.videoOrientation);
+                //NSLog(@"buffer orientation is %d", (int)connection.videoOrientation);
                 [_videoWriter startWriting];
                 [_videoWriter startSessionAtSourceTime:lastSampleTime];
             }
@@ -672,10 +652,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
 }
 
-- (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
-    
-}
-
 
 - (void)appendVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer {
     if (isRecording) {
@@ -684,9 +660,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 NSLog(@"Error: %@", _videoWriter.error);
             return;
         }
-        
-        if (![_videoWriterInput appendSampleBuffer:sampleBuffer]) {
-            NSLog(@"cannot add VIDEO sample buffer");
+        if (_videoWriterInput.readyForMoreMediaData) {
+            if (![_videoWriterInput appendSampleBuffer:sampleBuffer]) {
+                NSLog(@"cannot add VIDEO sample buffer");
+            }
         }
     }
 }
@@ -699,8 +676,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             return;
         }
         
-        if (![_audioWriterInput appendSampleBuffer:sampleBuffer]) {
-            NSLog(@"cannot add AUDIO sample buffer");
+        if (_audioWriterInput.readyForMoreMediaData) {
+            if (![_audioWriterInput appendSampleBuffer:sampleBuffer]) {
+                NSLog(@"cannot add AUDIO sample buffer");
+            }
         }
     }
 }
@@ -793,7 +772,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [self.flashButton setTransform:transform];
         [self.hubButton setTransform:transform];
         [self.activityButton setTransform:transform];
-        [self.activityCountLabel setTransform:transform];
     } completion:nil];
 
 }
@@ -807,35 +785,18 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 #pragma mark - VYBAppDelegateNotification
 
 - (void)remoteNotificationReceived:(id)sender {
-    if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {
-        [self.activityButton setSelected:YES];
-        [self.activityCountLabel setText:[NSString stringWithFormat:@"%d", (int)[[VYBUserStore sharedStore] newPrivateVybeCount]]];
-    }
+
 }
 
 - (void)applicationDidBecomeActiveNotificationReceived:(id)sender {    
-    if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
-        PFObject *myTribe = [[PFUser currentUser] objectForKey:@"tribe"];
-        [myTribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-            if (!error) {
-                PFRelation *members = [object relationForKey:kVYBTribeMembersKey];
-                PFQuery *countQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
-                [countQuery whereKey:kVYBVybeUserKey matchesQuery:[members query]];
-                [countQuery whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
-                [countQuery whereKey:kVYBVybeTimestampKey greaterThan:[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp]];
-                [countQuery whereKey:kVYBVybeTypePublicKey equalTo:[NSNumber numberWithBool:NO]];
-                [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-                    if (!error) {
-                        if (number > 0) {
-                            [self.activityButton setSelected:YES];
-                            [self.activityCountLabel setText:[NSString stringWithFormat:@"%d", number]];
-                            [[VYBUserStore sharedStore] setNewPrivateVybeCount:number];
-                        }
-                    }
-                }];
-            }
-        }];
-    }
+
+}
+
+- (void)freshVybeCountChanged {
+    NSInteger count = [[[VYBCache sharedCache] freshVybes] count];
+    self.hubButton.selected = !count;
+    if (count)
+        [self.hubButton setTitle:[NSString stringWithFormat:@"%ld", (long)count] forState:UIControlStateNormal];
 }
 
 #pragma mark - ()
@@ -862,10 +823,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)syncUIWithRecordingStatus:(BOOL)status {
     self.activityButton.hidden = status;
-    self.activityCountLabel.hidden = status;
     self.hubButton.hidden = status;
     flipButton.hidden = status;
-    flashButton.hidden = status || isFrontCamera;
+    flashButton.hidden = status;
 }
 
 - (IBAction)activityButtonPressed:(id)sender {

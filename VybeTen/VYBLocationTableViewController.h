@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface VYBLocationTableViewController : UITableViewController
+- (void)watchNewVybesFromLocation:(NSString *)locationKey;
 
 @end

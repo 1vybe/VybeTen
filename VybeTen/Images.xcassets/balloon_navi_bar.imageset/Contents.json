@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x"
+      "scale" : "1x",
+      "filename" : "Balloon-TopBar.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "BlueNotif.png"
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

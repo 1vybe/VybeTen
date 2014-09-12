@@ -111,10 +111,10 @@
 #pragma mark - ()
 
 - (void)watchNewVybesFromUser:(NSString *)aUserID {
-    NSArray *arr = [vybesFromHereByUser objectForKey:aUserID];
-    if (arr && arr.count > 0) {
+    NSArray *playList = [freshVybesFromHereByUser objectForKey:aUserID];
+    if (playList && playList.count > 0) {
         VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-        [playerVC setVybePlaylist:arr];
+        [playerVC setVybePlaylist:playList];
         [self presentViewController:playerVC animated:NO completion:nil];
     }
 }

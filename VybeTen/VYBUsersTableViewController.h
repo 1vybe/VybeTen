@@ -12,4 +12,7 @@
 @property (nonatomic, weak) id delegate;
 @property (nonatomic) NSString *locationKey;
 @property (nonatomic) NSArray *freshVybes;
+
+- (void)watchNewVybesFromUser:(NSString *)aUserID;
+
 @end

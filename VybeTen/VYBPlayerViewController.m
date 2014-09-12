@@ -230,7 +230,7 @@
 - (void)beginPlayingFrom:(NSInteger)from {
     currVybeIndex = from;
     
-    self.countLabel.text = [NSString stringWithFormat:@"%u", self.vybePlaylist.count - currVybeIndex - 1];
+    self.countLabel.text = [NSString stringWithFormat:@"%ld", (long)self.vybePlaylist.count - currVybeIndex - 1];
     
     downloadingVybeIndex = currVybeIndex + 1;
     
@@ -519,7 +519,7 @@
 #pragma mark - DeviceOrientation
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    return YES;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -527,6 +527,7 @@
 }
 
 - (void)deviceRotated:(NSNotification *)notification {
+    /*
     UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
     double rotation = 0;
     switch (currentOrientation) {
@@ -560,6 +561,7 @@
     [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.dismissButton.transform = transform;
     } completion:nil];
+    */
 }
 
 - (void)syncUIElementsForOrientation:(NSInteger)orientation {
