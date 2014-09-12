@@ -47,9 +47,11 @@
 - (IBAction)okButtonPressed:(id)sender {
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-    //[self.locationManager startUpdatingLocation];
-    // for iOS 8
-    [self.locationManager requestAlwaysAuthorization];
+    
+    if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+        [self.locationManager requestAlwaysAuthorization];
+    }
+    [self.locationManager startUpdatingLocation];
 }
 
 - (IBAction)laterButtonPressed:(id)sender {

@@ -45,6 +45,11 @@
 {
     [super viewDidLoad];
     
+    // Remove border line
+    [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
+                                                  forBarMetrics:UIBarMetricsDefault];
+    
     [self setNavigationBarItems];
     [self loadProfileInfoView];
 }
@@ -58,11 +63,16 @@
 #pragma mark - Private
 
 -(void)setNavigationBarItems {
-    self.navigationItem.title = @"Profile";
+    self.navigationItem.title = self.user[kVYBUserUsernameKey];
     if ([[PFUser currentUser].objectId isEqualToString:self.user.objectId]) {
-        self.actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
-                                                                          target:self
-                                                                          action:@selector(actionButtonPressed:)];
+//        self.actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+//                                                                          target:self
+//                                                                          action:@selector(actionButtonPressed:)];
+        self.actionButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_settings.png"]
+                                                             style:UIBarButtonItemStylePlain
+                                                            target:self
+                                                            action:@selector(actionButtonPressed:)];
+
         self.navigationItem.rightBarButtonItem = self.actionButton;
     }
 }
@@ -70,8 +80,21 @@
 -(void)loadProfileInfoView {
     self.profileInfo = [[[NSBundle mainBundle] loadNibNamed:@"VYBProfileInfoView" owner:nil options:nil] lastObject];
     self.profileInfo.delegate = self;
-    self.profileInfo.usernameLabel.text = self.user[kVYBUserUsernameKey];
     [self loadProfileImage];
+    
+    PFQuery *countQuery = [PFQuery queryWithClassName:@"_User"];
+    [countQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if (!error) {
+            if (number > 0) {
+                NSLog(@"Success!");
+                self.profileInfo.followersLabel.text = [NSString stringWithFormat:@"%d", number];
+                self.profileInfo.followingLabel.text = [NSString stringWithFormat:@"%d", number];
+            }
+        } else {
+            NSLog(@"Error fetching User count: %@", error);
+        }
+    }];
+    
     self.tableView.tableHeaderView = self.profileInfo;
 }
 
@@ -80,9 +103,31 @@
     [thumbnailFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         if (!error) {
             UIImage *profileImg = [UIImage imageWithData:data];
-            [self.profileInfo.profileImageView setImage:profileImg];
+            UIImage *maskImg = [UIImage imageNamed:@"thumbnail_mask"];
+            [self.profileInfo.profileImageView setImage:[self maskImage:profileImg withMask:maskImg]];
         }
     }];
+}
+
+- (UIImage*) maskImage:(UIImage *)image withMask:(UIImage *)maskImage {
+    
+    CGImageRef maskRef = maskImage.CGImage;
+    
+    CGImageRef mask = CGImageMaskCreate(CGImageGetWidth(maskRef),
+                                        CGImageGetHeight(maskRef),
+                                        CGImageGetBitsPerComponent(maskRef),
+                                        CGImageGetBitsPerPixel(maskRef),
+                                        CGImageGetBytesPerRow(maskRef),
+                                        CGImageGetDataProvider(maskRef), NULL, false);
+    
+    CGImageRef maskedImageRef = CGImageCreateWithMask([image CGImage], mask);
+    UIImage *maskedImage = [UIImage imageWithCGImage:maskedImageRef];
+    
+    CGImageRelease(mask);
+    CGImageRelease(maskedImageRef);
+    
+    // returns new image with mask applied
+    return maskedImage;
 }
 
 #pragma mark - VYBProfileInfoView
@@ -176,6 +221,7 @@
     [query whereKey:kVYBVybeUserKey equalTo:self.user];
     NSDate *someTimeAgo = [NSDate dateWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
     [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
+    [query orderByDescending:kVYBVybeTimestampKey];
     
     return query;
 }
@@ -183,7 +229,7 @@
 #pragma mark - UITableViewController
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60.0f;
+    return 62.0f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
@@ -195,6 +241,9 @@
     }
     
     cell.timestampLabel.text = [VYBUtility localizedDateStringFrom:object[kVYBVybeTimestampKey]];
+    NSString *location = object[kVYBVybeLocationStringKey];
+    NSArray *locationComponents = [location componentsSeparatedByString:@","];
+    cell.locationLabel.text = [locationComponents objectAtIndex:0];
     
     PFFile *thumbnailFile = object[kVYBVybeThumbnailKey];
     if (thumbnailFile) {
@@ -215,6 +264,17 @@
     [playerVC setCurrUser:self.user];
     [self presentViewController:playerVC animated:NO completion:nil];
 }
+
+// Use this to test out likes
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    [VYBUtility likeVybeInBackground:(PFObject *)[self.objects objectAtIndex:indexPath.row] block:^(BOOL succeeded, NSError *error) {
+//        if (succeeded) {
+//            NSLog(@"You liked that vybe.");
+//        } else {
+//            NSLog(@"%@", error);
+//        }
+//    }];
+//}
 
 #pragma mark - UIViewController
 

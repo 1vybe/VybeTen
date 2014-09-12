@@ -50,6 +50,7 @@
         
         // navigation bar color
         [self.navigationBar setBarTintColor:COLOR_MAIN];
+        self.navigationBar.translucent = NO;
         
         [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
         
