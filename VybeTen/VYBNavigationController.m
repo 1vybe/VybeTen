@@ -54,12 +54,15 @@
         
         [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
         
+        // title font
+        NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
+        [titleBarAttributes setValue:[UIFont fontWithName:@"ProximaNovaSoft-Regular" size:20.0] forKey:NSFontAttributeName];
+        [titleBarAttributes setValue:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
+        [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
+        
         // back button image
         [[UINavigationBar appearance] setBackIndicatorImage:[UIImage imageNamed:@"button_navi_back.png"]];
         [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
-        
-        [self.navigationBar setTranslucent:NO];
-
     }
     return self;
 }
