@@ -34,10 +34,10 @@ Parse.Cloud.afterSave('Vybe', function(request) {
     currentUser.set('mostRecentVybe', request.object);
     currentUser.save().then(
       function(result) {
-	console.log('user most recent vybe updated');
+        console.log('user most recent vybe updated');
       },
       function(error) {
-	console.log('user most recent vybe NOT updated');
+        console.log('user most recent vybe NOT updated');
       }
     );
   }
@@ -51,7 +51,7 @@ Parse.Cloud.afterSave('Vybe', function(request) {
     _.each(users, function(aUser) {
       var feed = aUser.get('freshFeed');
       if (!feed) {
-	feed = [];
+        feed = [];
       }
 
       feed.push(request.object);
@@ -127,18 +127,17 @@ Parse.Cloud.define('default_algorithm',
 );
 
 // Retrieve only fresh vybes for the requesting user
-Parse.Cloud.define('get_fresh_vybes', get_fresh_vybes); 
+Parse.Cloud.define('get_fresh_vybes', get_fresh_vybes);
 
 Parse.Cloud.define('remove_from_feed', remove_from_feed);
 
 // Retrieve vybes by city
 Parse.Cloud.define('get_region_vybes',
-		   get_region_vybes.bind(this, {
-		     recent:true,
-		     reversed:true,
-		   })
+  get_region_vybes.bind(this, {
+    recent:true,
+    reversed:true,
+  })
 );
-
 
 // Algorithms that can be chosen from the debug menu
 Parse.Cloud.define('algorithm1',
@@ -179,7 +178,7 @@ function get_fresh_vybes(request, response) {
     success: function(aUser) {
       var freshVybes = aUser.get('freshFeed');
       if (!freshVybes)
-	freshVybes = [];
+        freshVybes = [];
       response.success(freshVybes);
     },
     error: function(error) {
@@ -190,7 +189,6 @@ function get_fresh_vybes(request, response) {
 
 function remove_from_feed(request, response) {
   var wVybeID = request.params.vybeID;
-  
   var currUser = request.user;
   var query = new Parse.Query(Parse.User);
 
@@ -199,16 +197,16 @@ function remove_from_feed(request, response) {
     success: function(aUser) {
       var oldFreshVybes = aUser.get('freshFeed');
       if (oldFreshVybes) {
-	var newFreshVybes = [];
-	_.each(oldFreshVybes, function(oVybe) {
-	  if (oVybe.id != wVybeID) {
-	    newFreshVybes.push(oVybe);
-	  } else {
-	    console.log('removed from feed!');
-	  }
-	}); 
-	aUser.set('freshFeed', newFreshVybes);
-	aUser.save();
+        var newFreshVybes = [];
+        _.each(oldFreshVybes, function(oVybe) {
+          if (oVybe.id != wVybeID) {
+            newFreshVybes.push(oVybe);
+          } else {
+            console.log('removed from feed!');
+          }
+        });
+        aUser.set('freshFeed', newFreshVybes);
+        aUser.save();
       }
       response.success(wVybeID);
     },
@@ -239,35 +237,34 @@ function get_regions(request, response) {
       query.notEqualTo('user', request.user);
       query.include('user');
       promise = promise.then(function() {
-	return query.count().then(function(vCount) {
-	  if (vCount < 1)
-	    return;
-	  var userQuery = new Parse.Query(Parse.User);
-	  //NOTE: this limit is max but should be disregarded
-	  userQuery.limit(1000);
-	  userQuery.exists('mostRecentVybe');
-	  userQuery.matchesQuery('mostRecentVybe', query);
-	  userQuery.notEqualTo('username', request.user.get('username'));
-	  //NOTE: we do NOT check TTL for couting active users.
-	  return userQuery.count().then(function(uCount) {
-	    var mRegion = {};
-	    mRegion['pfRegion'] = regionObj;
-	    mRegion['vybeCount'] = vCount;
-	    mRegion['userCount'] =  uCount;
-	    regions.push(mRegion);
-	  });
-	});
+        return query.count().then(function(vCount) {
+          if (vCount < 1)
+            return;
+          var userQuery = new Parse.Query(Parse.User);
+          //NOTE: this limit is max but should be disregarded
+          userQuery.limit(1000);
+          userQuery.exists('mostRecentVybe');
+          userQuery.matchesQuery('mostRecentVybe', query);
+          userQuery.notEqualTo('username', request.user.get('username'));
+          //NOTE: we do NOT check TTL for couting active users.
+          return userQuery.count().then(function(uCount) {
+            var mRegion = {};
+            mRegion.pfRegion = regionObj;
+            mRegion.vybeCount = vCount;
+            mRegion.userCount =  uCount;
+            regions.push(mRegion);
+          });
+        });
       });
     });
     return promise;
   }).then(function() {
     response.success(regions);
   });
-
 }
 
 function count_distinct_user(vybeObjs) {
-  if (vybeObjs.length == 0)
+  if (vybeObjs.length === 0)
     return 0;
   var users = {};
   for (i = 0; i < vybeObjs.length; i++) {
@@ -361,17 +358,17 @@ function get_region_vybes(options, request, response) {
       var countryCode = region.get('code');
       query.equalTo('countryCode', countryCode);
       query.find({
-	success: function(vybesObjects) {
-	  if (reversed) {
+        success: function(vybesObjects) {
+          if (reversed) {
             response.success(vybesObjects);
-	  } else {
+          } else {
             // Sort result in chronological order
             response.success(vybesObjects.reverse());
-	  }
-	},
-	error: function(error) {
-	  response.error('Request to get_city_vybes() has failed: ' + error.code);
-	}
+          }
+        },
+        error: function(error) {
+          response.error('Request to get_city_vybes() has failed: ' + error.code);
+        }
       });
     },
     error: function(error) {
