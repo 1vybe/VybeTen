@@ -28,6 +28,7 @@
 + (NSString *)convertPlacemarkToLocation:(CLPlacemark *)placemark;
 + (CGAffineTransform)getTransformFromOrientation:(NSInteger)orientation;
 + (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title;
++ (UIImage*) maskImage:(UIImage *)image withMask:(UIImage *)maskImage;
 
 #pragma mark Display Name
 

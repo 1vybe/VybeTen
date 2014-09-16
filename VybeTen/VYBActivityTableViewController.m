@@ -82,7 +82,7 @@
     [thumbnailFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         if (!error) {
             UIImage *profileImg = [UIImage imageWithData:data];
-            [self.activityInfo.profileImageView setImage:profileImg];
+            [self.activityInfo.profileImageView setImage:[VYBUtility maskImage:profileImg withMask:[UIImage imageNamed:@"thumbnail_mask"]]];
         }
     }];
 }
@@ -127,7 +127,8 @@
     if (profilePic) {
         [profilePic getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             if (!error) {
-                cell.profilePic.image = [UIImage imageWithData:data];
+                cell.profilePic.image = [VYBUtility maskImage:[UIImage imageWithData:data]
+                                                     withMask:[UIImage imageNamed:@"thumbnail_mask"]];
             }
         }];
     }
@@ -135,7 +136,8 @@
     if (vybeThumbnail) {
         [vybeThumbnail getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             if (!error) {
-                cell.vybeThumbnail.image = [UIImage imageWithData:data];
+                cell.vybeThumbnail.image = [VYBUtility maskImage:[UIImage imageWithData:data]
+                                                        withMask:[UIImage imageNamed:@"thumbnail_mask"]];
             }
         }];
     }

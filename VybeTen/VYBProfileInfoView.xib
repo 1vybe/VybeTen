@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6246" systemVersion="14A329r" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6246" systemVersion="14A361p" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6239"/>
@@ -33,9 +33,6 @@
                             <color key="textColor" red="0.94509803920000002" green="0.21960784310000001" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="person_avatar" translatesAutoresizingMaskIntoConstraints="NO" id="dle-Am-Pg4">
-                            <rect key="frame" x="120" y="15" width="81" height="81"/>
-                        </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Followers" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Okm-NC-gqT">
                             <rect key="frame" x="81" y="101" width="56" height="13"/>
                             <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="13"/>
@@ -54,6 +51,12 @@
                             <color key="textColor" red="0.94509803920000002" green="0.21960784310000001" blue="0.25882352939999997" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="LargeWhiteSquare" translatesAutoresizingMaskIntoConstraints="NO" id="6CH-ah-6l9">
+                            <rect key="frame" x="120" y="15" width="81" height="81"/>
+                        </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="person_avatar" translatesAutoresizingMaskIntoConstraints="NO" id="dle-Am-Pg4">
+                            <rect key="frame" x="125" y="20" width="71" height="71"/>
+                        </imageView>
                     </subviews>
                     <color key="backgroundColor" red="0.92549019607843142" green="0.92549019607843142" blue="0.92549019607843142" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
@@ -70,6 +73,7 @@
         </view>
     </objects>
     <resources>
+        <image name="LargeWhiteSquare" width="80" height="80"/>
         <image name="divider_grey" width="1" height="30"/>
         <image name="person_avatar" width="18" height="22"/>
     </resources>

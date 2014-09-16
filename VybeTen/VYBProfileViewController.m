@@ -104,30 +104,9 @@
         if (!error) {
             UIImage *profileImg = [UIImage imageWithData:data];
             UIImage *maskImg = [UIImage imageNamed:@"thumbnail_mask"];
-            [self.profileInfo.profileImageView setImage:[self maskImage:profileImg withMask:maskImg]];
+            [self.profileInfo.profileImageView setImage:[VYBUtility maskImage:profileImg withMask:maskImg]];
         }
     }];
-}
-
-- (UIImage*) maskImage:(UIImage *)image withMask:(UIImage *)maskImage {
-    
-    CGImageRef maskRef = maskImage.CGImage;
-    
-    CGImageRef mask = CGImageMaskCreate(CGImageGetWidth(maskRef),
-                                        CGImageGetHeight(maskRef),
-                                        CGImageGetBitsPerComponent(maskRef),
-                                        CGImageGetBitsPerPixel(maskRef),
-                                        CGImageGetBytesPerRow(maskRef),
-                                        CGImageGetDataProvider(maskRef), NULL, false);
-    
-    CGImageRef maskedImageRef = CGImageCreateWithMask([image CGImage], mask);
-    UIImage *maskedImage = [UIImage imageWithCGImage:maskedImageRef];
-    
-    CGImageRelease(mask);
-    CGImageRelease(maskedImageRef);
-    
-    // returns new image with mask applied
-    return maskedImage;
 }
 
 #pragma mark - VYBProfileInfoView
@@ -249,8 +228,8 @@
     if (thumbnailFile) {
         [thumbnailFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             if (!error) {
-                UIImage *thumbImg = [UIImage imageWithData:data];
-                [cell.thumbnailImageView setImage:thumbImg];
+                cell.thumbnailImageView.image = [VYBUtility maskImage:[UIImage imageWithData:data]
+                                                             withMask:[UIImage imageNamed:@"thumbnail_mask"]];
             }
         }];
     }
