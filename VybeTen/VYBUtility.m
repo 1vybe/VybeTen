@@ -165,18 +165,13 @@
     // Generating and saving a thumbnail for the captured vybe
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
     AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-    NSLog(@"saving thumbnmail image in orientation %d", (int)[asset videoOrientation]);
     // To transform the snapshot to be in the orientation the video was taken with
     [generate setAppliesPreferredTrackTransform:YES];
     NSError *err = NULL;
     CMTime time = CMTimeMake(1, 60);
     CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
-    if (imgRef) {
-        NSLog(@"good");
-    }
     UIImage *tempImg = [[UIImage alloc] initWithCGImage:imgRef];
-    UIImage *thumb = [tempImg fixOrientation:[asset videoOrientation]];
-    NSData *thumbData = UIImageJPEGRepresentation(thumb, 0.3);
+    NSData *thumbData = UIImageJPEGRepresentation(tempImg, 0.3);
     NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[mVybe thumbnailFilePath]];
     [thumbData writeToURL:thumbURL atomically:YES];
 }
@@ -310,10 +305,10 @@
             transform = CGAffineTransformMakeRotation(M_PI);
             break;
         case AVCaptureVideoOrientationLandscapeLeft:
-            transform = CGAffineTransformMakeRotation(-M_PI_2);
+            transform = CGAffineTransformMakeRotation(M_PI_2);
             break;
         case AVCaptureVideoOrientationLandscapeRight:
-            transform = CGAffineTransformMakeRotation(M_PI_2);
+            transform = CGAffineTransformMakeRotation(-M_PI_2);
             break;
 
     }

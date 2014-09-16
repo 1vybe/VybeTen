@@ -154,9 +154,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [self checkDeviceAuthorizationStatus];
     
     dispatch_queue_t sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
-    dispatch_queue_t assetWriterQueue = dispatch_queue_create("assetWriter queue", DISPATCH_QUEUE_SERIAL);
+    //dispatch_queue_t assetWriterQueue = dispatch_queue_create("assetWriter queue", DISPATCH_QUEUE_SERIAL);
     [self setSessionQueue:sessionQueue];
-    [self setAssetWriterQueue:assetWriterQueue];
+    //[self setAssetWriterQueue:assetWriterQueue];
     
     dispatch_async(sessionQueue, ^{
         [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
@@ -201,7 +201,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             if ([connection isVideoStabilizationSupported])
                 [connection setEnablesVideoStabilizationWhenAvailable:YES];
             
-            [connection setVideoOrientation:lastOrientation];
+            [connection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+            //[connection setVideoOrientation:lastOrientation];
             [_videoOutput setSampleBufferDelegate:self queue:queue];
         }
         
@@ -356,7 +357,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         AVCaptureDevice *videoDevice = [VYBCaptureViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:prefferedPosition];
         AVCaptureDeviceInput *videoInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:nil];
         
-        //[[self session] beginConfiguration];
+        [[self session] beginConfiguration];
         
         [[self session] removeInput:[self videoInput]];
 
@@ -368,18 +369,19 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         }
         [self setVideoInput:videoInput];
 
-        //[[self session] commitConfiguration];
-        
         // Video should be mirrored if coming from the front camera
-        //[[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoMirrored:[videoDevice position] == AVCaptureDevicePositionFront];
+        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoMirrored:[videoDevice position] == AVCaptureDevicePositionFront];
+        
+        [[self session] commitConfiguration];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             isFrontCamera = [videoDevice position] == AVCaptureDevicePositionFront;
             [[self flipButton] setSelected:isFrontCamera];
+            [[self flipButton] setEnabled:YES];
             [[self flashButton] setEnabled:YES];
+            [[self flashButton] setHidden:isFrontCamera];
             [[self activityButton] setEnabled:YES];
             [[self hubButton] setEnabled:YES];
-            [[self flipButton] setEnabled:YES];
         });
         
     });
@@ -391,7 +393,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)longPressDetected:(UILongPressGestureRecognizer *)recognizer {
     if (!isRecording) {
         [self.view addSubview:self.captureButton];
-        /*
+        self.captureButton.center = [recognizer locationInView:self.view];
+
+        //TODO:
         double rotation = 0;
         switch (lastOrientation) {
             case AVCaptureVideoOrientationPortrait:
@@ -409,11 +413,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             default:
                 return;
         }
-        self.captureButton.center = [recognizer locationInView:self.view];
         
         CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
         self.captureButton.transform = transform;
-        */
+        
         [self startRecording];
     }
     
@@ -458,6 +461,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
     
+    if (![self setUpAssetWriter]) {
+        NSLog(@"setupAssetWriter FAILED :(");
+        return;
+    }
     
     dispatch_async([self sessionQueue], ^{
         if ([[UIDevice currentDevice] isMultitaskingSupported])
@@ -469,15 +476,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         // Turning flash for video recording
         if (flashOn) {
             [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOn forDevice:[[self videoInput] device]];
-        }
-        
-        //NSLog(@"[CAPTURE] shooting in orientation %d", (int)lastOrientation);
-        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:lastOrientation];
-        
-        
-        if (![self setUpAssetWriter]) {
-            NSLog(@"setupAssetWriter FAILED :(");
-            return;
         }
         
     });
@@ -589,6 +587,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)stopRecording {
+
     NSDate *now = [NSDate date];
     double secondsSinceStart = [now timeIntervalSinceDate:startTime];
     
@@ -611,19 +610,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     recordingTimer = nil;
     
     [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOff forDevice:[[self videoInput] device]];
-    
-//    
-//    UIBackgroundTaskIdentifier backgroundRecordingID = [self backgroundRecordingID];
-//	[self setBackgroundRecordingID:UIBackgroundTaskInvalid];
-//
-//    if (backgroundRecordingID != UIBackgroundTaskInvalid)
-//        [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-//    
-
 }
 
 
-#pragma mark - AVCaptureFileOutputRecordingDelegate
+#pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
     if (!CMSampleBufferDataIsReady(sampleBuffer)) {
@@ -731,14 +721,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     return UIInterfaceOrientationMaskPortrait;
 }
 
-
-/* for iOS6 and below
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
 }
-*/
 
 - (void)deviceRotated:(NSNotification *)notification {
     UIDeviceOrientation currentOrientation = [MotionOrientation sharedInstance].deviceOrientation;
@@ -759,10 +744,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             break;
         case UIDeviceOrientationLandscapeLeft:
             rotation = M_PI_2;
-            lastOrientation = AVCaptureVideoOrientationLandscapeLeft;
+            lastOrientation = AVCaptureVideoOrientationLandscapeRight;
             break;
         case UIDeviceOrientationLandscapeRight:
-            lastOrientation = AVCaptureVideoOrientationLandscapeRight;
+            lastOrientation = AVCaptureVideoOrientationLandscapeLeft;
             rotation = -M_PI_2;
             break;
     }
@@ -774,7 +759,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [self.hubButton setTransform:transform];
         [self.activityButton setTransform:transform];
     } completion:nil];
-
 }
 
 
@@ -826,7 +810,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     self.activityButton.hidden = status;
     self.hubButton.hidden = status;
     flipButton.hidden = status;
-    flashButton.hidden = status;
+    flashButton.hidden = status || isFrontCamera;
 }
 
 - (IBAction)activityButtonPressed:(id)sender {

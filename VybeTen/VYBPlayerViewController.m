@@ -259,6 +259,7 @@
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
 
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"[PLAYER] orientation is %d", [asset videoOrientation]);
             [self syncUIElementsForOrientation:[asset videoOrientation]];
         });
         
@@ -279,6 +280,7 @@
                 AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
                
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"[PLAYER] orientation is %d", [asset videoOrientation]);
                     [self syncUIElementsForOrientation:[asset videoOrientation]];
                 });
 
@@ -519,7 +521,7 @@
 #pragma mark - DeviceOrientation
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    return YES;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -567,7 +569,6 @@
     switch (orientation) {
         case AVCaptureVideoOrientationPortrait:
             rotation = 0;
-
             break;
         case AVCaptureVideoOrientationPortraitUpsideDown:
             rotation = -M_PI;

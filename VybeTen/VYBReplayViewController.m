@@ -36,7 +36,7 @@
     [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.width, darkBackground.bounds.size.height)];
     
     self.playerView = playerView;
-    
+
     self.player = [[AVPlayer alloc] init];
     
     [self.playerView setPlayer:self.player];
@@ -52,9 +52,8 @@
     // Hide status bar
     [self setNeedsStatusBarAppearanceUpdate];
    
-    // Adding CONFIRM button
+    // Adding ACCEPT button
     CGRect frame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
-
     self.acceptButton = [[UIButton alloc] initWithFrame:frame];
     [self.acceptButton setImage:[UIImage imageNamed:@"button_replay_accept.png"] forState:UIControlStateNormal];
     [self.acceptButton addTarget:self action:@selector(acceptButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -66,28 +65,21 @@
     [self.rejectButton addTarget:self action:@selector(rejectButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.rejectButton];
     
-    // Adding toggle switch for private/public
-    frame = CGRectMake(self.view.bounds.size.height - 150, self.view.bounds.size.width - 60, 130, 40);
-    self.modeControl = [[UISegmentedControl alloc] initWithItems:@[@"Public", @"Private"]];
-    [self.modeControl setFrame:frame];
-    [self.modeControl addTarget:self action:@selector(modeChanged:) forControlEvents:UIControlEventValueChanged];
     // By default it's public
     self.isPublic = YES;
-    //[self.view addSubview:self.modeControl];
-
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [self.modeControl setSelectedSegmentIndex:(self.isPublic) ? 0 : 1];
-    [self.modeControl setTintColor:(self.isPublic) ? [UIColor colorWithRed:0.0 green:191.0/255.0 blue:1.0 alpha:1.0] : [UIColor orangeColor]];
-    
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
 
-    NSLog(@"[REPLAY] orientation is %d", (int)[asset videoOrientation]);
-    [self rotateUIElementsForOrientation:(NSInteger)[asset videoOrientation]];
+    NSLog(@"[REPLAY] videoOrientation is %d", (int)[asset videoOrientation]);
+    //NSLog(@"[REPLAY] orientation is %d", (int)[asset ]);
+    
+    //[self rotateUIElementsForOrientation:(NSInteger)[asset videoOrientation]];
+    [self syncUIElementsForOrientation:[asset videoOrientation]];
     
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
@@ -101,26 +93,25 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
 }
 
-- (void)rotateUIElementsForOrientation:(VYBVideoOrientation)orientation {
-    CGAffineTransform transform;
-    switch (orientation) {
-        case VYBVideoOrientationUp:
-            transform = CGAffineTransformMakeRotation(0);
-            break;
-        case VYBVideoOrientationDown:
-            transform = CGAffineTransformMakeRotation(M_PI);
-            break;
-        case VYBVideoOrientationLeft:
-            transform = CGAffineTransformMakeRotation(M_PI_2);
-            break;
-        case VYBVideoOrientationRight:
-            transform = CGAffineTransformMakeRotation(-M_PI_2);
-            break;
-        case VYBVideoOrientationNotFound:
-            transform = CGAffineTransformMakeRotation(0);
 
+- (void)syncUIElementsForOrientation:(NSInteger)orientation {
+    double rotation = 0;
+    switch (orientation) {
+        case AVCaptureVideoOrientationPortrait:
+            rotation = 0;
+            break;
+        case AVCaptureVideoOrientationPortraitUpsideDown:
+            rotation = M_PI;
+            break;
+        case AVCaptureVideoOrientationLandscapeLeft:
+            rotation = M_PI_2;
+            break;
+        case AVCaptureVideoOrientationLandscapeRight:
+            rotation = -M_PI_2;
+            break;
     }
-    
+    CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
+    //self.playerView.transform = transform;
     self.acceptButton.transform = transform;
     self.rejectButton.transform = transform;
 }
@@ -217,22 +208,18 @@
     [self.navigationController popViewControllerAnimated:NO];
 }
 
-- (void)modeChanged:(id)sender {
-    self.isPublic = (self.modeControl.selectedSegmentIndex == 0);
-    self.modeControl.tintColor = (self.isPublic) ? [UIColor colorWithRed:0.0 green:191.0/255.0 blue:1.0 alpha:1.0] : [UIColor orangeColor];
-    if (self.isPublic) {
-        NSLog(@"changed to public");
-    }
-}
-
 #pragma mark - DeviceOrientation
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    return YES;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationLandscapeLeft;
 }
 
 

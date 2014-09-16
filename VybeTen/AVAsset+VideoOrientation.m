@@ -65,10 +65,10 @@ static inline CGFloat RadiansToDegrees(CGFloat radians) {
     CGAffineTransform firstTransform = [videoTrack preferredTransform];
     
     if (firstTransform.a == 0 && firstTransform.b == 1.0 && firstTransform.c == -1.0 && firstTransform.d == 0) {
-        orientation = AVCaptureVideoOrientationLandscapeRight;
+        orientation = AVCaptureVideoOrientationLandscapeLeft;
     }
     if (firstTransform.a == 0 && firstTransform.b == -1.0 && firstTransform.c == 1.0 && firstTransform.d == 0) {
-        orientation =  AVCaptureVideoOrientationLandscapeLeft;
+        orientation =  AVCaptureVideoOrientationLandscapeRight;
     }
     if (firstTransform.a == 1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == 1.0) {
         orientation =  AVCaptureVideoOrientationPortrait;

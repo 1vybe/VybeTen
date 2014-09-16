@@ -44,6 +44,10 @@
     return [self.viewControllers.firstObject shouldAutorotate];
 }
 
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return [self.viewControllers.firstObject preferredInterfaceOrientationForPresentation];
+}
+
 - (BOOL)prefersStatusBarHidden {
     return YES;
 }
