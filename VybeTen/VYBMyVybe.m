@@ -73,9 +73,12 @@
 - (PFObject *)parseObjectVybe {
     PFObject *theVybe = [PFObject objectWithClassName:kVYBVybeClassKey];
     
-    PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:geoTag.coordinate.latitude longitude:geoTag.coordinate.longitude];
-    [theVybe setObject:geoPoint forKey:kVYBVybeGeotag];
-    [theVybe setObject:locationString forKey:kVYBVybeLocationStringKey];
+    if (geoTag) {
+        PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:geoTag.coordinate.latitude longitude:geoTag.coordinate.longitude];
+        [theVybe setObject:geoPoint forKey:kVYBVybeGeotag];
+    }
+    if (locationString)
+        [theVybe setObject:locationString forKey:kVYBVybeLocationStringKey];
     [theVybe setObject:[NSNumber numberWithBool:isPublic] forKey:kVYBVybeTypePublicKey];
     [theVybe setObject:timeStamp forKey:kVYBVybeTimestampKey];
     [theVybe setObject:[PFUser currentUser] forKey:kVYBVybeUserKey];

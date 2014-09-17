@@ -198,7 +198,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 [connection setEnablesVideoStabilizationWhenAvailable:YES];
             
             [connection setVideoOrientation:AVCaptureVideoOrientationPortrait];
-            //[connection setVideoOrientation:lastOrientation];
+
             [_videoOutput setSampleBufferDelegate:self queue:queue];
         }
         
@@ -359,7 +359,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [[self session] removeInput:[self videoInput]];
 
         if ( [[self session] canAddInput:videoInput] ) {
-            NSLog(@"session added video input");
             [[self session] addInput:videoInput];
         } else {
             NSLog(@"session could NOT add video input");
@@ -587,7 +586,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] initWithNibName:@"VYBReplayViewController" bundle:nil];
         [replayVC setCurrVybe:self.currVybe];
         [self presentViewController:replayVC animated:NO completion:nil];
-        //[self.navigationController pushViewController:replayVC animated:NO];
     }
     else {
         NSError *error;
