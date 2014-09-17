@@ -186,6 +186,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         }
         
         dispatch_queue_t queue = dispatch_queue_create("MyQueue", NULL);
+        
         _videoOutput = [[AVCaptureVideoDataOutput alloc] init];
         if ([session canAddOutput:_videoOutput]) {
             [session addOutput:_videoOutput];
@@ -268,6 +269,62 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [super viewWillDisappear:animated];
 }
 
+- (IBAction)flipButtonPressed:(id)sender {
+    [[self flipButton] setEnabled:NO];
+    [[self flashButton] setEnabled:NO];
+    [[self activityButton] setEnabled:NO];
+    [[self hubButton] setEnabled:NO];
+    
+    dispatch_async([self sessionQueue], ^{
+        AVCaptureDevice *currentVideoDevice = [[self videoInput] device];
+        AVCaptureDevicePosition currentPosition = [currentVideoDevice position];
+        AVCaptureDevicePosition prefferedPosition = AVCaptureDevicePositionUnspecified;
+        
+        switch (currentPosition) {
+            case AVCaptureDevicePositionUnspecified:
+                prefferedPosition = AVCaptureDevicePositionBack;
+                break;
+            case AVCaptureDevicePositionBack:
+                prefferedPosition = AVCaptureDevicePositionFront;
+                break;
+            case AVCaptureDevicePositionFront:
+                prefferedPosition = AVCaptureDevicePositionBack;
+                break;
+        }
+        
+        AVCaptureDevice *videoDevice = [VYBCaptureViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:prefferedPosition];
+        AVCaptureDeviceInput *videoInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:nil];
+        
+        [[self session] beginConfiguration];
+        
+        [[self session] removeInput:[self videoInput]];
+        
+        if ( [[self session] canAddInput:videoInput] ) {
+            [[self session] addInput:videoInput];
+        } else {
+            NSLog(@"session could NOT add video input");
+        }
+        [self setVideoInput:videoInput];
+        
+        // Video should be mirrored if coming from the front camera
+        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoMirrored:[videoDevice position] == AVCaptureDevicePositionFront];
+        
+        [[self session] commitConfiguration];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            isFrontCamera = [videoDevice position] == AVCaptureDevicePositionFront;
+            [[self flipButton] setSelected:isFrontCamera];
+            [[self flipButton] setEnabled:YES];
+            [[self flashButton] setEnabled:YES];
+            [[self flashButton] setHidden:isFrontCamera];
+            [[self activityButton] setEnabled:YES];
+            [[self hubButton] setEnabled:YES];
+        });
+        
+    });
+    
+}
+
 + (AVCaptureDevice *)deviceWithMediaType:(NSString *)mediaType preferringPosition:(AVCaptureDevicePosition)position
 {
 	NSArray *devices = [AVCaptureDevice devicesWithMediaType:mediaType];
@@ -296,8 +353,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             [captureDevice setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
         }
         [captureDevice unlockForConfiguration];
-
-        
     } else {
         NSLog(@"Low light boost configuration failed: %@", error);
     }
@@ -328,61 +383,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	}
 }
 
-- (IBAction)flipButtonPressed:(id)sender {
-    [[self flipButton] setEnabled:NO];
-    [[self flashButton] setEnabled:NO];
-    [[self activityButton] setEnabled:NO];
-    [[self hubButton] setEnabled:NO];
-
-    dispatch_async([self sessionQueue], ^{
-        AVCaptureDevice *currentVideoDevice = [[self videoInput] device];
-        AVCaptureDevicePosition currentPosition = [currentVideoDevice position];
-        AVCaptureDevicePosition prefferedPosition = AVCaptureDevicePositionUnspecified;
-        
-        switch (currentPosition) {
-            case AVCaptureDevicePositionUnspecified:
-                prefferedPosition = AVCaptureDevicePositionBack;
-                break;
-            case AVCaptureDevicePositionBack:
-                prefferedPosition = AVCaptureDevicePositionFront;
-                break;
-            case AVCaptureDevicePositionFront:
-                prefferedPosition = AVCaptureDevicePositionBack;
-                break;
-        }
-        
-        AVCaptureDevice *videoDevice = [VYBCaptureViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:prefferedPosition];
-        AVCaptureDeviceInput *videoInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:nil];
-        
-        [[self session] beginConfiguration];
-        
-        [[self session] removeInput:[self videoInput]];
-
-        if ( [[self session] canAddInput:videoInput] ) {
-            [[self session] addInput:videoInput];
-        } else {
-            NSLog(@"session could NOT add video input");
-        }
-        [self setVideoInput:videoInput];
-
-        // Video should be mirrored if coming from the front camera
-        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoMirrored:[videoDevice position] == AVCaptureDevicePositionFront];
-        
-        [[self session] commitConfiguration];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            isFrontCamera = [videoDevice position] == AVCaptureDevicePositionFront;
-            [[self flipButton] setSelected:isFrontCamera];
-            [[self flipButton] setEnabled:YES];
-            [[self flashButton] setEnabled:YES];
-            [[self flashButton] setHidden:isFrontCamera];
-            [[self activityButton] setEnabled:YES];
-            [[self hubButton] setEnabled:YES];
-        });
-        
-    });
-    
-}
 
 #pragma mark - UIResponder
 
@@ -428,6 +428,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             isRecording = NO;
             [self syncUIWithRecordingStatus:NO];
             if (_videoWriter.status == AVAssetWriterStatusWriting) {
+                [_videoWriterInput markAsFinished];
+                [_audioWriterInput markAsFinished];
                 [_videoWriter finishWritingWithCompletionHandler:^{
                     _videoWriterInput = nil;
                     _videoWriter = nil;
@@ -463,11 +465,13 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     }
     
     dispatch_async([self sessionQueue], ^{
+        /*
         if ([[UIDevice currentDevice] isMultitaskingSupported])
         {
             // Setup background task. This is needed because the captureOutput:didFinishRecordingToOutputFileAtURL: callback is not received until AVCam returns to the foreground unless you request background execution time. This also ensures that there will be time to write the file to the assets library when AVCam is backgrounded. To conclude this background execution, -endBackgroundTask is called in -recorder:recordingDidFinishToOutputFileURL:error: after the recorded file has been saved.
             [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
         }
+        */
         
         // Turning flash for video recording
         if (flashOn) {
@@ -542,6 +546,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [_videoWriter addInput:_audioWriterInput];
     
     //NOTE: When writing a file by AVAssetWriter, we need to change its input's transform to set video orientation (not by setting videoOrientation of AVCaptureConnection
+    NSLog(@"[CAPTURE] setUpAssetWriter lastOrientation is %ld", lastOrientation);
     _videoWriterInput.transform = [VYBUtility getTransformFromOrientation:lastOrientation];
     
     return YES;
@@ -555,6 +560,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         isRecording = NO;
         [self syncUIWithRecordingStatus:NO];
         if (_videoWriter.status == AVAssetWriterStatusWriting) {
+            [_videoWriterInput markAsFinished];
+            [_audioWriterInput markAsFinished];
             [_videoWriter finishWritingWithCompletionHandler:^{
                 _videoWriterInput = nil;
                 _videoWriter = nil;
@@ -616,7 +623,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         if(_videoWriter.status != AVAssetWriterStatusWriting)
         {
             if ((_videoWriter.status != AVAssetWriterStatusFailed) && (_videoWriter.status != AVAssetWriterStatusCompleted)) {
-                //NSLog(@"buffer orientation is %d", (int)connection.videoOrientation);
+                NSLog(@"[CAPTURE] buffer orientation is %d", (int)connection.videoOrientation);
                 [_videoWriter startWriting];
                 [_videoWriter startSessionAtSourceTime:lastSampleTime];
             }
