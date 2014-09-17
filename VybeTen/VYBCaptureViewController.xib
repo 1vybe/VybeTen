@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -25,9 +26,9 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pxE-bC-V0j" customClass="VYBCameraView">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pxE-bC-V0j" customClass="VYBCameraView">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
-                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7vo-Gu-Tx0" userLabel="flipButton">
                     <rect key="frame" x="420" y="20" width="40" height="40"/>
@@ -74,7 +75,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jPK-KL-Kst" userLabel="flashButton">
-                    <rect key="frame" x="372" y="20" width="40" height="40"/>
+                    <rect key="frame" x="370" y="20" width="40" height="40"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="40" id="cIx-uw-lK6"/>
                         <constraint firstAttribute="height" constant="40" id="tGR-UE-dbK"/>
@@ -88,16 +89,18 @@
                     </connections>
                 </button>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="pxE-bC-V0j" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="9Z1-dn-rIO"/>
+                <constraint firstAttribute="bottom" secondItem="pxE-bC-V0j" secondAttribute="bottom" id="BPX-IX-mYn"/>
+                <constraint firstItem="pxE-bC-V0j" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Bsp-wu-2pQ"/>
+                <constraint firstAttribute="trailing" secondItem="pxE-bC-V0j" secondAttribute="trailing" id="RjX-wj-7bv"/>
                 <constraint firstAttribute="trailing" secondItem="7vo-Gu-Tx0" secondAttribute="trailing" constant="20" id="SOR-De-6sf"/>
-                <constraint firstAttribute="trailing" secondItem="pxE-bC-V0j" secondAttribute="trailing" id="TUk-a8-V3a"/>
                 <constraint firstItem="jPK-KL-Kst" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="Tcb-3B-fDL"/>
                 <constraint firstAttribute="bottom" secondItem="rNG-mo-RpY" secondAttribute="bottom" constant="20" id="Uat-TU-oQK"/>
                 <constraint firstItem="jPK-KL-Kst" firstAttribute="top" secondItem="7vo-Gu-Tx0" secondAttribute="top" id="abL-1i-gYu"/>
                 <constraint firstAttribute="bottom" secondItem="iNU-2f-whX" secondAttribute="bottom" constant="20" id="eac-mj-lNm"/>
-                <constraint firstItem="7vo-Gu-Tx0" firstAttribute="leading" secondItem="jPK-KL-Kst" secondAttribute="trailing" constant="8" id="jZz-ci-Ldc"/>
+                <constraint firstItem="7vo-Gu-Tx0" firstAttribute="leading" secondItem="jPK-KL-Kst" secondAttribute="trailing" constant="10" id="jZz-ci-Ldc"/>
+                <constraint firstItem="pxE-bC-V0j" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="kR1-9l-zhI"/>
                 <constraint firstItem="iNU-2f-whX" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="mOV-9C-5OF"/>
                 <constraint firstAttribute="trailing" secondItem="rNG-mo-RpY" secondAttribute="trailing" constant="20" id="s24-0h-PF9"/>
             </constraints>
