@@ -16,6 +16,10 @@
 #import "AVAsset+VideoOrientation.h"
 
 @interface VYBReplayViewController ()
+@property (nonatomic, weak) IBOutlet UIButton *acceptButton;
+@property (nonatomic, weak) IBOutlet UIButton *rejectButton;
+- (IBAction)acceptButtonPressed:(id)sender;
+- (IBAction)rejectButtonPressed:(id)sender;
 
 @end
 
@@ -26,60 +30,33 @@
     self.playerView = nil;
 }
 
-- (void)loadView {
-    UIView *darkBackground = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [darkBackground setBackgroundColor:[UIColor blackColor]];
-    self.view = darkBackground;
-    
-    VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
-
-    [playerView setFrame:CGRectMake(0, 0, darkBackground.bounds.size.width, darkBackground.bounds.size.height)];
-    
-    self.playerView = playerView;
-
-    self.player = [[AVPlayer alloc] init];
-    
-    [self.playerView setPlayer:self.player];
-    
-    [self.view addSubview:self.playerView];
-}
-
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
+    
+    self.playerView = playerView;
+    
+    self.player = [[AVPlayer alloc] init];
+    
+    [self.playerView setPlayer:self.player];
+    
+    [self.playerView setFrame:self.view.frame];
+    
+    [self.view insertSubview:self.playerView atIndex:0];
+
     // Hide status bar
     [self setNeedsStatusBarAppearanceUpdate];
    
-    // Adding ACCEPT button
-    CGRect frame = CGRectMake(self.view.bounds.size.width - 70, self.view.bounds.size.height - 70, 70, 70);
-    self.acceptButton = [[UIButton alloc] initWithFrame:frame];
-    [self.acceptButton setImage:[UIImage imageNamed:@"button_replay_accept.png"] forState:UIControlStateNormal];
-    [self.acceptButton addTarget:self action:@selector(acceptButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.acceptButton];
-    
-    frame = CGRectMake(0, self.view.bounds.size.height - 70, 70, 70);
-    self.rejectButton = [[UIButton alloc] initWithFrame:frame];
-    [self.rejectButton setImage:[UIImage imageNamed:@"button_replay_reject.png"] forState:UIControlStateNormal];
-    [self.rejectButton addTarget:self action:@selector(rejectButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.rejectButton];
-    
-    // By default it's public
     self.isPublic = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
+  
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
-
-    NSLog(@"[REPLAY] videoOrientation is %d", (int)[asset videoOrientation]);
-    //NSLog(@"[REPLAY] orientation is %d", (int)[asset ]);
-    
-    //[self rotateUIElementsForOrientation:(NSInteger)[asset videoOrientation]];
-    [self syncUIElementsForOrientation:[asset videoOrientation]];
     
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
@@ -93,35 +70,12 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
 }
 
-
-- (void)syncUIElementsForOrientation:(NSInteger)orientation {
-    double rotation = 0;
-    switch (orientation) {
-        case AVCaptureVideoOrientationPortrait:
-            rotation = 0;
-            break;
-        case AVCaptureVideoOrientationPortraitUpsideDown:
-            rotation = M_PI;
-            break;
-        case AVCaptureVideoOrientationLandscapeLeft:
-            rotation = M_PI_2;
-            break;
-        case AVCaptureVideoOrientationLandscapeRight:
-            rotation = -M_PI_2;
-            break;
-    }
-    CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
-    //self.playerView.transform = transform;
-    self.acceptButton.transform = transform;
-    self.rejectButton.transform = transform;
-}
-
 - (void)playerItemDidReachEnd {
     [self.currItem seekToTime:kCMTimeZero];
     [self.player play];
 }
 
-- (void)acceptButtonPressed:(id)sender {
+- (IBAction)acceptButtonPressed:(id)sender {
     NSData *video = [NSData dataWithContentsOfFile:[self.currVybe videoFilePath]];
     
     [VYBUtility saveThumbnailImageForVybe:self.currVybe];
@@ -190,11 +144,11 @@
     [[PFUser currentUser] saveInBackground];
     
     
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 
-- (void)rejectButtonPressed:(id)sender {
+- (IBAction)rejectButtonPressed:(id)sender {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
         
@@ -205,23 +159,18 @@
         }
     });
     
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 #pragma mark - DeviceOrientation
 
 - (BOOL)shouldAutorotate {
-    return YES;
+    return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAll;
 }
-
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-    return UIInterfaceOrientationLandscapeLeft;
-}
-
 
 - (BOOL)prefersStatusBarHidden {
     return YES;

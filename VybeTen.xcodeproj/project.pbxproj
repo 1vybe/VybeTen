@@ -70,6 +70,7 @@
 		02E45EC819B0131200A55079 /* VYBUsersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E45EC719B0131200A55079 /* VYBUsersTableViewController.m */; };
 		02E45ECB19B0156400A55079 /* VYBHubControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E45ECA19B0156400A55079 /* VYBHubControlView.m */; };
 		02E45ECD19B0158100A55079 /* VYBHubControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E45ECC19B0158100A55079 /* VYBHubControlView.xib */; };
+		02E943B219C916C50057E8EE /* VYBReplayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E943B119C916C50057E8EE /* VYBReplayViewController.xib */; };
 		02F36B2C1986F5A200B7D842 /* VYBUserStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F36B2B1986F5A200B7D842 /* VYBUserStore.m */; };
 		02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F36B2E1986F62800B7D842 /* VYBUser.m */; };
 		02F80C46196F600300FB2A48 /* AvenirLTStd-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02F80C45196F600300FB2A48 /* AvenirLTStd-Book.otf */; };
@@ -198,6 +199,7 @@
 		02E45EC919B0156400A55079 /* VYBHubControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBHubControlView.h; sourceTree = "<group>"; };
 		02E45ECA19B0156400A55079 /* VYBHubControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBHubControlView.m; sourceTree = "<group>"; };
 		02E45ECC19B0158100A55079 /* VYBHubControlView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBHubControlView.xib; sourceTree = "<group>"; };
+		02E943B119C916C50057E8EE /* VYBReplayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBReplayViewController.xib; sourceTree = "<group>"; };
 		02F36B2A1986F5A200B7D842 /* VYBUserStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUserStore.h; sourceTree = "<group>"; };
 		02F36B2B1986F5A200B7D842 /* VYBUserStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUserStore.m; sourceTree = "<group>"; };
 		02F36B2D1986F62800B7D842 /* VYBUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUser.h; sourceTree = "<group>"; };
@@ -307,6 +309,7 @@
 				022AC50219AD9757008A9C64 /* VYBCaptureViewController.xib */,
 				02CEE2AE1970C2F900AC361F /* VYBReplayViewController.h */,
 				02CEE2AF1970C2F900AC361F /* VYBReplayViewController.m */,
+				02E943B119C916C50057E8EE /* VYBReplayViewController.xib */,
 			);
 			name = Capture;
 			sourceTree = "<group>";
@@ -674,6 +677,7 @@
 				02D11D0F18DF62AC0018DA97 /* Montreal-Regular.otf in Resources */,
 				888F1FE819B2740B00546643 /* ProximaNovaSoft-Regular.otf in Resources */,
 				888F1FE919B2740B00546643 /* ProximaNovaSoft-Semibold.otf in Resources */,
+				02E943B219C916C50057E8EE /* VYBReplayViewController.xib in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
 				02D11D0918DF62AC0018DA97 /* Montreal-Heavy.otf in Resources */,
 				02D11D0E18DF62AC0018DA97 /* Montreal-MediumIta.otf in Resources */,

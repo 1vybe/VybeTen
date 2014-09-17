@@ -34,10 +34,11 @@
 
 @interface VYBCaptureViewController () <AVCaptureFileOutputRecordingDelegate>
 
-@property (nonatomic, strong) IBOutlet UIButton *flipButton;
-@property (nonatomic, strong) IBOutlet UIButton *flashButton;
-@property (nonatomic, strong) IBOutlet UIButton *hubButton;
-@property (nonatomic, strong) IBOutlet UIButton *activityButton;
+@property (nonatomic, weak) IBOutlet UIButton *flipButton;
+@property (nonatomic, weak) IBOutlet UIButton *flashButton;
+@property (nonatomic, weak) IBOutlet UIButton *hubButton;
+@property (nonatomic, weak) IBOutlet UIButton *activityButton;
+@property (nonatomic, weak) IBOutlet VYBCameraView *cameraView;
 
 - (IBAction)hubButtonPressed:(id)sender;
 - (IBAction)activityButtonPressed:(id)sender;
@@ -45,7 +46,6 @@
 - (IBAction)flashButtonPressed:(id)sender;
 
 @property (nonatomic, strong) VYBMyVybe *currVybe;
-@property (nonatomic, weak) VYBCameraView *cameraView;
 
 @property (nonatomic) dispatch_queue_t sessionQueue;
 @property (nonatomic) dispatch_queue_t assetWriterQueue;
@@ -84,7 +84,7 @@
     AVCaptureVideoOrientation lastOrientation;
 }
 
-@synthesize flipButton, flashButton;
+@synthesize flipButton, flashButton, cameraView;
 
 static void * RecordingContext = &RecordingContext;
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
@@ -128,13 +128,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         locationManager.desiredAccuracy=kCLLocationAccuracyBest;
     }
     
-    // AppDelegate Notification
+    // Subscribing to Notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActive object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
 
-    
+    // Adding gestures
     UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
      action:@selector(longPressDetected:)];
     longPressRecognizer.minimumPressDuration = 0.3;
@@ -145,9 +144,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [self setSession:session];
     
-    VYBCameraView *cameraView = [[VYBCameraView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-    [self setCameraView:cameraView];
-    [(AVCaptureVideoPreviewLayer *)[cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    [(AVCaptureVideoPreviewLayer *)[cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspect];
     [cameraView setSession:session];
     [self.view insertSubview:cameraView atIndex:0];
     
@@ -255,6 +252,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     // Google Analytics
     self.screenName = @"Capture Screen";
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -592,9 +590,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     double secondsSinceStart = [now timeIntervalSinceDate:startTime];
     
     if (secondsSinceStart >= 3.0) {
-        VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] init];
+        VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] initWithNibName:@"VYBReplayViewController" bundle:nil];
         [replayVC setCurrVybe:self.currVybe];
-        [self.navigationController pushViewController:replayVC animated:NO];
+        [self presentViewController:replayVC animated:NO completion:nil];
+        //[self.navigationController pushViewController:replayVC animated:NO];
     }
     else {
         NSError *error;

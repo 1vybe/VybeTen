@@ -17,9 +17,6 @@
 @property (nonatomic) VYBPlayerView *playerView;
 @property (nonatomic) AVPlayerItem *currItem;
 @property (nonatomic) VYBMyVybe *currVybe;
-@property (nonatomic) UISegmentedControl *modeControl;
-@property (nonatomic) UIButton *acceptButton;
-@property (nonatomic) UIButton *rejectButton;
 
 @property (nonatomic) BOOL isPublic;
 
