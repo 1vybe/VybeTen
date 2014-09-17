@@ -13,11 +13,7 @@
 @class VYBMyVybe;
 
 @interface VYBReplayViewController : UIViewController
-@property (nonatomic) AVPlayer *player;
-@property (nonatomic) VYBPlayerView *playerView;
-@property (nonatomic) AVPlayerItem *currItem;
-@property (nonatomic) VYBMyVybe *currVybe;
 
-@property (nonatomic) BOOL isPublic;
+@property (nonatomic) VYBMyVybe *currVybe;
 
 @end

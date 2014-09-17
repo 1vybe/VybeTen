@@ -146,7 +146,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     [(AVCaptureVideoPreviewLayer *)[cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspect];
     [cameraView setSession:session];
-    [self.view insertSubview:cameraView atIndex:0];
     
     [self checkDeviceAuthorizationStatus];
     
@@ -491,14 +490,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     NSDictionary *videoCompressionProps = [NSDictionary dictionaryWithObjectsAndKeys:
                                            [NSNumber numberWithDouble:700.0*1024.0], AVVideoAverageBitRateKey,
                                            nil ];
-    NSNumber *width, *height;
-    if ((lastOrientation == AVCaptureVideoOrientationLandscapeLeft) || (lastOrientation == AVCaptureVideoOrientationLandscapeRight)) {
-        width = [NSNumber numberWithInt:480];
-        height = [NSNumber numberWithInt:360];
-    } else {
-        width = [NSNumber numberWithInt:360];
-        height = [NSNumber numberWithInt:480];
-    }
+   
+    NSNumber *width = [NSNumber numberWithInt:self.view.bounds.size.width];
+    NSNumber *height = [NSNumber numberWithInt:self.view.bounds.size.height];
     
     NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
                                    AVVideoCodecH264, AVVideoCodecKey,

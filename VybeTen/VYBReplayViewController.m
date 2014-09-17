@@ -18,8 +18,14 @@
 @interface VYBReplayViewController ()
 @property (nonatomic, weak) IBOutlet UIButton *acceptButton;
 @property (nonatomic, weak) IBOutlet UIButton *rejectButton;
+@property (nonatomic, weak) IBOutlet VYBPlayerView *playerView;
+
 - (IBAction)acceptButtonPressed:(id)sender;
 - (IBAction)rejectButtonPressed:(id)sender;
+
+@property (nonatomic) AVPlayer *player;
+@property (nonatomic) AVPlayerItem *currItem;
+@property (nonatomic) BOOL isPublic;
 
 @end
 
@@ -34,18 +40,10 @@
 {
     [super viewDidLoad];
     
-    VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
-    
-    self.playerView = playerView;
-    
     self.player = [[AVPlayer alloc] init];
     
     [self.playerView setPlayer:self.player];
     
-    [self.playerView setFrame:self.view.frame];
-    
-    [self.view insertSubview:self.playerView atIndex:0];
-
     // Hide status bar
     [self setNeedsStatusBarAppearanceUpdate];
    
