@@ -72,6 +72,8 @@
     [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *objects, NSError *error) {
         if (!error) {
             for (PFObject *aVybe in objects) {
+                if ([aVybe isKindOfClass:[NSNull class]])
+                    continue;
                 [[VYBCache sharedCache] addFreshVybe:aVybe];
             }
             [self getUsersByLocation];
