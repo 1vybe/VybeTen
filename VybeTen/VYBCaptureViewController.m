@@ -309,7 +309,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         // Video should be mirrored if coming from the front camera
         [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoMirrored:[videoDevice position] == AVCaptureDevicePositionFront];
         
+        // Re-fixing videoOutput connection orientation to portrait because adding a new videoInput the orientation to landscape by default
+        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:AVCaptureVideoOrientationPortrait];
+
         [[self session] commitConfiguration];
+        
         
         dispatch_async(dispatch_get_main_queue(), ^{
             isFrontCamera = [videoDevice position] == AVCaptureDevicePositionFront;
@@ -546,7 +550,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [_videoWriter addInput:_audioWriterInput];
     
     //NOTE: When writing a file by AVAssetWriter, we need to change its input's transform to set video orientation (not by setting videoOrientation of AVCaptureConnection
-    NSLog(@"[CAPTURE] setUpAssetWriter lastOrientation is %ld", lastOrientation);
     _videoWriterInput.transform = [VYBUtility getTransformFromOrientation:lastOrientation];
     
     return YES;
@@ -623,7 +626,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         if(_videoWriter.status != AVAssetWriterStatusWriting)
         {
             if ((_videoWriter.status != AVAssetWriterStatusFailed) && (_videoWriter.status != AVAssetWriterStatusCompleted)) {
-                NSLog(@"[CAPTURE] buffer orientation is %d", (int)connection.videoOrientation);
                 [_videoWriter startWriting];
                 [_videoWriter startSessionAtSourceTime:lastSampleTime];
             }
