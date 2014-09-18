@@ -24,7 +24,7 @@
 #import <GAIDictionaryBuilder.h>
 
 @interface VYBPlayerViewController ()
-
+@property (nonatomic, weak) IBOutlet UIView *overlayView;
 @property (nonatomic, weak) IBOutlet UILabel *usernameLabel;
 @property (nonatomic, weak) IBOutlet PFImageView *profileImageView;
 @property (nonatomic, weak) IBOutlet UIImageView *funnySquareFrame;
@@ -530,11 +530,18 @@
 
 - (void)syncUIElementsForOrientation:(NSInteger)orientation {
     [self.currPlayerView resetFrame];
+    self.overlayView.transform = CGAffineTransformIdentity;
+    [self.overlayView setFrame:self.view.frame];
 
     if (orientation == AVCaptureVideoOrientationLandscapeLeft || orientation == AVCaptureVideoOrientationLandscapeRight) {
-        self.currPlayerView.transform = CGAffineTransformMakeRotation(M_PI_2);
-        CGRect newBounds = CGRectMake(0, 0, self.currPlayerView.bounds.size.height, self.currPlayerView.bounds.size.width);
+        CGAffineTransform rotation = CGAffineTransformMakeRotation(M_PI_2);
+        CGRect newBounds = CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width);
+
+        self.currPlayerView.transform = rotation;
         [self.currPlayerView setBounds:newBounds];
+        
+        self.overlayView.transform = rotation;
+        [self.overlayView setBounds:newBounds];
     }
     
     
