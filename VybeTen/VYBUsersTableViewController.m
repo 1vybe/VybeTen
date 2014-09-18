@@ -162,6 +162,16 @@
     [self.tableView reloadData];
 }
 
+#pragma mark - Orientation
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationPortrait;
+}
+
 /*
 #pragma mark - Navigation
 
