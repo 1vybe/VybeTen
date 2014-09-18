@@ -23,7 +23,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Timestamp" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zjB-aE-fgy">
-                        <rect key="frame" x="63" y="36" width="249" height="13"/>
+                        <rect key="frame" x="69" y="37" width="243" height="13"/>
                         <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="13"/>
                         <color key="textColor" red="0.59607843137254901" green="0.59607843137254901" blue="0.59607843137254901" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
@@ -32,7 +32,7 @@
                         <rect key="frame" x="20" y="13" width="35" height="35"/>
                     </imageView>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FpT-Nu-p6w">
-                        <rect key="frame" x="63" y="14" width="249" height="20"/>
+                        <rect key="frame" x="69" y="15" width="243" height="20"/>
                         <fontDescription key="fontDescription" name="ProximaNovaSoft-Semibold" family="Proxima Nova Soft" pointSize="20"/>
                         <color key="textColor" red="0.29803921568627451" green="0.29803921568627451" blue="0.29803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
@@ -44,7 +44,7 @@
                 <outlet property="thumbnailImageView" destination="bpI-ec-ON4" id="7n0-l6-6cB"/>
                 <outlet property="timestampLabel" destination="zjB-aE-fgy" id="ryQ-hL-g1P"/>
             </connections>
-            <point key="canvasLocation" x="414" y="301"/>
+            <point key="canvasLocation" x="414" y="299"/>
         </tableViewCell>
     </objects>
     <resources>

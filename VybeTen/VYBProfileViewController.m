@@ -52,6 +52,8 @@
     
     [self setNavigationBarItems];
     [self loadProfileInfoView];
+    
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, 70, 0, 0);
 }
 
 - (void)didReceiveMemoryWarning
