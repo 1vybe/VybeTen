@@ -37,6 +37,8 @@
     [super viewDidLoad];
     
     [self loadActivityInfoView];
+    
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, 70, 0, 0);
 }
 
 - (void)viewWillAppear:(BOOL)animated {

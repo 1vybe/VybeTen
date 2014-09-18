@@ -29,13 +29,13 @@
                         <rect key="frame" x="262" y="6" width="50" height="50"/>
                     </imageView>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Activity" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iNI-5f-Pga">
-                        <rect key="frame" x="66" y="34" width="188" height="12"/>
+                        <rect key="frame" x="72" y="35" width="182" height="12"/>
                         <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="12"/>
                         <color key="textColor" red="0.59607843137254901" green="0.59607843137254901" blue="0.59607843137254901" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zjB-aE-fgy">
-                        <rect key="frame" x="66" y="11" width="188" height="20"/>
+                        <rect key="frame" x="72" y="12" width="182" height="20"/>
                         <fontDescription key="fontDescription" name="ProximaNovaSoft-Semibold" family="Proxima Nova Soft" pointSize="20"/>
                         <color key="textColor" red="0.22352941176470589" green="0.22352941176470589" blue="0.22352941176470589" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -48,7 +48,7 @@
                 <outlet property="username" destination="zjB-aE-fgy" id="1V0-3F-ODT"/>
                 <outlet property="vybeThumbnail" destination="kBg-Ct-yon" id="GAu-01-bgz"/>
             </connections>
-            <point key="canvasLocation" x="236" y="349"/>
+            <point key="canvasLocation" x="236" y="347"/>
         </tableViewCell>
     </objects>
     <resources>
