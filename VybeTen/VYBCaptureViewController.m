@@ -21,7 +21,6 @@
 #import "VYBProfileViewController.h"
 #import "VYBUserStore.h"
 #import "VYBLogInViewController.h"
-#import "VYBPlayerViewController.h"
 #import "VYBReplayViewController.h"
 #import "VYBPermissionViewController.h"
 #import "VYBCameraView.h"

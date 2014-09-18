@@ -25,33 +25,28 @@
 
 @interface VYBPlayerViewController ()
 
-@property (nonatomic, strong) IBOutlet UILabel *usernameLabel;
-@property (nonatomic, strong) IBOutlet PFImageView *profileImageView;
-@property (nonatomic, strong) IBOutlet UIImageView *funnySquareFrame;
-@property (nonatomic, strong) IBOutlet UIImageView *countryFlagImageView;
-@property (nonatomic, strong) IBOutlet UILabel *cityNameLabel;
-@property (nonatomic, strong) IBOutlet UILabel *countLabel;
-@property (nonatomic, strong) IBOutlet UIButton *dismissButton;
+@property (nonatomic, weak) IBOutlet UILabel *usernameLabel;
+@property (nonatomic, weak) IBOutlet PFImageView *profileImageView;
+@property (nonatomic, weak) IBOutlet UIImageView *funnySquareFrame;
+@property (nonatomic, weak) IBOutlet UIImageView *countryFlagImageView;
+@property (nonatomic, weak) IBOutlet UILabel *cityNameLabel;
+@property (nonatomic, weak) IBOutlet UILabel *countLabel;
+@property (nonatomic, weak) IBOutlet UIButton *dismissButton;
 
 - (IBAction)dismissButtonPressed:(id)sender;
 
-/*
-@property (nonatomic, strong) VYBLabel *privateCountLabel;
-@property (nonatomic, strong) UIButton *privateViewButton;
-@property (nonatomic, strong) UILabel *locationLabel;
-@property (nonatomic, strong) UILabel *timeLabel;
-*/
-
+@property (nonatomic) AVPlayer *currPlayer;
+@property (nonatomic) VYBPlayerView *currPlayerView;
+@property (nonatomic) AVPlayerItem *currItem;
+@property (nonatomic) NSInteger debugMode;
 
 @end
 
 @implementation VYBPlayerViewController {
-    NSInteger pageIndex;
-    
+    AVCaptureVideoOrientation lastOrientation;
     NSInteger downloadingVybeIndex;
     
     UIView *backgroundView;
-    
     VYBTimerView *timerView;
     
     // Forward time by swiping to the left
@@ -70,39 +65,18 @@
 
 }
 
-+ (VYBPlayerViewController *)playerViewControllerForPageIndex:(NSInteger)idx {
-    if (idx >= 0 && idx < 2) {
-        return [[self alloc] initWithPageIndex:idx];
-    }
-    return nil;
-}
-
-- (id)initWithPageIndex:(NSInteger)idx {
-    self = [super init];
-    if (self) {
-        pageIndex = idx;
-    }
-    return self;
-}
-
-- (NSInteger)pageIndex {
-    return pageIndex;
-}
-
 - (void)loadView {
     [super loadView];
 
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
-
     [playerView setFrame:[[UIScreen mainScreen] bounds]];
-
     self.currPlayerView = playerView;
     
     self.currPlayer = [[AVPlayer alloc] init];
-    
     [self.currPlayerView setPlayer:self.currPlayer];
-
     [self.view insertSubview:self.currPlayerView atIndex:0];
+    
+    lastOrientation = AVCaptureVideoOrientationPortrait;
 }
 
 
@@ -118,7 +92,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActive object:nil];
     
     // responds to device orientation change
+    /*
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceRotated:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
+    */
     
     // Adding swipe gestures
     swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
@@ -127,13 +103,6 @@
     swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight)];
     swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipeRight];
-    //NOTE: all landscape videos are played in landscape right
-    //UISwipeGestureRecognizer *swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft)];
-    //swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
-    //UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight)];
-    //swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
-    
-    
     
     // PAUSE gesture
     UITapGestureRecognizer *tapOnce = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
@@ -258,10 +227,7 @@
     if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
 
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"[PLAYER] orientation is %d", [asset videoOrientation]);
-            [self syncUIElementsForOrientation:[asset videoOrientation]];
-        });
+        [self syncUIElementsForOrientation:[asset videoOrientation]];
         
         self.currItem = [AVPlayerItem playerItemWithAsset:asset];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
@@ -279,10 +245,7 @@
                 [data writeToURL:cacheURL atomically:YES];
                 AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"[PLAYER] orientation is %d", [asset videoOrientation]);
-                    [self syncUIElementsForOrientation:[asset videoOrientation]];
-                });
+                [self syncUIElementsForOrientation:[asset videoOrientation]];
 
                 self.currItem = [AVPlayerItem playerItemWithAsset:asset];
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
@@ -385,7 +348,7 @@
  * User Interactions
  **/
 
-- (void)dismissButtonPressed:(id)sender {
+- (IBAction)dismissButtonPressed:(id)sender {
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
@@ -521,12 +484,13 @@
 #pragma mark - DeviceOrientation
 
 - (BOOL)shouldAutorotate {
-    return YES;
+    return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskAll;
+    return UIInterfaceOrientationMaskPortrait;
 }
+
 
 - (void)deviceRotated:(NSNotification *)notification {
     UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
@@ -565,25 +529,18 @@
 }
 
 - (void)syncUIElementsForOrientation:(NSInteger)orientation {
-    double rotation = 0;
-    switch (orientation) {
-        case AVCaptureVideoOrientationPortrait:
-            rotation = 0;
-            break;
-        case AVCaptureVideoOrientationPortraitUpsideDown:
-            rotation = -M_PI;
-            break;
-        case AVCaptureVideoOrientationLandscapeLeft:
-            rotation = 0;
-            break;
-        case AVCaptureVideoOrientationLandscapeRight:
-            rotation = -M_PI;
-            break;
+    [self.currPlayerView resetFrame];
+
+    if (orientation == AVCaptureVideoOrientationLandscapeLeft || orientation == AVCaptureVideoOrientationLandscapeRight) {
+        self.currPlayerView.transform = CGAffineTransformMakeRotation(M_PI_2);
+        CGRect newBounds = CGRectMake(0, 0, self.currPlayerView.bounds.size.height, self.currPlayerView.bounds.size.width);
+        [self.currPlayerView setBounds:newBounds];
     }
-    CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
-    self.currPlayerView.transform = transform;
+    
+    
 }
 
+#pragma mark - ()
 
 - (BOOL)prefersStatusBarHidden {
     return YES;

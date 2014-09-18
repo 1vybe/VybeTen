@@ -21,7 +21,6 @@
 #import "VYBHubViewController.h"
 #import "VYBProfileViewController.h"
 #import "VYBActivityTableViewController.h"
-#import "VYBPlayerViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
@@ -42,7 +41,6 @@
 @property (nonatomic, strong) VYBHubViewController *hubVC;
 @property (nonatomic, strong) VYBProfileViewController *profileVC;
 @property (nonatomic, strong) VYBActivityTableViewController *activityVC;
-@property (nonatomic, strong) VYBPlayerViewController *playerVC;
 
 @end
 

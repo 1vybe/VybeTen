@@ -14,19 +14,12 @@
 @class VYBPlayerView;
 
 @interface VYBPlayerViewController : GAITrackedViewController <UIAlertViewDelegate, MBProgressHUDDelegate>
-//@property (nonatomic, weak) id presentingVC;
 
-@property (nonatomic) AVPlayer *currPlayer;
-@property (nonatomic) VYBPlayerView *currPlayerView;
-@property (nonatomic) AVPlayerItem *currItem;
 @property (nonatomic, copy) NSArray *vybePlaylist;
-@property (nonatomic) NSInteger debugMode;
 @property (nonatomic) NSInteger currVybeIndex;
 @property (nonatomic) PFObject *currRegion;
 @property (nonatomic) PFObject *currUser;
 
-+ (VYBPlayerViewController *)playerViewControllerForPageIndex:(NSInteger)idx;
-- (NSInteger)pageIndex;
 - (void)beginPlayingFrom:(NSInteger)from;
 
 @end

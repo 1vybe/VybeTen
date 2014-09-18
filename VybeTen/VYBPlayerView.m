@@ -28,5 +28,10 @@
     [playerLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
 }
 
+- (void)resetFrame {
+    self.transform = CGAffineTransformIdentity;
+    [self setBounds:[[UIScreen mainScreen] bounds]];
+}
+
 
 @end
