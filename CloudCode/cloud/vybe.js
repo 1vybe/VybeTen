@@ -63,6 +63,32 @@ Parse.Cloud.afterSave('Vybe', function(request) {
 
 });
 
+Parse.Cloud.job("removeDeletedVybesFromFeeds", function(request, status) {
+  // Set up to modify user data
+  Parse.Cloud.useMasterKey();
+
+  // Query for all users
+  var query = new Parse.Query(Parse.User);
+  query.include('freshFeed');
+  query.each(function(user) {
+      var username = user.get('username');
+      var freshFeed = user.get('freshFeed', []);
+      var newFreshFeed = freshFeed.filter(function(vybe) { return vybe !== null; });
+      var deleteCount = freshFeed.length - newFreshFeed.length;
+      if (deleteCount) {
+        console.log("Deleting " + deleteCount + " Vybes from " + username + "'s feed.");
+        user.set('freshFeed', newFreshFeed);
+        return user.save();
+      }
+  }).then(function() {
+    // Set the job's success status
+    status.success("Job completed successfully.");
+  }, function(error) {
+    // Set the job's error status
+    status.error("Uh oh, something went wrong.");
+  });
+});
+
 var sendPush = function(request) {
   var user = request.object.get("user");
   if (!user) {
