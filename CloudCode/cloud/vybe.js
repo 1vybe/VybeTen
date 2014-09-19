@@ -89,6 +89,29 @@ Parse.Cloud.job("removeDeletedVybesFromFeeds", function(request, status) {
   });
 });
 
+Parse.Cloud.afterDelete("Vybe", function(request) {
+  // Set up to modify user data
+  Parse.Cloud.useMasterKey();
+
+  var deletedVybe = request.object;
+
+  // Query for all users
+  var query = new Parse.Query(Parse.User);
+  query.include('freshFeed');
+  query.equalTo('freshFeed', deletedVybe);
+  query.each(function(user) {
+      var username = user.get('username');
+      var freshFeed = user.get('freshFeed', []);
+      var newFreshFeed = freshFeed.filter(function(vybe) { return vybe !== null; });
+      var deleteCount = freshFeed.length - newFreshFeed.length;
+      if (deleteCount) {
+        console.log("Deleting " + deleteCount + " Vybes from " + username + "'s feed.");
+        user.set('freshFeed', newFreshFeed);
+        return user.save();
+      }
+  });
+});
+
 var sendPush = function(request) {
   var user = request.object.get("user");
   if (!user) {
