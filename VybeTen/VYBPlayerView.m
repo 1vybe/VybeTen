@@ -25,7 +25,7 @@
 
 - (void)setVideoFillMode {
     AVPlayerLayer *playerLayer = (AVPlayerLayer *)[self layer];
-    [playerLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    [playerLayer setVideoGravity:AVLayerVideoGravityResizeAspect];
 }
 
 - (void)resetFrame {

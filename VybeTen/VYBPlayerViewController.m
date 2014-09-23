@@ -24,7 +24,9 @@
 #import <GAIDictionaryBuilder.h>
 
 @interface VYBPlayerViewController ()
-@property (nonatomic, weak) IBOutlet UIView *overlayView;
+@property (nonatomic, weak) IBOutlet UIButton *goPreviousButton;
+@property (nonatomic, weak) IBOutlet UIButton *goNextButton;
+@property (nonatomic, weak) IBOutlet UIButton *likeButton;
 @property (nonatomic, weak) IBOutlet UILabel *usernameLabel;
 @property (nonatomic, weak) IBOutlet PFImageView *profileImageView;
 @property (nonatomic, weak) IBOutlet UIImageView *funnySquareFrame;
@@ -34,9 +36,12 @@
 @property (nonatomic, weak) IBOutlet UIButton *dismissButton;
 
 - (IBAction)dismissButtonPressed:(id)sender;
+- (IBAction)likeButtonPressed:(id)sender;
+- (IBAction)goPreviousButtonPressed:(id)sender;
+- (IBAction)goNextButtonPressed:(id)sender;
 
+@property (nonatomic, weak) IBOutlet VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayer *currPlayer;
-@property (nonatomic) VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayerItem *currItem;
 @property (nonatomic) NSInteger debugMode;
 
@@ -49,32 +54,32 @@
     UIView *backgroundView;
     VYBTimerView *timerView;
     
-    // Forward time by swiping to the left
-    UISwipeGestureRecognizer *swipeLeft;
-    UISwipeGestureRecognizer *swipeRight;
+    BOOL menuMode;
+    NSTimer *overlayTimer;
 }
+
 @synthesize currVybeIndex;
 @synthesize currPlayer = _currPlayer;
 @synthesize currPlayerView = _currPlayerView;
 @synthesize currItem = _currItem;
-@synthesize usernameLabel, profileImageView, funnySquareFrame, countryFlagImageView, cityNameLabel, countLabel, dismissButton;
+@synthesize usernameLabel, profileImageView, funnySquareFrame, countryFlagImageView, cityNameLabel, countLabel, dismissButton, goNextButton, goPreviousButton, likeButton;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActive object:nil];
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (void)loadView {
     [super loadView];
 
-    VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
-    [playerView setFrame:[[UIScreen mainScreen] bounds]];
-    self.currPlayerView = playerView;
+    //VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
+    //[playerView setFrame:[[UIScreen mainScreen] bounds]];
+    //self.currPlayerView = playerView;
     
     self.currPlayer = [[AVPlayer alloc] init];
     [self.currPlayerView setPlayer:self.currPlayer];
-    [self.view insertSubview:self.currPlayerView atIndex:0];
+    //[self.view insertSubview:self.currPlayerView atIndex:0];
     
     lastOrientation = AVCaptureVideoOrientationPortrait;
 }
@@ -84,27 +89,18 @@
 {
     [super viewDidLoad];
     
+    menuMode = NO;
+    [self syncUIElementsWithMenuMode];
+    
     // Hide status bar
     [self setNeedsStatusBarAppearanceUpdate];
     
     // AppDelegate Notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActive object:nil];
-    
-    // responds to device orientation change
-    /*
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceRotated:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
-    */
     
-    // Adding swipe gestures
-    swipeLeft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeLeft)];
-    swipeLeft.direction=UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:swipeLeft];
-    swipeRight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeRight)];
-    swipeRight.direction=UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:swipeRight];
-    
-    // PAUSE gesture
+    // One tap pops up overlay
     UITapGestureRecognizer *tapOnce = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
     tapOnce.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapOnce];
@@ -113,14 +109,6 @@
     UITapGestureRecognizer *tapTwice = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapTwice)];
     tapTwice.numberOfTapsRequired = 2;
     [self.view addGestureRecognizer:tapTwice];
-    
-#if DEBUG
-    // Add Logout gesture
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
-    longPress.numberOfTapsRequired = 1;
-    longPress.minimumPressDuration = 1;
-    [self.view addGestureRecognizer:longPress];
-#endif
  
 
 }
@@ -204,21 +192,6 @@
     downloadingVybeIndex = currVybeIndex + 1;
     
     PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
-
-    /*
-    if ([[[VYBUserStore sharedStore] lastWatchedVybeTimeStamp] compare:currVybe[kVYBVybeTimestampKey]] == NSOrderedAscending) {
-        [[VYBUserStore sharedStore] setLastWatchedVybeTimeStamp:currVybe[kVYBVybeTimestampKey]];
-        
-        NSInteger newCount = [[VYBUserStore sharedStore] newPrivateVybeCount] - 1;
-        if (newCount < 0)
-            newCount = 0;
-        [[VYBUserStore sharedStore] setNewPrivateVybeCount:newCount];
-
-        PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-        currentInstallation.badge = [[VYBUserStore sharedStore] newPrivateVybeCount];
-        [currentInstallation saveEventually];
-    }
-    */
     
     NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
     cacheURL = [cacheURL URLByAppendingPathComponent:[currVybe objectId]];
@@ -352,7 +325,7 @@
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
-- (void)swipeLeft {
+- (IBAction)goNextButtonPressed:(id)sender {
     //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     if (!self.vybePlaylist) {
         return;
@@ -368,7 +341,7 @@
 
 }
 
-- (void)swipeRight {
+- (IBAction)goPreviousButtonPressed:(id)sender {
     //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     if (!self.vybePlaylist) {
         return;
@@ -384,6 +357,38 @@
 }
 
 - (void)tapOnce {
+    if (!menuMode) {
+        overlayTimer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(overlayTimerExpired:) userInfo:nil repeats:NO];
+    } else {
+        [overlayTimer invalidate];
+    }
+    
+    menuMode = !menuMode;
+    [self syncUIElementsWithMenuMode];
+}
+
+- (void)overlayTimerExpired:(NSTimer *)timer {
+    if (menuMode) {
+        menuMode = !menuMode;
+        [self syncUIElementsWithMenuMode];
+    }
+}
+
+- (void)syncUIElementsWithMenuMode {
+    goPreviousButton.hidden = menuMode;
+    goNextButton.hidden = menuMode;
+    likeButton.hidden = menuMode;
+    
+    usernameLabel.hidden = !menuMode;
+    profileImageView.hidden = !menuMode;
+    funnySquareFrame.hidden = !menuMode;
+    countryFlagImageView.hidden = !menuMode;
+    cityNameLabel.hidden = !menuMode;
+    countLabel.hidden = !menuMode;;
+    dismissButton.hidden = !menuMode;
+}
+
+- (void)pause {
     if (self.currPlayer.rate == 0.0) {
         [self.currPlayer play];
     }
@@ -404,13 +409,6 @@
     UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     [logOutAlert show];
 }
-
-#if DEBUG
-- (void)longPressDetected:(id)sender {
-    UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-    [logOutAlert show];
-}
-#endif
 
 #pragma mark - UIAlertViewDelegate
 
@@ -493,6 +491,7 @@
 
 
 - (void)deviceRotated:(NSNotification *)notification {
+    /*
     UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
     double rotation = 0;
     switch (currentOrientation) {
@@ -501,50 +500,35 @@
         case UIDeviceOrientationUnknown:
             return;
         case UIDeviceOrientationPortrait:
-            rotation = 0;
-            [swipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
-            [swipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
-            break;
         case UIDeviceOrientationPortraitUpsideDown:
-            [swipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
-            [swipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
-            rotation = -M_PI;
-            break;
-        case UIDeviceOrientationLandscapeLeft:
-            [swipeLeft setDirection:UISwipeGestureRecognizerDirectionUp];
-            [swipeRight setDirection:UISwipeGestureRecognizerDirectionDown];
             rotation = M_PI_2;
             break;
+        case UIDeviceOrientationLandscapeLeft:
         case UIDeviceOrientationLandscapeRight:
-            [swipeLeft setDirection:UISwipeGestureRecognizerDirectionUp];
-            [swipeRight setDirection:UISwipeGestureRecognizerDirectionDown];
             rotation = -M_PI_2;
             break;
     }
     
     CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
     [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        self.dismissButton.transform = transform;
+        self.goNextButton.transform = transform;
+        self.goPreviousButton.transform = transform;
+        self.likeButton.transform = transform;
     } completion:nil];
+    */
 }
 
 - (void)syncUIElementsForOrientation:(NSInteger)orientation {
-    [self.currPlayerView resetFrame];
-    self.overlayView.transform = CGAffineTransformIdentity;
-    [self.overlayView setFrame:self.view.frame];
+    self.view.transform = CGAffineTransformIdentity;
+    [self.view setBounds:[[UIScreen mainScreen] bounds]];
 
     if (orientation == AVCaptureVideoOrientationLandscapeLeft || orientation == AVCaptureVideoOrientationLandscapeRight) {
         CGAffineTransform rotation = CGAffineTransformMakeRotation(M_PI_2);
         CGRect newBounds = CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width);
 
-        self.currPlayerView.transform = rotation;
-        [self.currPlayerView setBounds:newBounds];
-        
-        self.overlayView.transform = rotation;
-        [self.overlayView setBounds:newBounds];
+        self.view.transform = rotation;
+        [self.view setBounds:newBounds];        
     }
-    
-    
 }
 
 #pragma mark - ()

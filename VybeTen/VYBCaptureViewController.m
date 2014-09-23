@@ -31,7 +31,7 @@
 #import "VYBCache.h"
 #import "VYBUtility.h"
 
-@interface VYBCaptureViewController () <AVCaptureFileOutputRecordingDelegate>
+@interface VYBCaptureViewController ()
 
 @property (nonatomic, weak) IBOutlet UIButton *flipButton;
 @property (nonatomic, weak) IBOutlet UIButton *flashButton;
@@ -143,7 +143,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [self setSession:session];
     
-    [(AVCaptureVideoPreviewLayer *)[cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    [(AVCaptureVideoPreviewLayer *)[cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspect];
     [cameraView setSession:session];
     
     [self checkDeviceAuthorizationStatus];
@@ -156,7 +156,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     dispatch_async(sessionQueue, ^{
         [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
         
-        [[self session] setSessionPreset:AVCaptureSessionPreset640x480];
+        [[self session] setSessionPreset:AVCaptureSessionPreset1280x720];
         
         NSError *error = nil;
         
@@ -394,7 +394,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [self.view addSubview:self.captureButton];
         self.captureButton.center = [recognizer locationInView:self.view];
 
-        //TODO:
         double rotation = 0;
         switch (lastOrientation) {
             case AVCaptureVideoOrientationPortrait:
@@ -404,10 +403,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 rotation = -M_PI;
                 break;
             case AVCaptureVideoOrientationLandscapeLeft:
-                rotation = M_PI_2;
+                rotation = -M_PI_2;
                 break;
             case AVCaptureVideoOrientationLandscapeRight:
-                rotation = -M_PI_2;
+                rotation = M_PI_2;
                 break;
             default:
                 return;
@@ -497,8 +496,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                                            [NSNumber numberWithDouble:700.0*1024.0], AVVideoAverageBitRateKey,
                                            nil ];
    
-    NSNumber *width = [NSNumber numberWithInt:self.view.bounds.size.width];
-    NSNumber *height = [NSNumber numberWithInt:self.view.bounds.size.height];
+    NSNumber *width = [NSNumber numberWithInt:270];
+    NSNumber *height = [NSNumber numberWithInt:480];
     
     NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
                                    AVVideoCodecH264, AVVideoCodecKey,

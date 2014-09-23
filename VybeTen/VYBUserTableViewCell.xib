@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6246" systemVersion="14A361p" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="14A361p" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6239"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <deployment defaultVersion="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="ProximaNovaSoft-Regular.otf">
@@ -17,7 +16,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="UserTableCellIdentifier" rowHeight="70" id="KGk-i7-Jjw" customClass="VYBUserTableViewCell">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="UserTableCellIdentifier" rowHeight="110" id="KGk-i7-Jjw" customClass="VYBUserTableViewCell">
             <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
@@ -25,29 +24,37 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person_avatar" translatesAutoresizingMaskIntoConstraints="NO" id="kru-xb-tlm">
-                        <rect key="frame" x="18" y="10" width="40" height="40"/>
+                        <rect key="frame" x="20" y="12" width="35" height="35"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="40" id="7wV-3R-tuM"/>
-                            <constraint firstAttribute="height" constant="40" id="hsq-cK-ctN"/>
+                            <constraint firstAttribute="width" constant="35" id="7wV-3R-tuM"/>
+                            <constraint firstAttribute="height" constant="35" id="hsq-cK-ctN"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BYC-UR-4pL" userLabel="usernameLabel">
-                        <rect key="frame" x="78" y="8" width="61" height="25"/>
+                        <rect key="frame" x="70" y="12" width="53" height="18"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="25" id="gWK-T4-xiR"/>
-                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="25" id="r0X-1S-FgW"/>
+                            <constraint firstAttribute="height" constant="18" id="gWK-T4-xiR"/>
                         </constraints>
-                        <fontDescription key="fontDescription" name="ProximaNovaSoft-Semibold" family="Proxima Nova Soft" pointSize="23"/>
+                        <fontDescription key="fontDescription" name="ProximaNovaSoft-Semibold" family="Proxima Nova Soft" pointSize="20"/>
                         <color key="textColor" red="0.29803921570000003" green="0.29803921570000003" blue="0.29803921570000003" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BgW-IN-zEd" userLabel="watchNewButton">
-                        <rect key="frame" x="272" y="15" width="30" height="30"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ZS-o0-Gvg" userLabel="countLabel">
+                        <rect key="frame" x="70" y="35" width="7" height="12"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="30" id="WZo-JL-Cei"/>
-                            <constraint firstAttribute="width" constant="30" id="bSO-1C-Ci6"/>
+                            <constraint firstAttribute="height" constant="12" id="NQu-ap-f7s"/>
                         </constraints>
-                        <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="13"/>
+                        <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="12"/>
+                        <color key="textColor" red="0.59607843140000005" green="0.59607843140000005" blue="0.59607843140000005" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BgW-IN-zEd" userLabel="watchNewButton">
+                        <rect key="frame" x="277" y="17" width="25" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="25" id="WZo-JL-Cei"/>
+                            <constraint firstAttribute="width" constant="25" id="bSO-1C-Ci6"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="11"/>
                         <state key="normal" backgroundImage="button_circle_lightblue">
                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -56,34 +63,26 @@
                             <action selector="watchNewButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="1UP-yz-lcg"/>
                         </connections>
                     </button>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ZS-o0-Gvg" userLabel="countLabel">
-                        <constraints>
-                            <constraint firstAttribute="height" constant="20" id="NQu-ap-f7s"/>
-                        </constraints>
-                        <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="17"/>
-                        <color key="textColor" red="0.59607843140000005" green="0.59607843140000005" blue="0.59607843140000005" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="kru-xb-tlm" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="10" id="KDb-uE-nnJ"/>
-                    <constraint firstItem="BYC-UR-4pL" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="YCy-ZH-vEe"/>
-                    <constraint firstAttribute="centerY" secondItem="kru-xb-tlm" secondAttribute="centerY" id="jLp-zY-qdH"/>
-                    <constraint firstItem="5ZS-o0-Gvg" firstAttribute="top" secondItem="BYC-UR-4pL" secondAttribute="bottom" constant="1" id="kg7-ea-JDw"/>
-                    <constraint firstItem="5ZS-o0-Gvg" firstAttribute="leading" secondItem="kru-xb-tlm" secondAttribute="trailing" constant="20" id="mWp-kL-Tgp"/>
-                    <constraint firstAttribute="centerY" secondItem="BgW-IN-zEd" secondAttribute="centerY" id="pWX-Q7-mf7"/>
-                    <constraint firstItem="BYC-UR-4pL" firstAttribute="leading" secondItem="kru-xb-tlm" secondAttribute="trailing" constant="20" id="wzT-iI-TSP"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="BgW-IN-zEd" secondAttribute="trailing" constant="10" id="zOW-ct-R6X"/>
+                    <constraint firstItem="BYC-UR-4pL" firstAttribute="leading" secondItem="kru-xb-tlm" secondAttribute="trailing" constant="15" id="N3K-jV-0f3"/>
+                    <constraint firstAttribute="trailing" secondItem="BgW-IN-zEd" secondAttribute="trailing" constant="18" id="QTv-D8-mCu"/>
+                    <constraint firstAttribute="centerY" secondItem="kru-xb-tlm" secondAttribute="centerY" id="Z44-hL-lYi"/>
+                    <constraint firstItem="5ZS-o0-Gvg" firstAttribute="bottom" secondItem="kru-xb-tlm" secondAttribute="bottom" id="cgr-Wh-twh"/>
+                    <constraint firstAttribute="centerY" secondItem="BgW-IN-zEd" secondAttribute="centerY" id="cz4-me-f4A"/>
+                    <constraint firstItem="5ZS-o0-Gvg" firstAttribute="leading" secondItem="BYC-UR-4pL" secondAttribute="leading" id="fUR-Qi-GzB"/>
+                    <constraint firstItem="kru-xb-tlm" firstAttribute="top" secondItem="BYC-UR-4pL" secondAttribute="top" id="qcB-cz-p07"/>
+                    <constraint firstItem="kru-xb-tlm" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="ugm-vX-wj0"/>
                 </constraints>
             </tableViewCellContentView>
-            <inset key="separatorInset" minX="80" minY="0.0" maxX="20" maxY="0.0"/>
+            <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
                 <outlet property="countLabel" destination="5ZS-o0-Gvg" id="gJx-g5-kdL"/>
                 <outlet property="nameLabel" destination="BYC-UR-4pL" id="0VB-O3-KPR"/>
                 <outlet property="profileImageView" destination="kru-xb-tlm" id="aRB-BL-xpr"/>
                 <outlet property="watchNewButton" destination="BgW-IN-zEd" id="Koh-kb-rzv"/>
             </connections>
-            <point key="canvasLocation" x="295" y="155"/>
+            <point key="canvasLocation" x="298" y="180"/>
         </tableViewCell>
     </objects>
     <resources>

@@ -36,7 +36,7 @@
     
     NSString *countryCode = [self.locationKey componentsSeparatedByString:@","][1];
     // NOTE: This assumes that the navigation bar height is 44pt
-    countryFlagImageView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - 40 - 10, 2, 40, 40)];
+    countryFlagImageView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - 40 - 10, 2, 40, 29)];
     [countryFlagImageView setImage:[UIImage imageNamed:countryCode]];
     [countryFlagImageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.navigationController.navigationBar addSubview:countryFlagImageView];
@@ -64,5 +64,14 @@
     [self.watchAllButton setCounterText:[NSString stringWithFormat:@"%ld", (long)self.embeddedController.freshVybes.count]];
 }
 
+#pragma mark - Orientation
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationPortrait;
+}
 
 @end

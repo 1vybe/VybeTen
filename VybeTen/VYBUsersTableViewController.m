@@ -19,7 +19,6 @@
 @end
 
 @implementation VYBUsersTableViewController {
-    UIImageView *countryFlagImageView;
 }
 @synthesize users, vybesFromHereByUser, freshVybesFromHereByUser, freshVybes;
 
@@ -48,11 +47,10 @@
 #pragma mark - Table view data source
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 70.0;
+    return 60.0;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
     return 1;
 }
 
@@ -147,7 +145,6 @@
             arr = [arr arrayByAddingObject:fVybe];
         [freshVybesFromHereByUser setObject:arr forKey:aUser.objectId];
     }
-    
     
     users = [[VYBCache sharedCache] usersForLocation:self.locationKey];
     users = [users sortedArrayUsingComparator:^NSComparisonResult(PFObject *user1, PFObject *user2) {

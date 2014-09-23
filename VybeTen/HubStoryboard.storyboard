@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vRS-GY-MWN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A361p" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vRS-GY-MWN">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -134,51 +134,51 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LocationTableCellIdentifier" rowHeight="70" id="eAk-Yj-OBR" customClass="VYBLocationTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LocationTableCellIdentifier" rowHeight="60" id="eAk-Yj-OBR" customClass="VYBLocationTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eAk-Yj-OBR" id="fcr-rY-KEx">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9IV-PT-20q" userLabel="flagImage">
-                                            <rect key="frame" x="18" y="15" width="40" height="40"/>
+                                            <rect key="frame" x="28" y="18" width="36" height="24"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="40" id="KLC-os-Ghy"/>
-                                                <constraint firstAttribute="width" constant="40" id="Oc6-xj-EZd"/>
+                                                <constraint firstAttribute="height" constant="24" id="KLC-os-Ghy"/>
+                                                <constraint firstAttribute="width" constant="36" id="Oc6-xj-EZd"/>
                                             </constraints>
                                             <variation key="widthClass=compact" fixedFrame="YES">
                                                 <rect key="frame" x="18" y="5" width="50" height="50"/>
                                             </variation>
                                         </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Sh-Ut-YVe" userLabel="followingCountLabel">
-                                            <rect key="frame" x="78" y="34" width="41" height="21"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Sh-Ut-YVe" userLabel="followingCountLabel">
+                                            <rect key="frame" x="78" y="34" width="29" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="C6D-CM-Mw6"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="17"/>
+                                            <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="12"/>
                                             <color key="textColor" red="0.59607843137254901" green="0.59607843137254901" blue="0.59607843137254901" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                             <variation key="widthClass=compact" fixedFrame="YES">
                                                 <rect key="frame" x="73" y="35" width="42" height="20"/>
                                             </variation>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Montreal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4tc-RQ-TJe" userLabel="cityNameLabel">
-                                            <rect key="frame" x="78" y="8" width="92" height="25"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Montreal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4tc-RQ-TJe" userLabel="cityNameLabel">
+                                            <rect key="frame" x="78" y="8" width="80" height="25"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="25" id="Kke-91-SAU"/>
+                                                <constraint firstAttribute="height" constant="15" id="Kke-91-SAU"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" name="ProximaNovaSoft-Semibold" family="Proxima Nova Soft" pointSize="23"/>
+                                            <fontDescription key="fontDescription" name="ProximaNovaSoft-Semibold" family="Proxima Nova Soft" pointSize="20"/>
                                             <color key="textColor" red="0.29803921568627451" green="0.29803921568627451" blue="0.29803921568627451" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                             <variation key="widthClass=compact" fixedFrame="YES">
                                                 <rect key="frame" x="73" y="5" width="42" height="21"/>
                                             </variation>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="roc-4G-49i" userLabel="vybeCountLabel">
-                                            <rect key="frame" x="139" y="34" width="41" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="roc-4G-49i" userLabel="vybeCountLabel">
+                                            <rect key="frame" x="127" y="34" width="29" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="1YV-By-U0w"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="17"/>
+                                            <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="12"/>
                                             <color key="textColor" red="0.59607843140000005" green="0.59607843140000005" blue="0.59607843140000005" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                             <variation key="widthClass=compact" fixedFrame="YES">
@@ -186,7 +186,7 @@
                                             </variation>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wUz-PL-xLQ" userLabel="watchFreshButton">
-                                            <rect key="frame" x="552" y="20" width="30" height="30"/>
+                                            <rect key="frame" x="552" y="15" width="30" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="30" id="55n-H2-oGQ"/>
                                                 <constraint firstAttribute="height" constant="30" id="McN-o6-GWH"/>
@@ -205,19 +205,18 @@
                                         </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="4tc-RQ-TJe" firstAttribute="leading" secondItem="9IV-PT-20q" secondAttribute="trailing" constant="20" id="2F1-aK-kSj"/>
+                                        <constraint firstItem="4tc-RQ-TJe" firstAttribute="leading" secondItem="9IV-PT-20q" secondAttribute="trailing" constant="14" id="2F1-aK-kSj"/>
                                         <constraint firstItem="5Sh-Ut-YVe" firstAttribute="leading" secondItem="4tc-RQ-TJe" secondAttribute="leading" id="D1t-hi-MgC"/>
                                         <constraint firstAttribute="centerY" secondItem="9IV-PT-20q" secondAttribute="centerY" id="X6u-Ui-Fs5"/>
-                                        <constraint firstItem="9IV-PT-20q" firstAttribute="leading" secondItem="fcr-rY-KEx" secondAttribute="leadingMargin" constant="10" id="bwg-xx-X3y"/>
+                                        <constraint firstItem="9IV-PT-20q" firstAttribute="leading" secondItem="fcr-rY-KEx" secondAttribute="leadingMargin" constant="20" id="bwg-xx-X3y"/>
                                         <constraint firstItem="roc-4G-49i" firstAttribute="leading" secondItem="5Sh-Ut-YVe" secondAttribute="trailing" constant="20" id="hNX-Um-q4O"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="wUz-PL-xLQ" secondAttribute="trailing" constant="10" id="m49-Ux-8Cl"/>
                                         <constraint firstAttribute="centerY" secondItem="wUz-PL-xLQ" secondAttribute="centerY" id="x7B-vG-bS4"/>
                                         <constraint firstItem="5Sh-Ut-YVe" firstAttribute="centerY" secondItem="roc-4G-49i" secondAttribute="centerY" id="xNa-uE-b2a"/>
-                                        <constraint firstItem="4tc-RQ-TJe" firstAttribute="top" secondItem="fcr-rY-KEx" secondAttribute="topMargin" id="zQR-vH-Fel"/>
                                         <constraint firstItem="5Sh-Ut-YVe" firstAttribute="top" secondItem="4tc-RQ-TJe" secondAttribute="bottom" constant="1" id="zgL-QK-e4t"/>
                                     </constraints>
                                 </tableViewCellContentView>
-                                <inset key="separatorInset" minX="80" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <outlet property="cityNameLabel" destination="4tc-RQ-TJe" id="zAj-3P-lhJ"/>
                                     <outlet property="flagImageView" destination="9IV-PT-20q" id="hKh-ws-XWu"/>
