@@ -37,47 +37,47 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jmd-R8-su8" customClass="VYBPlayerView">
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jmd-R8-su8" customClass="VYBPlayerView">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iN0-l3-epB" userLabel="Overlay">
+                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iN0-l3-epB" userLabel="Overlay" customClass="VYBDynamicSizeView">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SmallWhiteSquare" translatesAutoresizingMaskIntoConstraints="NO" id="K3w-xp-c46" userLabel="funnySquareFrame">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="SmallWhiteSquare" translatesAutoresizingMaskIntoConstraints="NO" id="K3w-xp-c46" userLabel="funnySquareFrame">
                             <rect key="frame" x="19" y="547" width="35" height="35"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="35" id="7MQ-dU-wE6"/>
                                 <constraint firstAttribute="width" constant="35" id="k9j-Kt-7go"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gTa-MQ-1EC" userLabel="cityNameLabel">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gTa-MQ-1EC" userLabel="cityNameLabel">
                             <rect key="frame" x="87" y="567" width="36" height="15"/>
                             <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="15"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="20o-9K-qPX" userLabel="usernameLabel">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="20o-9K-qPX" userLabel="usernameLabel">
                             <rect key="frame" x="62" y="547" width="37" height="15"/>
                             <fontDescription key="fontDescription" name="ProximaNovaSoft-Bold" family="Proxima Nova Soft" pointSize="15"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JtK-aD-qb0" userLabel="countryFlag">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JtK-aD-qb0" userLabel="countryFlag">
                             <rect key="frame" x="62" y="570" width="17" height="12"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="12" id="HFB-34-Kk3"/>
                                 <constraint firstAttribute="width" constant="17" id="g5G-Om-UqW"/>
                             </constraints>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5J6-Rc-flp" userLabel="profileImageView" customClass="PFImageView">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5J6-Rc-flp" userLabel="profileImageView" customClass="PFImageView">
                             <rect key="frame" x="20" y="548" width="32" height="32"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="32" id="1Re-sC-OBB"/>
                                 <constraint firstAttribute="height" constant="32" id="ae8-pF-QSU"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QfU-7v-4X4" userLabel="countLabel">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="9" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QfU-7v-4X4" userLabel="countLabel">
                             <rect key="frame" x="540" y="545" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="A9Y-lc-EHy"/>
@@ -87,7 +87,7 @@
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dYM-jr-fXw" userLabel="dismissButton">
+                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dYM-jr-fXw" userLabel="dismissButton">
                             <rect key="frame" x="10" y="10" width="50" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="50" id="Lpp-97-c3U"/>
@@ -100,7 +100,7 @@
                                 <action selector="dismissButtonPressed:" destination="-1" eventType="touchUpInside" id="PXA-lh-Igk"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="prc-HG-beu">
+                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="prc-HG-beu">
                             <rect key="frame" x="280" y="280" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="qw3-0u-w5g"/>
@@ -180,20 +180,16 @@
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="jmd-R8-su8" secondAttribute="trailing" id="4MG-GS-tDB"/>
-                <constraint firstAttribute="bottom" secondItem="jmd-R8-su8" secondAttribute="bottom" id="53m-PV-deN"/>
                 <constraint firstAttribute="bottom" secondItem="rJr-OK-7mc" secondAttribute="bottom" constant="10" id="Be6-NQ-Lu2"/>
-                <constraint firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="FcY-uh-Lyi"/>
+                <constraint firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="E41-qd-mhI"/>
                 <constraint firstAttribute="trailing" secondItem="rJr-OK-7mc" secondAttribute="trailing" constant="10" id="JdK-eT-c2d"/>
-                <constraint firstItem="jmd-R8-su8" firstAttribute="leading" secondItem="apZ-lM-DBO" secondAttribute="leading" id="P83-kE-Lho"/>
                 <constraint firstAttribute="centerX" secondItem="tNm-vH-W0l" secondAttribute="centerX" id="Z4h-Mw-qWF"/>
                 <constraint firstItem="rJr-OK-7mc" firstAttribute="bottom" secondItem="tNm-vH-W0l" secondAttribute="bottom" id="aoc-h0-DM4"/>
                 <constraint firstItem="lza-Ov-mh5" firstAttribute="leading" secondItem="apZ-lM-DBO" secondAttribute="leading" constant="10" id="boY-3t-GWg"/>
-                <constraint firstItem="jmd-R8-su8" firstAttribute="top" secondItem="apZ-lM-DBO" secondAttribute="top" id="fMo-ex-a3u"/>
+                <constraint firstAttribute="centerX" secondItem="jmd-R8-su8" secondAttribute="centerX" id="cNx-hT-DgS"/>
                 <constraint firstAttribute="bottom" secondItem="lza-Ov-mh5" secondAttribute="bottom" constant="10" id="gWy-Db-9Zu"/>
-                <constraint firstItem="iN0-l3-epB" firstAttribute="leading" secondItem="apZ-lM-DBO" secondAttribute="leading" id="lIb-Mg-aP6"/>
-                <constraint firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="oy4-9K-cYI"/>
-                <constraint firstItem="iN0-l3-epB" firstAttribute="top" secondItem="apZ-lM-DBO" secondAttribute="top" id="sK9-gA-7rq"/>
+                <constraint firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="k6U-No-3HY"/>
+                <constraint firstAttribute="centerY" secondItem="jmd-R8-su8" secondAttribute="centerY" id="oPA-mD-Bex"/>
             </constraints>
         </view>
     </objects>

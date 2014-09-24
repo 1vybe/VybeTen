@@ -18,13 +18,14 @@
 #import "VYBLabel.h"
 #import "VYBConstants.h"
 #import "VYBUserStore.h"
+#import "VYBDynamicSizeView.h"
 #import <GAI.h>
 #import <GAITracker.h>
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
 
 @interface VYBPlayerViewController ()
-@property (nonatomic, weak) IBOutlet UIView *overlayView;
+@property (nonatomic, weak) IBOutlet VYBDynamicSizeView *overlayView;
 @property (nonatomic, weak) IBOutlet UIButton *goPreviousButton;
 @property (nonatomic, weak) IBOutlet UIButton *goNextButton;
 @property (nonatomic, weak) IBOutlet UIButton *likeButton;
@@ -328,6 +329,14 @@
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
+- (IBAction)likeButtonPressed:(id)sender {
+    PFObject *aVybe = [self.vybePlaylist objectAtIndex:self.currVybeIndex];
+    [VYBUtility likeVybeInBackground:aVybe block:^(BOOL succeeded, NSError *error) {
+    
+    }];
+}
+
+
 - (IBAction)goNextButtonPressed:(id)sender {
     //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     if (!self.vybePlaylist) {
@@ -441,9 +450,8 @@
             break;
     }
     
+    [overlayView setOrientation:currentOrientation];
     CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
-    overlayView.transform = transform;
-    [overlayView setBounds:bounds];
     
     [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.goNextButton.transform = transform;

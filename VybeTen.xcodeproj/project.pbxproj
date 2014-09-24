@@ -73,6 +73,7 @@
 		02E943B219C916C50057E8EE /* VYBReplayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E943B119C916C50057E8EE /* VYBReplayViewController.xib */; };
 		02F36B2C1986F5A200B7D842 /* VYBUserStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F36B2B1986F5A200B7D842 /* VYBUserStore.m */; };
 		02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F36B2E1986F62800B7D842 /* VYBUser.m */; };
+		02F5B1F119D32594008C42C3 /* VYBDynamicSizeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F5B1F019D32594008C42C3 /* VYBDynamicSizeView.m */; };
 		02F80C46196F600300FB2A48 /* AvenirLTStd-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02F80C45196F600300FB2A48 /* AvenirLTStd-Book.otf */; };
 		6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6035496118C88B11003F5D3E /* VYBPlayerViewController.m */; };
 		604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 604B628518B495BB00D3EF19 /* InfoPlist.strings */; };
@@ -204,6 +205,8 @@
 		02F36B2B1986F5A200B7D842 /* VYBUserStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUserStore.m; sourceTree = "<group>"; };
 		02F36B2D1986F62800B7D842 /* VYBUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUser.h; sourceTree = "<group>"; };
 		02F36B2E1986F62800B7D842 /* VYBUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUser.m; sourceTree = "<group>"; };
+		02F5B1EF19D32594008C42C3 /* VYBDynamicSizeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBDynamicSizeView.h; sourceTree = "<group>"; };
+		02F5B1F019D32594008C42C3 /* VYBDynamicSizeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBDynamicSizeView.m; sourceTree = "<group>"; };
 		02F80C45196F600300FB2A48 /* AvenirLTStd-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AvenirLTStd-Book.otf"; sourceTree = "<group>"; };
 		6035496018C88B11003F5D3E /* VYBPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerViewController.h; sourceTree = "<group>"; };
 		6035496118C88B11003F5D3E /* VYBPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerViewController.m; sourceTree = "<group>"; };
@@ -391,6 +394,8 @@
 				88C7164E19B6AC1500E987C5 /* VYBActivityInfoView.h */,
 				88C7164F19B6AC2800E987C5 /* VYBActivityInfoView.m */,
 				88C7165119B6AC7500E987C5 /* VYBActivityInfoView.xib */,
+				02F5B1EF19D32594008C42C3 /* VYBDynamicSizeView.h */,
+				02F5B1F019D32594008C42C3 /* VYBDynamicSizeView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -773,6 +778,7 @@
 				023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */,
 				025408E119BA0FD7009C7C71 /* NSArray+PFObject.m in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
+				02F5B1F119D32594008C42C3 /* VYBDynamicSizeView.m in Sources */,
 				88C7165019B6AC2800E987C5 /* VYBActivityInfoView.m in Sources */,
 				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,
 				02B6AC2619AF843B00A0C44D /* EmptySegue.m in Sources */,
