@@ -825,14 +825,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 {
     [super didReceiveMemoryWarning];
     NSLog(@"[Capture] Memory Warning");
-    dispatch_async([self sessionQueue], ^{
-		[[self session] stopRunning];
-        
-		[[NSNotificationCenter defaultCenter] removeObserver:[self runtimeErrorHandlingObserver]];
-		
-		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
-	});
-
 }
 
 
