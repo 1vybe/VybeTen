@@ -194,8 +194,13 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             _videoOutput.videoSettings = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey];
             
             AVCaptureConnection *connection = [_videoOutput connectionWithMediaType:AVMediaTypeVideo];
-            if ([connection isVideoStabilizationSupported])
-                [connection setEnablesVideoStabilizationWhenAvailable:YES];
+            if ([connection isVideoStabilizationSupported]) {
+                if ([connection respondsToSelector:@selector(setPreferredVideoStabilizationMode:)]) {
+                    [connection setPreferredVideoStabilizationMode:AVCaptureVideoStabilizationModeAuto];
+                } else {
+                    [connection setEnablesVideoStabilizationWhenAvailable:YES];
+                }
+            }
             
             [connection setVideoOrientation:AVCaptureVideoOrientationPortrait];
 
