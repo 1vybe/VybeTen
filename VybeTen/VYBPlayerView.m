@@ -11,6 +11,7 @@
 @implementation VYBPlayerView {
     AVCaptureVideoOrientation _orientation;
 }
+
 + (Class)layerClass {
     return [AVPlayerLayer class];
 }
@@ -49,7 +50,7 @@
 
 - (void)setOrientation:(AVCaptureVideoOrientation)orientation {
     _orientation = orientation;
-    NSLog(@"orientation set");
+    NSLog(@"orientation set to %ld", _orientation);
 
     self.transform = CGAffineTransformIdentity;
 

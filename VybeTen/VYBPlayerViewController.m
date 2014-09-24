@@ -28,6 +28,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *goPreviousButton;
 @property (nonatomic, weak) IBOutlet UIButton *goNextButton;
 @property (nonatomic, weak) IBOutlet UIButton *likeButton;
+@property (nonatomic, weak) IBOutlet UIButton *pauseButton;
 @property (nonatomic, weak) IBOutlet UILabel *usernameLabel;
 @property (nonatomic, weak) IBOutlet PFImageView *profileImageView;
 @property (nonatomic, weak) IBOutlet UIImageView *funnySquareFrame;
@@ -40,6 +41,7 @@
 - (IBAction)likeButtonPressed:(id)sender;
 - (IBAction)goPreviousButtonPressed:(id)sender;
 - (IBAction)goNextButtonPressed:(id)sender;
+- (IBAction)pauseButtonPressed:(id)sender;
 
 @property (nonatomic, weak) IBOutlet VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayer *currPlayer;
@@ -357,9 +359,18 @@
     [self beginPlayingFrom:currVybeIndex];
 }
 
+- (IBAction)pauseButtonPressed:(id)sender {
+    if (self.currPlayer.rate == 0.0) {
+        [self.currPlayer play];
+    }
+    else {
+        [self.currPlayer pause];
+    }
+}
+
 - (void)tapOnce {
     if (!menuMode) {
-        overlayTimer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(overlayTimerExpired:) userInfo:nil repeats:NO];
+        overlayTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(overlayTimerExpired:) userInfo:nil repeats:NO];
     } else {
         [overlayTimer invalidate];
     }
@@ -381,15 +392,6 @@
     likeButton.hidden = menuMode;
     
     overlayView.hidden = !menuMode;
-}
-
-- (void)pause {
-    if (self.currPlayer.rate == 0.0) {
-        [self.currPlayer play];
-    }
-    else {
-        [self.currPlayer pause];
-    }
 }
 
 - (void)tapTwice {
