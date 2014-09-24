@@ -21,6 +21,15 @@
 
 @implementation VYBActivityTableViewController
 
+@synthesize user = _user;
+
+- (PFObject *)user {
+    if (!_user) {
+        _user = [PFUser currentUser];
+    }
+    return _user;
+}
+
 #pragma mark - Lifecycle
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

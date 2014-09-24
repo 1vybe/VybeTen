@@ -141,11 +141,8 @@
         VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
         [self.captureNavigationVC pushViewController:logInVC animated:NO];
     }
-
-
     
     self.activityVC = [[VYBActivityTableViewController alloc] init];
-    self.activityVC.user = [PFUser currentUser];
     self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.activityVC];
     
     self.viewControllers = [[NSArray alloc] initWithObjects:self.hubNavigationVC, self.captureNavigationVC, self.activityNavigationVC, nil];
