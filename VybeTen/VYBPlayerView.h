@@ -12,5 +12,6 @@
 @interface VYBPlayerView : UIView
 @property (nonatomic) AVPlayer *player;
 - (void)setVideoFillMode;
+- (void)setOrientation:(AVCaptureVideoOrientation)orientation;
 - (void)resetFrame;
 @end

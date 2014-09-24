@@ -24,6 +24,7 @@
 #import <GAIDictionaryBuilder.h>
 
 @interface VYBPlayerViewController ()
+@property (nonatomic, weak) IBOutlet UIView *overlayView;
 @property (nonatomic, weak) IBOutlet UIButton *goPreviousButton;
 @property (nonatomic, weak) IBOutlet UIButton *goNextButton;
 @property (nonatomic, weak) IBOutlet UIButton *likeButton;
@@ -62,7 +63,7 @@
 @synthesize currPlayer = _currPlayer;
 @synthesize currPlayerView = _currPlayerView;
 @synthesize currItem = _currItem;
-@synthesize usernameLabel, profileImageView, funnySquareFrame, countryFlagImageView, cityNameLabel, countLabel, dismissButton, goNextButton, goPreviousButton, likeButton;
+@synthesize usernameLabel, profileImageView, funnySquareFrame, countryFlagImageView, cityNameLabel, countLabel, dismissButton, goNextButton, goPreviousButton, likeButton, overlayView;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
@@ -379,13 +380,7 @@
     goNextButton.hidden = menuMode;
     likeButton.hidden = menuMode;
     
-    usernameLabel.hidden = !menuMode;
-    profileImageView.hidden = !menuMode;
-    funnySquareFrame.hidden = !menuMode;
-    countryFlagImageView.hidden = !menuMode;
-    cityNameLabel.hidden = !menuMode;
-    countLabel.hidden = !menuMode;;
-    dismissButton.hidden = !menuMode;
+    overlayView.hidden = !menuMode;
 }
 
 - (void)pause {
@@ -405,9 +400,58 @@
     [deleteAlert show];
 }
 
-- (void)tapThree {
-    UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:nil message:@"You are logging out" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-    [logOutAlert show];
+
+#pragma mark - DeviceOrientation
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+
+- (void)deviceRotated:(NSNotification *)notification {
+    UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
+    double rotation = 0;
+    CGRect bounds;
+    switch (currentOrientation) {
+        case UIDeviceOrientationFaceDown:
+        case UIDeviceOrientationFaceUp:
+        case UIDeviceOrientationUnknown:
+            return;
+        case UIDeviceOrientationPortrait:
+            rotation = 0;
+            bounds = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            rotation = M_PI;
+            bounds = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            rotation = M_PI_2;
+            bounds = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            rotation = -M_PI_2;
+            bounds = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+            break;
+    }
+    
+    CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
+    overlayView.transform = transform;
+    [overlayView setBounds:bounds];
+    
+    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.goNextButton.transform = transform;
+        self.goPreviousButton.transform = transform;
+        self.likeButton.transform = transform;
+    } completion:nil];
+}
+
+- (void)syncUIElementsForOrientation:(NSInteger)orientation {
+    [self.currPlayerView setOrientation:orientation];
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -437,7 +481,7 @@
             
             // Clear all caches
             [PFQuery clearAllCachedResults];
-
+            
             [PFUser logOut];
             VYBLogInViewController *loginVC = [[VYBLogInViewController alloc] init];
             [self presentViewController:loginVC animated:NO completion:nil];
@@ -479,57 +523,6 @@
 }
 
 
-#pragma mark - DeviceOrientation
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-
-- (void)deviceRotated:(NSNotification *)notification {
-    /*
-    UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
-    double rotation = 0;
-    switch (currentOrientation) {
-        case UIDeviceOrientationFaceDown:
-        case UIDeviceOrientationFaceUp:
-        case UIDeviceOrientationUnknown:
-            return;
-        case UIDeviceOrientationPortrait:
-        case UIDeviceOrientationPortraitUpsideDown:
-            rotation = M_PI_2;
-            break;
-        case UIDeviceOrientationLandscapeLeft:
-        case UIDeviceOrientationLandscapeRight:
-            rotation = -M_PI_2;
-            break;
-    }
-    
-    CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
-    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        self.goNextButton.transform = transform;
-        self.goPreviousButton.transform = transform;
-        self.likeButton.transform = transform;
-    } completion:nil];
-    */
-}
-
-- (void)syncUIElementsForOrientation:(NSInteger)orientation {
-    self.view.transform = CGAffineTransformIdentity;
-    [self.view setBounds:[[UIScreen mainScreen] bounds]];
-
-    if (orientation == AVCaptureVideoOrientationLandscapeLeft || orientation == AVCaptureVideoOrientationLandscapeRight) {
-        CGAffineTransform rotation = CGAffineTransformMakeRotation(M_PI_2);
-        CGRect newBounds = CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width);
-
-        self.view.transform = rotation;
-        [self.view setBounds:newBounds];        
-    }
-}
 
 #pragma mark - ()
 
