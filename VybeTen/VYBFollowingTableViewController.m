@@ -12,6 +12,7 @@
 #import "VYBPlayerViewController.h"
 #import "VYBHubViewController.h"
 #import "VYBCache.h"
+#import "VYBUtility.h"
 
 @interface VYBFollowingTableViewController ()
 @property (nonatomic, copy) NSDictionary *vybesByUser;
@@ -42,7 +43,7 @@
 #pragma mark - UITableViewController
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60.0;
+    return 62.0f;
 }
 
 
@@ -67,8 +68,7 @@
     PFFile *profile = aUser[kVYBUserProfilePicMediumKey];
     [profile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         if (!error) {
-            UIImage *profileImg = [UIImage imageWithData:data];
-            cell.profileImageView.image = profileImg;
+            cell.profileImageView.image = [VYBUtility maskImage:[UIImage imageWithData:data] withMask:[UIImage imageNamed:@"thumbnail_mask"]];
         }
     }];
     

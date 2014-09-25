@@ -26,8 +26,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self setNeedsStatusBarAppearanceUpdate];
-    // Do any additional setup after loading the view.
+    //[self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)didReceiveMemoryWarning
@@ -48,8 +47,5 @@
     return [self.viewControllers.firstObject preferredInterfaceOrientationForPresentation];
 }
 
-- (BOOL)prefersStatusBarHidden {
-    return YES;
-}
 
 @end

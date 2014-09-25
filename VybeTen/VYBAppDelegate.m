@@ -120,8 +120,6 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    //UIStoryboard *hubStory = [UIStoryboard storyboardWithName:@"HubStoryboard" bundle:nil];
-    //self.hub = [hubStory instantiateInitialViewController];
     self.hubNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBHubPageIndex];
     
     self.captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
@@ -156,7 +154,7 @@
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [application setStatusBarHidden:NO];
     
     // Handle push if the app is launched from notification
     [self handlePush:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];

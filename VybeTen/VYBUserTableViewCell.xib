@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="14A361p" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6246" systemVersion="14A361p" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6239"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="ProximaNovaSoft-Regular.otf">
@@ -49,10 +49,10 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BgW-IN-zEd" userLabel="watchNewButton">
-                        <rect key="frame" x="277" y="17" width="25" height="25"/>
+                        <rect key="frame" x="272" y="15" width="30" height="30"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="25" id="WZo-JL-Cei"/>
-                            <constraint firstAttribute="width" constant="25" id="bSO-1C-Ci6"/>
+                            <constraint firstAttribute="height" constant="30" id="WZo-JL-Cei"/>
+                            <constraint firstAttribute="width" constant="30" id="bSO-1C-Ci6"/>
                         </constraints>
                         <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="11"/>
                         <state key="normal" backgroundImage="button_circle_lightblue">

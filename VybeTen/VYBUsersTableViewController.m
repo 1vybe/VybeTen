@@ -11,6 +11,7 @@
 #import "VYBProfileViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBCache.h"
+#import "VYBUtility.h"
 
 @interface VYBUsersTableViewController ()
 @property (nonatomic, copy) NSArray *users;
@@ -47,7 +48,7 @@
 #pragma mark - Table view data source
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60.0;
+    return 62.0f;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -84,8 +85,8 @@
     PFFile *profile = aUser[kVYBUserProfilePicMediumKey];
     [profile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         if (!error) {
-            UIImage *profileImg = [UIImage imageWithData:data];
-            cell.profileImageView.image = profileImg;
+            cell.profileImageView.image = [VYBUtility maskImage:[UIImage imageWithData:data] withMask:[UIImage imageNamed:@"thumbnail_mask"]];
+            
         }
     }];
     

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A361p" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vRS-GY-MWN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6246" systemVersion="14A361p" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vRS-GY-MWN">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6239"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="ProximaNovaSoft-Regular.otf">
@@ -63,7 +63,7 @@
                                 </connections>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aLu-CG-CR3" customClass="VYBWatchAllButton">
-                                <rect key="frame" x="400" y="533" width="169" height="47"/>
+                                <rect key="frame" x="416" y="533" width="169" height="47"/>
                                 <color key="backgroundColor" red="0.82019680279999996" green="0.92266049589999999" blue="0.4845138926" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="169" id="5G8-j9-spN"/>
@@ -84,7 +84,7 @@
                             <constraint firstItem="Dyz-dk-YQ8" firstAttribute="top" secondItem="aLu-CG-CR3" secondAttribute="bottom" constant="20" id="idi-Wk-8eC"/>
                             <constraint firstAttribute="width" secondItem="5tC-aS-WZ0" secondAttribute="width" id="mLv-8Q-XWj"/>
                             <constraint firstAttribute="centerX" secondItem="KZX-rZ-Gc1" secondAttribute="centerX" id="pv6-io-EA8"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="aLu-CG-CR3" secondAttribute="trailing" constant="15" id="zMq-hc-sTc"/>
+                            <constraint firstAttribute="trailing" secondItem="aLu-CG-CR3" secondAttribute="trailing" constant="15" id="zMq-hc-sTc"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="NYS-IM-DVc"/>
@@ -134,25 +134,25 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LocationTableCellIdentifier" rowHeight="60" id="eAk-Yj-OBR" customClass="VYBLocationTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationWidth="10" reuseIdentifier="LocationTableCellIdentifier" rowHeight="60" id="eAk-Yj-OBR" customClass="VYBLocationTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eAk-Yj-OBR" id="fcr-rY-KEx">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9IV-PT-20q" userLabel="flagImage">
-                                            <rect key="frame" x="28" y="18" width="36" height="24"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9IV-PT-20q" userLabel="flagImage">
+                                            <rect key="frame" x="20" y="18" width="35" height="24"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="24" id="KLC-os-Ghy"/>
-                                                <constraint firstAttribute="width" constant="36" id="Oc6-xj-EZd"/>
+                                                <constraint firstAttribute="width" constant="35" id="Oc6-xj-EZd"/>
                                             </constraints>
                                             <variation key="widthClass=compact" fixedFrame="YES">
                                                 <rect key="frame" x="18" y="5" width="50" height="50"/>
                                             </variation>
                                         </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Sh-Ut-YVe" userLabel="followingCountLabel">
-                                            <rect key="frame" x="78" y="34" width="29" height="21"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Sh-Ut-YVe" userLabel="followingCountLabel">
+                                            <rect key="frame" x="70" y="33" width="29" height="12"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="21" id="C6D-CM-Mw6"/>
+                                                <constraint firstAttribute="height" constant="12" id="C6D-CM-Mw6"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="12"/>
                                             <color key="textColor" red="0.59607843137254901" green="0.59607843137254901" blue="0.59607843137254901" alpha="1" colorSpace="calibratedRGB"/>
@@ -161,10 +161,10 @@
                                                 <rect key="frame" x="73" y="35" width="42" height="20"/>
                                             </variation>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Montreal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4tc-RQ-TJe" userLabel="cityNameLabel">
-                                            <rect key="frame" x="78" y="8" width="80" height="25"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Montreal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4tc-RQ-TJe" userLabel="cityNameLabel">
+                                            <rect key="frame" x="70" y="12" width="80" height="18"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="15" id="Kke-91-SAU"/>
+                                                <constraint firstAttribute="height" constant="18" id="Kke-91-SAU"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="ProximaNovaSoft-Semibold" family="Proxima Nova Soft" pointSize="20"/>
                                             <color key="textColor" red="0.29803921568627451" green="0.29803921568627451" blue="0.29803921568627451" alpha="1" colorSpace="calibratedRGB"/>
@@ -173,10 +173,10 @@
                                                 <rect key="frame" x="73" y="5" width="42" height="21"/>
                                             </variation>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="roc-4G-49i" userLabel="vybeCountLabel">
-                                            <rect key="frame" x="127" y="34" width="29" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="roc-4G-49i" userLabel="vybeCountLabel">
+                                            <rect key="frame" x="119" y="33" width="29" height="12"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="21" id="1YV-By-U0w"/>
+                                                <constraint firstAttribute="height" constant="12" id="1YV-By-U0w"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="12"/>
                                             <color key="textColor" red="0.59607843140000005" green="0.59607843140000005" blue="0.59607843140000005" alpha="1" colorSpace="calibratedRGB"/>
@@ -205,15 +205,16 @@
                                         </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="4tc-RQ-TJe" firstAttribute="leading" secondItem="9IV-PT-20q" secondAttribute="trailing" constant="14" id="2F1-aK-kSj"/>
+                                        <constraint firstItem="4tc-RQ-TJe" firstAttribute="leading" secondItem="9IV-PT-20q" secondAttribute="trailing" constant="15" id="2F1-aK-kSj"/>
+                                        <constraint firstItem="9IV-PT-20q" firstAttribute="top" secondItem="4tc-RQ-TJe" secondAttribute="top" constant="6" id="7sL-gX-Hsx"/>
                                         <constraint firstItem="5Sh-Ut-YVe" firstAttribute="leading" secondItem="4tc-RQ-TJe" secondAttribute="leading" id="D1t-hi-MgC"/>
+                                        <constraint firstItem="5Sh-Ut-YVe" firstAttribute="bottom" secondItem="9IV-PT-20q" secondAttribute="bottom" constant="3" id="VIu-kA-31d"/>
                                         <constraint firstAttribute="centerY" secondItem="9IV-PT-20q" secondAttribute="centerY" id="X6u-Ui-Fs5"/>
-                                        <constraint firstItem="9IV-PT-20q" firstAttribute="leading" secondItem="fcr-rY-KEx" secondAttribute="leadingMargin" constant="20" id="bwg-xx-X3y"/>
+                                        <constraint firstItem="9IV-PT-20q" firstAttribute="leading" secondItem="fcr-rY-KEx" secondAttribute="leading" constant="20" id="bwg-xx-X3y"/>
                                         <constraint firstItem="roc-4G-49i" firstAttribute="leading" secondItem="5Sh-Ut-YVe" secondAttribute="trailing" constant="20" id="hNX-Um-q4O"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="wUz-PL-xLQ" secondAttribute="trailing" constant="10" id="m49-Ux-8Cl"/>
+                                        <constraint firstAttribute="trailing" secondItem="wUz-PL-xLQ" secondAttribute="trailing" constant="18" id="m49-Ux-8Cl"/>
                                         <constraint firstAttribute="centerY" secondItem="wUz-PL-xLQ" secondAttribute="centerY" id="x7B-vG-bS4"/>
                                         <constraint firstItem="5Sh-Ut-YVe" firstAttribute="centerY" secondItem="roc-4G-49i" secondAttribute="centerY" id="xNa-uE-b2a"/>
-                                        <constraint firstItem="5Sh-Ut-YVe" firstAttribute="top" secondItem="4tc-RQ-TJe" secondAttribute="bottom" constant="1" id="zgL-QK-e4t"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -268,7 +269,7 @@
                                 </connections>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Ws-19-IoP" customClass="VYBWatchAllButton">
-                                <rect key="frame" x="400" y="538" width="169" height="47"/>
+                                <rect key="frame" x="416" y="538" width="169" height="47"/>
                                 <color key="backgroundColor" red="0.82019680279999996" green="0.92266049589999999" blue="0.4845138926" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="47" id="qsp-8F-Z23"/>
@@ -284,7 +285,7 @@
                             <constraint firstAttribute="centerY" secondItem="GzW-2Y-rPb" secondAttribute="centerY" id="AO6-ae-wEz"/>
                             <constraint firstAttribute="centerX" secondItem="GzW-2Y-rPb" secondAttribute="centerX" id="B6H-18-SpM"/>
                             <constraint firstItem="dTI-wO-sOZ" firstAttribute="top" secondItem="4Ws-19-IoP" secondAttribute="bottom" constant="15" id="CpA-MP-HsQ"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="4Ws-19-IoP" secondAttribute="trailing" constant="15" id="F95-6T-ALq"/>
+                            <constraint firstAttribute="trailing" secondItem="4Ws-19-IoP" secondAttribute="trailing" constant="15" id="F95-6T-ALq"/>
                             <constraint firstAttribute="width" secondItem="GzW-2Y-rPb" secondAttribute="width" id="sCX-H9-XzM"/>
                             <constraint firstAttribute="height" secondItem="GzW-2Y-rPb" secondAttribute="height" id="xpr-B7-Qkn"/>
                         </constraints>

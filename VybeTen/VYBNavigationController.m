@@ -49,10 +49,10 @@
         _pageIndex = pageIndex;
         
         // navigation bar color
-        [self.navigationBar setBarTintColor:COLOR_MAIN];
+        [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"whiteTopBar.png"] forBarMetrics:UIBarMetricsDefault];
         self.navigationBar.translucent = NO;
         
-        [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+        [[UINavigationBar appearance] setTintColor:COLOR_MAIN];
         
         // title font
         NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
