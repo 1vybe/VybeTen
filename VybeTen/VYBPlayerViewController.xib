@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6239"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="ProximaNovaSoft-Bold.otf">
@@ -87,19 +88,6 @@
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dYM-jr-fXw" userLabel="dismissButton">
-                            <rect key="frame" x="10" y="10" width="50" height="50"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="50" id="Lpp-97-c3U"/>
-                                <constraint firstAttribute="height" constant="50" id="wtT-CL-ELZ"/>
-                            </constraints>
-                            <state key="normal" image="button_dismiss">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="dismissButtonPressed:" destination="-1" eventType="touchUpInside" id="PXA-lh-Igk"/>
-                            </connections>
-                        </button>
                         <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="prc-HG-beu">
                             <rect key="frame" x="280" y="280" width="40" height="40"/>
                             <constraints>
@@ -119,17 +107,15 @@
                         <constraint firstAttribute="centerX" secondItem="prc-HG-beu" secondAttribute="centerX" id="Bwy-i6-wOr"/>
                         <constraint firstAttribute="centerY" secondItem="prc-HG-beu" secondAttribute="centerY" id="Ggi-vI-Cfd"/>
                         <constraint firstItem="K3w-xp-c46" firstAttribute="bottom" secondItem="JtK-aD-qb0" secondAttribute="bottom" id="Hca-Y5-OuJ"/>
-                        <constraint firstItem="dYM-jr-fXw" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="Jha-r6-V3a"/>
                         <constraint firstItem="K3w-xp-c46" firstAttribute="top" secondItem="20o-9K-qPX" secondAttribute="top" id="Mdj-U3-qQ9"/>
                         <constraint firstItem="JtK-aD-qb0" firstAttribute="leading" secondItem="20o-9K-qPX" secondAttribute="leading" id="S4r-UT-Y43"/>
                         <constraint firstItem="5J6-Rc-flp" firstAttribute="centerY" secondItem="K3w-xp-c46" secondAttribute="centerY" id="YMV-Qb-0w9"/>
-                        <constraint firstItem="5J6-Rc-flp" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="bap-2w-QmZ"/>
+                        <constraint firstItem="5J6-Rc-flp" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leadingMargin" constant="20" id="bap-2w-QmZ"/>
                         <constraint firstItem="JtK-aD-qb0" firstAttribute="leading" secondItem="K3w-xp-c46" secondAttribute="trailing" constant="8" id="cAW-c3-Rxl"/>
-                        <constraint firstItem="dYM-jr-fXw" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="dRt-jm-CUJ"/>
                         <constraint firstItem="K3w-xp-c46" firstAttribute="bottom" secondItem="gTa-MQ-1EC" secondAttribute="bottom" id="hSi-rG-JOS"/>
                         <constraint firstItem="gTa-MQ-1EC" firstAttribute="leading" secondItem="JtK-aD-qb0" secondAttribute="trailing" constant="8" id="lPE-PF-wzh"/>
                         <constraint firstItem="5J6-Rc-flp" firstAttribute="centerX" secondItem="K3w-xp-c46" secondAttribute="centerX" id="mhv-Zu-pNB"/>
-                        <constraint firstAttribute="bottom" secondItem="5J6-Rc-flp" secondAttribute="bottom" constant="20" id="pPy-ql-cGz"/>
+                        <constraint firstAttribute="bottomMargin" secondItem="5J6-Rc-flp" secondAttribute="bottom" constant="20" id="pPy-ql-cGz"/>
                         <constraint firstAttribute="trailing" secondItem="QfU-7v-4X4" secondAttribute="trailing" constant="20" id="rr7-aM-cBh"/>
                     </constraints>
                 </view>
@@ -148,28 +134,41 @@
                         <action selector="likeButtonPressed:" destination="-1" eventType="touchUpInside" id="hvl-OG-rKn"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lza-Ov-mh5">
-                    <rect key="frame" x="10" y="540" width="50" height="50"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dYM-jr-fXw" userLabel="dismissButton">
+                    <rect key="frame" x="10" y="10" width="50" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="50" id="Lpp-97-c3U"/>
+                        <constraint firstAttribute="height" constant="50" id="wtT-CL-ELZ"/>
+                    </constraints>
+                    <state key="normal" image="button_dismiss">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="dismissButtonPressed:" destination="-1" eventType="touchUpInside" id="PXA-lh-Igk"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lza-Ov-mh5" userLabel="goPrevButton">
+                    <rect key="frame" x="10" y="536" width="64" height="54"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="50" id="f5S-DK-qYE"/>
                         <constraint firstAttribute="height" constant="50" id="u84-A9-bBr"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="boldSystem" pointSize="38"/>
-                    <state key="normal" title="&lt;">
+                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <state key="normal">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
                         <action selector="goPreviousButtonPressed:" destination="-1" eventType="touchUpInside" id="9qi-wc-MLf"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rJr-OK-7mc">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rJr-OK-7mc" userLabel="goNextButton">
                     <rect key="frame" x="540" y="540" width="50" height="50"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="50" id="VG9-QF-CYT"/>
                         <constraint firstAttribute="width" constant="50" id="jwG-zz-gJ1"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="38"/>
-                    <state key="normal" title="&gt;">
+                    <state key="normal">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -183,10 +182,12 @@
                 <constraint firstAttribute="bottom" secondItem="rJr-OK-7mc" secondAttribute="bottom" constant="10" id="Be6-NQ-Lu2"/>
                 <constraint firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="E41-qd-mhI"/>
                 <constraint firstAttribute="trailing" secondItem="rJr-OK-7mc" secondAttribute="trailing" constant="10" id="JdK-eT-c2d"/>
+                <constraint firstItem="dYM-jr-fXw" firstAttribute="leading" secondItem="apZ-lM-DBO" secondAttribute="leading" constant="10" id="LUw-tz-rN6"/>
                 <constraint firstAttribute="centerX" secondItem="tNm-vH-W0l" secondAttribute="centerX" id="Z4h-Mw-qWF"/>
                 <constraint firstItem="rJr-OK-7mc" firstAttribute="bottom" secondItem="tNm-vH-W0l" secondAttribute="bottom" id="aoc-h0-DM4"/>
                 <constraint firstItem="lza-Ov-mh5" firstAttribute="leading" secondItem="apZ-lM-DBO" secondAttribute="leading" constant="10" id="boY-3t-GWg"/>
                 <constraint firstAttribute="centerX" secondItem="jmd-R8-su8" secondAttribute="centerX" id="cNx-hT-DgS"/>
+                <constraint firstItem="dYM-jr-fXw" firstAttribute="top" secondItem="apZ-lM-DBO" secondAttribute="top" constant="10" id="d9i-Te-lfX"/>
                 <constraint firstAttribute="bottom" secondItem="lza-Ov-mh5" secondAttribute="bottom" constant="10" id="gWy-Db-9Zu"/>
                 <constraint firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="k6U-No-3HY"/>
                 <constraint firstAttribute="centerY" secondItem="jmd-R8-su8" secondAttribute="centerY" id="oPA-mD-Bex"/>

@@ -120,6 +120,24 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
+    // status bar
+    
+    // navigation bar settings
+    [[UINavigationBar appearance] setTranslucent:NO];
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"whiteTopBar.png"] forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setTintColor:COLOR_MAIN];
+    
+    // title font
+    NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
+    [titleBarAttributes setValue:[UIFont fontWithName:@"ProximaNovaSoft-Regular" size:20.0] forKey:NSFontAttributeName];
+    [titleBarAttributes setValue:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
+    [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
+    
+    // back button image
+    [[UINavigationBar appearance] setBackIndicatorImage:[UIImage imageNamed:@"button_navi_back.png"]];
+    [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
+
+    
     self.hubNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBHubPageIndex];
     
     self.captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
@@ -154,8 +172,8 @@
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     
-    [application setStatusBarHidden:NO];
     
+
     // Handle push if the app is launched from notification
     [self handlePush:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
     

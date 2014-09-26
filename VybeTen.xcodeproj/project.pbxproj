@@ -28,6 +28,8 @@
 		025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 025169AC18FAF955007F34B0 /* VYBLabel.m */; };
 		025408E119BA0FD7009C7C71 /* NSArray+PFObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 025408E019BA0FD7009C7C71 /* NSArray+PFObject.m */; };
 		025408E419BA10E5009C7C71 /* NSMutableArray+PFObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 025408E319BA10E5009C7C71 /* NSMutableArray+PFObject.m */; };
+		025CC90C19D51AF400A1208C /* UINavigationBar+fixedSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 025CC90B19D51AF400A1208C /* UINavigationBar+fixedSize.m */; };
+		025CC90F19D5229200A1208C /* UIImage+maskImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 025CC90E19D5229200A1208C /* UIImage+maskImage.m */; };
 		025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 025DE65A18CB16E30054F739 /* VYBConstants.m */; };
 		025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 025EDB2418F65E45008B0CB2 /* VYBAnimator.m */; };
 		0262054419A67B3600E994F9 /* UINavigationController+Autorotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0262054319A67B3600E994F9 /* UINavigationController+Autorotate.m */; };
@@ -139,6 +141,10 @@
 		025408E019BA0FD7009C7C71 /* NSArray+PFObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+PFObject.m"; sourceTree = "<group>"; };
 		025408E219BA10E5009C7C71 /* NSMutableArray+PFObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+PFObject.h"; sourceTree = "<group>"; };
 		025408E319BA10E5009C7C71 /* NSMutableArray+PFObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+PFObject.m"; sourceTree = "<group>"; };
+		025CC90A19D51AF400A1208C /* UINavigationBar+fixedSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationBar+fixedSize.h"; sourceTree = "<group>"; };
+		025CC90B19D51AF400A1208C /* UINavigationBar+fixedSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+fixedSize.m"; sourceTree = "<group>"; };
+		025CC90D19D5229200A1208C /* UIImage+maskImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+maskImage.h"; sourceTree = "<group>"; };
+		025CC90E19D5229200A1208C /* UIImage+maskImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+maskImage.m"; sourceTree = "<group>"; };
 		025DE65918CB16E30054F739 /* VYBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBConstants.h; sourceTree = "<group>"; };
 		025DE65A18CB16E30054F739 /* VYBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBConstants.m; sourceTree = "<group>"; };
 		025EDB2318F65E45008B0CB2 /* VYBAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBAnimator.h; sourceTree = "<group>"; };
@@ -284,6 +290,10 @@
 				025408E019BA0FD7009C7C71 /* NSArray+PFObject.m */,
 				025408E219BA10E5009C7C71 /* NSMutableArray+PFObject.h */,
 				025408E319BA10E5009C7C71 /* NSMutableArray+PFObject.m */,
+				025CC90A19D51AF400A1208C /* UINavigationBar+fixedSize.h */,
+				025CC90B19D51AF400A1208C /* UINavigationBar+fixedSize.m */,
+				025CC90D19D5229200A1208C /* UIImage+maskImage.h */,
+				025CC90E19D5229200A1208C /* UIImage+maskImage.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -748,6 +758,7 @@
 				021B5B6E19A7D0E300B906F3 /* VYBVybeTableViewCell.m in Sources */,
 				0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */,
 				02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */,
+				025CC90F19D5229200A1208C /* UIImage+maskImage.m in Sources */,
 				02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */,
 				0299EC84199A9254004E97CF /* VYBHubViewController.m in Sources */,
 				8867F96519C27A06005E33FE /* VYBStripeView.m in Sources */,
@@ -785,6 +796,7 @@
 				0262054419A67B3600E994F9 /* UINavigationController+Autorotate.m in Sources */,
 				020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
+				025CC90C19D51AF400A1208C /* UINavigationBar+fixedSize.m in Sources */,
 				0276D13C19590CDF007292B0 /* VYBPageViewController.m in Sources */,
 				0262054819A69DEE00E994F9 /* VYBUserTableViewCell.m in Sources */,
 			);

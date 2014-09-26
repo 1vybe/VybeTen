@@ -18,7 +18,6 @@
 
 @interface VYBHubViewController ()
 @property (nonatomic, strong) UISearchBar *searchBar;
-@property (nonatomic, strong) UISearchDisplayController *searchDisplay;
 @property (nonatomic, weak) IBOutlet VYBHubControlView *controlView;
 @property (nonatomic, weak) IBOutlet VYBWatchAllButton *watchAllButton;
 @property (nonatomic, weak) IBOutlet UIView *containerView;
@@ -43,35 +42,103 @@
     controlView.delegate = self;
     
     self.titleView = [[[NSBundle mainBundle] loadNibNamed:@"VYBHubTitleView" owner:nil options:nil] firstObject];
-    [self.navigationItem.titleView setFrame:CGRectMake(0, 0, 92, 44)];
-
-    [self.navigationController.navigationBar addSubview:self.titleView];
+    [self.navigationItem setTitleView:self.titleView];
+    if ([UIApplication sharedApplication].statusBarHidden) {
+        [self.navigationItem.titleView setFrame:CGRectMake(0, 20, self.titleView.bounds.size.width, self.titleView.bounds.size.height)];
+    }
     
     // Navigation bar settings
     UIBarButtonItem *captureButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_capture.png"] style:UIBarButtonItemStylePlain target:self action:@selector(captureButtonPressed:)];
     self.navigationItem.rightBarButtonItem = captureButton;
 
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
     
-    /*
-    self.navigationItem.hidesBackButton = YES;
-    
+}
 
-    UIBarButtonItem *playAllButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:self action:@selector(allButtonItemPressed:)];
-    UIBarButtonItem *searchButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchButtonPressed:)];
-    self.navigationItem.rightBarButtonItems = @[captureButton, playAllButton];
+/*
+- (void)getFreshVybes {
+    [[VYBCache sharedCache] clearFreshVybes];
     
-    self.searchBar = [[UISearchBar alloc] init];
-    [self.searchBar sizeToFit];
-    [self.view addSubview:self.searchBar];
-    self.searchBar.hidden = YES;
-    //self.tableView.tableHeaderView = self.searchBar;
+    NSString *functionName = @"get_fresh_vybes";
+    [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *aVybe in objects) {
+                if ([aVybe isKindOfClass:[NSNull class]])
+                    continue;
+                [[VYBCache sharedCache] addFreshVybe:aVybe];
+            }
+            [self getUsersByLocation];
+        }
+        else {
+            [self.refreshControl endRefreshing];
+        }
+    }];
+}
+
+- (void)getUsersByLocation {
+    [[VYBCache sharedCache] clearUsersByLocation];
     
-    self.searchDisplay = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
-    */
+    PFQuery *query = [PFUser query];
+    // 24 TTL checking
+    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
+    [query whereKey:kVYBUserLastVybedTimeKey greaterThanOrEqualTo:someTimeAgo];
+    [query whereKey:kVYBUserUsernameKey notEqualTo:[PFUser currentUser][kVYBUserUsernameKey]];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *aUser in objects) {
+                NSArray *token = [aUser[kVYBUserLastVybedLocationKey] componentsSeparatedByString:@","];
+                if (token.count != 3)
+                    continue;
+                
+                //NOTE: we discard the first location field (neighborhood)
+                NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
+                [[VYBCache sharedCache] addUser:aUser forLocation:keyString];
+            }
+            [self getVybesByLocationAndByUser];
+        } else {
+            [self.refreshControl endRefreshing];
+        }
+    }];
+}
+
+
+- (void)getVybesByLocationAndByUser {
+    [[VYBCache sharedCache] clearVybesByLocation];
+    [[VYBCache sharedCache] clearVybesByUser];
+    
+    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+    // 24 TTL checking
+    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
+    [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
+    // Don't include urself
+    [query whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
+    [query whereKeyExists:kVYBVybeLocationStringKey];
+    [query whereKey:kVYBVybeLocationStringKey notEqualTo:@""];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *obj in objects) {
+                NSString *locString = obj[kVYBVybeLocationStringKey];
+                NSArray *token = [locString componentsSeparatedByString:@","];
+                if (token.count != 3)
+                    continue;
+                
+                //NOTE: we discard the first location field (neighborhood)
+                NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
+                [[VYBCache sharedCache] addVybe:obj forLocation:keyString];
+                [[VYBCache sharedCache] addVybe:obj forUser:obj[kVYBVybeUserKey]];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:VYBCacheFreshVybeCountChangedNotification object:nil];
+            });
+            
+        }
+        [self.refreshControl endRefreshing];
+    }];
     
 }
+*/
 
 
 - (void)viewWillAppear:(BOOL)animated {

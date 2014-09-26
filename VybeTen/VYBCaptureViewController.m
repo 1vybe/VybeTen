@@ -143,7 +143,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [self setSession:session];
     
-    [(AVCaptureVideoPreviewLayer *)[cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspect];
+    [(AVCaptureVideoPreviewLayer *)[cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [cameraView setSession:session];
     
     [self checkDeviceAuthorizationStatus];

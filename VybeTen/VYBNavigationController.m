@@ -47,22 +47,6 @@
     
     if (self) {
         _pageIndex = pageIndex;
-        
-        // navigation bar color
-        [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"whiteTopBar.png"] forBarMetrics:UIBarMetricsDefault];
-        self.navigationBar.translucent = NO;
-        
-        [[UINavigationBar appearance] setTintColor:COLOR_MAIN];
-        
-        // title font
-        NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
-        [titleBarAttributes setValue:[UIFont fontWithName:@"ProximaNovaSoft-Regular" size:20.0] forKey:NSFontAttributeName];
-        [titleBarAttributes setValue:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
-        [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
-        
-        // back button image
-        [[UINavigationBar appearance] setBackIndicatorImage:[UIImage imageNamed:@"button_navi_back.png"]];
-        [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
     }
     return self;
 }
@@ -75,6 +59,10 @@
 
 - (NSInteger)pageIndex {
     return _pageIndex;
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return [self.topViewController prefersStatusBarHidden];
 }
 
 - (BOOL)shouldAutorotate {

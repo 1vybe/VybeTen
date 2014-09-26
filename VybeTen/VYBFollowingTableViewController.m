@@ -111,6 +111,16 @@
     [self freshVybeCountChanged];
 }
 
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    VYBHubViewController *hubVC = (VYBHubViewController *)self.parentViewController.parentViewController;
+    if (!hubVC)
+        return;
+    
+    [hubVC scrollViewBeganDragging:scrollView];
+}
+
 #pragma amrk - ()
 
 - (void)freshVybeCountChanged {

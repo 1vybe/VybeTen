@@ -170,14 +170,13 @@
     return UIInterfaceOrientationPortrait;
 }
 
-/*
-#pragma mark - Navigation
+#pragma mark - UIScrollViewDelegate
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scrollViewBeganDragging:)]) {
+        [self.delegate performSelector:@selector(scrollViewBeganDragging:) withObject:scrollView];
+    }
 }
-*/
+
 
 @end

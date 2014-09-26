@@ -64,6 +64,22 @@
     [self.watchAllButton setCounterText:[NSString stringWithFormat:@"%ld", (long)self.embeddedController.freshVybes.count]];
 }
 
+#pragma mark - Child View Controllers delegate
+
+- (void)scrollViewBeganDragging:(UIScrollView *)scrollView {
+    CGPoint translation = [scrollView.panGestureRecognizer translationInView:scrollView.superview];
+    
+    if(translation.y > 0)
+    {
+        // react to dragging down (scroll up), shrink WATCH button
+        [self.watchAllButton expand];
+    } else
+    {
+        // react to dragging up (scroll down)
+        [self.watchAllButton shrink];
+    }
+}
+
 #pragma mark - Orientation
 
 - (BOOL)shouldAutorotate {

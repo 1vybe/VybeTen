@@ -114,7 +114,13 @@
     tapTwice.numberOfTapsRequired = 2;
     [self.view addGestureRecognizer:tapTwice];
  
-
+    UIImage *image = [[UIImage imageNamed:@"arrow1"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [goPreviousButton setImage:image forState:UIControlStateNormal];
+    goPreviousButton.tintColor = [UIColor whiteColor];
+    
+    UIImage *image2 = [[UIImage imageNamed:@"arrow2"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [goNextButton setImage:image2 forState:UIControlStateNormal];
+    goNextButton.tintColor = [UIColor whiteColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

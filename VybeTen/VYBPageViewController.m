@@ -35,6 +35,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return [self.viewControllers.firstObject prefersStatusBarHidden];
+}
+
 - (NSUInteger)supportedInterfaceOrientations {
     return [self.viewControllers.firstObject supportedInterfaceOrientations];
 }

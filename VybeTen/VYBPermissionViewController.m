@@ -59,11 +59,11 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    if (status == kCLAuthorizationStatusAuthorized || status == kCLAuthorizationStatusDenied) {
+    //if (status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusDenied || status ) {
         [self.locationManager stopUpdatingLocation];
         self.locationManager = nil;
         [self.navigationController popViewControllerAnimated:NO];
-    }
+    //}
 }
 
 
