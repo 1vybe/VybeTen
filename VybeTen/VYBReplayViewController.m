@@ -174,5 +174,25 @@
     return YES;
 }
 
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    switch ([UIDevice currentDevice].orientation) {
+        case UIDeviceOrientationPortrait:
+            return UIInterfaceOrientationPortrait;
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            return UIInterfaceOrientationPortraitUpsideDown;
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            return UIInterfaceOrientationLandscapeLeft;
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            return UIInterfaceOrientationLandscapeRight;
+            break;
+        default:
+            return [UIApplication sharedApplication].statusBarOrientation;
+            break;
+    }
+}
 
 @end
