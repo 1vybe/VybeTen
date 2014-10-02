@@ -30,13 +30,21 @@
 - (void)setLocationKey:(NSString *)keyStr {
     _locationKey = keyStr;
     
-    NSArray *arr = [keyStr componentsSeparatedByString:@","];
-    if (arr.count == 2) {
-        cityNameLabel.text = arr[0];
-        NSString *countryCode = arr[1];
-        UIImage *flagImg = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", countryCode]];
-        [flagImageView setImage:flagImg];
-        
+    if (_locationKey && [_locationKey length] > 0) {
+        NSArray *arr = [keyStr componentsSeparatedByString:@","];
+        if (arr.count == 2) {
+#warning temporary fix
+            if ([arr[0] isEqualToString:@"(null)"]) {
+                cityNameLabel.text = @"Unknown";
+                [flagImageView setImage:[UIImage imageNamed:@"unknown_country_flag.png"]];
+            }
+            else {
+                cityNameLabel.text = arr[0];
+                NSString *countryCode = arr[1];
+                UIImage *flagImg = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", countryCode]];
+                [flagImageView setImage:flagImg];
+            }
+        }
     }
 }
 

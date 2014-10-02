@@ -192,7 +192,7 @@
     
 }
 
-+ (void)getVybesByLocationAndByUser:(void (^)(BOOL succeeded, NSError *error))completionBlock {    
++ (void)getVybesByLocationAndByUser:(void (^)(BOOL succeeded, NSError *error))completionBlock {
     PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
     // 24 TTL checking
     NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
@@ -205,6 +205,7 @@
     [query whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
     [query whereKeyExists:kVYBVybeLocationStringKey];
     [query whereKey:kVYBVybeLocationStringKey notEqualTo:@""];
+    [query setLimit:1000];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
