@@ -130,7 +130,7 @@
     // title font
     NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
     [titleBarAttributes setValue:[UIFont fontWithName:@"ProximaNovaSoft-Regular" size:20.0] forKey:NSFontAttributeName];
-    [titleBarAttributes setValue:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
+    [titleBarAttributes setValue:COLOR_MAIN forKey:NSForegroundColorAttributeName];
     [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
     
     // back button image
@@ -155,6 +155,9 @@
         VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
         [self.captureNavigationVC pushViewController:logInVC animated:NO];
     }
+    
+    // Initial fetch of feed
+    [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
     
     self.activityVC = [[VYBActivityTableViewController alloc] init];
     self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.activityVC];

@@ -14,14 +14,13 @@
 #import <Foundation/Foundation.h>
 
 @interface VYBCache : NSObject
+@property (nonatomic, strong) NSDate *lastRefresh;
 
 + (id)sharedCache;
 
 - (void)clear;
 - (void)addFreshVybe:(PFObject *)nVybe;
 - (void)removeFreshVybe:(PFObject *)oVybe;
-//- (void)addFreshVybe:(PFObject *)nVybe forLocation:(NSString *)location;
-//- (void)addFreshVybe:(PFObject *)nVybe forUser:(PFObject *)aUser;
 - (NSArray *)freshVybes;
 - (NSDictionary *)freshVybesByLocation;
 - (NSDictionary *)freshVybesByUser;
@@ -42,6 +41,7 @@
 - (void)addUser:(PFObject *)user forLocation:(NSString *)location;
 - (NSDictionary *)usersByLocation;
 - (NSArray *)usersForLocation:(NSString *)location;
+- (NSArray *)activeUsers;
 - (void)clearUsersByLocation;
 
 - (NSInteger)numberOfLocations;

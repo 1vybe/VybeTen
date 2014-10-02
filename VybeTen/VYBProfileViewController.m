@@ -153,7 +153,7 @@
             [PFUser logOut];
             
             VYBLogInViewController *loginVC = [[VYBLogInViewController alloc] init];
-            [self presentViewController:loginVC animated:NO completion:nil];
+            [self.navigationController pushViewController:loginVC animated:NO];
             break;
     }
 }

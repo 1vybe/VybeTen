@@ -8,6 +8,7 @@
 
 #import "VYBLogInViewController.h"
 #import "VYBSignUpViewController.h"
+#import "VYBUtility.h"
 #import "NSString+Email.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 
@@ -76,6 +77,7 @@
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         if (!error) {
             if ([PFUser currentUser]) {
+                [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
                 [self.navigationController popViewControllerAnimated:NO];
             }
         } else {

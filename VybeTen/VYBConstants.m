@@ -11,6 +11,8 @@
 #pragma mark - NSNotification
 
 NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification = @"com.vybe.app.AppDelegate.applicationDidReceiveRemoteNotification";
+NSString *const VYBFreshVybeFeedFetchedFromRemoteNotification = @"com.vybe.app.utility.freshFeedFetched";
+NSString *const VYBHubScreenVybesLoadedNotification = @"com.vybe.app.hub.vybesLoaded";
 NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification     = @"com.vybe.app.utility.userLikedUnlikedVybeCallbackFinished";
 NSString *const VYBAppDelegateApplicationDidBecomeActive               = @"com.vybe.app.AppDelegate.applicationDidBecomeActive";
 NSString *const VYBCacheFreshVybeCountChangedNotification       = @"com.vybe.app.cache.freshVybeCountChanged";

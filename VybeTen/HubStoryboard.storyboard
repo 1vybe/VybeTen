@@ -19,7 +19,7 @@
         <scene sceneID="Rab-UZ-cPk">
             <objects>
                 <navigationController id="vRS-GY-MWN" customClass="VYBNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" backIndicatorImage="ID" id="EZJ-Wh-7Fz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="EZJ-Wh-7Fz">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -314,7 +314,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ID" width="35" height="23"/>
         <image name="button_circle_lightblue" width="32" height="32"/>
     </resources>
 </document>

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBFollowingTableViewController : PFQueryTableViewController
+@interface VYBFollowingTableViewController : UITableViewController
 
 - (void)watchNewVybesFromUser:(NSString *)aUserID;
 

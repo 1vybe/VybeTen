@@ -41,14 +41,11 @@
     [refreshControl addTarget:self action:@selector(refreshControlPulled:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(vybesLoaded) name:VYBHubScreenVybesLoadedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
     
-    self.sortedKeys = [[NSArray alloc] init];
-    
-    [self getFreshVybes];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
+    if (!self.sortedKeys)
+        [self freshVybeCountChanged];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -66,88 +63,8 @@
 }
 
 - (void)getFreshVybes {
-    [[VYBCache sharedCache] clearFreshVybes];
-    
-    NSString *functionName = @"get_fresh_vybes";
-    [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            for (PFObject *aVybe in objects) {
-                if ([aVybe isKindOfClass:[NSNull class]])
-                    continue;
-                [[VYBCache sharedCache] addFreshVybe:aVybe];
-            }
-            [self getUsersByLocation];
-        }
-        else {
-            [self.refreshControl endRefreshing];
-        }
-    }];
-}
-
-- (void)getUsersByLocation {
-    [[VYBCache sharedCache] clearUsersByLocation];
-
-    PFQuery *query = [PFUser query];
-    // 24 TTL checking
-    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
-    [query whereKey:kVYBUserLastVybedTimeKey greaterThanOrEqualTo:someTimeAgo];
-    [query whereKey:kVYBUserUsernameKey notEqualTo:[PFUser currentUser][kVYBUserUsernameKey]];
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            for (PFObject *aUser in objects) {
-                NSArray *token = [aUser[kVYBUserLastVybedLocationKey] componentsSeparatedByString:@","];
-                if (token.count != 3)
-                    continue;
-                
-                //NOTE: we discard the first location field (neighborhood)
-                NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
-                [[VYBCache sharedCache] addUser:aUser forLocation:keyString];
-            }
-            [self getVybesByLocationAndByUser];
-        } else {
-            [self.refreshControl endRefreshing];
-        }
-    }];
-}
-
-
-- (void)getVybesByLocationAndByUser {
-    [[VYBCache sharedCache] clearVybesByLocation];
-    [[VYBCache sharedCache] clearVybesByUser];
-    
-    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-    // 24 TTL checking
-    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
-    [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
-    // Don't include urself
-    [query whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
-    [query whereKeyExists:kVYBVybeLocationStringKey];
-    [query whereKey:kVYBVybeLocationStringKey notEqualTo:@""];
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            for (PFObject *obj in objects) {
-                NSString *locString = obj[kVYBVybeLocationStringKey];
-                NSArray *token = [locString componentsSeparatedByString:@","];
-                if (token.count != 3)
-                    continue;
-                
-                //NOTE: we discard the first location field (neighborhood)
-                NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
-                [[VYBCache sharedCache] addVybe:obj forLocation:keyString];
-                [[VYBCache sharedCache] addVybe:obj forUser:obj[kVYBVybeUserKey]];
-            }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:VYBCacheFreshVybeCountChangedNotification object:nil];
-            });
-            
-        }
-        [self.refreshControl endRefreshing];
-    }];
     
 }
-
 
 
 #pragma mark - UITableViewController
@@ -207,16 +124,8 @@
     [hubVC scrollViewBeganDragging:scrollView];
 }
 
-#pragma mark - ()
 
-- (void)watchNewVybesFromLocation:(NSString *)locationKey {
-    NSArray *vybes = [self.freshVybesByLocation objectForKey:locationKey];
-    if (vybes && vybes.count > 0) {
-        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-        [playerVC setVybePlaylist:vybes];
-        [self presentViewController:playerVC animated:NO completion:nil];
-    }
-}
+#pragma mark - NSNotifications
 
 - (void)freshVybeCountChanged {
     self.freshVybesByLocation = [[VYBCache sharedCache] freshVybesByLocation];
@@ -230,6 +139,19 @@
     [self.tableView reloadData];
 }
 
+- (void)vybesLoaded {
+    [self freshVybeCountChanged];
+}
 
+#pragma mark - ()
+
+- (void)watchNewVybesFromLocation:(NSString *)locationKey {
+    NSArray *vybes = [self.freshVybesByLocation objectForKey:locationKey];
+    if (vybes && vybes.count > 0) {
+        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+        [playerVC setVybePlaylist:vybes];
+        [self presentViewController:playerVC animated:NO completion:nil];
+    }
+}
 
 @end

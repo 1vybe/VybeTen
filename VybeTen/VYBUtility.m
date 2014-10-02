@@ -158,6 +158,75 @@
     return query;
 }
 
+#pragma mark - Feed
++ (void)fetchFreshVybeFeedWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock {
+    if (![PFUser currentUser]) {
+        return;
+    }
+    
+    NSString *functionName = @"get_fresh_vybes";
+    [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *objects, NSError *error) {
+        if (error) {
+            if (completionBlock) {
+                completionBlock(NO, error);
+            }
+        } else {
+            if (objects) {
+                for (PFObject *nVybe in objects) {
+                    if ([nVybe isKindOfClass:[NSNull class]])
+                        continue;
+                    [[VYBCache sharedCache] addFreshVybe:nVybe];
+                }
+                if (completionBlock) {
+                    completionBlock(YES, nil);
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:VYBFreshVybeFeedFetchedFromRemoteNotification object:self];
+                });
+            }
+        }
+    }];
+    
+    [[VYBCache sharedCache] setLastRefresh:[NSDate date]];
+}
+
++ (void)getVybesByLocationAndByUser:(void (^)(BOOL succeeded, NSError *error))completionBlock {    
+    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+    // 24 TTL checking
+    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
+    // Only add NEW vybe
+    NSDate *lastRefresh = [[VYBCache sharedCache] lastRefresh];
+    if (lastRefresh && [lastRefresh timeIntervalSinceDate:someTimeAgo] > 0)
+        someTimeAgo = lastRefresh;
+    [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
+    // Don't include urself
+    [query whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
+    [query whereKeyExists:kVYBVybeLocationStringKey];
+    [query whereKey:kVYBVybeLocationStringKey notEqualTo:@""];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *obj in objects) {
+                NSString *locString = obj[kVYBVybeLocationStringKey];
+                NSArray *token = [locString componentsSeparatedByString:@","];
+                if (token.count != 3)
+                    continue;
+                
+                //NOTE: we discard the first location field (neighborhood)
+                NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
+                [[VYBCache sharedCache] addVybe:obj forLocation:keyString];
+                [[VYBCache sharedCache] addVybe:obj forUser:obj[kVYBVybeUserKey]];
+            }
+            if (completionBlock)
+                completionBlock(YES, nil);
+        } else {
+            if (completionBlock)
+                completionBlock(NO, error);
+        }
+    }];
+}
+
+
 #pragma mark Thumbnail
 
 + (void)saveThumbnailImageForVybe:(VYBMyVybe *)mVybe {

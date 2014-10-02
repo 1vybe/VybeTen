@@ -18,8 +18,6 @@
 #define DOWNLOADED      3
 
 
-
-
 /* House */
 #define PARSE_APPLICATION_ID        @"gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC"
 #define PARSE_CLIENT_KEY            @"6y6eMRZq5GAa5ihS2GSjFB0xwmnuatvuJBhYQ1Af"
@@ -55,6 +53,8 @@ typedef enum {
 
 #pragma mark - NSNotification
 extern NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification;
+extern NSString *const VYBFreshVybeFeedFetchedFromRemoteNotification;
+extern NSString *const VYBHubScreenVybesLoadedNotification;
 extern NSString *const VYBCacheFreshVybeCountChangedNotification;
 extern NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification;
 extern NSString *const VYBAppDelegateApplicationDidBecomeActive;

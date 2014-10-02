@@ -19,6 +19,9 @@
 
 + (PFQuery *)queryForActivitiesOnVybe:(PFObject *)vybe cachePolicy:(PFCachePolicy)cachePolicy;
 
++ (void)fetchFreshVybeFeedWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock;
++ (void)getVybesByLocationAndByUser:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+
 + (void)clearLocalCacheForVybe:(VYBMyVybe *)aVybe;
 //+ (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
 + (void)saveThumbnailImageForVybe:(VYBMyVybe *)mVybe;

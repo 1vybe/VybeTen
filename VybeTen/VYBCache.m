@@ -54,6 +54,9 @@
         return;
     
     NSArray *freshVybes = [self.cache objectForKey:@"freshVybes"];
+    if ( [freshVybes containsPFObject:nVybe] )
+        return;
+    
     NSArray *newArr;
     if (freshVybes) {
         newArr = [freshVybes arrayByAddingObject:nVybe];
@@ -61,8 +64,6 @@
         newArr = [NSArray arrayWithObject:nVybe];
     }
     [self.cache setObject:newArr forKey:@"freshVybes"];
-
-    
     
     //NOTE: we discard the first location field (neighborhood)
     NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
@@ -78,7 +79,6 @@
                                         
                                     }
                                 }];
-    
     
     [self addWatchedVybe:oVybe];
     
@@ -317,6 +317,16 @@
     return [self.cache objectForKey:@"vybesByUser"];
 }
 
+- (NSArray *)activeUsers {
+    NSArray *active = [[NSArray alloc] init];
+    for (NSArray *arr in [[self usersByLocation] allValues]) {
+        if (arr && [arr count] > 0) {
+            active = [active arrayByAddingObjectsFromArray:arr];
+        }
+    }
+    return active;
+}
+
 - (void)clearUsersByLocation {
     NSDictionary *emptyDict = [[NSDictionary alloc] init];
     [self.cache setObject:emptyDict forKey:@"usersByLocation"];
@@ -332,7 +342,6 @@
     [self.cache setObject:emptyDict forKey:@"vybesByUser"];
 }
 
-
 - (NSInteger)numberOfLocations {
     NSDictionary *vybesByLocation = [self.cache objectForKey:@"vybesByLocation"];
     NSDictionary *usersByLocation = [self.cache objectForKey:@"usersByLocation"];
@@ -343,8 +352,6 @@
     
     return usersByLocation.allKeys.count;
 }
-
-
 
 - (void)setAttributesForVybe:(PFObject *)vybe likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser {
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -453,10 +460,6 @@
     [self.cache setObject:friends forKey:key];
     [[NSUserDefaults standardUserDefaults] setObject:friends forKey:key];
     [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void)setLastRefresh:(NSDate *)aDate {
-    
 }
 
 - (NSArray *)facebookFriends {

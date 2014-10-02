@@ -17,7 +17,7 @@
 @interface VYBFollowingTableViewController ()
 @property (nonatomic, copy) NSDictionary *vybesByUser;
 @property (nonatomic, copy) NSDictionary *freshVybesByUser;
-@property (nonatomic, strong) NSArray *sortedUsers;
+@property (nonatomic) NSArray *sortedUsers;
 @end
 
 @implementation VYBFollowingTableViewController
@@ -32,7 +32,10 @@
     //NOTE: To remove empty cells.
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(vybesLoaded) name:VYBHubScreenVybesLoadedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
+    
+    [self freshVybeCountChanged];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,12 +43,16 @@
     // Dispose of any resources that can be recreated.
 }
 
+
 #pragma mark - UITableViewController
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 62.0f;
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.sortedUsers.count;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *UserTableViewCellIdentifier = @"UserTableViewCellIdentifier";
@@ -89,27 +96,6 @@
     [self.navigationController pushViewController:profileVC animated:NO];
 }
 
-#pragma mark - PFQueryTableViewController 
-
-- (PFQuery *)queryForTable {
-    PFQuery *query = [PFUser query];
-    // 24 TTL checking
-    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
-    [query whereKey:kVYBUserLastVybedTimeKey greaterThanOrEqualTo:someTimeAgo];
-    // Don't include urself
-    [query whereKey:kVYBUserUsernameKey notEqualTo:[PFUser currentUser][kVYBUserUsernameKey]];
-    [query whereKey:kVYBUserLastVybedLocationKey notEqualTo:@""];
-    [query orderByDescending:kVYBUserLastVybedTimeKey];
-    
-    return query;
-}
-
-- (void)objectsDidLoad:(NSError *)error {
-    [super objectsDidLoad:error];
-    
-    // TODO: freshVybesByUser should be updated by refresh control
-    [self freshVybeCountChanged];
-}
 
 #pragma mark - UIScrollViewDelegate
 
@@ -123,17 +109,6 @@
 
 #pragma amrk - ()
 
-- (void)freshVybeCountChanged {
-    self.vybesByUser = [[VYBCache sharedCache] vybesByUser];
-    self.freshVybesByUser = [[VYBCache sharedCache] freshVybesByUser];
-    
-    self.sortedUsers = [self.objects sortedArrayUsingComparator:^NSComparisonResult(PFObject *user1, PFObject *user2) {
-        return [[self.freshVybesByUser objectForKey:user1.objectId] count] < [[self.freshVybesByUser objectForKey:user2.objectId] count];
-    }];
-    
-    [self.tableView reloadData];
-}
-
 - (void)watchNewVybesFromUser:(NSString *)aUserID {
     NSArray *vybes = [self.freshVybesByUser objectForKey:aUserID];
     if (vybes && vybes.count > 0) {
@@ -143,14 +118,23 @@
     }
 }
 
-/*
-#pragma mark - Navigation
+#pragma mark - NSNotifications
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)freshVybeCountChanged {
+    self.vybesByUser = [[VYBCache sharedCache] vybesByUser];
+    self.freshVybesByUser = [[VYBCache sharedCache] freshVybesByUser];
+    NSArray *activeUsers = [[VYBCache sharedCache] activeUsers];
+    
+    self.sortedUsers = [activeUsers sortedArrayUsingComparator:^NSComparisonResult(PFObject *user1, PFObject *user2) {
+        return [[self.freshVybesByUser objectForKey:user1.objectId] count] < [[self.freshVybesByUser objectForKey:user2.objectId] count];
+    }];
+    
+    [self.tableView reloadData];
 }
-*/
+
+- (void)vybesLoaded {
+    [self freshVybeCountChanged];
+}
+
 
 @end

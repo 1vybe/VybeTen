@@ -93,6 +93,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActive object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheFreshVybeCountChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
     
     NSLog(@"CaptureVC deallocated");
 }
@@ -131,7 +132,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActive object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
-
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
+    
     // Adding gestures
     UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
      action:@selector(longPressDetected:)];
@@ -770,7 +772,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 
-#pragma mark - VYBAppDelegateNotification
+#pragma mark - NSNotifications
 
 - (void)remoteNotificationReceived:(id)sender {
 
@@ -786,6 +788,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     if (count)
         [self.hubButton setTitle:[NSString stringWithFormat:@"%ld", (long)count] forState:UIControlStateNormal];
 }
+
 
 #pragma mark - ()
 
