@@ -212,7 +212,7 @@
     return vybes;
 }
 
-
+/*
 - (void)clearFreshVybes {
     NSDictionary *emptyDict = [[NSDictionary alloc] init];
     [self.cache setObject:emptyDict forKey:@"freshByLocation"];
@@ -221,7 +221,7 @@
     NSArray *emptyArr = [[NSArray alloc] init];
     [self.cache setObject:emptyArr forKey:@"freshVybes"];
 }
-
+*/
 - (void)addUser:(PFObject *)user forLocation:(NSString *)location {
     NSDictionary *usersByLocation = [self.cache objectForKey:@"usersByLocation"];
     NSMutableDictionary *newDict;
@@ -331,7 +331,7 @@
     }
     return active;
 }
-
+/*
 - (void)clearUsersByLocation {
     NSDictionary *emptyDict = [[NSDictionary alloc] init];
     [self.cache setObject:emptyDict forKey:@"usersByLocation"];
@@ -346,7 +346,7 @@
     NSDictionary *emptyDict = [[NSDictionary alloc] init];
     [self.cache setObject:emptyDict forKey:@"vybesByUser"];
 }
-
+*/
 - (NSInteger)numberOfLocations {
     NSDictionary *vybesByLocation = [self.cache objectForKey:@"vybesByLocation"];
     NSDictionary *usersByLocation = [self.cache objectForKey:@"usersByLocation"];

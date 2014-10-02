@@ -239,10 +239,6 @@
     [currentInstallation saveEventually];
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-}
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
@@ -264,6 +260,10 @@
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidBecomeActive object:self];
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    [self moveToPage:VYBCapturePageIndex];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
