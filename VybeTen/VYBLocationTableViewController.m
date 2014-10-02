@@ -15,6 +15,7 @@
 #import "VYBProfileViewController.h"
 #import "VYBContainerWatchButtonController.h"
 #import "VYBCache.h"
+#import "VYBUtility.h"
 
 @interface VYBLocationTableViewController ()
 
@@ -29,6 +30,9 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheFreshVybeCountChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBHubScreenVybesLoadedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
+
 }
 
 - (void)viewDidLoad {
@@ -43,6 +47,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(vybesLoaded) name:VYBHubScreenVybesLoadedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
+
     
     if (!self.sortedKeys)
         [self freshVybeCountChanged];
@@ -59,13 +65,10 @@
 }
 
 - (void)refreshControlPulled:(id)sender {
-    [self getFreshVybes];
+    [VYBUtility fetchFreshVybeFeedWithCompletion:^(BOOL succeeded, NSError *error) {
+        [self.refreshControl endRefreshing];
+    }];
 }
-
-- (void)getFreshVybes {
-    
-}
-
 
 #pragma mark - UITableViewController
 
@@ -133,7 +136,7 @@
     self.vybesByLocation = [[VYBCache sharedCache] vybesByLocation];
 
     // Sort by the number of FRESH vybes (descending)
-    self.sortedKeys = [self.usersByLocation.allKeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+    self.sortedKeys = [self.vybesByLocation.allKeys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         return [self.freshVybesByLocation[obj1] count] < [self.freshVybesByLocation[obj2] count];
     }];
     [self.tableView reloadData];

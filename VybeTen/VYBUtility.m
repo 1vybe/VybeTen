@@ -177,6 +177,9 @@
                         continue;
                     [[VYBCache sharedCache] addFreshVybe:nVybe];
                 }
+                // Only set lastRefresh after inital vybe loading
+                if ( [[VYBCache sharedCache] vybesByLocation] )
+                    [[VYBCache sharedCache] setLastRefresh:[NSDate date]];
                 if (completionBlock) {
                     completionBlock(YES, nil);
                 }
@@ -187,7 +190,6 @@
         }
     }];
     
-    [[VYBCache sharedCache] setLastRefresh:[NSDate date]];
 }
 
 + (void)getVybesByLocationAndByUser:(void (^)(BOOL succeeded, NSError *error))completionBlock {    

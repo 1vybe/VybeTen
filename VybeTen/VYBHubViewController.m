@@ -51,6 +51,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
     
+    [self freshVybeCountChanged];
     [self getVybesByLocationAndByUser];
 }
 
@@ -59,9 +60,7 @@
     [self.navigationItem setTitle:@"vybe"];
 }
 
-- (void)getUsersByLocation {
-    [[VYBCache sharedCache] clearUsersByLocation];
-    
+- (void)getUsersByLocation {    
     PFQuery *query = [PFUser query];
     // 24 TTL checking
     NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];

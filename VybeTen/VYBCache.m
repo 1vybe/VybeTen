@@ -69,6 +69,11 @@
     NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
     [self addFreshVybe:nVybe forLocation:keyString];
     [self addFreshVybe:nVybe forUser:nVybe[kVYBVybeUserKey]];
+    
+    if ([nVybe[kVYBVybeTimestampKey] timeIntervalSinceDate:[[VYBCache sharedCache] lastRefresh]] > 0) {
+        [self addVybe:nVybe forLocation:keyString];
+        [self addVybe:nVybe forUser:nVybe[kVYBVybeUserKey]];
+    }
 }
 
 - (void)removeFreshVybe:(PFObject *)oVybe {
