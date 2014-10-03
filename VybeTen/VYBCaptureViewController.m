@@ -145,6 +145,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     longPressRecognizer.numberOfTouchesRequired = 1;
     [self.view addGestureRecognizer:longPressRecognizer];
     
+    [self freshVybeCountChanged];
 
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [self setSession:session];
