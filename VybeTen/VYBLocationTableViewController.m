@@ -38,7 +38,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //NOTE: To remove empty cells.
+    //To remove empty cells.
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];

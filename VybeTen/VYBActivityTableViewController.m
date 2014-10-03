@@ -45,6 +45,9 @@
 {
     [super viewDidLoad];
     
+    //To remove empty cells.
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
     [self loadActivityInfoView];
     
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 70, 0, 0);

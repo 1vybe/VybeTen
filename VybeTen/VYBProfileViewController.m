@@ -45,6 +45,9 @@
 {
     [super viewDidLoad];
     
+    //To remove empty cells.
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
     // Remove border line
     [self.navigationController.navigationBar setShadowImage:[UIImage new]];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
