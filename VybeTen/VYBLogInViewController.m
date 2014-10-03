@@ -26,6 +26,8 @@
 
 @implementation VYBLogInViewController
 
+#pragma mark - Lifecycle
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -48,9 +50,19 @@
     // Do any additional setup after loading the view from its nib.
 }
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - UIResponder
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
 }
+
+#pragma mark - IBActions
 
 - (IBAction)logInButtonPressed:(id)sender {
     NSString *username = self.usernameTextField.text;
@@ -107,6 +119,8 @@
     [self presentViewController:signUpVC animated:NO completion:nil];
 }
 
+#pragma mark - VYBSignUpViewControllerDelegate
+
 - (void)signUpCompleted {
     [self dismissViewControllerAnimated:NO completion:^{
         [self.navigationController popViewControllerAnimated:NO];
@@ -143,12 +157,14 @@
     [self.usernameTextField becomeFirstResponder];
 }
 
-# pragma mark -
+#pragma mark - DeviceOrientation
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end
