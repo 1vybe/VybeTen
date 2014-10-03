@@ -1,10 +1,10 @@
 PODS:
   - Bolts (1.1.2)
   - GoogleAnalytics-iOS-SDK (3.0.9)
-  - HockeySDK (3.5.7)
+  - HockeySDK (3.6.1)
   - MBProgressHUD (0.9)
   - MotionOrientation@PTEz (1.1.0)
-  - Parse (1.4.0):
+  - Parse (1.4.1):
     - Bolts (~> 1.1.2)
 
 DEPENDENCIES:
@@ -17,9 +17,9 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   Bolts: 2635e8698a630774689441047f3465d78c48d485
   GoogleAnalytics-iOS-SDK: d9e198b1f955259a72886769be7377cdfcdb2250
-  HockeySDK: f0e874d1c6833163ee0c4e423606faf33ad04071
+  HockeySDK: 15b24068466aa5ee421eed0cc1d58428d698edf6
   MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
   MotionOrientation@PTEz: ec58ced639faa14d30e63db9ef5cba8ded38b3b5
-  Parse: 217a57ed13e870a744fe746fcc01a3fef6a9b750
+  Parse: db1a09c832b7509edcc88a65dc07229f5e578c73
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.34.1
