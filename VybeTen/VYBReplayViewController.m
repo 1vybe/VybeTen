@@ -167,32 +167,27 @@
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskAll;
+    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
+
+    switch (asset.videoOrientation) {
+        case AVCaptureVideoOrientationPortrait:
+            return UIInterfaceOrientationMaskPortrait;
+            break;
+        case AVCaptureVideoOrientationPortraitUpsideDown:
+            return UIInterfaceOrientationMaskPortraitUpsideDown;
+            break;
+        case AVCaptureVideoOrientationLandscapeRight:
+            return UIInterfaceOrientationMaskLandscapeRight;
+            break;
+        case AVCaptureVideoOrientationLandscapeLeft:
+            return UIInterfaceOrientationMaskLandscapeLeft;
+            break;
+    }
 }
 
 - (BOOL)prefersStatusBarHidden {
     return YES;
-}
-
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
-{
-    switch ([UIDevice currentDevice].orientation) {
-        case UIDeviceOrientationPortrait:
-            return UIInterfaceOrientationPortrait;
-            break;
-        case UIDeviceOrientationPortraitUpsideDown:
-            return UIInterfaceOrientationPortraitUpsideDown;
-            break;
-        case UIDeviceOrientationLandscapeRight:
-            return UIInterfaceOrientationLandscapeLeft;
-            break;
-        case UIDeviceOrientationLandscapeLeft:
-            return UIInterfaceOrientationLandscapeRight;
-            break;
-        default:
-            return [UIApplication sharedApplication].statusBarOrientation;
-            break;
-    }
 }
 
 @end
