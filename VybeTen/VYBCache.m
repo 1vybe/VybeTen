@@ -212,16 +212,6 @@
     return vybes;
 }
 
-/*
-- (void)clearFreshVybes {
-    NSDictionary *emptyDict = [[NSDictionary alloc] init];
-    [self.cache setObject:emptyDict forKey:@"freshByLocation"];
-    [self.cache setObject:emptyDict forKey:@"freshByUser"];
-    
-    NSArray *emptyArr = [[NSArray alloc] init];
-    [self.cache setObject:emptyArr forKey:@"freshVybes"];
-}
-*/
 - (void)addUser:(PFObject *)user forLocation:(NSString *)location {
     NSDictionary *usersByLocation = [self.cache objectForKey:@"usersByLocation"];
     NSMutableDictionary *newDict;
@@ -331,31 +321,17 @@
     }
     return active;
 }
-/*
-- (void)clearUsersByLocation {
-    NSDictionary *emptyDict = [[NSDictionary alloc] init];
-    [self.cache setObject:emptyDict forKey:@"usersByLocation"];
+
+- (void)setActivityCount:(int)count {
+    [self.cache setObject:[NSNumber numberWithInt:count] forKey:@"activityCount"];
 }
 
-- (void)clearVybesByLocation {
-    NSDictionary *emptyDict = [[NSDictionary alloc] init];
-    [self.cache setObject:emptyDict forKey:@"vybesByLocation"];
-}
-
-- (void)clearVybesByUser {
-    NSDictionary *emptyDict = [[NSDictionary alloc] init];
-    [self.cache setObject:emptyDict forKey:@"vybesByUser"];
-}
-*/
-- (NSInteger)numberOfLocations {
-    NSDictionary *vybesByLocation = [self.cache objectForKey:@"vybesByLocation"];
-    NSDictionary *usersByLocation = [self.cache objectForKey:@"usersByLocation"];
-    
-    if (vybesByLocation.allKeys.count != usersByLocation.allKeys.count) {
-        NSLog(@"SOMETHING IS WRONG");
-    }
-    
-    return usersByLocation.allKeys.count;
+- (NSInteger)activityCount {
+    NSNumber *cnt = [self.cache objectForKey:@"activityCount"];
+    if (cnt)
+        return [cnt integerValue];
+    else
+        return 0;
 }
 
 - (void)setAttributesForVybe:(PFObject *)vybe likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser {

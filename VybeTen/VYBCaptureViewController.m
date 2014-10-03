@@ -98,6 +98,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActive object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheFreshVybeCountChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBUtilityActivityCountUpdatedNotification object:nil];
     
     NSLog(@"CaptureVC deallocated");
 }
@@ -137,6 +138,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActive object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityCountChanged) name:VYBUtilityActivityCountUpdatedNotification object:nil];
     
     // Adding gestures
     UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
@@ -145,8 +147,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     longPressRecognizer.numberOfTouchesRequired = 1;
     [self.view addGestureRecognizer:longPressRecognizer];
     
+    // In case capture screen is loaded AFTER initial loading from appdelegate is done already
     [self freshVybeCountChanged];
-
+    [self activityCountChanged];
+    
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [self setSession:session];
     
@@ -780,7 +784,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 #pragma mark - NSNotifications
 
 - (void)remoteNotificationReceived:(id)sender {
-
+    [VYBUtility getNewActivityCountWithCompletion:nil];
 }
 
 - (void)applicationDidBecomeActiveNotificationReceived:(id)sender {    
@@ -792,6 +796,18 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     self.hubButton.selected = !count;
     if (count)
         [self.hubButton setTitle:[NSString stringWithFormat:@"%ld", (long)count] forState:UIControlStateNormal];
+    else
+        [self.hubButton setTitle:@"" forState:UIControlStateNormal];
+
+}
+
+- (void)activityCountChanged {
+    NSInteger count = [[VYBCache sharedCache] activityCount];
+    self.activityButton.selected = !count;
+    if (count)
+        [self.activityButton setTitle:[NSString stringWithFormat:@"%ld", (long)count] forState:UIControlStateNormal];
+    else
+        [self.activityButton setTitle:@"" forState:UIControlStateNormal];
 }
 
 

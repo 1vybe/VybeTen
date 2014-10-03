@@ -54,7 +54,14 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+#warning why not calling [super viewWillAppear]?
     [self setNavigationBarItems];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [VYBUtility updateLastRefreshForCurrentUser];
 }
 
 - (void)didReceiveMemoryWarning

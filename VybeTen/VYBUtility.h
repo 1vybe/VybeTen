@@ -14,6 +14,9 @@
 
 @interface VYBUtility : NSObject
 
++ (void)getNewActivityCountWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock;
++ (void)updateLastRefreshForCurrentUser;
+
 + (void)likeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 + (void)unlikeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 

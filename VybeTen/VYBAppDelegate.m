@@ -158,6 +158,8 @@
     
     // Initial fetch of feed
     [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
+    // Get activity count
+    [VYBUtility getNewActivityCountWithCompletion:nil];
     
     self.activityVC = [[VYBActivityTableViewController alloc] init];
     self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.activityVC];
@@ -280,6 +282,8 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
+    
     if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
         // Tracks app open due to a push notification when the app was not active
     }

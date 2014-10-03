@@ -18,7 +18,50 @@
 
 @implementation VYBUtility
 
-#pragma mark - VYBUtility
+#pragma mark - Activity
++ (void)getNewActivityCountWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock {
+    PFQuery *query = [PFQuery queryWithClassName:kVYBActivityClassKey];
+    [query whereKey:kVYBActivityToUserKey equalTo:[PFUser currentUser]];
+    NSDate *someTimeAgo = [NSDate dateWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
+    // only get activities that a user has not seen yet
+    NSDate *lastRefresh = [[PFUser currentUser] objectForKey:kVYBUserLastRefreshedKey];
+    if (lastRefresh && ([lastRefresh timeIntervalSinceDate:someTimeAgo] > 0))
+        someTimeAgo = lastRefresh;
+    [query whereKey:@"createdAt" greaterThanOrEqualTo:someTimeAgo];
+    [query orderByDescending:@"createdAt"];
+    [query includeKey:kVYBActivityFromUserKey];
+    [query includeKey:kVYBActivityVybeKey];
+    
+    [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if (!error) {
+            [[VYBCache sharedCache] setActivityCount:number];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:VYBUtilityActivityCountUpdatedNotification object:nil];
+            });
+            
+            if (completionBlock)
+                completionBlock(YES, nil);
+        } else {
+            if (completionBlock)
+                completionBlock(NO, error);
+        }
+    }];
+}
+
++ (void)updateLastRefreshForCurrentUser {
+    // Set cached activity count to 0
+    [[VYBCache sharedCache] setActivityCount:0];
+    // Post notification so the count gets updated on capture screen
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBUtilityActivityCountUpdatedNotification object:nil];
+    // Update lastRefreshed of current user to now
+    PFObject *currUsr = [PFUser currentUser];
+    
+    [currUsr setObject:[NSDate date] forKey:kVYBUserLastRefreshedKey];
+    [currUsr saveInBackground];
+}
+
+
 #pragma mark Like Vybes
 
 + (void)likeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock {
@@ -220,12 +263,6 @@
     PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
     // 24 TTL checking
     NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
-    /*
-    // Only add NEW vybe
-    NSDate *lastRefresh = [[VYBCache sharedCache] lastRefresh];
-    if (lastRefresh && [lastRefresh timeIntervalSinceDate:someTimeAgo] > 0)
-        someTimeAgo = lastRefresh;
-    */
     [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
     // Don't include urself
     [query whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];

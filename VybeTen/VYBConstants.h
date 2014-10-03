@@ -56,6 +56,7 @@ extern NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification;
 extern NSString *const VYBFreshVybeFeedFetchedFromRemoteNotification;
 extern NSString *const VYBUtilityVybesLoadedNotification;
 extern NSString *const VYBCacheFreshVybeCountChangedNotification;
+extern NSString *const VYBUtilityActivityCountUpdatedNotification;
 extern NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification;
 extern NSString *const VYBAppDelegateApplicationDidBecomeActive;
 
@@ -73,6 +74,7 @@ extern NSString *const kVYBUserProfilePicMediumKey;
 extern NSString *const kVYBUserLastVybedLocationKey;
 extern NSString *const kVYBUserLastVybedTimeKey;
 extern NSString *const kVYBUserFreshFeedKey;
+extern NSString *const kVYBUserLastRefreshedKey;
 
 //extern NSString *const kVYBUserDisplayNameKey;
 //extern NSString *const kVYBUserFacebookIDKey;

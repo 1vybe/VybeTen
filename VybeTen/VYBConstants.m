@@ -13,6 +13,7 @@
 NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification = @"com.vybe.app.AppDelegate.applicationDidReceiveRemoteNotification";
 NSString *const VYBFreshVybeFeedFetchedFromRemoteNotification = @"com.vybe.app.utility.freshFeedFetched";
 NSString *const VYBUtilityVybesLoadedNotification = @"com.vybe.app.utility.vybesLoaded";
+NSString *const VYBUtilityActivityCountUpdatedNotification = @"com.vybe.app.utility.activityCountUpdated";
 NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification     = @"com.vybe.app.utility.userLikedUnlikedVybeCallbackFinished";
 NSString *const VYBAppDelegateApplicationDidBecomeActive               = @"com.vybe.app.AppDelegate.applicationDidBecomeActive";
 NSString *const VYBCacheFreshVybeCountChangedNotification       = @"com.vybe.app.cache.freshVybeCountChanged";
@@ -30,7 +31,7 @@ NSString *const kVYBUserProfilePicMediumKey                     = @"profilePictu
 NSString *const kVYBUserLastVybedLocationKey                    = @"lastVybedLocation";
 NSString *const kVYBUserLastVybedTimeKey                        = @"lastVybedTime";
 NSString *const kVYBUserFreshFeedKey                            = @"freshFeed";
-
+NSString *const kVYBUserLastRefreshedKey                        = @"lastRefreshed";
 
 /*
 NSString *const kVYBUserDisplayNameKey                          = @"displayName";
