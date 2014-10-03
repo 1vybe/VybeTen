@@ -37,20 +37,16 @@
 
 - (CGSize)intrinsicContentSize {
     CGSize size;
-    NSLog(@"intrinsicContentSize");
     if (_orientation == AVCaptureVideoOrientationLandscapeLeft || _orientation == AVCaptureVideoOrientationLandscapeRight) {
         size = CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
-        NSLog(@"landscape intrinsic size");
     } else {
         size = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-        NSLog(@"portrait intrinsic size");
     }
     return size;
 }
 
 - (void)setOrientation:(AVCaptureVideoOrientation)orientation {
     _orientation = orientation;
-    NSLog(@"orientation set to %ld", _orientation);
 
     self.transform = CGAffineTransformIdentity;
 

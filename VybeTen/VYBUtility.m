@@ -10,6 +10,7 @@
 #import <MBProgressHUD/MBProgressHUD.h>
 #import "AVAsset+VideoOrientation.h"
 #import "UIImage+FixOrientation.h"
+#import "NSMutableArray+PFObject.h"
 #import "VYBUtility.h"
 #import "VYBCache.h"
 #import "VYBConstants.h"
@@ -21,6 +22,14 @@
 #pragma mark Like Vybes
 
 + (void)likeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock {
+    // First update cache to show changes right away
+    NSArray *cLikers = [[VYBCache sharedCache] likersForVybe:vybe];
+    if (cLikers)
+        cLikers = [cLikers arrayByAddingObject:[PFUser currentUser]];
+    else
+        cLikers = [NSArray arrayWithObject:[PFUser currentUser]];
+    [[VYBCache sharedCache] setAttributesForVybe:vybe likers:cLikers commenters:nil likedByCurrentUser:YES];
+    
     PFQuery *queryExistingLikes = [PFQuery queryWithClassName:kVYBActivityClassKey];
     [queryExistingLikes whereKey:kVYBActivityVybeKey equalTo:vybe];
     [queryExistingLikes whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
@@ -29,7 +38,7 @@
     [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
         if (!error) {
             for (PFObject *activity in activities) {
-                [activity delete];
+                [activity deleteInBackground];
             }
         }
         
@@ -86,6 +95,15 @@
 }
 
 + (void)unlikeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock {
+    // First update cache to show changes right away
+    NSMutableArray *cLikers = [NSMutableArray arrayWithArray:[[VYBCache sharedCache] likersForVybe:vybe]];
+    if (cLikers)
+        [cLikers removePFObject:[PFUser currentUser]];
+    else {
+        
+    }
+    [[VYBCache sharedCache] setAttributesForVybe:vybe likers:cLikers commenters:nil likedByCurrentUser:NO];
+    
     PFQuery *queryExistingLikes = [PFQuery queryWithClassName:kVYBActivityClassKey];
     [queryExistingLikes whereKey:kVYBActivityVybeKey equalTo:vybe];
     [queryExistingLikes whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
@@ -94,7 +112,7 @@
     [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
         if (!error) {
             for (PFObject *activity in activities) {
-                [activity delete];
+                [activity deleteInBackground];
             }
             
             if (completionBlock) {

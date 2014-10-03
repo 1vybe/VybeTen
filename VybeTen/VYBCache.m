@@ -383,6 +383,25 @@
     return [NSNumber numberWithInt:0];
 }
 
+- (BOOL)vybeLikedByMe:(PFObject *)vybe {
+    NSDictionary *attributes = [self attributesForVybe:vybe];
+    if (attributes) {
+        NSNumber *boolNum = [attributes objectForKey:kVYBVybeAttributesIsLikedByCurrentUserKey];
+        return [boolNum intValue] > 0;
+    }
+    
+    return NO;
+}
+
+- (NSArray *)likersForVybe:(PFObject *)vybe {
+    NSDictionary *attributes = [self attributesForVybe:vybe];
+    if (attributes) {
+        return [attributes objectForKey:kVYBVybeAttributesLikersKey];
+    }
+    
+    return nil;
+}
+
 - (NSDictionary *)attributesForUser:(PFUser *)user {
     NSDictionary *attributes = [self.cache objectForKey:[self keyForUser:user]];
     return attributes;

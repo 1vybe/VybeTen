@@ -120,10 +120,10 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tNm-vH-W0l" userLabel="likeButton">
-                    <rect key="frame" x="284" y="557" width="33" height="33"/>
+                    <rect key="frame" x="275" y="540" width="50" height="50"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="33" id="A1Z-ir-kPE"/>
-                        <constraint firstAttribute="height" constant="33" id="kzj-4x-de3"/>
+                        <constraint firstAttribute="width" constant="50" id="A1Z-ir-kPE"/>
+                        <constraint firstAttribute="height" constant="50" id="kzj-4x-de3"/>
                     </constraints>
                     <state key="normal" image="button_heart_off">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -131,7 +131,7 @@
                     </state>
                     <state key="selected" image="button_heart_on"/>
                     <connections>
-                        <action selector="likeButtonPressed:" destination="-1" eventType="touchUpInside" id="hvl-OG-rKn"/>
+                        <action selector="likeButtonPressed:" destination="-1" eventType="touchUpInside" id="55G-Ye-0oO"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dYM-jr-fXw" userLabel="dismissButton">
@@ -147,8 +147,8 @@
                         <action selector="dismissButtonPressed:" destination="-1" eventType="touchUpInside" id="PXA-lh-Igk"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lza-Ov-mh5" userLabel="goPrevButton">
-                    <rect key="frame" x="10" y="536" width="64" height="54"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lza-Ov-mh5" userLabel="goPrevButton">
+                    <rect key="frame" x="10" y="540" width="50" height="50"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="50" id="f5S-DK-qYE"/>
                         <constraint firstAttribute="height" constant="50" id="u84-A9-bBr"/>

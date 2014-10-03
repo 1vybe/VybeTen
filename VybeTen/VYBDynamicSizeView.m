@@ -15,13 +15,10 @@
 
 - (CGSize)intrinsicContentSize {
     CGSize size;
-    NSLog(@"dynamic");
     if (UIDeviceOrientationIsLandscape(_orientation)) {
         size = CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
-        NSLog(@"landscape intrinsic size");
     } else {
         size = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-        NSLog(@"portrait intrinsic size");
     }
     return size;
 }

@@ -202,6 +202,7 @@
     downloadingVybeIndex = currVybeIndex + 1;
     
     PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
+    [self syncUI:currVybe];
     
     NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
     cacheURL = [cacheURL URLByAppendingPathComponent:[currVybe objectId]];
@@ -217,7 +218,6 @@
         [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
         [self.currPlayer play];
         [[VYBCache sharedCache] removeFreshVybe:currVybe];
-        [self syncUI:currVybe];
         [self prepareVybeAt:downloadingVybeIndex];
     } else {
         PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
@@ -235,7 +235,6 @@
                 [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
                 [self.currPlayer play];
                 [[VYBCache sharedCache] removeFreshVybe:currVybe];
-                [self syncUI:currVybe];
                 [self prepareVybeAt:downloadingVybeIndex];
             } else {
                 UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
@@ -295,11 +294,13 @@
 }
 
 - (void)syncUI:(PFObject *)aVybe {
-    
+    self.cityNameLabel.text = @"";
+    self.usernameLabel.text = @"";
+    [self.likeButton setSelected:NO];
+
     NSString *locationStr = aVybe[kVYBVybeLocationStringKey];
     NSArray *arr = [locationStr componentsSeparatedByString:@","];
     NSString *countryCode = @"";
-    self.cityNameLabel.text = @"";
     if (arr.count == 3) {
         countryCode = arr[2];
         cityNameLabel.text = arr[1];
@@ -311,7 +312,6 @@
         self.countryFlagImageView.image = countryFlagImg;
     }
     
-    self.usernameLabel.text = @"";
     if ([aVybe objectForKey:kVYBVybeUserKey]) {
         PFUser *aUser = [aVybe objectForKey:kVYBVybeUserKey];
         [aUser fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
@@ -324,6 +324,41 @@
         }];
     }
     
+    // Updating LIKE button status and count of the vybe
+    if ( [[VYBCache sharedCache] attributesForVybe:aVybe] ) {
+        [self.likeButton setSelected:[[VYBCache sharedCache] vybeLikedByMe:aVybe]];
+        
+    } else {
+        PFQuery *query = [VYBUtility queryForActivitiesOnVybe:aVybe cachePolicy:kPFCachePolicyNetworkOnly];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                NSMutableArray *likers = [NSMutableArray array];
+                NSMutableArray *commenters = [NSMutableArray array];
+                
+                BOOL isLikedByCurrentUser = NO;
+                
+                for (PFObject *activity in objects) {
+                    if ([[activity objectForKey:kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeLike] && [activity objectForKey:kVYBActivityFromUserKey]) {
+                        [likers addObject:[activity objectForKey:kVYBActivityFromUserKey]];
+                    } else if ([[activity objectForKey:kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeComment] && [activity objectForKey:kVYBActivityFromUserKey]) {
+                        [commenters addObject:[activity objectForKey:kVYBActivityFromUserKey]];
+                    }
+                    
+                    if ([[[activity objectForKey:kVYBActivityFromUserKey] objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
+                        if ([[activity objectForKey:kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeLike]) {
+                            isLikedByCurrentUser = YES;
+                        }
+                    }
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.likeButton setSelected:isLikedByCurrentUser];
+                });
+                
+                [[VYBCache sharedCache] setAttributesForVybe:aVybe likers:likers commenters:commenters likedByCurrentUser:isLikedByCurrentUser];
+            }
+        }];
+    }
 }
 
 
@@ -337,9 +372,14 @@
 
 - (IBAction)likeButtonPressed:(id)sender {
     PFObject *aVybe = [self.vybePlaylist objectAtIndex:self.currVybeIndex];
-    [VYBUtility likeVybeInBackground:aVybe block:^(BOOL succeeded, NSError *error) {
-    
-    }];
+    BOOL isLikedByMe = [[VYBCache sharedCache] vybeLikedByMe:aVybe];
+    if (isLikedByMe) {
+        [VYBUtility unlikeVybeInBackground:aVybe block:nil];
+        [self.likeButton setSelected:NO];
+    } else {
+        [VYBUtility likeVybeInBackground:aVybe block:nil];
+        [self.likeButton setSelected:YES];
+    }
 }
 
 
