@@ -30,8 +30,8 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheFreshVybeCountChangedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBHubScreenVybesLoadedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBUtilityVybesLoadedNotification object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
 
 }
 
@@ -45,13 +45,12 @@
     [refreshControl addTarget:self action:@selector(refreshControlPulled:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(vybesLoaded) name:VYBHubScreenVybesLoadedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(vybesLoaded) name:VYBUtilityVybesLoadedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBCacheFreshVybeCountChangedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybeCountChanged) name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
 
-    
     if (!self.sortedKeys)
-        [self freshVybeCountChanged];
+        [self vybesLoaded];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -65,9 +64,17 @@
 }
 
 - (void)refreshControlPulled:(id)sender {
-    [VYBUtility fetchFreshVybeFeedWithCompletion:^(BOOL succeeded, NSError *error) {
-        [self.refreshControl endRefreshing];
-    }];
+    if ( [[VYBCache sharedCache] vybesByLocation] ) {
+        [VYBUtility fetchFreshVybeFeedWithCompletion:^(BOOL succeeded, NSError *error) {
+            [self.refreshControl endRefreshing];
+        }];
+    } else {
+        [VYBUtility getVybesByLocationAndByUser:^(BOOL succeeded, NSError *error) {
+            [VYBUtility fetchFreshVybeFeedWithCompletion:^(BOOL succeeded, NSError *error) {
+                [self.refreshControl endRefreshing];
+            }];
+        }];
+    }
 }
 
 #pragma mark - UITableViewController
@@ -143,7 +150,15 @@
 }
 
 - (void)vybesLoaded {
-    [self freshVybeCountChanged];
+    if (![[VYBCache sharedCache] freshVybesByLocation]) {
+        [VYBUtility fetchFreshVybeFeedWithCompletion:^(BOOL succeeded, NSError *error) {
+            [self freshVybesByLocation];
+        }];
+    }
+    else if ( [[VYBCache sharedCache] vybesByLocation] )
+        [self freshVybeCountChanged];
+    else
+        return;
 }
 
 #pragma mark - ()

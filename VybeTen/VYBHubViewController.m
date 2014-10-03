@@ -60,36 +60,12 @@
     [self.navigationItem setTitle:@"vybe"];
 }
 
-- (void)getUsersByLocation {    
-    PFQuery *query = [PFUser query];
-    // 24 TTL checking
-    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
-    [query whereKey:kVYBUserLastVybedTimeKey greaterThanOrEqualTo:someTimeAgo];
-    [query whereKey:kVYBUserUsernameKey notEqualTo:[PFUser currentUser][kVYBUserUsernameKey]];
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            for (PFObject *aUser in objects) {
-                NSArray *token = [aUser[kVYBUserLastVybedLocationKey] componentsSeparatedByString:@","];
-                if (token.count != 3)
-                    continue;
-                
-                //NOTE: we discard the first location field (neighborhood)
-                NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
-                [[VYBCache sharedCache] addUser:aUser forLocation:keyString];
-            }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:VYBHubScreenVybesLoadedNotification object:nil];
-            });
-        }
-    }];
-}
-
-
 - (void)getVybesByLocationAndByUser {
     [VYBUtility getVybesByLocationAndByUser:^(BOOL succeeded, NSError *error) {
         if (!error) {
-            [self getUsersByLocation];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:VYBUtilityVybesLoadedNotification object:nil];
+            });
         }
     }];
 }
