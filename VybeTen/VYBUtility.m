@@ -20,6 +20,10 @@
 
 #pragma mark - Activity
 + (void)getNewActivityCountWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock {
+    if (![PFUser currentUser]) {
+        return;
+    }
+    
     PFQuery *query = [PFQuery queryWithClassName:kVYBActivityClassKey];
     [query whereKey:kVYBActivityToUserKey equalTo:[PFUser currentUser]];
     NSDate *someTimeAgo = [NSDate dateWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
@@ -59,6 +63,12 @@
     
     [currUsr setObject:[NSDate date] forKey:kVYBUserLastRefreshedKey];
     [currUsr saveInBackground];
+    
+    // Set icon bagde to 0
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    currentInstallation.badge = 0;
+    [currentInstallation saveInBackground];
+    
 }
 
 

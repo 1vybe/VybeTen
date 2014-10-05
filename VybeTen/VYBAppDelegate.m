@@ -120,19 +120,15 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    // status bar
-    
-    // navigation bar settings
-    [[UINavigationBar appearance] setTranslucent:NO];
+    /* navigation bar settings */
+    //[[UINavigationBar appearance] setTranslucent:YES];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"whiteTopBar.png"] forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setTintColor:COLOR_MAIN];
-    
     // title font
     NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
     [titleBarAttributes setValue:[UIFont fontWithName:@"ProximaNovaSoft-Regular" size:20.0] forKey:NSFontAttributeName];
     [titleBarAttributes setValue:COLOR_MAIN forKey:NSForegroundColorAttributeName];
     [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
-    
     // back button image
     [[UINavigationBar appearance] setBackIndicatorImage:[UIImage imageNamed:@"button_navi_back.png"]];
     [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
@@ -155,11 +151,6 @@
         VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
         [self.captureNavigationVC pushViewController:logInVC animated:NO];
     }
-    
-    // Initial fetch of feed
-    [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
-    // Get activity count
-    [VYBUtility getNewActivityCountWithCompletion:nil];
     
     self.activityVC = [[VYBActivityTableViewController alloc] init];
     self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.activityVC];
@@ -236,9 +227,6 @@
     else
         NSLog(@"Vybe in bg. User info is lost. :(");
     
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    currentInstallation.badge = [[VYBUserStore sharedStore] newPrivateVybeCount];
-    [currentInstallation saveEventually];
 }
 
 
@@ -290,6 +278,13 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
+    
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+        application.applicationIconBadgeNumber = application.applicationIconBadgeNumber + 1;
+    }
+    /*
     if ([userInfo objectForKey:kVYBPushPayloadVybeIDKey]) {
         PFInstallation *currentInstallation = [PFInstallation currentInstallation];
         currentInstallation.badge = currentInstallation.badge + 1;
@@ -297,6 +292,7 @@
         [[VYBUserStore sharedStore] setNewPrivateVybeCount:[[VYBUserStore sharedStore] newPrivateVybeCount] + 1];
         [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:self];
     }
+    */
 }
 
 

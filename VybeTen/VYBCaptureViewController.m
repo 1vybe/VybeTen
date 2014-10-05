@@ -267,7 +267,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     // Google Analytics
     self.screenName = @"Capture Screen";
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -788,7 +787,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (void)applicationDidBecomeActiveNotificationReceived:(id)sender {    
-
+    // Refresh fetch of feed and activity count when app is brought to foreground
+    [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
+    [VYBUtility getNewActivityCountWithCompletion:nil];
 }
 
 - (void)freshVybeCountChanged {
