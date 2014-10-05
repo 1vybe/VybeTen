@@ -85,6 +85,7 @@ var alertPayload = function(request) {
   } else if (request.object.get("type") === "like") {
     return {
       alert: alertMessage(request), // Set our alert message.
+      badge: 'Increment',
       // The following keys help Anypic load the correct vybe in response to this push notification.
       p: 'a', // Payload Type: Activity
       t: 'l', // Activity Type: Like
