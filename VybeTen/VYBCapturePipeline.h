@@ -19,7 +19,7 @@
 - (void)stopRecording;
 
 - (void)flipCameraWithCompletion:(void (^)())completionBlock;
-
+@property (nonatomic, getter=isFlashOn) BOOL flashOn;
 @end
 
 @protocol VYBCapturePipelineDelegate <NSObject>

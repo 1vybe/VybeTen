@@ -157,17 +157,20 @@
         if ( [[UIDevice currentDevice] isMultitaskingSupported] )
             _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
         
-        [recordButton setEnabled:NO];
-        [recordButton setTitle:@"Stop" forState:UIControlStateNormal];
-        
         self.currVybe = [[VYBMyVybe alloc] init];
         [self.currVybe setTimeStamp:[NSDate date]];
         [[VYBMyVybeStore sharedStore] setCurrVybe:self.currVybe];
+        
+        [recordButton setEnabled:NO];
+        [recordButton setTitle:@"Stop" forState:UIControlStateNormal];
+
+        
         [capturePipeline setRecordingOrientation:_captureOrientation];
         [capturePipeline startRecording];
         _isRecording = YES;
         [self syncUIWithRecordingStatus];
     } else {
+        [recordButton setEnabled:NO];
         [capturePipeline stopRecording];
     }
 }
@@ -199,6 +202,7 @@
 
 - (void)capturePipelineRecordingDidStart:(VYBCapturePipeline *)pipeline {
     [recordButton setEnabled:YES];
+    [NSTimer scheduledTimerWithTimeInterval:VYBE_LENGTH_SEC target:self selector:@selector(timer:) userInfo:nil repeats:NO];
 }
 
 - (void)capturePipelineRecordingWillStop:(VYBCapturePipeline *)pipeline {
@@ -242,25 +246,10 @@
 - (IBAction)flashButtonPressed:(id)sender {
     _flashOn = !_flashOn;
     flashButton.selected = _flashOn;
+    [capturePipeline setFlashOn:_flashOn];
 }
 
 
-+ (void)setTorchMode:(AVCaptureTorchMode)torchMode forDevice:(AVCaptureDevice *)device
-{
-	if ([device hasTorch] && [device isTorchModeSupported:torchMode])
-	{
-		NSError *error = nil;
-		if ([device lockForConfiguration:&error])
-		{
-            [device setTorchMode:torchMode];
-			[device unlockForConfiguration];
-		}
-		else
-		{
-			NSLog(@"%@", error);
-		}
-	}
-}
 
 
 #pragma mark - UIResponder
@@ -362,41 +351,15 @@
 }
 */
 - (void)timer:(NSTimer *)timer {
-    /*
-    double secondsSinceStart = [[NSDate date] timeIntervalSinceDate:startTime];
-    // less than 3.0 because of a delay in drawing. This guarantees user hold until red circle is full to pass the minimum
-    if (secondsSinceStart >= VYBE_LENGTH_SEC) {
-        [self.captureButton removeFromSuperview];
-        isRecording = NO;
-        [self syncUIWithRecordingStatus:NO];
-        if (_videoWriter.status == AVAssetWriterStatusWriting) {
-            [_videoWriterInput markAsFinished];
-            [_audioWriterInput markAsFinished];
-            [_videoWriter finishWritingWithCompletionHandler:^{
-                _videoWriterInput = nil;
-                _videoWriter = nil;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self stopRecording];
-                });
-            }];
-        }
+    if (_isRecording) {
+        [recordButton setEnabled:NO];
+        [capturePipeline stopRecording];
     }
-    else if (secondsSinceStart >= 2.89) {
-        if (!self.captureButton.passedMin) {
-            self.captureButton.passedMin = YES;
-        }
-        double maxPercent = (secondsSinceStart - 2.89) / (VYBE_LENGTH_SEC - 2.89);
-        [self.captureButton setMaxPercentage:maxPercent];
-    } else {
-        double minPercent = secondsSinceStart / 2.89;
-        [self.captureButton setMinPercentage:minPercent];
-    }
-    [self.captureButton setNeedsDisplay];
-    */
 }
 
+/*
 - (void)stopRecording {
-    /*
+
     NSDate *now = [NSDate date];
     double secondsSinceStart = [now timeIntervalSinceDate:startTime];
     
@@ -419,11 +382,12 @@
     recordingTimer = nil;
     
     [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOff forDevice:[[self videoInput] device]];
-    */
 }
+*/
 
 
-#pragma mark - CLLocationManagerDelegate 
+
+#pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
     NSLog(@"Failed to get current location");

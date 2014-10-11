@@ -309,6 +309,9 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
             return;
         }
         
+        dispatch_async(_sessionQueue, ^{
+            [self setTorchMode:([self isFlashOn]) ? AVCaptureTorchModeOn : AVCaptureTorchModeOff forDevice:[_videoDeviceInput device]];
+        });
         _recordingStatus = VYBRecorderRecordingStatusStartingRecording;
         
         _recorder = [[VYBCaptureRecorder alloc] init];
@@ -327,6 +330,10 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
         if (_recordingStatus != VYBRecorderRecordingStatusRecording) {
             return;
         }
+        
+        dispatch_async(_sessionQueue, ^{
+            [self setTorchMode:AVCaptureTorchModeOff forDevice:[_videoDeviceInput device]];
+        });
         
         _recordingStatus = VYBRecorderRecordingStatusStoppingRecording;
         dispatch_async(_delegateCallbackQueue, ^{
@@ -463,6 +470,24 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
     }
     return captureDevice;
 }
+
+- (void)setTorchMode:(AVCaptureTorchMode)torchMode forDevice:(AVCaptureDevice *)device
+{
+    if ([device hasTorch] && [device isTorchModeSupported:torchMode])
+    {
+        NSError *error = nil;
+        if ([device lockForConfiguration:&error])
+        {
+            [device setTorchMode:torchMode];
+            [device unlockForConfiguration];
+        }
+        else
+        {
+            NSLog(@"%@", error);
+        }
+    }
+}
+
 
 
 
