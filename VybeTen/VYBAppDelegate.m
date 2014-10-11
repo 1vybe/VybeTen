@@ -212,7 +212,9 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
-{    
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
+    
     BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
     if (success)
         NSLog(@"Vybe in bg. My vybes are saved. :)");
@@ -247,7 +249,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidBecomeActive object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidBecomeActiveNotification object:self];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {

@@ -8,15 +8,8 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
-#import "VYBCaptureButton.h"
 #import "GAITrackedViewController.h"
 
-
-@class VYBTribe;
-@class VYBLabel;
-
-@interface VYBCaptureViewController : GAITrackedViewController <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, CLLocationManagerDelegate>
-
-@property (nonatomic, strong) VYBCaptureButton *captureButton;
-
+@protocol VYBCapturePipelineDelegate;
+@interface VYBCaptureViewController : GAITrackedViewController
 @end

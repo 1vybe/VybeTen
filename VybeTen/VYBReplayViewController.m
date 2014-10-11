@@ -48,6 +48,8 @@
     [self setNeedsStatusBarAppearanceUpdate];
    
     self.isPublic = YES;
+    
+    self.currVybe = [[VYBMyVybeStore sharedStore] currVybe];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

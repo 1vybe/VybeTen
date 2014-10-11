@@ -10,6 +10,7 @@
 #import "VYBMyVybe.h"
 
 @interface VYBMyVybeStore : NSObject {
+    VYBMyVybe *_currVybe;
     NSArray *myVybes;
     NSMutableArray *uploadQueue;
 }
@@ -18,7 +19,8 @@
 - (void)addVybe:(VYBMyVybe *)aVybe;
 - (void)uploadDelayedVybes;
 - (NSString *)myVybesArchivePath;
-
+- (void)setCurrVybe:(VYBMyVybe *)aVybe;
+- (VYBMyVybe *)currVybe;
 
 - (BOOL)saveChanges;
 

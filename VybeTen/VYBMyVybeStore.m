@@ -119,6 +119,13 @@
     myVybes = newArray;
 }
 
+- (void)setCurrVybe:(VYBMyVybe *)aVybe {
+    _currVybe = aVybe;
+}
+
+- (VYBMyVybe *)currVybe {
+    return _currVybe;
+}
 
 - (NSString *)myVybesArchivePath {
     NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

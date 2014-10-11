@@ -53,12 +53,13 @@ typedef enum {
 
 #pragma mark - NSNotification
 extern NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification;
+extern NSString *const VYBAppDelegateApplicationDidBecomeActiveNotification;
+extern NSString *const VYBAppDelegateApplicationDidEnterBackgourndNotification;
 extern NSString *const VYBFreshVybeFeedFetchedFromRemoteNotification;
 extern NSString *const VYBUtilityVybesLoadedNotification;
 extern NSString *const VYBCacheFreshVybeCountChangedNotification;
 extern NSString *const VYBUtilityActivityCountUpdatedNotification;
 extern NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification;
-extern NSString *const VYBAppDelegateApplicationDidBecomeActive;
 
 
 #pragma mark - NSUserDefaults
