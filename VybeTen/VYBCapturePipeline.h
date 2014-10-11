@@ -18,6 +18,8 @@
 - (void)startRecording;
 - (void)stopRecording;
 
+- (void)flipCameraWithCompletion:(void (^)())completionBlock;
+
 @end
 
 @protocol VYBCapturePipelineDelegate <NSObject>

@@ -49,8 +49,8 @@
     NSTimer *recordingTimer;
     CMTime lastSampleTime;
     
-    BOOL flashOn;
-    BOOL isFrontCamera;
+    BOOL _flashOn;
+    BOOL _isFrontCamera;
     BOOL _isRecording;
     
     CLLocationManager *locationManager;
@@ -133,8 +133,8 @@
     
     [capturePipeline startRunning];
     
-    flashButton.selected = flashOn;
-    flipButton.selected = isFrontCamera;
+    flashButton.selected = _flashOn;
+    flipButton.selected = _isFrontCamera;
     
     // Google Analytics
     self.screenName = @"Capture Screen";
@@ -166,6 +166,7 @@
         [capturePipeline setRecordingOrientation:_captureOrientation];
         [capturePipeline startRecording];
         _isRecording = YES;
+        [self syncUIWithRecordingStatus];
     } else {
         [capturePipeline stopRecording];
     }
@@ -173,6 +174,7 @@
 
 - (void)recordingStopped {
     _isRecording = NO;
+    [self syncUIWithRecordingStatus];
     [recordButton setEnabled:YES];
     [recordButton setTitle:@"Record" forState:UIControlStateNormal];
     
@@ -217,70 +219,29 @@
 #pragma mark - Capture Settings
 
 - (IBAction)flipButtonPressed:(id)sender {
-    /*
+    
     [[self flipButton] setEnabled:NO];
     [[self flashButton] setEnabled:NO];
     [[self activityButton] setEnabled:NO];
     [[self hubButton] setEnabled:NO];
     
-    dispatch_async([self sessionQueue], ^{
-        AVCaptureDevice *currentVideoDevice = [[self videoInput] device];
-        AVCaptureDevicePosition currentPosition = [currentVideoDevice position];
-        AVCaptureDevicePosition prefferedPosition = AVCaptureDevicePositionUnspecified;
-        
-        switch (currentPosition) {
-            case AVCaptureDevicePositionUnspecified:
-                prefferedPosition = AVCaptureDevicePositionBack;
-                break;
-            case AVCaptureDevicePositionBack:
-                prefferedPosition = AVCaptureDevicePositionFront;
-                break;
-            case AVCaptureDevicePositionFront:
-                prefferedPosition = AVCaptureDevicePositionBack;
-                break;
-        }
-        
-        AVCaptureDevice *videoDevice = [VYBCaptureViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:prefferedPosition];
-        AVCaptureDeviceInput *videoInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:nil];
-        
-        [[self session] beginConfiguration];
-        
-        [[self session] removeInput:[self videoInput]];
-        
-        if ( [[self session] canAddInput:videoInput] ) {
-            [[self session] addInput:videoInput];
-        } else {
-            NSLog(@"session could NOT add video input");
-        }
-        [self setVideoInput:videoInput];
-        
-        // Video should be mirrored if coming from the front camera
-        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoMirrored:[videoDevice position] == AVCaptureDevicePositionFront];
-        
-        // Re-fixing videoOutput connection orientation to portrait because adding a new videoInput the orientation to landscape by default
-        [[[self videoOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:AVCaptureVideoOrientationPortrait];
-
-        [[self session] commitConfiguration];
-        
-        
+    [capturePipeline flipCameraWithCompletion:^(AVCaptureDevicePosition cameraPosition){
         dispatch_async(dispatch_get_main_queue(), ^{
-            isFrontCamera = [videoDevice position] == AVCaptureDevicePositionFront;
-            [[self flipButton] setSelected:isFrontCamera];
+            _isFrontCamera = (cameraPosition == AVCaptureDevicePositionFront);
+            [[self flipButton] setSelected:_isFrontCamera];
             [[self flipButton] setEnabled:YES];
             [[self flashButton] setEnabled:YES];
-            [[self flashButton] setHidden:isFrontCamera];
+            [[self flashButton] setHidden:_isFrontCamera];
             [[self activityButton] setEnabled:YES];
             [[self hubButton] setEnabled:YES];
         });
-        
-    });
-    */
+    }];
 }
 
 
 - (IBAction)flashButtonPressed:(id)sender {
-    flashOn = !flashOn;
-    flashButton.selected = flashOn;
+    _flashOn = !_flashOn;
+    flashButton.selected = _flashOn;
 }
 
 
@@ -584,11 +545,11 @@
 
 #pragma mark - ()
 
-- (void)syncUIWithRecordingStatus:(BOOL)status {
-    self.activityButton.hidden = status;
-    self.hubButton.hidden = status;
-    flipButton.hidden = status;
-    flashButton.hidden = status || isFrontCamera;
+- (void)syncUIWithRecordingStatus {
+    self.activityButton.hidden = _isRecording;
+    self.hubButton.hidden = _isRecording;
+    flipButton.hidden = _isRecording;
+    flashButton.hidden = _isRecording || _isFrontCamera;
 }
 
 - (IBAction)activityButtonPressed:(id)sender {

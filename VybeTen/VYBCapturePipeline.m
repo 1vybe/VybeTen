@@ -33,6 +33,9 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
     dispatch_queue_t _sessionQueue;
     BOOL _sessionRunning;
     
+    AVCaptureDeviceInput *_videoDeviceInput;
+    AVCaptureVideoDataOutput *_videoDataOutput;
+    
     AVCaptureConnection *_videoConnection;
     AVCaptureConnection *_audioConnection;
 
@@ -122,19 +125,19 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
     if ([_session canAddInput:videoDeviceInput]) {
         [_session addInput:videoDeviceInput];
     }
-
+    _videoDeviceInput = videoDeviceInput;
     // Adding video output to session
-    AVCaptureVideoDataOutput *videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
-    videoDataOutput.alwaysDiscardsLateVideoFrames = NO;
-    videoDataOutput.videoSettings = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey];
-    [videoDataOutput setSampleBufferDelegate:self queue:_videoDataOutputQueue];
-    [videoDataOutput setAlwaysDiscardsLateVideoFrames:NO];
-    if ([_session canAddOutput:videoDataOutput]) {
-        [_session addOutput:videoDataOutput];
+    _videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
+    _videoDataOutput.alwaysDiscardsLateVideoFrames = NO;
+    _videoDataOutput.videoSettings = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey];
+    [_videoDataOutput setSampleBufferDelegate:self queue:_videoDataOutputQueue];
+    [_videoDataOutput setAlwaysDiscardsLateVideoFrames:NO];
+    if ([_session canAddOutput:_videoDataOutput]) {
+        [_session addOutput:_videoDataOutput];
     }
-    _videoConnection = [videoDataOutput connectionWithMediaType:AVMediaTypeVideo];
+    _videoConnection = [_videoDataOutput connectionWithMediaType:AVMediaTypeVideo];
     [_videoConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
-    
+
     return;
 }
 
@@ -386,6 +389,43 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
             [_delegate capturePipeline:self didStopWithError:error];
         });
     }
+}
+
+- (void)flipCameraWithCompletion:(void (^)())completionBlock {
+    dispatch_async(_sessionQueue, ^{
+        AVCaptureDevicePosition currentPosition = [[_videoDeviceInput device] position];
+        AVCaptureDevicePosition prefferedPosition = AVCaptureDevicePositionUnspecified;
+        
+        switch (currentPosition) {
+            case AVCaptureDevicePositionUnspecified:
+                prefferedPosition = AVCaptureDevicePositionBack;
+                break;
+            case AVCaptureDevicePositionBack:
+                prefferedPosition = AVCaptureDevicePositionFront;
+                break;
+            case AVCaptureDevicePositionFront:
+                prefferedPosition = AVCaptureDevicePositionBack;
+                break;
+        }
+        
+        AVCaptureDevice *videoDevice = [VYBCapturePipeline deviceWithMediaType:AVMediaTypeVideo preferringPosition:prefferedPosition];
+        AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:nil];
+        [_session beginConfiguration];
+        [_session removeInput:_videoDeviceInput];
+        if ( [_session canAddInput:videoDeviceInput] ) {
+            [_session addInput:videoDeviceInput];
+        }
+        _videoDeviceInput = videoDeviceInput;
+        _videoConnection = [_videoDataOutput connectionWithMediaType:AVMediaTypeVideo];
+        // Video should be mirrored if coming from the front camera
+        [_videoConnection setVideoMirrored:[videoDevice position] == AVCaptureDevicePositionFront];
+        // Re-fixing videoOutput connection orientation to portrait because adding a new videoInput the orientation to landscape by default
+        [_videoConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+        [_session commitConfiguration];
+        if (completionBlock)
+            completionBlock();
+    });
+
 }
 
 #pragma mark - ()
