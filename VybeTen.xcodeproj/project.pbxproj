@@ -91,6 +91,7 @@
 		607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 607CA69918C5C80C0060B420 /* VYBPlayerView.m */; };
 		60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */; };
 		876FD1CBA2104ACB85FFFB93 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D4D61F35BF543039A00CFD0 /* libPods.a */; };
+		88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */; };
 		883E125019B7F69B0043BBBC /* VYBActivityTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 883E124F19B7F69B0043BBBC /* VYBActivityTableViewController.xib */; };
 		88459C0719BE97E50078E393 /* VYBBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 88459C0619BE97E50078E393 /* VYBBannerView.m */; };
 		8861F0D019A81C8C000249DB /* NSString+Username.m in Sources */ = {isa = PBXBuildFile; fileRef = 8861F0CF19A81C8C000249DB /* NSString+Username.m */; };
@@ -244,6 +245,8 @@
 		607CA69918C5C80C0060B420 /* VYBPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerView.m; sourceTree = "<group>"; };
 		60F1BBB718BAAFA900070EEC /* VYBMyVybeStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyVybeStore.h; sourceTree = "<group>"; };
 		60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybeStore.m; sourceTree = "<group>"; };
+		88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBWelcomeViewController.h; sourceTree = "<group>"; };
+		88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBWelcomeViewController.m; sourceTree = "<group>"; };
 		883E124F19B7F69B0043BBBC /* VYBActivityTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBActivityTableViewController.xib; sourceTree = "<group>"; };
 		88459C0619BE97E50078E393 /* VYBBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBBannerView.m; sourceTree = "<group>"; };
 		88459C0819BE984E0078E393 /* VYBStripeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBStripeView.h; sourceTree = "<group>"; };
@@ -466,6 +469,8 @@
 				88FF430319AFFCEB00D18872 /* VYBActivityTableViewController.h */,
 				88FF430419AFFCEB00D18872 /* VYBActivityTableViewController.m */,
 				883E124F19B7F69B0043BBBC /* VYBActivityTableViewController.xib */,
+				88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */,
+				88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -814,6 +819,7 @@
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				026385EE197972BA00B377EC /* VYBSignUpViewController.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
+				88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */,
 				88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */,
 				021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */,
 				88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */,

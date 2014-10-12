@@ -9,6 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "VYBSignUpViewController.h"
 
-@interface VYBLogInViewController : UIViewController <UITextFieldDelegate, VYBSignUpViewControllerDelegate>
+@protocol VYBLogInViewControllerDelegate;
 
+@interface VYBLogInViewController : UIViewController <UITextFieldDelegate, VYBSignUpViewControllerDelegate>
+@property (nonatomic, assign) id<VYBLogInViewControllerDelegate> delegate;
+@end
+
+@protocol VYBLogInViewControllerDelegate <NSObject>
+@optional
+- (void)logInViewController:(VYBLogInViewController *)logInController didLogInUser:(PFUser *)user;
 @end

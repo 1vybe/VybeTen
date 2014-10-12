@@ -22,6 +22,7 @@
 #import "VYBPermissionViewController.h"
 #import "VYBHubViewController.h"
 #import "VYBActivityTableViewController.h"
+#import "VYBWelcomeViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
@@ -42,6 +43,10 @@
 @property (nonatomic) VYBPlayerControlViewController *playerController;
 //@property (nonatomic, strong) VYBHubViewController *hubVC;
 @property (nonatomic, strong) VYBActivityTableViewController *activityVC;
+@property (nonatomic, strong) VYBWelcomeViewController *welcomeViewController;
+
+- (void)setupAppearance;
+- (BOOL)shouldProceedToMainInterface;
 @end
 
 @implementation VYBAppDelegate
@@ -110,16 +115,12 @@
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
     /* navigation bar settings */
-    [[UINavigationBar appearance] setTintColor:COLOR_MAIN];
-    // title font
-    NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
-    [titleBarAttributes setValue:[UIFont fontWithName:@"ProximaNovaSoft-Regular" size:20.0] forKey:NSFontAttributeName];
-    [titleBarAttributes setValue:COLOR_MAIN forKey:NSForegroundColorAttributeName];
-    [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
-    // back button image
-    [[UINavigationBar appearance] setBackIndicatorImage:[UIImage imageNamed:@"button_navi_back.png"]];
-    [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
+    [self setupAppearance];
 
+    self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
+
+    self.navController = [[VYBNavigationController alloc] initWithRootViewController:self.welcomeViewController];
+    self.navController.navigationBarHidden = YES;
     
     //self.hubVC = [[VYBHubViewController alloc] initWithPageIndex:VYBHubPageIndex];
     
@@ -326,14 +327,108 @@
     
 }
 
+#pragma mark - VYBLogInViewController
+
+- (void)logInViewController:(VYBLogInViewController *)logInController didLogInUser:(PFUser *)user{
+    [self shouldProceedToMainInterface];
+}
+
 #pragma mark - AppDelegate
 
 - (BOOL)isParseReachable {
     return self.networkStatus != NotReachable;
 }
 
+- (void)presentLoginViewControllerAnimated:(BOOL)animated {
+    VYBLogInViewController *loginViewController = [[VYBLogInViewController alloc] init];
+    [loginViewController setDelegate:self];
+//    loginViewController.fields = PFLogInFieldsFacebook;
+//    loginViewController.facebookPermissions = @[ @"user_about_me" ];
+    
+    [self.welcomeViewController presentViewController:loginViewController animated:NO completion:nil];
+}
+
+- (void)presentLoginViewController {
+    [self presentLoginViewControllerAnimated:YES];
+}
+
+- (void)presentPageViewController {
+    self.pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+    
+    self.hubNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBHubPageIndex];
+    
+    self.captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
+    self.captureNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBCapturePageIndex withRootViewController:self.captureVC];
+    self.captureNavigationVC.navigationBarHidden = YES;
+    
+//    // Checking permissions
+//    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+//        VYBPermissionViewController *permission = [[VYBPermissionViewController alloc] init];
+//        [self.captureNavigationVC pushViewController:permission animated:NO];
+//    }
+    
+//    // Checking login status
+//    if (![PFUser currentUser]) {
+//        VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
+//        [self.captureNavigationVC pushViewController:logInVC animated:NO];
+//    }
+    
+    self.activityVC = [[VYBActivityTableViewController alloc] init];
+    self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.activityVC];
+    
+    self.viewControllers = [[NSArray alloc] initWithObjects:self.hubNavigationVC, self.captureNavigationVC, self.activityNavigationVC, nil];
+    
+    [self.pageController setViewControllers:@[self.captureNavigationVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    self.pageController.dataSource = self;
+    
+    [self.navController setViewControllers:@[ self.welcomeViewController, self.pageController ] animated:NO];
+}
+
+- (void)logOut {
+    // clear cache
+    [[VYBCache sharedCache] clear];
+    
+//    // clear NSUserDefaults
+//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPAPUserDefaultsCacheFacebookFriendsKey];
+//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kVYBUserDefaultsActivityFeedViewControllerLastRefreshKey];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    // Unsubscribe from push notifications by removing the user association from the current installation.
+    [[PFInstallation currentInstallation] removeObjectForKey:kVYBInstallationUserKey];
+    [[PFInstallation currentInstallation] saveInBackground];
+    
+    // Clear all caches
+    [PFQuery clearAllCachedResults];
+    
+    // Log out
+    [PFUser logOut];
+    
+    // clear out cached data, view controllers, etc
+    [self.navController popToRootViewControllerAnimated:NO];
+    
+    [self presentLoginViewController];
+    
+    self.hubNavigationVC = nil;
+    self.captureVC = nil;
+    self.captureNavigationVC = nil;
+    self.activityVC = nil;
+    self.activityNavigationVC = nil;
+    self.viewControllers = nil;
+}
 
 #pragma mark - ()
+
+- (void)setupAppearance {
+    [[UINavigationBar appearance] setTintColor:COLOR_MAIN];
+    // title font
+    NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
+    [titleBarAttributes setValue:[UIFont fontWithName:@"ProximaNovaSoft-Regular" size:20.0] forKey:NSFontAttributeName];
+    [titleBarAttributes setValue:COLOR_MAIN forKey:NSForegroundColorAttributeName];
+    [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
+    // back button image
+    [[UINavigationBar appearance] setBackIndicatorImage:[UIImage imageNamed:@"button_navi_back.png"]];
+    [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
+}
 
 - (void)monitorReachability {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
@@ -360,6 +455,14 @@
         // Parse is reachable and calling this method will only upload a vybe if there is
         [[VYBMyVybeStore sharedStore] startUploadingOldVybes];
     }
+}
+
+- (BOOL)shouldProceedToMainInterface {
+//    [MBProgressHUD hideHUDForView:self.navController.presentedViewController.view animated:YES];
+    [self presentPageViewController];
+    
+    [self.navController dismissViewControllerAnimated:YES completion:nil];
+    return YES;
 }
 
 @end
