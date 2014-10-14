@@ -141,7 +141,6 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
     return;
 }
 
-#warning session should stop running when entered background
 - (void)stopRunning {
     dispatch_async(_sessionQueue, ^{
         _sessionRunning = NO;

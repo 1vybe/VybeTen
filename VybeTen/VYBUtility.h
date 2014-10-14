@@ -10,8 +10,7 @@
 #import <Parse/Parse.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
-@class VYBMyVybe;
-
+@class VYBVybe;
 @interface VYBUtility : NSObject
 
 + (void)getNewActivityCountWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock;
@@ -26,9 +25,8 @@
 + (void)getVybesByLocationAndByUserInBackground;
 + (void)getVybesByLocationAndByUser:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 
-+ (void)clearLocalCacheForVybe:(VYBMyVybe *)aVybe;
 //+ (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
-+ (void)saveThumbnailImageForVybe:(VYBMyVybe *)mVybe;
++ (void)saveThumbnailImageForVybe:(VYBVybe *)mVybe;
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate;
 + (NSString *)reverseTime:(NSDate *)aDate;
 + (void)reverseGeoCode:(PFGeoPoint *)aLocation withCompletion:(void (^)(NSArray *placemarks, NSError *error))completionBlock;

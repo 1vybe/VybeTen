@@ -270,6 +270,9 @@
 }
 
 + (void)getVybesByLocationAndByUser:(void (^)(BOOL succeeded, NSError *error))completionBlock {
+    if ( ! [PFUser currentUser] )
+        return;
+    
     PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
     // 24 TTL checking
     NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
@@ -332,7 +335,7 @@
 
 #pragma mark Thumbnail
 
-+ (void)saveThumbnailImageForVybe:(VYBMyVybe *)mVybe {
++ (void)saveThumbnailImageForVybe:(VYBVybe *)mVybe {
     NSURL *url = [[NSURL alloc] initFileURLWithPath:[mVybe videoFilePath]] ;
     // Generating and saving a thumbnail for the captured vybe
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
@@ -348,24 +351,6 @@
     [thumbData writeToURL:thumbURL atomically:YES];
 }
 
-+ (void)clearLocalCacheForVybe:(VYBMyVybe *)aVybe {
-    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[aVybe videoFilePath]];
-    NSURL *thumbnailURL = [[NSURL alloc] initFileURLWithPath:[aVybe thumbnailFilePath]];
-    NSError *error;
-    [[NSFileManager defaultManager] removeItemAtURL:videoURL error:&error];
-    if (error) {
-        NSLog(@"[Utility] Cached video was NOT deleted");
-    } else {
-        NSLog(@"[Utility] Cached video was DELETED");
-    }
-    
-    [[NSFileManager defaultManager] removeItemAtURL:thumbnailURL error:&error];
-    if (error) {
-        NSLog(@"[Utility] Cached thumbnail image was NOT deleted");
-    } else {
-        NSLog(@"[Utility] Cached thumbnail image was DELETED");
-    }
-}
 
 #pragma mark Display Name
 
@@ -457,14 +442,16 @@
 }
 
 + (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title {
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:aIamge];
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[[UIApplication sharedApplication] delegate].window];
-    [[[UIApplication sharedApplication] delegate].window addSubview:hud];
-    hud.mode = MBProgressHUDModeCustomView;
-    hud.customView = imageView;
-    hud.labelText = title;
-    [hud show:YES];
-    [hud hide:YES afterDelay:1.0];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:aIamge];
+        MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[[UIApplication sharedApplication] delegate].window];
+        [[[UIApplication sharedApplication] delegate].window addSubview:hud];
+        hud.mode = MBProgressHUDModeCustomView;
+        hud.customView = imageView;
+        hud.labelText = title;
+        [hud show:YES];
+        [hud hide:YES afterDelay:1.0];
+    });
 }
 
 + (CGAffineTransform)getTransformFromOrientation:(NSInteger)orientation {

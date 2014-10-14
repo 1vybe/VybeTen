@@ -60,6 +60,7 @@ extern NSString *const VYBUtilityVybesLoadedNotification;
 extern NSString *const VYBCacheFreshVybeCountChangedNotification;
 extern NSString *const VYBUtilityActivityCountUpdatedNotification;
 extern NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification;
+extern NSString *const VYBMyVybeStoreLocationFetchedNotification;
 
 
 #pragma mark - NSUserDefaults

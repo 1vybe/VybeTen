@@ -18,6 +18,7 @@ NSString *const VYBUtilityVybesLoadedNotification = @"com.vybe.app.utility.vybes
 NSString *const VYBUtilityActivityCountUpdatedNotification = @"com.vybe.app.utility.activityCountUpdated";
 NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification     = @"com.vybe.app.utility.userLikedUnlikedVybeCallbackFinished";
 NSString *const VYBCacheFreshVybeCountChangedNotification       = @"com.vybe.app.cache.freshVybeCountChanged";
+NSString *const VYBMyVybeStoreLocationFetchedNotification       = @"com.vybe.app.myvybestore.locationFetched";
 
 #pragma mark - NSUserDefaults
 NSString *const kVYBUserDefaultsCacheFacebookFriendsKey         = @"com.vybe.app.userDefaults.cache.facebookFriends";

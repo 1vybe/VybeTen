@@ -10,10 +10,8 @@
 #import <AVFoundation/AVFoundation.h>
 
 @class VYBPlayerView;
-@class VYBMyVybe;
+@class VYBVybe;
 
 @interface VYBReplayViewController : UIViewController
-
-@property (nonatomic) VYBMyVybe *currVybe;
-
+@property (nonatomic, readonly) VYBVybe *currVybe;
 @end

@@ -25,7 +25,6 @@
 
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *currItem;
-@property (nonatomic) BOOL isPublic;
 
 @end
 
@@ -34,6 +33,8 @@
 - (void)dealloc {
     self.player = nil;
     self.playerView = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBMyVybeStoreLocationFetchedNotification object:nil];
 }
 
 - (void)viewDidLoad
@@ -44,12 +45,12 @@
     
     [self.playerView setPlayer:self.player];
     
+    _currVybe = [[VYBMyVybeStore sharedStore] currVybe];
+        
     // Hide status bar
     [self setNeedsStatusBarAppearanceUpdate];
-   
-    self.isPublic = YES;
     
-    self.currVybe = [[VYBMyVybeStore sharedStore] currVybe];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationFetched:) name:VYBMyVybeStoreLocationFetchedNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -76,82 +77,15 @@
 }
 
 - (IBAction)acceptButtonPressed:(id)sender {
-    NSData *video = [NSData dataWithContentsOfFile:[self.currVybe videoFilePath]];
-    
-    [VYBUtility saveThumbnailImageForVybe:self.currVybe];
-    NSData *thumbnail = [NSData dataWithContentsOfFile:[self.currVybe thumbnailFilePath]];
-    
-    PFFile *videoFile = [PFFile fileWithData:video];
-    PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
-    
-    //NOTE: vybes are ALWAYS public now
-    [self.currVybe setIsPublic:YES];
-    PFObject *vybe = [self.currVybe parseObjectVybe];
-    
-    PFACL *vybeACL = [PFACL ACLWithUser:[PFUser currentUser]];
-    [vybeACL setPublicReadAccess:YES];
-    vybe.ACL = vybeACL;
-    
-    
-    if ( [(VYBAppDelegate *)[UIApplication sharedApplication].delegate isParseReachable] ) {
-        UIProgressView *uploadProgressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-        [uploadProgressView setFrame:CGRectMake(0, 0, self.view.bounds.size.width, 50)];
-        [self.navigationController.view addSubview:uploadProgressView];
-        
-        [thumbnailFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error) {
-                [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    if (succeeded) {
-                        [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-                        [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
-                        [VYBUtility clearLocalCacheForVybe:self.currVybe];
-                        [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                            if (succeeded) {
-                                NSLog(@"Posted");
-                                [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Posted"];
-                            }
-                            else {
-                                NSLog(@"Saved");
-                                [vybe saveEventually];
-                                [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
-                            }
-                            [uploadProgressView removeFromSuperview];
-                        }];
-                    } else {
-                        [[VYBMyVybeStore sharedStore] addVybe:self.currVybe];
-                        [uploadProgressView removeFromSuperview];
-                        
-                        NSLog(@"Saved");
-                        [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
-                    }
-                } progressBlock:^(int percentDone) {
-                    uploadProgressView.progress = percentDone / 100.0;
-                }];
-            } else {
-                [[VYBMyVybeStore sharedStore] addVybe:self.currVybe];
-                [uploadProgressView removeFromSuperview];
-                
-                NSLog(@"Saved");
-                [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
-            }
-        }];
-    } else {
-        [[VYBMyVybeStore sharedStore] addVybe:self.currVybe];
-    }
-    
-    // Update user lastVybeLocation and lastVybeTime field. lastVybeLocation is updated in captureVC didUpdateLocaton
-    [[PFUser currentUser] setObject:self.currVybe.timeStamp forKey:kVYBUserLastVybedTimeKey];
-    [[PFUser currentUser] saveInBackground];
-    
+    [[VYBMyVybeStore sharedStore] uploadCurrentVybe];
     
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 
 - (IBAction)rejectButtonPressed:(id)sender {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
-        
         NSError *error;
         [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&error];
         if (error) {
@@ -161,6 +95,11 @@
     
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
+
+- (void)locationFetched:(NSNotification *)notification {
+    //[self.acceptButton setEnabled:YES];
+}
+
 
 #pragma mark - DeviceOrientation
 

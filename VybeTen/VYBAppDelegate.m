@@ -159,8 +159,6 @@
     [self.pageController setViewControllers:@[self.captureNavigationVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     self.pageController.dataSource = self;
     
-    [[VYBMyVybeStore sharedStore] uploadDelayedVybes];
-
     [self.window setRootViewController:self.pageController];
     
     self.window.backgroundColor = [UIColor blackColor];
@@ -332,7 +330,7 @@
     // Try
     if ([self isParseReachable] && [PFUser currentUser] ) {
         // Parse is reachable and calling this method will only upload a vybe if there is
-        [[VYBMyVybeStore sharedStore] uploadDelayedVybes];
+        [[VYBMyVybeStore sharedStore] startUploadingOldVybes];
     }
 }
 

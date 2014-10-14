@@ -58,7 +58,7 @@
 
 - (void)setUserCount:(NSInteger)userCount {
     _userCount = userCount;
-    
+
     followingCountLabel.text = [NSString stringWithFormat:@"%ld Following", (long)_userCount];
 }
 

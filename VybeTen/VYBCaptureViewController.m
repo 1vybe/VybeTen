@@ -24,7 +24,7 @@
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
 
-@interface VYBCaptureViewController () <VYBCapturePipelineDelegate, CLLocationManagerDelegate> 
+@interface VYBCaptureViewController () <VYBCapturePipelineDelegate> 
 
 @property (nonatomic, weak) IBOutlet UIButton *flipButton;
 @property (nonatomic, weak) IBOutlet UIButton *flashButton;
@@ -39,7 +39,7 @@
 - (IBAction)flashButtonPressed:(id)sender;
 - (IBAction)recordButtonPressed:(id)sender;
 
-@property (nonatomic) VYBMyVybe *currVybe;
+//@property (nonatomic) VYBMyVybe *currVybe;
 @property (nonatomic) VYBCapturePipeline *capturePipeline;
 
 @end
@@ -52,9 +52,7 @@
     BOOL _flashOn;
     BOOL _isFrontCamera;
     BOOL _isRecording;
-    
-    CLLocationManager *locationManager;
-    
+        
     AVCaptureVideoOrientation _captureOrientation;
     
     UIBackgroundTaskIdentifier _backgroundRecordingID;
@@ -90,12 +88,6 @@
 {
     _captureOrientation = AVCaptureVideoOrientationPortrait;
     
-    if ([CLLocationManager locationServicesEnabled]) {
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;
-        locationManager.desiredAccuracy=kCLLocationAccuracyBest;
-    }
-    
     // Subscribing to Notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
@@ -124,6 +116,15 @@
     
     capturePipeline = [[VYBCapturePipeline alloc] init];
     [capturePipeline setDelegate:self callbackQueue:dispatch_get_main_queue()];
+    
+    if ( ! [CLLocationManager locationServicesEnabled] ) {
+        UIAlertView *locationServiceAlert = [[UIAlertView alloc] initWithTitle:@"Enable Location Service"
+                                                                       message:@"Please allow Vybe to access your location from Settings -> Privacy -> Location Services"
+                                                                      delegate:self
+                                                             cancelButtonTitle:@"OK"
+                                                             otherButtonTitles:nil];
+        [locationServiceAlert show];
+    }
     
     [super viewDidLoad];
 }
@@ -157,9 +158,7 @@
         if ( [[UIDevice currentDevice] isMultitaskingSupported] )
             _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
         
-        self.currVybe = [[VYBMyVybe alloc] init];
-        [self.currVybe setTimeStamp:[NSDate date]];
-        [[VYBMyVybeStore sharedStore] setCurrVybe:self.currVybe];
+        [[VYBMyVybeStore sharedStore] prepareNewVybe];
         
         [recordButton setEnabled:NO];
         [recordButton setTitle:@"Stop" forState:UIControlStateNormal];
@@ -255,162 +254,14 @@
 #pragma mark - UIResponder
 
 - (void)longPressDetected:(UILongPressGestureRecognizer *)recognizer {
-    /*
-    if (!_isRecording) {
-        [self.view addSubview:self.captureButton];
-        self.captureButton.center = [recognizer locationInView:self.view];
 
-        double rotation = 0;
-        switch (lastOrientation) {
-            case AVCaptureVideoOrientationPortrait:
-                rotation = 0;
-                break;
-            case AVCaptureVideoOrientationPortraitUpsideDown:
-                rotation = -M_PI;
-                break;
-            case AVCaptureVideoOrientationLandscapeLeft:
-                rotation = -M_PI_2;
-                break;
-            case AVCaptureVideoOrientationLandscapeRight:
-                rotation = M_PI_2;
-                break;
-            default:
-                return;
-        }
-        
-        CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
-        self.captureButton.transform = transform;
-        
-        [self startRecording];
-    }
-    
-    if ([recognizer state] == UIGestureRecognizerStateChanged) {
-        CGPoint pt = [recognizer locationInView:self.view];
-        self.captureButton.center = pt;
-    }
-    
-    if (([recognizer state] == UIGestureRecognizerStateEnded) || ([recognizer state] == UIGestureRecognizerStateCancelled)) {
-        [self.captureButton removeFromSuperview];
-
-        if (isRecording) {
-            isRecording = NO;
-            [self syncUIWithRecordingStatus:NO];
-            if (_videoWriter.status == AVAssetWriterStatusWriting) {
-                [_videoWriterInput markAsFinished];
-                [_audioWriterInput markAsFinished];
-                [_videoWriter finishWritingWithCompletionHandler:^{
-                    _videoWriterInput = nil;
-                    _videoWriter = nil;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self stopRecording];
-                    });
-                }];
-            }
-        }
-    }
-    */
 }
-/*
-- (void)startRecording {
-    
-    isRecording = YES;
-    [self syncUIWithRecordingStatus:YES];
 
-    startTime = [NSDate date];
-    self.currVybe = [[VYBMyVybe alloc] init];
-    [self.currVybe setTimeStamp:startTime];
-    
-    [locationManager startUpdatingLocation];
-    
-    if (recordingTimer) {
-        [recordingTimer invalidate];
-        recordingTimer = nil;
-    }
-    
-    recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
-    
-    if (![self setUpAssetWriter]) {
-        NSLog(@"setupAssetWriter FAILED :(");
-        return;
-    }
-    
-    dispatch_async([self sessionQueue], ^{
-        if ([[UIDevice currentDevice] isMultitaskingSupported])
-        {
-            // Setup background task. This is needed because the captureOutput:didFinishRecordingToOutputFileAtURL: callback is not received until AVCam returns to the foreground unless you request background execution time. This also ensures that there will be time to write the file to the assets library when AVCam is backgrounded. To conclude this background execution, -endBackgroundTask is called in -recorder:recordingDidFinishToOutputFileURL:error: after the recorded file has been saved.
-            [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
-        }
-     
-        // Turning flash for video recording
-        if (flashOn) {
-            [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOn forDevice:[[self videoInput] device]];
-        }
-        
-    });
- 
-}
-*/
 - (void)timer:(NSTimer *)timer {
     if (_isRecording) {
         [recordButton setEnabled:NO];
         [capturePipeline stopRecording];
     }
-}
-
-/*
-- (void)stopRecording {
-
-    NSDate *now = [NSDate date];
-    double secondsSinceStart = [now timeIntervalSinceDate:startTime];
-    
-    if (secondsSinceStart >= 3.0) {
-        VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] initWithNibName:@"VYBReplayViewController" bundle:nil];
-        [replayVC setCurrVybe:self.currVybe];
-        [self presentViewController:replayVC animated:NO completion:nil];
-    }
-    else {
-        NSError *error;
-        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
-        [[NSFileManager defaultManager] removeItemAtURL:outputURL  error:&error];
-        if (error) {
-            NSLog(@"Failed to delete a vybe under 3 seconds");
-        }
-    }
-
-    startTime = nil;
-    [recordingTimer invalidate];
-    recordingTimer = nil;
-    
-    [VYBCaptureViewController setTorchMode:AVCaptureTorchModeOff forDevice:[[self videoInput] device]];
-}
-*/
-
-
-
-#pragma mark - CLLocationManagerDelegate
-
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-    NSLog(@"Failed to get current location");
-}
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    CLLocation *currLocation = [locations lastObject];
-    CLGeocoder *reverseGeocoder = [[CLGeocoder alloc] init];
-
-    [self.currVybe setGeoTag:currLocation];
-
-    [reverseGeocoder reverseGeocodeLocation:currLocation completionHandler:^(NSArray *placemarks, NSError *error)
-     {
-         CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
-         NSString *neighborhood = myPlacemark.subLocality;
-         NSString *city = myPlacemark.locality;
-         NSString *isoCountryCode = myPlacemark.ISOcountryCode;
-         NSString *locationStr = [NSString stringWithFormat:@"%@,%@,%@",neighborhood, city, isoCountryCode];
-         [self.currVybe setLocationString:locationStr];
-         [[PFUser currentUser] setObject:locationStr forKey:kVYBUserLastVybedLocationKey];
-     }];
-    
-    [locationManager stopUpdatingLocation];
 }
 
 #pragma mark - DeviceOrientation
@@ -505,7 +356,6 @@
     else
         [self.activityButton setTitle:@"" forState:UIControlStateNormal];
 }
-
 
 #pragma mark - ()
 

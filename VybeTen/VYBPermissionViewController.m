@@ -50,8 +50,9 @@
     
     if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
         [self.locationManager requestAlwaysAuthorization];
+    } else {
+        [self.locationManager startUpdatingLocation];
     }
-    [self.locationManager startUpdatingLocation];
 }
 
 - (IBAction)laterButtonPressed:(id)sender {
@@ -64,6 +65,10 @@
         self.locationManager = nil;
         [self.navigationController popViewControllerAnimated:NO];
     //}
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    [self.locationManager stopUpdatingLocation];
 }
 
 

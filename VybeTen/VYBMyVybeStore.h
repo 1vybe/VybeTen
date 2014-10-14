@@ -7,20 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "VYBMyVybe.h"
+#import "VYBVybe.h"
 
-@interface VYBMyVybeStore : NSObject {
-    VYBMyVybe *_currVybe;
-    NSArray *myVybes;
-    NSMutableArray *uploadQueue;
-}
+@interface VYBMyVybeStore : NSObject
 
 + (VYBMyVybeStore *)sharedStore;
-- (void)addVybe:(VYBMyVybe *)aVybe;
-- (void)uploadDelayedVybes;
+- (void)prepareNewVybe;
+- (void)uploadCurrentVybe;
+
+//- (void)addVybe:(VYBMyVybe *)aVybe;
+- (void)startUploadingOldVybes;
 - (NSString *)myVybesArchivePath;
-- (void)setCurrVybe:(VYBMyVybe *)aVybe;
-- (VYBMyVybe *)currVybe;
+- (VYBVybe *)currVybe;
 
 - (BOOL)saveChanges;
 
