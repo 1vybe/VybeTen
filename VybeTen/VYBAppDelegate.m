@@ -121,8 +121,6 @@
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
     /* navigation bar settings */
-    //[[UINavigationBar appearance] setTranslucent:YES];
-    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"whiteTopBar.png"] forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setTintColor:COLOR_MAIN];
     // title font
     NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
