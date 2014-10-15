@@ -218,6 +218,10 @@ static BOOL _uploadingOldVybes = NO;
     NSData *video = [NSData dataWithContentsOfFile:[aVybe videoFilePath]];
     NSData *thumbnail = [NSData dataWithContentsOfFile:[aVybe thumbnailFilePath]];
     
+    if ( ! video )
+        return NO;
+    if ( ! thumbnail )
+        return NO;
     //NSAssert(video, @"cached video does not exist");
     //NSAssert(thumbnail, @"cached thumbnail does not exist");
 
@@ -225,26 +229,31 @@ static BOOL _uploadingOldVybes = NO;
     PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
 
     BOOL success = [thumbnailFile save];
-    if (success) {
-        success = [videoFile save];
-        if (success) {
-            [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-            [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
-            success = [vybe save];
-            if (success) {
-                [self clearLocalCacheForVybe:aVybe];
+    if ( ! success )
+        return NO;
+    success = [videoFile save];
+    if ( ! success )
+        return NO;
+
+    [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
+    [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
+    success = [vybe save];
+    if ( ! success )
+        return NO;
+    
+    [self clearLocalCacheForVybe:aVybe];
                 
-                // Only update current user's lastVybedTime and lastVybeLocation if this vybe is fresher
-                NSDate *currUserLastVybedTime = [PFUser currentUser][kVYBUserLastVybedTimeKey];
-                if (currUserLastVybedTime && ([currUserLastVybedTime timeIntervalSinceDate:vybe[kVYBVybeTimestampKey]] < 0)) {
-                    [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
-                    [[PFUser currentUser] setObject:vybe[kVYBVybeLocationStringKey] forKey:kVYBUserLastVybedLocationKey];
-                    success = [[PFUser currentUser] save];
-                }
-            }
-        }
+    // Only update current user's lastVybedTime and lastVybeLocation if this vybe is fresher
+    NSDate *currUserLastVybedTime = [PFUser currentUser][kVYBUserLastVybedTimeKey];
+    if (currUserLastVybedTime &&
+        ([currUserLastVybedTime timeIntervalSinceDate:vybe[kVYBVybeTimestampKey]] < 0)) {
+        [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
+        [[PFUser currentUser] setObject:vybe[kVYBVybeLocationStringKey] forKey:kVYBUserLastVybedLocationKey];
+        success = [[PFUser currentUser] save];
+        
+        return success;
     }
-    return success;
+    return YES;
 }
 
 

@@ -160,9 +160,8 @@
         
         [[VYBMyVybeStore sharedStore] prepareNewVybe];
         
+        [recordButton setSelected:YES];
         [recordButton setEnabled:NO];
-        [recordButton setTitle:@"Stop" forState:UIControlStateNormal];
-
         
         [capturePipeline setRecordingOrientation:_captureOrientation];
         [capturePipeline startRecording];
@@ -170,6 +169,7 @@
         [self syncUIWithRecordingStatus];
     } else {
         [recordButton setEnabled:NO];
+        [recordButton setSelected:NO];
         [capturePipeline stopRecording];
     }
 }
@@ -178,7 +178,6 @@
     _isRecording = NO;
     [self syncUIWithRecordingStatus];
     [recordButton setEnabled:YES];
-    [recordButton setTitle:@"Record" forState:UIControlStateNormal];
     
     [UIApplication sharedApplication].idleTimerDisabled = NO;
     
@@ -311,6 +310,7 @@
         [self.flashButton setTransform:transform];
         [self.hubButton setTransform:transform];
         [self.activityButton setTransform:transform];
+        [recordButton setTransform:transform];
     } completion:nil];
 }
 
