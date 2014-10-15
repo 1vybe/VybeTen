@@ -54,7 +54,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-#warning why not calling [super viewWillAppear]?
+    [super viewWillAppear:animated];
     [self setNavigationBarItems];
 }
 
