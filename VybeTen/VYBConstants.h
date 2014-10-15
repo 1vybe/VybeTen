@@ -67,6 +67,16 @@ extern NSString *const VYBMyVybeStoreLocationFetchedNotification;
 extern NSString *const kVYBUserDefaultsCacheFacebookFriendsKey;
 extern NSString *const kVYBUserDefaultsActivityLastRefreshKey;
 
+extern NSString *const kVYBUserDefaultsAudioAccessPermissionKey;
+extern NSString *const kVYBUserDefaultsAudioAccessPermissionDeniedKey;
+extern NSString *const kVYBUserDefaultsAudioAccessPermissionUndeterminedKey;
+extern NSString *const kVYBUserDefaultsAudioAccessPermissionGrantedKey;
+
+extern NSString *const kVYBUserDefaultsVideoAccessPermissionKey;
+extern NSString *const kVYBUserDefaultsVideoAccessPermissionDeniedKey;
+extern NSString *const kVYBUserDefaultsVideoAccessPermissionUndeterminedKey;
+extern NSString *const kVYBUserDefaultsVideoAccessPermissionGrantedKey;
+
 
 #pragma mark - PFObject User Class
 // field keys

@@ -24,6 +24,15 @@ NSString *const VYBMyVybeStoreLocationFetchedNotification       = @"com.vybe.app
 NSString *const kVYBUserDefaultsCacheFacebookFriendsKey         = @"com.vybe.app.userDefaults.cache.facebookFriends";
 NSString *const kVYBUserDefaultsActivityLastRefreshKey                  = @"com.vybe.app.userDefaults.ActivityLastRefresh";
 
+NSString *const kVYBUserDefaultsAudioAccessPermissionKey        = @"com.vybe.app.userDefaults.audio.permission";
+NSString *const kVYBUserDefaultsAudioAccessPermissionDeniedKey  = @"com.vybe.app.userDefaults.audio.permission.denied";
+NSString *const kVYBUserDefaultsAudioAccessPermissionUndeterminedKey = @"com.vybe.app.userDefaults.audio.permission.undetermined";
+NSString *const kVYBUserDefaultsAudioAccessPermissionGrantedKey = @"com.vybe.app.userDefaults.audio.permission.granted";
+
+NSString *const kVYBUserDefaultsVideoAccessPermissionKey        = @"com.vybe.app.userDefaults.video.permission";
+NSString *const kVYBUserDefaultsVideoAccessPermissionDeniedKey  = @"com.vybe.app.userDefaults.video.permission.denied";
+NSString *const kVYBUserDefaultsVideoAccessPermissionUndeterminedKey = @"com.vybe.app.userDefaults.video.permission.undetermined";
+NSString *const kVYBUserDefaultsVideoAccessPermissionGrantedKey = @"com.vybe.app.userDefaults.video.permission.granted";
 
 #pragma mark - PFObject User Class
 // field keys

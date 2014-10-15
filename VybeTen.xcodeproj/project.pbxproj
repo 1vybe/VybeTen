@@ -20,6 +20,7 @@
 		02267C2819AEDE00007C659C /* VYBLocationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02267C2619AEDE00007C659C /* VYBLocationTableViewController.m */; };
 		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
 		022AC50319AD9757008A9C64 /* VYBCaptureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 022AC50219AD9757008A9C64 /* VYBCaptureViewController.xib */; };
+		0237C13719EEF44A00AC6F81 /* DefaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0237C13619EEF44A00AC6F81 /* DefaultPreferences.plist */; };
 		023E538D191F142000C3CF78 /* VYBCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 023E538C191F142000C3CF78 /* VYBCache.m */; };
 		023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 023F0FCD19AA6BFA0055D3B7 /* UIImage+FixOrientation.m */; };
 		023F0FD019AB9BC00055D3B7 /* VYBPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 023F0FCF19AB9BC00055D3B7 /* VYBPlayerViewController.xib */; };
@@ -130,6 +131,7 @@
 		0226CBAB194A0339005270D3 /* VYBNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBNavigationController.h; sourceTree = "<group>"; };
 		0226CBAC194A0339005270D3 /* VYBNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBNavigationController.m; sourceTree = "<group>"; };
 		022AC50219AD9757008A9C64 /* VYBCaptureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBCaptureViewController.xib; sourceTree = "<group>"; };
+		0237C13619EEF44A00AC6F81 /* DefaultPreferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultPreferences.plist; sourceTree = "<group>"; };
 		023E538B191F142000C3CF78 /* VYBCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCache.h; sourceTree = "<group>"; };
 		023E538C191F142000C3CF78 /* VYBCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCache.m; sourceTree = "<group>"; };
 		023F0FCC19AA6BFA0055D3B7 /* UIImage+FixOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FixOrientation.h"; sourceTree = "<group>"; };
@@ -475,6 +477,7 @@
 			isa = PBXGroup;
 			children = (
 				02D11CF518DF62710018DA97 /* fonts */,
+				0237C13619EEF44A00AC6F81 /* DefaultPreferences.plist */,
 			);
 			name = resources;
 			sourceTree = "<group>";
@@ -719,6 +722,7 @@
 				02D11D1018DF62AC0018DA97 /* Montreal-RegularIta.otf in Resources */,
 				02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */,
 				021B5B7419A7F23800B906F3 /* VYBProfileInfoView.xib in Resources */,
+				0237C13719EEF44A00AC6F81 /* DefaultPreferences.plist in Resources */,
 				02D11D0F18DF62AC0018DA97 /* Montreal-Regular.otf in Resources */,
 				888F1FE819B2740B00546643 /* ProximaNovaSoft-Regular.otf in Resources */,
 				888F1FE919B2740B00546643 /* ProximaNovaSoft-Semibold.otf in Resources */,

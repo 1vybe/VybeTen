@@ -104,6 +104,12 @@
                                                             label:nil
                                                             value:nil] set:@"start" forKey:kGAISessionControl] build]];
 
+    // Register defaults for NSUserDefaults
+    NSURL *prefsFileURL = [[NSBundle mainBundle] URLForResource:@"DefaultPreferences" withExtension:@"plist"];
+    NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfURL:prefsFileURL];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+    
+    
     // Clearing Push-noti Badge number
     /*
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
