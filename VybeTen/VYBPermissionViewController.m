@@ -53,6 +53,10 @@
     NSString *title = [[NSString alloc] init];
     NSString *message = [[NSString alloc] init];
     
+    if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
+        [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsAudioAccessPermissionGrantedKey forKey:kVYBUserDefaultsAudioAccessPermissionKey];
+    }
+    
     NSString *audioPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsAudioAccessPermissionKey];
     
     // iOS7 and prior
@@ -137,9 +141,16 @@
     NSString *title = [[NSString alloc] init];
     NSString *message = [[NSString alloc] init];
     
+    if ( [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusAuthorized) {
+        [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsVideoAccessPermissionGrantedKey forKey:kVYBUserDefaultsVideoAccessPermissionKey];
+    }
+
     NSString *videoPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsVideoAccessPermissionKey];
+
     // Video access denied
-    if ( [videoPermission isEqualToString:kVYBUserDefaultsVideoAccessPermissionDeniedKey] ) {
+    if ( [videoPermission isEqualToString:kVYBUserDefaultsVideoAccessPermissionDeniedKey]
+        || ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusDenied)) {
+        
         title = @"Enable Video Access";
         message = @"Please allow Vybe to access your camera from Settings -> Privacy -> Camera";
         

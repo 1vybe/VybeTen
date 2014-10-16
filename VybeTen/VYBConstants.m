@@ -24,6 +24,11 @@ NSString *const VYBMyVybeStoreLocationFetchedNotification       = @"com.vybe.app
 NSString *const kVYBUserDefaultsCacheFacebookFriendsKey         = @"com.vybe.app.userDefaults.cache.facebookFriends";
 NSString *const kVYBUserDefaultsActivityLastRefreshKey                  = @"com.vybe.app.userDefaults.ActivityLastRefresh";
 
+NSString *const kVYBUserDefaultsNotificationPermissionKey       = @"com.vybe.app.userDefaults.notification.permission";
+NSString *const kVYBUserDefaultsNotificationPermissionUndeterminedKey = @"com.vybe.app.userDefaults.notification.permission.undetermined";
+NSString *const kVYBUserDefaultsNotificationPermissionDeniedKey = @"com.vybe.app.userDefaults.notification.permission.denied";
+NSString *const kVYBUserDefaultsNotificationPermissionGrantedKey = @"com.vybe.app.userDefaults.notification.permission.granted";
+
 NSString *const kVYBUserDefaultsAudioAccessPermissionKey        = @"com.vybe.app.userDefaults.audio.permission";
 NSString *const kVYBUserDefaultsAudioAccessPermissionDeniedKey  = @"com.vybe.app.userDefaults.audio.permission.denied";
 NSString *const kVYBUserDefaultsAudioAccessPermissionUndeterminedKey = @"com.vybe.app.userDefaults.audio.permission.undetermined";

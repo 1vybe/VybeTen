@@ -14,7 +14,7 @@
 #import "VYBAppDelegate.h"
 #import "VYBActivityInfoView.h"
 
-@interface VYBActivityTableViewController ()
+@interface VYBActivityTableViewController () <UIAlertViewDelegate>
 @property (nonatomic, strong) UIBarButtonItem *profileButton;
 @property (nonatomic, strong) VYBActivityInfoView *activityInfo;
 @end
@@ -61,6 +61,57 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    
+    // Check notification permission settings
+    NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
+    if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionUndeterminedKey] ) {
+        
+        // iOS8
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Push Notification"
+                                                                                     message:@"We would like to notify when there are live happenings around you" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                                   style:UIAlertActionStyleCancel handler:nil];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction *action) {
+                                                                 UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
+                                                                                                                 UIUserNotificationTypeBadge |
+                                                                                                                 UIUserNotificationTypeSound);
+                                                                 UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
+                                                                                                                                          categories:nil];
+                                                                 [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+                                                             }];
+            [alertController addAction:cancelAction];
+            [alertController addAction:okAction];
+            
+            [self presentViewController:alertController animated:NO completion:nil];
+        }
+        /*
+        else {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Push Notification"
+                                                                message:@"We would like to notify when there are live happenings around you"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Cancel"
+                                                      otherButtonTitles:@"OK", nil];
+            [alertView show];
+        }
+        */
+
+    }
+    else if ([notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionDeniedKey]) {
+        // iOS8
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enable Notification"
+                                                                                     message:@"Please let us notify you so you know what's happening around you when you want from Settings -> Notifications"
+                                                                              preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *emptyAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+            [alertController addAction:emptyAction];
+            [self presentViewController:alertController animated:NO completion:nil];
+        }
+    }
+
+
     [VYBUtility updateLastRefreshForCurrentUser];
 }
 
@@ -81,7 +132,6 @@
                                                                      target:self
                                                                      action:@selector(captureButtonPressed:)];
     self.navigationItem.leftBarButtonItem = captureButton;
-    
 }
 
 - (void)profileButtonPressed:(id)sender {
@@ -178,6 +228,17 @@
 - (void)captureButtonPressed:(id)sender {
     VYBAppDelegate *appDel = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
     [appDel moveToPage:VYBCapturePageIndex];
+}
+
+#pragma mark - UIAlertViewDelegate
+
+// iOS7 and prior
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if ( [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"OK"] ) {
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert |
+                                                                               UIRemoteNotificationTypeBadge |
+                                                                               UIRemoteNotificationTypeSound)];
+    }
 }
 
 #pragma mark - UIViewController

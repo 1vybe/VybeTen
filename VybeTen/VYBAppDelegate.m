@@ -71,44 +71,27 @@
     // Parse Analaytics
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-    // Push Notification Initialization
-    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        // Register for Push Notitications, if running iOS 8
-        UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
-                                                        UIUserNotificationTypeBadge |
-                                                        UIUserNotificationTypeSound);
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
-                                                                                 categories:nil];
-        [application registerUserNotificationSettings:settings];
-        [application registerForRemoteNotifications];
-    } else {
-        // Register for Push Notifications before iOS 8
-        [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                         UIRemoteNotificationTypeAlert |
-                                                         UIRemoteNotificationTypeSound)];
-    }
+    
+    // Register defaults for NSUserDefaults
+    NSURL *prefsFileURL = [[NSBundle mainBundle] URLForResource:@"DefaultPreferences" withExtension:@"plist"];
+    NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfURL:prefsFileURL];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+    
+    // Register for remote notification
+    [self checkNotificationPermissionAndRegister:application];
     
     // Optional: automatically send uncaught exceptions to Google Analytics.
     [GAI sharedInstance].trackUncaughtExceptions = YES;
-    
     // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
     [GAI sharedInstance].dispatchInterval = 20;
-    
     // Optional: set Logger to VERBOSE for debug information.
     [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelNone];
-    
     // Initialize tracker. Replace with your tracking ID.
     id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:GA_TRACKING_ID];
     [tracker send:[[[GAIDictionaryBuilder createEventWithCategory:@"UX"
                                                            action:@"appstart"
                                                             label:nil
                                                             value:nil] set:@"start" forKey:kGAISessionControl] build]];
-
-    // Register defaults for NSUserDefaults
-    NSURL *prefsFileURL = [[NSBundle mainBundle] URLForResource:@"DefaultPreferences" withExtension:@"plist"];
-    NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfURL:prefsFileURL];
-    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
-    
     
     // Clearing Push-noti Badge number
     /*
@@ -145,10 +128,8 @@
     self.captureNavigationVC.navigationBarHidden = YES;
     
     // Checking permissions
-    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
-        VYBPermissionViewController *permission = [[VYBPermissionViewController alloc] init];
-        [self.captureNavigationVC pushViewController:permission animated:NO];
-    }
+    VYBPermissionViewController *permission = [[VYBPermissionViewController alloc] init];
+    [self.captureNavigationVC pushViewController:permission animated:NO];
     
     // Checking login status
     if (![PFUser currentUser]) {
@@ -169,8 +150,6 @@
     
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
-    
-    
 
     // Handle push if the app is launched from notification
     [self handlePush:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
@@ -258,6 +237,41 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     [self moveToPage:VYBCapturePageIndex];
+}
+
+#pragma mark - Notification
+
+- (void)checkNotificationPermissionAndRegister:(UIApplication *)application {
+    // iOS8
+    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
+
+        if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionGrantedKey] ) {
+            [application registerForRemoteNotifications];
+        }
+        // Else Do nothing because request should be made from Activity screen
+    }
+    
+    else {
+        // Register for Push Notifications for iOS7 and prior
+        [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+                                                         UIRemoteNotificationTypeAlert |
+                                                         UIRemoteNotificationTypeSound)];
+    }
+
+}
+
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+    if (notificationSettings.types == UIUserNotificationTypeNone) {
+        // Permission denied
+        [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsNotificationPermissionDeniedKey forKey:kVYBUserDefaultsNotificationPermissionKey];
+    }
+    else {
+        // Permission granted
+        [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsNotificationPermissionGrantedKey forKey:kVYBUserDefaultsNotificationPermissionKey];
+    }
+    
+    [application registerForRemoteNotifications];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {

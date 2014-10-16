@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>com.vybe.app.userDefaults.notification.permission</key>
+	<string>com.vybe.app.userDefaults.notification.permission.undetermined</string>
 	<key>com.vybe.app.userDefaults.audio.permission</key>
 	<string>com.vybe.app.userDefaults.audio.permission.undetermined</string>
 	<key>com.vybe.app.userDefaults.video.permission</key>

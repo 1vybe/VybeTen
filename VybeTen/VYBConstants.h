@@ -67,6 +67,11 @@ extern NSString *const VYBMyVybeStoreLocationFetchedNotification;
 extern NSString *const kVYBUserDefaultsCacheFacebookFriendsKey;
 extern NSString *const kVYBUserDefaultsActivityLastRefreshKey;
 
+extern NSString *const kVYBUserDefaultsNotificationPermissionKey;
+extern NSString *const kVYBUserDefaultsNotificationPermissionUndeterminedKey;
+extern NSString *const kVYBUserDefaultsNotificationPermissionDeniedKey;
+extern NSString *const kVYBUserDefaultsNotificationPermissionGrantedKey;
+
 extern NSString *const kVYBUserDefaultsAudioAccessPermissionKey;
 extern NSString *const kVYBUserDefaultsAudioAccessPermissionDeniedKey;
 extern NSString *const kVYBUserDefaultsAudioAccessPermissionUndeterminedKey;
