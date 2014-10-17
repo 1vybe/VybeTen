@@ -61,9 +61,8 @@
     
     // iOS7 and prior
     if ( !_isLatestOS) {
-
-        
-        if ( [audioPermission isEqualToString:kVYBUserDefaultsAudioAccessPermissionDeniedKey] ) {
+        if ( [audioPermission isEqualToString:kVYBUserDefaultsAudioAccessPermissionDeniedKey]
+            || ([[AVAudioSession sharedInstance] recordPermission] == AVAuthorizationStatusDenied) ) {
             title = @"Enable Audio Access";
             message = @"Please allow Vybe to access your microphone from Settings -> Privacy -> Microhpone";
             
