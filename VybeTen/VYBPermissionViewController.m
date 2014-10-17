@@ -53,16 +53,11 @@
     NSString *title = [[NSString alloc] init];
     NSString *message = [[NSString alloc] init];
     
-    if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
-        [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsAudioAccessPermissionGrantedKey forKey:kVYBUserDefaultsAudioAccessPermissionKey];
-    }
-    
-    NSString *audioPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsAudioAccessPermissionKey];
-    
     // iOS7 and prior
     if ( !_isLatestOS) {
-        if ( [audioPermission isEqualToString:kVYBUserDefaultsAudioAccessPermissionDeniedKey]
-            || ([[AVAudioSession sharedInstance] recordPermission] == AVAuthorizationStatusDenied) ) {
+        NSString *audioPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsAudioAccessPermissionKey];
+
+        if ( [audioPermission isEqualToString:kVYBUserDefaultsAudioAccessPermissionDeniedKey] ) {
             title = @"Enable Audio Access";
             message = @"Please allow Vybe to access your microphone from Settings -> Privacy -> Microhpone";
             
@@ -74,6 +69,9 @@
             [mediaAlertView show];
         }
         else if ( [audioPermission isEqualToString:kVYBUserDefaultsAudioAccessPermissionUndeterminedKey] ) {
+            title = @"Audio Access";
+            message = @"We'd like to record what you hear when you are vybing";
+            
             UIAlertView *mediaAlertView = [[UIAlertView alloc] initWithTitle:title
                                                                      message:message
                                                                     delegate:self
@@ -87,7 +85,13 @@
     }
     // iOS8 and later
     else {
-        if ( [audioPermission isEqualToString:kVYBUserDefaultsAudioAccessPermissionDeniedKey] ) {
+        if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
+            [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsAudioAccessPermissionGrantedKey forKey:kVYBUserDefaultsAudioAccessPermissionKey];
+        }
+        NSString *audioPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsAudioAccessPermissionKey];
+        
+        if ( [audioPermission isEqualToString:kVYBUserDefaultsAudioAccessPermissionDeniedKey]
+            || ([[AVAudioSession sharedInstance] recordPermission] == AVAuthorizationStatusDenied)) {
             title = @"Enable Audio Access";
             message = @"Please allow Vybe to access your microphone from Settings -> Privacy -> Microhpone";
             
@@ -102,7 +106,8 @@
             [mediaAlertController addAction:okAction];
             [self presentViewController:mediaAlertController animated:NO completion:nil];
         }
-        else if ( [audioPermission isEqualToString:kVYBUserDefaultsAudioAccessPermissionUndeterminedKey] ) {      title = @"Audio Access";
+        else if ( [audioPermission isEqualToString:kVYBUserDefaultsAudioAccessPermissionUndeterminedKey] ) {
+            title = @"Audio Access";
             message = @"We'd like to record what you hear when you are vybing";
             
             UIAlertController *mediaAlertController = [UIAlertController alertControllerWithTitle:title
@@ -140,15 +145,21 @@
     NSString *title = [[NSString alloc] init];
     NSString *message = [[NSString alloc] init];
     
-    if ( [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusAuthorized) {
-        [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsVideoAccessPermissionGrantedKey forKey:kVYBUserDefaultsVideoAccessPermissionKey];
-    }
+
 
     NSString *videoPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsVideoAccessPermissionKey];
-
+    BOOL authorizationStatus = false;
+    // only for iOS8
+    if (_isLatestOS) {
+        authorizationStatus = ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusDenied);
+        if ( [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusAuthorized) {
+            [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsVideoAccessPermissionGrantedKey forKey:kVYBUserDefaultsVideoAccessPermissionKey];
+        }
+    }
+    
     // Video access denied
     if ( [videoPermission isEqualToString:kVYBUserDefaultsVideoAccessPermissionDeniedKey]
-        || ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusDenied)) {
+        || authorizationStatus) {
         
         title = @"Enable Video Access";
         message = @"Please allow Vybe to access your camera from Settings -> Privacy -> Camera";
