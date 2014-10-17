@@ -149,6 +149,13 @@
      send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    // Show status bar
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
 - (IBAction)recordButtonPressed:(id)sender {
     if (!_isRecording) {
         [UIApplication sharedApplication].idleTimerDisabled = YES;
