@@ -140,6 +140,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    // Hide status bar
     [self setNeedsStatusBarAppearanceUpdate];
     
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName
