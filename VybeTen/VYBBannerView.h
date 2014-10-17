@@ -8,5 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+IB_DESIGNABLE
 @interface VYBBannerView : UIView
+@property (nonatomic) IBInspectable UIColor *fillColor;
+@property (nonatomic) IBInspectable UIColor *strokeColor;
 @end

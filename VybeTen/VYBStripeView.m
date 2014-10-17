@@ -28,8 +28,8 @@
 
     
     // Set the stroke and fill colors
-    CGContextSetStrokeColorWithColor(context, COLOR_CONTROL_LINE.CGColor);
-    CGContextSetFillColorWithColor(context, COLOR_CONTROL_LINE.CGColor);
+    CGContextSetStrokeColorWithColor(context, self.strokeColor.CGColor);
+    CGContextSetFillColorWithColor(context, self.fillColor.CGColor);
     
     // Set the width of the pen mark
     CGContextSetLineWidth(context, 0.5);

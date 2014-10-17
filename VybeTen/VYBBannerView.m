@@ -26,10 +26,9 @@
     // Get the CGContext from this view
     CGContextRef context = UIGraphicsGetCurrentContext();
 
-    
     // Set the stroke and fill colors
-    CGContextSetStrokeColorWithColor(context, COLOR_CONTROL_LINE.CGColor);
-    CGContextSetFillColorWithColor(context, COLOR_MAIN.CGColor);
+    CGContextSetStrokeColorWithColor(context, self.strokeColor.CGColor);
+    CGContextSetFillColorWithColor(context, self.fillColor.CGColor);
     
     // Set the width of the pen mark
     CGContextSetLineWidth(context, 0.5);

@@ -8,5 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+IB_DESIGNABLE
 @interface VYBStripeView : UIView
+@property (nonatomic) IBInspectable UIColor *fillColor;
+@property (nonatomic) IBInspectable UIColor *strokeColor;
 @end
