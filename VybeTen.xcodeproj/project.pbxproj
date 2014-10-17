@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0207236519F1991800817A02 /* VYBPermissionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0207236419F1991800817A02 /* VYBPermissionViewController.xib */; };
 		020CC65E19A701D900B2F794 /* VYBProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 020CC65C19A701D900B2F794 /* VYBProfileViewController.m */; };
-		020CC65F19A701D900B2F794 /* VYBProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 020CC65D19A701D900B2F794 /* VYBProfileViewController.xib */; };
 		020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 020F1C491977054900C3AA40 /* VYBPermissionViewController.m */; };
 		020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 020FB84819744EBA005C9BA9 /* VYBCameraView.m */; };
 		021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */; };
@@ -111,7 +110,6 @@
 		0207236419F1991800817A02 /* VYBPermissionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBPermissionViewController.xib; sourceTree = "<group>"; };
 		020CC65B19A701D900B2F794 /* VYBProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBProfileViewController.h; sourceTree = "<group>"; };
 		020CC65C19A701D900B2F794 /* VYBProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBProfileViewController.m; sourceTree = "<group>"; };
-		020CC65D19A701D900B2F794 /* VYBProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBProfileViewController.xib; sourceTree = "<group>"; };
 		020F1C481977054900C3AA40 /* VYBPermissionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPermissionViewController.h; sourceTree = "<group>"; };
 		020F1C491977054900C3AA40 /* VYBPermissionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPermissionViewController.m; sourceTree = "<group>"; };
 		020FB84719744EBA005C9BA9 /* VYBCameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCameraView.h; sourceTree = "<group>"; };
@@ -447,7 +445,6 @@
 				0299EC82199A9254004E97CF /* VYBHubViewController.m */,
 				020CC65B19A701D900B2F794 /* VYBProfileViewController.h */,
 				020CC65C19A701D900B2F794 /* VYBProfileViewController.m */,
-				020CC65D19A701D900B2F794 /* VYBProfileViewController.xib */,
 				027C708019AF08C6007BB8FE /* Container */,
 				88FF430319AFFCEB00D18872 /* VYBActivityTableViewController.h */,
 				88FF430419AFFCEB00D18872 /* VYBActivityTableViewController.m */,
