@@ -102,9 +102,6 @@
     [self activityCountChanged];
     
     
-    // Hide status bar
-    [self setNeedsStatusBarAppearanceUpdate];
-    
     // Device orientation detection
     [MotionOrientation initialize];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -135,11 +132,21 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    // Hide status bar
+    [self setNeedsStatusBarAppearanceUpdate];
+    
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName
                                        value:@"Capture Screen"];
     // Send the screen view.
     [[GAI sharedInstance].defaultTracker
      send:[[GAIDictionaryBuilder createAppView] build]];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    // Show status bar
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (IBAction)recordButtonPressed:(id)sender {

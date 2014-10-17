@@ -47,9 +47,6 @@
     
     _currVybe = [[VYBMyVybeStore sharedStore] currVybe];
         
-    // Hide status bar
-    [self setNeedsStatusBarAppearanceUpdate];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationFetched:) name:VYBMyVybeStoreLocationFetchedNotification object:nil];
 }
 

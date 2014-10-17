@@ -96,9 +96,6 @@
     menuMode = NO;
     [self syncUIElementsWithMenuMode];
     
-    // Hide status bar
-    [self setNeedsStatusBarAppearanceUpdate];
-    
     // AppDelegate Notification
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
