@@ -18,8 +18,9 @@
     BOOL _isLatestOS;
 }
 
-- (id)init {
-    self = [super init];
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _locationManager = [[CLLocationManager alloc] init];
         [_locationManager setDelegate:self];
@@ -32,7 +33,7 @@
 {
     [super viewDidLoad];
     
-    [self.view setBackgroundColor:[UIColor clearColor]];
+    //[self.view setBackgroundColor:[UIColor clearColor]];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -45,7 +46,6 @@
 #pragma mark - Permissions
 
 - (void)checkPermissionSettings {
-
     [self checkPermissionForAudioAccess];
 }
 
@@ -356,6 +356,14 @@
     [self.navigationController popViewControllerAnimated:NO];
 }
 
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
 
 
 - (void)didReceiveMemoryWarning

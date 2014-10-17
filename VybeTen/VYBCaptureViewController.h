@@ -12,4 +12,5 @@
 
 @protocol VYBCapturePipelineDelegate;
 @interface VYBCaptureViewController : GAITrackedViewController
+- (id)initWithPageIndex:(NSInteger)pageIndex;
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <Parse/Parse.h>
-
 @interface VYBHubViewController : UIViewController <UISearchDisplayDelegate, UISearchBarDelegate>
+- (id)initWithPageIndex:(NSInteger)pageIndex;
 - (void)scrollViewBeganDragging:(UIScrollView *)scrollView;
 @end

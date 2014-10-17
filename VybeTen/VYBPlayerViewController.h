@@ -12,14 +12,14 @@
 #import "GAITrackedViewController.h"
 
 @class VYBPlayerView;
-
+@class VYBPlayerControlViewController;
 @interface VYBPlayerViewController : GAITrackedViewController <UIAlertViewDelegate, MBProgressHUDDelegate>
 
-@property (nonatomic, copy) NSArray *vybePlaylist;
-@property (nonatomic) NSInteger currVybeIndex;
-@property (nonatomic) PFObject *currRegion;
-@property (nonatomic) PFObject *currUser;
+@property (nonatomic, weak) VYBPlayerControlViewController *playerController;
+@property (nonatomic, weak) VYBPlayerView *currPlayerView;
+@property (nonatomic) AVPlayer *currPlayer;
+@property (nonatomic) AVPlayerItem *currItem;
 
-- (void)beginPlayingFrom:(NSInteger)from;
+- (void)playAsset:(AVAsset *)asset;
 
 @end

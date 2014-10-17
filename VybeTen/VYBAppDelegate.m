@@ -15,11 +15,11 @@
 #import <HockeySDK/HockeySDK.h>
 #import "VYBAppDelegate.h"
 #import "VYBUserStore.h"
+#import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBLogInViewController.h"
 #import "VYBPermissionViewController.h"
 #import "VYBHubViewController.h"
-#import "VYBProfileViewController.h"
 #import "VYBActivityTableViewController.h"
 #import "VYBMyVybeStore.h"
 #import "VYBCache.h"
@@ -33,15 +33,13 @@
 @property (nonatomic, strong) Reachability *wifiReach;
 @property (nonatomic, strong) NSString *uniqueID;
 
+@property (nonatomic) VYBNavigationController *mainNavigationController;
+@property (nonatomic) VYBPermissionViewController *permissionController;
 @property (nonatomic, strong) VYBPageViewController *pageController;
-@property (nonatomic, strong) VYBNavigationController *hubNavigationVC;
-@property (nonatomic, strong) VYBNavigationController *captureNavigationVC;
 @property (nonatomic, strong) VYBNavigationController *activityNavigationVC;
 @property (nonatomic, strong) VYBCaptureViewController *captureVC;
 @property (nonatomic, strong) VYBHubViewController *hubVC;
-@property (nonatomic, strong) VYBProfileViewController *profileVC;
 @property (nonatomic, strong) VYBActivityTableViewController *activityVC;
-
 @end
 
 @implementation VYBAppDelegate
@@ -121,32 +119,37 @@
     [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
 
     
-    self.hubNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBHubPageIndex];
+    self.hubVC = [[VYBHubViewController alloc] initWithPageIndex:VYBHubPageIndex];
     
-    self.captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
-    self.captureNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBCapturePageIndex withRootViewController:self.captureVC];
-    self.captureNavigationVC.navigationBarHidden = YES;
-    
-    // Checking permissions
-    VYBPermissionViewController *permission = [[VYBPermissionViewController alloc] init];
-    [self.captureNavigationVC pushViewController:permission animated:NO];
-    
-    // Checking login status
-    if (![PFUser currentUser]) {
-        VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
-        [self.captureNavigationVC pushViewController:logInVC animated:NO];
-    }
+    self.captureVC = [[VYBCaptureViewController alloc] initWithPageIndex:VYBCapturePageIndex];
     
     self.activityVC = [[VYBActivityTableViewController alloc] init];
     self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.activityVC];
     
-    self.viewControllers = [[NSArray alloc] initWithObjects:self.hubNavigationVC, self.captureNavigationVC, self.activityNavigationVC, nil];
+    self.viewControllers = [[NSArray alloc] initWithObjects:self.hubVC, self.captureVC, self.activityNavigationVC, nil];
     
     self.pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
-    [self.pageController setViewControllers:@[self.captureNavigationVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    [self.pageController setViewControllers:@[self.captureVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     self.pageController.dataSource = self;
     
-    [self.window setRootViewController:self.pageController];
+    
+    self.mainNavigationController = [[VYBNavigationController alloc] initWithRootViewController:self.pageController];
+    [self.mainNavigationController setNavigationBarHidden:YES];
+    
+    // Checking permissions
+    self.permissionController = [[VYBPermissionViewController alloc] init];
+    [self.mainNavigationController pushViewController:self.permissionController animated:NO];
+    
+    // Checking login status
+    if (![PFUser currentUser]) {
+        VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
+        [self.mainNavigationController pushViewController:logInVC animated:NO];
+    }
+    
+    [self.window setRootViewController:self.mainNavigationController];
+    
+    self.playerVC = [[VYBPlayerViewController alloc] init];
+    [self.window addSubview:self.playerVC.view];
     
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
@@ -247,6 +250,7 @@
         NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
 
         if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionGrantedKey] ) {
+            //[application registerUserNotificationSettings:<#(UIUserNotificationSettings *)#>]
             [application registerForRemoteNotifications];
         }
         // Else Do nothing because request should be made from Activity screen

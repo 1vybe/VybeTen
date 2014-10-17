@@ -110,12 +110,7 @@
 #pragma amrk - ()
 
 - (void)watchNewVybesFromUser:(NSString *)aUserID {
-    NSArray *vybes = [self.freshVybesByUser objectForKey:aUserID];
-    if (vybes && vybes.count > 0) {
-        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-        [playerVC setVybePlaylist:vybes];
-        [self presentViewController:playerVC animated:NO completion:nil];
-    }
+
 }
 
 #pragma mark - NSNotifications

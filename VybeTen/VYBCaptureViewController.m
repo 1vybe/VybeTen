@@ -24,7 +24,9 @@
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
 
-@interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>
+@interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate, CLLocationManagerDelegate> {
+    NSInteger _pageIndex;
+}
 
 @property (nonatomic, weak) IBOutlet UIButton *flipButton;
 @property (nonatomic, weak) IBOutlet UIButton *flashButton;
@@ -76,12 +78,19 @@
     NSLog(@"CaptureVC deallocated");
 }
 
-- (id)init {
+- (id)initWithPageIndex:(NSInteger)pageIndex {
     self = [super init];
     if (self) {
-        _isRecording = NO;
+        if (pageIndex != VYBCapturePageIndex)
+            return nil;
+        
+        _pageIndex = pageIndex;
     }
     return self;
+}
+
+- (NSInteger)pageIndex {
+    return _pageIndex;
 }
 
 - (void)viewDidLoad
@@ -100,10 +109,6 @@
     // In case capture screen is loaded AFTER initial loading from appdelegate is done already
     [self freshVybeCountChanged];
     [self activityCountChanged];
-    
-    
-    // Hide status bar
-    [self setNeedsStatusBarAppearanceUpdate];
     
     // Device orientation detection
     [MotionOrientation initialize];
@@ -134,6 +139,8 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    [self setNeedsStatusBarAppearanceUpdate];
     
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName
                                        value:@"Capture Screen"];

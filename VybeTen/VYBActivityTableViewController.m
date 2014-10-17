@@ -9,7 +9,7 @@
 #import "VYBActivityTableViewController.h"
 #import "VYBActivityTableViewCell.h"
 #import "VYBUtility.h"
-#import "VYBPlayerViewController.h"
+#import "VYBPlayerControlViewController.h"
 #import "VYBProfileViewController.h"
 #import "VYBAppDelegate.h"
 #import "VYBActivityInfoView.h"
@@ -63,6 +63,9 @@
     
     
     // Check notification permission settings
+    if ([[[UIApplication sharedApplication] currentUserNotificationSettings] types] > 0) {
+        [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsNotificationPermissionGrantedKey forKey:kVYBUserDefaultsNotificationPermissionKey];
+    }
     NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
     if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionUndeterminedKey] ) {
         
@@ -220,9 +223,11 @@
     PFObject *selectedActivity = [self.objects objectAtIndex:indexPath.row];
     PFObject *selectedVybe = selectedActivity[kVYBActivityVybeKey];
     
-    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-    [playerVC setVybePlaylist:@[selectedVybe]];
-    [self presentViewController:playerVC animated:NO completion:nil];
+    VYBPlayerControlViewController *playerController = [[VYBPlayerControlViewController alloc] initWithNibName:@"VYBPlayerControlViewController" bundle:nil];
+    [playerController setVybePlaylist:@[selectedVybe]];
+    [self presentViewController:playerController animated:NO completion:^{
+        [playerController beginPlayingFrom:0];
+    }];
 }
 
 - (void)captureButtonPressed:(id)sender {

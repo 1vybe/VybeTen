@@ -24,30 +24,12 @@
     return nil;
 }
 
-+ (VYBNavigationController *)navigationControllerForPageIndex:(NSInteger)pageIndex {
-    if (pageIndex == VYBHubPageIndex) {
-        return [[self alloc] initWithPageIndex:pageIndex withRootViewController:nil];
-    }
-    return nil;
-}
-
-
 - (id)initWithPageIndex:(NSInteger)pageIndex withRootViewController:(UIViewController *)rootViewController {
-    if (!rootViewController) {
-        switch (pageIndex) {
-            case VYBHubPageIndex:
-                self = [[UIStoryboard storyboardWithName:@"HubStoryboard" bundle:nil] instantiateInitialViewController];
-                break;
-            default:
-                break;
-        }
-    } else {
-        self = [self initWithRootViewController:rootViewController];
-    }
-    
+    self = [super initWithRootViewController:rootViewController];
     if (self) {
         _pageIndex = pageIndex;
     }
+    
     return self;
 }
 

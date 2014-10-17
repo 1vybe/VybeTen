@@ -12,7 +12,7 @@
 #import "VYBHubControlView.h"
 #import "VYBAppDelegate.h"
 #import "VYBWatchAllButton.h"
-#import "VYBPlayerViewController.h"
+#import "VYBPlayerControlViewController.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
 
@@ -27,13 +27,29 @@
 
 @end
 
-@implementation VYBHubViewController
-
+@implementation VYBHubViewController {
+    NSInteger _pageIndex;
+}
 @synthesize controlView;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheFreshVybeCountChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
+}
+
+- (id)initWithPageIndex:(NSInteger)pageIndex {
+    self = [super init];
+    if (self) {
+        if (pageIndex != VYBHubPageIndex)
+            return nil;
+        
+        _pageIndex = pageIndex;
+    }
+    return self;
+}
+
+- (NSInteger)pageIndex {
+    return _pageIndex;
 }
 
 - (void)viewDidLoad
@@ -58,6 +74,12 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationItem setTitle:@"vybe"];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)getVybesByLocationAndByUser {
@@ -103,6 +125,11 @@
     return UIInterfaceOrientationMaskPortrait;
 }
 
+#pragma mark - Status Bar
+
+- (BOOL)prefersStatusBarHidden {
+    return NO;
+}
 
 #pragma mark - ()
 
@@ -118,9 +145,9 @@
 
 - (IBAction)watchAllButtonPressed:(id)sender {
     if ([[[VYBCache sharedCache] freshVybes] count]) {
-        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-        [playerVC setVybePlaylist:[[VYBCache sharedCache] freshVybes]];
-        [self presentViewController:playerVC animated:NO completion:nil];
+        VYBPlayerControlViewController *playerController = [[VYBPlayerControlViewController alloc] initWithNibName:@"VYBPlayerControlViewController" bundle:nil];
+        [playerController setVybePlaylist:[[VYBCache sharedCache] freshVybes]];
+        [self presentViewController:playerController animated:NO completion:nil];
     }
     else {
         [VYBUtility showToastWithImage:nil title:@"You are watching from the first vybe of the day"];

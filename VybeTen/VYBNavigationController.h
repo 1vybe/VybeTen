@@ -10,17 +10,11 @@
 #import <MBProgressHUD/MBProgressHUD.h>
 
 @protocol VYBPageViewControllerProtocol <NSObject>
-
 - (NSInteger)pageIndex;
-
 @end
 
 @interface VYBNavigationController : UINavigationController <VYBPageViewControllerProtocol, MBProgressHUDDelegate>
 
 + (VYBNavigationController *)navigationControllerForPageIndex:(NSInteger)pageIndex withRootViewController:(UIViewController *)rootViewController;
-+ (VYBNavigationController *)navigationControllerForPageIndex:(NSInteger)pageIndex;
-
-- (NSInteger)pageIndex;
-
 
 @end

@@ -11,11 +11,13 @@
 #import "VYBNavigationController.h"
 #import "VYBPageViewController.h"
 
+@class VYBPlayerViewController;
 @interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource>
 
 @property (strong, nonatomic) UIWindow *window;
 
 @property (nonatomic, strong) NSArray *viewControllers;
+@property (nonatomic) VYBPlayerViewController *playerVC;
 
 @property (nonatomic, readonly) int networkStatus;
 - (BOOL)isParseReachable;
