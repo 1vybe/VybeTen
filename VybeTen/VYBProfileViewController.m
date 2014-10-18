@@ -112,11 +112,11 @@
 #pragma mark - VYBProfileInfoView
 
 - (void)watchAllButtonPressed:(id)sender {
-    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-    [playerVC setVybePlaylist:[self.objects.reverseObjectEnumerator allObjects]];
-    [playerVC setCurrVybeIndex:0];
-    [playerVC setCurrUser:self.user];
-    [self presentViewController:playerVC animated:NO completion:nil];
+//    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+//    [playerVC setVybePlaylist:[self.objects.reverseObjectEnumerator allObjects]];
+//    [playerVC setCurrVybeIndex:0];
+//    [playerVC setCurrUser:self.user];
+//    [self presentViewController:playerVC animated:NO completion:nil];
 }
 
 #pragma mark - UIActionSheetDelegate
@@ -237,11 +237,11 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-    [playerVC setVybePlaylist:[[self.objects reverseObjectEnumerator] allObjects]];
-    [playerVC setCurrVybeIndex:self.objects.count - indexPath.row - 1];
-    [playerVC setCurrUser:self.user];
-    [self presentViewController:playerVC animated:NO completion:nil];
+//    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+//    [playerVC setVybePlaylist:[[self.objects reverseObjectEnumerator] allObjects]];
+//    [playerVC setCurrVybeIndex:self.objects.count - indexPath.row - 1];
+//    [playerVC setCurrUser:self.user];
+//    [self presentViewController:playerVC animated:NO completion:nil];
 }
 
 // Use this to test out likes

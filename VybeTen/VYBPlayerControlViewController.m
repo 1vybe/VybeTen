@@ -26,24 +26,54 @@
 #import <GAIDictionaryBuilder.h>
 
 @interface VYBPlayerControlViewController ()
+@property (nonatomic, weak) IBOutlet UIButton *counterButton;
+@property (nonatomic, weak) IBOutlet UIButton *portalButton;
+@property (nonatomic, weak) IBOutlet UIButton *locationTimeButton;
+@property (nonatomic, weak) IBOutlet UIButton *captureButton;
+
+- (IBAction)counterButtonPressed;
+- (IBAction)portalButtonPressed;
+- (IBAction)captureButtonPressed;
 
 @property (nonatomic, weak) VYBPlayerViewController *playerVC;
 
 @end
 
+
 @implementation VYBPlayerControlViewController {
     NSInteger downloadingVybeIndex;
     BOOL menuMode;
     NSTimer *overlayTimer;
+    
+    NSInteger _pageIndex;
 }
-
+@synthesize captureButton;
 @synthesize currVybeIndex;
+@synthesize counterButton;
+@synthesize portalButton;
+@synthesize locationTimeButton;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
+
+- (id)initWithPageIndex:(NSInteger)pageIndex {
+    self = [super init];
+    if (self) {
+        if (pageIndex != VYBHubPageIndex)
+            return nil;
+        
+        _pageIndex = pageIndex;
+    }
+    return self;
+}
+
+- (NSInteger)pageIndex {
+    return _pageIndex;
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -75,45 +105,87 @@
     });
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self setNeedsStatusBarAppearanceUpdate];
+    
+    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+    [query whereKeyExists:kVYBVybeLocationStringKey];
+    [query orderByAscending:kVYBVybeTimestampKey];
+    [query setLimit:50];
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            if (objects.count > 0) {
+                [self setVybePlaylist:objects];
+                [self beginPlayingFrom:0];
+            }
+        }
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }];
+
+}
+
+#pragma mark - User Interactions
+- (IBAction)counterButtonPressed {
+    
+}
+
+- (IBAction)portalButtonPressed {
+    
+}
+
+- (IBAction)captureButtonPressed {
+    
+}
+
+#pragma mark - Behind the scene
+
 - (void)beginPlayingFrom:(NSInteger)from {
     currVybeIndex = from;
     
-//    self.countLabel.text = [NSString stringWithFormat:@"%ld", (long)self.vybePlaylist.count - currVybeIndex - 1];
+    NSString *counterString = [NSString stringWithFormat:@"%ld", (long)self.vybePlaylist.count - currVybeIndex - 1];
+    [counterButton setTitle:counterString forState:UIControlStateNormal];
     
     downloadingVybeIndex = currVybeIndex + 1;
     
     PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
-    [self syncUI:currVybe];
-    
-    NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
-    cacheURL = [cacheURL URLByAppendingPathComponent:[currVybe objectId]];
-    cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+    [self syncUI:currVybe withCompletion:^{
         
-        [self.playerVC playAsset:asset];
+        // Play after syncing UI elements
+        NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
+        cacheURL = [cacheURL URLByAppendingPathComponent:[currVybe objectId]];
+        cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
         
-        [[VYBCache sharedCache] removeFreshVybe:currVybe];
-        [self prepareVybeAt:downloadingVybeIndex];
-    } else {
-        PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            if (!error) {
-                [data writeToURL:cacheURL atomically:YES];
-                AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
-                
-                [self.playerVC playAsset:asset];
-                [[VYBCache sharedCache] removeFreshVybe:currVybe];
-                [self prepareVybeAt:downloadingVybeIndex];
-            } else {
-                UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-                [av show];
-            }
-        }];
-    }
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
+            AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+            
+            [self.playerVC playAsset:asset];
+            
+//            [[VYBCache sharedCache] removeFreshVybe:currVybe];
+            [self prepareVybeAt:downloadingVybeIndex];
+        } else {
+            PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                if (!error) {
+                    [data writeToURL:cacheURL atomically:YES];
+                    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+                    
+                    [self.playerVC playAsset:asset];
+                    [[VYBCache sharedCache] removeFreshVybe:currVybe];
+                    [self prepareVybeAt:downloadingVybeIndex];
+                } else {
+                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                    [av show];
+                }
+            }];
+        }
+
+    }];
 }
 
 - (void)prepareVybeAt:(NSInteger)idx {
@@ -141,7 +213,7 @@
                     [self.playerVC playAsset:asset];
                     
                     [[VYBCache sharedCache] removeFreshVybe:aVybe];
-                    [self syncUI:aVybe];
+//                    [self syncUI:aVybe];
                     [self prepareVybeAt:downloadingVybeIndex + 1];
                 }
             }
@@ -159,24 +231,51 @@
     }
 }
 
-- (void)syncUI:(PFObject *)aVybe {
-//    self.cityNameLabel.text = @"";
-//    self.usernameLabel.text = @"";
-//    [self.likeButton setSelected:NO];
-    
+- (void)syncUI:(PFObject *)aVybe withCompletion:(void (^)())completionBlock {
+    // Display location and time
+    [locationTimeButton setTitle:@"" forState:UIControlStateNormal];
+    NSString *locationTimeString = [[NSString alloc] init];
     NSString *locationStr = aVybe[kVYBVybeLocationStringKey];
     NSArray *arr = [locationStr componentsSeparatedByString:@","];
-    NSString *countryCode = @"";
     if (arr.count == 3) {
-        countryCode = arr[2];
-//        cityNameLabel.text = arr[1];
-    } else if (aVybe[kVYBVybeCountryCodeKey]) {
-        countryCode = aVybe[kVYBVybeCountryCodeKey];
+        locationStr = [arr[1] stringByAppendingString:@", "];
+    } else {
+        locationStr = @"Nebulas, ";
     }
+    locationTimeString = [locationStr stringByAppendingString:[VYBUtility reverseTime:[aVybe objectForKey:kVYBVybeTimestampKey]]];
+    [locationTimeButton setTitle:locationTimeString forState:UIControlStateNormal];
     
+    
+    // Display how many vybes have been around current vybe
+    [portalButton setTitle:@"" forState:UIControlStateNormal];
+    if ( ! [aVybe objectForKey:kVYBVybeGeotag] ) {
+        return;
+    }
+    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+    [query whereKey:kVYBVybeGeotag nearGeoPoint:[aVybe objectForKey:kVYBVybeGeotag] withinKilometers:0.02];
+    [query setLimit:50];
+    query.cachePolicy = kPFCachePolicyCacheElseNetwork;
+    [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if (!error) {
+            if (number > 0) {
+                [portalButton setTitle:[NSString stringWithFormat:@"%d", number] forState:UIControlStateNormal];
+            }
+            if (completionBlock)
+                completionBlock();
+        }
+    }];
+    
+    
+//    } else if (aVybe[kVYBVybeCountryCodeKey]) {
+//        countryCode = aVybe[kVYBVybeCountryCodeKey];
+//    }
+    
+    /*
+    [self.likeButton setSelected:NO];
+
     // Updating LIKE button status and count of the vybe
     if ( [[VYBCache sharedCache] attributesForVybe:aVybe] ) {
-//        [self.likeButton setSelected:[[VYBCache sharedCache] vybeLikedByMe:aVybe]];
+        [self.likeButton setSelected:[[VYBCache sharedCache] vybeLikedByMe:aVybe]];
         
     } else {
         PFQuery *query = [VYBUtility queryForActivitiesOnVybe:aVybe cachePolicy:kPFCachePolicyNetworkOnly];
@@ -202,13 +301,14 @@
                 }
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-//                    [self.likeButton setSelected:isLikedByCurrentUser];
+                    [self.likeButton setSelected:isLikedByCurrentUser];
                 });
                 
                 [[VYBCache sharedCache] setAttributesForVybe:aVybe likers:likers commenters:commenters likedByCurrentUser:isLikedByCurrentUser];
             }
         }];
     }
+    */
 }
 
 
@@ -273,6 +373,7 @@
     }
 }
 
+
 - (void)tapOnce {
     if (!menuMode) {
         overlayTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(overlayTimerExpired:) userInfo:nil repeats:NO];
@@ -292,10 +393,11 @@
 }
 
 - (void)syncUIElementsWithMenuMode {
-    for (UIView *subView in self.view.subviews) {
-        subView.hidden = !menuMode;
-    }
+    locationTimeButton.hidden = !menuMode;
+    counterButton.hidden = !menuMode;
+    captureButton.hidden = !menuMode;
 }
+
 
 - (void)tapTwice {
     if (self.playerVC.currPlayer.rate != 0.0) {
@@ -305,40 +407,6 @@
     [deleteAlert show];
 }
 
-#pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
-        if (alertView.title) {
-            PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            [currVybe deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                if (!error) {
-                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Deleted"];
-                } else {
-                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_x.png"] title:@"Failed"];
-                }
-            }];
-        } else {
-            NSLog(@"Logging out");
-            
-            // clear cache
-            [[VYBCache sharedCache] clear];
-            
-            // Unsubscribe from push notifications by removing the user association from the current installation.
-            [[PFInstallation currentInstallation] removeObjectForKey:@"user"];
-            [[PFInstallation currentInstallation] saveInBackground];
-            
-            // Clear all caches
-            [PFQuery clearAllCachedResults];
-            
-            [PFUser logOut];
-            VYBLogInViewController *loginVC = [[VYBLogInViewController alloc] init];
-            [self presentViewController:loginVC animated:NO completion:nil];
-        }
-    }
-}
 
 
 #pragma mark - VYBAppDelegateNotification
@@ -372,6 +440,8 @@
         }];
     }
 }
+
+#pragma mark - ()
 
 - (void)deviceRotated:(NSNotification *)notification {
     UIDeviceOrientation currentOrientation = [MotionOrientation sharedInstance].deviceOrientation;
@@ -412,7 +482,6 @@
 - (BOOL)shouldAutorotate {
     return NO;
 }
-
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;

@@ -16,6 +16,7 @@
 #import "VYBAppDelegate.h"
 #import "VYBUserStore.h"
 #import "VYBPlayerViewController.h"
+#import "VYBPlayerControlViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBLogInViewController.h"
 #import "VYBPermissionViewController.h"
@@ -38,7 +39,8 @@
 @property (nonatomic, strong) VYBPageViewController *pageController;
 @property (nonatomic, strong) VYBNavigationController *activityNavigationVC;
 @property (nonatomic, strong) VYBCaptureViewController *captureVC;
-@property (nonatomic, strong) VYBHubViewController *hubVC;
+@property (nonatomic) VYBPlayerControlViewController *playerController;
+//@property (nonatomic, strong) VYBHubViewController *hubVC;
 @property (nonatomic, strong) VYBActivityTableViewController *activityVC;
 @end
 
@@ -119,14 +121,16 @@
     [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
 
     
-    self.hubVC = [[VYBHubViewController alloc] initWithPageIndex:VYBHubPageIndex];
+    //self.hubVC = [[VYBHubViewController alloc] initWithPageIndex:VYBHubPageIndex];
+    
+    self.playerController = [[VYBPlayerControlViewController alloc] initWithPageIndex:VYBHubPageIndex];
     
     self.captureVC = [[VYBCaptureViewController alloc] initWithPageIndex:VYBCapturePageIndex];
     
     self.activityVC = [[VYBActivityTableViewController alloc] init];
     self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.activityVC];
     
-    self.viewControllers = [[NSArray alloc] initWithObjects:self.hubVC, self.captureVC, self.activityNavigationVC, nil];
+    self.viewControllers = [[NSArray alloc] initWithObjects:self.playerController, self.captureVC, self.activityNavigationVC, nil];
     
     self.pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     [self.pageController setViewControllers:@[self.captureVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];

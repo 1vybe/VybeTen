@@ -42,6 +42,12 @@
     [super viewDidLoad];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
 - (void)playAsset:(AVAsset *)asset {
     [self.currPlayerView setOrientation:[asset videoOrientation]];
     

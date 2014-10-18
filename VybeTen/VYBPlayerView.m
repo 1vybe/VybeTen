@@ -27,7 +27,7 @@
 
 - (void)setVideoFillMode {
     AVPlayerLayer *playerLayer = (AVPlayerLayer *)[self layer];
-    [playerLayer setVideoGravity:AVLayerVideoGravityResizeAspect];
+    [playerLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
 }
 
 - (void)resetFrame {
@@ -48,11 +48,17 @@
 - (void)setOrientation:(AVCaptureVideoOrientation)orientation {
     _orientation = orientation;
 
-    self.transform = CGAffineTransformIdentity;
-
+    //self.transform = CGAffineTransformIdentity;
+    [self resetFrame];
+    
     if (orientation == AVCaptureVideoOrientationLandscapeLeft || orientation == AVCaptureVideoOrientationLandscapeRight) {
         CGAffineTransform rotation = CGAffineTransformMakeRotation(M_PI_2);
         self.transform = rotation;
+        
+        CGRect newBounds = CGRectMake(0, 0,
+                                      [[UIScreen mainScreen] bounds].size.height,
+                                      [[UIScreen mainScreen] bounds].size.width);
+        [self setBounds:newBounds];
     }
 }
 
