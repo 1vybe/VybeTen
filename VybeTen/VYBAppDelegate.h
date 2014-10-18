@@ -10,14 +10,12 @@
 #import <Parse/Parse.h>
 #import "VYBNavigationController.h"
 #import "VYBPageViewController.h"
-#import "VYBLogInViewController.h"
 
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource, VYBLogInViewControllerDelegate>
+@class VYBPlayerViewController;
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource>
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (nonatomic, strong) VYBPageViewController *pageController;
-@property (nonatomic, strong) VYBNavigationController *navController;
 @property (nonatomic, strong) NSArray *viewControllers;
 @property (nonatomic) VYBPlayerViewController *playerVC;
 
@@ -28,7 +26,6 @@
 
 - (void)presentLoginViewController;
 - (void)presentLoginViewControllerAnimated:(BOOL)animated;
-- (void)presentPageViewController;
-
+- (void)proceedToMainInterface;
 - (void)logOut;
 @end

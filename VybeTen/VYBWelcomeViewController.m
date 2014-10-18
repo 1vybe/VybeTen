@@ -8,6 +8,7 @@
 
 #import "VYBWelcomeViewController.h"
 #import "VYBAppDelegate.h"
+#import "VYBUtility.h"
 
 @implementation VYBWelcomeViewController
 
@@ -26,12 +27,13 @@
     if (![PFUser currentUser]) {
         [(VYBAppDelegate*)[[UIApplication sharedApplication] delegate] presentLoginViewControllerAnimated:NO];
         return;
+    } else {
+        [(VYBAppDelegate*)[[UIApplication sharedApplication] delegate] proceedToMainInterface];
     }
-    // Present Anypic UI
-    [(VYBAppDelegate*)[[UIApplication sharedApplication] delegate] presentPageViewController];
     
     // Refresh current user with server side data -- checks if user is still valid and so on
-    [[PFUser currentUser] refreshInBackgroundWithTarget:self selector:@selector(refreshCurrentUserCallbackWithResult:error:)];
+    [[PFUser currentUser] fetchInBackgroundWithTarget:self selector:@selector(refreshCurrentUserCallbackWithResult:error:)];
+    [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
 }
 
 

@@ -91,7 +91,6 @@
             if ([PFUser currentUser]) {
                 [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
                 [self.navigationController popViewControllerAnimated:NO];
-                [self.delegate logInViewController:self didLogInUser:[PFUser currentUser]];
             }
         } else {
             if (error.code == 101) {

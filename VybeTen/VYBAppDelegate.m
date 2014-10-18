@@ -35,18 +35,16 @@
 @property (nonatomic, strong) Reachability *wifiReach;
 @property (nonatomic, strong) NSString *uniqueID;
 
-@property (nonatomic) VYBNavigationController *mainNavigationController;
+@property (nonatomic) VYBNavigationController *mainNavController;
 @property (nonatomic) VYBPermissionViewController *permissionController;
 @property (nonatomic, strong) VYBPageViewController *pageController;
 @property (nonatomic, strong) VYBNavigationController *activityNavigationVC;
 @property (nonatomic, strong) VYBCaptureViewController *captureVC;
 @property (nonatomic) VYBPlayerControlViewController *playerController;
-//@property (nonatomic, strong) VYBHubViewController *hubVC;
 @property (nonatomic, strong) VYBActivityTableViewController *activityVC;
 @property (nonatomic, strong) VYBWelcomeViewController *welcomeViewController;
 
 - (void)setupAppearance;
-- (BOOL)shouldProceedToMainInterface;
 @end
 
 @implementation VYBAppDelegate
@@ -117,41 +115,9 @@
     /* navigation bar settings */
     [self setupAppearance];
 
-    self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
-
-    self.navController = [[VYBNavigationController alloc] initWithRootViewController:self.welcomeViewController];
-    self.navController.navigationBarHidden = YES;
+    [self setUpViewControllers];
     
-    //self.hubVC = [[VYBHubViewController alloc] initWithPageIndex:VYBHubPageIndex];
-    
-    self.playerController = [[VYBPlayerControlViewController alloc] initWithPageIndex:VYBHubPageIndex];
-    
-    self.captureVC = [[VYBCaptureViewController alloc] initWithPageIndex:VYBCapturePageIndex];
-    
-    self.activityVC = [[VYBActivityTableViewController alloc] init];
-    self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.activityVC];
-    
-    self.viewControllers = [[NSArray alloc] initWithObjects:self.playerController, self.captureVC, self.activityNavigationVC, nil];
-    
-    self.pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
-    [self.pageController setViewControllers:@[self.captureVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    self.pageController.dataSource = self;
-    
-    
-    self.mainNavigationController = [[VYBNavigationController alloc] initWithRootViewController:self.pageController];
-    [self.mainNavigationController setNavigationBarHidden:YES];
-    
-    // Checking permissions
-    self.permissionController = [[VYBPermissionViewController alloc] init];
-    [self.mainNavigationController pushViewController:self.permissionController animated:NO];
-    
-    // Checking login status
-    if (![PFUser currentUser]) {
-        VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
-        [self.mainNavigationController pushViewController:logInVC animated:NO];
-    }
-    
-    [self.window setRootViewController:self.mainNavigationController];
+    [self.window setRootViewController:self.mainNavController];
     
     self.playerVC = [[VYBPlayerViewController alloc] init];
     [self.window addSubview:self.playerVC.view];
@@ -159,6 +125,7 @@
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
 
+    
     // Handle push if the app is launched from notification
     [self handlePush:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
     
@@ -255,7 +222,6 @@
         NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
 
         if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionGrantedKey] ) {
-            //[application registerUserNotificationSettings:<#(UIUserNotificationSettings *)#>]
             [application registerForRemoteNotifications];
         }
         // Else Do nothing because request should be made from Activity screen
@@ -327,12 +293,6 @@
     
 }
 
-#pragma mark - VYBLogInViewController
-
-- (void)logInViewController:(VYBLogInViewController *)logInController didLogInUser:(PFUser *)user{
-    [self shouldProceedToMainInterface];
-}
-
 #pragma mark - AppDelegate
 
 - (BOOL)isParseReachable {
@@ -340,48 +300,47 @@
 }
 
 - (void)presentLoginViewControllerAnimated:(BOOL)animated {
-    VYBLogInViewController *loginViewController = [[VYBLogInViewController alloc] init];
-    [loginViewController setDelegate:self];
-//    loginViewController.fields = PFLogInFieldsFacebook;
-//    loginViewController.facebookPermissions = @[ @"user_about_me" ];
-    
-    [self.welcomeViewController presentViewController:loginViewController animated:NO completion:nil];
+    VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
+    [self.mainNavController pushViewController:logInVC animated:NO];
 }
 
 - (void)presentLoginViewController {
     [self presentLoginViewControllerAnimated:YES];
 }
 
-- (void)presentPageViewController {
-    self.pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+- (void)proceedToMainInterface {
+    [self.mainNavController popViewControllerAnimated:NO];
+}
+
+- (void)setUpViewControllers {
+    self.playerController = [[VYBPlayerControlViewController alloc] initWithPageIndex:VYBHubPageIndex];
     
-    self.hubNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBHubPageIndex];
-    
-    self.captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
-    self.captureNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBCapturePageIndex withRootViewController:self.captureVC];
-    self.captureNavigationVC.navigationBarHidden = YES;
-    
-//    // Checking permissions
-//    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
-//        VYBPermissionViewController *permission = [[VYBPermissionViewController alloc] init];
-//        [self.captureNavigationVC pushViewController:permission animated:NO];
-//    }
-    
-//    // Checking login status
-//    if (![PFUser currentUser]) {
-//        VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
-//        [self.captureNavigationVC pushViewController:logInVC animated:NO];
-//    }
+    self.captureVC = [[VYBCaptureViewController alloc] initWithPageIndex:VYBCapturePageIndex];
     
     self.activityVC = [[VYBActivityTableViewController alloc] init];
     self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.activityVC];
     
-    self.viewControllers = [[NSArray alloc] initWithObjects:self.hubNavigationVC, self.captureNavigationVC, self.activityNavigationVC, nil];
+    self.viewControllers = [[NSArray alloc] initWithObjects:self.playerController, self.captureVC, self.activityNavigationVC, nil];
     
-    [self.pageController setViewControllers:@[self.captureNavigationVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    self.pageController.dataSource = self;
+    if ([self.mainNavController childViewControllers] == 0) {
+        self.pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
+                                                               navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
+                                                                             options:nil];
+        self.pageController.dataSource = self;
+        
+        self.mainNavController = [[VYBNavigationController alloc] initWithRootViewController:self.pageController];
+        self.mainNavController.navigationBarHidden = YES;
+    }
+
+    [self.pageController setViewControllers:@[self.captureVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
-    [self.navController setViewControllers:@[ self.welcomeViewController, self.pageController ] animated:NO];
+    // Checking permissions
+    self.permissionController = [[VYBPermissionViewController alloc] init];
+    [self.mainNavController pushViewController:self.permissionController animated:NO];
+    
+    self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
+    [self.mainNavController pushViewController:self.welcomeViewController animated:NO];
+
 }
 
 - (void)logOut {
@@ -404,16 +363,17 @@
     [PFUser logOut];
     
     // clear out cached data, view controllers, etc
-    [self.navController popToRootViewControllerAnimated:NO];
+    [self.mainNavController popToRootViewControllerAnimated:NO];
     
-    [self presentLoginViewController];
-    
-    self.hubNavigationVC = nil;
     self.captureVC = nil;
-    self.captureNavigationVC = nil;
+    self.playerController = nil;
     self.activityVC = nil;
     self.activityNavigationVC = nil;
     self.viewControllers = nil;
+    self.permissionController = nil;
+    self.welcomeViewController = nil;
+    
+    [self setUpViewControllers];
 }
 
 #pragma mark - ()
@@ -457,12 +417,5 @@
     }
 }
 
-- (BOOL)shouldProceedToMainInterface {
-//    [MBProgressHUD hideHUDForView:self.navController.presentedViewController.view animated:YES];
-    [self presentPageViewController];
-    
-    [self.navController dismissViewControllerAnimated:YES completion:nil];
-    return YES;
-}
 
 @end

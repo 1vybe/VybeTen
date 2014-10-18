@@ -11,8 +11,8 @@
 #import "VYBProfileInfoView.h"
 #import "VYBUtility.h"
 #import "VYBCache.h"
-#import "VYBLogInViewController.h"
 #import "VYBPlayerViewController.h"
+#import "VYBAppDelegate.h"
 
 @interface VYBProfileViewController ()
 @property (nonatomic, strong) UIBarButtonItem *actionButton;
@@ -138,20 +138,8 @@
             break;
         case 0:
             NSLog(@"Logging out");
-            // clear cache
-            [[VYBCache sharedCache] clear];
-            
-            // Unsubscribe from push notifications by removing the user association from the current installation.
-            [[PFInstallation currentInstallation] removeObjectForKey:@"user"];
-            [[PFInstallation currentInstallation] saveInBackground];
-            
-            // Clear all caches
-            [PFQuery clearAllCachedResults];
-            
-            [PFUser logOut];
-            
-            VYBLogInViewController *loginVC = [[VYBLogInViewController alloc] init];
-            [self.navigationController pushViewController:loginVC animated:NO];
+           
+            [(VYBAppDelegate *)[UIApplication sharedApplication].delegate logOut];
             break;
     }
 }
