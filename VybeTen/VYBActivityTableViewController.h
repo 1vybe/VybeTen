@@ -8,7 +8,5 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBActivityTableViewController : PFQueryTableViewController
-@property (nonatomic, strong) PFObject *user;
-- (IBAction)profileButtonPressed:(id)sender;
+@interface VYBActivityTableViewController : PFQueryTableViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @end
