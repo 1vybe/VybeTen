@@ -20,6 +20,8 @@
 @property (nonatomic, weak) IBOutlet UIButton *rejectButton;
 @property (nonatomic, weak) IBOutlet VYBPlayerView *playerView;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *acceptButtonBottomSpacingConstraint;
+
 - (IBAction)acceptButtonPressed:(id)sender;
 - (IBAction)rejectButtonPressed:(id)sender;
 
@@ -35,6 +37,8 @@
     self.playerView = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBMyVybeStoreLocationFetchedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)viewDidLoad
@@ -48,6 +52,10 @@
     _currVybe = [[VYBMyVybeStore sharedStore] currVybe];
         
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationFetched:) name:VYBMyVybeStoreLocationFetchedNotification object:nil];
+    
+    // Register for keyboard notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -97,6 +105,18 @@
     //[self.acceptButton setEnabled:YES];
 }
 
+#pragma mark - Keyboard
+
+- (void)keyboardWasShown:(NSNotification *)notification {
+    NSDictionary *info = [notification userInfo];
+    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    [self.acceptButtonBottomSpacingConstraint setConstant:keyboardSize.height];
+}
+
+- (void)keyboardWillBeHidden:(NSNotification *)notification {
+    [self.acceptButtonBottomSpacingConstraint setConstant:0.0f];
+}
 
 #pragma mark - DeviceOrientation
 
