@@ -61,6 +61,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    [self setNeedsStatusBarAppearanceUpdate];
     
     // Check notification permission settings
     if ([[[UIApplication sharedApplication] currentUserNotificationSettings] types] > 0) {
@@ -113,7 +114,6 @@
             [self presentViewController:alertController animated:NO completion:nil];
         }
     }
-
 
     [VYBUtility updateLastRefreshForCurrentUser];
 }
@@ -249,6 +249,10 @@
 #pragma mark - UIViewController
 
 - (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (BOOL)prefersStatusBarHidden {
     return NO;
 }
 

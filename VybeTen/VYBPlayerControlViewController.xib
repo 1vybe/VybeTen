@@ -10,6 +10,7 @@
                 <outlet property="captureButton" destination="dYE-vk-C0a" id="agJ-Lp-j7M"/>
                 <outlet property="counterButton" destination="7uh-eA-VQL" id="CkR-SW-DjF"/>
                 <outlet property="locationTimeButton" destination="cMN-bL-OwK" id="DOn-OL-dn1"/>
+                <outlet property="pauseButton" destination="SAw-ya-zhv" id="XbC-qS-MG9"/>
                 <outlet property="portalButton" destination="MJr-Ty-ayr" id="GSw-cM-qeq"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -47,9 +48,6 @@
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <connections>
-                        <action selector="portalButtonPressed" destination="-1" eventType="touchDown" id="a0S-yI-2mX"/>
-                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7uh-eA-VQL" userLabel="counterButton">
                     <rect key="frame" x="20" y="544" width="36" height="36"/>
@@ -66,20 +64,66 @@
                         <action selector="counterButtonPressed" destination="-1" eventType="touchUpInside" id="3E1-Ee-5Bb"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vij-MN-ZuP" userLabel="goPrevButton">
+                    <rect key="frame" x="0.0" y="250" width="80" height="100"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="80" id="dgs-1a-6c4"/>
+                        <constraint firstAttribute="height" constant="100" id="sb1-2A-jP7"/>
+                    </constraints>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="goPrevButtonPressed:" destination="-1" eventType="touchUpInside" id="BvO-Ez-ipM"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pb2-69-N8y" userLabel="goNextButton">
+                    <rect key="frame" x="520" y="250" width="80" height="100"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="80" id="Ipi-MK-x7z"/>
+                        <constraint firstAttribute="height" constant="100" id="Q53-EW-l1o"/>
+                    </constraints>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="goNextButtonPressed:" destination="-1" eventType="touchUpInside" id="Vha-uK-yxY"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SAw-ya-zhv" userLabel="pauseButton">
+                    <rect key="frame" x="265" y="265" width="70" height="70"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="Rg8-7d-EZV"/>
+                        <constraint firstAttribute="width" constant="70" id="nLX-qV-MVI"/>
+                    </constraints>
+                    <state key="normal" image="button_player_pause">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="pauseButtonPressed:" destination="-1" eventType="touchUpInside" id="apg-Wb-NDu"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="MJr-Ty-ayr" secondAttribute="trailing" constant="20" id="2qJ-73-YOq"/>
                 <constraint firstItem="cMN-bL-OwK" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="BwS-M7-aPe"/>
                 <constraint firstAttribute="bottom" secondItem="7uh-eA-VQL" secondAttribute="bottom" constant="20" id="DN2-iT-2UF"/>
                 <constraint firstItem="dYE-vk-C0a" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="HQa-bK-LI1"/>
+                <constraint firstAttribute="trailing" secondItem="Pb2-69-N8y" secondAttribute="trailing" id="P8w-2S-sOY"/>
                 <constraint firstItem="cMN-bL-OwK" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="QlJ-SX-1u3"/>
                 <constraint firstAttribute="bottom" secondItem="MJr-Ty-ayr" secondAttribute="bottom" constant="20" id="SXM-m5-4N5"/>
+                <constraint firstAttribute="centerY" secondItem="SAw-ya-zhv" secondAttribute="centerY" id="VxK-bn-cuP"/>
+                <constraint firstAttribute="centerY" secondItem="Vij-MN-ZuP" secondAttribute="centerY" id="fkI-HM-iB3"/>
                 <constraint firstItem="7uh-eA-VQL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="jJS-qh-YoZ"/>
+                <constraint firstAttribute="centerX" secondItem="SAw-ya-zhv" secondAttribute="centerX" id="r1o-80-FU8"/>
+                <constraint firstAttribute="centerY" secondItem="Pb2-69-N8y" secondAttribute="centerY" id="u1c-Sv-adY"/>
                 <constraint firstAttribute="trailing" secondItem="dYE-vk-C0a" secondAttribute="trailing" constant="20" id="uR8-wv-scZ"/>
+                <constraint firstItem="Vij-MN-ZuP" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="utX-77-c0b"/>
             </constraints>
         </view>
     </objects>
     <resources>
+        <image name="button_player_pause" width="21" height="32"/>
         <image name="player_camera_button" width="36" height="36"/>
         <image name="player_counter_button" width="36" height="36"/>
         <image name="player_location_time_label" width="153" height="39"/>

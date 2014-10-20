@@ -18,6 +18,7 @@
 
 - (void)beginPlayingFrom:(NSInteger)from;
 - (void)playNextItem;
+- (void)playNextZoneVideo;
 
 
 @end

@@ -30,10 +30,16 @@
 @property (nonatomic, weak) IBOutlet UIButton *portalButton;
 @property (nonatomic, weak) IBOutlet UIButton *locationTimeButton;
 @property (nonatomic, weak) IBOutlet UIButton *captureButton;
+@property (nonatomic, weak) IBOutlet UIButton *pauseButton;
+
+
+- (IBAction)goNextButtonPressed:(id)sender;
+- (IBAction)goPrevButtonPressed:(id)sender;
+- (IBAction)pauseButtonPressed:(id)sender;
 
 - (IBAction)counterButtonPressed;
-- (IBAction)portalButtonPressed;
 - (IBAction)captureButtonPressed;
+
 
 @property (nonatomic, weak) VYBPlayerViewController *playerVC;
 
@@ -46,6 +52,8 @@
     NSTimer *overlayTimer;
     
     NSInteger _pageIndex;
+    NSArray *_zoneVybes;
+    NSInteger _zoneVybeCurrIdx;
 }
 @synthesize captureButton;
 @synthesize currVybeIndex;
@@ -56,7 +64,7 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
 }
 
 - (id)initWithPageIndex:(NSInteger)pageIndex {
@@ -78,6 +86,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybesFetched:) name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
+    
     // Device orientation detection
     [MotionOrientation initialize];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -91,6 +101,10 @@
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
     tapGesture.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapGesture];
+    
+    UILongPressGestureRecognizer *tapAndHoldGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(portalButtonTapAndHoldDetected:)];
+    tapAndHoldGesture.minimumPressDuration = 0.5;
+    [portalButton addGestureRecognizer:tapAndHoldGesture];
     
     menuMode = NO;
     [self syncUIElementsWithMenuMode];
@@ -110,36 +124,12 @@
     
     [self setNeedsStatusBarAppearanceUpdate];
     
-    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-    [query whereKeyExists:kVYBVybeLocationStringKey];
-    [query orderByAscending:kVYBVybeTimestampKey];
-    [query setLimit:50];
+    self.vybePlaylist = [[VYBCache sharedCache] freshVybes];
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            if (objects.count > 0) {
-                [self setVybePlaylist:objects];
-                [self beginPlayingFrom:0];
-            }
-        }
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    }];
-
+    if (self.vybePlaylist && ([self.vybePlaylist count] > 0))
+        [self beginPlayingFrom:0];
 }
 
-#pragma mark - User Interactions
-- (IBAction)counterButtonPressed {
-    
-}
-
-- (IBAction)portalButtonPressed {
-    
-}
-
-- (IBAction)captureButtonPressed {
-    
-}
 
 #pragma mark - Behind the scene
 
@@ -164,7 +154,7 @@
             
             [self.playerVC playAsset:asset];
             
-//            [[VYBCache sharedCache] removeFreshVybe:currVybe];
+            [[VYBCache sharedCache] removeFreshVybe:currVybe];
             [self prepareVybeAt:downloadingVybeIndex];
         } else {
             PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
@@ -206,28 +196,95 @@
         [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             if (!error) {
                 if (currVybeIndex == downloadingVybeIndex) {
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                    [data writeToURL:cacheURL atomically:YES];
-                    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+                    //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                     
-                    [self.playerVC playAsset:asset];
-                    
-                    [[VYBCache sharedCache] removeFreshVybe:aVybe];
-//                    [self syncUI:aVybe];
                     [self prepareVybeAt:downloadingVybeIndex + 1];
+                    [self syncUI:aVybe withCompletion:^{
+                        [data writeToURL:cacheURL atomically:YES];
+                        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+                        
+                        [self.playerVC playAsset:asset];
+                        
+                        [[VYBCache sharedCache] removeFreshVybe:aVybe];
+                    }];
                 }
             }
         }];
     }
 }
 
+
+- (void)beginPlayingZoneVybes {
+    _zoneVybeCurrIdx = 0;
+    [self playZoneVybeAt:0];
+    
+}
+- (void)playZoneVybeAt:(NSInteger)idx {
+    PFObject *currVybe = [_zoneVybes objectAtIndex:idx];
+    
+    // Play after syncing UI elements
+    NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
+    cacheURL = [cacheURL URLByAppendingPathComponent:[currVybe objectId]];
+    cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+        [self.playerVC playAsset:asset];
+    }
+    else {
+        PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            if (!error) {
+                [data writeToURL:cacheURL atomically:YES];
+                AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+                [self.playerVC playAsset:asset];
+            } else {
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [av show];
+            }
+        }];
+    }
+}
+
+
 - (void)playNextItem {
+    if (_zoneVybes) {
+        [self playNextZoneVideo];
+        return;
+    }
     if (currVybeIndex == self.vybePlaylist.count - 1) {
+        [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
         return;
     } else {
         [self.playerVC.currPlayer pause];
         currVybeIndex++;
         [self beginPlayingFrom:currVybeIndex];
+    }
+}
+
+- (void)playNextZoneVideo {
+    if (_zoneVybeCurrIdx == _zoneVybes.count - 1) {
+        
+        [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+            self.playerVC.view.alpha = 0.0;
+            self.playerVC.view.transform = CGAffineTransformMakeScale(0.1f, 0.1f);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                self.playerVC.view.alpha = 1.0;
+                self.playerVC.view.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+            } completion:^(BOOL finished) {
+                _zoneVybes = nil;
+                [self beginPlayingFrom:currVybeIndex];
+            }];
+        }];
+
+        return;
+    } else {
+        [self.playerVC.currPlayer pause];
+        _zoneVybeCurrIdx++;
+        [self playZoneVybeAt:_zoneVybeCurrIdx];
     }
 }
 
@@ -249,16 +306,21 @@
     // Display how many vybes have been around current vybe
     [portalButton setTitle:@"" forState:UIControlStateNormal];
     if ( ! [aVybe objectForKey:kVYBVybeGeotag] ) {
+        if (completionBlock)
+            completionBlock();
         return;
     }
+    
     PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
     [query whereKey:kVYBVybeGeotag nearGeoPoint:[aVybe objectForKey:kVYBVybeGeotag] withinKilometers:0.02];
     [query setLimit:50];
     query.cachePolicy = kPFCachePolicyCacheElseNetwork;
     [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        portalButton.hidden = YES;
         if (!error) {
             if (number > 0) {
                 [portalButton setTitle:[NSString stringWithFormat:@"%d", number] forState:UIControlStateNormal];
+                portalButton.hidden = NO;
             }
             if (completionBlock)
                 completionBlock();
@@ -316,6 +378,67 @@
  * User Interactions
  **/
 
+#pragma mark - User Interactions
+
+- (void)portalButtonTapAndHoldDetected:(UILongPressGestureRecognizer *)recognizer {
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        [self.playerVC.currPlayer pause];
+
+        [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+            self.playerVC.view.transform = CGAffineTransformMakeScale(3.0f, 3.0f);
+        } completion:^(BOOL success) {
+            [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                self.playerVC.view.alpha = 0.0f;
+            } completion:^(BOOL success) {
+                self.playerVC.view.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+            }];
+        }];
+        
+        PFObject *currVybe = self.vybePlaylist[currVybeIndex];
+        [PFCloud callFunctionInBackground:@"get_nearby_vybes"
+                           withParameters:@{ @"vybeID" : currVybe.objectId}
+                                    block:^(NSArray *objects, NSError *error) {
+                                        if (!error) {
+                                            _zoneVybes = objects;
+                                            _zoneVybeCurrIdx = 0;
+                                            [self beginPlayingZoneVybes];
+                                        }
+                                        [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                                            self.playerVC.view.alpha = 1.0;
+                                        } completion:nil];
+                                    }];
+    }
+    else if (recognizer.state == UIGestureRecognizerStateEnded) {
+        if ( ! _zoneVybes)
+            return;
+        
+        [self.playerVC.currPlayer pause];
+        
+        [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+            self.playerVC.view.transform = CGAffineTransformMakeScale(0.2f, 0.2f);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                self.playerVC.view.alpha = 0.0;
+            } completion:^(BOOL finished) {
+                self.playerVC.view.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+                _zoneVybes = nil;
+                [self beginPlayingFrom:currVybeIndex];
+                [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                    self.playerVC.view.alpha = 1.0;
+                } completion:nil];
+            }];
+        }];
+    }
+}
+
+- (IBAction)counterButtonPressed {
+    
+}
+
+- (IBAction)captureButtonPressed {
+    
+}
+
 - (IBAction)dismissButtonPressed:(id)sender {
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
@@ -332,12 +455,15 @@
     }
 }
 
-
 - (IBAction)goNextButtonPressed:(id)sender {
     //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     if (!self.vybePlaylist) {
         return;
     }
+    
+    if ( _zoneVybes)
+        return;
+    
     if (currVybeIndex == self.vybePlaylist.count - 1) {
         // Reached the end show the ENDING screen
         return;
@@ -349,11 +475,15 @@
     
 }
 
-- (IBAction)goPreviousButtonPressed:(id)sender {
+- (IBAction)goPrevButtonPressed:(id)sender {
     //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     if (!self.vybePlaylist) {
         return;
     }
+    
+    if ( _zoneVybes)
+        return;
+    
     if (currVybeIndex == 0) {
         // Reached the beginning show the BEGINNING screen
         return;
@@ -372,7 +502,6 @@
         [self.playerVC.currPlayer pause];
     }
 }
-
 
 - (void)tapOnce {
     if (!menuMode) {
@@ -396,20 +525,18 @@
     locationTimeButton.hidden = !menuMode;
     counterButton.hidden = !menuMode;
     captureButton.hidden = !menuMode;
+    self.pauseButton.hidden = !menuMode;
 }
-
-
-- (void)tapTwice {
-    if (self.playerVC.currPlayer.rate != 0.0) {
-        [self.playerVC.currPlayer pause];
-    }
-    UIAlertView *deleteAlert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"This vybe will be gone." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"DELETE", nil];
-    [deleteAlert show];
-}
-
 
 
 #pragma mark - VYBAppDelegateNotification
+
+- (void)freshVybesFetched:(NSNotification *)notification {
+    self.vybePlaylist = [[VYBCache sharedCache] freshVybes];
+    if (self.vybePlaylist && (self.vybePlaylist.count > 0))
+        [self beginPlayingFrom:0];
+}
+
 
 - (void)remoteNotificationReceived:(id)sender {
     if ([[VYBUserStore sharedStore] newPrivateVybeCount] > 0) {

@@ -167,6 +167,14 @@ var alertPayload = function(request) {
 // Function that returns info about regions
 Parse.Cloud.define('get_regions', get_regions);
 
+Parse.Cloud.define('get_nearby_vybes',
+  get_nearby_vybes.bind(this, {
+    recent: true,
+    radius: 0.01,
+    limit: 50,
+  })
+);
+
 // Default algorithm used in the app
 Parse.Cloud.define('default_algorithm',
   get_vybes.bind(this, {
@@ -372,6 +380,54 @@ function get_vybes(options, request, response) {
       response.error('Request to get_vybes() has failed.');
     }
   });
+}
+
+function get_nearby_vybes(options, request, response) {
+  var recent = options.recent || false;
+  var hide_user = options.hide_user || false;
+  var reversed = options.reversed || false;
+  var limit = options.limit || 50;
+
+  var query = new Parse.Query('Vybe');
+  query.include('user');
+
+  if (recent)
+    query.addDescending('timestamp');
+  if (hide_user)
+    query.notEqualTo('user', currentUser);
+  if (limit)
+    query.limit(limit);
+
+  // Don't get private vybes
+  query.notEqualTo('isPublic', false);
+
+  var aVybe = new Vybe();
+  aVybe.id = request.params.vybeID;
+  console.log('CP');
+  aVybe.fetch({
+    success: function(vybeObj) {
+      console.log('vybe from ' + vybeObj.get('locationString'));
+      query.near('location', vybeObj.get('location'));
+      query.find({
+        success: function(vybesObjects) {
+          console.log('nearby vybes found');
+          if (reversed) {
+            response.success(vybesObjects);
+          } else {
+             // Sort result in chronological order
+            response.success(vybesObjects.reverse());
+          }
+        },
+        error: function() {
+          response.error('Request to get_vybes() has failed.');
+        }
+      });
+    },
+    error: function(error) {
+      response.error('vybe could not be fetched. ' + error.message);
+    }
+  });
+
 }
 
 function get_region_vybes(options, request, response) {
