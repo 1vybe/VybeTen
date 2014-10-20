@@ -8,5 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
+IB_DESIGNABLE
 @interface VYBActivityTableViewController : PFQueryTableViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @end

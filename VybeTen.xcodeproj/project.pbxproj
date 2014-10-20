@@ -12,8 +12,6 @@
 		020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 020F1C491977054900C3AA40 /* VYBPermissionViewController.m */; };
 		020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 020FB84819744EBA005C9BA9 /* VYBCameraView.m */; };
 		021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */; };
-		021B5B6E19A7D0E300B906F3 /* VYBVybeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 021B5B6C19A7D0E300B906F3 /* VYBVybeTableViewCell.m */; };
-		021B5B6F19A7D0E300B906F3 /* VYBVybeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 021B5B6D19A7D0E300B906F3 /* VYBVybeTableViewCell.xib */; };
 		021B5B7219A7F21C00B906F3 /* VYBProfileInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 021B5B7119A7F21C00B906F3 /* VYBProfileInfoView.m */; };
 		021B5B7419A7F23800B906F3 /* VYBProfileInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 021B5B7319A7F23800B906F3 /* VYBProfileInfoView.xib */; };
 		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
@@ -87,22 +85,18 @@
 		607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 607CA69918C5C80C0060B420 /* VYBPlayerView.m */; };
 		60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */; };
 		876FD1CBA2104ACB85FFFB93 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D4D61F35BF543039A00CFD0 /* libPods.a */; };
+		88063E6819F22F1E00C90A2D /* Activity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88063E6719F22F1E00C90A2D /* Activity.storyboard */; };
 		88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */; };
-		883E125019B7F69B0043BBBC /* VYBActivityTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 883E124F19B7F69B0043BBBC /* VYBActivityTableViewController.xib */; };
 		88459C0719BE97E50078E393 /* VYBBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 88459C0619BE97E50078E393 /* VYBBannerView.m */; };
 		8861F0D019A81C8C000249DB /* NSString+Username.m in Sources */ = {isa = PBXBuildFile; fileRef = 8861F0CF19A81C8C000249DB /* NSString+Username.m */; };
 		8861F0D319A81E08000249DB /* NSString+Email.m in Sources */ = {isa = PBXBuildFile; fileRef = 8861F0D219A81E08000249DB /* NSString+Email.m */; };
-		8867F96519C27A06005E33FE /* VYBStripeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8867F96419C27A06005E33FE /* VYBStripeView.m */; };
 		88828D9B19344AEB005CB06C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 88828D9A19344AEB005CB06C /* Reachability.m */; };
+		8887DA0E19F50774007BCC53 /* VYBVybeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8887DA0D19F50774007BCC53 /* VYBVybeTableViewCell.m */; };
 		888F1FE719B2740B00546643 /* ProximaNovaSoft-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 888F1FE419B2740B00546643 /* ProximaNovaSoft-Bold.otf */; };
 		888F1FE819B2740B00546643 /* ProximaNovaSoft-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 888F1FE519B2740B00546643 /* ProximaNovaSoft-Regular.otf */; };
 		888F1FE919B2740B00546643 /* ProximaNovaSoft-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 888F1FE619B2740B00546643 /* ProximaNovaSoft-Semibold.otf */; };
-		88C7165019B6AC2800E987C5 /* VYBActivityInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C7164F19B6AC2800E987C5 /* VYBActivityInfoView.m */; };
-		88C7165219B6AC7500E987C5 /* VYBActivityInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88C7165119B6AC7500E987C5 /* VYBActivityInfoView.xib */; };
 		88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F72A111914C721007C7370 /* AnimatedTransitioning.m */; };
 		88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F72A131914C721007C7370 /* TransitionDelegate.m */; };
-		88FF430119AFFCDB00D18872 /* VYBActivityTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 88FF42FF19AFFCDB00D18872 /* VYBActivityTableViewCell.m */; };
-		88FF430219AFFCDB00D18872 /* VYBActivityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88FF430019AFFCDB00D18872 /* VYBActivityTableViewCell.xib */; };
 		88FF430519AFFCEB00D18872 /* VYBActivityTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88FF430419AFFCEB00D18872 /* VYBActivityTableViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -117,8 +111,6 @@
 		021B5B6819A7B49100B906F3 /* AVAsset+VideoOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVAsset+VideoOrientation.h"; sourceTree = "<group>"; };
 		021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+VideoOrientation.m"; sourceTree = "<group>"; };
 		021B5B6B19A7D0E300B906F3 /* VYBVybeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybeTableViewCell.h; sourceTree = "<group>"; };
-		021B5B6C19A7D0E300B906F3 /* VYBVybeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybeTableViewCell.m; sourceTree = "<group>"; };
-		021B5B6D19A7D0E300B906F3 /* VYBVybeTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBVybeTableViewCell.xib; sourceTree = "<group>"; };
 		021B5B7019A7F21C00B906F3 /* VYBProfileInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBProfileInfoView.h; sourceTree = "<group>"; };
 		021B5B7119A7F21C00B906F3 /* VYBProfileInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBProfileInfoView.m; sourceTree = "<group>"; };
 		021B5B7319A7F23800B906F3 /* VYBProfileInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBProfileInfoView.xib; sourceTree = "<group>"; };
@@ -233,32 +225,25 @@
 		607CA69918C5C80C0060B420 /* VYBPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerView.m; sourceTree = "<group>"; };
 		60F1BBB718BAAFA900070EEC /* VYBMyVybeStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyVybeStore.h; sourceTree = "<group>"; };
 		60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybeStore.m; sourceTree = "<group>"; };
+		88063E6719F22F1E00C90A2D /* Activity.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Activity.storyboard; sourceTree = "<group>"; };
 		88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBWelcomeViewController.h; sourceTree = "<group>"; };
 		88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBWelcomeViewController.m; sourceTree = "<group>"; };
-		883E124F19B7F69B0043BBBC /* VYBActivityTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBActivityTableViewController.xib; sourceTree = "<group>"; };
 		88459C0619BE97E50078E393 /* VYBBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBBannerView.m; sourceTree = "<group>"; };
-		88459C0819BE984E0078E393 /* VYBStripeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBStripeView.h; sourceTree = "<group>"; };
 		8861F0CE19A81C8C000249DB /* NSString+Username.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Username.h"; sourceTree = "<group>"; };
 		8861F0CF19A81C8C000249DB /* NSString+Username.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Username.m"; sourceTree = "<group>"; };
 		8861F0D119A81E08000249DB /* NSString+Email.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Email.h"; sourceTree = "<group>"; };
 		8861F0D219A81E08000249DB /* NSString+Email.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Email.m"; sourceTree = "<group>"; };
-		8867F96419C27A06005E33FE /* VYBStripeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBStripeView.m; sourceTree = "<group>"; };
 		8867F96619C27A35005E33FE /* VYBBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBBannerView.h; sourceTree = "<group>"; };
 		88828D9919344AEB005CB06C /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = External/Reachability/Reachability.h; sourceTree = "<group>"; };
 		88828D9A19344AEB005CB06C /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = External/Reachability/Reachability.m; sourceTree = "<group>"; };
+		8887DA0D19F50774007BCC53 /* VYBVybeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybeTableViewCell.m; sourceTree = "<group>"; };
 		888F1FE419B2740B00546643 /* ProximaNovaSoft-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNovaSoft-Bold.otf"; sourceTree = "<group>"; };
 		888F1FE519B2740B00546643 /* ProximaNovaSoft-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNovaSoft-Regular.otf"; sourceTree = "<group>"; };
 		888F1FE619B2740B00546643 /* ProximaNovaSoft-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNovaSoft-Semibold.otf"; sourceTree = "<group>"; };
-		88C7164E19B6AC1500E987C5 /* VYBActivityInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBActivityInfoView.h; sourceTree = "<group>"; };
-		88C7164F19B6AC2800E987C5 /* VYBActivityInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBActivityInfoView.m; sourceTree = "<group>"; };
-		88C7165119B6AC7500E987C5 /* VYBActivityInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBActivityInfoView.xib; sourceTree = "<group>"; };
 		88F72A101914C721007C7370 /* AnimatedTransitioning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimatedTransitioning.h; sourceTree = "<group>"; };
 		88F72A111914C721007C7370 /* AnimatedTransitioning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimatedTransitioning.m; sourceTree = "<group>"; };
 		88F72A121914C721007C7370 /* TransitionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionDelegate.h; sourceTree = "<group>"; };
 		88F72A131914C721007C7370 /* TransitionDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionDelegate.m; sourceTree = "<group>"; };
-		88FF42FE19AFFCDB00D18872 /* VYBActivityTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBActivityTableViewCell.h; sourceTree = "<group>"; };
-		88FF42FF19AFFCDB00D18872 /* VYBActivityTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBActivityTableViewCell.m; sourceTree = "<group>"; };
-		88FF430019AFFCDB00D18872 /* VYBActivityTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBActivityTableViewCell.xib; sourceTree = "<group>"; };
 		88FF430319AFFCEB00D18872 /* VYBActivityTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBActivityTableViewController.h; sourceTree = "<group>"; };
 		88FF430419AFFCEB00D18872 /* VYBActivityTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBActivityTableViewController.m; sourceTree = "<group>"; };
 		9D4D61F35BF543039A00CFD0 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -355,6 +340,7 @@
 				027C707819AEFE68007BB8FE /* HubStoryboard.storyboard */,
 				02B6AC2419AF843B00A0C44D /* EmptySegue.h */,
 				02B6AC2519AF843B00A0C44D /* EmptySegue.m */,
+				88063E6719F22F1E00C90A2D /* Activity.storyboard */,
 			);
 			name = Stories;
 			sourceTree = "<group>";
@@ -404,15 +390,12 @@
 				0262054619A69DEE00E994F9 /* VYBUserTableViewCell.m */,
 				0262054719A69DEE00E994F9 /* VYBUserTableViewCell.xib */,
 				021B5B6B19A7D0E300B906F3 /* VYBVybeTableViewCell.h */,
-				021B5B6C19A7D0E300B906F3 /* VYBVybeTableViewCell.m */,
-				021B5B6D19A7D0E300B906F3 /* VYBVybeTableViewCell.xib */,
+				8887DA0D19F50774007BCC53 /* VYBVybeTableViewCell.m */,
 				021B5B7019A7F21C00B906F3 /* VYBProfileInfoView.h */,
 				021B5B7119A7F21C00B906F3 /* VYBProfileInfoView.m */,
 				021B5B7319A7F23800B906F3 /* VYBProfileInfoView.xib */,
 				8867F96619C27A35005E33FE /* VYBBannerView.h */,
 				88459C0619BE97E50078E393 /* VYBBannerView.m */,
-				88459C0819BE984E0078E393 /* VYBStripeView.h */,
-				8867F96419C27A06005E33FE /* VYBStripeView.m */,
 				027F18CE19AFC7030045BFEF /* VYBLocationTableViewCell.h */,
 				027F18CF19AFC7030045BFEF /* VYBLocationTableViewCell.m */,
 				02E45EC919B0156400A55079 /* VYBHubControlView.h */,
@@ -423,12 +406,6 @@
 				02B0A7B019B264FD0074627A /* VYBWatchAllButton.m */,
 				02B0A7AD19B262BA0074627A /* VYBWatchAllButton.xib */,
 				02A28A4C19B15A67007C8FFA /* VYBHubTitleView.xib */,
-				88FF42FE19AFFCDB00D18872 /* VYBActivityTableViewCell.h */,
-				88FF42FF19AFFCDB00D18872 /* VYBActivityTableViewCell.m */,
-				88FF430019AFFCDB00D18872 /* VYBActivityTableViewCell.xib */,
-				88C7164E19B6AC1500E987C5 /* VYBActivityInfoView.h */,
-				88C7164F19B6AC2800E987C5 /* VYBActivityInfoView.m */,
-				88C7165119B6AC7500E987C5 /* VYBActivityInfoView.xib */,
 				02F5B1EF19D32594008C42C3 /* VYBDynamicSizeView.h */,
 				02F5B1F019D32594008C42C3 /* VYBDynamicSizeView.m */,
 			);
@@ -448,7 +425,6 @@
 				027C708019AF08C6007BB8FE /* Container */,
 				88FF430319AFFCEB00D18872 /* VYBActivityTableViewController.h */,
 				88FF430419AFFCEB00D18872 /* VYBActivityTableViewController.m */,
-				883E124F19B7F69B0043BBBC /* VYBActivityTableViewController.xib */,
 				88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */,
 				88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */,
 			);
@@ -691,18 +667,15 @@
 			files = (
 				02D11D0B18DF62AC0018DA97 /* Montreal-Light.otf in Resources */,
 				02A28A4D19B15A67007C8FFA /* VYBHubTitleView.xib in Resources */,
-				020CC65F19A701D900B2F794 /* VYBProfileViewController.xib in Resources */,
 				0266802919F15CB000030836 /* VYBPlayerControlViewController.xib in Resources */,
 				027C707919AEFE68007BB8FE /* HubStoryboard.storyboard in Resources */,
 				02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */,
 				02B0A7AE19B262BA0074627A /* VYBWatchAllButton.xib in Resources */,
 				02E45ECD19B0158100A55079 /* VYBHubControlView.xib in Resources */,
 				02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */,
-				88C7165219B6AC7500E987C5 /* VYBActivityInfoView.xib in Resources */,
-				88FF430219AFFCDB00D18872 /* VYBActivityTableViewCell.xib in Resources */,
 				02F80C46196F600300FB2A48 /* AvenirLTStd-Book.otf in Resources */,
 				02D11D0A18DF62AC0018DA97 /* Montreal-HeavyIta.otf in Resources */,
-				883E125019B7F69B0043BBBC /* VYBActivityTableViewController.xib in Resources */,
+				88063E6819F22F1E00C90A2D /* Activity.storyboard in Resources */,
 				604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */,
 				02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */,
 				02B0C5DA19B13C5E003404BF /* VYBNavigationBar.xib in Resources */,
@@ -725,7 +698,6 @@
 				02D11D0E18DF62AC0018DA97 /* Montreal-MediumIta.otf in Resources */,
 				02D11D0818DF62AC0018DA97 /* Montreal-DemiBoldIta.otf in Resources */,
 				0207236519F1991800817A02 /* VYBPermissionViewController.xib in Resources */,
-				021B5B6F19A7D0E300B906F3 /* VYBVybeTableViewCell.xib in Resources */,
 				02D11D0618DF62AC0018DA97 /* Montreal-BoldIta.otf in Resources */,
 				888F1FE719B2740B00546643 /* ProximaNovaSoft-Bold.otf in Resources */,
 				0262054919A69DEE00E994F9 /* VYBUserTableViewCell.xib in Resources */,
@@ -781,14 +753,12 @@
 				02C7A02719F580FC0065BF4E /* VYBFirstPageViewController.swift in Sources */,
 				88459C0719BE97E50078E393 /* VYBBannerView.m in Sources */,
 				02CEE2AD1970A46A00AC361F /* VYBTimerView.m in Sources */,
-				021B5B6E19A7D0E300B906F3 /* VYBVybeTableViewCell.m in Sources */,
 				0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */,
 				02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */,
 				025CC90F19D5229200A1208C /* UIImage+maskImage.m in Sources */,
 				02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */,
 				027DE0EF19E7484200F5F4C0 /* VYBCaptureRecorder.m in Sources */,
 				0299EC84199A9254004E97CF /* VYBHubViewController.m in Sources */,
-				8867F96519C27A06005E33FE /* VYBStripeView.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
 				02E45ECB19B0156400A55079 /* VYBHubControlView.m in Sources */,
 				02E4556A1989727200B22554 /* VYBLogInViewController.m in Sources */,
@@ -808,6 +778,7 @@
 				02B0A7B119B264FD0074627A /* VYBWatchAllButton.m in Sources */,
 				023E538D191F142000C3CF78 /* VYBCache.m in Sources */,
 				027F18D019AFC7030045BFEF /* VYBLocationTableViewCell.m in Sources */,
+				8887DA0E19F50774007BCC53 /* VYBVybeTableViewCell.m in Sources */,
 				020CC65E19A701D900B2F794 /* VYBProfileViewController.m in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
@@ -817,7 +788,6 @@
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
 				0266802819F15CB000030836 /* VYBPlayerControlViewController.m in Sources */,
 				02F5B1F119D32594008C42C3 /* VYBDynamicSizeView.m in Sources */,
-				88C7165019B6AC2800E987C5 /* VYBActivityInfoView.m in Sources */,
 				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,
 				02B6AC2619AF843B00A0C44D /* EmptySegue.m in Sources */,
 				0262054419A67B3600E994F9 /* UINavigationController+Autorotate.m in Sources */,

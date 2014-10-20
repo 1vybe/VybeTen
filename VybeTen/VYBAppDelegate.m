@@ -325,8 +325,8 @@
     self.captureVC = [[VYBCaptureViewController alloc] initWithPageIndex:VYBCapturePageIndex];
     
     // Activity (page 2)
-    self.activityVC = [[VYBActivityTableViewController alloc] init];
-    self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.activityVC];
+    self.activityNavigationVC = (VYBNavigationController *)[[UIStoryboard storyboardWithName:@"Activity" bundle:nil] instantiateInitialViewController];
+    self.activityNavigationVC.pageIndex = VYBActivityPageIndex;
     
     // Page view controller
     self.viewControllers = [[NSArray alloc] initWithObjects:self.playerController, self.captureVC, self.activityNavigationVC, nil];

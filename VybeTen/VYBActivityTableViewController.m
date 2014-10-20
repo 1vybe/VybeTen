@@ -7,21 +7,21 @@
 //
 
 #import "VYBActivityTableViewController.h"
-#import "VYBActivityTableViewCell.h"
-#import "VYBUtility.h"
-#import "VYBPlayerControlViewController.h"
-#import "VYBAppDelegate.h"
-#import "VYBActivityInfoView.h"
-
 #import "VYBVybeTableViewCell.h"
+
+#import "VYBAppDelegate.h"
+
+#import "VYBUtility.h"
 #import "VYBCache.h"
+
+#import "VYBPlayerControlViewController.h"
+
 #import "VYBLogInViewController.h"
 
 @interface VYBActivityTableViewController () <UIAlertViewDelegate>
 
-@property (strong, nonatomic) UIBarButtonItem *actionButton;
-@property (weak, nonatomic) VYBActivityInfoView *activityInfo;
-@property (weak, nonatomic) PFObject *user;
+@property (nonatomic, strong) UIBarButtonItem *actionButton;
+@property (nonatomic, weak) PFObject *user;
 
 - (void)setNavigationBarItems;
 - (void)captureButtonPressed:(id)sender;
@@ -45,18 +45,10 @@
 {
     [super viewDidLoad];
     
+    [self setNavigationBarItems];
+
     // Remove empty cells.
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    
-    [self loadActivityInfoView];
-
-    [self setNavigationBarItems];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [self setNavigationBarItems];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -144,9 +136,7 @@
 
 #pragma mark - Private
 
-- (void)setNavigationBarItems {
-    self.navigationItem.title = @"ACTIVITY";
-    
+- (void)setNavigationBarItems { 
     UIBarButtonItem *captureButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_capture.png"] style:UIBarButtonItemStylePlain target:self action:@selector(captureButtonPressed:)];
     self.navigationItem.leftBarButtonItem = captureButton;
     
@@ -155,28 +145,6 @@
         
         self.navigationItem.rightBarButtonItem = self.actionButton;
     }
-}
-
-- (void)loadActivityInfoView {
-    self.activityInfo = [[[NSBundle mainBundle] loadNibNamed:@"VYBActivityInfoView" owner:self options:nil] lastObject];
-    self.activityInfo.delegate = self;
-    self.activityInfo.usernameLabel.text = self.user[kVYBUserUsernameKey];
-    self.activityInfo.locationLabel.text = self.user[kVYBUserLastVybedLocationKey];
-    
-    [self loadProfileImage];
-
-    self.tableView.tableHeaderView = self.activityInfo;
-}
-
-- (void)loadProfileImage {
-    PFFile *thumbnailFile = self.user[kVYBUserProfilePicMediumKey];
-    [thumbnailFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        if (!error) {
-            UIImage *profileImage = [UIImage imageWithData:data];
-            UIImage *profileMask = [UIImage imageNamed:@"thumbnail_mask"];
-            [self.activityInfo.profileImageView setImage:[VYBUtility maskImage:profileImage withMask:profileMask]];
-        }
-    }];
 }
 
 - (void)captureButtonPressed:(id)sender {
@@ -196,21 +164,14 @@
 
 #pragma mark - UITableView
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 62.0f;
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
-    NSString *location = object[kVYBVybeLocationStringKey];
-    PFFile *thumbnailFile = object[kVYBVybeThumbnailKey];
     
-    VYBVybeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VybeTableViewCellIdentifier"];
-    if (!cell) {
-        cell = [[[NSBundle mainBundle] loadNibNamed:@"VYBVybeTableViewCell" owner:nil options:nil] lastObject];
-    }
-    cell.locationLabel.text = [[location componentsSeparatedByString:@","] objectAtIndex:0];
+    VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
+    
+    cell.locationLabel.text = [[object[kVYBVybeLocationStringKey] componentsSeparatedByString:@","] objectAtIndex:0];
     cell.timestampLabel.text = [VYBUtility localizedDateStringFrom:object[kVYBVybeTimestampKey]];
-
+    
+    PFFile *thumbnailFile = object[kVYBVybeThumbnailKey];
     if (thumbnailFile) {
         [thumbnailFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             if (!error) {
@@ -219,6 +180,7 @@
             }
         }];
     }
+    
     return cell;
 }
 
@@ -241,6 +203,11 @@
     if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
         [cell setLayoutMargins:UIEdgeInsetsZero];
     }
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [self.objects count];
 }
 
 #pragma mark - PFQueryTableView
@@ -286,20 +253,7 @@
             break;
         case 0:
             NSLog(@"Logging out");
-            // clear cache
-            [[VYBCache sharedCache] clear];
-            
-            // Unsubscribe from push notifications by removing the user association from the current installation.
-            [[PFInstallation currentInstallation] removeObjectForKey:@"user"];
-            [[PFInstallation currentInstallation] saveInBackground];
-            
-            // Clear all caches
-            [PFQuery clearAllCachedResults];
-            
-            [PFUser logOut];
-            
-            VYBLogInViewController *loginVC = [[VYBLogInViewController alloc] init];
-            [self.navigationController pushViewController:loginVC animated:NO];
+            [(VYBAppDelegate *)[UIApplication sharedApplication].delegate logOut];
             break;
     }
 }

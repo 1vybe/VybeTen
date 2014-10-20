@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface VYBVybeTableViewCell : UITableViewCell
-@property (nonatomic, strong) IBOutlet UILabel *timestampLabel;
-@property (nonatomic, strong) IBOutlet UILabel *locationLabel;
-@property (nonatomic, strong) IBOutlet UIImageView *thumbnailImageView;
+
+@property (nonatomic, weak) IBOutlet UILabel *timestampLabel;
+@property (nonatomic, weak) IBOutlet UILabel *locationLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
+
 @end
