@@ -55,7 +55,7 @@
                                             <color key="textColor" red="0.59607843140000005" green="0.59607843140000005" blue="0.59607843140000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="vybe_thumbnail_default" translatesAutoresizingMaskIntoConstraints="NO" id="ald-QL-PdU">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="vybe_thumbnail_default" translatesAutoresizingMaskIntoConstraints="NO" id="ald-QL-PdU" customClass="PFImageView">
                                             <rect key="frame" x="8" y="13" width="35" height="35"/>
                                         </imageView>
                                     </subviews>

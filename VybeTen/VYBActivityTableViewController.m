@@ -171,15 +171,12 @@
     cell.locationLabel.text = [[object[kVYBVybeLocationStringKey] componentsSeparatedByString:@","] objectAtIndex:0];
     cell.timestampLabel.text = [VYBUtility localizedDateStringFrom:object[kVYBVybeTimestampKey]];
     
-    PFFile *thumbnailFile = object[kVYBVybeThumbnailKey];
-    if (thumbnailFile) {
-        [thumbnailFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            if (!error) {
-                cell.thumbnailImageView.image = [VYBUtility maskImage:[UIImage imageWithData:data]
-                                                             withMask:[UIImage imageNamed:@"thumbnail_mask"]];
-            }
-        }];
-    }
+    cell.thumbnailImageView.file = object[kVYBVybeThumbnailKey];
+    [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
+        if (!error) {
+            cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:[UIImage imageNamed:@"thumbnail_mask"]];
+        }
+    }];
     
     return cell;
 }

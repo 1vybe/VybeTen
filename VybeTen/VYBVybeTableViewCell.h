@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBVybeTableViewCell : UITableViewCell
+@interface VYBVybeTableViewCell : PFTableViewCell
 
 @property (nonatomic, weak) IBOutlet UILabel *timestampLabel;
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
-@property (nonatomic, weak) IBOutlet UIImageView *thumbnailImageView;
+@property (nonatomic, weak) IBOutlet PFImageView *thumbnailImageView;
 
 @end
