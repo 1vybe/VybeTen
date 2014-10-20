@@ -9,11 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <MBProgressHUD/MBProgressHUD.h>
 
-@protocol VYBPageViewControllerProtocol <NSObject>
-- (NSInteger)pageIndex;
-@end
+@interface VYBNavigationController : UINavigationController <MBProgressHUDDelegate>
 
-@interface VYBNavigationController : UINavigationController <VYBPageViewControllerProtocol, MBProgressHUDDelegate>
+@property (nonatomic, assign) IBInspectable NSInteger pageIndex;
 
 + (VYBNavigationController *)navigationControllerForPageIndex:(NSInteger)pageIndex withRootViewController:(UIViewController *)rootViewController;
 

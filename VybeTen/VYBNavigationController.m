@@ -9,13 +9,7 @@
 #import "VYBNavigationController.h"
 #import "VYBHubViewController.h"
 
-@interface VYBNavigationController ()
-
-@end
-
-@implementation VYBNavigationController {
-    NSInteger _pageIndex;
-}
+@implementation VYBNavigationController
 
 + (VYBNavigationController *)navigationControllerForPageIndex:(NSInteger)pageIndex withRootViewController:(UIViewController *)rootViewController {
     if (pageIndex >= 0 && pageIndex < 3) {
@@ -39,10 +33,6 @@
     [super pushViewController:viewController animated:animated];
 }
 
-- (NSInteger)pageIndex {
-    return _pageIndex;
-}
-
 - (BOOL)prefersStatusBarHidden {
     return [self.topViewController prefersStatusBarHidden];
 }
@@ -58,6 +48,5 @@
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
     return [self.topViewController preferredInterfaceOrientationForPresentation];
 }
-
 
 @end
