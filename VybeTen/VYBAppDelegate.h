@@ -10,9 +10,10 @@
 #import <Parse/Parse.h>
 #import "VYBNavigationController.h"
 #import "VYBPageViewController.h"
+#import "VYBLogInViewController.h"
 
 @class VYBPlayerViewController;
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource>
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource, VYBLogInViewControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

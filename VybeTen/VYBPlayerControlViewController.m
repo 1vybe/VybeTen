@@ -532,9 +532,11 @@
 #pragma mark - VYBAppDelegateNotification
 
 - (void)freshVybesFetched:(NSNotification *)notification {
+    /*
     self.vybePlaylist = [[VYBCache sharedCache] freshVybes];
     if (self.vybePlaylist && (self.vybePlaylist.count > 0))
         [self beginPlayingFrom:0];
+    */
 }
 
 

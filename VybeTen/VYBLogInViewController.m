@@ -89,8 +89,8 @@
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         if (!error) {
             if ([PFUser currentUser]) {
-                [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
-                [self.navigationController popViewControllerAnimated:NO];
+                if (self.delegate)
+                    [self.delegate logInViewController:self didLogInUser:user];
             }
         } else {
             if (error.code == 101) {

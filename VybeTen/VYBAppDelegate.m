@@ -115,7 +115,10 @@
     /* navigation bar settings */
     [self setupAppearance];
 
-    [self setUpViewControllers];
+    self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
+    
+    self.mainNavController = [[VYBNavigationController alloc] initWithRootViewController:self.welcomeViewController];
+    self.mainNavController.navigationBarHidden = YES;
     
     [self.window setRootViewController:self.mainNavController];
     
@@ -301,6 +304,7 @@
 
 - (void)presentLoginViewControllerAnimated:(BOOL)animated {
     VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
+    [logInVC setDelegate:self];
     [self.mainNavController pushViewController:logInVC animated:NO];
 }
 
@@ -308,39 +312,39 @@
     [self presentLoginViewControllerAnimated:YES];
 }
 
+- (void)logInViewController:(VYBLogInViewController *)logInController didLogInUser:(PFUser *)user {
+    // It will take you to welcomeVC
+    [self.mainNavController popToRootViewControllerAnimated:NO];
+}
+
 - (void)proceedToMainInterface {
-    [self.mainNavController popViewControllerAnimated:NO];
+    [self setUpViewControllers];
 }
 
 - (void)setUpViewControllers {
+    // PlayerController (page 0)
     self.playerController = [[VYBPlayerControlViewController alloc] initWithPageIndex:VYBHubPageIndex];
     
+    // Capture (page 1)
     self.captureVC = [[VYBCaptureViewController alloc] initWithPageIndex:VYBCapturePageIndex];
     
+    // Activity (page 2)
     self.activityVC = [[VYBActivityTableViewController alloc] init];
     self.activityNavigationVC = [VYBNavigationController navigationControllerForPageIndex:VYBActivityPageIndex withRootViewController:self.activityVC];
     
+    // Page view controller
     self.viewControllers = [[NSArray alloc] initWithObjects:self.playerController, self.captureVC, self.activityNavigationVC, nil];
-    
-    if ([self.mainNavController childViewControllers] == 0) {
-        self.pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
+    self.pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
                                                                navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
                                                                              options:nil];
-        self.pageController.dataSource = self;
-        
-        self.mainNavController = [[VYBNavigationController alloc] initWithRootViewController:self.pageController];
-        self.mainNavController.navigationBarHidden = YES;
-    }
-
+    self.pageController.dataSource = self;
     [self.pageController setViewControllers:@[self.captureVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    
+    [self.mainNavController pushViewController:self.pageController animated:NO];
     
     // Checking permissions
     self.permissionController = [[VYBPermissionViewController alloc] init];
     [self.mainNavController pushViewController:self.permissionController animated:NO];
-    
-    self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
-    [self.mainNavController pushViewController:self.welcomeViewController animated:NO];
-
 }
 
 - (void)logOut {
@@ -371,9 +375,6 @@
     self.activityNavigationVC = nil;
     self.viewControllers = nil;
     self.permissionController = nil;
-    self.welcomeViewController = nil;
-    
-    [self setUpViewControllers];
 }
 
 #pragma mark - ()
