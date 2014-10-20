@@ -18,7 +18,6 @@
 #import "VYBPlayerControlViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBPermissionViewController.h"
-#import "VYBHubViewController.h"
 #import "VYBActivityTableViewController.h"
 #import "VYBWelcomeViewController.h"
 #import "VYBMyVybeStore.h"

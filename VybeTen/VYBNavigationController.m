@@ -7,7 +7,6 @@
 //
 
 #import "VYBNavigationController.h"
-#import "VYBHubViewController.h"
 
 @implementation VYBNavigationController
 
