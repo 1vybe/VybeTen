@@ -214,7 +214,6 @@
     
     PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
     [query whereKey:kVYBVybeUserKey equalTo:self.user];
-    [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:[NSDate dateWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS]];
     [query orderByDescending:kVYBVybeTimestampKey];
     
     return query;
