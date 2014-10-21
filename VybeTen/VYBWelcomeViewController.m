@@ -12,8 +12,8 @@
 
 @implementation VYBWelcomeViewController
 
+#pragma mark - Lifecycle
 
-#pragma mark - UIViewController
 - (void)loadView {
     UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
     [backgroundImageView setImage:[UIImage imageNamed:@"Default.png"]];
@@ -36,8 +36,7 @@
     [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
 }
 
-
-#pragma mark - ()
+#pragma mark - Private
 
 - (void)refreshCurrentUserCallbackWithResult:(PFObject *)refreshedObject error:(NSError *)error {
     // A kPFErrorObjectNotFound error on currentUser refresh signals a deleted user
@@ -46,37 +45,6 @@
         [(VYBAppDelegate*)[[UIApplication sharedApplication] delegate] logOut];
         return;
     }
-    
-//    // Check if user is missing a Facebook ID
-//    if ([PAPUtility userHasValidFacebookData:[PFUser currentUser]]) {
-//        // User has Facebook ID.
-//        
-//        // refresh Facebook friends on each launch
-//        [FBRequestConnection startForMyFriendsWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-//            if (!error) {
-//                if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(facebookRequestDidLoad:)]) {
-//                    [[UIApplication sharedApplication].delegate performSelector:@selector(facebookRequestDidLoad:) withObject:result];
-//                }
-//            } else {
-//                if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(facebookRequestDidFailWithError:)]) {
-//                    [[UIApplication sharedApplication].delegate performSelector:@selector(facebookRequestDidFailWithError:) withObject:error];
-//                }
-//            }
-//        }];
-//    } else {
-//        NSLog(@"Current user is missing their Facebook ID");
-//        [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-//            if (!error) {
-//                if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(facebookRequestDidLoad:)]) {
-//                    [[UIApplication sharedApplication].delegate performSelector:@selector(facebookRequestDidLoad:) withObject:result];
-//                }
-//            } else {
-//                if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(facebookRequestDidFailWithError:)]) {
-//                    [[UIApplication sharedApplication].delegate performSelector:@selector(facebookRequestDidFailWithError:) withObject:error];
-//                }
-//            }
-//        }];
-//    }
 }
 
 @end
