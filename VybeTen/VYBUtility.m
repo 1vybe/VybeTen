@@ -348,8 +348,7 @@
     UIImage *tempImg = [[UIImage alloc] initWithCGImage:imgRef];
     NSData *thumbData = UIImageJPEGRepresentation(tempImg, 0.3);
     NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[mVybe thumbnailFilePath]];
-    BOOL success = [thumbData writeToURL:thumbURL atomically:YES];
-    
+    [thumbData writeToURL:thumbURL atomically:YES];
 }
 
 

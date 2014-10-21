@@ -14,19 +14,24 @@
 
 @interface VYBLogInViewController ()
 
-@property (nonatomic, strong) IBOutlet UIButton *logInButton;
-@property (nonatomic, strong) IBOutlet UIButton *signUpButton;
-@property (nonatomic, strong) IBOutlet UITextField *usernameTextField;
-@property (nonatomic, strong) IBOutlet UITextField *passwordTextField;
+@property (nonatomic, weak) IBOutlet UIButton *logInButton;
+@property (nonatomic, weak) IBOutlet UITextField *usernameTextField;
+@property (nonatomic, weak) IBOutlet UITextField *passwordTextField;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *bottomSpacing;
 
 - (IBAction)logInButtonPressed:(id)sender;
-- (IBAction)signUpButtonPressed:(id)sender;
 
 @end
 
 @implementation VYBLogInViewController
 
 #pragma mark - Lifecycle
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,6 +46,11 @@
 {
     [super viewDidLoad];
     
+    self.navigationController.navigationBarHidden = NO;
+    
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    
     [self.view endEditing:YES];
     
     self.usernameTextField.delegate = self;
@@ -48,6 +58,32 @@
     
     self.passwordTextField.secureTextEntry = YES;
     // Do any additional setup after loading the view from its nib.
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    
+    UIImageView *titleImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"login_title.png"]];
+    [self.navigationItem setTitleView:titleImageView];
+    
+    UIFont *theFont = [UIFont fontWithName:@"Helvetica Neue" size:15.0];
+    NSDictionary *stringAttributes = @{ NSForegroundColorAttributeName : [UIColor colorWithRed:72.0/255.0 green:72.0/255.0 blue:72.0/255.0 alpha:1.0],
+                                        NSFontAttributeName : theFont};
+    self.usernameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Username" attributes:stringAttributes];
+    self.passwordTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Password" attributes:stringAttributes];
+    
+    self.usernameTextField.leftViewMode = UITextFieldViewModeAlways;
+    self.passwordTextField.leftViewMode = UITextFieldViewModeAlways;
+    
+    [self.usernameTextField setLeftView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, 15.0, 15.0)]];
+    [self.passwordTextField setLeftView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, 15.0, 15.0)]];
+    
+    [self.usernameTextField becomeFirstResponder];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    self.navigationController.navigationBarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -113,12 +149,6 @@
     
 }
 
-- (IBAction)signUpButtonPressed:(id)sender {
-    VYBSignUpViewController *signUpVC = [[VYBSignUpViewController alloc] init];
-    signUpVC.delegate = self;
-    [self presentViewController:signUpVC animated:NO completion:nil];
-}
-
 #pragma mark - VYBSignUpViewControllerDelegate
 
 - (void)signUpCompleted {
@@ -150,6 +180,31 @@
         textField.returnKeyType = UIReturnKeyGo;
     }
 }
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    NSDictionary *dictionary = [notification userInfo];
+    CGSize keyboardSize = [[dictionary objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    
+    NSNumber *duration = [dictionary objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration = [duration doubleValue];
+    [UIView animateWithDuration:animationDuration delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.bottomSpacing.constant = keyboardSize.height;
+    } completion:nil];
+    
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    NSDictionary *dictionary = [notification userInfo];
+    
+    NSNumber *duration = [dictionary objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration = [duration doubleValue];
+    [UIView animateWithDuration:animationDuration delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.bottomSpacing.constant = 0;
+    } completion:nil];
+    
+}
+
 
 #pragma mark - UIAlertViewDelegate
 

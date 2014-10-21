@@ -63,15 +63,15 @@
     
     [self setNeedsStatusBarAppearanceUpdate];
     
-    // Check notification permission settings
-    if ([[[UIApplication sharedApplication] currentUserNotificationSettings] types] > 0) {
-        [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsNotificationPermissionGrantedKey forKey:kVYBUserDefaultsNotificationPermissionKey];
-    }
-    NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
-    if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionUndeterminedKey] ) {
+    // iOS8
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        // Check notification permission settings
+        if ([[[UIApplication sharedApplication] currentUserNotificationSettings] types] > 0) {
+            [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsNotificationPermissionGrantedKey forKey:kVYBUserDefaultsNotificationPermissionKey];
+        }
         
-        // iOS8
-        if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
+        if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionUndeterminedKey] ) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Push Notification"
                                                                                      message:@"We would like to notify when there are live happenings around you" preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
@@ -90,22 +90,18 @@
             [alertController addAction:okAction];
             
             [self presentViewController:alertController animated:NO completion:nil];
+            /*
+             else {
+             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Push Notification"
+             message:@"We would like to notify when there are live happenings around you"
+             delegate:self
+             cancelButtonTitle:@"Cancel"
+             otherButtonTitles:@"OK", nil];
+             [alertView show];
+             }
+             */
         }
-        /*
-        else {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Push Notification"
-                                                                message:@"We would like to notify when there are live happenings around you"
-                                                               delegate:self
-                                                      cancelButtonTitle:@"Cancel"
-                                                      otherButtonTitles:@"OK", nil];
-            [alertView show];
-        }
-        */
-
-    }
-    else if ([notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionDeniedKey]) {
-        // iOS8
-        if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        else if ([notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionDeniedKey]) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enable Notification"
                                                                                      message:@"Please let us notify you so you know what's happening around you when you want from Settings -> Notifications"
                                                                               preferredStyle:UIAlertControllerStyleAlert];
@@ -114,6 +110,7 @@
             [self presentViewController:alertController animated:NO completion:nil];
         }
     }
+
 
     [VYBUtility updateLastRefreshForCurrentUser];
 }

@@ -11,11 +11,11 @@
 
 @protocol VYBLogInViewControllerDelegate;
 
-@interface VYBLogInViewController : UIViewController <UITextFieldDelegate, VYBSignUpViewControllerDelegate>
+@interface VYBLogInViewController : UIViewController <UITextFieldDelegate>
 @property (nonatomic, assign) id<VYBLogInViewControllerDelegate> delegate;
 @end
 
 @protocol VYBLogInViewControllerDelegate <NSObject>
-@optional
+@required
 - (void)logInViewController:(VYBLogInViewController *)logInController didLogInUser:(PFUser *)user;
 @end

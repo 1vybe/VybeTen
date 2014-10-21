@@ -18,7 +18,6 @@
 #import "VYBPlayerViewController.h"
 #import "VYBPlayerControlViewController.h"
 #import "VYBCaptureViewController.h"
-#import "VYBLogInViewController.h"
 #import "VYBPermissionViewController.h"
 #import "VYBHubViewController.h"
 #import "VYBActivityTableViewController.h"
@@ -214,7 +213,8 @@
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    [self moveToPage:VYBCapturePageIndex];
+    if (_viewControllers && ([_viewControllers count] > 0))
+        [self moveToPage:VYBCapturePageIndex];
 }
 
 #pragma mark - Notification
@@ -302,17 +302,17 @@
     return self.networkStatus != NotReachable;
 }
 
-- (void)presentLoginViewControllerAnimated:(BOOL)animated {
-    VYBLogInViewController *logInVC = [[VYBLogInViewController alloc] init];
-    [logInVC setDelegate:self];
-    [self.mainNavController pushViewController:logInVC animated:NO];
+- (void)presentFirstPageViewControllerAnimated:(BOOL)animated {
+    VYBFirstPageViewController *firstPageVC = [[VYBFirstPageViewController alloc] initWithNibName:@"VYBFirstPageViewController" bundle:nil];
+    [firstPageVC setDelegate:self];
+    [self.mainNavController pushViewController:firstPageVC animated:animated];
 }
 
-- (void)presentLoginViewController {
-    [self presentLoginViewControllerAnimated:YES];
+- (void)presentFirstPage {
+    [self presentFirstPageViewControllerAnimated:YES];
 }
 
-- (void)logInViewController:(VYBLogInViewController *)logInController didLogInUser:(PFUser *)user {
+- (void)didLogInuser:(PFUser *)user {
     // It will take you to welcomeVC
     [self.mainNavController popToRootViewControllerAnimated:NO];
 }
@@ -386,9 +386,10 @@
     [titleBarAttributes setValue:[UIFont fontWithName:@"ProximaNovaSoft-Regular" size:20.0] forKey:NSFontAttributeName];
     [titleBarAttributes setValue:COLOR_MAIN forKey:NSForegroundColorAttributeName];
     [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
+    
     // back button image
-    [[UINavigationBar appearance] setBackIndicatorImage:[UIImage imageNamed:@"button_navi_back.png"]];
-    [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
+//    [[UINavigationBar appearance] setBackIndicatorImage:[UIImage imageNamed:@"button_navi_back.png"]];
+//    [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
 }
 
 - (void)monitorReachability {

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VYBFirstPageViewController" customModule="VybeTen" customModuleProvider="target">
+            <connections>
+                <outlet property="logInButton" destination="mSf-gD-Zgj" id="ze0-Kf-adq"/>
+                <outlet property="signUpButton" destination="p11-5v-zxj" id="qfk-Ru-Jx9"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_ballons" translatesAutoresizingMaskIntoConstraints="NO" id="JHJ-er-Tmz">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="intro_vybe_title" translatesAutoresizingMaskIntoConstraints="NO" id="3AU-6k-uD5" userLabel="vybeTitle">
+                    <rect key="frame" x="195" y="82" width="211" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="EC3-0Z-mA6"/>
+                        <constraint firstAttribute="width" constant="211" id="z4a-Ah-s0H"/>
+                    </constraints>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="intro_vybe_logo" translatesAutoresizingMaskIntoConstraints="NO" id="Ecx-uM-EsV" userLabel="vybeLogo">
+                    <rect key="frame" x="226" y="215" width="149" height="72"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="72" id="A81-qv-vQw"/>
+                        <constraint firstAttribute="width" constant="149" id="tDr-vB-Rj4"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mSf-gD-Zgj" userLabel="logInButton">
+                    <rect key="frame" x="168" y="477" width="265" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="265" id="hCy-Lg-GeR"/>
+                        <constraint firstAttribute="height" constant="50" id="mwG-kQ-FPO"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="27"/>
+                    <state key="normal" title="LOG IN" backgroundImage="intro_login_button">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="logInButtonPressed:" destination="-1" eventType="touchUpInside" id="hxC-UX-PdT"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p11-5v-zxj" userLabel="signUpButton">
+                    <rect key="frame" x="168" y="395" width="265" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="opg-f8-77h"/>
+                        <constraint firstAttribute="width" constant="265" id="ov3-Um-c3F"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="27"/>
+                    <state key="normal" title="SIGN UP" backgroundImage="intro_signup_button">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="signUpButtonPressed:" destination="-1" eventType="touchUpInside" id="fl8-KR-IhD"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ou-tS-gfP" userLabel="tryOutButton">
+                    <rect key="frame" x="226" y="539" width="149" height="32"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                    <state key="normal" title="Or skip this for now">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="3AU-6k-uD5" secondAttribute="centerX" id="1F8-8n-Zl1"/>
+                <constraint firstAttribute="centerX" secondItem="mSf-gD-Zgj" secondAttribute="centerX" id="4j1-hg-9g8"/>
+                <constraint firstAttribute="centerX" secondItem="Ecx-uM-EsV" secondAttribute="centerX" id="D8j-7c-T5q"/>
+                <constraint firstAttribute="centerX" secondItem="p11-5v-zxj" secondAttribute="centerX" id="Fv7-H0-lAn"/>
+                <constraint firstAttribute="bottom" secondItem="mSf-gD-Zgj" secondAttribute="bottom" constant="73" id="HVK-Aw-eLS"/>
+                <constraint firstAttribute="trailing" secondItem="JHJ-er-Tmz" secondAttribute="trailing" id="KmB-TY-CVA"/>
+                <constraint firstAttribute="bottom" secondItem="JHJ-er-Tmz" secondAttribute="bottom" id="TLz-Fd-vKf"/>
+                <constraint firstAttribute="bottom" secondItem="0ou-tS-gfP" secondAttribute="bottom" constant="29" id="fHZ-bq-Zu6"/>
+                <constraint firstItem="JHJ-er-Tmz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="kdu-bN-fqI"/>
+                <constraint firstAttribute="bottom" secondItem="p11-5v-zxj" secondAttribute="bottom" constant="155" id="rfj-pY-CEu"/>
+                <constraint firstItem="3AU-6k-uD5" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="82" id="sEn-ob-2FT"/>
+                <constraint firstItem="JHJ-er-Tmz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="t5I-Ys-ZBh"/>
+                <constraint firstItem="Ecx-uM-EsV" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="215" id="wF0-8T-Vn4"/>
+                <constraint firstAttribute="centerX" secondItem="0ou-tS-gfP" secondAttribute="centerX" id="x97-sn-8F9"/>
+            </constraints>
+        </view>
+    </objects>
+    <resources>
+        <image name="background_ballons" width="320" height="541"/>
+        <image name="intro_login_button" width="265" height="50"/>
+        <image name="intro_signup_button" width="265" height="50"/>
+        <image name="intro_vybe_logo" width="148" height="72"/>
+        <image name="intro_vybe_title" width="211" height="50"/>
+    </resources>
+</document>

@@ -10,10 +10,10 @@
 #import <Parse/Parse.h>
 #import "VYBNavigationController.h"
 #import "VYBPageViewController.h"
-#import "VYBLogInViewController.h"
+#import "VybeTen-Swift.h"
 
 @class VYBPlayerViewController;
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource, VYBLogInViewControllerDelegate>
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource, VYBFirstPageViewControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
@@ -25,8 +25,7 @@
 - (BOOL)isParseReachable;
 - (void)moveToPage:(NSInteger)pageIdx;
 
-- (void)presentLoginViewController;
-- (void)presentLoginViewControllerAnimated:(BOOL)animated;
+- (void)presentFirstPage;
 - (void)proceedToMainInterface;
 - (void)logOut;
 @end

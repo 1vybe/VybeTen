@@ -24,7 +24,7 @@
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
 
-@interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate, CLLocationManagerDelegate> {
+@interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate> {
     NSInteger _pageIndex;
 }
 

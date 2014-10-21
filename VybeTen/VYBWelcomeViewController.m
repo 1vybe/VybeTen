@@ -25,7 +25,7 @@
     
     // If not logged in, present login view controller
     if (![PFUser currentUser]) {
-        [(VYBAppDelegate*)[[UIApplication sharedApplication] delegate] presentLoginViewControllerAnimated:NO];
+        [(VYBAppDelegate*)[[UIApplication sharedApplication] delegate] presentFirstPage];
         return;
     } else {
         [(VYBAppDelegate*)[[UIApplication sharedApplication] delegate] proceedToMainInterface];

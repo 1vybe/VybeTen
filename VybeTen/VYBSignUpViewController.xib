@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6206.8" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VYBSignUpViewController">
             <connections>
+                <outlet property="bottomSpacing" destination="4fl-3R-I1g" id="wpu-rI-ZIB"/>
                 <outlet property="emailTextField" destination="iY2-fz-3a7" id="scx-N6-Xej"/>
-                <outlet property="logInButton" destination="3JY-fc-Gnh" id="fQW-Rj-Vfa"/>
                 <outlet property="passwordTextField" destination="bYX-Je-6rS" id="AyS-Yf-lek"/>
                 <outlet property="signUpButton" destination="dhO-NF-P9X" id="eow-zg-qoR"/>
                 <outlet property="usernameTextField" destination="0Hs-U3-oRG" id="tZA-7C-5iZ"/>
@@ -16,69 +17,65 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="username" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0Hs-U3-oRG">
-                    <rect key="frame" x="20" y="58" width="200" height="30"/>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="password" minimumFontSize="17" background="signup_textfield" translatesAutoresizingMaskIntoConstraints="NO" id="bYX-Je-6rS">
+                    <rect key="frame" x="0.0" y="130" width="600" height="65"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="65" id="cBt-th-6Xd"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bYX-Je-6rS">
-                    <rect key="frame" x="20" y="192" width="200" height="30"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits"/>
-                </textField>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="iY2-fz-3a7">
-                    <rect key="frame" x="20" y="125" width="200" height="30"/>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="email" minimumFontSize="17" background="signup_textfield" translatesAutoresizingMaskIntoConstraints="NO" id="iY2-fz-3a7">
+                    <rect key="frame" x="0.0" y="65" width="600" height="65"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="65" id="PUm-fZ-k71"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
                 </textField>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Or you can" translatesAutoresizingMaskIntoConstraints="NO" id="kUe-Do-NSf">
-                    <rect key="frame" x="83" y="325" width="91" height="36"/>
-                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                </textView>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3JY-fc-Gnh">
-                    <rect key="frame" x="169" y="325" width="68" height="40"/>
-                    <state key="normal" title="Log In">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="logInButtonPressed:" destination="-1" eventType="touchUpInside" id="Go7-XI-xk5"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dhO-NF-P9X">
-                    <rect key="frame" x="110" y="264" width="100" height="40"/>
-                    <state key="normal" title="Sign Up">
-                        <color key="titleColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dhO-NF-P9X">
+                    <rect key="frame" x="0.0" y="540" width="600" height="60"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="Ypd-hM-4wc"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="25"/>
+                    <state key="normal" title="SIGN UP" backgroundImage="signup_button">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
                         <action selector="signUpButtonPressed:" destination="-1" eventType="touchUpInside" id="UOA-jZ-Ib5"/>
                     </connections>
                 </button>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HL2-kI-MAu">
-                    <rect key="frame" x="20" y="29" width="76" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="password" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YK5-UW-51E">
-                    <rect key="frame" x="20" y="163" width="75" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="email" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dNW-sC-od9">
-                    <rect key="frame" x="20" y="96" width="41" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="username" minimumFontSize="17" background="signup_textfield" translatesAutoresizingMaskIntoConstraints="NO" id="0Hs-U3-oRG">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="65"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="65" id="Z6E-65-qLT"/>
+                    </constraints>
+                    <color key="textColor" red="0.28235294117647058" green="0.28235294117647058" blue="0.28235294117647058" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="dhO-NF-P9X" secondAttribute="bottom" id="4fl-3R-I1g"/>
+                <constraint firstItem="dhO-NF-P9X" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="4ik-Js-5om"/>
+                <constraint firstItem="0Hs-U3-oRG" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="KSJ-qJ-dse"/>
+                <constraint firstAttribute="trailing" secondItem="dhO-NF-P9X" secondAttribute="trailing" id="MV8-oF-zue"/>
+                <constraint firstItem="iY2-fz-3a7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="O1R-vf-i5t"/>
+                <constraint firstAttribute="trailing" secondItem="bYX-Je-6rS" secondAttribute="trailing" id="Ri4-F8-qhP"/>
+                <constraint firstItem="iY2-fz-3a7" firstAttribute="top" secondItem="0Hs-U3-oRG" secondAttribute="bottom" id="diy-nj-JVJ"/>
+                <constraint firstItem="bYX-Je-6rS" firstAttribute="top" secondItem="iY2-fz-3a7" secondAttribute="bottom" id="hRQ-Mb-Q7A"/>
+                <constraint firstAttribute="trailing" secondItem="0Hs-U3-oRG" secondAttribute="trailing" id="jNh-ce-ooY"/>
+                <constraint firstItem="0Hs-U3-oRG" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="knX-4z-lzh"/>
+                <constraint firstItem="bYX-Je-6rS" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="u7i-D7-zoX"/>
+                <constraint firstAttribute="trailing" secondItem="iY2-fz-3a7" secondAttribute="trailing" id="z4l-sw-yIe"/>
+            </constraints>
+            <point key="canvasLocation" x="343" y="430"/>
         </view>
         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="vdC-8G-IYa">
             <rect key="frame" x="0.0" y="0.0" width="97" height="30"/>
@@ -87,12 +84,8 @@
             <textInputTraits key="textInputTraits"/>
         </textField>
     </objects>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4">
-            <size key="portraitSize" width="320" height="568"/>
-            <size key="landscapeSize" width="568" height="320"/>
-        </simulatedScreenMetrics>
-    </simulatedMetricsContainer>
+    <resources>
+        <image name="signup_button" width="320" height="59"/>
+        <image name="signup_textfield" width="320" height="65"/>
+    </resources>
 </document>

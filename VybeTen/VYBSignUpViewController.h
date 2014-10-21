@@ -16,8 +16,7 @@
 @end
 
 @protocol VYBSignUpViewControllerDelegate <NSObject>
-@optional
-- (void)signUpCompleted;
-
+@required
+- (void)didCompleteSignUp;
 @end;
 

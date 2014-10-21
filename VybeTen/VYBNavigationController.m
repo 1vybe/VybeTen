@@ -35,7 +35,7 @@
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
     // To remove a navigation bar's back button text 
-    self.navigationBar.topItem.title = @"";
+    //self.navigationBar.topItem.title = @"";
     [super pushViewController:viewController animated:animated];
 }
 
