@@ -23,6 +23,14 @@
     return self;
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+ 
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+}
+
 - (BOOL)prefersStatusBarHidden {
     return [self.viewControllers.firstObject prefersStatusBarHidden];
 }
