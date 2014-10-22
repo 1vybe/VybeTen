@@ -11,7 +11,6 @@
 #import "VYBProfileInfoView.h"
 #import "VYBUtility.h"
 #import "VYBCache.h"
-#import "VYBPlayerViewController.h"
 #import "VYBAppDelegate.h"
 
 @interface VYBProfileViewController ()

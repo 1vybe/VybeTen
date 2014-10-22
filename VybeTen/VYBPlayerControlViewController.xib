@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6246" systemVersion="14A388b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6239"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VYBPlayerControlViewController">
             <connections>
-                <outlet property="captureButton" destination="dYE-vk-C0a" id="agJ-Lp-j7M"/>
                 <outlet property="counterButton" destination="7uh-eA-VQL" id="CkR-SW-DjF"/>
+                <outlet property="dismissButton" destination="lH2-Xq-FWU" id="B27-vS-keY"/>
                 <outlet property="locationTimeButton" destination="cMN-bL-OwK" id="DOn-OL-dn1"/>
-                <outlet property="pauseButton" destination="SAw-ya-zhv" id="XbC-qS-MG9"/>
                 <outlet property="portalButton" destination="MJr-Ty-ayr" id="GSw-cM-qeq"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -21,27 +20,18 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cMN-bL-OwK" userLabel="locationTimeButton">
-                    <rect key="frame" x="20" y="20" width="153" height="39"/>
+                    <rect key="frame" x="224" y="20" width="152" height="38"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="15"/>
                     <state key="normal" backgroundImage="player_location_time_label">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dYE-vk-C0a" userLabel="captureButton">
-                    <rect key="frame" x="544" y="20" width="36" height="36"/>
-                    <state key="normal" image="player_camera_button">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="captureButtonPressed" destination="-1" eventType="touchUpInside" id="Otq-s1-fIS"/>
-                    </connections>
-                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MJr-Ty-ayr" userLabel="portalButton">
-                    <rect key="frame" x="530" y="530" width="50" height="50"/>
+                    <rect key="frame" x="523" y="523" width="57" height="57"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="50" id="QGN-4n-SlW"/>
-                        <constraint firstAttribute="height" constant="50" id="zYu-3j-q8t"/>
+                        <constraint firstAttribute="width" constant="57" id="QGN-4n-SlW"/>
+                        <constraint firstAttribute="height" constant="57" id="zYu-3j-q8t"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
                     <state key="normal" backgroundImage="player_portal_button">
@@ -50,10 +40,10 @@
                     </state>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7uh-eA-VQL" userLabel="counterButton">
-                    <rect key="frame" x="20" y="544" width="36" height="36"/>
+                    <rect key="frame" x="542" y="20" width="38" height="38"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="36" id="G2u-MS-DLk"/>
-                        <constraint firstAttribute="width" constant="36" id="eDO-b2-Swn"/>
+                        <constraint firstAttribute="height" constant="38" id="G2u-MS-DLk"/>
+                        <constraint firstAttribute="width" constant="38" id="eDO-b2-Swn"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="15"/>
                     <state key="normal" backgroundImage="player_counter_button">
@@ -90,43 +80,50 @@
                         <action selector="goNextButtonPressed:" destination="-1" eventType="touchUpInside" id="Vha-uK-yxY"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SAw-ya-zhv" userLabel="pauseButton">
-                    <rect key="frame" x="265" y="265" width="70" height="70"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lH2-Xq-FWU" userLabel="dismissButton">
+                    <rect key="frame" x="20" y="20" width="31" height="31"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="70" id="Rg8-7d-EZV"/>
-                        <constraint firstAttribute="width" constant="70" id="nLX-qV-MVI"/>
+                        <constraint firstAttribute="height" constant="31" id="W7p-ZD-4cl"/>
+                        <constraint firstAttribute="width" constant="31" id="dJ9-fq-FQN"/>
                     </constraints>
-                    <state key="normal" image="button_player_pause">
+                    <state key="normal" image="player_dismiss_button">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="pauseButtonPressed:" destination="-1" eventType="touchUpInside" id="apg-Wb-NDu"/>
+                        <action selector="dismissButtonPressed" destination="-1" eventType="touchUpInside" id="fQ7-eI-AD4"/>
                     </connections>
                 </button>
             </subviews>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="MJr-Ty-ayr" secondAttribute="trailing" constant="20" id="2qJ-73-YOq"/>
+                <constraint firstItem="7uh-eA-VQL" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="3G8-8m-36R"/>
+                <constraint firstItem="lH2-Xq-FWU" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="8JX-ga-vc3"/>
                 <constraint firstItem="cMN-bL-OwK" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="BwS-M7-aPe"/>
                 <constraint firstAttribute="bottom" secondItem="7uh-eA-VQL" secondAttribute="bottom" constant="20" id="DN2-iT-2UF"/>
-                <constraint firstItem="dYE-vk-C0a" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="HQa-bK-LI1"/>
+                <constraint firstAttribute="trailing" secondItem="7uh-eA-VQL" secondAttribute="trailing" constant="20" id="E9J-2A-MtU"/>
+                <constraint firstItem="lH2-Xq-FWU" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="NJF-cM-aKv"/>
                 <constraint firstAttribute="trailing" secondItem="Pb2-69-N8y" secondAttribute="trailing" id="P8w-2S-sOY"/>
                 <constraint firstItem="cMN-bL-OwK" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="QlJ-SX-1u3"/>
                 <constraint firstAttribute="bottom" secondItem="MJr-Ty-ayr" secondAttribute="bottom" constant="20" id="SXM-m5-4N5"/>
-                <constraint firstAttribute="centerY" secondItem="SAw-ya-zhv" secondAttribute="centerY" id="VxK-bn-cuP"/>
+                <constraint firstAttribute="centerX" secondItem="cMN-bL-OwK" secondAttribute="centerX" id="UeP-sZ-Mmp"/>
                 <constraint firstAttribute="centerY" secondItem="Vij-MN-ZuP" secondAttribute="centerY" id="fkI-HM-iB3"/>
                 <constraint firstItem="7uh-eA-VQL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="jJS-qh-YoZ"/>
-                <constraint firstAttribute="centerX" secondItem="SAw-ya-zhv" secondAttribute="centerX" id="r1o-80-FU8"/>
                 <constraint firstAttribute="centerY" secondItem="Pb2-69-N8y" secondAttribute="centerY" id="u1c-Sv-adY"/>
-                <constraint firstAttribute="trailing" secondItem="dYE-vk-C0a" secondAttribute="trailing" constant="20" id="uR8-wv-scZ"/>
                 <constraint firstItem="Vij-MN-ZuP" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="utX-77-c0b"/>
             </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="QlJ-SX-1u3"/>
+                    <exclude reference="DN2-iT-2UF"/>
+                    <exclude reference="jJS-qh-YoZ"/>
+                </mask>
+            </variation>
         </view>
     </objects>
     <resources>
-        <image name="button_player_pause" width="21" height="32"/>
-        <image name="player_camera_button" width="36" height="36"/>
-        <image name="player_counter_button" width="36" height="36"/>
-        <image name="player_location_time_label" width="153" height="39"/>
-        <image name="player_portal_button" width="50" height="50"/>
+        <image name="player_counter_button" width="37" height="38"/>
+        <image name="player_dismiss_button" width="31" height="31"/>
+        <image name="player_location_time_label" width="152" height="38"/>
+        <image name="player_portal_button" width="57" height="57"/>
     </resources>
 </document>

@@ -15,7 +15,6 @@
 #import <HockeySDK/HockeySDK.h>
 #import "VYBAppDelegate.h"
 #import "VYBUserStore.h"
-#import "VYBPlayerViewController.h"
 #import "VYBPlayerControlViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBPermissionViewController.h"
@@ -120,9 +119,6 @@
     self.mainNavController.navigationBarHidden = YES;
     
     [self.window setRootViewController:self.mainNavController];
-    
-    self.playerVC = [[VYBPlayerViewController alloc] init];
-    [self.window addSubview:self.playerVC.view];
     
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];

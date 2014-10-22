@@ -17,7 +17,6 @@
 		021B5B6F19A7D0E300B906F3 /* VYBVybeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 021B5B6D19A7D0E300B906F3 /* VYBVybeTableViewCell.xib */; };
 		021B5B7219A7F21C00B906F3 /* VYBProfileInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 021B5B7119A7F21C00B906F3 /* VYBProfileInfoView.m */; };
 		021B5B7419A7F23800B906F3 /* VYBProfileInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 021B5B7319A7F23800B906F3 /* VYBProfileInfoView.xib */; };
-		02267C2819AEDE00007C659C /* VYBLocationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02267C2619AEDE00007C659C /* VYBLocationTableViewController.m */; };
 		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
 		022AC50319AD9757008A9C64 /* VYBCaptureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 022AC50219AD9757008A9C64 /* VYBCaptureViewController.xib */; };
 		0237C13719EEF44A00AC6F81 /* DefaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0237C13619EEF44A00AC6F81 /* DefaultPreferences.plist */; };
@@ -42,7 +41,6 @@
 		0275087C19252D5C00B070EE /* VYBUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275087B19252D5C00B070EE /* VYBUtility.m */; };
 		0276D13C19590CDF007292B0 /* VYBPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0276D13B19590CDF007292B0 /* VYBPageViewController.m */; };
 		027C707919AEFE68007BB8FE /* HubStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 027C707819AEFE68007BB8FE /* HubStoryboard.storyboard */; };
-		027C707C19AF0400007BB8FE /* VYBFollowingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 027C707B19AF0400007BB8FE /* VYBFollowingTableViewController.m */; };
 		027C707F19AF0705007BB8FE /* VYBSwapContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 027C707E19AF0705007BB8FE /* VYBSwapContainerViewController.m */; };
 		027DE0EF19E7484200F5F4C0 /* VYBCaptureRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 027DE0EE19E7484200F5F4C0 /* VYBCaptureRecorder.m */; };
 		027F18D019AFC7030045BFEF /* VYBLocationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 027F18CF19AFC7030045BFEF /* VYBLocationTableViewCell.m */; };
@@ -75,7 +73,6 @@
 		02D255E11992A4DE0053B89F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02D255E01992A4DE0053B89F /* MapKit.framework */; };
 		02E4556A1989727200B22554 /* VYBLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E455681989727200B22554 /* VYBLogInViewController.m */; };
 		02E4556B1989727200B22554 /* VYBLogInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E455691989727200B22554 /* VYBLogInViewController.xib */; };
-		02E45EC819B0131200A55079 /* VYBUsersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E45EC719B0131200A55079 /* VYBUsersTableViewController.m */; };
 		02E45ECB19B0156400A55079 /* VYBHubControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E45ECA19B0156400A55079 /* VYBHubControlView.m */; };
 		02E45ECD19B0158100A55079 /* VYBHubControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E45ECC19B0158100A55079 /* VYBHubControlView.xib */; };
 		02E943B219C916C50057E8EE /* VYBReplayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E943B119C916C50057E8EE /* VYBReplayViewController.xib */; };
@@ -83,7 +80,6 @@
 		02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F36B2E1986F62800B7D842 /* VYBUser.m */; };
 		02F5B1F119D32594008C42C3 /* VYBDynamicSizeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F5B1F019D32594008C42C3 /* VYBDynamicSizeView.m */; };
 		02F80C46196F600300FB2A48 /* AvenirLTStd-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02F80C45196F600300FB2A48 /* AvenirLTStd-Book.otf */; };
-		6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6035496118C88B11003F5D3E /* VYBPlayerViewController.m */; };
 		604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 604B628518B495BB00D3EF19 /* InfoPlist.strings */; };
 		604B628918B495BB00D3EF19 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 604B628818B495BB00D3EF19 /* main.m */; };
 		604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 604B628C18B495BB00D3EF19 /* VYBAppDelegate.m */; };
@@ -128,8 +124,6 @@
 		021B5B7019A7F21C00B906F3 /* VYBProfileInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBProfileInfoView.h; sourceTree = "<group>"; };
 		021B5B7119A7F21C00B906F3 /* VYBProfileInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBProfileInfoView.m; sourceTree = "<group>"; };
 		021B5B7319A7F23800B906F3 /* VYBProfileInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBProfileInfoView.xib; sourceTree = "<group>"; };
-		02267C2519AEDE00007C659C /* VYBLocationTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBLocationTableViewController.h; sourceTree = "<group>"; };
-		02267C2619AEDE00007C659C /* VYBLocationTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBLocationTableViewController.m; sourceTree = "<group>"; };
 		0226CBAB194A0339005270D3 /* VYBNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBNavigationController.h; sourceTree = "<group>"; };
 		0226CBAC194A0339005270D3 /* VYBNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBNavigationController.m; sourceTree = "<group>"; };
 		022AC50219AD9757008A9C64 /* VYBCaptureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBCaptureViewController.xib; sourceTree = "<group>"; };
@@ -173,8 +167,6 @@
 		0276D13A19590CDE007292B0 /* VYBPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPageViewController.h; sourceTree = "<group>"; };
 		0276D13B19590CDF007292B0 /* VYBPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPageViewController.m; sourceTree = "<group>"; };
 		027C707819AEFE68007BB8FE /* HubStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = HubStoryboard.storyboard; sourceTree = "<group>"; };
-		027C707A19AF0400007BB8FE /* VYBFollowingTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBFollowingTableViewController.h; sourceTree = "<group>"; };
-		027C707B19AF0400007BB8FE /* VYBFollowingTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBFollowingTableViewController.m; sourceTree = "<group>"; };
 		027C707D19AF0705007BB8FE /* VYBSwapContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBSwapContainerViewController.h; sourceTree = "<group>"; };
 		027C707E19AF0705007BB8FE /* VYBSwapContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBSwapContainerViewController.m; sourceTree = "<group>"; };
 		027DE0ED19E7484200F5F4C0 /* VYBCaptureRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCaptureRecorder.h; sourceTree = "<group>"; };
@@ -218,8 +210,6 @@
 		02E455671989727200B22554 /* VYBLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBLogInViewController.h; sourceTree = "<group>"; };
 		02E455681989727200B22554 /* VYBLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBLogInViewController.m; sourceTree = "<group>"; };
 		02E455691989727200B22554 /* VYBLogInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBLogInViewController.xib; sourceTree = "<group>"; };
-		02E45EC619B0131200A55079 /* VYBUsersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUsersTableViewController.h; sourceTree = "<group>"; };
-		02E45EC719B0131200A55079 /* VYBUsersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUsersTableViewController.m; sourceTree = "<group>"; };
 		02E45EC919B0156400A55079 /* VYBHubControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBHubControlView.h; sourceTree = "<group>"; };
 		02E45ECA19B0156400A55079 /* VYBHubControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBHubControlView.m; sourceTree = "<group>"; };
 		02E45ECC19B0158100A55079 /* VYBHubControlView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBHubControlView.xib; sourceTree = "<group>"; };
@@ -231,8 +221,6 @@
 		02F5B1EF19D32594008C42C3 /* VYBDynamicSizeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBDynamicSizeView.h; sourceTree = "<group>"; };
 		02F5B1F019D32594008C42C3 /* VYBDynamicSizeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBDynamicSizeView.m; sourceTree = "<group>"; };
 		02F80C45196F600300FB2A48 /* AvenirLTStd-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AvenirLTStd-Book.otf"; sourceTree = "<group>"; };
-		6035496018C88B11003F5D3E /* VYBPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerViewController.h; sourceTree = "<group>"; };
-		6035496118C88B11003F5D3E /* VYBPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerViewController.m; sourceTree = "<group>"; };
 		604B627918B495BB00D3EF19 /* VybeTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VybeTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		604B628418B495BB00D3EF19 /* VybeTen-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VybeTen-Info.plist"; sourceTree = "<group>"; };
 		604B628618B495BB00D3EF19 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -356,8 +344,6 @@
 		0266802419F15BAF00030836 /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				6035496018C88B11003F5D3E /* VYBPlayerViewController.h */,
-				6035496118C88B11003F5D3E /* VYBPlayerViewController.m */,
 				0266802519F15CB000030836 /* VYBPlayerControlViewController.h */,
 				0266802619F15CB000030836 /* VYBPlayerControlViewController.m */,
 				0266802719F15CB000030836 /* VYBPlayerControlViewController.xib */,
@@ -459,12 +445,6 @@
 				0254E92219BB8A9B003A99DE /* Capture */,
 				0299EC81199A9254004E97CF /* VYBHubViewController.h */,
 				0299EC82199A9254004E97CF /* VYBHubViewController.m */,
-				02267C2519AEDE00007C659C /* VYBLocationTableViewController.h */,
-				02267C2619AEDE00007C659C /* VYBLocationTableViewController.m */,
-				027C707A19AF0400007BB8FE /* VYBFollowingTableViewController.h */,
-				027C707B19AF0400007BB8FE /* VYBFollowingTableViewController.m */,
-				02E45EC619B0131200A55079 /* VYBUsersTableViewController.h */,
-				02E45EC719B0131200A55079 /* VYBUsersTableViewController.m */,
 				020CC65B19A701D900B2F794 /* VYBProfileViewController.h */,
 				020CC65C19A701D900B2F794 /* VYBProfileViewController.m */,
 				020CC65D19A701D900B2F794 /* VYBProfileViewController.xib */,
@@ -795,8 +775,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				02267C2819AEDE00007C659C /* VYBLocationTableViewController.m in Sources */,
-				6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */,
 				020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */,
 				025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */,
 				88FF430519AFFCEB00D18872 /* VYBActivityTableViewController.m in Sources */,
@@ -828,7 +806,6 @@
 				88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */,
 				021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */,
 				88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */,
-				027C707C19AF0400007BB8FE /* VYBFollowingTableViewController.m in Sources */,
 				02F36B2C1986F5A200B7D842 /* VYBUserStore.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
 				02B0A7B119B264FD0074627A /* VYBWatchAllButton.m in Sources */,
@@ -838,7 +815,6 @@
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
 				021B5B7219A7F21C00B906F3 /* VYBProfileInfoView.m in Sources */,
-				02E45EC819B0131200A55079 /* VYBUsersTableViewController.m in Sources */,
 				023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */,
 				025408E119BA0FD7009C7C71 /* NSArray+PFObject.m in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,

@@ -15,10 +15,9 @@
 @property (nonatomic) PFObject *currRegion;
 @property (nonatomic, copy) NSArray *vybePlaylist;
 @property (nonatomic) NSInteger currVybeIndex;
-
 - (void)beginPlayingFrom:(NSInteger)from;
 - (void)playNextItem;
-- (void)playNextZoneVideo;
 
+- (void)playNextZoneVideo;
 
 @end

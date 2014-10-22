@@ -7,7 +7,6 @@
 //
 
 #import "VYBPlayerControlViewController.h"
-#import "VYBPlayerViewController.h"
 #import "VYBAppDelegate.h"
 #import <MotionOrientation@PTEz/MotionOrientation.h>
 #import "VYBCaptureViewController.h"
@@ -29,19 +28,19 @@
 @property (nonatomic, weak) IBOutlet UIButton *counterButton;
 @property (nonatomic, weak) IBOutlet UIButton *portalButton;
 @property (nonatomic, weak) IBOutlet UIButton *locationTimeButton;
-@property (nonatomic, weak) IBOutlet UIButton *captureButton;
-@property (nonatomic, weak) IBOutlet UIButton *pauseButton;
-
+@property (nonatomic, weak) IBOutlet UIButton *dismissButton;
 
 - (IBAction)goNextButtonPressed:(id)sender;
 - (IBAction)goPrevButtonPressed:(id)sender;
-- (IBAction)pauseButtonPressed:(id)sender;
 
 - (IBAction)counterButtonPressed;
-- (IBAction)captureButtonPressed;
+- (IBAction)dismissButtonPressed;
 
+@property (nonatomic, weak) VYBPlayerView *currPlayerView;
+@property (nonatomic) AVPlayer *currPlayer;
+@property (nonatomic) AVPlayerItem *currItem;
 
-@property (nonatomic, weak) VYBPlayerViewController *playerVC;
+- (void)playAsset:(AVAsset *)asset;
 
 @end
 
@@ -54,12 +53,20 @@
     NSInteger _pageIndex;
     NSArray *_zoneVybes;
     NSInteger _zoneVybeCurrIdx;
+    
+    AVCaptureVideoOrientation lastOrientation;
+    
+    UIView *backgroundView;
 }
-@synthesize captureButton;
+@synthesize dismissButton;
 @synthesize currVybeIndex;
 @synthesize counterButton;
 @synthesize portalButton;
 @synthesize locationTimeButton;
+
+@synthesize currPlayer = _currPlayer;
+@synthesize currPlayerView = _currPlayerView;
+@synthesize currItem = _currItem;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
@@ -95,9 +102,16 @@
                                                  name:MotionOrientationChangedNotification
                                                object:nil];
     
-    self.playerVC = [(VYBAppDelegate *)[[UIApplication sharedApplication] delegate] playerVC];
-    self.playerVC.playerController = self;
     
+    VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
+    [playerView setFrame:[[UIScreen mainScreen] bounds]];
+    self.currPlayerView = playerView;
+    
+    self.currPlayer = [[AVPlayer alloc] init];
+    [playerView setPlayer:self.currPlayer];
+    
+    [self.view insertSubview:playerView atIndex:0];
+
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
     tapGesture.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapGesture];
@@ -113,10 +127,8 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerVC.currItem];
-        [self.playerVC.currPlayer pause];
-    });
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+    [self.currPlayer pause];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -126,8 +138,24 @@
     
     self.vybePlaylist = [[VYBCache sharedCache] freshVybes];
     
-    if (self.vybePlaylist && ([self.vybePlaylist count] > 0))
+    if (self.vybePlaylist && ([self.vybePlaylist count] > 0)) {
         [self beginPlayingFrom:0];
+    }
+    else {
+        PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+        [query whereKeyExists:kVYBVybeGeotag];
+        [query whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
+        [query orderByAscending:kVYBVybeTimestampKey];
+        [query setLimit:50];
+        
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                self.vybePlaylist = objects;
+                if (self.vybePlaylist.count > 0)
+                    [self beginPlayingFrom:0];
+            }
+        }];
+    }
 }
 
 
@@ -152,7 +180,7 @@
         if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
             AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
             
-            [self.playerVC playAsset:asset];
+            [self playAsset:asset];
             
             [[VYBCache sharedCache] removeFreshVybe:currVybe];
             [self prepareVybeAt:downloadingVybeIndex];
@@ -165,7 +193,7 @@
                     [data writeToURL:cacheURL atomically:YES];
                     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
                     
-                    [self.playerVC playAsset:asset];
+                    [self playAsset:asset];
                     [[VYBCache sharedCache] removeFreshVybe:currVybe];
                     [self prepareVybeAt:downloadingVybeIndex];
                 } else {
@@ -203,7 +231,7 @@
                         [data writeToURL:cacheURL atomically:YES];
                         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
                         
-                        [self.playerVC playAsset:asset];
+                        [self playAsset:asset];
                         
                         [[VYBCache sharedCache] removeFreshVybe:aVybe];
                     }];
@@ -229,7 +257,7 @@
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
-        [self.playerVC playAsset:asset];
+        [self playAsset:asset];
     }
     else {
         PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
@@ -239,7 +267,7 @@
             if (!error) {
                 [data writeToURL:cacheURL atomically:YES];
                 AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
-                [self.playerVC playAsset:asset];
+                [self playAsset:asset];
             } else {
                 UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                 [av show];
@@ -258,7 +286,7 @@
         [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
         return;
     } else {
-        [self.playerVC.currPlayer pause];
+        [self.currPlayer pause];
         currVybeIndex++;
         [self beginPlayingFrom:currVybeIndex];
     }
@@ -268,12 +296,12 @@
     if (_zoneVybeCurrIdx == _zoneVybes.count - 1) {
         
         [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            self.playerVC.view.alpha = 0.0;
-            self.playerVC.view.transform = CGAffineTransformMakeScale(0.1f, 0.1f);
+            self.currPlayerView.alpha = 0.0;
+            self.currPlayerView.transform = CGAffineTransformMakeScale(0.1f, 0.1f);
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                self.playerVC.view.alpha = 1.0;
-                self.playerVC.view.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+                self.currPlayerView.alpha = 1.0;
+                self.currPlayerView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
             } completion:^(BOOL finished) {
                 _zoneVybes = nil;
                 [self beginPlayingFrom:currVybeIndex];
@@ -282,11 +310,49 @@
 
         return;
     } else {
-        [self.playerVC.currPlayer pause];
+        [self.currPlayer pause];
         _zoneVybeCurrIdx++;
         [self playZoneVybeAt:_zoneVybeCurrIdx];
     }
 }
+
+- (void)playAsset:(AVAsset *)asset {
+    [self.currPlayerView setOrientation:[asset videoOrientation]];
+    
+    self.currItem = [AVPlayerItem playerItemWithAsset:asset];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+    [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
+    [self.currPlayer play];
+}
+
+- (void)playerItemDidReachEnd {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+    [self playNextItem];
+}
+
+#pragma mark - DeviceOrientation
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+
+#pragma mark - ()
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+}
+
 
 - (void)syncUI:(PFObject *)aVybe withCompletion:(void (^)())completionBlock {
     // Display location and time
@@ -382,15 +448,15 @@
 
 - (void)portalButtonTapAndHoldDetected:(UILongPressGestureRecognizer *)recognizer {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        [self.playerVC.currPlayer pause];
+        [self.currPlayer pause];
 
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            self.playerVC.view.transform = CGAffineTransformMakeScale(3.0f, 3.0f);
+            self.currPlayerView.transform = CGAffineTransformMakeScale(3.0f, 3.0f);
         } completion:^(BOOL success) {
             [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                self.playerVC.view.alpha = 0.0f;
+                self.currPlayerView.alpha = 0.0f;
             } completion:^(BOOL success) {
-                self.playerVC.view.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+                self.currPlayerView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
             }];
         }];
         
@@ -404,7 +470,7 @@
                                             [self beginPlayingZoneVybes];
                                         }
                                         [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                                            self.playerVC.view.alpha = 1.0;
+                                            self.currPlayerView.alpha = 1.0;
                                         } completion:nil];
                                     }];
     }
@@ -412,19 +478,19 @@
         if ( ! _zoneVybes)
             return;
         
-        [self.playerVC.currPlayer pause];
+        [self.currPlayer pause];
         
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            self.playerVC.view.transform = CGAffineTransformMakeScale(0.2f, 0.2f);
+            self.currPlayerView.transform = CGAffineTransformMakeScale(0.2f, 0.2f);
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                self.playerVC.view.alpha = 0.0;
+                self.currPlayerView.alpha = 0.0;
             } completion:^(BOOL finished) {
-                self.playerVC.view.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+                self.currPlayerView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
                 _zoneVybes = nil;
                 [self beginPlayingFrom:currVybeIndex];
                 [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                    self.playerVC.view.alpha = 1.0;
+                    self.currPlayerView.alpha = 1.0;
                 } completion:nil];
             }];
         }];
@@ -435,11 +501,7 @@
     
 }
 
-- (IBAction)captureButtonPressed {
-    
-}
-
-- (IBAction)dismissButtonPressed:(id)sender {
+- (IBAction)dismissButtonPressed {
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
@@ -468,8 +530,8 @@
         // Reached the end show the ENDING screen
         return;
     }
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerVC.currItem];
-    [self.playerVC.currPlayer pause];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+    [self.currPlayer pause];
     currVybeIndex++;
     [self beginPlayingFrom:currVybeIndex];
     
@@ -488,18 +550,18 @@
         // Reached the beginning show the BEGINNING screen
         return;
     }
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerVC.currItem];
-    [self.playerVC.currPlayer pause];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+    [self.currPlayer pause];
     currVybeIndex--;
     [self beginPlayingFrom:currVybeIndex];
 }
 
 - (IBAction)pauseButtonPressed:(id)sender {
-    if (self.playerVC.currPlayer.rate == 0.0) {
-        [self.playerVC.currPlayer play];
+    if (self.currPlayer.rate == 0.0) {
+        [self.currPlayer play];
     }
     else {
-        [self.playerVC.currPlayer pause];
+        [self.currPlayer pause];
     }
 }
 
@@ -524,8 +586,7 @@
 - (void)syncUIElementsWithMenuMode {
     locationTimeButton.hidden = !menuMode;
     counterButton.hidden = !menuMode;
-    captureButton.hidden = !menuMode;
-    self.pauseButton.hidden = !menuMode;
+    dismissButton.hidden = !menuMode;
 }
 
 
@@ -607,19 +668,6 @@
     } completion:nil];
     
 }
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-- (BOOL)prefersStatusBarHidden {
-    return YES;
-}
-
 
 
 @end
