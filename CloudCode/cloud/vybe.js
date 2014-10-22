@@ -176,10 +176,12 @@ Parse.Cloud.define('get_nearby_vybes',
 );
 
 // Default algorithm used in the app
-Parse.Cloud.define('default_algorithm',
+Parse.Cloud.define('get_active_vybes',
   get_vybes.bind(this, {
     recent: true,
+    hide_user: true,
     reversed: true,
+    limit: 50,
   })
 );
 
@@ -343,8 +345,7 @@ function get_vybes(options, request, response) {
   var hide_user = options.hide_user || false;
   var reversed = options.reversed || false;
   var limit = options.limit || 500;
-
-  var geoPoint = request.params.location;
+  var ttl_hours = options.ttl_hours || 168; // one week
 
   var currentUser = Parse.User.current();
 
@@ -353,8 +354,10 @@ function get_vybes(options, request, response) {
 
   if (recent)
     query.addDescending('timestamp');
-  if (nearby)
-    query.near('location', geoPoint);
+  if (nearby) {
+      var geoPoint = request.params.location;
+      query.near('location', geoPoint);
+  }
   if (hide_user)
     query.notEqualTo('user', currentUser);
   if (limit)
@@ -365,7 +368,7 @@ function get_vybes(options, request, response) {
   // 24 hour TTL check
   var currTime = new Date();
   var ttlAgo = new Date();
-  ttlAgo.setHours(currTime.getHours() - 24);
+  ttlAgo.setHours(currTime.getHours() - ttl_hours);
   query.greaterThanOrEqualTo('timestamp',ttlAgo);
   query.find({
     success: function(vybesObjects) {

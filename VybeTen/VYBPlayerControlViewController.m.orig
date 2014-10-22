@@ -28,17 +28,26 @@
 @property (nonatomic, weak) IBOutlet UIButton *counterButton;
 @property (nonatomic, weak) IBOutlet UIButton *portalButton;
 @property (nonatomic, weak) IBOutlet UIButton *locationTimeButton;
+<<<<<<< Updated upstream
 @property (nonatomic, weak) IBOutlet UIButton *dismissButton;
+=======
+@property (nonatomic, weak) IBOutlet UIButton *captureButton;
+@property (nonatomic, weak) IBOutlet UIButton *pauseButton;
+>>>>>>> Stashed changes
 
 - (IBAction)goNextButtonPressed:(id)sender;
 - (IBAction)goPrevButtonPressed:(id)sender;
 
 - (IBAction)counterButtonPressed;
+<<<<<<< Updated upstream
 - (IBAction)dismissButtonPressed;
+=======
+- (IBAction)captureButtonPressed;
 
 @property (nonatomic, weak) VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayer *currPlayer;
 @property (nonatomic) AVPlayerItem *currItem;
+>>>>>>> Stashed changes
 
 - (void)playAsset:(AVAsset *)asset;
 
@@ -95,6 +104,13 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(freshVybesFetched:) name:VYBFreshVybeFeedFetchedFromRemoteNotification object:nil];
     
+    // Device orientation detection
+    [MotionOrientation initialize];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(deviceRotated:)
+                                                 name:MotionOrientationChangedNotification
+                                               object:nil];
+    
     
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
     [playerView setFrame:[[UIScreen mainScreen] bounds]];
@@ -120,8 +136,15 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
+<<<<<<< Updated upstream
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
     [self.currPlayer pause];
+=======
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+        [self.currPlayer pause];
+    });
+>>>>>>> Stashed changes
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -135,8 +158,13 @@
         [self beginPlayingFrom:0];
     }
     else {
-        NSString *functionName = @"get_active_vybes";
-        [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *objects, NSError *error) {
+        PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+        [query whereKeyExists:kVYBVybeGeotag];
+        [query whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
+        [query orderByAscending:kVYBVybeTimestampKey];
+        [query setLimit:50];
+        
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 self.vybePlaylist = objects;
                 if (self.vybePlaylist.count > 0)
@@ -617,6 +645,44 @@
             }
         }];
     }
+}
+
+#pragma mark - ()
+
+- (void)deviceRotated:(NSNotification *)notification {
+    UIDeviceOrientation currentOrientation = [MotionOrientation sharedInstance].deviceOrientation;
+    
+    double rotation = 0;
+    CGRect newBounds;
+    switch (currentOrientation) {
+        case UIDeviceOrientationFaceDown:
+        case UIDeviceOrientationFaceUp:
+        case UIDeviceOrientationUnknown:
+            return;
+        case UIDeviceOrientationPortrait:
+            rotation = 0;
+            newBounds = [[UIScreen mainScreen] bounds];
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            rotation = -M_PI;
+            newBounds = [[UIScreen mainScreen] bounds];
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            rotation = M_PI_2;
+            newBounds = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.height, [[UIScreen mainScreen] bounds].size.width);
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            rotation = -M_PI_2;
+            newBounds = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.height, [[UIScreen mainScreen] bounds].size.width);
+            break;
+    }
+    
+    CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
+    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        [self.view setTransform:transform];
+        [self.view setBounds:newBounds];
+    } completion:nil];
+    
 }
 
 

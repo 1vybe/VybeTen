@@ -86,7 +86,7 @@
                         <constraint firstAttribute="height" constant="31" id="W7p-ZD-4cl"/>
                         <constraint firstAttribute="width" constant="31" id="dJ9-fq-FQN"/>
                     </constraints>
-                    <state key="normal" image="player_dismiss_button">
+                    <state key="normal" backgroundImage="player_dismiss_button">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
