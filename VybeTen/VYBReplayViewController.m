@@ -19,6 +19,7 @@
 
 @property (nonatomic, weak) IBOutlet UIView *acceptButton;
 @property (nonatomic, weak) IBOutlet UIButton *rejectButton;
+
 @property (nonatomic, weak) IBOutlet UITextField *tagTextField;
 @property (nonatomic, weak) IBOutlet VYBPlayerView *playerView;
 
@@ -55,7 +56,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationFetched:) name:VYBMyVybeStoreLocationFetchedNotification object:nil];
     
     // Register for keyboard notification
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     
     UIFont *theFont = [UIFont fontWithName:@"Helvetica Neue" size:15.0];
@@ -64,9 +65,8 @@
     self.tagTextField.delegate = self;
     self.tagTextField.clearsOnBeginEditing = YES;
     self.tagTextField.clearsOnInsertion = NO;
+    self.tagTextField.textAlignment = NSTextAlignmentCenter;
     self.tagTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:([_currVybe tagString])? [_currVybe tagString] : @"tag your vybe :)" attributes:stringAttributes];
-    self.tagTextField.leftViewMode = UITextFieldViewModeAlways;
-    [self.tagTextField setLeftView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, 15.0, 15.0)]];
     
     UITapGestureRecognizer *tapToAccep = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(acceptButtonPressed)];
     tapToAccep.numberOfTapsRequired = 1;
@@ -143,11 +143,11 @@
     NSTimeInterval animationDuration = [duration doubleValue];
 
     self.acceptButtonBottomSpacingConstraint.constant = keyboardSize.height - self.acceptButton.bounds.size.height;
-    [self.acceptButton setNeedsUpdateConstraints];
+
+    [self.view setNeedsUpdateConstraints];
     [UIView animateWithDuration:animationDuration animations:^{
-        [self.acceptButton layoutIfNeeded];
+        [self.view layoutIfNeeded];
     }];
-    
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
@@ -157,17 +157,18 @@
     NSTimeInterval animationDuration = [duration doubleValue];
     
     self.acceptButtonBottomSpacingConstraint.constant = 0;
-    [self.acceptButton setNeedsUpdateConstraints];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:animationDuration animations:^{
-            [self.acceptButton layoutIfNeeded];
-        }];
-    });
+    [self.view setNeedsUpdateConstraints];
+    [UIView animateWithDuration:animationDuration animations:^{
+        [self.view layoutIfNeeded];
+    }];
 }
 
 - (void)viewTouchedToDismissKeyboard {
-    [self.tagTextField resignFirstResponder];
+    if ([self.tagTextField isFirstResponder])
+        [self.tagTextField resignFirstResponder];
+    else
+        [self.tagTextField becomeFirstResponder];
 }
 
 
