@@ -99,25 +99,15 @@
                 <constraint firstItem="7uh-eA-VQL" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="3G8-8m-36R"/>
                 <constraint firstItem="lH2-Xq-FWU" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="8JX-ga-vc3"/>
                 <constraint firstItem="cMN-bL-OwK" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="BwS-M7-aPe"/>
-                <constraint firstAttribute="bottom" secondItem="7uh-eA-VQL" secondAttribute="bottom" constant="20" id="DN2-iT-2UF"/>
                 <constraint firstAttribute="trailing" secondItem="7uh-eA-VQL" secondAttribute="trailing" constant="20" id="E9J-2A-MtU"/>
                 <constraint firstItem="lH2-Xq-FWU" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="NJF-cM-aKv"/>
                 <constraint firstAttribute="trailing" secondItem="Pb2-69-N8y" secondAttribute="trailing" id="P8w-2S-sOY"/>
-                <constraint firstItem="cMN-bL-OwK" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="QlJ-SX-1u3"/>
                 <constraint firstAttribute="bottom" secondItem="MJr-Ty-ayr" secondAttribute="bottom" constant="20" id="SXM-m5-4N5"/>
                 <constraint firstAttribute="centerX" secondItem="cMN-bL-OwK" secondAttribute="centerX" id="UeP-sZ-Mmp"/>
                 <constraint firstAttribute="centerY" secondItem="Vij-MN-ZuP" secondAttribute="centerY" id="fkI-HM-iB3"/>
-                <constraint firstItem="7uh-eA-VQL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="jJS-qh-YoZ"/>
                 <constraint firstAttribute="centerY" secondItem="Pb2-69-N8y" secondAttribute="centerY" id="u1c-Sv-adY"/>
                 <constraint firstItem="Vij-MN-ZuP" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="utX-77-c0b"/>
             </constraints>
-            <variation key="default">
-                <mask key="constraints">
-                    <exclude reference="QlJ-SX-1u3"/>
-                    <exclude reference="DN2-iT-2UF"/>
-                    <exclude reference="jJS-qh-YoZ"/>
-                </mask>
-            </variation>
         </view>
     </objects>
     <resources>

@@ -101,12 +101,20 @@
     return [self.parseObjectDictionary objectForKey:kVYBVybeLocationStringKey];
 }
 
+- (NSString *)tagString {
+    return [self.parseObjectDictionary objectForKey:kVYBVybeTagKey];
+}
+
 - (void)setGeoTag:(CLLocation *)location {
     self.locationCL = location;
 }
 
 - (void)setLocationString:(NSString *)locationString {
     [self.parseObjectDictionary setObject:locationString forKey:kVYBVybeLocationStringKey];
+}
+
+- (void)setTag:(NSString *)tag {
+    [self.parseObjectDictionary setObject:tag forKey:kVYBVybeTagKey];
 }
 
 - (BOOL)hasLocationData {

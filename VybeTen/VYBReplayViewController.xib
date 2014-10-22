@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6246" systemVersion="14A388b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6239"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VYBReplayViewController">
             <connections>
-                <outlet property="acceptButton" destination="NNn-st-deF" id="H7i-mn-m3e"/>
-                <outlet property="acceptButtonBottomSpacingConstraint" destination="O8m-0i-CGY" id="z6k-x5-kd1"/>
+                <outlet property="acceptButton" destination="z7g-Te-fSv" id="bZc-Fs-5ND"/>
+                <outlet property="acceptButtonBottomSpacingConstraint" destination="SK8-yu-n8L" id="Db0-6Z-lDy"/>
                 <outlet property="playerView" destination="cKp-4D-Bm4" id="O5h-oz-ujt"/>
                 <outlet property="rejectButton" destination="VEJ-4U-kAQ" id="n4I-CF-Z4X"/>
+                <outlet property="tagTextField" destination="6CB-I6-DGM" id="yaJ-40-Itc"/>
                 <outlet property="view" destination="iN0-l3-epB" id="zb0-Pq-FWJ"/>
             </connections>
         </placeholder>
@@ -22,19 +23,46 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cKp-4D-Bm4" userLabel="playerView" customClass="VYBPlayerView">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NNn-st-deF" userLabel="accept">
-                    <rect key="frame" x="0.0" y="545" width="600" height="55"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z7g-Te-fSv" userLabel="acceptButton">
+                    <rect key="frame" x="0.0" y="537" width="600" height="63"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="replay_vybeit_button" translatesAutoresizingMaskIntoConstraints="NO" id="AiM-47-sjF">
+                            <rect key="frame" x="0.0" y="0.0" width="600" height="63"/>
+                        </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="replay_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="pgD-vi-5bG">
+                            <rect key="frame" x="546" y="19" width="34" height="25"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="34" id="U4h-6T-jvv"/>
+                                <constraint firstAttribute="height" constant="25" id="Zoe-86-WWW"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="V Y B E   I T" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YD9-7T-Hi4">
+                            <rect key="frame" x="246" y="20" width="109" height="24"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
                     <constraints>
-                        <constraint firstAttribute="height" constant="55" id="bLC-ua-3kk"/>
+                        <constraint firstAttribute="centerX" secondItem="YD9-7T-Hi4" secondAttribute="centerX" id="7Gb-T2-BJS"/>
+                        <constraint firstAttribute="bottom" secondItem="AiM-47-sjF" secondAttribute="bottom" id="8Jb-wu-CwZ"/>
+                        <constraint firstAttribute="trailing" secondItem="pgD-vi-5bG" secondAttribute="trailing" constant="20" id="EhJ-yj-Pw0"/>
+                        <constraint firstAttribute="centerY" secondItem="pgD-vi-5bG" secondAttribute="centerY" id="JFn-Pu-PDj"/>
+                        <constraint firstAttribute="trailing" secondItem="AiM-47-sjF" secondAttribute="trailing" id="Kmf-8g-hLB"/>
+                        <constraint firstItem="AiM-47-sjF" firstAttribute="top" secondItem="z7g-Te-fSv" secondAttribute="top" id="LfS-hj-qDY"/>
+                        <constraint firstItem="AiM-47-sjF" firstAttribute="leading" secondItem="z7g-Te-fSv" secondAttribute="leading" id="YBJ-H5-MrU"/>
+                        <constraint firstAttribute="centerY" secondItem="YD9-7T-Hi4" secondAttribute="centerY" id="aJG-Sd-d8P"/>
+                        <constraint firstAttribute="height" constant="63" id="tGX-jn-NHo"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
-                    <state key="normal" title="V Y B E   I T" backgroundImage="replay_vybeit_button">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="acceptButtonPressed:" destination="-1" eventType="touchUpInside" id="vaQ-c8-p26"/>
-                    </connections>
-                </button>
+                </view>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" background="replay_tag_textfield" translatesAutoresizingMaskIntoConstraints="NO" id="6CB-I6-DGM" userLabel="tagTextField">
+                    <rect key="frame" x="0.0" y="477" width="600" height="60"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="Br7-XY-WHZ"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VEJ-4U-kAQ" userLabel="reject">
                     <rect key="frame" x="15" y="15" width="40" height="40"/>
                     <constraints>
@@ -49,22 +77,27 @@
                     </connections>
                 </button>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="cKp-4D-Bm4" secondAttribute="bottom" id="2ZG-tn-wVc"/>
+                <constraint firstAttribute="trailing" secondItem="z7g-Te-fSv" secondAttribute="trailing" id="3c8-1O-r7f"/>
                 <constraint firstItem="cKp-4D-Bm4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="6zC-kX-XiS"/>
                 <constraint firstAttribute="trailing" secondItem="cKp-4D-Bm4" secondAttribute="trailing" id="7uw-VG-7qb"/>
-                <constraint firstAttribute="bottom" secondItem="NNn-st-deF" secondAttribute="bottom" id="O8m-0i-CGY"/>
+                <constraint firstItem="z7g-Te-fSv" firstAttribute="top" secondItem="6CB-I6-DGM" secondAttribute="bottom" id="L0y-wZ-uUt"/>
                 <constraint firstItem="cKp-4D-Bm4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="OBi-OI-syv"/>
+                <constraint firstAttribute="bottom" secondItem="z7g-Te-fSv" secondAttribute="bottom" id="SK8-yu-n8L"/>
                 <constraint firstItem="VEJ-4U-kAQ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="aKK-Vq-wkm"/>
                 <constraint firstItem="VEJ-4U-kAQ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="don-ho-Dzu"/>
-                <constraint firstItem="NNn-st-deF" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="jzq-O7-fpk"/>
-                <constraint firstAttribute="trailing" secondItem="NNn-st-deF" secondAttribute="trailing" id="xl3-6I-8UT"/>
+                <constraint firstItem="z7g-Te-fSv" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="kjd-8D-PNf"/>
+                <constraint firstAttribute="trailing" secondItem="6CB-I6-DGM" secondAttribute="trailing" id="lPM-bT-Ysz"/>
+                <constraint firstItem="6CB-I6-DGM" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="yqQ-GF-4WU"/>
             </constraints>
         </view>
     </objects>
     <resources>
-        <image name="replay_reject_button" width="20" height="20"/>
-        <image name="replay_vybeit_button" width="320" height="55"/>
+        <image name="replay_arrow" width="34" height="25"/>
+        <image name="replay_reject_button" width="30" height="30"/>
+        <image name="replay_tag_textfield" width="320" height="79"/>
+        <image name="replay_vybeit_button" width="320" height="60"/>
     </resources>
 </document>

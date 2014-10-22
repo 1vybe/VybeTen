@@ -15,14 +15,15 @@
 #import "VYBNavigationController.h"
 #import "AVAsset+VideoOrientation.h"
 
-@interface VYBReplayViewController ()
-@property (nonatomic, weak) IBOutlet UIButton *acceptButton;
+@interface VYBReplayViewController () <UITextFieldDelegate>
+
+@property (nonatomic, weak) IBOutlet UIView *acceptButton;
 @property (nonatomic, weak) IBOutlet UIButton *rejectButton;
+@property (nonatomic, weak) IBOutlet UITextField *tagTextField;
 @property (nonatomic, weak) IBOutlet VYBPlayerView *playerView;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *acceptButtonBottomSpacingConstraint;
 
-- (IBAction)acceptButtonPressed:(id)sender;
 - (IBAction)rejectButtonPressed:(id)sender;
 
 @property (nonatomic) AVPlayer *player;
@@ -54,8 +55,26 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationFetched:) name:VYBMyVybeStoreLocationFetchedNotification object:nil];
     
     // Register for keyboard notification
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    
+    UIFont *theFont = [UIFont fontWithName:@"Helvetica Neue" size:15.0];
+    NSDictionary *stringAttributes = @{ NSForegroundColorAttributeName : [UIColor colorWithRed:72.0/255.0 green:72.0/255.0 blue:72.0/255.0 alpha:1.0],
+                                        NSFontAttributeName : theFont};
+    self.tagTextField.delegate = self;
+    self.tagTextField.clearsOnBeginEditing = YES;
+    self.tagTextField.clearsOnInsertion = NO;
+    self.tagTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:([_currVybe tagString])? [_currVybe tagString] : @"tag your vybe :)" attributes:stringAttributes];
+    self.tagTextField.leftViewMode = UITextFieldViewModeAlways;
+    [self.tagTextField setLeftView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, 15.0, 15.0)]];
+    
+    UITapGestureRecognizer *tapToAccep = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(acceptButtonPressed)];
+    tapToAccep.numberOfTapsRequired = 1;
+    [self.acceptButton addGestureRecognizer:tapToAccep];
+    
+    UITapGestureRecognizer *tapToDismissKeyboard = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTouchedToDismissKeyboard)];
+    tapToDismissKeyboard.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tapToDismissKeyboard];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -81,9 +100,17 @@
     [self.player play];
 }
 
-- (IBAction)acceptButtonPressed:(id)sender {
-    [[VYBMyVybeStore sharedStore] uploadCurrentVybe];
+- (void)acceptButtonPressed {
+    if (self.tagTextField.text && (self.tagTextField.text.length > 0)) {
+        if (self.tagTextField.text.length < 3) {
+            self.tagTextField.text = @"";
+            return;
+        }
+        
+        [[[VYBMyVybeStore sharedStore] currVybe] setTag:self.tagTextField.text];
+    }
     
+    [[VYBMyVybeStore sharedStore] uploadCurrentVybe];
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
@@ -107,16 +134,65 @@
 
 #pragma mark - Keyboard
 
-- (void)keyboardWasShown:(NSNotification *)notification {
-    NSDictionary *info = [notification userInfo];
-    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+- (void)keyboardWillShow:(NSNotification *)notification {
+    NSDictionary *dictionary = [notification userInfo];
+    CGSize keyboardSize = [[dictionary objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
-    [self.acceptButtonBottomSpacingConstraint setConstant:keyboardSize.height];
+    
+    NSNumber *duration = [dictionary objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration = [duration doubleValue];
+
+    self.acceptButtonBottomSpacingConstraint.constant = keyboardSize.height - self.acceptButton.bounds.size.height;
+    [self.acceptButton setNeedsUpdateConstraints];
+    [UIView animateWithDuration:animationDuration animations:^{
+        [self.acceptButton layoutIfNeeded];
+    }];
+    
 }
 
-- (void)keyboardWillBeHidden:(NSNotification *)notification {
-    [self.acceptButtonBottomSpacingConstraint setConstant:0.0f];
+- (void)keyboardWillHide:(NSNotification *)notification {
+    NSDictionary *dictionary = [notification userInfo];
+    
+    NSNumber *duration = [dictionary objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration = [duration doubleValue];
+    
+    self.acceptButtonBottomSpacingConstraint.constant = 0;
+    [self.acceptButton setNeedsUpdateConstraints];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:animationDuration animations:^{
+            [self.acceptButton layoutIfNeeded];
+        }];
+    });
 }
+
+- (void)viewTouchedToDismissKeyboard {
+    [self.tagTextField resignFirstResponder];
+}
+
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if (textField.text.length < 3) {
+        if (textField.text.length > 0) {
+            textField.text = @"";
+            return NO;
+        }
+    }
+    
+    [textField resignFirstResponder];
+    [self acceptButtonPressed];
+    
+    return YES;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    textField.returnKeyType = UIReturnKeyGo;
+}
+
+
 
 #pragma mark - DeviceOrientation
 

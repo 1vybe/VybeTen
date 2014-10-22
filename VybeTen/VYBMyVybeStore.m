@@ -314,18 +314,22 @@ static BOOL _uploadingOldVybes = NO;
     _reverseGeocodingInProgress = YES;
     [reverseGeocoder reverseGeocodeLocation:_bestLocation completionHandler:^(NSArray *placemarks, NSError *error) {
         NSString *locationStr = [[NSString alloc] init];
+        NSString *tag = [[NSString alloc] init];
         if (!error) {
             CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
             NSString *neighborhood = myPlacemark.subLocality;
             NSString *city = myPlacemark.locality;
             NSString *isoCountryCode = myPlacemark.ISOcountryCode;
             locationStr = [NSString stringWithFormat:@"%@,%@,%@",neighborhood, city, isoCountryCode];
-            
+            tag = neighborhood;
         } else {
             locationStr = @"Nebulas, unknown, unknown";
+            tag = @"Nebulas";
         }
         
         [_currVybe setLocationString:locationStr];
+        [_currVybe setTag:tag];
+        
         _reverseGeocodingInProgress = NO;
     }];
     

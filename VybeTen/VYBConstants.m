@@ -74,6 +74,8 @@ NSString *const kVYBVybeGeotag                                  = @"location";
 NSString *const kVYBVybeTypePublicKey                           = @"isPublic";
 NSString *const kVYBVybeLocationStringKey                       = @"locationString";
 NSString *const kVYBVybeCountryCodeKey                          = @"countryCode";
+NSString *const kVYBVybeTagKey                                  = @"tag";
+
 
 /*
  NSString *const kVYBVybeCountryCodeKey                          = @"countryCode";

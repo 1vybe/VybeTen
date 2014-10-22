@@ -113,6 +113,7 @@ extern NSString *const kVYBVybeGeotag;
 extern NSString *const kVYBVybeTypePublicKey;
 extern NSString *const kVYBVybeLocationStringKey;
 extern NSString *const kVYBVybeCountryCodeKey;
+extern NSString *const kVYBVybeTagKey;
 
 /*
 extern NSString *const kVYBVybeTribeKey;
