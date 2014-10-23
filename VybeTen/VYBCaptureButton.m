@@ -9,19 +9,32 @@
 #import "VYBCaptureButton.h"
 
 @implementation VYBCaptureButton {
+    UIImageView *_backgroundImage;
+    UIImageView *_foregroundImage;
+    
     double smallRadius;
     double largeRaduis;
     double thinLineWidth;
     double thickLineWidth;
 }
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
     if (self) {
-        self.center = CGPointMake(0, 0);
-        self.backgroundColor = [UIColor clearColor];
-        self.minPercentage = 0.0;
+        _backgroundImage = [[UIImageView alloc] initWithFrame:self.bounds];
+        [_backgroundImage setContentMode:UIViewContentModeCenter];
+        [_backgroundImage setImage:[UIImage imageNamed:@"capture_record_bg_normal.png"]];
+        [self addSubview:_backgroundImage];
+        
+        _foregroundImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60.0, 60.0)];
+        [_foregroundImage setContentMode:UIViewContentModeScaleAspectFit];
+        [_foregroundImage setImage:[UIImage imageNamed:@"capture_record_flyingV.png"]];
+        [self addSubview:_foregroundImage];
+        _foregroundImage.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+        
+        [self setBackgroundColor:[UIColor clearColor]];
+        
+        self.minPercentage = 0.5;
         self.maxPercentage = 0.0;
         
         smallRadius = 46.0;
@@ -33,14 +46,21 @@
     return self;
 }
 
-- (void)didMoveToSuperview {
-    [super didMoveToSuperview];
-    self.passedMin = NO;
-    self.minPercentage = 0.0;
-    self.maxPercentage = 0.0;
-    [self setNeedsDisplay];
+- (void)didStartRecording {
+    [_foregroundImage setImage:[UIImage imageNamed:@"capture_record_sun.png"]];
+    [UIView transitionWithView:_backgroundImage duration:3.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        [_backgroundImage setImage:[UIImage imageNamed:@"capture_record_bg_pressed.png"]];
+    } completion:nil];
 }
 
+- (void)didStopRecording {
+    [_foregroundImage setImage:[UIImage imageNamed:@"capture_record_flyingV.png"]];
+    [UIView transitionWithView:_backgroundImage duration:3.0 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+        [_backgroundImage setImage:[UIImage imageNamed:@"capture_record_bg_normal.png"]];
+    } completion:nil];
+}
+
+/*
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
@@ -83,6 +103,6 @@
     }
     
 }
-
+*/
 
 @end

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+IB_DESIGNABLE
 @interface VYBCaptureButton : UIView
 @property (nonatomic) CGPoint center;
 @property (nonatomic) BOOL passedMin;
@@ -15,5 +16,7 @@
 @property (nonatomic) double minPercentage;
 @property (nonatomic) double maxPercentage;
 
+- (void)didStartRecording;
+- (void)didStopRecording;
 //@property (nonatomic) CGPoint startLocation;
 @end

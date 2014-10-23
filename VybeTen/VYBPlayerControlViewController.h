@@ -17,7 +17,6 @@
 @property (nonatomic) NSInteger currVybeIndex;
 - (void)beginPlayingFrom:(NSInteger)from;
 - (void)playNextItem;
-
 - (void)playNextZoneVideo;
 
 @end

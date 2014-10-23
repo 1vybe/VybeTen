@@ -119,6 +119,9 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
     [self.currPlayer pause];
+    
+    self.vybePlaylist = nil;
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
