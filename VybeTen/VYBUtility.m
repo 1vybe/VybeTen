@@ -249,10 +249,6 @@
                     [[VYBCache sharedCache] addFreshVybe:nVybe];
                 }
                 
-                // Only set lastRefresh after inital vybe loading
-                if ( [[VYBCache sharedCache] vybesByLocation] )
-                    [[VYBCache sharedCache] setLastRefresh:[NSDate date]];
-                
                 if (completionBlock) {
                     completionBlock(YES, nil);
                 }
@@ -264,74 +260,6 @@
     }];
     
 }
-
-+ (void)getVybesByLocationAndByUserInBackground {
-    [self getVybesByLocationAndByUser:nil];
-}
-
-+ (void)getVybesByLocationAndByUser:(void (^)(BOOL succeeded, NSError *error))completionBlock {
-    if ( ! [PFUser currentUser] )
-        return;
-    
-    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-    // 24 TTL checking
-    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
-    [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
-    // Don't include urself
-    [query whereKey:kVYBVybeUserKey notEqualTo:[PFUser currentUser]];
-    [query whereKeyExists:kVYBVybeLocationStringKey];
-    [query whereKey:kVYBVybeLocationStringKey notEqualTo:@""];
-    [query setLimit:1000];
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            for (PFObject *obj in objects) {
-                NSString *locString = obj[kVYBVybeLocationStringKey];
-                NSArray *token = [locString componentsSeparatedByString:@","];
-                if (token.count != 3)
-                    continue;
-                
-                //NOTE: we discard the first location field (neighborhood)
-                NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
-                [[VYBCache sharedCache] addVybe:obj forLocation:keyString];
-                [[VYBCache sharedCache] addVybe:obj forUser:obj[kVYBVybeUserKey]];
-            }
-            [self getUsersByLocation:completionBlock];
-        } else {
-            if (completionBlock)
-                completionBlock(NO, error);
-        }
-    }];
-}
-
-+ (void)getUsersByLocation:(void (^)(BOOL succeeded, NSError *error))completionBlock {
-    PFQuery *query = [PFUser query];
-    // 24 TTL checking
-    NSDate *someTimeAgo = [[NSDate alloc] initWithTimeIntervalSinceNow:-3600 * VYBE_TTL_HOURS];
-    [query whereKey:kVYBUserLastVybedTimeKey greaterThanOrEqualTo:someTimeAgo];
-    [query whereKey:kVYBUserUsernameKey notEqualTo:[PFUser currentUser][kVYBUserUsernameKey]];
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            for (PFObject *aUser in objects) {
-                NSArray *token = [aUser[kVYBUserLastVybedLocationKey] componentsSeparatedByString:@","];
-                if (token.count != 3)
-                    continue;
-                
-                //NOTE: we discard the first location field (neighborhood)
-                NSString *keyString = [NSString stringWithFormat:@"%@,%@", token[1], token[2]];
-                [[VYBCache sharedCache] addUser:aUser forLocation:keyString];
-            }
-            if (completionBlock)
-                completionBlock(YES, nil);
-        }
-        else {
-            if (completionBlock)
-                completionBlock(NO, error);
-        }
-    }];
-}
-
 
 #pragma mark Thumbnail
 
