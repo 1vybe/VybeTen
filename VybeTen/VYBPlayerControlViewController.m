@@ -29,6 +29,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *portalButton;
 @property (nonatomic, weak) IBOutlet UIButton *locationTimeButton;
 @property (nonatomic, weak) IBOutlet UIButton *dismissButton;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *portalButtonHorizontalSpacing;
 
 - (IBAction)goNextButtonPressed:(id)sender;
 - (IBAction)goPrevButtonPressed:(id)sender;
@@ -106,7 +107,7 @@
     [self.view addGestureRecognizer:tapGesture];
     
     UILongPressGestureRecognizer *tapAndHoldGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(portalButtonTapAndHoldDetected:)];
-    tapAndHoldGesture.minimumPressDuration = 0.5;
+    tapAndHoldGesture.minimumPressDuration = 0.3;
     [portalButton addGestureRecognizer:tapAndHoldGesture];
     
     menuMode = NO;
@@ -279,21 +280,9 @@
 - (void)playNextZoneVideo {
     if (_zoneVybeCurrIdx == _zoneVybes.count - 1) {
         
-        [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            self.currPlayerView.alpha = 0.0;
-            self.currPlayerView.transform = CGAffineTransformMakeScale(0.1f, 0.1f);
-        } completion:^(BOOL finished) {
-            [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                self.currPlayerView.alpha = 1.0;
-                self.currPlayerView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
-            } completion:^(BOOL finished) {
-                _zoneVybes = nil;
-                [self beginPlayingFrom:currVybeIndex];
-            }];
-        }];
-
-        return;
+        [self portalButtonZoneOut:self.portalButton];
     } else {
+        
         [self.currPlayer pause];
         _zoneVybeCurrIdx++;
         [self playZoneVybeAt:_zoneVybeCurrIdx];
@@ -370,13 +359,11 @@
     else {
         NSString *functionName = @"get_nearby_count";
         //NOTE: portal button disappears while loading and should do something when reappears
-        portalButton.hidden = YES;
         [PFCloud callFunctionInBackground:functionName withParameters:@{ @"vybeID" : aVybe.objectId } block:^(NSNumber *count, NSError *error) {
             if (!error) {
                 [portalButton setTitle:[NSString stringWithFormat:@"%@", count] forState:UIControlStateNormal];
                 [[VYBCache sharedCache] setNearbyCount:count forVybe:aVybe];
             }
-            portalButton.hidden = NO;
             if (completionBlock)
                 completionBlock();
         }];
@@ -436,55 +423,76 @@
 #pragma mark - User Interactions
 
 - (void)portalButtonTapAndHoldDetected:(UILongPressGestureRecognizer *)recognizer {
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
-        [self.currPlayer pause];
-
-        [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            self.currPlayerView.transform = CGAffineTransformMakeScale(3.0f, 3.0f);
-        } completion:^(BOOL success) {
-            [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                self.currPlayerView.alpha = 0.0f;
-            } completion:^(BOOL success) {
-                self.currPlayerView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
-            }];
-        }];
-        
-        PFObject *currVybe = self.vybePlaylist[currVybeIndex];
-        [PFCloud callFunctionInBackground:@"get_nearby_vybes"
-                           withParameters:@{ @"vybeID" : currVybe.objectId}
-                                    block:^(NSArray *objects, NSError *error) {
-                                        if (!error) {
-                                            _zoneVybes = objects;
-                                            _zoneVybeCurrIdx = 0;
-                                            [self beginPlayingZoneVybes];
-                                        }
-                                        [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                                            self.currPlayerView.alpha = 1.0;
-                                        } completion:nil];
-                                    }];
+    // Zone in
+    if (recognizer.state != UIGestureRecognizerStateBegan) {
+        return;
     }
-    else if (recognizer.state == UIGestureRecognizerStateEnded) {
-        if ( ! _zoneVybes)
-            return;
-        
-        [self.currPlayer pause];
-        
-        [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            self.currPlayerView.transform = CGAffineTransformMakeScale(0.2f, 0.2f);
-        } completion:^(BOOL finished) {
-            [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                self.currPlayerView.alpha = 0.0;
-            } completion:^(BOOL finished) {
-                self.currPlayerView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
-                _zoneVybes = nil;
-                [self beginPlayingFrom:currVybeIndex];
-                [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                    self.currPlayerView.alpha = 1.0;
-                } completion:nil];
-            }];
-        }];
+    
+    if (!_zoneVybes) {
+        [self.portalButton setEnabled:NO];
+        [self portalButtonZoneIn:self.portalButton];
+    }
+    else {
+        [self.portalButton setEnabled:NO];
+        [self portalButtonZoneOut:self.portalButton];
     }
 }
+
+- (void)portalButtonZoneIn:(UIButton *)button {
+    [self.currPlayer pause];
+
+    PFObject *currVybe = self.vybePlaylist[currVybeIndex];
+    [PFCloud callFunctionInBackground:@"get_nearby_vybes"
+                       withParameters:@{ @"vybeID" : currVybe.objectId}
+                                block:^(NSArray *objects, NSError *error) {
+                                    if (!error) {
+                                        _zoneVybes = objects;
+                                        _zoneVybeCurrIdx = 0;
+                                        [self beginPlayingZoneVybes];
+                                    }
+                                }];
+    
+    // Animation to change bg image
+    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        [self.portalButton setBackgroundImage:[UIImage imageNamed:@"player_zoned_in.png"] forState:UIControlStateNormal];
+    } completion:^(BOOL success) {
+        [self.portalButton setEnabled:YES];
+    }];
+    
+    // Animation to move the button to the LEFT
+    CGFloat newConstant = self.view.bounds.size.width - 40.0f - self.portalButton.bounds.size.width;
+    self.portalButtonHorizontalSpacing.constant = newConstant;
+    [self.view setNeedsUpdateConstraints];
+    [UIView animateWithDuration:0.4 animations:^{
+        [self.view layoutIfNeeded];
+    }];
+    
+}
+
+- (void)portalButtonZoneOut:(UIButton *)button {
+    [self.currPlayer pause];
+
+    _zoneVybes = nil;
+
+    // Animation to change bg image
+    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        [self.portalButton setBackgroundImage:[UIImage imageNamed:@"player_portal_button.png"] forState:UIControlStateNormal];
+    } completion:^(BOOL success) {
+        [self.portalButton setEnabled:YES];
+        
+        [self beginPlayingFrom:currVybeIndex];
+    }];
+    
+    // Animation to move the button to the RIGHT
+    // move the button to the LEFT Animation
+    CGFloat newConstant = 20.0f;
+    self.portalButtonHorizontalSpacing.constant = newConstant;
+    [self.view setNeedsUpdateConstraints];
+    [UIView animateWithDuration:0.4 animations:^{
+        [self.view layoutIfNeeded];
+    }];
+}
+
 
 - (IBAction)counterButtonPressed {
     
