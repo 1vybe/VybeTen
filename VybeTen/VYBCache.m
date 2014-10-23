@@ -345,6 +345,18 @@
     [self setAttributes:attributes forVybe:vybe];
 }
 
+- (void)setNearbyCount:(NSNumber *)count forVybe:(PFObject *)vybe {
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForVybe:vybe]];
+    [attributes setObject:count forKey:kVYBVybeAttributesNearbyCountKey];
+    [self setAttributes:attributes forVybe:vybe];
+}
+
+- (NSNumber *)nearbyCountForVybe:(PFObject *)vybe {
+    NSDictionary *attributes = [self attributesForVybe:vybe];
+    NSNumber *count = [attributes objectForKey:kVYBVybeAttributesNearbyCountKey];
+    return count;
+}
+
 - (NSDictionary *)attributesForVybe:(PFObject *)vybe {
     NSString *key = [self keyForVybe:vybe];
     return [self.cache objectForKey:key];

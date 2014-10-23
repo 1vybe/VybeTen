@@ -90,6 +90,8 @@ NSString *const kVYBVybeAttributesLikeCountKey            = @"likeCount";
 NSString *const kVYBVybeAttributesLikersKey               = @"likers";
 NSString *const kVYBVybeAttributesCommentCountKey         = @"commentCount";
 NSString *const kVYBVybeAttributesCommentersKey           = @"commenters";
+NSString *const kVYBVybeAttributesNearbyCountKey         = @"nearbyCount";
+
 
 #pragma mark - PFObject Region Class
 // class key

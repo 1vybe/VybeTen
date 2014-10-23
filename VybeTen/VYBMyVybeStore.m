@@ -97,7 +97,7 @@ static BOOL _uploadingOldVybes = NO;
             UIProgressView *uploadProgressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
             [uploadProgressView setFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 50)];
             [[UIApplication sharedApplication].keyWindow addSubview:uploadProgressView];
-        
+
             [thumbnailFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (!error) {
                     [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -205,8 +205,10 @@ static BOOL _uploadingOldVybes = NO;
         }
     }
 
-    if (success)
+    if (success) {
+        [self clearLocalCacheForVybe:oldVybe];
         [self uploadDelayedVybe];
+    }
 }
 
 - (BOOL)uploadVybe:(VYBVybe *)aVybe {

@@ -365,21 +365,26 @@
         return;
     }
     
-    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-    [query whereKey:kVYBVybeGeotag nearGeoPoint:[aVybe objectForKey:kVYBVybeGeotag] withinKilometers:0.02];
-    [query setLimit:50];
-    query.cachePolicy = kPFCachePolicyCacheElseNetwork;
-    [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+    NSNumber *nearbyCount = [[VYBCache sharedCache] nearbyCountForVybe:aVybe];
+    if (nearbyCount) {
+        [portalButton setTitle:[NSString stringWithFormat:@"%@", nearbyCount] forState:UIControlStateNormal];
+        if (completionBlock)
+            completionBlock();
+    }
+    else {
+        NSString *functionName = @"get_nearby_count";
+        //NOTE: portal button disappears while loading and should do something when reappears
         portalButton.hidden = YES;
-        if (!error) {
-            if (number > 0) {
-                [portalButton setTitle:[NSString stringWithFormat:@"%d", number] forState:UIControlStateNormal];
-                portalButton.hidden = NO;
+        [PFCloud callFunctionInBackground:functionName withParameters:@{ @"vybeID" : aVybe.objectId } block:^(NSNumber *count, NSError *error) {
+            if (!error) {
+                [portalButton setTitle:[NSString stringWithFormat:@"%@", count] forState:UIControlStateNormal];
+                [[VYBCache sharedCache] setNearbyCount:count forVybe:aVybe];
             }
+            portalButton.hidden = NO;
             if (completionBlock)
                 completionBlock();
-        }
-    }];
+        }];
+    }
     
     
 //    } else if (aVybe[kVYBVybeCountryCodeKey]) {

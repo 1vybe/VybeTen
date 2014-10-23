@@ -170,10 +170,21 @@ Parse.Cloud.define('get_regions', get_regions);
 Parse.Cloud.define('get_nearby_vybes',
   get_nearby_vybes.bind(this, {
     recent: true,
+    reversed: true,
     radius: 0.01,
     limit: 50,
   })
 );
+
+Parse.Cloud.define('get_nearby_count', 
+  get_nearby_vybes.bind(this, {
+    recent: true,
+    radius: 0.01,
+    limit: 50,
+    count_only: true,
+  })
+);
+
 
 // Default algorithm used in the app
 Parse.Cloud.define('get_active_vybes',
@@ -390,6 +401,8 @@ function get_nearby_vybes(options, request, response) {
   var hide_user = options.hide_user || false;
   var reversed = options.reversed || false;
   var limit = options.limit || 50;
+  var radius = options.radius || 0.01 // 10 meters by default
+  var count_only = options.count_only || false;
 
   var query = new Parse.Query('Vybe');
   query.include('user');
@@ -410,21 +423,34 @@ function get_nearby_vybes(options, request, response) {
   aVybe.fetch({
     success: function(vybeObj) {
       console.log('vybe from ' + vybeObj.get('locationString'));
-      query.near('location', vybeObj.get('location'));
-      query.find({
-        success: function(vybesObjects) {
-          console.log('nearby vybes found');
-          if (reversed) {
-            response.success(vybesObjects);
-          } else {
-             // Sort result in chronological order
-            response.success(vybesObjects.reverse());
+      query.withinKilometers('location', vybeObj.get('location'), radius);
+      
+      if (count_only) {
+         query.count({
+          success: function(nearbyCount) {
+            console.log('nearby count found ' + nearbyCount);
+            response.success(nearbyCount);
+          },
+          error: function() {
+            response.error('Request to get_vybes() has failed.');
           }
-        },
-        error: function() {
-          response.error('Request to get_vybes() has failed.');
-        }
-      });
+        });
+      } else {
+         query.find({
+          success: function(vybesObjects) {
+            console.log('nearby vybes found');
+            if (reversed) {
+               // Sort result in chronological order
+              response.success(vybesObjects.reverse());
+            } else {
+              response.success(vybesObjects);
+            }
+          },
+          error: function() {
+            response.error('Request to get_vybes() has failed.');
+          }
+        });
+      }
     },
     error: function(error) {
       response.error('vybe could not be fetched. ' + error.message);

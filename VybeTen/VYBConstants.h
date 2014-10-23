@@ -129,6 +129,8 @@ extern NSString *const kVYBVybeAttributesLikeCountKey;
 extern NSString *const kVYBVybeAttributesLikersKey;
 extern NSString *const kVYBVybeAttributesCommentCountKey;
 extern NSString *const kVYBVybeAttributesCommentersKey;
+extern NSString *const kVYBVybeAttributesNearbyCountKey;
+
 
 #pragma mark - PFObject Region Class
 // class key
