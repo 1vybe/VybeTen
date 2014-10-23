@@ -270,7 +270,7 @@
         [self playNextZoneVideo];
         return;
     }
-    if (currVybeIndex == self.vybePlaylist.count - 1) {
+    if (currVybeIndex >= (self.vybePlaylist.count - 1)) {
         [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
         return;
     } else {
@@ -519,7 +519,7 @@
     if ( _zoneVybes)
         return;
     
-    if (currVybeIndex == self.vybePlaylist.count - 1) {
+    if (currVybeIndex >= (self.vybePlaylist.count - 1)) {
         // Reached the end show the ENDING screen
         return;
     }

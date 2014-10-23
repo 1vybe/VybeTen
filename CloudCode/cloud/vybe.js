@@ -170,7 +170,7 @@ Parse.Cloud.define('get_regions', get_regions);
 Parse.Cloud.define('get_nearby_vybes',
   get_nearby_vybes.bind(this, {
     recent: true,
-    reversed: true,
+    reversed: false,
     radius: 0.01,
     limit: 50,
   })
@@ -191,7 +191,7 @@ Parse.Cloud.define('get_active_vybes',
   get_vybes.bind(this, {
     recent: true,
     hide_user: true,
-    reversed: true,
+    reversed: false,
     limit: 50,
   })
 );
@@ -440,10 +440,10 @@ function get_nearby_vybes(options, request, response) {
           success: function(vybesObjects) {
             console.log('nearby vybes found');
             if (reversed) {
-               // Sort result in chronological order
-              response.success(vybesObjects.reverse());
-            } else {
               response.success(vybesObjects);
+            } else {
+              // Sort result in chronological order
+              response.success(vybesObjects.reverse());
             }
           },
           error: function() {
