@@ -3,20 +3,14 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6243"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <mutableArray key="ProximaNovaSoft-Regular.otf">
-            <string>ProximaNovaSoft-Regular</string>
-        </mutableArray>
-        <mutableArray key="ProximaNovaSoft-Semibold.otf">
-            <string>ProximaNovaSoft-Semibold</string>
-        </mutableArray>
-    </customFonts>
     <scenes>
         <!--Navigation Controller-->
         <scene sceneID="84J-Is-o1N">
             <objects>
                 <navigationController id="eD8-nl-Ebb" customClass="VYBNavigationController" sceneMemberID="viewController">
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="t6c-1K-5fm">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -27,42 +21,126 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z9i-Xm-uMK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1005" y="2380"/>
+            <point key="canvasLocation" x="1250.5" y="2374.5"/>
         </scene>
         <!--Activity Table View Controller-->
         <scene sceneID="nzO-I6-M23">
             <objects>
                 <tableViewController title="Activity Table View Controller" id="UzS-ES-twR" customClass="VYBActivityTableViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="62" sectionHeaderHeight="22" sectionFooterHeight="22" id="zmg-at-BNL">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="85" sectionHeaderHeight="22" sectionFooterHeight="22" id="zmg-at-BNL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="k9P-cU-izn">
+                            <rect key="frame" x="0.0" y="64" width="375" height="85"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="ListBar" translatesAutoresizingMaskIntoConstraints="NO" id="0xt-CJ-kuQ">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="85"/>
+                                </imageView>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SN9-et-K44">
+                                    <rect key="frame" x="20" y="24" width="70" height="21"/>
+                                    <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="15"/>
+                                    <color key="textColor" red="0.29019607843137257" green="0.29019607843137257" blue="0.29019607843137257" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Flame-btn" translatesAutoresizingMaskIntoConstraints="NO" id="PYc-pH-GBZ">
+                                    <rect key="frame" x="20" y="49" width="11" height="16"/>
+                                </imageView>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nmr-jg-AVc">
+                                    <rect key="frame" x="37" y="49" width="7" height="16"/>
+                                    <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="11"/>
+                                    <color key="textColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wSR-Hs-VwP">
+                                    <rect key="frame" x="306" y="18" width="50" height="49"/>
+                                    <state key="normal" image="FEED-btn">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="PYc-pH-GBZ" firstAttribute="leading" secondItem="k9P-cU-izn" secondAttribute="leading" constant="20" id="6gh-sB-JBQ"/>
+                                <constraint firstItem="wSR-Hs-VwP" firstAttribute="top" secondItem="k9P-cU-izn" secondAttribute="top" constant="18" id="7Co-en-cLR"/>
+                                <constraint firstAttribute="trailing" secondItem="wSR-Hs-VwP" secondAttribute="trailing" constant="19" id="8rH-fs-23a"/>
+                                <constraint firstItem="SN9-et-K44" firstAttribute="top" secondItem="k9P-cU-izn" secondAttribute="top" constant="23.5" id="G9D-Mt-rZ1"/>
+                                <constraint firstItem="SN9-et-K44" firstAttribute="leading" secondItem="k9P-cU-izn" secondAttribute="leading" constant="20" id="Olu-Ee-J4t"/>
+                                <constraint firstItem="Nmr-jg-AVc" firstAttribute="leading" secondItem="PYc-pH-GBZ" secondAttribute="trailing" constant="6" id="XFD-vy-fA2"/>
+                                <constraint firstItem="Nmr-jg-AVc" firstAttribute="centerY" secondItem="PYc-pH-GBZ" secondAttribute="centerY" id="cvd-FI-4JO"/>
+                                <constraint firstAttribute="bottom" secondItem="wSR-Hs-VwP" secondAttribute="bottom" constant="18" id="dV2-At-6hJ"/>
+                                <constraint firstAttribute="bottom" secondItem="PYc-pH-GBZ" secondAttribute="bottom" constant="20" id="giI-T7-Ftt"/>
+                            </constraints>
+                        </view>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="VybeCell" rowHeight="62" id="YK0-wJ-ZjC" customClass="VYBVybeTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="VybeCell" id="YK0-wJ-ZjC" customClass="VYBVybeTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YK0-wJ-ZjC" id="eud-5z-hNB">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" tableViewCell="YK0-wJ-ZjC" id="eud-5z-hNB">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bx9-xm-YbN">
-                                            <rect key="frame" x="51" y="13" width="243" height="20"/>
-                                            <fontDescription key="fontDescription" name="ProximaNovaSoft-Semibold" family="Proxima Nova Soft" pointSize="20"/>
-                                            <color key="textColor" red="0.29803921570000003" green="0.29803921570000003" blue="0.29803921570000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Timestamp" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y2a-BU-8V2">
-                                            <rect key="frame" x="51" y="35" width="243" height="13"/>
-                                            <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="13"/>
-                                            <color key="textColor" red="0.59607843140000005" green="0.59607843140000005" blue="0.59607843140000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="vybe_thumbnail_default" translatesAutoresizingMaskIntoConstraints="NO" id="ald-QL-PdU" customClass="PFImageView">
-                                            <rect key="frame" x="8" y="13" width="35" height="35"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ListBar" translatesAutoresizingMaskIntoConstraints="NO" id="Jhc-oP-IHI">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="85"/>
                                         </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D0Z-j3-0mz">
+                                            <rect key="frame" x="255" y="27" width="8" height="18"/>
+                                            <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="13"/>
+                                            <color key="textColor" red="0.32941176470588235" green="0.59215686274509804" blue="0.82745098039215681" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bx9-xm-YbN">
+                                            <rect key="frame" x="16" y="25" width="59" height="21"/>
+                                            <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="15"/>
+                                            <color key="textColor" red="0.29019607843137257" green="0.29019607843137257" blue="0.29019607843137257" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timestamp" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y2a-BU-8V2">
+                                            <rect key="frame" x="16" y="48" width="56" height="16"/>
+                                            <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="11"/>
+                                            <color key="textColor" red="0.5725490196078431" green="0.5725490196078431" blue="0.5725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Oval_mask" translatesAutoresizingMaskIntoConstraints="NO" id="Yyl-cu-X6Q" customClass="PFImageView">
+                                            <rect key="frame" x="305" y="15" width="55" height="55"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="Yyl-cu-X6Q" secondAttribute="height" multiplier="1:1" id="Eua-ad-pOB"/>
+                                            </constraints>
+                                        </imageView>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eye" translatesAutoresizingMaskIntoConstraints="NO" id="q5k-tr-Sx8">
+                                            <rect key="frame" x="271" y="52" width="15" height="10"/>
+                                        </imageView>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AroundMe" translatesAutoresizingMaskIntoConstraints="NO" id="Y5E-QT-HrK">
+                                            <rect key="frame" x="272" y="29" width="13" height="13"/>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LZd-Ju-ZaA">
+                                            <rect key="frame" x="255" y="48" width="8" height="18"/>
+                                            <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="13"/>
+                                            <color key="textColor" red="0.5490196078431373" green="0.81960784313725488" blue="0.61568627450980395" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="bx9-xm-YbN" firstAttribute="top" secondItem="eud-5z-hNB" secondAttribute="top" constant="25" id="0LH-3q-Yru"/>
+                                        <constraint firstItem="Y5E-QT-HrK" firstAttribute="top" secondItem="eud-5z-hNB" secondAttribute="top" constant="29" id="4yd-XH-W9o"/>
+                                        <constraint firstItem="q5k-tr-Sx8" firstAttribute="leading" secondItem="LZd-Ju-ZaA" secondAttribute="trailing" constant="8" id="9I8-rH-Fnx"/>
+                                        <constraint firstItem="q5k-tr-Sx8" firstAttribute="centerY" secondItem="LZd-Ju-ZaA" secondAttribute="centerY" id="BRw-Ib-PIs"/>
+                                        <constraint firstItem="D0Z-j3-0mz" firstAttribute="centerY" secondItem="Y5E-QT-HrK" secondAttribute="centerY" id="CfG-UK-eW2"/>
+                                        <constraint firstItem="Y5E-QT-HrK" firstAttribute="leading" secondItem="D0Z-j3-0mz" secondAttribute="trailing" constant="9" id="Eyu-Ez-cnZ"/>
+                                        <constraint firstItem="bx9-xm-YbN" firstAttribute="leading" secondItem="eud-5z-hNB" secondAttribute="leading" constant="16" id="FMJ-zd-V3V"/>
+                                        <constraint firstAttribute="bottom" secondItem="q5k-tr-Sx8" secondAttribute="bottom" constant="23" id="H9J-At-94c"/>
+                                        <constraint firstItem="Yyl-cu-X6Q" firstAttribute="leading" secondItem="Y5E-QT-HrK" secondAttribute="trailing" constant="20" id="Ll4-On-6Tc"/>
+                                        <constraint firstAttribute="trailing" secondItem="Yyl-cu-X6Q" secondAttribute="trailing" constant="15" id="S1a-1K-zMO"/>
+                                        <constraint firstItem="y2a-BU-8V2" firstAttribute="leading" secondItem="eud-5z-hNB" secondAttribute="leading" constant="16" id="Vxt-y7-UJ4"/>
+                                        <constraint firstAttribute="bottom" secondItem="y2a-BU-8V2" secondAttribute="bottom" constant="21" id="dID-6u-WbA"/>
+                                        <constraint firstAttribute="bottom" secondItem="Yyl-cu-X6Q" secondAttribute="bottom" constant="15" id="eQU-e6-c4U"/>
+                                        <constraint firstItem="Yyl-cu-X6Q" firstAttribute="top" secondItem="eud-5z-hNB" secondAttribute="top" constant="15" id="gts-WX-3Xm"/>
+                                        <constraint firstItem="Yyl-cu-X6Q" firstAttribute="leading" secondItem="q5k-tr-Sx8" secondAttribute="trailing" constant="19" id="jpD-bl-ej6"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="locationLabel" destination="bx9-xm-YbN" id="whv-Dr-X4q"/>
-                                    <outlet property="thumbnailImageView" destination="ald-QL-PdU" id="ovL-9Z-6mw"/>
+                                    <outlet property="thumbnailImageView" destination="Yyl-cu-X6Q" id="Udn-yj-oJP"/>
                                     <outlet property="timestampLabel" destination="y2a-BU-8V2" id="I22-VZ-Nnr"/>
                                 </connections>
                             </tableViewCell>
@@ -72,14 +150,54 @@
                             <outlet property="delegate" destination="UzS-ES-twR" id="3cn-tv-CoB"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="ACTIVITY" id="n5s-Dd-GxH"/>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="n5s-Dd-GxH">
+                        <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" image="VybeLogo_Nav" id="8oV-BS-cDQ">
+                            <connections>
+                                <action selector="captureButtonPressed:" destination="UzS-ES-twR" id="Lea-gt-sHo"/>
+                            </connections>
+                        </barButtonItem>
+                        <view key="titleView" contentMode="scaleToFill" id="Rbi-gw-l9V">
+                            <rect key="frame" x="113" y="6" width="150" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="V Y B E_Title" translatesAutoresizingMaskIntoConstraints="NO" id="iS9-4Y-Bn6">
+                                    <rect key="frame" x="41" y="9" width="69" height="16"/>
+                                </imageView>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="centerX" secondItem="iS9-4Y-Bn6" secondAttribute="centerX" id="b7O-K3-rcW"/>
+                                <constraint firstAttribute="bottom" secondItem="iS9-4Y-Bn6" secondAttribute="bottom" constant="8" id="gtV-Dl-hTS"/>
+                            </constraints>
+                        </view>
+                        <barButtonItem key="rightBarButtonItem" image="Settings" id="OYf-ew-xqs">
+                            <color key="tintColor" red="0.78431372549019607" green="0.78431372549019607" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="settingsButtonPressed:" destination="UzS-ES-twR" id="phc-u1-k9W"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="usernameLabel" destination="SN9-et-K44" id="vJl-4F-OLo"/>
+                        <outlet property="vybeCountLabel" destination="Nmr-jg-AVc" id="nye-ia-MiZ"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="twK-2h-eJK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1756" y="2380"/>
+            <point key="canvasLocation" x="1756.5" y="2368.5"/>
         </scene>
     </scenes>
     <resources>
-        <image name="vybe_thumbnail_default" width="25" height="25"/>
+        <image name="AroundMe" width="13" height="13"/>
+        <image name="FEED-btn" width="50" height="50"/>
+        <image name="Flame-btn" width="11" height="16"/>
+        <image name="ListBar" width="375" height="85"/>
+        <image name="Oval_mask" width="55" height="55"/>
+        <image name="Settings" width="22" height="21"/>
+        <image name="V Y B E_Title" width="69" height="16"/>
+        <image name="VybeLogo_Nav" width="25" height="26"/>
+        <image name="eye" width="15" height="10"/>
     </resources>
+    <color key="tintColor" red="1" green="0.31936163649999999" blue="0.31620065790000002" alpha="1" colorSpace="calibratedRGB"/>
 </document>

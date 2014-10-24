@@ -20,11 +20,11 @@
 
 @interface VYBActivityTableViewController () <UIAlertViewDelegate>
 
-@property (nonatomic, strong) UIBarButtonItem *actionButton;
-@property (nonatomic, weak) PFObject *user;
+@property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *vybeCountLabel;
 
-- (void)setNavigationBarItems;
-- (void)captureButtonPressed:(id)sender;
+- (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
+- (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender;
 
 @end
 
@@ -45,14 +45,45 @@
 {
     [super viewDidLoad];
     
-    [self setNavigationBarItems];
-
+    self.usernameLabel.text = [PFUser currentUser].username;
+    
     // Remove empty cells.
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    [self getPermissionIfNeeded];
+
+    [VYBUtility updateLastRefreshForCurrentUser];
+}
+
+#pragma mark - UIView
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+#pragma mark - IBActions
+
+- (IBAction)captureButtonPressed:(UIBarButtonItem *)sender {
+    VYBAppDelegate *appDel = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDel moveToPage:VYBCapturePageIndex];
+}
+
+- (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Logout" otherButtonTitles:nil];
+    [actionSheet showFromBarButtonItem:sender animated:YES];
+}
+
+#pragma mark - Private
+
+- (void)getPermissionIfNeeded {
     
     // iOS8
     if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
@@ -64,7 +95,8 @@
         NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
         if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionUndeterminedKey] ) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Push Notification"
-                                                                                     message:@"We would like to notify when there are live happenings around you" preferredStyle:UIAlertControllerStyleAlert];
+                                                                                     message:@"We would like to notify when there are live happenings around you"
+                                                                              preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
                                                                    style:UIAlertActionStyleCancel handler:nil];
             UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
@@ -81,16 +113,6 @@
             [alertController addAction:okAction];
             
             [self presentViewController:alertController animated:NO completion:nil];
-            /*
-             else {
-             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Push Notification"
-             message:@"We would like to notify when there are live happenings around you"
-             delegate:self
-             cancelButtonTitle:@"Cancel"
-             otherButtonTitles:@"OK", nil];
-             [alertView show];
-             }
-             */
         }
         else if ([notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionDeniedKey]) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enable Notification"
@@ -103,120 +125,6 @@
             [self presentViewController:alertController animated:NO completion:nil];
         }
     }
-
-
-    [VYBUtility updateLastRefreshForCurrentUser];
-}
-
--(void)viewDidLayoutSubviews
-{
-    if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
-        [self.tableView setSeparatorInset:UIEdgeInsetsZero];
-    }
-    
-    if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
-        [self.tableView setLayoutMargins:UIEdgeInsetsZero];
-    }
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - Custom Accessors
-
-- (PFObject *)user {
-    if (!_user) {
-        _user = [PFUser currentUser];
-    }
-    return _user;
-}
-
-#pragma mark - Private
-
-- (void)setNavigationBarItems { 
-    UIBarButtonItem *captureButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_capture.png"] style:UIBarButtonItemStylePlain target:self action:@selector(captureButtonPressed:)];
-    self.navigationItem.leftBarButtonItem = captureButton;
-    
-    if ([[PFUser currentUser].objectId isEqualToString:self.user.objectId]) {
-        self.actionButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_settings.png"] style:UIBarButtonItemStylePlain target:self action:@selector(actionButtonPressed:)];
-        
-        self.navigationItem.rightBarButtonItem = self.actionButton;
-    }
-}
-
-- (void)captureButtonPressed:(id)sender {
-    VYBAppDelegate *appDel = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDel moveToPage:VYBCapturePageIndex];
-}
-
-#pragma mark - UIView
-
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-#pragma mark - UITableView
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
-    
-    VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
-    
-    cell.locationLabel.text = [[object[kVYBVybeLocationStringKey] componentsSeparatedByString:@","] objectAtIndex:0];
-    cell.timestampLabel.text = [VYBUtility localizedDateStringFrom:object[kVYBVybeTimestampKey]];
-    
-    cell.thumbnailImageView.file = object[kVYBVybeThumbnailKey];
-    [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
-        if (!error) {
-            cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:[UIImage imageNamed:@"thumbnail_mask"]];
-        }
-    }];
-    
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    PFObject *selectedVybe = [self.objects objectAtIndex:indexPath.row];
-    
-    VYBPlayerControlViewController *playerController = [[VYBPlayerControlViewController alloc] initWithNibName:@"VYBPlayerControlViewController" bundle:nil];
-    [playerController setVybePlaylist:@[selectedVybe]];
-    [self presentViewController:playerController animated:NO completion:^{
-        [playerController beginPlayingFrom:0];
-    }];
-}
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
-        [cell setSeparatorInset:UIEdgeInsetsZero];
-    }
-    
-    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
-        [cell setLayoutMargins:UIEdgeInsetsZero];
-    }
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [self.objects count];
-}
-
-#pragma mark - PFQueryTableView
-
-- (PFQuery *)queryForTable {
-    assert(self.user != nil);
-    
-    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-    [query whereKey:kVYBVybeUserKey equalTo:self.user];
-    [query orderByDescending:kVYBVybeTimestampKey];
-    
-    return query;
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -230,64 +138,67 @@
     }
 }
 
-#pragma mark - UIActionSheetDelegate
+#pragma mark - PFQueryTableView
 
-- (void)actionButtonPressed:(id)sender {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Cancel"
-                                               destructiveButtonTitle:@"Logout"
-                                                    otherButtonTitles:@"Choose a profile photo", nil];
-    [actionSheet showFromBarButtonItem:self.actionButton animated:YES];
+- (PFQuery *)queryForTable {
+    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+    [query whereKey:kVYBVybeUserKey equalTo:[PFUser currentUser]];
+    [query orderByDescending:kVYBVybeTimestampKey];
+    
+    return query;
 }
+
+#pragma mark UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    PFObject *selectedVybe = [self.objects objectAtIndex:indexPath.row];
+    
+    VYBPlayerControlViewController *playerController = [[VYBPlayerControlViewController alloc] initWithNibName:@"VYBPlayerControlViewController" bundle:nil];
+    playerController.vybePlaylist = @[selectedVybe];
+    
+    [self presentViewController:playerController animated:NO completion:nil];
+}
+
+#pragma mark UITableViewDataSource
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
+    
+    VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
+    
+    cell.locationLabel.text = [[object[kVYBVybeLocationStringKey] componentsSeparatedByString:@","] objectAtIndex:0];
+    cell.timestampLabel.text = [VYBUtility reverseTime:object[kVYBVybeTimestampKey]];
+    
+    cell.thumbnailImageView.file = object[kVYBVybeThumbnailKey];
+    [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
+        if (!error) {
+            cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:[UIImage imageNamed:@"ThumbnailMask"]];
+        }
+    }];
+    
+    return cell;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    self.vybeCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.objects.count];
+    return self.objects.count;
+}
+
+#pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     switch (buttonIndex) {
-        case 1:
-            [self chooseProfilePhoto];
-            break;
         case 0:
             NSLog(@"Logging out");
             [(VYBAppDelegate *)[UIApplication sharedApplication].delegate logOut];
             break;
     }
-}
-
-#pragma mark - UIImagePickerControllerDelegate
-
-- (void)chooseProfilePhoto {
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.delegate = self;
-    picker.allowsEditing = YES;
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    
-    [self presentViewController:picker animated:YES completion:NULL];
-}
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
-    NSData *data = UIImagePNGRepresentation(chosenImage);
-    PFFile *thumbnailFile = [PFFile fileWithData:data];
-    [thumbnailFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (!error) {
-            [[PFUser currentUser] setObject:thumbnailFile forKey:kVYBUserProfilePicMediumKey];
-            [[PFUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (!error) {
-                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Success"];
-                } else {
-                    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_x.png"] title:@"Failed"];
-                }
-            }];
-        } else {
-            [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_x.png"] title:@"Failed"];
-        }
-    }];
-    [picker dismissViewControllerAnimated:YES completion:NULL];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [picker dismissViewControllerAnimated:YES completion:NULL];
 }
 
 @end
