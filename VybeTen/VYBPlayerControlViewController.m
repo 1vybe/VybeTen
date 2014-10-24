@@ -126,8 +126,6 @@
     
     [self setNeedsStatusBarAppearanceUpdate];
     
-    self.vybePlaylist = [[VYBCache sharedCache] freshVybes];
-    
     if (self.vybePlaylist && ([self.vybePlaylist count] > 0)) {
         [self beginPlayingFrom:0];
     }
@@ -143,6 +141,14 @@
     }
 }
 
+#pragma mark - Custom Accessors
+
+- (NSArray *)vybePlaylist {
+    if (!_vybePlaylist) {
+       _vybePlaylist = [[VYBCache sharedCache] freshVybes];
+    }
+    return _vybePlaylist;
+}
 
 #pragma mark - Behind the scene
 
