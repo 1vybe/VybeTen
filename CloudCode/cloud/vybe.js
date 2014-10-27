@@ -5,15 +5,12 @@ var Vybe = Parse.Object.extend('Vybe');
 
 // Validate Vybes have a valid owner in the "user" pointer.
 Parse.Cloud.beforeSave('Vybe', function(request, response) {
-  var currentUser = request.user;
   var objectUser = request.object.get('user');
 
-  if(!currentUser || !objectUser) {
+  if(!objectUser) {
     response.error('A Vybe should have a valid user.');
-  } else if (currentUser.id === objectUser.id) {
-    response.success();
   } else {
-    response.error('Cannot set user on Vybe to a user other than the current user.');
+    response.success();
   }
 });
 
@@ -176,7 +173,7 @@ Parse.Cloud.define('get_nearby_vybes',
   })
 );
 
-Parse.Cloud.define('get_nearby_count', 
+Parse.Cloud.define('get_nearby_count',
   get_nearby_vybes.bind(this, {
     recent: true,
     radius: 0.01,
@@ -424,7 +421,7 @@ function get_nearby_vybes(options, request, response) {
     success: function(vybeObj) {
       console.log('vybe from ' + vybeObj.get('locationString'));
       query.withinKilometers('location', vybeObj.get('location'), radius);
-      
+
       if (count_only) {
          query.count({
           success: function(nearbyCount) {
