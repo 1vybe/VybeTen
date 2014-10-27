@@ -361,8 +361,6 @@
 				0266802419F15BAF00030836 /* Player */,
 				0254E92119BB8A78003A99DE /* Registration */,
 				0254E92219BB8A9B003A99DE /* Capture */,
-				0299EC81199A9254004E97CF /* VYBHubViewController.h */,
-				0299EC82199A9254004E97CF /* VYBHubViewController.m */,
 				027C708019AF08C6007BB8FE /* Container */,
 				88FF430319AFFCEB00D18872 /* VYBActivityTableViewController.h */,
 				88FF430419AFFCEB00D18872 /* VYBActivityTableViewController.m */,
@@ -678,7 +676,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6035496218C88B11003F5D3E /* VYBPlayerViewController.m in Sources */,
 				020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */,
 				025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */,
 				88FF430519AFFCEB00D18872 /* VYBActivityTableViewController.m in Sources */,
