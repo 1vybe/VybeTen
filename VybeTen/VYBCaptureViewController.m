@@ -31,12 +31,10 @@
 
 @property (nonatomic, weak) IBOutlet UIButton *flipButton;
 @property (nonatomic, weak) IBOutlet UIButton *flashButton;
-@property (nonatomic, weak) IBOutlet UIButton *hubButton;
 @property (nonatomic, weak) IBOutlet UIButton *activityButton;
 @property (nonatomic, weak) IBOutlet VYBCameraView *cameraView;
 @property (nonatomic, weak) IBOutlet VYBCaptureButton *recordButton;
 
-- (IBAction)hubButtonPressed:(id)sender;
 - (IBAction)activityButtonPressed:(id)sender;
 - (IBAction)flipButtonPressed:(id)sender;
 - (IBAction)flashButtonPressed:(id)sender;
@@ -48,7 +46,7 @@
 
 @implementation VYBCaptureViewController {
     NSDate *startTime;
-    NSTimer *recordingTimer;
+    NSTimer *_timeBomb;
     CMTime lastSampleTime;
     
     BOOL _flashOn;
@@ -122,8 +120,9 @@
     
     [super viewDidLoad];
     
-    UITapGestureRecognizer *tapOnRecord = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(recordButtonPressed:)];
-    [self.recordButton addGestureRecognizer:tapOnRecord];
+    UILongPressGestureRecognizer *holdGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(holdGestureReceived:)];
+    holdGesture.minimumPressDuration = 0.3;
+    [self.recordButton addGestureRecognizer:holdGesture];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -158,30 +157,38 @@
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
-- (void)recordButtonPressed:(id)sender {
-    if (!_isRecording) {
-        [UIApplication sharedApplication].idleTimerDisabled = YES;
-        
-        if ( [[UIDevice currentDevice] isMultitaskingSupported] )
-            _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
-        
-        [[VYBMyVybeStore sharedStore] prepareNewVybe];
-        
-        [recordButton setUserInteractionEnabled:NO];
-        [recordButton didStartRecording];
-        
-        [capturePipeline setRecordingOrientation:_captureOrientation];
-        [capturePipeline startRecording];
-        _isRecording = YES;
-        [self syncUIWithRecordingStatus];
-    } else {
-        [recordButton setUserInteractionEnabled:NO];
-        [capturePipeline stopRecording];
+- (void)holdGestureReceived:(UIGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        if (!_isRecording) {
+            [UIApplication sharedApplication].idleTimerDisabled = YES;
+            
+            if ( [[UIDevice currentDevice] isMultitaskingSupported] )
+                _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
+            
+            [[VYBMyVybeStore sharedStore] prepareNewVybe];
+            
+            [recordButton setUserInteractionEnabled:NO];
+            
+            [recordButton didStartRecording];
+            
+            [capturePipeline setRecordingOrientation:_captureOrientation];
+            [capturePipeline startRecording];
+            _isRecording = YES;
+            [self syncUIWithRecordingStatus];
+        }
+    }
+    else if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled) {
+        if (_isRecording) {
+            [recordButton setUserInteractionEnabled:NO];
+            [_timeBomb invalidate];
+            [capturePipeline stopRecording];
+        }
     }
 }
 
 - (void)recordingStopped {
     _isRecording = NO;
+    [recordButton didStopRecording];
     [self syncUIWithRecordingStatus];
     [recordButton setUserInteractionEnabled:YES];
 
@@ -206,7 +213,7 @@
 
 - (void)capturePipelineRecordingDidStart:(VYBCapturePipeline *)pipeline {
     [recordButton setUserInteractionEnabled:YES];
-    [NSTimer scheduledTimerWithTimeInterval:VYBE_LENGTH_SEC target:self selector:@selector(timer:) userInfo:nil repeats:NO];
+    _timeBomb = [NSTimer scheduledTimerWithTimeInterval:VYBE_LENGTH_SEC target:self selector:@selector(timer:) userInfo:nil repeats:NO];
 }
 
 - (void)capturePipelineRecordingWillStop:(VYBCapturePipeline *)pipeline {
@@ -231,7 +238,6 @@
     [[self flipButton] setEnabled:NO];
     [[self flashButton] setEnabled:NO];
     [[self activityButton] setEnabled:NO];
-    [[self hubButton] setEnabled:NO];
     
     [capturePipeline flipCameraWithCompletion:^(AVCaptureDevicePosition cameraPosition){
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -241,7 +247,6 @@
             [[self flashButton] setEnabled:YES];
             [[self flashButton] setHidden:_isFrontCamera];
             [[self activityButton] setEnabled:YES];
-            [[self hubButton] setEnabled:YES];
         });
     }];
 }
@@ -262,6 +267,7 @@
 - (void)timer:(NSTimer *)timer {
     if (_isRecording) {
         [recordButton setUserInteractionEnabled:NO];
+        _timeBomb = nil;
         [capturePipeline stopRecording];
     }
 }
@@ -311,7 +317,6 @@
     [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         [self.flipButton setTransform:transform];
         [self.flashButton setTransform:transform];
-        [self.hubButton setTransform:transform];
         [self.activityButton setTransform:transform];
         [recordButton setTransform:transform];
     } completion:nil];
@@ -342,12 +347,7 @@
 }
 
 - (void)freshVybeCountChanged {
-    NSInteger count = [[[VYBCache sharedCache] freshVybes] count];
-    self.hubButton.selected = !count;
-    if (count)
-        [self.hubButton setTitle:[NSString stringWithFormat:@"%ld", (long)count] forState:UIControlStateNormal];
-    else
-        [self.hubButton setTitle:@"" forState:UIControlStateNormal];
+
 
 }
 
@@ -362,9 +362,9 @@
 
 #pragma mark - ()
 
+
 - (void)syncUIWithRecordingStatus {
     self.activityButton.hidden = _isRecording;
-    self.hubButton.hidden = _isRecording;
     flipButton.hidden = _isRecording;
     flashButton.hidden = _isRecording || _isFrontCamera;
 }
