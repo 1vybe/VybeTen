@@ -22,4 +22,4 @@ SPEC CHECKSUMS:
   MotionOrientation@PTEz: ec58ced639faa14d30e63db9ef5cba8ded38b3b5
   Parse: fc9ceb6edbc6bb6a1a1f3c33f0db3293a6894f94
 
-COCOAPODS: 0.34.1
+COCOAPODS: 0.34.4
