@@ -39,8 +39,10 @@
     self.playerView = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBMyVybeStoreLocationFetchedNotification object:nil];
+    /*
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    */
 }
 
 - (void)viewDidLoad
@@ -55,13 +57,10 @@
         
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationFetched:) name:VYBMyVybeStoreLocationFetchedNotification object:nil];
     
-    // Register for keyboard notification
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    
     UIFont *theFont = [UIFont fontWithName:@"Helvetica Neue" size:15.0];
     NSDictionary *stringAttributes = @{ NSForegroundColorAttributeName : [UIColor colorWithRed:72.0/255.0 green:72.0/255.0 blue:72.0/255.0 alpha:1.0],
                                         NSFontAttributeName : theFont};
+    [self.tagTextField setEnabled:NO];
     self.tagTextField.delegate = self;
     self.tagTextField.clearsOnBeginEditing = YES;
     self.tagTextField.clearsOnInsertion = NO;
@@ -72,9 +71,15 @@
     tapToAccep.numberOfTapsRequired = 1;
     [self.acceptButton addGestureRecognizer:tapToAccep];
     
+    /*
+    // Register for keyboard notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+
     UITapGestureRecognizer *tapToDismissKeyboard = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTouchedToDismissKeyboard)];
     tapToDismissKeyboard.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapToDismissKeyboard];
+    */
 }
 
 - (void)viewDidAppear:(BOOL)animated {
