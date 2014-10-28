@@ -43,16 +43,16 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rNG-mo-RpY" userLabel="activityButton">
-                    <rect key="frame" x="415" y="20" width="45" height="45"/>
+                    <rect key="frame" x="420" y="20" width="40" height="40"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="45" id="G58-BE-F2i"/>
-                        <constraint firstAttribute="height" constant="45" id="J1v-IO-I9w"/>
+                        <constraint firstAttribute="width" constant="40" id="G58-BE-F2i"/>
+                        <constraint firstAttribute="height" constant="40" id="J1v-IO-I9w"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="13"/>
-                    <state key="normal" image="button_activity_empty">
+                    <state key="normal" image="capture_flame_off">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="button_activity_empty"/>
+                    <state key="selected" image="capture_flame_on"/>
                     <connections>
                         <action selector="activityButtonPressed:" destination="-1" eventType="touchUpInside" id="Q7F-jd-feC"/>
                     </connections>
@@ -106,9 +106,10 @@
         </view>
     </objects>
     <resources>
-        <image name="button_activity_empty" width="26" height="26"/>
         <image name="button_flash_off" width="17" height="23"/>
         <image name="button_flash_on" width="11" height="23"/>
         <image name="button_flip_camera_on" width="23" height="23"/>
+        <image name="capture_flame_off" width="46" height="46"/>
+        <image name="capture_flame_on" width="45" height="44"/>
     </resources>
 </document>

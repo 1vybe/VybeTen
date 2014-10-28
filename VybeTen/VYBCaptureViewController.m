@@ -331,13 +331,12 @@
 #pragma mark - NSNotifications
 
 - (void)remoteNotificationReceived:(id)sender {
-    [VYBUtility getNewActivityCountWithCompletion:nil];
 }
 
 - (void)applicationDidBecomeActiveNotificationReceived:(id)sender {    
     // Refresh fetch of feed and activity count when app is brought to foreground
     [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
-    [VYBUtility getNewActivityCountWithCompletion:nil];
+    //[VYBUtility getNewActivityCountWithCompletion:nil];
 }
 
 - (void)applicationDidEnterBackgroundNotificationReceived:(id)sender {
@@ -347,17 +346,13 @@
 }
 
 - (void)freshVybeCountChanged {
-
-
+    NSInteger count = [[VYBCache sharedCache] freshVybes].count;
+    
+    self.activityButton.selected = !count;
 }
 
 - (void)activityCountChanged {
-    NSInteger count = [[VYBCache sharedCache] activityCount];
-    self.activityButton.selected = !count;
-    if (count)
-        [self.activityButton setTitle:[NSString stringWithFormat:@"%ld", (long)count] forState:UIControlStateNormal];
-    else
-        [self.activityButton setTitle:@"" forState:UIControlStateNormal];
+
 }
 
 #pragma mark - ()

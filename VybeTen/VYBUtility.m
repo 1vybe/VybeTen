@@ -230,6 +230,7 @@
 }
 
 #pragma mark - Feed
+// completion block is now always nil because it's using notification pattern to communicate.
 + (void)fetchFreshVybeFeedWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock {
     if (![PFUser currentUser]) {
         return;
