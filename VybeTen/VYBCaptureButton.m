@@ -7,21 +7,26 @@
 //
 
 #import "VYBCaptureButton.h"
+#import "VYBPizzaLayer.h"
+
 @interface VYBCaptureButton ()
 @property (nonatomic) IBInspectable CGFloat radius;
 @property (nonatomic) IBInspectable CGFloat borderLineWidth;
 @end
 
-const CGFloat _iRadius = 42.5f;
-const CGFloat _iLineWidth = 4.0f;
+const CGFloat _fRadius = 40.0f;
+const CGFloat _fStrokeWidth = 4.0f;
+const CGFloat _fBlackStrokeWidth = 1.0f;
 
 @implementation VYBCaptureButton {
     NSTimer *_timer;
-    BOOL _isRecording;
     
     CAShapeLayer *_backgroundLayer;
-    CAShapeLayer *_redBorderLayer;
+    VYBPizzaLayer *_redBorderLayer;
+    CAShapeLayer *_blackBorderLayer;
     CALayer *_foregroundLayer;
+    
+    CABasicAnimation *_bigger;
     
     CGFloat _fgWidth;
     CGFloat _fgHeight;
@@ -49,69 +54,110 @@ const CGFloat _iLineWidth = 4.0f;
     [self setOpaque:NO];
     
     _backgroundLayer = [CAShapeLayer layer];
+    _redBorderLayer = [VYBPizzaLayer layer];
+    _blackBorderLayer = [CAShapeLayer layer];
     _foregroundLayer = [CALayer layer];
-    _redBorderLayer = [CAShapeLayer layer];
+
     
     [self.layer addSublayer:_backgroundLayer];
-    [self.layer addSublayer:_foregroundLayer];
     [self.layer addSublayer:_redBorderLayer];
+    [self.layer addSublayer:_blackBorderLayer];
+    [self.layer addSublayer:_foregroundLayer];
 }
 
 - (void)layoutSubviews {
     _backgroundLayer.frame = self.bounds;
-    _backgroundLayer.path = [self circleWithRadius:_radius];
+    _backgroundLayer.path = [self circleWithRadius:_fRadius];
     _backgroundLayer.fillColor = [UIColor colorWithWhite:0.5 alpha:0.5].CGColor;
     _backgroundLayer.strokeColor = [UIColor whiteColor].CGColor;
-    _backgroundLayer.lineWidth = _borderLineWidth;
+    _backgroundLayer.lineWidth = _fStrokeWidth;
     
-    _redBorderLayer.strokeColor = [UIColor redColor].CGColor;
+    _redBorderLayer.frame = self.bounds;
+    _redBorderLayer.startAngle = -M_PI_2;
+    _redBorderLayer.endAngle = _redBorderLayer.startAngle;
+    _redBorderLayer.radius = _fRadius;
+    _redBorderLayer.strokeColor = [UIColor redColor];
+    _redBorderLayer.strokeWidth = _fStrokeWidth;
+    _redBorderLayer.fillColor = [UIColor clearColor];
+    _redBorderLayer.rasterizationScale = [UIScreen mainScreen].scale;
+    _redBorderLayer.shouldRasterize = YES;
+    
+    _blackBorderLayer.frame = self.bounds;
+    _blackBorderLayer.path = [self circleWithRadius:_fRadius + _fStrokeWidth/2.0 + _fBlackStrokeWidth/2.0];
+    _blackBorderLayer.fillColor = [UIColor clearColor].CGColor;
+    _blackBorderLayer.strokeColor = [UIColor blackColor].CGColor;
+    _blackBorderLayer.lineWidth = _fBlackStrokeWidth;
     
     _fgWidth = 50.0f;
     _fgHeight = 50.0f;
     _foregroundLayer.frame = CGRectInset(self.bounds, (self.bounds.size.width - _fgWidth)/2.0, (self.bounds.size.height - _fgHeight)/2.0);
     _foregroundLayer.contentsGravity = kCAGravityResizeAspect;
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    _foregroundLayer.contents = (id)[UIImage imageNamed:@"capture_record_flyingV.png" inBundle:bundle compatibleWithTraitCollection:self.traitCollection].CGImage;
+    _foregroundLayer.contents = (id)[self getContentsWithNamed:@"capture_record_flyingV.png"];
 }
 
 
 - (void)didStartRecording {
-    _isRecording = YES;
     
-    const CGFloat bigRadius = 47.5;
+    const CGFloat bigRadius = 47;
     const CGFloat thickLineWidth = 6.0f;
     
-    [CATransaction begin];
-    [CATransaction setCompletionBlock:^{
-        // CAShapeLayer's path needs to be set after animation is completed because CABasicAnimation does not actually change the properties of presented layer.
-        //_backgroundLayer.path = [self circleWithRadius:bigRadius];
-        
-    }];
-    [CATransaction setValue:[NSNumber numberWithFloat:3.0f] forKey:kCATransactionAnimationDuration];
-    CABasicAnimation *bigger = [CABasicAnimation animationWithKeyPath:@"path"];
-    bigger.removedOnCompletion = NO;
-    bigger.fromValue = (id)[self circleWithRadius:_iRadius];
-    bigger.toValue = (id)[self circleWithRadius:bigRadius];
-    [_backgroundLayer addAnimation:bigger forKey:bigger.keyPath];
 
+    [CATransaction begin];                                  // red circle animation
+    [CATransaction setValue:[NSNumber numberWithFloat:15.0f] forKey:kCATransactionAnimationDuration];
+    //CABasicAnimation *redArc = [CABasicAnimation animationWithKeyPath:@"path"];
+    //redArc.fillMode = kCAFillModeForwards;
+    //redArc.toValue = (id)[self arcWithRadius:_oRadius percentage:1.0];
+    //_redBorderLayer.lineWidth = thickLineWidth;
+    _redBorderLayer.endAngle = 3 * M_PI_2;
+    
+    [CATransaction begin];              // growing animation
+    [CATransaction setValue:[NSNumber numberWithFloat:2.0f] forKey:kCATransactionAnimationDuration];
+    CABasicAnimation *bgGrowing = [CABasicAnimation animationWithKeyPath:@"path"];
+    // animation effect does not reverse
+    bgGrowing.fillMode = kCAFillModeForwards;
+    // animation layer is not removed
+    bgGrowing.removedOnCompletion = NO;
+    bgGrowing.toValue = (id)[self circleWithRadius:bigRadius];
+    [_backgroundLayer addAnimation:bgGrowing forKey:bgGrowing.keyPath];
     _backgroundLayer.lineWidth = thickLineWidth;
-    [CATransaction commit];
+    
+    // give a slightly more weight on red stroke
+    _redBorderLayer.strokeWidth = thickLineWidth + 0.5;
+    _redBorderLayer.radius = bigRadius;
+    
+    CABasicAnimation *borderGrowing = [CABasicAnimation animationWithKeyPath:@"path"];
+    // animation effect does not reverse
+    borderGrowing.fillMode = kCAFillModeForwards;
+    // animation layer is not removed
+    borderGrowing.removedOnCompletion = NO;
+    borderGrowing.toValue = (id)[self circleWithRadius:bigRadius + thickLineWidth/2.0 + _fBlackStrokeWidth/2.0];
+    [_blackBorderLayer addAnimation:borderGrowing forKey:borderGrowing.keyPath];
+    
+    [CATransaction begin]; // sun animation
+    [CATransaction setValue:[NSNumber numberWithFloat:0.5f] forKey:kCATransactionAnimationDuration];
+    _foregroundLayer.contents = (id)[self getContentsWithNamed:@"capture_record_sun.png"];
+    [CATransaction commit]; // sun animation
+    
+    [CATransaction commit];             // growing animation
+    
+    [CATransaction commit];                                 // red circle animation
 }
 
 - (void)didStopRecording {
-    _isRecording = NO;
     
-    [CATransaction begin];
-    [CATransaction setCompletionBlock:^{
-        _backgroundLayer.path = [self circleWithRadius:_iRadius];
-    }];
-    [CATransaction setValue:[NSNumber numberWithFloat:2.0f] forKey:kCATransactionAnimationDuration];
-    CABasicAnimation *bigger = [CABasicAnimation animationWithKeyPath:@"path"];
-    bigger.toValue = (id)[self circleWithRadius:_iRadius];
-    [_backgroundLayer addAnimation:bigger forKey:bigger.keyPath];
-
-    _backgroundLayer.lineWidth = _iLineWidth;
-    [CATransaction commit];
+    // Remove growing animation
+    [_backgroundLayer removeAllAnimations];
+    _backgroundLayer.path = [self circleWithRadius:_fRadius];
+    _backgroundLayer.lineWidth = _fStrokeWidth;
+    
+    _redBorderLayer.endAngle = _redBorderLayer.startAngle;
+    _redBorderLayer.strokeWidth = _fStrokeWidth;
+    _redBorderLayer.radius = _fRadius;
+    
+    [_blackBorderLayer removeAllAnimations];
+    _blackBorderLayer.path = [self circleWithRadius:_fRadius + _fStrokeWidth/2 + _fBlackStrokeWidth/2];
+    
+    _foregroundLayer.contents = (id)[self getContentsWithNamed:@"capture_record_flyingV.png"];
 }
 
 - (CGPathRef)circleWithRadius:(CGFloat)radius {
@@ -120,74 +166,10 @@ const CGFloat _iLineWidth = 4.0f;
     return circlePath.CGPath;
 }
 
-#pragma mark - CABasicAnimationDelegate
-
-
-
-
-
-
-
-
-/*
-- (void)drawRect:(CGRect)rect
-{
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextClearRect(ctx, rect);
-
-    // Draw white transparent inncer circle
-    CGRect inncerCircle = CGRectMake(rect.size.width/2 - _radius, rect.size.height/2 - _radius, _radius * 2, _radius * 2);
-    CGContextAddEllipseInRect(ctx, inncerCircle);
-    CGContextSetFillColorWithColor(ctx, [UIColor colorWithWhite:1.0 alpha:0.5].CGColor);
-    CGContextDrawPath(ctx, kCGPathFill);
-    
-    CGMutablePathRef arc = CGPathCreateMutable();
-    CGPathMoveToPoint(arc, NULL, rect.size.width / 2, rect.size.height/2 - _radius + _borderLineWidth/2);
-    CGPathAddArc(arc, NULL, rect.size.width / 2, rect.size.height / 2, _radius - _borderLineWidth/2, -M_PI_2, 3 * M_PI_2, NO);
-    CGPathRef strokedArc = CGPathCreateCopyByStrokingPath(arc, NULL, _borderLineWidth, kCGLineCapButt, kCGLineJoinMiter, 10);
-    CGContextSetFillColorWithColor(ctx, [UIColor whiteColor].CGColor);
-    CGContextAddPath(ctx, strokedArc);
-    CGContextDrawPath(ctx, kCGPathFill);
-
-    
+- (CGImageRef)getContentsWithNamed:(NSString *)imgName {
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    if (_isRecording) {
-        UIImage *foregroundImage = [UIImage imageNamed:@"capture_record_sun.png" inBundle:bundle compatibleWithTraitCollection:self.traitCollection];
-        CGRect foregroundBox = CGRectMake((rect.size.width - foregroundImage.size.width)/2.0, (rect.size.height - foregroundImage.size.height)/2.0, foregroundImage.size.width, foregroundImage.size.height);
-        [foregroundImage drawInRect:foregroundBox];
-        
-    } else {
-        UIImage *foregroundImage = [UIImage imageNamed:@"capture_record_flyingV.png" inBundle:bundle compatibleWithTraitCollection:self.traitCollection];
-        CGRect foregroundBox = CGRectMake((rect.size.width - foregroundImage.size.width)/2.0, (rect.size.height - foregroundImage.size.height)/2.0, foregroundImage.size.width, foregroundImage.size.height);
-        [foregroundImage drawInRect:foregroundBox];
-    }
-    
-    
-    
-    
-    // black transparent outter arc
-     
-    // orange arc for minimum
-    arc = CGPathCreateMutable();
-    CGPathMoveToPoint(arc, NULL, rect.size.width / 2, rect.size.height / 2 - smallRadius - thinLineWidth/2);
-    CGPathAddArc(arc, NULL, rect.size.width / 2, rect.size.height / 2, smallRadius + thinLineWidth/2, 3 * M_PI_2, 3 * M_PI_2 - self.minPercentage * 4 * M_PI_2, YES);
-    strokedArc = CGPathCreateCopyByStrokingPath(arc, NULL, thinLineWidth, kCGLineCapButt, kCGLineJoinMiter, 10);
-    CGContextAddPath(ctx, strokedArc);
-    CGContextSetFillColorWithColor(ctx, [UIColor colorWithRed:243.0/255.0 green:122.0/255.0 blue:32.0/255.0 alpha:0.9].CGColor);
-    CGContextDrawPath(ctx, kCGPathFill);
-        
-    if (self.passedMin) {
-        // green arc for maximum
-        arc = CGPathCreateMutable();
-        CGPathMoveToPoint(arc, NULL, rect.size.width / 2, rect.size.height / 2 - smallRadius - thickLineWidth/2);
-        CGPathAddArc(arc, NULL, rect.size.width / 2, rect.size.height / 2,
-                     smallRadius + thickLineWidth/2, -M_PI_2, -M_PI_2 + M_PI_2 * self.maxPercentage * 4, NO);
-        strokedArc = CGPathCreateCopyByStrokingPath(arc, NULL, thickLineWidth, kCGLineCapButt, kCGLineJoinMiter, 10);
-        CGContextAddPath(ctx, strokedArc);
-        CGContextSetFillColorWithColor(ctx, [UIColor colorWithRed:105.0/255.0 green:188.0/255.0 blue:69.0/255.0 alpha:0.9].CGColor);
-        CGContextDrawPath(ctx, kCGPathFill);
-    }
+    return [UIImage imageNamed:imgName inBundle:bundle compatibleWithTraitCollection:self.traitCollection].CGImage;
+
 }
-*/
 
 @end
