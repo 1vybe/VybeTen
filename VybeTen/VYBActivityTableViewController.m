@@ -185,7 +185,11 @@
     cell.thumbnailImageView.file = object[kVYBVybeThumbnailKey];
     [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
-            cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:[UIImage imageNamed:@"ThumbnailMask"]];
+            if (image) {
+                cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:[UIImage imageNamed:@"ThumbnailMask"]];
+            } else {
+                cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
+            }
         }
     }];
     
