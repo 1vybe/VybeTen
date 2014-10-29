@@ -140,8 +140,10 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="locationLabel" destination="bx9-xm-YbN" id="whv-Dr-X4q"/>
+                                    <outlet property="nearbyCountLabel" destination="D0Z-j3-0mz" id="lcg-5B-pnD"/>
                                     <outlet property="thumbnailImageView" destination="Yyl-cu-X6Q" id="Udn-yj-oJP"/>
                                     <outlet property="timestampLabel" destination="y2a-BU-8V2" id="I22-VZ-Nnr"/>
+                                    <outlet property="viewCountLabel" destination="LZd-Ju-ZaA" id="6Nt-4B-rzK"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LoadMoreCell" id="3yu-7n-tnX">
