@@ -46,9 +46,8 @@
 
 
 typedef enum {
-    VYBHubPageIndex = 0,
-    VYBCapturePageIndex = 1,
-    VYBActivityPageIndex = 2
+    VYBCapturePageIndex = 0,
+    VYBActivityPageIndex = 1
 } VYBPageControllerIndex;
 
 #pragma mark - NSNotification

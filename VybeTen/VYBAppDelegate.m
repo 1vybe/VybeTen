@@ -37,7 +37,6 @@
 @property (nonatomic, strong) VYBPageViewController *pageController;
 @property (nonatomic, strong) VYBNavigationController *activityNavigationVC;
 @property (nonatomic, strong) VYBCaptureViewController *captureVC;
-@property (nonatomic) VYBPlayerControlViewController *playerController;
 @property (nonatomic, strong) VYBActivityTableViewController *activityVC;
 @property (nonatomic, strong) VYBWelcomeViewController *welcomeViewController;
 
@@ -317,9 +316,6 @@
 }
 
 - (void)setUpViewControllers {
-    // PlayerController (page 0)
-    self.playerController = [[VYBPlayerControlViewController alloc] initWithPageIndex:VYBHubPageIndex];
-    
     // Capture (page 1)
     self.captureVC = [[VYBCaptureViewController alloc] initWithPageIndex:VYBCapturePageIndex];
     
@@ -328,7 +324,7 @@
     self.activityNavigationVC.pageIndex = VYBActivityPageIndex;
     
     // Page view controller
-    self.viewControllers = [[NSArray alloc] initWithObjects:self.playerController, self.captureVC, self.activityNavigationVC, nil];
+    self.viewControllers = [[NSArray alloc] initWithObjects:self.captureVC, self.activityNavigationVC, nil];
     self.pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
                                                                navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
                                                                              options:nil];
@@ -365,7 +361,6 @@
     [self.mainNavController popToRootViewControllerAnimated:NO];
     
     self.captureVC = nil;
-    self.playerController = nil;
     self.activityVC = nil;
     self.activityNavigationVC = nil;
     self.viewControllers = nil;

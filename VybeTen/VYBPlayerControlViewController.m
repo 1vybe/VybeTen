@@ -73,9 +73,6 @@
 - (id)initWithPageIndex:(NSInteger)pageIndex {
     self = [super init];
     if (self) {
-        if (pageIndex != VYBHubPageIndex)
-            return nil;
-        
         _pageIndex = pageIndex;
     }
     return self;

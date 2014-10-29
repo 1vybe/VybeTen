@@ -59,6 +59,9 @@
                                     <state key="normal" image="FEED-btn">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
+                                    <connections>
+                                        <segue destination="4nv-U8-Nbd" kind="presentation" id="I9R-10-ozi"/>
+                                    </connections>
                                 </button>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -208,7 +211,15 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="twK-2h-eJK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1756.5" y="2368.5"/>
+            <point key="canvasLocation" x="1749.5" y="2374.5"/>
+        </scene>
+        <!--Player Control View Controller-->
+        <scene sceneID="lgC-vi-hZJ">
+            <objects>
+                <viewController id="4nv-U8-Nbd" customClass="VYBPlayerControlViewController" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cWG-q1-XSt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2243.5" y="2374.5"/>
         </scene>
     </scenes>
     <resources>

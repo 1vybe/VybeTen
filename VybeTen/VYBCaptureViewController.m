@@ -375,11 +375,6 @@
     [appDel moveToPage:VYBActivityPageIndex];
 }
 
-- (IBAction)hubButtonPressed:(id)sender {
-    VYBAppDelegate *appDel = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDel moveToPage:VYBHubPageIndex];
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
