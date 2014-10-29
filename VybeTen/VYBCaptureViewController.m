@@ -16,6 +16,7 @@
 #import "VYBCaptureViewController.h"
 #import "VYBReplayViewController.h"
 #import "VYBCaptureButton.h"
+#import "VYBActiveButton.h"
 #import "VYBCameraView.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
@@ -31,7 +32,7 @@
 
 @property (nonatomic, weak) IBOutlet UIButton *flipButton;
 @property (nonatomic, weak) IBOutlet UIButton *flashButton;
-@property (nonatomic, weak) IBOutlet UIButton *activityButton;
+@property (nonatomic, weak) IBOutlet VYBActiveButton *activityButton;
 @property (nonatomic, weak) IBOutlet VYBCameraView *cameraView;
 @property (nonatomic, weak) IBOutlet VYBCaptureButton *recordButton;
 
@@ -119,6 +120,13 @@
     [capturePipeline setDelegate:self callbackQueue:dispatch_get_main_queue()];
     
     [super viewDidLoad];
+    
+    // set images for two different states for our custom button
+    [self.activityButton setNormalImage:[UIImage imageNamed:@"capture_flame_off.png"]
+                         highlightImage:[UIImage imageNamed:@"capture_flame_off_highlight.png"]];
+    [self.activityButton setActiveImage:[UIImage imageNamed:@"capture_flame_on.png"]
+                         highlightImage:[UIImage imageNamed:@"capture_flame_on_highlight.png"]];
+    [self.activityButton setActive:NO];
     
     UILongPressGestureRecognizer *holdGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(holdGestureReceived:)];
     holdGesture.minimumPressDuration = 0.3;
@@ -259,8 +267,6 @@
 }
 
 
-
-
 #pragma mark - UIResponder
 
 
@@ -348,7 +354,7 @@
 - (void)freshVybeCountChanged {
     NSInteger count = [[VYBCache sharedCache] freshVybes].count;
     
-    self.activityButton.selected = !count;
+    [self.activityButton setActive:count];
 }
 
 - (void)activityCountChanged {

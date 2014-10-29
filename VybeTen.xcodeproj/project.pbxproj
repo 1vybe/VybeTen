@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0207236519F1991800817A02 /* VYBPermissionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0207236419F1991800817A02 /* VYBPermissionViewController.xib */; };
+		020BDABA19FFFF7500B02824 /* VYBAciveButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 020BDAB919FFFF7500B02824 /* VYBAciveButton.m */; };
+		020BDABD1A008C7500B02824 /* VYBPortalButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 020BDABC1A008C7500B02824 /* VYBPortalButton.m */; };
 		020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 020F1C491977054900C3AA40 /* VYBPermissionViewController.m */; };
 		020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 020FB84819744EBA005C9BA9 /* VYBCameraView.m */; };
 		021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */; };
@@ -86,6 +88,10 @@
 
 /* Begin PBXFileReference section */
 		0207236419F1991800817A02 /* VYBPermissionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBPermissionViewController.xib; sourceTree = "<group>"; };
+		020BDAB819FFFF7500B02824 /* VYBActiveButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBActiveButton.h; sourceTree = "<group>"; };
+		020BDAB919FFFF7500B02824 /* VYBAciveButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBAciveButton.m; sourceTree = "<group>"; };
+		020BDABB1A008C7500B02824 /* VYBPortalButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPortalButton.h; sourceTree = "<group>"; };
+		020BDABC1A008C7500B02824 /* VYBPortalButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPortalButton.m; sourceTree = "<group>"; };
 		020F1C481977054900C3AA40 /* VYBPermissionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPermissionViewController.h; sourceTree = "<group>"; };
 		020F1C491977054900C3AA40 /* VYBPermissionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPermissionViewController.m; sourceTree = "<group>"; };
 		020FB84719744EBA005C9BA9 /* VYBCameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCameraView.h; sourceTree = "<group>"; };
@@ -346,6 +352,10 @@
 				02F5B1F019D32594008C42C3 /* VYBDynamicSizeView.m */,
 				0222946B19FF2CE200A2AD62 /* VYBPizzaLayer.h */,
 				0222946C19FF2CE200A2AD62 /* VYBPizzaLayer.m */,
+				020BDAB819FFFF7500B02824 /* VYBActiveButton.h */,
+				020BDAB919FFFF7500B02824 /* VYBAciveButton.m */,
+				020BDABB1A008C7500B02824 /* VYBPortalButton.h */,
+				020BDABC1A008C7500B02824 /* VYBPortalButton.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -682,11 +692,13 @@
 				02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */,
 				025CC90F19D5229200A1208C /* UIImage+maskImage.m in Sources */,
 				02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */,
+				020BDABA19FFFF7500B02824 /* VYBAciveButton.m in Sources */,
 				027DE0EF19E7484200F5F4C0 /* VYBCaptureRecorder.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
 				02E4556A1989727200B22554 /* VYBLogInViewController.m in Sources */,
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				025408E419BA10E5009C7C71 /* NSMutableArray+PFObject.m in Sources */,
+				020BDABD1A008C7500B02824 /* VYBPortalButton.m in Sources */,
 				024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				026385EE197972BA00B377EC /* VYBSignUpViewController.m in Sources */,

@@ -1,13 +1,13 @@
 //
-//  VYBButton.m
+//  VYBPortalButton.h
 //  VybeTen
 //
 //  Created by jinsuk on 10/28/14.
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import "VYBButton.h"
+#import <UIKit/UIKit.h>
 
-@implementation VYBButton
+@interface VYBPortalButton : UIButton
 
 @end
