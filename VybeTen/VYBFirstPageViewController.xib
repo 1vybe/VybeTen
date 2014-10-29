@@ -71,6 +71,9 @@
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="tryOutButtonPressed:" destination="-1" eventType="touchUpInside" id="dCy-NS-42x"/>
+                    </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -93,7 +96,7 @@
         </view>
     </objects>
     <resources>
-        <image name="background_ballons" width="320" height="541"/>
+        <image name="background_ballons" width="320" height="568"/>
         <image name="intro_login_button" width="265" height="50"/>
         <image name="intro_signup_button" width="265" height="50"/>
         <image name="intro_vybe_logo" width="148" height="72"/>

@@ -26,6 +26,14 @@ class VYBFirstPageViewController: UIViewController, VYBLogInViewControllerDelega
         self.navigationController?.pushViewController(signUpVC, animated: false)
     }
     
+    @IBAction func tryOutButtonPressed(sender: UIButton) {
+        PFAnonymousUtils.logInWithBlock { (user: PFUser!, error: NSError!) -> Void in
+            if error == nil {
+                self.delegate?.didLogInuser(user)
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
