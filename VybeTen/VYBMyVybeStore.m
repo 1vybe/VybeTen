@@ -293,7 +293,7 @@ static BOOL _uploadingOldVybes = NO;
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
     NSLog(@"Failed to get current location");
     
-    [_currVybe setLocationString:@"Nebulas, unknown, unknown"];
+    [_currVybe setLocationString:@"Earth, unknown, unknown"];
     _reverseGeocodingInProgress = NO;
 
     [_locationManager stopUpdatingLocation];
@@ -325,8 +325,8 @@ static BOOL _uploadingOldVybes = NO;
             locationStr = [NSString stringWithFormat:@"%@,%@,%@",neighborhood, city, isoCountryCode];
             tag = neighborhood;
         } else {
-            locationStr = @"Nebulas, unknown, unknown";
-            tag = @"Nebulas";
+            locationStr = @"Earth, unknown, unknown";
+            tag = @"Earth";
         }
         
         [_currVybe setLocationString:locationStr];

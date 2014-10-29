@@ -179,7 +179,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
     VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
     
-    cell.locationLabel.text = [[object[kVYBVybeLocationStringKey] componentsSeparatedByString:@","] objectAtIndex:0];
+    NSString *locationString = object[kVYBVybeLocationStringKey];
+    if (locationString.length) {
+        cell.locationLabel.text = [[locationString componentsSeparatedByString:@","] objectAtIndex:0];
+    } else {
+        cell.locationLabel.text = @"Earth";
+    }
+    
     cell.timestampLabel.text = [VYBUtility reverseTime:object[kVYBVybeTimestampKey]];
     
     cell.thumbnailImageView.file = object[kVYBVybeThumbnailKey];

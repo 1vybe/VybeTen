@@ -315,7 +315,7 @@
     if (arr.count == 3) {
         locationStr = [arr[1] stringByAppendingString:@", "];
     } else {
-        locationStr = @"Nebulas, ";
+        locationStr = @"Earth, ";
     }
     locationTimeString = [locationStr stringByAppendingString:[VYBUtility reverseTime:[aVybe objectForKey:kVYBVybeTimestampKey]]];
     [locationTimeButton setTitle:locationTimeString forState:UIControlStateNormal];
