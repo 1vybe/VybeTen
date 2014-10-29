@@ -32,11 +32,13 @@
 
 #pragma mark - Lifecycle
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
     if (self) {
-        // Custom initialization
+        self.parseClassName = kVYBVybeClassKey;
+        self.paginationEnabled = YES;
+        self.pullToRefreshEnabled = YES;
+        self.objectsPerPage = 25;
     }
     return self;
 }
@@ -141,16 +143,29 @@
 #pragma mark - PFQueryTableView
 
 - (PFQuery *)queryForTable {
-    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+    PFQuery *query = [PFQuery queryWithClassName:self.parseClassName];
     [query whereKey:kVYBVybeUserKey equalTo:[PFUser currentUser]];
     [query orderByDescending:kVYBVybeTimestampKey];
     
     return query;
 }
 
+- (void)objectsDidLoad:(NSError *)error {
+    [super objectsDidLoad:error];
+    
+    self.vybeCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.objects.count];
+}
+
 #pragma mark UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    
+    if (indexPath.row == self.objects.count) {
+        // Load more was pressed
+        return;
+    }
+    
     PFObject *selectedVybe = [self.objects objectAtIndex:indexPath.row];
     
     VYBPlayerControlViewController *playerController = [[VYBPlayerControlViewController alloc] initWithNibName:@"VYBPlayerControlViewController" bundle:nil];
@@ -162,7 +177,6 @@
 #pragma mark UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
-    
     VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
     
     cell.locationLabel.text = [[object[kVYBVybeLocationStringKey] componentsSeparatedByString:@","] objectAtIndex:0];
@@ -175,18 +189,12 @@
         }
     }];
     
+
     return cell;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    self.vybeCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.objects.count];
-    return self.objects.count;
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForNextPageAtIndexPath:(NSIndexPath *)indexPath {
+    return [tableView dequeueReusableCellWithIdentifier:@"LoadMoreCell"];
 }
 
 #pragma mark - UIActionSheetDelegate
