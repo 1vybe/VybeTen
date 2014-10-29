@@ -341,29 +341,29 @@
     int i;
     if (timePassed < 60) {
         i = timePassed / 1;
-        unit = @"sec";
+        unit = @"second";
     } else if (timePassed < 60 * 60) {
         i = timePassed / 60;
-        unit = @"min";
+        unit = @"minute";
     } else if (timePassed < 3600 * 24.0) {
         i = timePassed / 3600;
-        unit = @"h";
+        unit = @"hour";
     } else if (timePassed < 3600 * 24 * 7) {
         i = timePassed/ 3600 / 24;
-        unit = @"d";
+        unit = @"day";
     } else if (timePassed < 3600 * 24 * 7 * 4) {
         i = timePassed / 3600 / 24 / 7;
-        unit = @"w";
+        unit = @"week";
     } else if (timePassed < 3600 * 24 * 7 * 4 * 12) {
         i = timePassed / 3600 / 24 / 7 / 4;
-        unit = @"m";
+        unit = @"month";
     } else {
         i = timePassed / 3600 / 24 / 7 / 4 / 12;
         unit = @"year";
     }
     
     if (i > 1) {
-//        unit = [unit stringByAppendingString:@"s"];
+        unit = [unit stringByAppendingString:@"s"];
     }
     NSString *theTime = [NSString stringWithFormat:@"%d %@ ago", i, unit];
     

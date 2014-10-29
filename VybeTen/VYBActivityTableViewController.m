@@ -186,7 +186,8 @@
         cell.locationLabel.text = @"Earth";
     }
     
-    cell.timestampLabel.text = [VYBUtility reverseTime:object[kVYBVybeTimestampKey]];
+    NSDate *timestampDate = object[kVYBVybeTimestampKey];
+    cell.timestampLabel.text = [NSString stringWithFormat:@"%@  (%@)", [VYBUtility localizedDateStringFrom:timestampDate], [VYBUtility reverseTime:timestampDate]];
     
     cell.thumbnailImageView.file = object[kVYBVybeThumbnailKey];
     [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
