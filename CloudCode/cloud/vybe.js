@@ -164,11 +164,13 @@ var alertPayload = function(request) {
 // Function that returns info about regions
 Parse.Cloud.define('get_regions', get_regions);
 
+var default_radius = 0.1;
+
 Parse.Cloud.define('get_nearby_vybes',
   get_nearby_vybes.bind(this, {
     recent: true,
     reversed: false,
-    radius: 0.01,
+    radius: default_radius,
     limit: 50,
   })
 );
@@ -176,7 +178,7 @@ Parse.Cloud.define('get_nearby_vybes',
 Parse.Cloud.define('get_nearby_count',
   get_nearby_vybes.bind(this, {
     recent: true,
-    radius: 0.01,
+    radius: default_radius,
     limit: 50,
     count_only: true,
   })
@@ -398,8 +400,9 @@ function get_nearby_vybes(options, request, response) {
   var hide_user = options.hide_user || false;
   var reversed = options.reversed || false;
   var limit = options.limit || 50;
-  var radius = options.radius || 0.01 // 10 meters by default
+  var radius = options.radius || default_radius; // 100 meters by default
   var count_only = options.count_only || false;
+  var ignore_past = options.ignore_past || true;
 
   var query = new Parse.Query('Vybe');
   query.include('user');
@@ -416,11 +419,13 @@ function get_nearby_vybes(options, request, response) {
 
   var aVybe = new Vybe();
   aVybe.id = request.params.vybeID;
-  console.log('CP');
   aVybe.fetch({
     success: function(vybeObj) {
       console.log('vybe from ' + vybeObj.get('locationString'));
       query.withinKilometers('location', vybeObj.get('location'), radius);
+
+      if (ignore_past)
+        query.greaterThanOrEqualTo('timestamp', vybeObj.get('timestamp'));
 
       if (count_only) {
          query.count({
@@ -435,7 +440,7 @@ function get_nearby_vybes(options, request, response) {
       } else {
          query.find({
           success: function(vybesObjects) {
-            console.log('nearby vybes found');
+            console.log('nearby vybes found ' + vybesObjects.length);
             if (reversed) {
               response.success(vybesObjects);
             } else {
