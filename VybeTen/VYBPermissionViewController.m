@@ -79,10 +79,11 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
     if ( [micPermission isEqualToString:kVYBUserDefaultsAudioAccessPermissionGrantedKey] ) {
         _currentStage = VYBPermissionStageAudioGranted;
     }
-    if ( [cameraPermission isEqualToString:kVYBUserDefaultsVideoAccessPermissionGrantedKey]) {
+    if ( (_currentStage > VYBPermissionStageNone) &&
+        [cameraPermission isEqualToString:kVYBUserDefaultsVideoAccessPermissionGrantedKey]) {
         _currentStage = VYBPermissionStageVideoGranted;
     }
-    if (locationGranted)
+    if ( (_currentStage > VYBPermissionStageVideoGranted) && locationGranted)
         _currentStage = VYBPermissionStageAllGranted;
     
     [self displayPromptAtStage:_currentStage];
@@ -91,7 +92,6 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
 - (void)displayPromptAtStage:(NSInteger)stage {
     if (stage == VYBPermissionStageAllGranted) {
         [self.navigationController popViewControllerAnimated:NO];
-        return;
     }
     if (stage == VYBPermissionStageNone) {
         [self.promptView setImage:[UIImage imageNamed:@"permission_camera_and_mic.png"]];

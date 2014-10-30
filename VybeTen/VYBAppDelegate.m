@@ -15,8 +15,8 @@
 #import <HockeySDK/HockeySDK.h>
 #import "VYBAppDelegate.h"
 #import "VYBUserStore.h"
-#import "VYBPlayerControlViewController.h"
 #import "VYBCaptureViewController.h"
+#import "VYBPlayerControlViewController.h"
 #import "VYBPermissionViewController.h"
 #import "VYBActivityTableViewController.h"
 #import "VYBWelcomeViewController.h"

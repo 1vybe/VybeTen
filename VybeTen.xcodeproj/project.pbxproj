@@ -16,6 +16,8 @@
 		0222946D19FF2CE200A2AD62 /* VYBPizzaLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0222946C19FF2CE200A2AD62 /* VYBPizzaLayer.m */; };
 		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
 		022AC50319AD9757008A9C64 /* VYBCaptureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 022AC50219AD9757008A9C64 /* VYBCaptureViewController.xib */; };
+		022F4A671A0126DE00C20526 /* VYBMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022F4A651A0126DE00C20526 /* VYBMapViewController.swift */; };
+		022F4A681A0126DE00C20526 /* VYBMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 022F4A661A0126DE00C20526 /* VYBMapViewController.xib */; };
 		0237C13719EEF44A00AC6F81 /* DefaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0237C13619EEF44A00AC6F81 /* DefaultPreferences.plist */; };
 		023E538D191F142000C3CF78 /* VYBCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 023E538C191F142000C3CF78 /* VYBCache.m */; };
 		023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 023F0FCD19AA6BFA0055D3B7 /* UIImage+FixOrientation.m */; };
@@ -104,6 +106,8 @@
 		0226CBAB194A0339005270D3 /* VYBNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBNavigationController.h; sourceTree = "<group>"; };
 		0226CBAC194A0339005270D3 /* VYBNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBNavigationController.m; sourceTree = "<group>"; };
 		022AC50219AD9757008A9C64 /* VYBCaptureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBCaptureViewController.xib; sourceTree = "<group>"; };
+		022F4A651A0126DE00C20526 /* VYBMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VYBMapViewController.swift; sourceTree = "<group>"; };
+		022F4A661A0126DE00C20526 /* VYBMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBMapViewController.xib; sourceTree = "<group>"; };
 		0237C13619EEF44A00AC6F81 /* DefaultPreferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultPreferences.plist; sourceTree = "<group>"; };
 		023E538B191F142000C3CF78 /* VYBCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCache.h; sourceTree = "<group>"; };
 		023E538C191F142000C3CF78 /* VYBCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCache.m; sourceTree = "<group>"; };
@@ -234,29 +238,33 @@
 			children = (
 				0262054219A67B3600E994F9 /* UINavigationController+Autorotate.h */,
 				0262054319A67B3600E994F9 /* UINavigationController+Autorotate.m */,
+				025CC90A19D51AF400A1208C /* UINavigationBar+fixedSize.h */,
+				025CC90B19D51AF400A1208C /* UINavigationBar+fixedSize.m */,
 				021B5B6819A7B49100B906F3 /* AVAsset+VideoOrientation.h */,
 				021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */,
+				023F0FCC19AA6BFA0055D3B7 /* UIImage+FixOrientation.h */,
+				023F0FCD19AA6BFA0055D3B7 /* UIImage+FixOrientation.m */,
+				025CC90D19D5229200A1208C /* UIImage+maskImage.h */,
+				025CC90E19D5229200A1208C /* UIImage+maskImage.m */,
 				8861F0CE19A81C8C000249DB /* NSString+Username.h */,
 				8861F0CF19A81C8C000249DB /* NSString+Username.m */,
 				8861F0D119A81E08000249DB /* NSString+Email.h */,
 				8861F0D219A81E08000249DB /* NSString+Email.m */,
-				023F0FCC19AA6BFA0055D3B7 /* UIImage+FixOrientation.h */,
-				023F0FCD19AA6BFA0055D3B7 /* UIImage+FixOrientation.m */,
 				025408DF19BA0FD7009C7C71 /* NSArray+PFObject.h */,
 				025408E019BA0FD7009C7C71 /* NSArray+PFObject.m */,
 				025408E219BA10E5009C7C71 /* NSMutableArray+PFObject.h */,
 				025408E319BA10E5009C7C71 /* NSMutableArray+PFObject.m */,
-				025CC90A19D51AF400A1208C /* UINavigationBar+fixedSize.h */,
-				025CC90B19D51AF400A1208C /* UINavigationBar+fixedSize.m */,
-				025CC90D19D5229200A1208C /* UIImage+maskImage.h */,
-				025CC90E19D5229200A1208C /* UIImage+maskImage.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
 		};
-		0254E92119BB8A78003A99DE /* Registration */ = {
+		0254E92119BB8A78003A99DE /* Intro/ Registration */ = {
 			isa = PBXGroup;
 			children = (
+				88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */,
+				88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */,
+				02C7A02519F580FC0065BF4E /* VYBFirstPageViewController.swift */,
+				02C7A02619F580FC0065BF4E /* VYBFirstPageViewController.xib */,
 				026385EC197972BA00B377EC /* VYBSignUpViewController.m */,
 				026385EB197972BA00B377EC /* VYBSignUpViewController.h */,
 				026385ED197972BA00B377EC /* VYBSignUpViewController.xib */,
@@ -266,10 +274,8 @@
 				020F1C481977054900C3AA40 /* VYBPermissionViewController.h */,
 				020F1C491977054900C3AA40 /* VYBPermissionViewController.m */,
 				0207236419F1991800817A02 /* VYBPermissionViewController.xib */,
-				02C7A02519F580FC0065BF4E /* VYBFirstPageViewController.swift */,
-				02C7A02619F580FC0065BF4E /* VYBFirstPageViewController.xib */,
 			);
-			name = Registration;
+			name = "Intro/ Registration";
 			sourceTree = "<group>";
 		};
 		0254E92219BB8A9B003A99DE /* Capture */ = {
@@ -363,14 +369,14 @@
 		027D924818EA85F300537822 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				0266802419F15BAF00030836 /* Player */,
-				0254E92119BB8A78003A99DE /* Registration */,
+				0254E92119BB8A78003A99DE /* Intro/ Registration */,
 				0254E92219BB8A9B003A99DE /* Capture */,
-				027C708019AF08C6007BB8FE /* Container */,
+				0266802419F15BAF00030836 /* Player */,
 				88FF430319AFFCEB00D18872 /* VYBActivityTableViewController.h */,
 				88FF430419AFFCEB00D18872 /* VYBActivityTableViewController.m */,
-				88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */,
-				88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */,
+				022F4A651A0126DE00C20526 /* VYBMapViewController.swift */,
+				022F4A661A0126DE00C20526 /* VYBMapViewController.xib */,
+				027C708019AF08C6007BB8FE /* Container */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -626,6 +632,7 @@
 				026385EF197972BA00B377EC /* VYBSignUpViewController.xib in Resources */,
 				02D11D1018DF62AC0018DA97 /* Montreal-RegularIta.otf in Resources */,
 				02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */,
+				022F4A681A0126DE00C20526 /* VYBMapViewController.xib in Resources */,
 				0237C13719EEF44A00AC6F81 /* DefaultPreferences.plist in Resources */,
 				02D11D0F18DF62AC0018DA97 /* Montreal-Regular.otf in Resources */,
 				888F1FE819B2740B00546643 /* ProximaNovaSoft-Regular.otf in Resources */,
@@ -682,6 +689,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */,
+				022F4A671A0126DE00C20526 /* VYBMapViewController.swift in Sources */,
 				025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */,
 				88FF430519AFFCEB00D18872 /* VYBActivityTableViewController.m in Sources */,
 				8861F0D319A81E08000249DB /* NSString+Email.m in Sources */,

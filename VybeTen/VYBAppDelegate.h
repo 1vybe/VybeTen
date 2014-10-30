@@ -5,12 +5,11 @@
 //  Created by Kim Jin Su on 2014. 2. 19..
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
-
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import "VybeTen-Swift.h"
 #import "VYBNavigationController.h"
 #import "VYBPageViewController.h"
-#import "VybeTen-Swift.h"
 
 @class VYBPlayerViewController;
 @interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource, VYBFirstPageViewControllerDelegate>

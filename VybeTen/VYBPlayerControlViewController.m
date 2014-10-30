@@ -10,6 +10,7 @@
 #import <MotionOrientation@PTEz/MotionOrientation.h>
 #import <MBProgressHUD/MBProgressHUD.h>
 #import "AVAsset+VideoOrientation.h"
+#import "VYBAppDelegate.h"
 #import "VYBPlayerView.h"
 #import "VYBUtility.h"
 #import "VYBCache.h"
@@ -32,6 +33,7 @@
 
 - (IBAction)counterButtonPressed;
 - (IBAction)dismissButtonPressed;
+- (IBAction)mapButtonPressed;
 
 @property (nonatomic, weak) VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayer *currPlayer;
@@ -589,6 +591,29 @@
         }];
     }
 }
+
+#pragma mark - Map
+
+- (IBAction)mapButtonPressed {
+    [self.currPlayer pause];
+    // while on zone stream display all videos in that zone
+    if (_zoneVybes) {
+        if (_zoneVybes.count > 0) {
+            VYBMapViewController *mapVC = [[VYBMapViewController alloc] initWithNibName:@"VYBMapViewController" bundle:nil];
+            [self presentViewController:mapVC animated:YES completion:^{
+                [mapVC displayVybes:_zoneVybes];
+            }];
+        }
+    }
+    else {
+        PFObject *currVybe = self.vybePlaylist[currVybeIndex];
+        VYBMapViewController *mapVC = [[VYBMapViewController alloc] initWithNibName:@"VYBMapViewController" bundle:nil];
+        [self presentViewController:mapVC animated:YES completion:^{
+            [mapVC displayNearbyAroundVybe:currVybe];
+        }];
+    }
+}
+
 
 
 @end

@@ -39,6 +39,7 @@
 - (IBAction)activityButtonPressed:(id)sender;
 - (IBAction)flipButtonPressed:(id)sender;
 - (IBAction)flashButtonPressed:(id)sender;
+- (IBAction)mapButtonPressed:(id)sender;
 
 //@property (nonatomic) VYBMyVybe *currVybe;
 @property (nonatomic) VYBCapturePipeline *capturePipeline;
@@ -114,7 +115,7 @@
                                                  name:MotionOrientationChangedNotification
                                                object:nil];
     
-    [(AVCaptureVideoPreviewLayer *)[self.cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspect];
+    [(AVCaptureVideoPreviewLayer *)[self.cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     
     capturePipeline = [[VYBCapturePipeline alloc] init];
     [capturePipeline setDelegate:self callbackQueue:dispatch_get_main_queue()];
@@ -353,12 +354,23 @@
 
 - (void)freshVybeCountChanged {
     NSInteger count = [[VYBCache sharedCache] freshVybes].count;
-    
     [self.activityButton setActive:count];
 }
 
 - (void)activityCountChanged {
 
+}
+
+#pragma mark - Map
+
+- (IBAction)mapButtonPressed:(id)sender {
+    NSArray *freshVybes = [[VYBCache sharedCache] freshVybes];
+    if (freshVybes && freshVybes.count > 0) {
+        VYBMapViewController *mapVC = [[VYBMapViewController alloc] initWithNibName:@"VYBMapViewController" bundle:nil];
+        [self presentViewController:mapVC animated:YES completion:^{
+            [mapVC displayVybes:freshVybes];
+        }];
+    }
 }
 
 #pragma mark - ()

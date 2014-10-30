@@ -167,8 +167,9 @@ const CGFloat _fBlackStrokeWidth = 1.0f;
 }
 
 - (CGImageRef)getContentsWithNamed:(NSString *)imgName {
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    return [UIImage imageNamed:imgName inBundle:bundle compatibleWithTraitCollection:self.traitCollection].CGImage;
+    //NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    UIImage *img = [UIImage imageNamed:imgName];
+    return img.CGImage;
 
 }
 

@@ -82,16 +82,29 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lH2-Xq-FWU" userLabel="dismissButton">
-                    <rect key="frame" x="20" y="23" width="20" height="20"/>
+                    <rect key="frame" x="20" y="19" width="40" height="40"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="20" id="W7p-ZD-4cl"/>
-                        <constraint firstAttribute="width" constant="20" id="dJ9-fq-FQN"/>
+                        <constraint firstAttribute="height" constant="40" id="W7p-ZD-4cl"/>
+                        <constraint firstAttribute="width" constant="40" id="dJ9-fq-FQN"/>
                     </constraints>
                     <state key="normal" image="player_dismiss_button">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
                         <action selector="dismissButtonPressed" destination="-1" eventType="touchUpInside" id="fQ7-eI-AD4"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5d8-yx-Lg9">
+                    <rect key="frame" x="20" y="540" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="Cth-VT-RXY"/>
+                        <constraint firstAttribute="height" constant="40" id="GwA-hP-9zI"/>
+                    </constraints>
+                    <state key="normal" title="Map">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="mapButtonPressed" destination="-1" eventType="touchUpInside" id="n9a-Vz-oVH"/>
                     </connections>
                 </button>
             </subviews>
@@ -101,14 +114,24 @@
                 <constraint firstItem="lH2-Xq-FWU" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="8JX-ga-vc3"/>
                 <constraint firstItem="cMN-bL-OwK" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="BwS-M7-aPe"/>
                 <constraint firstAttribute="trailing" secondItem="7uh-eA-VQL" secondAttribute="trailing" constant="20" id="E9J-2A-MtU"/>
-                <constraint firstItem="lH2-Xq-FWU" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="23" id="NJF-cM-aKv"/>
+                <constraint firstItem="lH2-Xq-FWU" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="NJF-cM-aKv"/>
                 <constraint firstAttribute="trailing" secondItem="Pb2-69-N8y" secondAttribute="trailing" id="P8w-2S-sOY"/>
                 <constraint firstAttribute="bottom" secondItem="MJr-Ty-ayr" secondAttribute="bottom" constant="20" id="SXM-m5-4N5"/>
                 <constraint firstAttribute="centerX" secondItem="cMN-bL-OwK" secondAttribute="centerX" id="UeP-sZ-Mmp"/>
+                <constraint firstItem="cMN-bL-OwK" firstAttribute="centerY" secondItem="lH2-Xq-FWU" secondAttribute="centerY" id="Wtv-Eq-OfN"/>
                 <constraint firstAttribute="centerY" secondItem="Vij-MN-ZuP" secondAttribute="centerY" id="fkI-HM-iB3"/>
+                <constraint firstAttribute="bottom" secondItem="5d8-yx-Lg9" secondAttribute="bottom" constant="20" id="qCr-DN-hIh"/>
+                <constraint firstItem="5d8-yx-Lg9" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="tTC-ZJ-1cD"/>
                 <constraint firstAttribute="centerY" secondItem="Pb2-69-N8y" secondAttribute="centerY" id="u1c-Sv-adY"/>
                 <constraint firstItem="Vij-MN-ZuP" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="utX-77-c0b"/>
+                <constraint firstItem="7uh-eA-VQL" firstAttribute="centerY" secondItem="cMN-bL-OwK" secondAttribute="centerY" id="xp4-7b-T7a"/>
             </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="NJF-cM-aKv"/>
+                    <exclude reference="3G8-8m-36R"/>
+                </mask>
+            </variation>
         </view>
     </objects>
     <resources>
