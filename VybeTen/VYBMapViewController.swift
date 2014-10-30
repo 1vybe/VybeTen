@@ -33,6 +33,10 @@ class VYBMapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func displayNearbyAroundVybe(aVybe: PFObject) {
+        let geoPoint = aVybe[kVYBVybeGeotag] as PFGeoPoint
+        let location = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
+        self.moveMapToRegionAround(location)
+        
         PFCloud.callFunctionInBackground("get_nearby_vybes", withParameters: ["vybeID": aVybe.objectId], { (objects: AnyObject!, error: NSError!) -> Void in
             if error == nil {
                 self.displayVybes(objects as [PFObject])
@@ -50,7 +54,12 @@ class VYBMapViewController: UIViewController, MKMapViewDelegate {
         currAnnotation = vAnnotation
 
         mapView.addAnnotation(vAnnotation)
-        mapView.setNeedsDisplay()
+    }
+    
+    private func moveMapToRegionAround(location: CLLocationCoordinate2D) {
+        let span = MKCoordinateSpanMake(0.05, 0.05)
+        let region = MKCoordinateRegionMake(location, span)
+        mapView.setRegion(region, animated: false)
     }
     
     private func setUpMapRegion() {
