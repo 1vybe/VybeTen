@@ -7,9 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-
+@class VYBZone;
 @interface VYBUser : NSObject <NSCoding>
 
 @property (nonatomic, strong) NSDate *lastWatchedVybeTimeStamp;
+@property (nonatomic, strong) VYBZone *currZone;
 
 @end

@@ -9,7 +9,6 @@
 #import "VYBVybe.h"
 @interface VYBVybe ()
 @property (nonatomic) NSString *uniqueFileName;
-@property (nonatomic) CLLocation *locationCL;
 @property (nonatomic) NSMutableDictionary *parseObjectDictionary;
 @end
 

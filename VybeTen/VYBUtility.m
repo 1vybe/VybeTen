@@ -15,6 +15,7 @@
 #import "VYBCache.h"
 #import "VYBConstants.h"
 #import "VYBMyVybeStore.h"
+#import "VYBAppDelegate.h"
 
 @implementation VYBUtility
 
@@ -72,7 +73,7 @@
 }
 
 
-#pragma mark Like Vybes
+#pragma mark - Like Vybes
 
 + (void)likeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock {
     // First update cache to show changes right away
@@ -262,6 +263,7 @@
     
 }
 
+
 #pragma mark Thumbnail
 
 + (void)saveThumbnailImageForVybe:(VYBVybe *)mVybe {
@@ -372,11 +374,13 @@
 
 + (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title {
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:aIamge];
         MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[[UIApplication sharedApplication] delegate].window];
         [[[UIApplication sharedApplication] delegate].window addSubview:hud];
         hud.mode = MBProgressHUDModeCustomView;
-        hud.customView = imageView;
+        if (aIamge) {
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:aIamge];
+            hud.customView = imageView;
+        }
         hud.labelText = title;
         [hud show:YES];
         [hud hide:YES afterDelay:1.0];

@@ -7,12 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-
+@class VYBZone;
 @interface VYBUserStore : NSObject
 @property (nonatomic) NSInteger newPrivateVybeCount;
 + (VYBUserStore *)sharedStore;
-- (NSDate *)lastWatchedVybeTimeStamp;
 - (void)setLastWatchedVybeTimeStamp:(NSDate *)aDate;
+- (NSDate *)lastWatchedVybeTimeStamp;
+
+
 - (BOOL)saveChanges;
 
 @end

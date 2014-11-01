@@ -53,7 +53,7 @@
     
     [self.playerView setPlayer:self.player];
     
-    _currVybe = [[VYBMyVybeStore sharedStore] currVybe];
+    NSString *zoneName = [[VYBMyVybeStore sharedStore] currZone].name;
         
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationFetched:) name:VYBMyVybeStoreLocationFetchedNotification object:nil];
     
@@ -65,7 +65,7 @@
     self.tagTextField.clearsOnBeginEditing = YES;
     self.tagTextField.clearsOnInsertion = NO;
     self.tagTextField.textAlignment = NSTextAlignmentCenter;
-    self.tagTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:([_currVybe tagString])? [_currVybe tagString] : @"tag your vybe :)" attributes:stringAttributes];
+    self.tagTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:(zoneName)? zoneName : @"tag your vybe :)" attributes:stringAttributes];
     
     UITapGestureRecognizer *tapToAccep = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(acceptButtonPressed)];
     tapToAccep.numberOfTapsRequired = 1;

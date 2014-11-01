@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @interface VYBVybe : NSObject
+@property (nonatomic) CLLocation *locationCL;
+
 - (VYBVybe *)initWithParseObject:(PFObject *)parseObj;
 - (PFObject *)parseObject;
 - (NSString *)videoFilePath;

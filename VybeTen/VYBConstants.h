@@ -113,7 +113,9 @@ extern NSString *const kVYBVybeTypePublicKey;
 extern NSString *const kVYBVybeLocationStringKey;
 extern NSString *const kVYBVybeCountryCodeKey;
 extern NSString *const kVYBVybeTagKey;
-
+#warning For simplicity we save zone name and zoneID separately on vybe. Should create Zone class later
+extern NSString *const kVYBVybeZoneNameKey;
+extern NSString *const kVYBVybeZoneIDKey;
 /*
 extern NSString *const kVYBVybeTribeKey;
 extern NSString *const kVYBVybeCountryCodeKey;

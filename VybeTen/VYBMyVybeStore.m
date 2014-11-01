@@ -12,6 +12,7 @@
 #import "VYBVybe.h"
 #import "VYBConstants.h"
 #import "VYBUtility.h"
+#import "VYBMyVybeStore.h"
 
 @interface VYBMyVybeStore () <CLLocationManagerDelegate> {
     VYBVybe *_currVybe;
@@ -71,6 +72,9 @@ static BOOL _uploadingOldVybes = NO;
     [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
     [nVybe setObject:[NSNumber numberWithBool:YES] forKey:kVYBVybeTypePublicKey];
     [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
+    VYBZone *zone = [[VYBMyVybeStore sharedStore] currZone];
+    [nVybe setObject:zone.name forKey:kVYBVybeZoneNameKey];
+    [nVybe setObject:zone.zoneID forKeyedSubscript:kVYBVybeZoneIDKey];
     
     _currVybe = [[VYBVybe alloc] initWithParseObject:nVybe];
     
@@ -311,7 +315,7 @@ static BOOL _uploadingOldVybes = NO;
         }
     }
     [_currVybe setGeoTag:_bestLocation];
-    
+        
     CLGeocoder *reverseGeocoder = [[CLGeocoder alloc] init];
     _reverseGeocodingInProgress = YES;
     [reverseGeocoder reverseGeocodeLocation:_bestLocation completionHandler:^(NSArray *placemarks, NSError *error) {

@@ -8,10 +8,10 @@
 
 #import "VYBUserStore.h"
 #import "VYBUser.h"
-
-@implementation VYBUserStore {
-    VYBUser *user;
-}
+@interface VYBUserStore ()
+@property (nonatomic, strong) VYBUser *user;
+@end
+@implementation VYBUserStore
 
 + (VYBUserStore *)sharedStore {
     static VYBUserStore *sharedStore = nil;
@@ -31,10 +31,11 @@
         self.newPrivateVybeCount = 0;
         
         NSString *path = [self userInfoArchivePath];
-        user = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+        VYBUser *user = (VYBUser *)[NSKeyedUnarchiver unarchiveObjectWithFile:path];
         if (!user) {
             user = [[VYBUser alloc] init];
         }
+        self.user = user;
     }
     return self;
 }
@@ -49,16 +50,21 @@
 
 - (BOOL)saveChanges {
     NSString *path = [self userInfoArchivePath];
-    return [NSKeyedArchiver archiveRootObject:user toFile:path];
-}
-
-
-- (NSDate *)lastWatchedVybeTimeStamp {
-    return [user lastWatchedVybeTimeStamp];
+    return [NSKeyedArchiver archiveRootObject:self.user toFile:path];
 }
 
 - (void)setLastWatchedVybeTimeStamp:(NSDate *)aDate {
-    [user setLastWatchedVybeTimeStamp:aDate];
+    [self.user setLastWatchedVybeTimeStamp:aDate];
 }
+
+- (void)setCurrentZone:(VYBZone *)zone {
+    [self.user setCurrZone:zone];
+}
+
+- (NSDate *)lastWatchedVybeTimeStamp {
+    return [self.user lastWatchedVybeTimeStamp];
+}
+
+
 
 @end
