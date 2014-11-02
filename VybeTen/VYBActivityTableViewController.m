@@ -166,12 +166,13 @@
         return;
     }
     
-    PFObject *selectedVybe = [self.objects objectAtIndex:indexPath.row];
-    
-    VYBPlayerControlViewController *playerController = [[VYBPlayerControlViewController alloc] initWithNibName:@"VYBPlayerControlViewController" bundle:nil];
-    playerController.vybePlaylist = @[selectedVybe];
-    
-    [self presentViewController:playerController animated:NO completion:nil];
+    VYBPlayerControlViewController *playerController = [[VYBPlayerControlViewController alloc] initWithNibName:@"VYBPlayerControlViewController" bundle:nil];    
+    [self presentViewController:playerController animated:NO completion:^{
+        // Because objects in table are in reverse-time order
+        NSArray *reversedObjects = [[self.objects reverseObjectEnumerator] allObjects];
+        NSInteger videoIndex = self.objects.count - indexPath.row - 1;
+        [playerController playVybes:reversedObjects from:videoIndex];
+    }];
 }
 
 #pragma mark UITableViewDataSource
@@ -208,6 +209,7 @@
     return [tableView dequeueReusableCellWithIdentifier:@"LoadMoreCell"];
 }
 
+
 #pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -219,5 +221,6 @@
             break;
     }
 }
+
 
 @end

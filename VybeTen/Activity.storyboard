@@ -60,7 +60,7 @@
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
-                                        <segue destination="4nv-U8-Nbd" kind="presentation" id="I9R-10-ozi"/>
+                                        <segue destination="4nv-U8-Nbd" kind="custom" customClass="PlayFeedSegue" id="P8d-uw-3VG"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -219,7 +219,7 @@
                 <viewController id="4nv-U8-Nbd" customClass="VYBPlayerControlViewController" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cWG-q1-XSt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2243.5" y="2374.5"/>
+            <point key="canvasLocation" x="2654" y="2375"/>
         </scene>
     </scenes>
     <resources>

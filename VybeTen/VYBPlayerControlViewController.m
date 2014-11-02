@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
+//TODO: Manage a pool to asynchronously download vybes using a queue
 #import "VYBPlayerControlViewController.h"
 #import <MotionOrientation@PTEz/MotionOrientation.h>
 #import <MBProgressHUD/MBProgressHUD.h>
@@ -35,6 +36,8 @@
 - (IBAction)dismissButtonPressed;
 - (IBAction)mapButtonPressed;
 
+@property (nonatomic) NSArray *initialStream;
+
 @property (nonatomic, weak) VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayer *currPlayer;
 @property (nonatomic) AVPlayerItem *currItem;
@@ -50,15 +53,17 @@
     NSTimer *overlayTimer;
     
     NSInteger _pageIndex;
+    NSInteger _initialStreamCurrIdx;
     NSArray *_zoneVybes;
-    NSInteger _zoneVybeCurrIdx;
+    NSInteger _zoneCurrIdx;
     
     AVCaptureVideoOrientation lastOrientation;
     
     UIView *backgroundView;
+    
+    BOOL _isPlaying;
 }
 @synthesize dismissButton;
-@synthesize currVybeIndex;
 @synthesize counterButton;
 @synthesize portalButton;
 @synthesize locationTimeButton;
@@ -105,9 +110,9 @@
     tapGesture.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tapGesture];
     
-    UILongPressGestureRecognizer *tapAndHoldGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(portalButtonTapAndHoldDetected:)];
-    tapAndHoldGesture.minimumPressDuration = 0.3;
-    [portalButton addGestureRecognizer:tapAndHoldGesture];
+    UITapGestureRecognizer *tapPortalButton = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(portalButtonPressed:)];
+    tapPortalButton.numberOfTapsRequired = 1;
+    [portalButton addGestureRecognizer:tapPortalButton];
     
     /*
     // Portal button image set up
@@ -126,9 +131,6 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
     [self.currPlayer pause];
-    
-    self.vybePlaylist = nil;
-
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -136,9 +138,11 @@
     
     [self setNeedsStatusBarAppearanceUpdate];
     
-    if (self.vybePlaylist && ([self.vybePlaylist count] > 0)) {
-        [self beginPlayingFrom:0];
+    if (self.currPlayer && self.currItem) {
+        [self.currPlayer play];
     }
+    /*
+    
     else {
         NSString *functionName = @"get_active_vybes";
         [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *objects, NSError *error) {
@@ -149,26 +153,30 @@
             }
         }];
     }
+     */
+}
+
+- (void)playVybes:(NSArray *)vybes {
+    [self playVybes:vybes from:0];
+}
+
+- (void)playVybes:(NSArray *)vybes from:(NSInteger)idx {
+    self.initialStream = vybes;
+    
+    _initialStreamCurrIdx = idx;
+    // We are beginning with initial stream
+    [self playStream:self.initialStream atIndex:_initialStreamCurrIdx];
 
 }
 
-#pragma mark - Custom Accessors
 
-- (NSArray *)vybePlaylist {
-    if (!_vybePlaylist) {
-       _vybePlaylist = [[VYBCache sharedCache] freshVybes];
-    }
-    return _vybePlaylist;
-}
+
 
 #pragma mark - Behind the scene
 
-- (void)beginPlayingFrom:(NSInteger)from {
-    currVybeIndex = from;
-
-    downloadingVybeIndex = currVybeIndex + 1;
+- (void)playStream:(NSArray *)stream atIndex:(NSInteger)streamIdx {
     
-    PFObject *currVybe = [self.vybePlaylist objectAtIndex:currVybeIndex];
+    PFObject *currVybe = [stream objectAtIndex:streamIdx];
     [self syncUI:currVybe withCompletion:^{
         
         // Play after syncing UI elements
@@ -180,9 +188,6 @@
             AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
             
             [self playAsset:asset];
-            
-            [[VYBCache sharedCache] removeFreshVybe:currVybe];
-            [self prepareVybeAt:downloadingVybeIndex];
         } else {
             PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -193,85 +198,7 @@
                     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
                     
                     [self playAsset:asset];
-                    [[VYBCache sharedCache] removeFreshVybe:currVybe];
-                    [self prepareVybeAt:downloadingVybeIndex];
-                } else {
-                    UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-                    [av show];
-                }
-            }];
-        }
 
-    }];
-}
-
-- (void)prepareVybeAt:(NSInteger)idx {
-    downloadingVybeIndex = idx;
-    if (downloadingVybeIndex == self.vybePlaylist.count) {
-        return;
-    }
-    
-    PFObject *aVybe = [self.vybePlaylist objectAtIndex:downloadingVybeIndex];
-    NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
-    cacheURL = [cacheURL URLByAppendingPathComponent:[aVybe objectId]];
-    cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
-        return;
-    } else {
-        PFFile *vid = [aVybe objectForKey:kVYBVybeVideoKey];
-        [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            if (!error) {
-                if (currVybeIndex == downloadingVybeIndex) {
-                    //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                    
-                    [self prepareVybeAt:downloadingVybeIndex + 1];
-                    [self syncUI:aVybe withCompletion:^{
-                        [data writeToURL:cacheURL atomically:YES];
-                        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
-                        
-                        [self playAsset:asset];
-                        
-                        [[VYBCache sharedCache] removeFreshVybe:aVybe];
-                    }];
-                }
-            }
-        }];
-    }
-}
-
-
-- (void)beginPlayingZoneVybes {
-    if (_zoneVybes && _zoneVybes.count > 0) {
-        _zoneVybeCurrIdx = 0;
-        [self playZoneVybeAt:0];
-    } else {
-        [self portalButtonZoneOut:self.portalButton];
-    }
-}
-
-- (void)playZoneVybeAt:(NSInteger)idx {
-    PFObject *currVybe = [_zoneVybes objectAtIndex:idx];
-
-    [self syncUI:currVybe withCompletion:^{
-        // Play after syncing UI elements
-        NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
-        cacheURL = [cacheURL URLByAppendingPathComponent:[currVybe objectId]];
-        cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
-        
-        if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
-            AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
-            [self playAsset:asset];
-        }
-        else {
-            PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                if (!error) {
-                    [data writeToURL:cacheURL atomically:YES];
-                    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
-                    [self playAsset:asset];
                 } else {
                     UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                     [av show];
@@ -280,7 +207,6 @@
         }
     }];
 }
-
 
 #pragma mark - DeviceOrientation
 
@@ -305,6 +231,11 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void)syncUIWithCurrentVybe {
+    
+}
+
+
 
 - (void)syncUI:(PFObject *)aVybe withCompletion:(void (^)())completionBlock {
     // Display location and time
@@ -322,10 +253,10 @@
     
     
     if (_zoneVybes) {
-        [counterButton setTitle: [NSString stringWithFormat:@"%ld", (long)_zoneVybes.count - _zoneVybeCurrIdx - 1] forState:UIControlStateNormal];
+        [counterButton setTitle: [NSString stringWithFormat:@"%ld", (long)_zoneVybes.count - _zoneCurrIdx - 1] forState:UIControlStateNormal];
     }
     else {
-        [counterButton setTitle: [NSString stringWithFormat:@"%ld", (long)self.vybePlaylist.count - currVybeIndex - 1] forState:UIControlStateNormal];
+        [counterButton setTitle: [NSString stringWithFormat:@"%ld", (long)self.initialStream.count - _initialStreamCurrIdx - 1] forState:UIControlStateNormal];
     }
     
     if ( ! _zoneVybes ) {
@@ -376,12 +307,8 @@
 
 #pragma mark - User Interactions
 
-- (void)portalButtonTapAndHoldDetected:(UILongPressGestureRecognizer *)recognizer {
+- (void)portalButtonPressed:(id)sender {
     // Zone in
-    if (recognizer.state != UIGestureRecognizerStateBegan) {
-        return;
-    }
-    
     if (!_zoneVybes) {
         [self.portalButton setEnabled:NO];
         [self portalButtonZoneIn:self.portalButton];
@@ -394,18 +321,29 @@
 
 - (void)portalButtonZoneIn:(UIButton *)button {
     [self.currPlayer pause];
-
-    PFObject *currVybe = self.vybePlaylist[currVybeIndex];
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    PFObject *currVybe = self.initialStream[_initialStreamCurrIdx];
     [PFCloud callFunctionInBackground:@"get_nearby_vybes"
                        withParameters:@{ @"vybeID" : currVybe.objectId}
                                 block:^(NSArray *objects, NSError *error) {
+                                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                                     if (!error) {
                                         _zoneVybes = objects;
-                                        _zoneVybeCurrIdx = 0;
-                                        [self beginPlayingZoneVybes];
+                                        // First zone vybe to play is -1 relative to the current video playing on stream
+                                        _zoneCurrIdx = -1;
+                                        
+                                        // Updadate counter because you just zoned in
+                                        //TODO: shine a number of something to notify
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [self.portalButton setTitle:[NSString stringWithFormat:@"%d", _zoneVybes.count] forState:UIControlStateNormal];
+                                        });
                                     }
+                                    [self.currPlayer play];
                                 }];
     
+#warning this does not create any animation effect
     // Animation to change bg image
     [UIView animateWithDuration:0.7 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         [self.portalButton setSelected:YES];
@@ -416,17 +354,18 @@
 }
 
 - (void)portalButtonZoneOut:(UIButton *)button {
-    [self.currPlayer pause];
+    //[self.currPlayer pause];
 
     _zoneVybes = nil;
 
+#warning this does not create any animation effect
     // Animation to change bg image
     [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         [self.portalButton setSelected:NO];
     } completion:^(BOOL success) {
         [self.portalButton setEnabled:YES];
         
-        [self beginPlayingFrom:currVybeIndex];
+        [self playNextItem];
     }];
     
 }
@@ -454,14 +393,14 @@
 
 
 - (IBAction)goNextButtonPressed:(id)sender {
-    if (_zoneVybes)
-        [self playNextZoneVideo];
-    else
-        [self playNextStreamVideo];
+    [self playNextItem];
 }
 
 
 - (void)playNextItem {
+    // Remove notification for current item
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+    
     if (_zoneVybes) {
         [self playNextZoneVideo];
     }
@@ -472,35 +411,46 @@
 
 
 - (void)playNextStreamVideo {
-    if (!self.vybePlaylist) {
-        return;
-    }
-    
-    if (currVybeIndex >= (self.vybePlaylist.count - 1)) {
-        // Reached the end show the ENDING screen
+    NSAssert(self.initialStream, @"Can't play next video on stream because stream is nil");
+
+    // Reached the end of stream. Show the ENDING screen
+    if (_initialStreamCurrIdx == (self.initialStream.count - 1)) {
         [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
         return;
     }
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-    [self.currPlayer pause];
-    currVybeIndex++;
-    [self beginPlayingFrom:currVybeIndex];
+    else {
+        //[self.currPlayer pause];
+        _initialStreamCurrIdx = _initialStreamCurrIdx + 1;
+        [self playStream:self.initialStream atIndex:_initialStreamCurrIdx];
+    }
+
 }
 
 - (void)playNextZoneVideo {
-    if (_zoneVybeCurrIdx == _zoneVybes.count - 1) {
+    NSAssert(_zoneVybes, @"Can't play next video in zone because zone is nil");
+    
+    // Reached the end of zone. Zone OUT
+    if (_zoneCurrIdx == _zoneVybes.count - 1) {
         [self portalButtonZoneOut:self.portalButton];
+        return;
     }
     else {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-        [self.currPlayer pause];
-        _zoneVybeCurrIdx++;
-        [self playZoneVybeAt:_zoneVybeCurrIdx];
+        //[self.currPlayer pause];
+
+        _zoneCurrIdx = _zoneCurrIdx + 1;
+        [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
     }
 }
 
 
 - (IBAction)goPrevButtonPressed:(id)sender {
+    [self playPrevItem];
+}
+
+- (void)playPrevItem {
+    // Remove notification for current item
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+    
     if (_zoneVybes) {
         [self playPrevZoneVideo];
     }
@@ -509,35 +459,34 @@
     }
 }
 
-- (void)playPrevZoneVideo {
-    if (_zoneVybeCurrIdx == 0) {
-        // Reached the beginning show the BEGINNING screen
-        return;
-    }
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-    [self.currPlayer pause];
-    _zoneVybeCurrIdx--;
-    [self playZoneVybeAt:_zoneVybeCurrIdx];
-}
 
 - (void)playPrevStreamVideo {
-    if (!self.vybePlaylist) {
-        return;
-    }
+    NSAssert(self.initialStream, @"Can't play prev video on stream because stream is nil");
     
-    if (currVybeIndex == 0) {
-        // Reached the beginning show the BEGINNING screen
+    // Reached the beginning of the stream.
+    if (_initialStreamCurrIdx == 0) {
         return;
     }
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-    [self.currPlayer pause];
-    currVybeIndex--;
-    [self beginPlayingFrom:currVybeIndex];
+    else {
+        _initialStreamCurrIdx = _initialStreamCurrIdx - 1;
+        [self playStream:self.initialStream atIndex:_initialStreamCurrIdx];
+    }
+}
+
+- (void)playPrevZoneVideo {
+    NSAssert(_zoneVybes, @"Can't play prev video in zone because zone is nil");
+
+    // Reached the beginning of the zone
+    if (_zoneCurrIdx == 0) {
+        return;
+    }
+    else {
+        [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+    }
 }
 
 
 - (void)playerItemDidReachEnd {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
     [self playNextItem];
 }
 
@@ -607,7 +556,7 @@
         }
     }
     else {
-        PFObject *currVybe = self.vybePlaylist[currVybeIndex];
+        PFObject *currVybe = self.initialStream[_initialStreamCurrIdx];
         VYBMapViewController *mapVC = [[VYBMapViewController alloc] initWithNibName:@"VYBMapViewController" bundle:nil];
         [self presentViewController:mapVC animated:YES completion:^{
             [mapVC displayNearbyAroundVybe:currVybe];

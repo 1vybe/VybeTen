@@ -12,10 +12,9 @@
 - (id)initWithPageIndex:(NSInteger)pageIndex;
 - (NSInteger)pageIndex;
 
-@property (nonatomic, copy) NSArray *vybePlaylist;
-@property (nonatomic) NSInteger currVybeIndex;
-- (void)beginPlayingFrom:(NSInteger)from;
-- (void)playNextItem;
-- (void)playNextZoneVideo;
+// Called should call this method inside the completion block when it is calling presentViewController: 
+- (void)playVybes:(NSArray *)vybes;
+- (void)playVybes:(NSArray *)vybes from:(NSInteger)idx;
+
 
 @end
