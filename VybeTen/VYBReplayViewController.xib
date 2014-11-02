@@ -11,7 +11,7 @@
                 <outlet property="acceptButtonBottomSpacingConstraint" destination="SK8-yu-n8L" id="Db0-6Z-lDy"/>
                 <outlet property="playerView" destination="cKp-4D-Bm4" id="O5h-oz-ujt"/>
                 <outlet property="rejectButton" destination="VEJ-4U-kAQ" id="n4I-CF-Z4X"/>
-                <outlet property="tagTextField" destination="6CB-I6-DGM" id="yaJ-40-Itc"/>
+                <outlet property="selectZoneButton" destination="Lcg-sD-4d9" id="o4X-Oa-el7"/>
                 <outlet property="view" destination="iN0-l3-epB" id="zb0-Pq-FWJ"/>
             </connections>
         </placeholder>
@@ -55,14 +55,6 @@
                         <constraint firstAttribute="height" constant="63" id="tGX-jn-NHo"/>
                     </constraints>
                 </view>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" background="replay_tag_textfield" translatesAutoresizingMaskIntoConstraints="NO" id="6CB-I6-DGM" userLabel="tagTextField">
-                    <rect key="frame" x="0.0" y="477" width="600" height="60"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="60" id="Br7-XY-WHZ"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits"/>
-                </textField>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VEJ-4U-kAQ" userLabel="reject">
                     <rect key="frame" x="15" y="15" width="40" height="40"/>
                     <constraints>
@@ -76,21 +68,35 @@
                         <action selector="rejectButtonPressed:" destination="-1" eventType="touchUpInside" id="krd-bB-DJx"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lcg-sD-4d9">
+                    <rect key="frame" x="0.0" y="477" width="600" height="60"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="Iqy-7f-F8o"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
+                    <state key="normal" backgroundImage="replay_tag_textfield">
+                        <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="selectZoneButtonPressed:" destination="-1" eventType="touchUpInside" id="T5z-1r-Nnb"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="Lcg-sD-4d9" secondAttribute="trailing" id="1eA-wH-NTD"/>
                 <constraint firstAttribute="bottom" secondItem="cKp-4D-Bm4" secondAttribute="bottom" id="2ZG-tn-wVc"/>
                 <constraint firstAttribute="trailing" secondItem="z7g-Te-fSv" secondAttribute="trailing" id="3c8-1O-r7f"/>
+                <constraint firstItem="Lcg-sD-4d9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="5wO-RB-Egb"/>
                 <constraint firstItem="cKp-4D-Bm4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="6zC-kX-XiS"/>
                 <constraint firstAttribute="trailing" secondItem="cKp-4D-Bm4" secondAttribute="trailing" id="7uw-VG-7qb"/>
-                <constraint firstItem="z7g-Te-fSv" firstAttribute="top" secondItem="6CB-I6-DGM" secondAttribute="bottom" id="L0y-wZ-uUt"/>
                 <constraint firstItem="cKp-4D-Bm4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="OBi-OI-syv"/>
                 <constraint firstAttribute="bottom" secondItem="z7g-Te-fSv" secondAttribute="bottom" id="SK8-yu-n8L"/>
                 <constraint firstItem="VEJ-4U-kAQ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="aKK-Vq-wkm"/>
                 <constraint firstItem="VEJ-4U-kAQ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="don-ho-Dzu"/>
                 <constraint firstItem="z7g-Te-fSv" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="kjd-8D-PNf"/>
-                <constraint firstAttribute="trailing" secondItem="6CB-I6-DGM" secondAttribute="trailing" id="lPM-bT-Ysz"/>
-                <constraint firstItem="6CB-I6-DGM" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="yqQ-GF-4WU"/>
+                <constraint firstItem="z7g-Te-fSv" firstAttribute="top" secondItem="Lcg-sD-4d9" secondAttribute="bottom" id="yH5-oL-hNy"/>
             </constraints>
         </view>
     </objects>

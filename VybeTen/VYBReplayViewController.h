@@ -13,5 +13,4 @@
 @class VYBVybe;
 
 @interface VYBReplayViewController : UIViewController
-@property (nonatomic, readonly) VYBVybe *currVybe;
 @end

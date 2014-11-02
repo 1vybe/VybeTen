@@ -41,7 +41,6 @@
 - (IBAction)flipButtonPressed:(id)sender;
 - (IBAction)flashButtonPressed:(id)sender;
 - (IBAction)mapButtonPressed:(id)sender;
-- (IBAction)checkButtonPressed:(id)sender;
 
 //@property (nonatomic) VYBMyVybe *currVybe;
 @property (nonatomic) VYBCapturePipeline *capturePipeline;
@@ -377,52 +376,6 @@
     }
 }
 
-- (IBAction)checkButtonPressed:(id)sender {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-        if (!error) {
-            _oldZoneFinder = [[VYBOldZoneFinder alloc] init];
-            //_oldZoneFinder.numOfResults = 10;
-            [_oldZoneFinder findZoneNearLocationInBackgroundWithLatitude:geoPoint.latitude longitude:geoPoint.longitude completionHandler:^(NSArray *results, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                });
-                if (!error) {
-                    [self displayCurrentZoneSuggestions:results];
-                }
-            }];
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            });
-        }
-    }];
-}
-
-- (void)displayCurrentZoneSuggestions:(NSArray *)suggestions {
-    UIAlertController *checkInController = [UIAlertController alertControllerWithTitle:@"Check-in" message:@"Where are you vybing? :)" preferredStyle:UIAlertControllerStyleActionSheet];
-    for (VYBZone *aZone in suggestions) {
-        UIAlertAction *action = [UIAlertAction actionWithTitle:aZone.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            [[VYBMyVybeStore sharedStore] setCurrZone:aZone];
-            NSLog(@"You are in zone %@!", aZone.zoneID);
-        }];
-        [checkInController addAction:action];
-    }
-    if (checkInController.actions.count > 0) {
-        VYBZone *currZone = [[VYBMyVybeStore sharedStore] currZone];
-        if (currZone) {
-            [checkInController setMessage:[NSString stringWithFormat:@"Your are in %@", currZone.name]];
-        }
-        
-    } else {
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Unlock your zone" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            // choose a name/tag for zone.
-        }];
-        [checkInController addAction:action];
-    }
-    
-    [self presentViewController:checkInController animated:YES completion:nil];
-}
 
 #pragma mark - ()
 

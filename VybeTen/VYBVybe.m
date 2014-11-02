@@ -7,6 +7,8 @@
 //
 
 #import "VYBVybe.h"
+#import "VYBAppDelegate.h"
+
 @interface VYBVybe ()
 @property (nonatomic) NSString *uniqueFileName;
 @property (nonatomic) NSMutableDictionary *parseObjectDictionary;
@@ -50,6 +52,7 @@
     if (self) {
         [self setUniqueFileName:[aDecoder decodeObjectForKey:@"uniqueFileName"]];
         [self setLocationCL:[aDecoder decodeObjectForKey:@"location"]];
+        [self setVybeZone:[aDecoder decodeObjectForKey:@"vybeZone"]];
         [self setParseObjectDictionary:[NSMutableDictionary dictionaryWithDictionary:
                                         [aDecoder decodeObjectForKey:@"parseObjectDictionary"]]];
     }
@@ -60,6 +63,7 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.uniqueFileName forKey:@"uniqueFileName"];
     [aCoder encodeObject:self.locationCL forKey:@"location"];
+    [aCoder encodeObject:self.vybeZone forKey:@"vybeZone"];
     [aCoder encodeObject:self.parseObjectDictionary forKey:@"parseObjectDictionary"];
 }
 
@@ -74,6 +78,12 @@
     
     if (self.locationCL)
         [parseObj setObject:[PFGeoPoint geoPointWithLocation:self.locationCL] forKey:kVYBVybeGeotag];
+    
+    if (self.vybeZone) {
+        [parseObj setObject:self.vybeZone.name forKey:kVYBVybeZoneNameKey];
+        [parseObj setObject:self.vybeZone.zoneID forKey:kVYBVybeZoneIDKey];
+    }
+        
     
     return parseObj;
 }

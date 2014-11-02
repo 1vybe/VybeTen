@@ -12,6 +12,7 @@
 #import "MBProgressHUD.h"
 #import "VYBUtility.h"
 #import "VYBMyVybeStore.h"
+#import "VYBOldZoneFinder.h"
 #import "VYBNavigationController.h"
 #import "AVAsset+VideoOrientation.h"
 
@@ -19,30 +20,29 @@
 
 @property (nonatomic, weak) IBOutlet UIView *acceptButton;
 @property (nonatomic, weak) IBOutlet UIButton *rejectButton;
+@property (nonatomic, weak) IBOutlet UIButton *selectZoneButton;
 
-@property (nonatomic, weak) IBOutlet UITextField *tagTextField;
 @property (nonatomic, weak) IBOutlet VYBPlayerView *playerView;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *acceptButtonBottomSpacingConstraint;
 
 - (IBAction)rejectButtonPressed:(id)sender;
+- (IBAction)selectZoneButtonPressed:(id)sender;
 
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *currItem;
 
 @end
 
-@implementation VYBReplayViewController
+@implementation VYBReplayViewController {
+    VYBVybe *_currVybe;
+}
 
 - (void)dealloc {
     self.player = nil;
     self.playerView = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBMyVybeStoreLocationFetchedNotification object:nil];
-    /*
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-    */
 }
 
 - (void)viewDidLoad
@@ -53,39 +53,26 @@
     
     [self.playerView setPlayer:self.player];
     
-    NSString *zoneName = [[VYBMyVybeStore sharedStore] currZone].name;
-        
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationFetched:) name:VYBMyVybeStoreLocationFetchedNotification object:nil];
     
-    UIFont *theFont = [UIFont fontWithName:@"Helvetica Neue" size:15.0];
-    NSDictionary *stringAttributes = @{ NSForegroundColorAttributeName : [UIColor colorWithRed:72.0/255.0 green:72.0/255.0 blue:72.0/255.0 alpha:1.0],
-                                        NSFontAttributeName : theFont};
-    [self.tagTextField setEnabled:NO];
-    self.tagTextField.delegate = self;
-    self.tagTextField.clearsOnBeginEditing = YES;
-    self.tagTextField.clearsOnInsertion = NO;
-    self.tagTextField.textAlignment = NSTextAlignmentCenter;
-    self.tagTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:(zoneName)? zoneName : @"tag your vybe :)" attributes:stringAttributes];
+    VYBZone *currZone = [[VYBMyVybeStore sharedStore] currZone];
+    if (currZone) {
+        [self.selectZoneButton setTitle:currZone.name forState:UIControlStateNormal];
+    } else {
+        [self.selectZoneButton setTitle:@"Where are you vybing?" forState:UIControlStateNormal];
+    }
     
     UITapGestureRecognizer *tapToAccep = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(acceptButtonPressed)];
     tapToAccep.numberOfTapsRequired = 1;
     [self.acceptButton addGestureRecognizer:tapToAccep];
     
-    /*
-    // Register for keyboard notification
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-
-    UITapGestureRecognizer *tapToDismissKeyboard = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTouchedToDismissKeyboard)];
-    tapToDismissKeyboard.numberOfTapsRequired = 1;
-    [self.view addGestureRecognizer:tapToDismissKeyboard];
-    */
+    _currVybe = [[VYBMyVybeStore sharedStore] currVybe];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
   
-    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
+    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[_currVybe videoFilePath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
     
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
@@ -105,24 +92,74 @@
     [self.player play];
 }
 
-- (void)acceptButtonPressed {
-    if (self.tagTextField.text && (self.tagTextField.text.length > 0)) {
-        if (self.tagTextField.text.length < 3) {
-            self.tagTextField.text = @"";
-            return;
+#pragma mark - Zone
+- (IBAction)selectZoneButtonPressed:(id)sender {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+        if (!error) {
+            VYBOldZoneFinder *oldZoneFinder = [[VYBOldZoneFinder alloc] init];
+            //TODO: _oldZoneFinder.numOfResults = 10;
+            [oldZoneFinder findZoneNearLocationInBackgroundWithLatitude:geoPoint.latitude longitude:geoPoint.longitude completionHandler:^(NSArray *results, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                });
+                if (!error) {
+                    [self displayCurrentZoneSuggestions:results];
+                }
+            }];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            });
+        }
+    }];
+}
+
+- (void)displayCurrentZoneSuggestions:(NSArray *)suggestions {
+    UIAlertController *checkInController = [UIAlertController alertControllerWithTitle:@"Check-in" message:@"Where are you vybing? :)" preferredStyle:UIAlertControllerStyleActionSheet];
+    for (VYBZone *aZone in suggestions) {
+        UIAlertAction *action = [UIAlertAction actionWithTitle:aZone.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [[VYBMyVybeStore sharedStore] setCurrZone:aZone];
+            [self.selectZoneButton setTitle:aZone.name forState:UIControlStateNormal];
+        }];
+        [checkInController addAction:action];
+    }
+    if (checkInController.actions.count > 0) {
+        VYBZone *currZone = [[VYBMyVybeStore sharedStore] currZone];
+        if (currZone) {
+            [checkInController setMessage:[NSString stringWithFormat:@"Your are in %@", currZone.name]];
         }
         
-        [[[VYBMyVybeStore sharedStore] currVybe] setTag:self.tagTextField.text];
+    } else {
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Unlock your zone" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            // choose a name/tag for zone.
+        }];
+        [checkInController addAction:action];
     }
     
-    [[VYBMyVybeStore sharedStore] uploadCurrentVybe];
-    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"Go Back" style:UIAlertActionStyleCancel handler:nil];
+    [checkInController addAction:action];
+    
+    [self presentViewController:checkInController animated:YES completion:nil];
+}
+
+
+- (void)acceptButtonPressed {
+    VYBZone *currZone = [[VYBMyVybeStore sharedStore] currZone];
+    if (currZone) {
+        [[VYBMyVybeStore sharedStore] uploadCurrentVybe];
+        [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+    }
+    else {
+        //TODO: highlight zone button so they know what to do
+        
+    }
 }
 
 
 - (IBAction)rejectButtonPressed:(id)sender {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
+        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[_currVybe videoFilePath]];
         NSError *error;
         [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&error];
         if (error) {
@@ -169,13 +206,6 @@
     }];
 }
 
-- (void)viewTouchedToDismissKeyboard {
-    if ([self.tagTextField isFirstResponder])
-        [self.tagTextField resignFirstResponder];
-    else
-        [self.tagTextField becomeFirstResponder];
-}
-
 
 #pragma mark - UITextFieldDelegate
 
@@ -207,7 +237,7 @@
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[self.currVybe videoFilePath]];
+    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[_currVybe videoFilePath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
 
     switch (asset.videoOrientation) {

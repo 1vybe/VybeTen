@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class VYBZone;
 @interface VYBVybe : NSObject
 @property (nonatomic) CLLocation *locationCL;
+@property (nonatomic) VYBZone *vybeZone;
 
 - (VYBVybe *)initWithParseObject:(PFObject *)parseObj;
 - (PFObject *)parseObject;

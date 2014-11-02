@@ -72,17 +72,26 @@ static BOOL _uploadingOldVybes = NO;
     [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
     [nVybe setObject:[NSNumber numberWithBool:YES] forKey:kVYBVybeTypePublicKey];
     [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
-    VYBZone *zone = [[VYBMyVybeStore sharedStore] currZone];
-    [nVybe setObject:zone.name forKey:kVYBVybeZoneNameKey];
-    [nVybe setObject:zone.zoneID forKeyedSubscript:kVYBVybeZoneIDKey];
-    
+    if (self.currZone) {
+        [nVybe setObject:self.currZone.name forKey:kVYBVybeZoneNameKey];
+        [nVybe setObject:self.currZone.zoneID forKeyedSubscript:kVYBVybeZoneIDKey];
+    }
     _currVybe = [[VYBVybe alloc] initWithParseObject:nVybe];
     
-    [_locationManager startUpdatingLocation];
+    //[_locationManager startUpdatingLocation];
+}
+
+- (void)setCurrZone:(VYBZone *)currZone {
+    _currZone = currZone;
+    // Update current vybe's zone here
+    if (_currVybe) {
+        [_currVybe setVybeZone:_currZone];
+    }
 }
 
 
 - (void)uploadCurrentVybe {
+    
     dispatch_async(_currentUploadQueue, ^{
         
         [VYBUtility saveThumbnailImageForVybe:_currVybe];
@@ -141,6 +150,7 @@ static BOOL _uploadingOldVybes = NO;
     });
 
 }
+
 
 - (void)didUploadVybe:(VYBVybe *)cVybe {
     NSAssert(cVybe, @"did upload a vybe but currVybe is nil now");
