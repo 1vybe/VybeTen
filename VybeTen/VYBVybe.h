@@ -21,7 +21,6 @@
 - (NSString *)tagString;
 
 - (void)setTag:(NSString *)tag;
-- (void)setGeoTag:(CLLocation *)location;
 - (void)setLocationString:(NSString *)locationString;
 - (BOOL)hasLocationData;
 @end

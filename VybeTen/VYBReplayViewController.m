@@ -107,6 +107,31 @@
                     [self displayCurrentZoneSuggestions:results];
                 }
             }];
+            
+            CLLocation *currLoc = [[CLLocation alloc] initWithLatitude:geoPoint.latitude longitude:geoPoint.longitude];
+            [_currVybe setLocationCL:currLoc];
+            
+            CLGeocoder *reverseGeocoder = [[CLGeocoder alloc] init];
+            [reverseGeocoder reverseGeocodeLocation:currLoc completionHandler:^(NSArray *placemarks, NSError *error) {
+                NSString *locationStr = [[NSString alloc] init];
+                NSString *tag = [[NSString alloc] init];
+                if (!error) {
+                    CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
+                    NSString *neighborhood = myPlacemark.subLocality;
+                    NSString *city = myPlacemark.locality;
+                    NSString *isoCountryCode = myPlacemark.ISOcountryCode;
+                    locationStr = [NSString stringWithFormat:@"%@,%@,%@",neighborhood, city, isoCountryCode];
+                    tag = neighborhood;
+                } else {
+                    locationStr = @"Earth, unknown, unknown";
+                    tag = @"Earth";
+                }
+                
+                [_currVybe setLocationString:locationStr];
+                [_currVybe setTag:tag];
+            }];
+            
+
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -173,61 +198,6 @@
 - (void)locationFetched:(NSNotification *)notification {
     //[self.acceptButton setEnabled:YES];
 }
-
-#pragma mark - Keyboard
-
-- (void)keyboardWillShow:(NSNotification *)notification {
-    NSDictionary *dictionary = [notification userInfo];
-    CGSize keyboardSize = [[dictionary objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    
-    
-    NSNumber *duration = [dictionary objectForKey:UIKeyboardAnimationDurationUserInfoKey];
-    NSTimeInterval animationDuration = [duration doubleValue];
-
-    self.acceptButtonBottomSpacingConstraint.constant = keyboardSize.height - self.acceptButton.bounds.size.height;
-
-    [self.view setNeedsUpdateConstraints];
-    [UIView animateWithDuration:animationDuration animations:^{
-        [self.view layoutIfNeeded];
-    }];
-}
-
-- (void)keyboardWillHide:(NSNotification *)notification {
-    NSDictionary *dictionary = [notification userInfo];
-    
-    NSNumber *duration = [dictionary objectForKey:UIKeyboardAnimationDurationUserInfoKey];
-    NSTimeInterval animationDuration = [duration doubleValue];
-    
-    self.acceptButtonBottomSpacingConstraint.constant = 0;
-    
-    [self.view setNeedsUpdateConstraints];
-    [UIView animateWithDuration:animationDuration animations:^{
-        [self.view layoutIfNeeded];
-    }];
-}
-
-
-#pragma mark - UITextFieldDelegate
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if (textField.text.length < 3) {
-        if (textField.text.length > 0) {
-            textField.text = @"";
-            return NO;
-        }
-    }
-    
-    [textField resignFirstResponder];
-    [self acceptButtonPressed];
-    
-    return YES;
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
-    textField.returnKeyType = UIReturnKeyGo;
-}
-
 
 
 #pragma mark - DeviceOrientation

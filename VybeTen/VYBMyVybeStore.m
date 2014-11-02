@@ -14,21 +14,18 @@
 #import "VYBUtility.h"
 #import "VYBMyVybeStore.h"
 
-@interface VYBMyVybeStore () <CLLocationManagerDelegate> {
+@interface VYBMyVybeStore () {
     VYBVybe *_currVybe;
     dispatch_queue_t _currentUploadQueue;
     
     NSMutableArray *_vybesToUpload;
     dispatch_queue_t _oldUploadQueue;
-    
-    CLLocationManager *_locationManager;
 }
 
 @end
 @implementation VYBMyVybeStore
 
 static CLLocation *_bestLocation;
-static BOOL _reverseGeocodingInProgress = YES;
 static BOOL _uploadingOldVybes = NO;
 
 + (VYBMyVybeStore *)sharedStore {
@@ -51,12 +48,6 @@ static BOOL _uploadingOldVybes = NO;
         
         _oldUploadQueue = dispatch_queue_create("vybestore old upload queue", DISPATCH_QUEUE_SERIAL);
         
-        if ([CLLocationManager locationServicesEnabled]) {
-            _locationManager = [[CLLocationManager alloc] init];
-            _locationManager.delegate = self;
-            _locationManager.desiredAccuracy=kCLLocationAccuracyBest;
-        }
-        
         // Load saved videos from Vybe's Documents directory
         NSString *path = [self myVybesArchivePath];
         _vybesToUpload = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithFile:path]];
@@ -72,13 +63,9 @@ static BOOL _uploadingOldVybes = NO;
     [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
     [nVybe setObject:[NSNumber numberWithBool:YES] forKey:kVYBVybeTypePublicKey];
     [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
-    if (self.currZone) {
-        [nVybe setObject:self.currZone.name forKey:kVYBVybeZoneNameKey];
-        [nVybe setObject:self.currZone.zoneID forKeyedSubscript:kVYBVybeZoneIDKey];
-    }
+
     _currVybe = [[VYBVybe alloc] initWithParseObject:nVybe];
     
-    //[_locationManager startUpdatingLocation];
 }
 
 - (void)setCurrZone:(VYBZone *)currZone {
@@ -95,10 +82,6 @@ static BOOL _uploadingOldVybes = NO;
     dispatch_async(_currentUploadQueue, ^{
         
         [VYBUtility saveThumbnailImageForVybe:_currVybe];
-        
-        while (_reverseGeocodingInProgress) {
-            
-        }
         
         if ( [(VYBAppDelegate *)[UIApplication sharedApplication].delegate isParseReachable] ) {
             NSData *video = [NSData dataWithContentsOfFile:[_currVybe videoFilePath]];
@@ -300,58 +283,6 @@ static BOOL _uploadingOldVybes = NO;
     NSString *path = [self myVybesArchivePath];
     return [NSKeyedArchiver archiveRootObject:_vybesToUpload toFile:path];
 }
-
-
-#pragma mark - CLLocationManagerDelegate
-
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-    NSLog(@"Failed to get current location");
-    
-    [_currVybe setLocationString:@"Earth, unknown, unknown"];
-    _reverseGeocodingInProgress = NO;
-
-    [_locationManager stopUpdatingLocation];
-}
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    CLLocation *newLocation = [locations lastObject];
-
-    if (!_bestLocation) {
-        _bestLocation = newLocation;
-    }
-    else {
-        if (_bestLocation.horizontalAccuracy > newLocation.horizontalAccuracy) {
-            _bestLocation = newLocation;
-        }
-    }
-    [_currVybe setGeoTag:_bestLocation];
-        
-    CLGeocoder *reverseGeocoder = [[CLGeocoder alloc] init];
-    _reverseGeocodingInProgress = YES;
-    [reverseGeocoder reverseGeocodeLocation:_bestLocation completionHandler:^(NSArray *placemarks, NSError *error) {
-        NSString *locationStr = [[NSString alloc] init];
-        NSString *tag = [[NSString alloc] init];
-        if (!error) {
-            CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
-            NSString *neighborhood = myPlacemark.subLocality;
-            NSString *city = myPlacemark.locality;
-            NSString *isoCountryCode = myPlacemark.ISOcountryCode;
-            locationStr = [NSString stringWithFormat:@"%@,%@,%@",neighborhood, city, isoCountryCode];
-            tag = neighborhood;
-        } else {
-            locationStr = @"Earth, unknown, unknown";
-            tag = @"Earth";
-        }
-        
-        [_currVybe setLocationString:locationStr];
-        [_currVybe setTag:tag];
-        
-        _reverseGeocodingInProgress = NO;
-    }];
-    
-    [_locationManager stopUpdatingLocation];
-}
-
 
 
 @end
