@@ -23,12 +23,11 @@ class VYBMapViewController: UIViewController, MKMapViewDelegate {
                 break
             }
 
-            let geoPoint = aVybe[kVYBVybeGeotag] as PFGeoPoint
-            let location = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
-            let vAnnotation = MKPointAnnotation()
-            vAnnotation.setCoordinate(location)
-            
-            mapView.addAnnotation(vAnnotation)
+            if let geoPoint = aVybe[kVYBVybeGeotag] as PFGeoPoint? {
+                let vAnnotation = MKPointAnnotation()
+                vAnnotation.coordinate = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
+                mapView.addAnnotation(vAnnotation)
+            }
         }
     }
     
