@@ -18,10 +18,6 @@
     [self.sourceViewController presentViewController:player animated:YES completion:^{
         [VYBUtility fetchFreshVybeFeedWithCompletion:^(BOOL succeeded, NSError *error) {
             if (!error) {
-                NSArray *freshContents = [[VYBCache sharedCache] freshVybes];
-                if (freshContents && freshContents.count > 0) {
-                    [player playVybes:freshContents];
-                }
 
             }
         }];

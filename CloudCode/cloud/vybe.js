@@ -185,11 +185,10 @@ Parse.Cloud.define('get_count_for_zone',
 
 
 // Default algorithm used in the app
-Parse.Cloud.define('get_active_vybes',
-  get_vybes.bind(this, {
+Parse.Cloud.define('get_active_zone_vybes',
+  get_active_zone_vybes.bind(this, {
     recent: true,
-    hide_user: true,
-    reversed: false,
+    hide_user: false,
     limit: 50,
   })
 );
@@ -402,6 +401,7 @@ function get_vybes_in_zone(options, request, response) {
   var limit = options.limit || 50;
   var ignore_past = options.ignore_past || false;
   var count_only = options.count_only || false;
+  var skip_current_vybe = options.skip_current_vybe || false;
 
   var query = new Parse.Query('Vybe');
   query.include('user');
@@ -410,14 +410,16 @@ function get_vybes_in_zone(options, request, response) {
     query.addDescending('timestamp');
   if (hide_user)
     query.notEqualTo('user', currentUser);
+  if (skip_current_vybe)  // Don't include itself
+    query.notEqualTo('objectId', request.params.vybeID);
   if (limit)
     query.limit(limit);
 
   // Don't get private vybes
   query.notEqualTo('isPublic', false);
 
-  // Don't include itself
-  query.notEqualTo('objectId', request.params.vybeID);
+
+
 
   query.equalTo('zoneID', request.params.zoneID);
 
@@ -427,7 +429,7 @@ function get_vybes_in_zone(options, request, response) {
   if (count_only) {
     query.count({
       success: function(nearbyCount) {
-        console.log('nearby count found ' + nearbyCount);
+        console.log(nearbyCount + 'vybes counted after this vybe in this zone');
         response.success(nearbyCount);
       },
       error: function() {
@@ -437,7 +439,7 @@ function get_vybes_in_zone(options, request, response) {
   } else {
     query.find({
       success: function(vybesObjects) {
-        console.log('nearby vybes found ' + vybesObjects.length);
+        console.log(vybesObjects.length + 'vybes found after this vybe in this zone');
         if (reversed) {
           response.success(vybesObjects);
         } else {
@@ -446,10 +448,48 @@ function get_vybes_in_zone(options, request, response) {
         }
       },
       error: function() {
-        response.error('Request to get_vybes() has failed.');
+        response.error('Request to get_vybes_in_zone() has failed.');
       }
     });
   }
+}
+
+function get_active_zone_vybes(options, request, response) {
+  var recent = options.recent || false;
+  var hide_user = options.hide_user || false;
+  var reversed = options.reversed || false;
+  var limit = options.limit || 500;
+
+  var query = new Parse.Query('Vybe');
+ if (recent)
+    query.addDescending('timestamp');
+  if (hide_user)
+    query.notEqualTo('user', currentUser);
+  if (limit)
+    query.limit(limit);
+
+  query.equalTo('zoneID', request.params.zoneID);
+
+ // 24 hour window 
+  var currTime = new Date();
+  var ttlAgo = new Date();
+  ttlAgo.setHours(currTime.getHours() - 24);
+  query.greaterThanOrEqualTo('timestamp',ttlAgo);
+
+   query.find({
+      success: function(vybesObjects) {
+        console.log('active vybes found ' + vybesObjects.length);
+        if (reversed) {
+          response.success(vybesObjects);
+        } else {
+          // Sort result in chronological order
+          response.success(vybesObjects.reverse());
+        }
+      },
+      error: function() {
+        response.error('Request to get_active_zone_vybes() has failed.');
+      }
+  });
 }
 
 function get_region_vybes(options, request, response) {

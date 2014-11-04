@@ -17,6 +17,7 @@
 #import "VYBCache.h"
 #import "VYBConstants.h"
 #import "VYBActiveButton.h"
+#import "NSArray+PFObject.h"
 #import <GAI.h>
 #import <GAITracker.h>
 #import <GAIFields.h>
@@ -93,8 +94,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    menuMode = NO;
-
     // Set up player view
     VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
     [playerView setFrame:[[UIScreen mainScreen] bounds]];
@@ -114,15 +113,8 @@
     tapPortalButton.numberOfTapsRequired = 1;
     [portalButton addGestureRecognizer:tapPortalButton];
     
-    /*
-    // Portal button image set up
-    [portalButton setNormalImage:[UIImage imageNamed:@"player_zone_in.png"]
-                  highlightImage:[UIImage imageNamed:@"player_zone_in_highlight.png"]];
-    [portalButton setActiveImage:[UIImage imageNamed:@"player_zone_out.png"]
-                  highlightImage:[UIImage imageNamed:@"player_zone_out_highlight.png"]];
-    [portalButton setActive:NO];
-    */
-    
+    menuMode = NO;
+
     [self syncUIElementsWithMenuMode];
 }
 
@@ -141,20 +133,36 @@
     if (self.currPlayer && self.currItem) {
         [self.currPlayer play];
     }
-    /*
-    
-    else {
-        NSString *functionName = @"get_active_vybes";
-        [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                self.vybePlaylist = objects;
-                if (self.vybePlaylist.count > 0)
-                    [self beginPlayingFrom:0];
-            }
-        }];
-    }
-     */
 }
+
+- (void)playZoneVybesAfterVybe:(PFObject *)aVybe {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    [PFCloud callFunctionInBackground:@"get_vybes_in_zone"
+                       withParameters:@{ @"vybeID" : aVybe.objectId,
+                                         @"zoneID" : aVybe[kVYBVybeZoneIDKey],
+                                         @"timestamp" : aVybe[kVYBVybeTimestampKey]}
+                                block:^(NSArray *objects, NSError *error) {
+                                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                                    if (!error) {
+                                        if (objects.count > 0) {
+                                            _zoneVybes = objects;
+                                            _zoneCurrIdx = 0;
+                                            [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                [self.portalButton setSelected:YES];
+                                            });
+                                        }
+                                        else {
+                                            //Your vybe is the most recent so object count should always be at least 1
+                                        }
+                                    }
+                                    else {
+                                        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+                                    }
+                                }];
+}
+
 
 - (void)playVybes:(NSArray *)vybes {
     [self playVybes:vybes from:0];
@@ -169,22 +177,47 @@
 }
 
 - (void)playActiveVybesFromZone:(NSString *)zoneID {
-    // Set zone vybes from fresh contents that were fetched
+    // Pick fresh vybes from this zone and store them
     NSArray *freshContents = [[VYBCache sharedCache] freshVybes];
-    if (freshContents && freshContents.count > 0) {
-        NSMutableArray *zoneVybes = [[NSMutableArray alloc] init];
+    NSMutableArray *zoneVybes = [[NSMutableArray alloc] init];
+
+    // We only care about fresh vybes from this zone
+    if (freshContents) {
         for (PFObject *aVybe in freshContents) {
             if (aVybe[kVYBVybeZoneIDKey] && [aVybe[kVYBVybeZoneIDKey] isEqualToString:zoneID] ) {
                 [zoneVybes addObject:aVybe];
             }
         }
+    }
+    
+    [self.portalButton setSelected:YES];
+
+    if (zoneVybes.count > 0) {
         _zoneVybes = zoneVybes;
-        [self.portalButton setSelected:YES];
         _zoneCurrIdx = 0;
         [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
     }
+    // User watched all the active vybes. It will show you vybes from past 24 hours now.
     else {
-        //TODO: load the most recent vybe from this zone
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        NSString *functionName = @"get_active_zone_vybes";
+        [PFCloud callFunctionInBackground:functionName withParameters:@{@"zoneID": zoneID} block:^(NSArray *objects, NSError *error) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            if (!error) {
+                if (objects.count > 0) {
+                    _zoneVybes = objects;
+                    _zoneCurrIdx = 0;
+                    [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+                }
+                else {
+                    //TODO: No vybe within past 24 hours.
+                    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+                }
+            }
+            else {
+                [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+            }
+        }];
     }
 }
 
@@ -208,11 +241,8 @@
             
             [self playAsset:asset];
             // this playerVC is ONLY playing zone vybes
-            if (!_initialStream) {
+            if (!self.initialStream) {
                 [[VYBCache sharedCache] removeFreshVybe:currVybe];
-            }
-            else {
-                
             }
         } else {
             PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
@@ -224,7 +254,10 @@
                     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
                     
                     [self playAsset:asset];
-                    [[VYBCache sharedCache] removeFreshVybe:currVybe];
+                    // this playerVC is ONLY playing zone vybes
+                    if (!self.initialStream) {
+                        [[VYBCache sharedCache] removeFreshVybe:currVybe];
+                    }
                 } else {
                     UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                     [av show];
@@ -233,6 +266,7 @@
         }
     }];
 }
+
 
 #pragma mark - DeviceOrientation
 
@@ -257,24 +291,22 @@
     [super didReceiveMemoryWarning];
 }
 
-- (void)syncUIWithCurrentVybe {
-    
-}
-
-
-
 - (void)syncUI:(PFObject *)aVybe withCompletion:(void (^)())completionBlock {
     // Display location and time
     [locationTimeButton setTitle:@"" forState:UIControlStateNormal];
     NSString *locationTimeString = [[NSString alloc] init];
-    NSString *locationStr = aVybe[kVYBVybeLocationStringKey];
-    NSArray *arr = [locationStr componentsSeparatedByString:@","];
-    if (arr.count == 3) {
-        locationStr = [arr[1] stringByAppendingString:@", "];
-    } else {
-        locationStr = @"Earth, ";
+    NSString *zoneName = aVybe[kVYBVybeZoneNameKey];
+    if (!zoneName) {
+        zoneName = aVybe[kVYBVybeLocationStringKey];
+        NSArray *arr = [zoneName componentsSeparatedByString:@","];
+        if (arr.count == 3) {
+            zoneName = [arr[1] stringByAppendingString:@", "];
+        } else {
+            zoneName = @"Earth, ";
+        }
     }
-    locationTimeString = [locationStr stringByAppendingString:[VYBUtility reverseTime:[aVybe objectForKey:kVYBVybeTimestampKey]]];
+    
+    locationTimeString = [zoneName stringByAppendingString:[VYBUtility reverseTime:[aVybe objectForKey:kVYBVybeTimestampKey]]];
     [locationTimeButton setTitle:locationTimeString forState:UIControlStateNormal];
     
     
@@ -307,8 +339,8 @@
                     if (!error) {
                         [[VYBCache sharedCache] setNearbyCount:count forVybe:aVybe];
                         BOOL hasNearby = [count boolValue];
-                                                   [portalButton setHidden:YES];
- if (hasNearby) {
+                        [portalButton setHidden:YES];
+                        if (hasNearby) {
                             [portalButton setHidden:NO];
                         }
                         else {
@@ -377,7 +409,7 @@
                                         // Updadate counter because you just zoned in
                                         //TODO: shine a number of something to notify
                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                            [self.portalButton setTitle:[NSString stringWithFormat:@"%ld", _zoneVybes.count] forState:UIControlStateNormal];
+                                            [self.counterButton setTitle:[NSString stringWithFormat:@"%ld", _zoneVybes.count] forState:UIControlStateNormal];
                                         });
                                     }
                                     [self.currPlayer play];
@@ -394,9 +426,27 @@
 }
 
 - (void)portalButtonZoneOut:(UIButton *)button {
-    //[self.currPlayer pause];
-
+    if (self.initialStream) {
+        //Remove vybes from the stream that you watched while you were in the zone
+        NSMutableArray *watchedZoneVybes = [[NSMutableArray alloc] init];
+        for (int i = 0; i <= _zoneCurrIdx; i++) {
+            [watchedZoneVybes addObject:_zoneVybes[i]];
+        }
+        
+        NSMutableArray *prunedStream = [[NSMutableArray alloc] init];
+        
+        for (NSInteger i = _initialStreamCurrIdx; i < self.initialStream.count; i++) {
+            if ( ! [watchedZoneVybes containsPFObject:self.initialStream[i]] ) {
+                [prunedStream addObject:self.initialStream[i]];
+            }
+        }
+        
+        self.initialStream = prunedStream;
+        _initialStreamCurrIdx = -1;
+    }
+    
     _zoneVybes = nil;
+
 
 #warning this does not create any animation effect
     // Animation to change bg image
