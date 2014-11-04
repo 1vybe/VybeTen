@@ -23,9 +23,10 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
 
 @implementation VYBPermissionViewController {
     CLLocationManager *_locationManager;
-    BOOL _isLatestOS;
     
     VYBPermissionStage _currentStage;
+    
+    BOOL _isLatestOS;
 }
 
 
@@ -44,8 +45,8 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
     [super viewDidLoad];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
     _currentStage = VYBPermissionStageNone;
     

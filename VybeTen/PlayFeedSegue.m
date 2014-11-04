@@ -7,18 +7,24 @@
 //
 
 #import "PlayFeedSegue.h"
-#import "VYBPlayerControlViewController.h"
+#import "VYBPlayerViewController.h"
+#import "VYBUtility.h"
 #import "VYBCache.h"
 
 @implementation PlayFeedSegue
 
 - (void)perform {
-    VYBPlayerControlViewController *player = (VYBPlayerControlViewController *)self.destinationViewController;
+    VYBPlayerViewController *player = (VYBPlayerViewController *)self.destinationViewController;
     [self.sourceViewController presentViewController:player animated:YES completion:^{
-        NSArray *freshContents = [[VYBCache sharedCache] freshVybes];
-        if (freshContents && freshContents.count > 0) {
-            [player playVybes:freshContents];
-        }
+        [VYBUtility fetchFreshVybeFeedWithCompletion:^(BOOL succeeded, NSError *error) {
+            if (!error) {
+                NSArray *freshContents = [[VYBCache sharedCache] freshVybes];
+                if (freshContents && freshContents.count > 0) {
+                    [player playVybes:freshContents];
+                }
+
+            }
+        }];
     }];
 }
 

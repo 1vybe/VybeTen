@@ -52,7 +52,7 @@
     if (self) {
         [self setUniqueFileName:[aDecoder decodeObjectForKey:@"uniqueFileName"]];
         [self setLocationCL:[aDecoder decodeObjectForKey:@"location"]];
-        [self setVybeZone:[aDecoder decodeObjectForKey:@"vybeZone"]];
+        //[self setVybeZone:[aDecoder decodeObjectForKey:@"vybeZone"]];
         [self setParseObjectDictionary:[NSMutableDictionary dictionaryWithDictionary:
                                         [aDecoder decodeObjectForKey:@"parseObjectDictionary"]]];
     }
@@ -63,7 +63,7 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.uniqueFileName forKey:@"uniqueFileName"];
     [aCoder encodeObject:self.locationCL forKey:@"location"];
-    [aCoder encodeObject:self.vybeZone forKey:@"vybeZone"];
+    //[aCoder encodeObject:self.vybeZone forKey:@"vybeZone"];
     [aCoder encodeObject:self.parseObjectDictionary forKey:@"parseObjectDictionary"];
 }
 
@@ -78,12 +78,6 @@
     
     if (self.locationCL)
         [parseObj setObject:[PFGeoPoint geoPointWithLocation:self.locationCL] forKey:kVYBVybeGeotag];
-    
-    if (self.vybeZone) {
-        [parseObj setObject:self.vybeZone.name forKey:kVYBVybeZoneNameKey];
-        [parseObj setObject:self.vybeZone.zoneID forKey:kVYBVybeZoneIDKey];
-    }
-        
     
     return parseObj;
 }
@@ -106,12 +100,25 @@
     return [thumbnailPath stringByAppendingPathExtension:@"jpeg"];
 }
 
+- (NSString *)zoneID {
+    return [self.parseObjectDictionary objectForKey:kVYBVybeZoneIDKey];
+}
+
+- (NSString *)zoneName {
+    return [self.parseObjectDictionary objectForKey:kVYBVybeZoneNameKey];
+}
+
 - (NSString *)locationString {
     return [self.parseObjectDictionary objectForKey:kVYBVybeLocationStringKey];
 }
 
 - (NSString *)tagString {
     return [self.parseObjectDictionary objectForKey:kVYBVybeTagKey];
+}
+
+- (void)setVybeZone:(VYBZone *)zone {
+    [self.parseObjectDictionary setObject:zone.zoneID forKey:kVYBVybeZoneIDKey];
+    [self.parseObjectDictionary setObject:zone.name forKey:kVYBVybeZoneNameKey];
 }
 
 - (void)setGeoTag:(CLLocation *)location {

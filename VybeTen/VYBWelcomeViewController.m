@@ -29,12 +29,11 @@
         return;
     } else {
         [(VYBAppDelegate*)[[UIApplication sharedApplication] delegate] proceedToMainInterface];
+        
+        // Refresh current user with server side data -- checks if user is still valid and so on
+        [[PFUser currentUser] fetchInBackgroundWithTarget:self selector:@selector(refreshCurrentUserCallbackWithResult:error:)];
     }
-    
-    // Refresh current user with server side data -- checks if user is still valid and so on
-    [[PFUser currentUser] fetchInBackgroundWithTarget:self selector:@selector(refreshCurrentUserCallbackWithResult:error:)];
-    [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
-}
+   }
 
 #pragma mark - Private
 
@@ -44,6 +43,10 @@
         NSLog(@"User does not exist.");
         [(VYBAppDelegate*)[[UIApplication sharedApplication] delegate] logOut];
         return;
+    }
+    // fetch fresh contents for acknowledged user
+    else {
+        [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
     }
 }
 

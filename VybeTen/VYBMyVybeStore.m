@@ -66,6 +66,11 @@ static BOOL _uploadingOldVybes = NO;
 
     _currVybe = [[VYBVybe alloc] initWithParseObject:nVybe];
     
+    // By default a vybe will be tagged to your last checked-in zone
+    if (_currZone) {
+        [_currVybe setVybeZone:_currZone];
+    }
+    
 }
 
 - (void)setCurrZone:(VYBZone *)currZone {
@@ -124,7 +129,7 @@ static BOOL _uploadingOldVybes = NO;
             
             // Update user lastVybeLocation and lastVybeTime field.
             [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
-            [[PFUser currentUser] setObject:[_currVybe locationString] forKey:kVYBUserLastVybedLocationKey];
+            [[PFUser currentUser] setObject:[_currVybe zoneID] forKey:kVYBUserLastVybedZoneKey];
             [[PFUser currentUser] saveInBackground];
         }
         else {
@@ -247,7 +252,7 @@ static BOOL _uploadingOldVybes = NO;
     if (currUserLastVybedTime &&
         ([currUserLastVybedTime timeIntervalSinceDate:vybe[kVYBVybeTimestampKey]] < 0)) {
         [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
-        [[PFUser currentUser] setObject:vybe[kVYBVybeLocationStringKey] forKey:kVYBUserLastVybedLocationKey];
+        [[PFUser currentUser] setObject:[aVybe zoneID] forKey:kVYBUserLastVybedZoneKey];
         success = [[PFUser currentUser] save];
         
         return success;

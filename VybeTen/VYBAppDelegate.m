@@ -16,7 +16,7 @@
 #import "VYBAppDelegate.h"
 #import "VYBUserStore.h"
 #import "VYBCaptureViewController.h"
-#import "VYBPlayerControlViewController.h"
+#import "VYBPlayerViewController.h"
 #import "VYBPermissionViewController.h"
 #import "VYBActivityTableViewController.h"
 #import "VYBWelcomeViewController.h"

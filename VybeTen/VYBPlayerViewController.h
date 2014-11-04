@@ -1,5 +1,5 @@
 //
-//  VYBPlayerControlViewController.h
+//  VYBPlayerViewController.h
 //  VybeTen
 //
 //  Created by jinsuk on 10/6/14.
@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBPlayerControlViewController : UIViewController
+@interface VYBPlayerViewController : UIViewController
 - (id)initWithPageIndex:(NSInteger)pageIndex;
 - (NSInteger)pageIndex;
 
 // Called should call this method inside the completion block when it is calling presentViewController: 
 - (void)playVybes:(NSArray *)vybes;
+- (void)playActiveVybesFromZone:(NSString *)zoneID;
 - (void)playVybes:(NSArray *)vybes from:(NSInteger)idx;
 
 

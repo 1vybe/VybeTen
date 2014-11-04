@@ -11,7 +11,7 @@
 @class VYBZone;
 @interface VYBVybe : NSObject
 @property (nonatomic) CLLocation *locationCL;
-@property (nonatomic) VYBZone *vybeZone;
+//@property (nonatomic) VYBZone *vybeZone;
 
 - (VYBVybe *)initWithParseObject:(PFObject *)parseObj;
 - (PFObject *)parseObject;
@@ -19,7 +19,10 @@
 - (NSString *)thumbnailFilePath;
 - (NSString *)locationString;
 - (NSString *)tagString;
+- (NSString *)zoneID;
+- (NSString *)zoneName;
 
+- (void)setVybeZone:(VYBZone *)zone;
 - (void)setTag:(NSString *)tag;
 - (void)setLocationString:(NSString *)locationString;
 - (BOOL)hasLocationData;

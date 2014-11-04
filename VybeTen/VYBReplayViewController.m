@@ -16,7 +16,7 @@
 #import "VYBNavigationController.h"
 #import "AVAsset+VideoOrientation.h"
 
-@interface VYBReplayViewController () <UITextFieldDelegate>
+@interface VYBReplayViewController () <UITextFieldDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *acceptButton;
 @property (nonatomic, weak) IBOutlet UIButton *rejectButton;
@@ -36,6 +36,7 @@
 
 @implementation VYBReplayViewController {
     VYBVybe *_currVybe;
+    NSArray *_suggestions;
 }
 
 - (void)dealloc {
@@ -104,7 +105,8 @@
                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                 });
                 if (!error) {
-                    [self displayCurrentZoneSuggestions:results];
+                    _suggestions = results;
+                    [self displayCurrentPlaceSuggestions:results];
                 }
             }];
             
@@ -140,32 +142,62 @@
     }];
 }
 
-- (void)displayCurrentZoneSuggestions:(NSArray *)suggestions {
-    UIAlertController *checkInController = [UIAlertController alertControllerWithTitle:@"Check-in" message:@"Where are you vybing? :)" preferredStyle:UIAlertControllerStyleActionSheet];
-    for (VYBZone *aZone in suggestions) {
-        UIAlertAction *action = [UIAlertAction actionWithTitle:aZone.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            [[VYBMyVybeStore sharedStore] setCurrZone:aZone];
-            [self.selectZoneButton setTitle:aZone.name forState:UIControlStateNormal];
-        }];
-        [checkInController addAction:action];
-    }
-    if (checkInController.actions.count > 0) {
-        VYBZone *currZone = [[VYBMyVybeStore sharedStore] currZone];
-        if (currZone) {
-            [checkInController setMessage:[NSString stringWithFormat:@"Your are in %@", currZone.name]];
+- (void)displayCurrentPlaceSuggestions:(NSArray *)suggestions {
+    CLLocationManager *tmp = [[CLLocationManager alloc] init];
+    BOOL isLatestOS = [tmp respondsToSelector:@selector(requestAlwaysAuthorization)];
+    
+    // iOS 8
+    if (isLatestOS) {
+        UIAlertController *checkInController = [UIAlertController alertControllerWithTitle:@"Check-in" message:@"Where are you vybing? :)" preferredStyle:UIAlertControllerStyleActionSheet];
+        for (VYBZone *aZone in suggestions) {
+            UIAlertAction *action = [UIAlertAction actionWithTitle:aZone.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                [[VYBMyVybeStore sharedStore] setCurrZone:aZone];
+                [self.selectZoneButton setTitle:aZone.name forState:UIControlStateNormal];
+            }];
+            [checkInController addAction:action];
+        }
+        if (checkInController.actions.count > 0) {
+            VYBZone *currZone = [[VYBMyVybeStore sharedStore] currZone];
+            if (currZone) {
+                [checkInController setMessage:[NSString stringWithFormat:@"Your are in %@", currZone.name]];
+            }
+        } else {
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"Unlock your zone" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                // choose a name/tag for zone.
+            }];
+            [checkInController addAction:action];
         }
         
-    } else {
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Unlock your zone" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            // choose a name/tag for zone.
-        }];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Go Back" style:UIAlertActionStyleCancel handler:nil];
         [checkInController addAction:action];
+        
+        [self presentViewController:checkInController animated:YES completion:nil];
     }
-    
-    UIAlertAction *action = [UIAlertAction actionWithTitle:@"Go Back" style:UIAlertActionStyleCancel handler:nil];
-    [checkInController addAction:action];
-    
-    [self presentViewController:checkInController animated:YES completion:nil];
+    else {
+        UIActionSheet *actionsheet = [[UIActionSheet alloc] initWithTitle:@"Where are you vybing?" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+        for (VYBZone *aZone in _suggestions) {
+            [actionsheet addButtonWithTitle:aZone.name];
+        }
+        [actionsheet addButtonWithTitle:@"Go Back"];
+        actionsheet.cancelButtonIndex = _suggestions.count;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [actionsheet showInView:[UIApplication sharedApplication].keyWindow];
+        });
+    }
+}
+
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    // cancel button 
+    if (buttonIndex == _suggestions.count) {
+
+    }
+    else {
+        VYBZone *zone = _suggestions[buttonIndex];
+        [self.selectZoneButton setTitle:zone.name forState:UIControlStateNormal];
+        [[VYBMyVybeStore sharedStore] setCurrZone:zone];
+    }
 }
 
 
@@ -207,7 +239,8 @@
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[_currVybe videoFilePath]];
+    VYBVybe *currVybe = [[VYBMyVybeStore sharedStore] currVybe];
+    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[currVybe videoFilePath]];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
 
     switch (asset.videoOrientation) {

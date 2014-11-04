@@ -213,10 +213,10 @@
             </objects>
             <point key="canvasLocation" x="1749.5" y="2374.5"/>
         </scene>
-        <!--Player Control View Controller-->
+        <!--Player View Controller-->
         <scene sceneID="lgC-vi-hZJ">
             <objects>
-                <viewController id="4nv-U8-Nbd" customClass="VYBPlayerControlViewController" sceneMemberID="viewController"/>
+                <viewController id="4nv-U8-Nbd" customClass="VYBPlayerViewController" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cWG-q1-XSt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2654" y="2375"/>

@@ -87,7 +87,7 @@ extern NSString *const kVYBUserDefaultsVideoAccessPermissionGrantedKey;
 extern NSString *const kVYBUserUsernameKey;
 extern NSString *const kVYBUserProfilePicSmallKey;
 extern NSString *const kVYBUserProfilePicMediumKey;
-extern NSString *const kVYBUserLastVybedLocationKey;
+extern NSString *const kVYBUserLastVybedZoneKey;
 extern NSString *const kVYBUserLastVybedTimeKey;
 extern NSString *const kVYBUserFreshFeedKey;
 extern NSString *const kVYBUserLastRefreshedKey;

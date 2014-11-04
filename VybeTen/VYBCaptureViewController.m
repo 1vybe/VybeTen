@@ -27,7 +27,7 @@
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
 
-@interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate> {
+@interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
     NSInteger _pageIndex;
 }
 
@@ -41,6 +41,7 @@
 - (IBAction)flipButtonPressed:(id)sender;
 - (IBAction)flashButtonPressed:(id)sender;
 - (IBAction)mapButtonPressed:(id)sender;
+- (IBAction)selectPlaceButtonPressed:(id)sender;
 
 //@property (nonatomic) VYBMyVybe *currVybe;
 @property (nonatomic) VYBCapturePipeline *capturePipeline;
@@ -61,6 +62,8 @@
     UIBackgroundTaskIdentifier _backgroundRecordingID;
     
     VYBOldZoneFinder *_oldZoneFinder;
+    
+    NSArray *_suggestions;
 }
 
 @synthesize flipButton;
@@ -376,6 +379,107 @@
     }
 }
 
+#pragma mark - Zone
+- (IBAction)selectPlaceButtonPressed:(id)sender {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+        if (!error) {
+            VYBOldZoneFinder *oldZoneFinder = [[VYBOldZoneFinder alloc] init];
+            //TODO: _oldZoneFinder.numOfResults = 10;
+            [oldZoneFinder findZoneNearLocationInBackgroundWithLatitude:geoPoint.latitude longitude:geoPoint.longitude completionHandler:^(NSArray *results, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                });
+                if (!error) {
+                    _suggestions = results;
+                    [self displayCurrentPlaceSuggestions:results];
+                }
+            }];
+            
+            CLLocation *currLoc = [[CLLocation alloc] initWithLatitude:geoPoint.latitude longitude:geoPoint.longitude];
+            
+            CLGeocoder *reverseGeocoder = [[CLGeocoder alloc] init];
+            [reverseGeocoder reverseGeocodeLocation:currLoc completionHandler:^(NSArray *placemarks, NSError *error) {
+                NSString *locationStr = [[NSString alloc] init];
+                NSString *tag = [[NSString alloc] init];
+                if (!error) {
+                    CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
+                    NSString *neighborhood = myPlacemark.subLocality;
+                    NSString *city = myPlacemark.locality;
+                    NSString *isoCountryCode = myPlacemark.ISOcountryCode;
+                    locationStr = [NSString stringWithFormat:@"%@,%@,%@",neighborhood, city, isoCountryCode];
+                    tag = neighborhood;
+                } else {
+                    locationStr = @"Earth, unknown, unknown";
+                    tag = @"Earth";
+                }
+                
+            }];
+            
+            
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            });
+        }
+    }];
+}
+
+- (void)displayCurrentPlaceSuggestions:(NSArray *)suggestions {
+    CLLocationManager *tmp = [[CLLocationManager alloc] init];
+    BOOL isLatestOS = [tmp respondsToSelector:@selector(requestAlwaysAuthorization)];
+    
+    // iOS 8
+    if (isLatestOS) {
+        UIAlertController *checkInController = [UIAlertController alertControllerWithTitle:@"Check-in" message:@"Where are you vybing? :)" preferredStyle:UIAlertControllerStyleActionSheet];
+        for (VYBZone *aZone in suggestions) {
+            UIAlertAction *action = [UIAlertAction actionWithTitle:aZone.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                [[VYBMyVybeStore sharedStore] setCurrZone:aZone];
+            }];
+            [checkInController addAction:action];
+        }
+        if (checkInController.actions.count > 0) {
+            VYBZone *currZone = [[VYBMyVybeStore sharedStore] currZone];
+            if (currZone) {
+                [checkInController setMessage:[NSString stringWithFormat:@"Your are in %@", currZone.name]];
+            }
+        } else {
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"Unlock your zone" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                // choose a name/tag for zone.
+            }];
+            [checkInController addAction:action];
+        }
+        
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Go Back" style:UIAlertActionStyleCancel handler:nil];
+        [checkInController addAction:action];
+        
+        [self presentViewController:checkInController animated:YES completion:nil];
+    }
+    else {
+        UIActionSheet *actionsheet = [[UIActionSheet alloc] initWithTitle:@"Where are you vybing?" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+        for (VYBZone *aZone in _suggestions) {
+            [actionsheet addButtonWithTitle:aZone.name];
+        }
+        [actionsheet addButtonWithTitle:@"Go Back"];
+        actionsheet.cancelButtonIndex = _suggestions.count;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [actionsheet showInView:[UIApplication sharedApplication].keyWindow];
+        });
+    }
+}
+
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        NSLog(@"%@", [actionSheet buttonTitleAtIndex:buttonIndex]);
+    }
+    else {
+        VYBZone *zone = _suggestions[buttonIndex];
+        
+        [[VYBMyVybeStore sharedStore] setCurrZone:zone];
+    }
+}
 
 #pragma mark - ()
 

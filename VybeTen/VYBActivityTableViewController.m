@@ -14,7 +14,7 @@
 #import "VYBUtility.h"
 #import "VYBCache.h"
 
-#import "VYBPlayerControlViewController.h"
+#import "VYBPlayerViewController.h"
 
 #import "VYBLogInViewController.h"
 
@@ -166,13 +166,22 @@
         return;
     }
     
-    VYBPlayerControlViewController *playerController = [[VYBPlayerControlViewController alloc] initWithNibName:@"VYBPlayerControlViewController" bundle:nil];    
+    VYBPlayerViewController *playerController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+    [self presentViewController:playerController animated:YES completion:^{
+        PFObject *selectedVybe = self.objects[indexPath.row];
+        NSString *zoneID = selectedVybe[kVYBVybeZoneIDKey];
+        if (zoneID && zoneID.length > 0) {
+            [playerController playActiveVybesFromZone:zoneID];
+        }
+    }];
+    /*
     [self presentViewController:playerController animated:NO completion:^{
         // Because objects in table are in reverse-time order
         NSArray *reversedObjects = [[self.objects reverseObjectEnumerator] allObjects];
         NSInteger videoIndex = self.objects.count - indexPath.row - 1;
         [playerController playVybes:reversedObjects from:videoIndex];
     }];
+    */
 }
 
 #pragma mark UITableViewDataSource
@@ -180,9 +189,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
     VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
     
-    NSString *locationString = object[kVYBVybeLocationStringKey];
-    if (locationString.length) {
-        cell.locationLabel.text = [[locationString componentsSeparatedByString:@","] objectAtIndex:0];
+    NSString *zoneName = object[kVYBVybeZoneNameKey];
+    if (zoneName && zoneName.length > 0) {
+        cell.locationLabel.text = zoneName;
     } else {
         cell.locationLabel.text = @"Earth";
     }

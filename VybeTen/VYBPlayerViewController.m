@@ -1,5 +1,5 @@
 //
-//  VYBPlayerControlViewController.m
+//  VYBPlayerViewController.m
 //  VybeTen
 //
 //  Created by jinsuk on 10/6/14.
@@ -7,7 +7,7 @@
 //
 
 //TODO: Manage a pool to asynchronously download vybes using a queue
-#import "VYBPlayerControlViewController.h"
+#import "VYBPlayerViewController.h"
 #import <MotionOrientation@PTEz/MotionOrientation.h>
 #import <MBProgressHUD/MBProgressHUD.h>
 #import "AVAsset+VideoOrientation.h"
@@ -22,7 +22,7 @@
 #import <GAIFields.h>
 #import <GAIDictionaryBuilder.h>
 
-@interface VYBPlayerControlViewController ()
+@interface VYBPlayerViewController ()
 @property (nonatomic, weak) IBOutlet UIButton *counterButton;
 @property (nonatomic, weak) IBOutlet UIButton *portalButton;
 @property (nonatomic, weak) IBOutlet UIButton *locationTimeButton;
@@ -47,7 +47,7 @@
 @end
 
 
-@implementation VYBPlayerControlViewController {
+@implementation VYBPlayerViewController {
     NSInteger downloadingVybeIndex;
     BOOL menuMode;
     NSTimer *overlayTimer;
@@ -166,7 +166,26 @@
     _initialStreamCurrIdx = idx;
     // We are beginning with initial stream
     [self playStream:self.initialStream atIndex:_initialStreamCurrIdx];
+}
 
+- (void)playActiveVybesFromZone:(NSString *)zoneID {
+    // Set zone vybes from fresh contents that were fetched
+    NSArray *freshContents = [[VYBCache sharedCache] freshVybes];
+    if (freshContents && freshContents.count > 0) {
+        NSMutableArray *zoneVybes = [[NSMutableArray alloc] init];
+        for (PFObject *aVybe in freshContents) {
+            if (aVybe[kVYBVybeZoneIDKey] && [aVybe[kVYBVybeZoneIDKey] isEqualToString:zoneID] ) {
+                [zoneVybes addObject:aVybe];
+            }
+        }
+        _zoneVybes = zoneVybes;
+        [self.portalButton setSelected:YES];
+        _zoneCurrIdx = 0;
+        [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+    }
+    else {
+        //TODO: load the most recent vybe from this zone
+    }
 }
 
 
@@ -188,6 +207,13 @@
             AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
             
             [self playAsset:asset];
+            // this playerVC is ONLY playing zone vybes
+            if (!_initialStream) {
+                [[VYBCache sharedCache] removeFreshVybe:currVybe];
+            }
+            else {
+                
+            }
         } else {
             PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -198,7 +224,7 @@
                     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
                     
                     [self playAsset:asset];
-
+                    [[VYBCache sharedCache] removeFreshVybe:currVybe];
                 } else {
                     UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                     [av show];
@@ -265,38 +291,50 @@
             BOOL hasNearby = [nearbyCount boolValue];
             if (hasNearby) {
                 [portalButton setHidden:NO];
-                if (completionBlock)
-                    completionBlock();
             }
             else {
                 [portalButton setHidden:YES];
             }
+            if (completionBlock) {
+                completionBlock();
+            }
         }
         else {
-            NSString *functionName = @"get_nearby_count";
-            //NOTE: portal button disappears while loading and should do something when reappears
-            [PFCloud callFunctionInBackground:functionName withParameters:@{ @"vybeID" : aVybe.objectId } block:^(NSNumber *count, NSError *error) {
-                if (!error) {
-                    [[VYBCache sharedCache] setNearbyCount:count forVybe:aVybe];
-                    BOOL hasNearby = [count boolValue];
-                    if (hasNearby) {
-                        [portalButton setHidden:NO];
-                        if (completionBlock)
-                            completionBlock();
+            if ( aVybe[kVYBVybeZoneIDKey] ) {
+                NSString *functionName = @"get_count_for_zone";
+                //NOTE: portal button disappears while loading and should do something when reappears
+                [PFCloud callFunctionInBackground:functionName withParameters:@{ @"vybeID" : aVybe.objectId, @"zoneID" : aVybe[kVYBVybeZoneIDKey], @"timestamp" : aVybe[kVYBVybeTimestampKey]} block:^(NSNumber *count, NSError *error) {
+                    if (!error) {
+                        [[VYBCache sharedCache] setNearbyCount:count forVybe:aVybe];
+                        BOOL hasNearby = [count boolValue];
+                                                   [portalButton setHidden:YES];
+ if (hasNearby) {
+                            [portalButton setHidden:NO];
+                        }
+                        else {
+                        }
                     }
                     else {
                         [portalButton setHidden:YES];
                     }
+                    if (completionBlock) {
+                        completionBlock();
+                    }
+                }];
+            }
+            else {
+                [[VYBCache sharedCache] setNearbyCount:[NSNumber numberWithInt:0] forVybe:aVybe];
+                [portalButton setHidden:YES];
+                if (completionBlock) {
+                    completionBlock();
                 }
-                else {
-                    [portalButton setEnabled:NO];
-                }
-            }];
+            }
         }
     }
     else {
-        if (completionBlock)
+        if (completionBlock) {
             completionBlock();
+        }
     }
 }
 
@@ -325,8 +363,10 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     PFObject *currVybe = self.initialStream[_initialStreamCurrIdx];
-    [PFCloud callFunctionInBackground:@"get_nearby_vybes"
-                       withParameters:@{ @"vybeID" : currVybe.objectId}
+    [PFCloud callFunctionInBackground:@"get_vybes_in_zone"
+                       withParameters:@{ @"vybeID" : currVybe.objectId,
+                                         @"zoneID" : currVybe[kVYBVybeZoneIDKey],
+                                         @"timestamp" : currVybe[kVYBVybeTimestampKey]}
                                 block:^(NSArray *objects, NSError *error) {
                                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                                     if (!error) {
@@ -337,7 +377,7 @@
                                         // Updadate counter because you just zoned in
                                         //TODO: shine a number of something to notify
                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                            [self.portalButton setTitle:[NSString stringWithFormat:@"%d", _zoneVybes.count] forState:UIControlStateNormal];
+                                            [self.portalButton setTitle:[NSString stringWithFormat:@"%ld", _zoneVybes.count] forState:UIControlStateNormal];
                                         });
                                     }
                                     [self.currPlayer play];
@@ -411,8 +451,12 @@
 
 
 - (void)playNextStreamVideo {
-    NSAssert(self.initialStream, @"Can't play next video on stream because stream is nil");
-
+    // This playerViewController is ONLY playing zone vybes
+    if (!_initialStream) {
+        [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+        return;
+    }
+    
     // Reached the end of stream. Show the ENDING screen
     if (_initialStreamCurrIdx == (self.initialStream.count - 1)) {
         [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
