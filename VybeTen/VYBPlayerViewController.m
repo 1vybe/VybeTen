@@ -24,16 +24,19 @@
 #import <GAIDictionaryBuilder.h>
 
 @interface VYBPlayerViewController ()
-@property (nonatomic, weak) IBOutlet UIButton *counterButton;
 @property (nonatomic, weak) IBOutlet UIButton *portalButton;
-@property (nonatomic, weak) IBOutlet UIButton *locationTimeButton;
+@property (nonatomic, weak) IBOutlet UILabel *locationLabel;
+@property (nonatomic, weak) IBOutlet UIButton *userButton;
+@property (nonatomic, weak) IBOutlet UILabel *timeLabel;
+@property (nonatomic, weak) IBOutlet UIButton *mapButton;
 @property (nonatomic, weak) IBOutlet UIButton *dismissButton;
+@property (nonatomic, weak) IBOutlet UIButton *goPrevButton;
+@property (nonatomic, weak) IBOutlet UIButton *goNextButton;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *portalButtonHorizontalSpacing;
 
 - (IBAction)goNextButtonPressed:(id)sender;
 - (IBAction)goPrevButtonPressed:(id)sender;
 
-- (IBAction)counterButtonPressed;
 - (IBAction)dismissButtonPressed;
 - (IBAction)mapButtonPressed;
 
@@ -65,9 +68,7 @@
     BOOL _isPlaying;
 }
 @synthesize dismissButton;
-@synthesize counterButton;
 @synthesize portalButton;
-@synthesize locationTimeButton;
 
 @synthesize currPlayer = _currPlayer;
 @synthesize currPlayerView = _currPlayerView;
@@ -113,9 +114,7 @@
     tapPortalButton.numberOfTapsRequired = 1;
     [portalButton addGestureRecognizer:tapPortalButton];
     
-    menuMode = NO;
-
-    [self syncUIElementsWithMenuMode];
+    [self showOverlayMenu:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -300,81 +299,25 @@
 
 - (void)syncUI:(PFObject *)aVybe withCompletion:(void (^)())completionBlock {
     // Display location and time
-    [locationTimeButton setTitle:@"" forState:UIControlStateNormal];
-    NSString *locationTimeString = [[NSString alloc] init];
     NSString *zoneName = aVybe[kVYBVybeZoneNameKey];
     if (!zoneName) {
-        zoneName = aVybe[kVYBVybeLocationStringKey];
-        NSArray *arr = [zoneName componentsSeparatedByString:@","];
-        if (arr.count == 3) {
-            zoneName = [arr[1] stringByAppendingString:@", "];
-        } else {
-            zoneName = @"Earth, ";
-        }
+        zoneName = @"Earth";
+    }
+    [self.locationLabel setText:zoneName];
+
+    NSString *timeString = [[NSString alloc] init];
+    timeString = [VYBUtility reverseTime:aVybe[kVYBVybeTimestampKey]];
+    [self.timeLabel setText:timeString];
+    
+    PFObject *user = aVybe[kVYBVybeUserKey];
+    NSString *username = user[kVYBUserUsernameKey];
+
+    if (username) {
+        [self.userButton setTitle:username forState:UIControlStateNormal];
     }
     
-    locationTimeString = [zoneName stringByAppendingString:[VYBUtility reverseTime:[aVybe objectForKey:kVYBVybeTimestampKey]]];
-    [locationTimeButton setTitle:locationTimeString forState:UIControlStateNormal];
-    
-    
-    if (_zoneVybes) {
-        [counterButton setTitle: [NSString stringWithFormat:@"%ld", (long)_zoneVybes.count - _zoneCurrIdx - 1] forState:UIControlStateNormal];
-    }
-    else {
-        [counterButton setTitle: [NSString stringWithFormat:@"%ld", (long)self.initialStream.count - _initialStreamCurrIdx - 1] forState:UIControlStateNormal];
-    }
-    
-    if ( ! _zoneVybes ) {
-        NSNumber *nearbyCount = [[VYBCache sharedCache] nearbyCountForVybe:aVybe];
-        if (nearbyCount) {
-            BOOL hasNearby = [nearbyCount boolValue];
-            if (hasNearby) {
-                [portalButton setHidden:NO];
-            }
-            else {
-                [portalButton setHidden:YES];
-            }
-            if (completionBlock) {
-                completionBlock();
-            }
-        }
-        else {
-            if ( aVybe[kVYBVybeZoneIDKey] ) {
-                NSString *functionName = @"get_count_for_zone";
-                //NOTE: portal button disappears while loading and should do something when reappears
-                [PFCloud callFunctionInBackground:functionName withParameters:@{ @"vybeID" : aVybe.objectId, @"zoneID" : aVybe[kVYBVybeZoneIDKey], @"timestamp" : aVybe[kVYBVybeTimestampKey]} block:^(NSNumber *count, NSError *error) {
-                    if (!error) {
-                        [[VYBCache sharedCache] setNearbyCount:count forVybe:aVybe];
-                        BOOL hasNearby = [count boolValue];
-                        [portalButton setHidden:YES];
-                        if (hasNearby) {
-                            [portalButton setHidden:NO];
-                        }
-                        else {
-                        }
-                    }
-                    else {
-                        [portalButton setHidden:YES];
-                    }
-                    if (completionBlock) {
-                        completionBlock();
-                    }
-                }];
-            }
-            else {
-                [[VYBCache sharedCache] setNearbyCount:[NSNumber numberWithInt:0] forVybe:aVybe];
-                [portalButton setHidden:YES];
-                if (completionBlock) {
-                    completionBlock();
-                }
-            }
-        }
-    }
-    else {
-        if (completionBlock) {
-            completionBlock();
-        }
-    }
+    if (completionBlock)
+        completionBlock();
 }
 
 
@@ -415,9 +358,6 @@
                                         
                                         // Updadate counter because you just zoned in
                                         //TODO: shine a number of something to notify
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            [self.counterButton setTitle:[NSString stringWithFormat:@"%ld", _zoneVybes.count] forState:UIControlStateNormal];
-                                        });
                                     }
                                     [self.currPlayer play];
                                 }];
@@ -609,20 +549,25 @@
     }
     
     menuMode = !menuMode;
-    [self syncUIElementsWithMenuMode];
+    [self showOverlayMenu:menuMode];
 }
 
 - (void)overlayTimerExpired:(NSTimer *)timer {
-    if (menuMode) {
-        menuMode = !menuMode;
-        [self syncUIElementsWithMenuMode];
-    }
+    [self showOverlayMenu:NO];
 }
 
-- (void)syncUIElementsWithMenuMode {
-    locationTimeButton.hidden = !menuMode;
-    counterButton.hidden = !menuMode;
-    dismissButton.hidden = !menuMode;
+- (void)showOverlayMenu:(BOOL)show {
+    menuMode = show;
+    
+    [self menuModeChanged];
+}
+
+- (void)menuModeChanged {
+    self.locationLabel.hidden = !menuMode;
+    self.userButton.hidden = !menuMode;
+    self.dismissButton.hidden = !menuMode;
+    self.goPrevButton.selected = !menuMode;
+    self.goNextButton.selected = !menuMode;
 }
 
 
