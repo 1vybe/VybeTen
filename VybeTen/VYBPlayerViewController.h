@@ -13,7 +13,7 @@
 - (NSInteger)pageIndex;
 
 // Called should call this method inside the completion block when it is calling presentViewController: 
-- (void)playZoneVybesAfterVybe:(PFObject *)aVybe;
+- (void)playZoneVybesFromVybe:(PFObject *)aVybe;
 - (void)playActiveVybesFromZone:(NSString *)zoneID;
 
 

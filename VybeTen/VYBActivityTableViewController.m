@@ -167,13 +167,13 @@
     }
     
     VYBPlayerViewController *playerController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-    /*
     // Start reliving through your vybe
     [self presentViewController:playerController animated:YES completion:^{
         PFObject *selectedVybe = self.objects[indexPath.row];
-        [playerController playZoneVybesAfterVybe:selectedVybe];
+        [playerController playZoneVybesFromVybe:selectedVybe];
     }];
-    */
+    
+    /*
     // Play active vybes from this zone
     [self presentViewController:playerController animated:YES completion:^{
         PFObject *selectedVybe = self.objects[indexPath.row];
@@ -182,7 +182,7 @@
             [playerController playActiveVybesFromZone:zoneID];
         }
     }];
-    
+    */
     /*
     [self presentViewController:playerController animated:NO completion:^{
         // Because objects in table are in reverse-time order

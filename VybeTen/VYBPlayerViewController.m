@@ -135,10 +135,11 @@
     }
 }
 
-- (void)playZoneVybesAfterVybe:(PFObject *)aVybe {
+- (void)playZoneVybesFromVybe:(PFObject *)aVybe {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [PFCloud callFunctionInBackground:@"get_vybes_in_zone"
+    if (aVybe[kVYBVybeZoneIDKey]) {
+        [PFCloud callFunctionInBackground:@"get_vybes_in_zone"
                        withParameters:@{ @"vybeID" : aVybe.objectId,
                                          @"zoneID" : aVybe[kVYBVybeZoneIDKey],
                                          @"timestamp" : aVybe[kVYBVybeTimestampKey]}
@@ -161,6 +162,16 @@
                                         [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
                                     }
                                 }];
+    }
+    else {
+        _zoneVybes = [[NSArray alloc] initWithObjects:aVybe, nil];
+        _zoneCurrIdx = 0;
+        
+        [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.portalButton setSelected:YES];
+        });
+    }
 }
 
 
