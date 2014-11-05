@@ -368,13 +368,9 @@
 #pragma mark - Map
 
 - (IBAction)mapButtonPressed:(id)sender {
-    NSArray *freshVybes = [[VYBCache sharedCache] freshVybes];
-    if (freshVybes && freshVybes.count > 0) {
-        VYBMapViewController *mapVC = [[VYBMapViewController alloc] initWithNibName:@"VYBMapViewController" bundle:nil];
-        [self presentViewController:mapVC animated:YES completion:^{
-            [mapVC displayVybes:freshVybes];
-        }];
-    }
+    VYBMapViewController *mapVC = [[VYBMapViewController alloc] initWithNibName:@"VYBMapViewController" bundle:nil];
+    [mapVC setDelegate:self];
+    [mapVC displayAllActiveVybes];
 }
 
 #pragma mark - ()

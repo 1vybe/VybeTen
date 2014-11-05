@@ -653,7 +653,7 @@
         PFObject *currVybe = self.initialStream[_initialStreamCurrIdx];
         VYBMapViewController *mapVC = [[VYBMapViewController alloc] initWithNibName:@"VYBMapViewController" bundle:nil];
         [self presentViewController:mapVC animated:YES completion:^{
-            [mapVC displayNearbyAroundVybe:currVybe];
+            //[mapVC displayNearbyAroundVybe:currVybe];
         }];
     }
 }

@@ -193,6 +193,15 @@ Parse.Cloud.define('get_active_zone_vybes',
   })
 );
 
+Parse.Cloud.define('get_active_vybes',
+  get_active_vybes.bind(this, {
+    recent: true,
+    hide_user: false,
+    window_size: 1, // in hours
+  })
+);
+
+
 // Retrieve only fresh vybes for the requesting user
 Parse.Cloud.define('get_fresh_vybes', get_fresh_vybes);
 
@@ -469,6 +478,43 @@ function get_active_zone_vybes(options, request, response) {
     query.limit(limit);
 
   query.equalTo('zoneID', request.params.zoneID);
+
+ // 24 hour window 
+  var currTime = new Date();
+  var ttlAgo = new Date();
+  ttlAgo.setHours(currTime.getHours() - 24);
+  query.greaterThanOrEqualTo('timestamp',ttlAgo);
+
+   query.find({
+      success: function(vybesObjects) {
+        console.log('active vybes found ' + vybesObjects.length);
+        if (reversed) {
+          response.success(vybesObjects);
+        } else {
+          // Sort result in chronological order
+          response.success(vybesObjects.reverse());
+        }
+      },
+      error: function() {
+        response.error('Request to get_active_zone_vybes() has failed.');
+      }
+  });
+}
+
+function get_active_vybes(options, request, response) {
+  var recent = options.recent || false;
+  var hide_user = options.hide_user || false;
+  var reversed = options.reversed || false;
+  var window_size = options.window_size || 24;
+  var limit = options.limit || 50;
+
+  var query = new Parse.Query('Vybe');
+ if (recent)
+    query.addDescending('timestamp');
+  if (hide_user)
+    query.notEqualTo('user', currentUser);
+  if (limit)
+    query.limit(limit);
 
  // 24 hour window 
   var currTime = new Date();

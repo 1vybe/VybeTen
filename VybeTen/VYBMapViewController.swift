@@ -16,6 +16,31 @@ class VYBMapViewController: UIViewController, MKMapViewDelegate {
     }
     
     var currAnnotation: MKAnnotation!
+    var delegate: AnyObject!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.setUpMapRegion()
+    }
+    
+    private func setUpMapRegion() {
+        // Somewhere in montreal
+        let location = CLLocationCoordinate2DMake(45.503039, -73.570120)
+        let span = MKCoordinateSpanMake(0.05, 0.05)
+        let region = MKCoordinateRegionMake(location, span)
+        
+        mapView.setRegion(region, animated: false)
+        mapView.delegate = self
+    }
+    
+    private func moveMapToRegionAround(location: CLLocationCoordinate2D) {
+        let span = MKCoordinateSpanMake(0.05, 0.05)
+        let region = MKCoordinateRegionMake(location, span)
+        mapView.setRegion(region, animated: false)
+    }
+
+    
     
     func displayVybes(vybes: [PFObject]) {
         for aVybe in vybes {
@@ -31,87 +56,60 @@ class VYBMapViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    func displayNearbyAroundVybe(aVybe: PFObject) {
-        let geoPoint = aVybe[kVYBVybeGeotag] as PFGeoPoint
-        let location = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
-        self.moveMapToRegionAround(location)
-        
-        PFCloud.callFunctionInBackground("get_nearby_vybes", withParameters: ["vybeID": aVybe.objectId], { (objects: AnyObject!, error: NSError!) -> Void in
+    func displayAllActiveVybes() {
+        VYBUtility.fetchActiveZones { (zones: [AnyObject]!, error:NSError!) -> Void in
             if error == nil {
-                self.displayVybes(objects as [PFObject])
+                if zones.count > 0 {
+                    self.delegate.presentViewController(self, animated: true, completion: { () -> Void in
+                        for aZone in zones as [VYBZone] {
+                            aZone.title = aZone.name
+                            self.mapView.addAnnotation(aZone)
+                        }
+                    })
+
+                }
+                else {
+                    // There is no active zone
+                }
             }
-            self.displayCurrentVybe(aVybe)
-        })
+        }
     }
-    
-    private func displayCurrentVybe(aVybe: PFObject) {
-        let geoPoint = aVybe[kVYBVybeGeotag] as PFGeoPoint
-        let location = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
-        let vAnnotation = MKPointAnnotation()
-        vAnnotation.setCoordinate(location)
-
-        currAnnotation = vAnnotation
-
-        mapView.addAnnotation(vAnnotation)
-    }
-    
-    private func moveMapToRegionAround(location: CLLocationCoordinate2D) {
-        let span = MKCoordinateSpanMake(0.05, 0.05)
-        let region = MKCoordinateRegionMake(location, span)
-        mapView.setRegion(region, animated: false)
-    }
-    
-    private func setUpMapRegion() {
-        let location = CLLocationCoordinate2DMake(45.503039, -73.570120)
-        let span = MKCoordinateSpanMake(0.05, 0.05)
-        let region = MKCoordinateRegionMake(location, span)
-        
-        mapView.setRegion(region, animated: false)
-        mapView.delegate = self
-    }
-
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        self.setUpMapRegion()
-        // Do any additional setup after loading the view.
-    }
-    
     
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
-        var pin = mapView.dequeueReusableAnnotationViewWithIdentifier("vybePin") as MKPinAnnotationView?
-        if  pin != nil {
-            pin?.annotation = annotation
-        }
-        else {
-            pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "vybePin")
+        var pin = mapView.dequeueReusableAnnotationViewWithIdentifier("zonePin") as MKAnnotationView!
+
+        if pin == nil {
+            pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "zonePin")
         }
         
-        if annotation.isEqual(currAnnotation) {
-            pin?.pinColor = MKPinAnnotationColor.Green
+        let accessoryView = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as UIButton
+        pin.rightCalloutAccessoryView = accessoryView
+        
+        pin.canShowCallout = true
+        
+        var zoneAnnotation = annotation as VYBZone
+        if zoneAnnotation.unlocked {
+            pin.image = UIImage(named: "map_blue_pin.png")
         }
         else {
-            pin?.pinColor = MKPinAnnotationColor.Red
+            pin.image = UIImage(named: "map_red_pin.png")
         }
         
         return pin
+    }
+    
+    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
+        let zone = view.annotation as VYBZone
+        let playerVC = VYBPlayerViewController()
+        self.presentViewController(playerVC, animated: true) { () -> Void in
+            playerVC.playActiveVybesFromZone(zone.zoneID)
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

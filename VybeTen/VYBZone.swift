@@ -7,12 +7,20 @@
 //
 
 import UIKit
+import MapKit
 
-class VYBZone: NSObject {
+class VYBZone: NSObject, MKAnnotation {
     var zoneID: String!
     var name: String!
+    var unlocked: Bool = false
     
+    var coordinate: CLLocationCoordinate2D
+    var title: String!
+    
+
     init(foursquareVenue: NSDictionary) {
+        coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        
         zoneID = foursquareVenue["id"] as? String
         if zoneID == nil {
             zoneID = "777"
@@ -21,7 +29,18 @@ class VYBZone: NSObject {
         if name == nil {
             name = "Earth"
         }
+    }
+    
+    init(name aName: String, zoneID zID: String) {
+        coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+
+        name = aName
+        zoneID = zID
+    }
+    
+    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         
     }
+    
     
 }
