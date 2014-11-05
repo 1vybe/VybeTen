@@ -582,6 +582,7 @@
         return;
     }
     else {
+        _zoneCurrIdx = _zoneCurrIdx - 1;
         [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
     }
 }
