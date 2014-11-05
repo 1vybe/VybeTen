@@ -183,48 +183,26 @@
 }
 
 - (void)playActiveVybesFromZone:(NSString *)zoneID {
-    // Pick fresh vybes from this zone and store them
-    NSArray *freshContents = [[VYBCache sharedCache] freshVybes];
-    NSMutableArray *zoneVybes = [[NSMutableArray alloc] init];
-
-    // We only care about fresh vybes from this zone
-    if (freshContents) {
-        for (PFObject *aVybe in freshContents) {
-            if (aVybe[kVYBVybeZoneIDKey] && [aVybe[kVYBVybeZoneIDKey] isEqualToString:zoneID] ) {
-                [zoneVybes addObject:aVybe];
-            }
-        }
-    }
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    NSString *functionName = @"get_active_zone_vybes";
     
-    [self.portalButton setSelected:YES];
-
-    if (zoneVybes.count > 0) {
-        _zoneVybes = zoneVybes;
-        _zoneCurrIdx = 0;
-        [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
-    }
-    // User watched all the active vybes. It will show you vybes from past 24 hours now.
-    else {
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        NSString *functionName = @"get_active_zone_vybes";
-        [PFCloud callFunctionInBackground:functionName withParameters:@{@"zoneID": zoneID} block:^(NSArray *objects, NSError *error) {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            if (!error) {
-                if (objects.count > 0) {
-                    _zoneVybes = objects;
-                    _zoneCurrIdx = 0;
-                    [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
-                }
-                else {
-                    //TODO: No vybe within past 24 hours.
-                    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
-                }
+    [PFCloud callFunctionInBackground:functionName withParameters:@{@"zoneID": zoneID} block:^(NSArray *objects, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        if (!error) {
+            if (objects.count > 0) {
+                _zoneVybes = objects;
+                _zoneCurrIdx = 0;
+                [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
             }
             else {
+                //TODO: No vybe within past 24 hours.
                 [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
             }
-        }];
-    }
+        }
+        else {
+            [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+        }
+    }];
 }
 
 

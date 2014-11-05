@@ -473,6 +473,8 @@ function get_active_zone_vybes(options, request, response) {
   var limit = options.limit || 500;
 
   var query = new Parse.Query('Vybe');
+  query.include('user')
+  
  if (recent)
     query.addDescending('timestamp');
   if (hide_user)

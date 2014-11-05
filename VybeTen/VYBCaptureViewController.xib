@@ -27,40 +27,6 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pxE-bC-V0j" customClass="VYBCameraView">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Up-fD-nGP">
-                            <rect key="frame" x="20" y="20" width="40" height="40"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="40" id="c8Q-1G-7EW"/>
-                                <constraint firstAttribute="height" constant="40" id="fXp-W9-Jwx"/>
-                            </constraints>
-                            <state key="normal" title="Map">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="mapButtonPressed:" destination="-1" eventType="touchUpInside" id="6dB-nP-NeR"/>
-                            </connections>
-                        </button>
-                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mhR-vI-Lu9">
-                            <rect key="frame" x="80" y="20" width="50" height="40"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="40" id="eQR-Xx-BaF"/>
-                                <constraint firstAttribute="width" constant="50" id="w9g-BN-TZz"/>
-                            </constraints>
-                            <state key="normal" title="Place">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="selectPlaceButtonPressed:" destination="-1" eventType="touchUpInside" id="SGH-Sg-Y6Y"/>
-                            </connections>
-                        </button>
-                    </subviews>
-                    <constraints>
-                        <constraint firstItem="3Up-fD-nGP" firstAttribute="top" secondItem="pxE-bC-V0j" secondAttribute="top" constant="20" id="CEq-bx-7BA"/>
-                        <constraint firstItem="3Up-fD-nGP" firstAttribute="leading" secondItem="pxE-bC-V0j" secondAttribute="leading" constant="20" id="Ega-Nk-M4A"/>
-                        <constraint firstItem="mhR-vI-Lu9" firstAttribute="leading" secondItem="3Up-fD-nGP" secondAttribute="trailing" constant="20" id="N9a-fU-yPj"/>
-                        <constraint firstItem="mhR-vI-Lu9" firstAttribute="top" secondItem="pxE-bC-V0j" secondAttribute="top" constant="20" id="lg1-47-mWe"/>
-                    </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7vo-Gu-Tx0" userLabel="flipButton">
                     <rect key="frame" x="420" y="420" width="40" height="40"/>

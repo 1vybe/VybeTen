@@ -24,6 +24,11 @@ class VYBMapViewController: UIViewController, MKMapViewDelegate {
         self.setUpMapRegion()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setNeedsStatusBarAppearanceUpdate()
+    }
+    
     private func setUpMapRegion() {
         // Somewhere in montreal
         let location = CLLocationCoordinate2DMake(45.503039, -73.570120)
@@ -60,13 +65,10 @@ class VYBMapViewController: UIViewController, MKMapViewDelegate {
         VYBUtility.fetchActiveZones { (zones: [AnyObject]!, error:NSError!) -> Void in
             if error == nil {
                 if zones.count > 0 {
-                    self.delegate.presentViewController(self, animated: true, completion: { () -> Void in
-                        for aZone in zones as [VYBZone] {
-                            aZone.title = aZone.name
-                            self.mapView.addAnnotation(aZone)
-                        }
-                    })
-
+                    for aZone in zones as [VYBZone] {
+                        aZone.title = aZone.name
+                        self.mapView.addAnnotation(aZone)
+                    }
                 }
                 else {
                     // There is no active zone
@@ -80,12 +82,14 @@ class VYBMapViewController: UIViewController, MKMapViewDelegate {
 
         if pin == nil {
             pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "zonePin")
+        
+            pin.canShowCallout = true
         }
         
         let accessoryView = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as UIButton
         pin.rightCalloutAccessoryView = accessoryView
         
-        pin.canShowCallout = true
+
         
         var zoneAnnotation = annotation as VYBZone
         if zoneAnnotation.unlocked {
@@ -109,6 +113,10 @@ class VYBMapViewController: UIViewController, MKMapViewDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
 
 
