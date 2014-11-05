@@ -427,10 +427,13 @@ function get_vybes_in_zone(options, request, response) {
   // Don't get private vybes
   query.notEqualTo('isPublic', false);
 
-
-
-
-  query.equalTo('zoneID', request.params.zoneID);
+  var zoneID = request.params.zoneID;
+  if (zoneID) {
+    query.equalTo('zoneID', zoneID);
+  } else {
+    // Group untagged vybes together
+    query.doesNotExist('zoneID');
+  }
 
   if (ignore_past)
     query.greaterThanOrEqualTo('timestamp', request.params.timestamp);
@@ -438,7 +441,7 @@ function get_vybes_in_zone(options, request, response) {
   if (count_only) {
     query.count({
       success: function(nearbyCount) {
-        console.log(nearbyCount + 'vybes counted after this vybe in this zone');
+        console.log(nearbyCount + ' vybes counted after this vybe in this zone');
         response.success(nearbyCount);
       },
       error: function() {
@@ -448,7 +451,7 @@ function get_vybes_in_zone(options, request, response) {
   } else {
     query.find({
       success: function(vybesObjects) {
-        console.log(vybesObjects.length + 'vybes found after this vybe in this zone');
+        console.log(vybesObjects.length + ' vybes found after this vybe in this zone');
         if (reversed) {
           response.success(vybesObjects);
         } else {
@@ -479,7 +482,7 @@ function get_active_zone_vybes(options, request, response) {
 
   query.equalTo('zoneID', request.params.zoneID);
 
- // 24 hour window 
+  // 24 hour window
   var currTime = new Date();
   var ttlAgo = new Date();
   ttlAgo.setHours(currTime.getHours() - 24);

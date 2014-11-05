@@ -167,6 +167,7 @@
     }
     
     VYBPlayerViewController *playerController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+
     // Start reliving through your vybe
     [self presentViewController:playerController animated:YES completion:^{
         PFObject *selectedVybe = self.objects[indexPath.row];
