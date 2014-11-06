@@ -25,10 +25,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="player_bottom_overlay" translatesAutoresizingMaskIntoConstraints="NO" id="FUM-j7-JZe">
-                    <rect key="frame" x="113" y="500" width="375" height="100"/>
+                    <rect key="frame" x="113" y="467" width="375" height="133"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="375" id="mev-fK-Iaj"/>
-                        <constraint firstAttribute="height" constant="100" id="yOK-aN-5fr"/>
+                        <constraint firstAttribute="height" constant="133" id="yOK-aN-5fr"/>
                     </constraints>
                 </imageView>
                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MJr-Ty-ayr" userLabel="portalButton">
@@ -154,7 +154,7 @@
     </objects>
     <resources>
         <image name="TransparentImage" width="180" height="180"/>
-        <image name="player_bottom_overlay" width="375" height="99"/>
+        <image name="player_bottom_overlay" width="375" height="133"/>
         <image name="player_close_button" width="40" height="40"/>
         <image name="player_map_button" width="40" height="40"/>
         <image name="player_next_button" width="114" height="340"/>
