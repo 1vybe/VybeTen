@@ -25,53 +25,22 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pxE-bC-V0j" customClass="VYBCameraView">
-                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
-                </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7vo-Gu-Tx0" userLabel="flipButton">
-                    <rect key="frame" x="420" y="420" width="40" height="40"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rNG-mo-RpY" userLabel="activityButton">
+                    <rect key="frame" x="430" y="15" width="35" height="35"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="40" id="1Kg-cq-LXx"/>
-                        <constraint firstAttribute="height" constant="40" id="Jai-6O-dj2"/>
-                    </constraints>
-                    <state key="normal" image="button_flip_camera_on">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <state key="selected" image="button_flip_camera_on"/>
-                    <connections>
-                        <action selector="flipButtonPressed:" destination="-1" eventType="touchUpInside" id="ql3-4B-Gaq"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rNG-mo-RpY" userLabel="activityButton" customClass="VYBActiveButton">
-                    <rect key="frame" x="420" y="20" width="40" height="40"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="40" id="G58-BE-F2i"/>
-                        <constraint firstAttribute="height" constant="40" id="J1v-IO-I9w"/>
+                        <constraint firstAttribute="width" constant="35" id="G58-BE-F2i"/>
+                        <constraint firstAttribute="height" constant="35" id="J1v-IO-I9w"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="13"/>
-                    <state key="normal" image="capture_flame_off">
+                    <state key="normal" image="capture_activity_button">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
                         <action selector="activityButtonPressed:" destination="-1" eventType="touchUpInside" id="Q7F-jd-feC"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jPK-KL-Kst" userLabel="flashButton">
-                    <rect key="frame" x="20" y="420" width="40" height="40"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="40" id="cIx-uw-lK6"/>
-                        <constraint firstAttribute="height" constant="40" id="tGR-UE-dbK"/>
-                    </constraints>
-                    <state key="normal" image="button_flash_on">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <state key="selected" image="button_flash_off"/>
-                    <connections>
-                        <action selector="flashButtonPressed:" destination="-1" eventType="touchUpInside" id="uRm-bw-HO3"/>
-                    </connections>
-                </button>
-                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sIB-Pf-Xfc" userLabel="recordButton" customClass="VYBCaptureButton">
-                    <rect key="frame" x="188" y="355" width="105" height="105"/>
+                <view opaque="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="sIB-Pf-Xfc" userLabel="recordButton" customClass="VYBCaptureButton">
+                    <rect key="frame" x="188" y="360" width="105" height="105"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="105" id="gmx-Us-Gty"/>
                         <constraint firstAttribute="height" constant="105" id="ptl-Br-JxY"/>
@@ -85,29 +54,62 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pxE-bC-V0j" customClass="VYBCameraView">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jPK-KL-Kst" userLabel="flashButton">
+                    <rect key="frame" x="425" y="185" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="cIx-uw-lK6"/>
+                        <constraint firstAttribute="height" constant="40" id="tGR-UE-dbK"/>
+                    </constraints>
+                    <state key="normal" image="capture_flash_off">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <state key="selected" image="capture_flash_on"/>
+                    <connections>
+                        <action selector="flashButtonPressed:" destination="-1" eventType="touchUpInside" id="uRm-bw-HO3"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7vo-Gu-Tx0" userLabel="flipButton">
+                    <rect key="frame" x="425" y="255" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="1Kg-cq-LXx"/>
+                        <constraint firstAttribute="height" constant="40" id="Jai-6O-dj2"/>
+                    </constraints>
+                    <state key="normal" image="capture_flip">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <state key="selected" image="button_flip_camera_on"/>
+                    <connections>
+                        <action selector="flipButtonPressed:" destination="-1" eventType="touchUpInside" id="ql3-4B-Gaq"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
-                <constraint firstItem="rNG-mo-RpY" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="1c6-8l-wbS"/>
+                <constraint firstItem="rNG-mo-RpY" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="1c6-8l-wbS"/>
                 <constraint firstAttribute="centerX" secondItem="sIB-Pf-Xfc" secondAttribute="centerX" id="9cO-jN-0hj"/>
                 <constraint firstAttribute="bottom" secondItem="pxE-bC-V0j" secondAttribute="bottom" id="BPX-IX-mYn"/>
                 <constraint firstItem="pxE-bC-V0j" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Bsp-wu-2pQ"/>
-                <constraint firstAttribute="bottom" secondItem="sIB-Pf-Xfc" secondAttribute="bottom" constant="20" id="HMx-hL-vBE"/>
+                <constraint firstAttribute="trailing" secondItem="jPK-KL-Kst" secondAttribute="trailing" constant="15" id="NZ2-vd-iqU"/>
+                <constraint firstAttribute="centerY" secondItem="jPK-KL-Kst" secondAttribute="centerY" constant="35" id="OOC-Ty-soN"/>
                 <constraint firstAttribute="trailing" secondItem="pxE-bC-V0j" secondAttribute="trailing" id="RjX-wj-7bv"/>
-                <constraint firstAttribute="trailing" secondItem="7vo-Gu-Tx0" secondAttribute="trailing" constant="20" id="SOR-De-6sf"/>
-                <constraint firstAttribute="bottom" secondItem="jPK-KL-Kst" secondAttribute="bottom" constant="20" id="eav-Wg-PLU"/>
-                <constraint firstAttribute="bottom" secondItem="7vo-Gu-Tx0" secondAttribute="bottom" constant="20" id="k9G-Bf-Jpq"/>
+                <constraint firstAttribute="centerY" secondItem="7vo-Gu-Tx0" secondAttribute="centerY" constant="-35" id="ToJ-KP-UqM"/>
+                <constraint firstAttribute="trailing" secondItem="7vo-Gu-Tx0" secondAttribute="trailing" constant="15" id="WnB-yZ-xkI"/>
+                <constraint firstAttribute="bottom" secondItem="sIB-Pf-Xfc" secondAttribute="bottom" constant="15" id="fP5-yl-fE3"/>
                 <constraint firstItem="pxE-bC-V0j" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="kR1-9l-zhI"/>
-                <constraint firstAttribute="trailing" secondItem="rNG-mo-RpY" secondAttribute="trailing" constant="20" id="s24-0h-PF9"/>
-                <constraint firstItem="jPK-KL-Kst" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="tr4-RL-x1M"/>
+                <constraint firstAttribute="trailing" secondItem="rNG-mo-RpY" secondAttribute="trailing" constant="15" id="s24-0h-PF9"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="268" y="408"/>
         </view>
     </objects>
     <resources>
-        <image name="button_flash_off" width="17" height="23"/>
-        <image name="button_flash_on" width="11" height="23"/>
         <image name="button_flip_camera_on" width="23" height="23"/>
-        <image name="capture_flame_off" width="46" height="46"/>
+        <image name="capture_activity_button" width="35" height="35"/>
+        <image name="capture_flash_off" width="40" height="40"/>
+        <image name="capture_flash_on" width="40" height="40"/>
+        <image name="capture_flip" width="40" height="40"/>
     </resources>
 </document>
