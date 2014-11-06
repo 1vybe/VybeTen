@@ -18,16 +18,14 @@
 
 @interface VYBReplayViewController () <UITextFieldDelegate, UIActionSheetDelegate>
 
-@property (nonatomic, weak) IBOutlet UIView *acceptButton;
 @property (nonatomic, weak) IBOutlet UIButton *rejectButton;
-@property (nonatomic, weak) IBOutlet UIButton *selectZoneButton;
-
+@property (nonatomic, weak) IBOutlet UILabel *acceptLabel;
+@property (nonatomic, weak) IBOutlet UILabel *zoneLabel;
 @property (nonatomic, weak) IBOutlet VYBPlayerView *playerView;
-
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *acceptButtonBottomSpacingConstraint;
 
 - (IBAction)rejectButtonPressed:(id)sender;
 - (IBAction)selectZoneButtonPressed:(id)sender;
+- (IBAction)acceptButtonPressed:(id)sender;
 
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *currItem;
@@ -58,14 +56,8 @@
     
     VYBZone *currZone = [[VYBMyVybeStore sharedStore] currZone];
     if (currZone) {
-        [self.selectZoneButton setTitle:currZone.name forState:UIControlStateNormal];
-    } else {
-        [self.selectZoneButton setTitle:@"Where are you vybing?" forState:UIControlStateNormal];
+        [self.zoneLabel setText:currZone.name];
     }
-    
-    UITapGestureRecognizer *tapToAccep = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(acceptButtonPressed)];
-    tapToAccep.numberOfTapsRequired = 1;
-    [self.acceptButton addGestureRecognizer:tapToAccep];
     
     _currVybe = [[VYBMyVybeStore sharedStore] currVybe];
 }
@@ -152,7 +144,7 @@
         for (VYBZone *aZone in suggestions) {
             UIAlertAction *action = [UIAlertAction actionWithTitle:aZone.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 [[VYBMyVybeStore sharedStore] setCurrZone:aZone];
-                [self.selectZoneButton setTitle:aZone.name forState:UIControlStateNormal];
+                [self.zoneLabel setText:aZone.name];
             }];
             [checkInController addAction:action];
         }
@@ -195,13 +187,13 @@
     }
     else {
         VYBZone *zone = _suggestions[buttonIndex];
-        [self.selectZoneButton setTitle:zone.name forState:UIControlStateNormal];
+        [self.zoneLabel setText:zone.name];
         [[VYBMyVybeStore sharedStore] setCurrZone:zone];
     }
 }
 
 
-- (void)acceptButtonPressed {
+- (IBAction)acceptButtonPressed:(id)sender {
     VYBZone *currZone = [[VYBMyVybeStore sharedStore] currZone];
     if (currZone) {
         [[VYBMyVybeStore sharedStore] uploadCurrentVybe];
