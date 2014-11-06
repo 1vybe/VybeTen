@@ -22,6 +22,8 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *vybeCountLabel;
+@property (retain, nonatomic) NSMutableDictionary *sections;
+@property (retain, nonatomic) NSMutableDictionary *sectionToZoneNameMap;
 
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender;
@@ -36,9 +38,11 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         self.parseClassName = kVYBVybeClassKey;
-        self.paginationEnabled = YES;
+        self.paginationEnabled = NO;
         self.pullToRefreshEnabled = YES;
-        self.objectsPerPage = 25;
+        self.objectsPerPage = 500;
+        self.sections = [NSMutableDictionary dictionary];
+        self.sectionToZoneNameMap = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -129,6 +133,10 @@
     }
 }
 
+- (NSString *)zoneForSection:(NSInteger)section {
+    return [self.sectionToZoneNameMap objectForKey:[NSNumber numberWithInteger:section]];
+}
+
 #pragma mark - UIAlertViewDelegate
 
 // iOS7 and prior
@@ -145,7 +153,9 @@
 - (PFQuery *)queryForTable {
     PFQuery *query = [PFQuery queryWithClassName:self.parseClassName];
     [query whereKey:kVYBVybeUserKey equalTo:[PFUser currentUser]];
-    [query orderByDescending:kVYBVybeTimestampKey];
+    [query orderByDescending:kVYBVybeZoneNameKey];
+    [query addDescendingOrder:kVYBVybeTimestampKey];
+    query.limit = 500;
     
     return query;
 }
@@ -154,44 +164,53 @@
     [super objectsDidLoad:error];
     
     self.vybeCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.objects.count];
+    
+    [self.sections removeAllObjects];
+    [self.sectionToZoneNameMap removeAllObjects];
+    
+    NSInteger section = 0;
+    NSInteger rowIndex = 0;
+    for (PFObject *object in self.objects) {
+        NSString *zoneName;
+        if ([object objectForKey:kVYBVybeZoneNameKey] == nil) {
+            zoneName = @"Earth";
+        } else {
+            zoneName = [object objectForKey:kVYBVybeZoneNameKey];
+        }
+        NSMutableArray *objectsInSection = [self.sections objectForKey:zoneName];
+        if (!objectsInSection) {
+            objectsInSection = [NSMutableArray array];
+            
+            // this is the first time we see this zone - increment the section index
+            [self.sectionToZoneNameMap setObject:zoneName forKey:[NSNumber numberWithInteger:section++]];
+        }
+        
+        [objectsInSection addObject:[NSNumber numberWithInteger:rowIndex++]];
+        [self.sections setObject:objectsInSection forKey:zoneName];
+    }
 }
+
+- (PFObject *)objectAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *zoneName = [self zoneForSection:indexPath.section];
+    
+    NSArray *rowIndecesInSection = [self.sections objectForKey:zoneName];
+    
+    NSNumber *rowIndex = [rowIndecesInSection objectAtIndex:indexPath.row];
+    return [self.objects objectAtIndex:[rowIndex intValue]];
+}
+
 
 #pragma mark UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     
-    if (indexPath.row == self.objects.count) {
-        // Load more was pressed
-        return;
-    }
-    
     VYBPlayerViewController *playerController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
 
-    // Start reliving through your vybe
     [self presentViewController:playerController animated:YES completion:^{
-        PFObject *selectedVybe = self.objects[indexPath.row];
+        PFObject *selectedVybe = [self objectAtIndexPath:indexPath];
         [playerController playZoneVybesFromVybe:selectedVybe];
     }];
-    
-    /*
-    // Play active vybes from this zone
-    [self presentViewController:playerController animated:YES completion:^{
-        PFObject *selectedVybe = self.objects[indexPath.row];
-        NSString *zoneID = selectedVybe[kVYBVybeZoneIDKey];
-        if (zoneID && zoneID.length > 0) {
-            [playerController playActiveVybesFromZone:zoneID];
-        }
-    }];
-    */
-    /*
-    [self presentViewController:playerController animated:NO completion:^{
-        // Because objects in table are in reverse-time order
-        NSArray *reversedObjects = [[self.objects reverseObjectEnumerator] allObjects];
-        NSInteger videoIndex = self.objects.count - indexPath.row - 1;
-        [playerController playVybes:reversedObjects from:videoIndex];
-    }];
-    */
 }
 
 #pragma mark UITableViewDataSource
@@ -220,12 +239,26 @@
         }
     }];
     
-
     return cell;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForNextPageAtIndexPath:(NSIndexPath *)indexPath {
     return [tableView dequeueReusableCellWithIdentifier:@"LoadMoreCell"];
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return self.sections.allKeys.count;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSString *zoneName = [self zoneForSection:section];
+    NSArray *rowIndecesInSection = [self.sections objectForKey:zoneName];
+    return rowIndecesInSection.count;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    NSString *zoneName = [self zoneForSection:section];
+    return zoneName;
 }
 
 #pragma mark Segue
