@@ -16,7 +16,7 @@ class VYBMapViewController: UIViewController, MKMapViewDelegate {
     }
     
     var currAnnotation: MKAnnotation!
-    var delegate: AnyObject!
+    //var delegate: AnyObject!
     
     override func viewDidLoad() {
         super.viewDidLoad()

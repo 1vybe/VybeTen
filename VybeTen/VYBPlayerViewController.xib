@@ -99,15 +99,18 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2xr-fh-a0w" userLabel="locationLabel">
-                    <rect key="frame" x="15" y="533" width="46" height="25"/>
+                    <rect key="frame" x="15" y="560" width="207" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="207" id="xWg-mo-Yh1"/>
+                    </constraints>
                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="18"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="thN-J3-OUv" userLabel="userButton">
-                    <rect key="frame" x="15" y="563" width="30" height="22"/>
+                    <rect key="frame" x="15" y="522" width="100" height="33"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="22" id="DNM-xa-u6s"/>
+                        <constraint firstAttribute="width" constant="100" id="Vg6-IQ-xKS"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="15"/>
                     <state key="normal" title="Me">
@@ -115,7 +118,10 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPQ-0i-rrO" userLabel="timeLabel">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPQ-0i-rrO" userLabel="timeLabel">
+                    <constraints>
+                        <constraint firstAttribute="width" constant="186" id="ziG-Di-nIo"/>
+                    </constraints>
                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="16"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
@@ -129,19 +135,19 @@
                 <constraint firstAttribute="bottom" secondItem="UPQ-0i-rrO" secondAttribute="bottom" constant="15" id="Iqn-t4-LrI"/>
                 <constraint firstAttribute="trailing" secondItem="Pb2-69-N8y" secondAttribute="trailing" id="P8w-2S-sOY"/>
                 <constraint firstAttribute="bottom" secondItem="MJr-Ty-ayr" secondAttribute="bottom" constant="20" id="SXM-m5-4N5"/>
-                <constraint firstAttribute="bottom" secondItem="thN-J3-OUv" secondAttribute="bottom" constant="15" id="UkW-OI-Vp3"/>
+                <constraint firstAttribute="bottom" secondItem="thN-J3-OUv" secondAttribute="bottom" constant="45" id="UkW-OI-Vp3"/>
+                <constraint firstAttribute="trailing" secondItem="UPQ-0i-rrO" secondAttribute="trailing" constant="15" id="VNG-OV-7gD"/>
                 <constraint firstAttribute="bottom" secondItem="FUM-j7-JZe" secondAttribute="bottom" id="Yty-f2-X9K"/>
                 <constraint firstItem="lH2-Xq-FWU" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="bfu-PK-bjc"/>
                 <constraint firstItem="cMN-bL-OwK" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="dSl-PC-WxB"/>
                 <constraint firstAttribute="centerY" secondItem="Vij-MN-ZuP" secondAttribute="centerY" id="fkI-HM-iB3"/>
                 <constraint firstItem="2xr-fh-a0w" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="hpp-Ku-osE"/>
-                <constraint firstAttribute="centerX" secondItem="UPQ-0i-rrO" secondAttribute="centerX" id="jTt-Wt-4Vq"/>
                 <constraint firstItem="thN-J3-OUv" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="l8d-Bt-Gjo"/>
                 <constraint firstAttribute="bottom" secondItem="cMN-bL-OwK" secondAttribute="bottom" constant="40" id="mvR-Xz-P0q"/>
                 <constraint firstItem="lH2-Xq-FWU" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="15" id="qGi-X7-iTW"/>
                 <constraint firstAttribute="centerY" secondItem="Pb2-69-N8y" secondAttribute="centerY" id="u1c-Sv-adY"/>
                 <constraint firstItem="Vij-MN-ZuP" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="utX-77-c0b"/>
-                <constraint firstAttribute="bottom" secondItem="2xr-fh-a0w" secondAttribute="bottom" constant="42" id="zX8-nu-aHw"/>
+                <constraint firstAttribute="bottom" secondItem="2xr-fh-a0w" secondAttribute="bottom" constant="15" id="zX8-nu-aHw"/>
             </constraints>
             <variation key="default">
                 <mask key="constraints">

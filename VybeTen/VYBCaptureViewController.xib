@@ -16,7 +16,7 @@
                 <outlet property="cameraView" destination="pxE-bC-V0j" id="oRf-N0-aNf"/>
                 <outlet property="flashButton" destination="jPK-KL-Kst" id="f78-1p-p9v"/>
                 <outlet property="flipButton" destination="7vo-Gu-Tx0" id="H0U-It-ehr"/>
-                <outlet property="recordButton" destination="sIB-Pf-Xfc" id="kbY-jh-L7h"/>
+                <outlet property="recordButton" destination="iEb-4Z-c7N" id="6xj-4L-I8S"/>
                 <outlet property="view" destination="iN0-l3-epB" id="ms6-DC-4sx"/>
             </connections>
         </placeholder>
@@ -42,23 +42,8 @@
                         <action selector="activityButtonPressed:" destination="-1" eventType="touchUpInside" id="Q7F-jd-feC"/>
                     </connections>
                 </button>
-                <view opaque="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="sIB-Pf-Xfc" userLabel="recordButton" customClass="VYBCaptureButton">
-                    <rect key="frame" x="188" y="360" width="105" height="105"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="105" id="gmx-Us-Gty"/>
-                        <constraint firstAttribute="height" constant="105" id="ptl-Br-JxY"/>
-                    </constraints>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="radius">
-                            <real key="value" value="47.5"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="borderLineWidth">
-                            <real key="value" value="4"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jPK-KL-Kst" userLabel="flashButton">
-                    <rect key="frame" x="425" y="185" width="40" height="40"/>
+                    <rect key="frame" x="425" y="425" width="40" height="40"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="40" id="cIx-uw-lK6"/>
                         <constraint firstAttribute="height" constant="40" id="tGR-UE-dbK"/>
@@ -71,8 +56,23 @@
                         <action selector="flashButtonPressed:" destination="-1" eventType="touchUpInside" id="uRm-bw-HO3"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iEb-4Z-c7N" userLabel="recordButton">
+                    <rect key="frame" x="198" y="375" width="85" height="85"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="85" id="VpT-Qh-pZE"/>
+                        <constraint firstAttribute="width" constant="85" id="vwB-DV-G8z"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="18"/>
+                    <state key="normal" backgroundImage="capture_record_normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <state key="selected" backgroundImage="capture_record_recording"/>
+                    <connections>
+                        <action selector="recordButtonPressed:" destination="-1" eventType="touchUpInside" id="fJX-54-vBp"/>
+                    </connections>
+                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7vo-Gu-Tx0" userLabel="flipButton">
-                    <rect key="frame" x="425" y="255" width="40" height="40"/>
+                    <rect key="frame" x="15" y="425" width="40" height="40"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="40" id="1Kg-cq-LXx"/>
                         <constraint firstAttribute="height" constant="40" id="Jai-6O-dj2"/>
@@ -87,16 +87,16 @@
                 </button>
             </subviews>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="jPK-KL-Kst" secondAttribute="bottom" constant="15" id="0vY-vj-zsY"/>
                 <constraint firstItem="rNG-mo-RpY" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="1c6-8l-wbS"/>
-                <constraint firstAttribute="centerX" secondItem="sIB-Pf-Xfc" secondAttribute="centerX" id="9cO-jN-0hj"/>
+                <constraint firstAttribute="bottom" secondItem="7vo-Gu-Tx0" secondAttribute="bottom" constant="15" id="4sY-AC-3Cp"/>
+                <constraint firstItem="7vo-Gu-Tx0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="8yM-kf-bpg"/>
                 <constraint firstAttribute="bottom" secondItem="pxE-bC-V0j" secondAttribute="bottom" id="BPX-IX-mYn"/>
+                <constraint firstAttribute="centerX" secondItem="iEb-4Z-c7N" secondAttribute="centerX" id="BpA-Sz-xjK"/>
                 <constraint firstItem="pxE-bC-V0j" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Bsp-wu-2pQ"/>
                 <constraint firstAttribute="trailing" secondItem="jPK-KL-Kst" secondAttribute="trailing" constant="15" id="NZ2-vd-iqU"/>
-                <constraint firstAttribute="centerY" secondItem="jPK-KL-Kst" secondAttribute="centerY" constant="35" id="OOC-Ty-soN"/>
                 <constraint firstAttribute="trailing" secondItem="pxE-bC-V0j" secondAttribute="trailing" id="RjX-wj-7bv"/>
-                <constraint firstAttribute="centerY" secondItem="7vo-Gu-Tx0" secondAttribute="centerY" constant="-35" id="ToJ-KP-UqM"/>
-                <constraint firstAttribute="trailing" secondItem="7vo-Gu-Tx0" secondAttribute="trailing" constant="15" id="WnB-yZ-xkI"/>
-                <constraint firstAttribute="bottom" secondItem="sIB-Pf-Xfc" secondAttribute="bottom" constant="15" id="fP5-yl-fE3"/>
+                <constraint firstAttribute="bottom" secondItem="iEb-4Z-c7N" secondAttribute="bottom" constant="20" id="eCK-HP-ib5"/>
                 <constraint firstItem="pxE-bC-V0j" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="kR1-9l-zhI"/>
                 <constraint firstAttribute="trailing" secondItem="rNG-mo-RpY" secondAttribute="trailing" constant="15" id="s24-0h-PF9"/>
             </constraints>
@@ -111,5 +111,7 @@
         <image name="capture_flash_off" width="40" height="40"/>
         <image name="capture_flash_on" width="40" height="40"/>
         <image name="capture_flip" width="40" height="40"/>
+        <image name="capture_record_normal" width="85" height="85"/>
+        <image name="capture_record_recording" width="85" height="85"/>
     </resources>
 </document>
