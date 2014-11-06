@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B17" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="eD8-nl-Ebb">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6249" systemVersion="14A388b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="eD8-nl-Ebb">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6243"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
@@ -60,7 +60,7 @@
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
-                                        <segue destination="4nu-fI-UsT" kind="custom" customClass="ShowActiveMapSegue" customModule="VybeTen" customModuleProvider="target" id="bgk-Mn-phg"/>
+                                        <segue destination="4nu-fI-UsT" kind="presentation" identifier="ShowActiveMap" id="bgk-Mn-phg"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -222,11 +222,11 @@
                         <viewControllerLayoutGuide type="bottom" id="cLA-nl-7AN"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ln7-Ne-h9A">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ppP-wo-Pn9">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fyZ-LC-QOJ">
                                 <rect key="frame" x="15" y="15" width="40" height="40"/>
@@ -242,7 +242,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" alpha="0.69999999999999973" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="map_guide" translatesAutoresizingMaskIntoConstraints="NO" id="UHR-p0-8Ff">
-                                <rect key="frame" x="16" y="503" width="190" height="82"/>
+                                <rect key="frame" x="16" y="570" width="190" height="82"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="190" id="aMG-E5-TTK"/>
                                     <constraint firstAttribute="height" constant="82" id="umJ-ie-gEa"/>
@@ -267,7 +267,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LGn-Dg-kdr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2551" y="2355"/>
+            <point key="canvasLocation" x="2247.5" y="2374.5"/>
         </scene>
     </scenes>
     <resources>

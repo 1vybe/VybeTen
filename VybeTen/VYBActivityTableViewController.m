@@ -228,6 +228,16 @@
     return [tableView dequeueReusableCellWithIdentifier:@"LoadMoreCell"];
 }
 
+#pragma mark Segue
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if([segue.identifier isEqualToString:@"ShowActiveMap"])
+    {
+        VYBMapViewController *mapVC = segue.destinationViewController;
+        [mapVC displayAllActiveVybes];
+    }
+}
+
 
 #pragma mark - UIActionSheetDelegate
 
