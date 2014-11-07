@@ -119,6 +119,8 @@
 - (void)setVybeZone:(VYBZone *)zone {
     [self.parseObjectDictionary setObject:zone.zoneID forKey:kVYBVybeZoneIDKey];
     [self.parseObjectDictionary setObject:zone.name forKey:kVYBVybeZoneNameKey];
+    [self.parseObjectDictionary setObject:[NSNumber numberWithDouble:zone.latitude] forKey:kVYBVybeZoneLatitudeKey];
+    [self.parseObjectDictionary setObject:[NSNumber numberWithDouble:zone.longitude] forKey:kVYBVybeZoneLongitudeKey];
 }
 
 - (void)setGeoTag:(CLLocation *)location {

@@ -77,6 +77,9 @@ NSString *const kVYBVybeCountryCodeKey                          = @"countryCode"
 NSString *const kVYBVybeTagKey                                  = @"tag";
 NSString *const kVYBVybeZoneNameKey                             = @"zoneName";
 NSString *const kVYBVybeZoneIDKey                               = @"zoneID";
+NSString *const kVYBVybeZoneLatitudeKey                         = @"zoneLatitude";
+NSString *const kVYBVybeZoneLongitudeKey                        = @"zoneLongitude";
+
 
 /*
  NSString *const kVYBVybeCountryCodeKey                          = @"countryCode";

@@ -163,6 +163,8 @@
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
     
+    [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects];
+    
     self.vybeCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.objects.count];
     
     [self.sections removeAllObjects];
@@ -212,6 +214,7 @@
         [playerController playZoneVybesFromVybe:selectedVybe];
     }];
 }
+
 
 #pragma mark UITableViewDataSource
 

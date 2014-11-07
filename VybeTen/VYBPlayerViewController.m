@@ -576,7 +576,6 @@
         if (_zoneVybes.count > 0) {
             VYBMapViewController *mapVC = [[VYBMapViewController alloc] initWithNibName:@"VYBMapViewController" bundle:nil];
             [self presentViewController:mapVC animated:YES completion:^{
-                [mapVC displayVybes:_zoneVybes];
             }];
         }
     }

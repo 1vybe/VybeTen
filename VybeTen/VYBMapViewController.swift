@@ -8,25 +8,36 @@
 import UIKit
 import MapKit
 
-class VYBMapViewController: UIViewController, MKMapViewDelegate {
+@objc class VYBMapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     
     @IBAction func dismissButtonPressed(sender: AnyObject) {
         self.presentingViewController?.dismissViewControllerAnimated(false, completion: nil)
     }
     
-    var currAnnotation: MKAnnotation!
-    //var delegate: AnyObject!
+    var _zonesOnScreen: [VYBZone]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.setUpMapRegion()
+        
+        self.preloadZones()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
         self.setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    private func preloadZones() {
+        if _zonesOnScreen != nil {
+            for aZone in _zonesOnScreen {
+                aZone.title = aZone.name
+                mapView.addAnnotation(aZone)
+            }
+        }
     }
     
     private func setUpMapRegion() {
@@ -46,35 +57,8 @@ class VYBMapViewController: UIViewController, MKMapViewDelegate {
     }
 
     
-    
-    func displayVybes(vybes: [PFObject]) {
-        for aVybe in vybes {
-            if (mapView.annotations.count >= 30) {
-                break
-            }
-
-            if let geoPoint = aVybe[kVYBVybeGeotag] as PFGeoPoint? {
-                let vAnnotation = MKPointAnnotation()
-                vAnnotation.coordinate = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
-                mapView.addAnnotation(vAnnotation)
-            }
-        }
-    }
-    
     func displayAllActiveVybes() {
-        VYBUtility.fetchActiveZones { (zones: [AnyObject]!, error:NSError!) -> Void in
-            if error == nil {
-                if zones.count > 0 {
-                    for aZone in zones as [VYBZone] {
-                        aZone.title = aZone.name
-                        self.mapView.addAnnotation(aZone)
-                    }
-                }
-                else {
-                    // There is no active zone
-                }
-            }
-        }
+        _zonesOnScreen = ZoneStore.sharedInstance.activeZones()
     }
     
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
@@ -90,7 +74,6 @@ class VYBMapViewController: UIViewController, MKMapViewDelegate {
         pin.rightCalloutAccessoryView = accessoryView
         
 
-        
         var zoneAnnotation = annotation as VYBZone
         if zoneAnnotation.unlocked {
             pin.image = UIImage(named: "map_blue_pin.png")

@@ -9,18 +9,34 @@
 import UIKit
 import MapKit
 
-class VYBZone: NSObject, MKAnnotation {
+@objc class VYBZone: NSObject, MKAnnotation {
     var zoneID: String!
     var name: String!
     var unlocked: Bool = false
+    var activityLevel = 0
     
     var coordinate: CLLocationCoordinate2D
     var title: String!
     
+    var latitude: Double {
+        get {
+            return coordinate.latitude
+        }
+    }
+    var longitude: Double {
+        get {
+            return coordinate.longitude
+        }
+    }
+    
 
     init(foursquareVenue: NSDictionary) {
-        coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        
+        let location = foursquareVenue["location"] as NSDictionary?
+        let latitude = location?["lat"] as Double
+        let longitude = location?["lng"] as Double
+        let coord = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        coordinate = coord
+ 
         zoneID = foursquareVenue["id"] as? String
         if zoneID == nil {
             zoneID = "777"
