@@ -59,9 +59,14 @@
     [self monitorReachability];
     
     /* HockeyApp Initilization */
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:HOCKEY_APP_ID];
-    [[BITHockeyManager sharedHockeyManager] startManager];
+    BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
+    [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
+    hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
+    hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
+    [hockeyManager startManager];
+    
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+
     
     // Parse Initialization
     [Parse setApplicationId:PARSE_APPLICATION_ID
