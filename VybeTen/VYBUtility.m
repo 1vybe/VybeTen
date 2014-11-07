@@ -282,7 +282,7 @@
 + (NSArray *)groupByZonesFromVybes:(NSArray *)vybes {
     NSMutableArray *zones = [[NSMutableArray alloc] init];
     for (PFObject *aVybe in vybes) {
-        VYBZone *zone = [[VYBZone alloc] initWithName:aVybe[kVYBVybeZoneNameKey] zoneID:aVybe[kVYBVybeZoneIDKey]];
+        Zone *zone = [[Zone alloc] initWithName:aVybe[kVYBVybeZoneNameKey] zoneID:aVybe[kVYBVybeZoneIDKey]];
         PFGeoPoint *geoPoint = aVybe[kVYBVybeGeotag];
         CLLocation *location = [[CLLocation alloc] initWithLatitude:geoPoint.latitude longitude:geoPoint.longitude];
         zone.coordinate = [location coordinate];
@@ -293,8 +293,8 @@
     return zones;
 }
 
-+ (BOOL)array:(NSArray *)zones containsZone:(VYBZone *)zone {
-    for (VYBZone *aZone in zones) {
++ (BOOL)array:(NSArray *)zones containsZone:(Zone *)zone {
+    for (Zone *aZone in zones) {
         if ([aZone.zoneID isEqualToString:zone.zoneID]) {
             return YES;
         }

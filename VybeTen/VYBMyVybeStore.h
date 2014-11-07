@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "VYBVybe.h"
-@class VYBZone;
+@class Zone;
 @interface VYBMyVybeStore : NSObject
-@property (nonatomic) VYBZone *currZone;
+@property (nonatomic) Zone *currZone;
 + (VYBMyVybeStore *)sharedStore;
 - (void)prepareNewVybe;
 - (void)uploadCurrentVybe;

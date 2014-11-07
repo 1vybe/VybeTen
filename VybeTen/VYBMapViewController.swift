@@ -15,7 +15,7 @@ import MapKit
         self.presentingViewController?.dismissViewControllerAnimated(false, completion: nil)
     }
     
-    var _zonesOnScreen: [VYBZone]!
+    var _zonesOnScreen: [Zone]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,7 +74,7 @@ import MapKit
         pin.rightCalloutAccessoryView = accessoryView
         
 
-        var zoneAnnotation = annotation as VYBZone
+        var zoneAnnotation = annotation as Zone
         if zoneAnnotation.unlocked {
             pin.image = UIImage(named: "map_blue_pin.png")
         }
@@ -86,7 +86,7 @@ import MapKit
     }
     
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
-        let zone = view.annotation as VYBZone
+        let zone = view.annotation as Zone
         let playerVC = VYBPlayerViewController()
         self.presentViewController(playerVC, animated: true) { () -> Void in
             playerVC.playActiveVybesFromZone(zone.zoneID)

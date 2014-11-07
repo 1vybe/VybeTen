@@ -73,7 +73,7 @@ static BOOL _uploadingOldVybes = NO;
     
 }
 
-- (void)setCurrZone:(VYBZone *)currZone {
+- (void)setCurrZone:(Zone *)currZone {
     _currZone = currZone;
     // Update current vybe's zone here
     if (_currVybe) {

@@ -11,69 +11,13 @@ import UIKit
 private let _zoneStoreSharedInstance = ZoneStore()
 
 @objc class ZoneStore: NSObject {
-    var _activeZones: [VYBZone]!
-    private var _unlockedZones: [VYBZone]!
-    private var _activeUnlockedZones: [VYBZone]!
+    private var _activeZones: [Zone]!
+    private var _activeUnlockedZones: [Zone]!
+    private var _unlockedZones: [Zone]!
     
     class var sharedInstance: ZoneStore {
         return _zoneStoreSharedInstance
     }
-    
-    private func fetchActiveVybes() {
-        let functionName = "get_active_vybes"
-        let params = [NSObject: AnyObject]()
-        PFCloud.callFunctionInBackground(functionName, withParameters:params) { (result: AnyObject!, error: NSError!) -> Void in
-            if error == nil {
-                if result.count > 0 {
-                    let vybeObjects = result as? [PFObject]
-                    self.createActiveZonesFromVybes(vybeObjects)
-                    
-                    // Mark active zones as UNLOCKED
-                    self.updateUnlockedActiveZones()
-                    
-                    // Rearrange unlocked zones by popularity score
-                    self.updatePopularityScoreForUnlockedZones()
-                    self._unlockedZones .sort({ (zone1: VYBZone, zone2: VYBZone) -> Bool in
-                        return zone1.activityLevel > zone2.activityLevel
-                    })
-                    
-                }
-            }
-        }
-    }
-    
-    private func createActiveZonesFromVybes(vybes: [PFObject]!) {
-        let zoneDict = [VYBZone: PFObject]()
-        var coordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
-
-        for aVybe in vybes {
-            let zone = self.extractZoneFromVybe(aVybe)
-            
-            self.addActiveZone(zone)
-        }
-        
-        println("there are \(self._activeZones.count) active zones")
-    }
-    
-    private func addActiveZone(zone: VYBZone) {
-        if _activeZones == nil {
-            _activeZones = [zone]
-        }
-        else {
-            var newZone = true
-            for aZone in _activeZones {
-                if aZone.zoneID == zone.zoneID {
-                    newZone = false
-                    aZone.activityLevel++
-                    break
-                }
-            }
-            if newZone {
-                _activeZones.append(zone)
-            }
-        }
-    }
-    
     
     func didFetchUnlockedVybes(result: [PFObject]!) {
         self.createUnlockedZonesFromVybes(result)
@@ -84,17 +28,17 @@ private let _zoneStoreSharedInstance = ZoneStore()
     
     private func createUnlockedZonesFromVybes(result: [PFObject]!) {
         for aVybe in result {
-            let zone = self.extractZoneFromVybe(aVybe)
+            let zone = self.createZoneFromVybe(aVybe)
             
             self.addUnlockedZone(zone)
         }
         
         println("there are \(self._unlockedZones.count) unlocked zones")
-
-
+        
+        
     }
     
-    private func addUnlockedZone(zone: VYBZone!) {
+    private func addUnlockedZone(zone: Zone!) {
         if _unlockedZones == nil {
             _unlockedZones = [zone]
         }
@@ -111,8 +55,8 @@ private let _zoneStoreSharedInstance = ZoneStore()
             }
         }
     }
-
-
+    
+    
     private func updateUnlockedActiveZones() {
         for aZone in _activeZones {
             for uZone in _unlockedZones {
@@ -123,23 +67,79 @@ private let _zoneStoreSharedInstance = ZoneStore()
         }
     }
     
-    private func updatePopularityScoreForUnlockedZones() {
-        for aZone in _activeZones {
-            for uZone in _unlockedZones {
-                if aZone.zoneID == uZone.zoneID {
-                    uZone.activityLevel = aZone.activityLevel
+    private func fetchActiveVybes() {
+        let functionName = "get_active_vybes"
+        let params = [NSObject: AnyObject]()
+        PFCloud.callFunctionInBackground(functionName, withParameters:params) { (result: AnyObject!, error: NSError!) -> Void in
+            if error == nil {
+                if result.count > 0 {
+                    let vybeObjects = result as [PFObject]!
+                    // Group vybes into zones
+                    self.createActiveZonesFromVybes(vybeObjects)
+                    
+                    // Mark active zones as UNLOCKED
+                    self.updateUnlockedActiveZones()
+                    
+                    // Rearrange unlocked zones by popularity score
+                    self.updatePopularityScoreForUnlockedZones()
+                    self._unlockedZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
+                        return zone1.popularityScore > zone2.popularityScore
+                    })
+                    
                 }
             }
         }
     }
-
     
-    private func extractZoneFromVybe(aVybe: PFObject!) -> VYBZone! {
-        var zone: VYBZone!
+    private func createActiveZonesFromVybes(vybes: [PFObject]!) {
+        for aVybe in vybes {
+            self.putActiveVybeIntoZone(aVybe)
+        }
+        
+        println("there are \(self._activeZones.count) active zones")
+    }
+    
+    
+    private func putActiveVybeIntoZone(aVybe: PFObject!) {
+        // Zone exists. Only update popularity
+        if let zone = self.activeZoneForVybe(aVybe) {
+            zone.increasePopularityWithVybe(aVybe)
+        }
+        // Vybe comes from a new zone. Create a new zone
+        else {
+            let zone = self.createZoneFromVybe(aVybe)
+            zone.increasePopularityWithVybe(aVybe)
+            self.addActiveZone(zone)
+        }
+    }
+    
+    private func activeZoneForVybe(aVybe: PFObject!) -> Zone? {
+        if _activeZones == nil {
+            return nil
+        }
+        
+        var zoneID = "777"
+        
+        if aVybe[kVYBVybeZoneIDKey] != nil {
+            zoneID = aVybe[kVYBVybeZoneIDKey] as String
+        }
+        
+        for aZone in _activeZones {
+            if aZone.zoneID == zoneID {
+                return aZone
+            }
+        }
+        
+        return nil
+    }
+    
+    
+    private func createZoneFromVybe(aVybe: PFObject!) -> Zone! {
+        var zone: Zone!
         
         if let zoneID = aVybe[kVYBVybeZoneIDKey] as? String {
             let zoneName = aVybe[kVYBVybeZoneNameKey] as String
-            zone = VYBZone(name: zoneName, zoneID: zoneID)
+            zone = Zone(name: zoneName, zoneID: zoneID)
             var coordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
             
             if let zLat = aVybe[kVYBVybeZoneLatitudeKey] as? Double {
@@ -155,7 +155,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
             zone.coordinate = coordinate
         }
         else {
-            zone = VYBZone(name: "Earth", zoneID: "777")
+            zone = Zone(name: "Earth", zoneID: "777")
         }
         
         zone.unlocked = false
@@ -163,11 +163,32 @@ private let _zoneStoreSharedInstance = ZoneStore()
         return zone
     }
     
-    func unlockedZones() -> [VYBZone]! {
+    
+    private func addActiveZone(zone: Zone) {
+        if _activeZones == nil {
+            _activeZones = [zone]
+        }
+        else {
+            _activeZones.append(zone)
+        }
+    }
+ 
+    
+    private func updatePopularityScoreForUnlockedZones() {
+        for aZone in _activeZones {
+            for uZone in _unlockedZones {
+                if aZone.zoneID == uZone.zoneID {
+                    uZone.popularityScore = aZone.popularityScore
+                }
+            }
+        }
+    }
+    
+    func unlockedZones() -> [Zone]! {
         return _unlockedZones
     }
     
-    func activeZones() -> [VYBZone]! {
+    func activeZones() -> [Zone]! {
         return _activeZones
     }
 }

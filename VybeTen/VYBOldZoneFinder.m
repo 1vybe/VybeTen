@@ -73,7 +73,7 @@ NSMutableArray *zones = [[NSMutableArray alloc] init];
         NSDictionary *response = jsonObj[@"response"];
         NSArray *venues = response[@"venues"];
         for (NSDictionary *aVenue in venues) {
-            VYBZone *aZone = [[VYBZone alloc] initWithFoursquareVenue:aVenue];
+            Zone *aZone = [[Zone alloc] initWithFoursquareVenue:aVenue];
             [zones addObject:aZone];
         }
         return zones;

@@ -54,7 +54,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationFetched:) name:VYBMyVybeStoreLocationFetchedNotification object:nil];
     
-    VYBZone *currZone = [[VYBMyVybeStore sharedStore] currZone];
+    Zone *currZone = [[VYBMyVybeStore sharedStore] currZone];
     if (currZone) {
         [self.zoneLabel setText:currZone.name];
     }
@@ -141,7 +141,7 @@
     // iOS 8
     if (isLatestOS) {
         UIAlertController *checkInController = [UIAlertController alertControllerWithTitle:@"Check-in" message:@"Where are you vybing? :)" preferredStyle:UIAlertControllerStyleActionSheet];
-        for (VYBZone *aZone in suggestions) {
+        for (Zone *aZone in suggestions) {
             UIAlertAction *action = [UIAlertAction actionWithTitle:aZone.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 [[VYBMyVybeStore sharedStore] setCurrZone:aZone];
                 [self.zoneLabel setText:aZone.name];
@@ -149,7 +149,7 @@
             [checkInController addAction:action];
         }
         if (checkInController.actions.count > 0) {
-            VYBZone *currZone = [[VYBMyVybeStore sharedStore] currZone];
+            Zone *currZone = [[VYBMyVybeStore sharedStore] currZone];
             if (currZone) {
                 [checkInController setMessage:[NSString stringWithFormat:@"Your are in %@", currZone.name]];
             }
@@ -167,7 +167,7 @@
     }
     else {
         UIActionSheet *actionsheet = [[UIActionSheet alloc] initWithTitle:@"Where are you vybing?" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
-        for (VYBZone *aZone in _suggestions) {
+        for (Zone *aZone in _suggestions) {
             [actionsheet addButtonWithTitle:aZone.name];
         }
         [actionsheet addButtonWithTitle:@"Go Back"];
@@ -186,7 +186,7 @@
 
     }
     else {
-        VYBZone *zone = _suggestions[buttonIndex];
+        Zone *zone = _suggestions[buttonIndex];
         [self.zoneLabel setText:zone.name];
         [[VYBMyVybeStore sharedStore] setCurrZone:zone];
     }
@@ -194,7 +194,7 @@
 
 
 - (IBAction)acceptButtonPressed:(id)sender {
-    VYBZone *currZone = [[VYBMyVybeStore sharedStore] currZone];
+    Zone *currZone = [[VYBMyVybeStore sharedStore] currZone];
     if (currZone) {
         [[VYBMyVybeStore sharedStore] uploadCurrentVybe];
         [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];

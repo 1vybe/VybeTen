@@ -13,7 +13,7 @@
 		020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 020F1C491977054900C3AA40 /* VYBPermissionViewController.m */; };
 		020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 020FB84819744EBA005C9BA9 /* VYBCameraView.m */; };
 		021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */; };
-		0221A0081A02FB1600C5C60E /* VYBZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0221A0071A02FB1600C5C60E /* VYBZone.swift */; };
+		0221A0081A02FB1600C5C60E /* Zone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0221A0071A02FB1600C5C60E /* Zone.swift */; };
 		0221A00B1A0340AD00C5C60E /* VYBOldZoneFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0221A00A1A0340AD00C5C60E /* VYBOldZoneFinder.m */; };
 		0222946D19FF2CE200A2AD62 /* VYBPizzaLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0222946C19FF2CE200A2AD62 /* VYBPizzaLayer.m */; };
 		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
@@ -104,7 +104,7 @@
 		021B5B6819A7B49100B906F3 /* AVAsset+VideoOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVAsset+VideoOrientation.h"; sourceTree = "<group>"; };
 		021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+VideoOrientation.m"; sourceTree = "<group>"; };
 		021B5B6B19A7D0E300B906F3 /* VYBVybeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybeTableViewCell.h; sourceTree = "<group>"; };
-		0221A0071A02FB1600C5C60E /* VYBZone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VYBZone.swift; sourceTree = "<group>"; };
+		0221A0071A02FB1600C5C60E /* Zone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Zone.swift; sourceTree = "<group>"; };
 		0221A0091A0340AD00C5C60E /* VYBOldZoneFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBOldZoneFinder.h; sourceTree = "<group>"; };
 		0221A00A1A0340AD00C5C60E /* VYBOldZoneFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBOldZoneFinder.m; sourceTree = "<group>"; };
 		0222946B19FF2CE200A2AD62 /* VYBPizzaLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPizzaLayer.h; sourceTree = "<group>"; };
@@ -341,7 +341,7 @@
 				026216B919EA43DE00EC6544 /* VybeTen-Bridging-Header.h */,
 				026216BC19EA470600EC6544 /* VYBVybe.h */,
 				026216BD19EA470600EC6544 /* VYBVybe.m */,
-				0221A0071A02FB1600C5C60E /* VYBZone.swift */,
+				0221A0071A02FB1600C5C60E /* Zone.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -701,7 +701,7 @@
 				020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */,
 				022F4A671A0126DE00C20526 /* VYBMapViewController.swift in Sources */,
 				025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */,
-				0221A0081A02FB1600C5C60E /* VYBZone.swift in Sources */,
+				0221A0081A02FB1600C5C60E /* Zone.swift in Sources */,
 				88FF430519AFFCEB00D18872 /* VYBActivityTableViewController.m in Sources */,
 				8861F0D319A81E08000249DB /* NSString+Email.m in Sources */,
 				8861F0D019A81C8C000249DB /* NSString+Username.m in Sources */,

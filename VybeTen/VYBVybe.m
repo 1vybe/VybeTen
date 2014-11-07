@@ -116,7 +116,7 @@
     return [self.parseObjectDictionary objectForKey:kVYBVybeTagKey];
 }
 
-- (void)setVybeZone:(VYBZone *)zone {
+- (void)setVybeZone:(Zone *)zone {
     [self.parseObjectDictionary setObject:zone.zoneID forKey:kVYBVybeZoneIDKey];
     [self.parseObjectDictionary setObject:zone.name forKey:kVYBVybeZoneNameKey];
     [self.parseObjectDictionary setObject:[NSNumber numberWithDouble:zone.latitude] forKey:kVYBVybeZoneLatitudeKey];

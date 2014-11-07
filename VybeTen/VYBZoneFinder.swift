@@ -1,5 +1,5 @@
 //
-//  VYBZoneFinder.swift
+//  ZoneFinder.swift
 //  VybeTen
 //
 //  Created by jinsuk on 10/30/14.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class VYBZoneFinder: NSObject  {
+class ZoneFinder: NSObject  {
 
     let clientID = "O3P21TKG3FF1U11LDHT52PA50WLFPCBZUNHKBNK0OJRCOF12"
     let clientSecret = "JJ5VR1JFDUSIG0LBDKPFXFHUP3HACC004YDXSOZ4YZFRCMIB"
@@ -56,14 +56,14 @@ class VYBZoneFinder: NSObject  {
     }
     
     private func generateZonesFromData(data: NSData) -> NSArray? {
-        var zones = [VYBZone]()
+        var zones = [Zone]()
         var jsonError: NSError?
         var jsonObj = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &jsonError) as [String: AnyObject]
         if jsonError != nil {
             let response = jsonObj["response"] as [String: AnyObject]
             let venues = response["venues"] as [NSDictionary]
             for aVenue in venues {
-                let aZone = VYBZone(foursquareVenue: aVenue)
+                let aZone = Zone(foursquareVenue: aVenue)
                 zones.append(aZone)
             }
             

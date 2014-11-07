@@ -1,5 +1,5 @@
 //
-//  VYBZone.swift
+//  Zone.swift
 //  VybeTen
 //
 //  Created by jinsuk on 10/30/14.
@@ -9,12 +9,15 @@
 import UIKit
 import MapKit
 
-@objc class VYBZone: NSObject, MKAnnotation {
+@objc class Zone: NSObject, MKAnnotation {
     var zoneID: String!
     var name: String!
     var unlocked: Bool = false
-    var activityLevel = 0
     
+    var uniqueUsers = [String: Int]()
+    var numOfVybes = 0
+    var popularityScore = 0
+
     var coordinate: CLLocationCoordinate2D
     var title: String!
     
@@ -30,7 +33,7 @@ import MapKit
     }
     
 
-    init(foursquareVenue: NSDictionary) {
+    init(foursquareVenue: NSDictionary!) {
         let location = foursquareVenue["location"] as NSDictionary?
         let latitude = location?["lat"] as Double
         let longitude = location?["lng"] as Double
@@ -53,6 +56,28 @@ import MapKit
         name = aName
         zoneID = zID
     }
+    
+    func increasePopularityWithVybe(aVybe: PFObject!) {
+        if let aZoneID = aVybe[kVYBVybeZoneIDKey] as? String {
+            if aZoneID != zoneID {
+                println("Something is wrong zoneID mispatch")
+            }
+        }
+        
+        if let user = aVybe[kVYBVybeUserKey] as PFObject! {
+            let username = user[kVYBUserUsernameKey] as String
+            uniqueUsers[username] = 1
+        }
+        
+        numOfVybes++
+        
+        self.updatePopularityScore()
+    }
+    
+    private func updatePopularityScore() {
+        popularityScore = uniqueUsers.keys.array.count
+    }
+    
     
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         
