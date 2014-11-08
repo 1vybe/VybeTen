@@ -29,6 +29,15 @@
     return self;
 }
 
+- (VYBVybe *)initWithVybeObject:(VYBVybe *)aVybe {
+    self = [self initWithParseObject:[aVybe parseObject]];
+    if (self) {
+        uniqueFileName = aVybe.uniqueFileName;
+        locationCL = aVybe.locationCL;
+    }
+    return self;
+}
+
 - (NSString *)generateUniqueFileName {
     //Create unique filename
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

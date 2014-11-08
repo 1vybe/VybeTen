@@ -85,12 +85,13 @@ static BOOL _uploadingOldVybes = NO;
 - (void)uploadCurrentVybe {
     
     dispatch_async(_currentUploadQueue, ^{
+        VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe] ;
         
-        [VYBUtility saveThumbnailImageForVybe:_currVybe];
+        [VYBUtility saveThumbnailImageForVybe:vybeToUpload];
         
-        if ( [(VYBAppDelegate *)[UIApplication sharedApplication].delegate isParseReachable] ) {
-            NSData *video = [NSData dataWithContentsOfFile:[_currVybe videoFilePath]];
-            NSData *thumbnail = [NSData dataWithContentsOfFile:[_currVybe thumbnailFilePath]];
+//        if ( [(VYBAppDelegate *)[UIApplication sharedApplication].delegate isParseReachable] ) {
+            NSData *video = [NSData dataWithContentsOfFile:[vybeToUpload videoFilePath]];
+            NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToUpload thumbnailFilePath]];
             
             PFFile *videoFile = [PFFile fileWithData:video];
             PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
@@ -103,12 +104,12 @@ static BOOL _uploadingOldVybes = NO;
                 if (!error) {
                     [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                         if (!error) {
-                            PFObject *vybe = [_currVybe parseObject];
+                            PFObject *vybe = [vybeToUpload parseObject];
                             [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
                             [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
                             [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                                 if (succeeded) {
-                                    [self didUploadVybe:_currVybe];
+                                    [self didUploadVybe:vybeToUpload];
                                 } else {
                                     [self currentUploadingFailed];
                                 }
@@ -130,10 +131,10 @@ static BOOL _uploadingOldVybes = NO;
             // Update user lastVybeLocation and lastVybeTime field.
             [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
             [[PFUser currentUser] saveInBackground];
-        }
-        else {
-            [self currentUploadingFailed];
-        }
+//        }
+//        else {
+//            [self currentUploadingFailed];
+//        }
     });
 
 }

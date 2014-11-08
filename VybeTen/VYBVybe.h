@@ -13,6 +13,7 @@
 //@property (nonatomic) VYBZone *vybeZone;
 
 - (VYBVybe *)initWithParseObject:(PFObject *)parseObj;
+- (VYBVybe *)initWithVybeObject:(VYBVybe *)aVybe;
 - (PFObject *)parseObject;
 - (NSString *)videoFilePath;
 - (NSString *)thumbnailFilePath;
