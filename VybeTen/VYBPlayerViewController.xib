@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14B17" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6249" systemVersion="14A388b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6243"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VYBPlayerViewController">
@@ -12,8 +12,6 @@
                 <outlet property="goPrevButton" destination="Vij-MN-ZuP" id="rwy-vS-Z1J"/>
                 <outlet property="locationLabel" destination="2xr-fh-a0w" id="cA0-kh-x5y"/>
                 <outlet property="mapButton" destination="cMN-bL-OwK" id="ovz-hp-e1v"/>
-                <outlet property="portalButton" destination="MJr-Ty-ayr" id="GSw-cM-qeq"/>
-                <outlet property="portalButtonHorizontalSpacing" destination="2qJ-73-YOq" id="C7C-cU-Jll"/>
                 <outlet property="timeLabel" destination="UPQ-0i-rrO" id="4c8-UE-Biw"/>
                 <outlet property="userButton" destination="thN-J3-OUv" id="ioR-z5-rt0"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -31,18 +29,6 @@
                         <constraint firstAttribute="height" constant="133" id="yOK-aN-5fr"/>
                     </constraints>
                 </imageView>
-                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MJr-Ty-ayr" userLabel="portalButton">
-                    <rect key="frame" x="513" y="513" width="67" height="67"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="67" id="QGN-4n-SlW"/>
-                        <constraint firstAttribute="height" constant="67" id="zYu-3j-q8t"/>
-                    </constraints>
-                    <state key="normal" image="player_zone_in">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <state key="selected" image="player_zone_out"/>
-                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vij-MN-ZuP" userLabel="goPrevButton">
                     <rect key="frame" x="0.0" y="130" width="115" height="340"/>
                     <constraints>
@@ -118,7 +104,7 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPQ-0i-rrO" userLabel="timeLabel">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPQ-0i-rrO" userLabel="timeLabel">
                     <constraints>
                         <constraint firstAttribute="width" constant="186" id="ziG-Di-nIo"/>
                     </constraints>
@@ -129,12 +115,10 @@
             </subviews>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="cMN-bL-OwK" secondAttribute="bottom" constant="42" id="2JL-dR-ArK"/>
-                <constraint firstAttribute="trailing" secondItem="MJr-Ty-ayr" secondAttribute="trailing" constant="20" id="2qJ-73-YOq"/>
                 <constraint firstAttribute="centerX" secondItem="cMN-bL-OwK" secondAttribute="centerX" id="4DG-8P-Yn9"/>
                 <constraint firstAttribute="centerX" secondItem="FUM-j7-JZe" secondAttribute="centerX" id="4bn-Rs-2OS"/>
                 <constraint firstAttribute="bottom" secondItem="UPQ-0i-rrO" secondAttribute="bottom" constant="15" id="Iqn-t4-LrI"/>
                 <constraint firstAttribute="trailing" secondItem="Pb2-69-N8y" secondAttribute="trailing" id="P8w-2S-sOY"/>
-                <constraint firstAttribute="bottom" secondItem="MJr-Ty-ayr" secondAttribute="bottom" constant="20" id="SXM-m5-4N5"/>
                 <constraint firstAttribute="bottom" secondItem="thN-J3-OUv" secondAttribute="bottom" constant="45" id="UkW-OI-Vp3"/>
                 <constraint firstAttribute="trailing" secondItem="UPQ-0i-rrO" secondAttribute="trailing" constant="15" id="VNG-OV-7gD"/>
                 <constraint firstAttribute="bottom" secondItem="FUM-j7-JZe" secondAttribute="bottom" id="Yty-f2-X9K"/>
@@ -165,7 +149,5 @@
         <image name="player_map_button" width="40" height="40"/>
         <image name="player_next_button" width="114" height="340"/>
         <image name="player_prev_button" width="115" height="342"/>
-        <image name="player_zone_in" width="67" height="67"/>
-        <image name="player_zone_out" width="67" height="67"/>
     </resources>
 </document>
