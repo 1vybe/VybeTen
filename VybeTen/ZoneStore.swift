@@ -38,6 +38,10 @@ private let _zoneStoreSharedInstance = ZoneStore()
                     // Rearrange unlocked zones by popularity score
                     self.updatePopularityScoreForUnlockedZones()
                     self._unlockedZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
+                        if (zone1.popularityScore == zone2.popularityScore) {
+                            let comparisonResult = zone1.myMostRecentVybeTimestamp.compare(zone2.myMostRecentVybeTimestamp)
+                            return comparisonResult == NSComparisonResult.OrderedDescending
+                        }
                         return zone1.popularityScore > zone2.popularityScore
                     })
                     

@@ -170,8 +170,9 @@
             self.sections = [[ZoneStore sharedInstance] unlockedZones];
             
             for (Zone *aZone in self.sections) {
-                NSLog(@"%@: %ld", aZone.name, aZone.popularityScore);
+                NSLog(@"%@: %ld, %@", aZone.name, aZone.popularityScore, aZone.myMostRecentVybeTimestamp);
             }
+            
             [self.tableView reloadData];
         }
     }];

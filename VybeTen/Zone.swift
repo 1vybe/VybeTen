@@ -24,6 +24,12 @@ import MapKit
             return myVybes.count
         }
     }
+    
+    var myMostRecentVybeTimestamp: NSDate {
+        get {
+            return myVybes.first?.objectForKey(kVYBVybeTimestampKey) as NSDate
+        }
+    }
 
     var coordinate: CLLocationCoordinate2D
     var title: String!
