@@ -18,7 +18,7 @@ private let _sharedInstance = ZoneFinder()
     var numOfResults: Int = 10;
     
     var searchURL = ""
-    let session: NSURLSession!
+    var session: NSURLSession!
     
     var suggestions: [Zone]!
     
@@ -26,8 +26,7 @@ private let _sharedInstance = ZoneFinder()
         return _sharedInstance;
     }
     
-    override init() {
-        super.init()
+    func setUpSessionWithFourSquare() {
         searchURL = "https://api.foursquare.com/v2/venues/search?"
         searchURL += "client_id=\(clientID)"
         searchURL += "&client_secret=\(clientSecret)"
@@ -40,6 +39,8 @@ private let _sharedInstance = ZoneFinder()
     }
     
     func findZoneNearLocationInBackground(completionHandler: ((success: Bool) -> Void)) {
+        self.setUpSessionWithFourSquare()
+        
         PFGeoPoint.geoPointForCurrentLocationInBackground { (geoPoint: PFGeoPoint!, error: NSError!) -> Void in
             if error == nil {
                 let location = CLLocation(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
@@ -80,18 +81,27 @@ private let _sharedInstance = ZoneFinder()
         self.findZoneNearLocationInBackground({ _ in })
     }
     
+    func suggestionsContainZone(zone: Zone?) -> Bool {
+        for aZone in suggestions {
+            if aZone.zoneID == zone?.zoneID {
+                return true
+            }
+        }
+        return false
+    }
+    
     private func generateZonesFromData(data: NSData!) -> [Zone]? {
         var zones = [Zone]()
         var jsonError: NSError?
         var jsonObj = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &jsonError) as [String: AnyObject]
-        if jsonError != nil {
+        if jsonError == nil {
             let response = jsonObj["response"] as [String: AnyObject]
             let venues = response["venues"] as [NSDictionary]
             for aVenue in venues {
                 let aZone = Zone(foursquareVenue: aVenue)
                 zones.append(aZone)
             }
-            
+            return zones
         }
         return nil
     }

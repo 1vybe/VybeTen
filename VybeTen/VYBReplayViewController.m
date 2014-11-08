@@ -54,9 +54,10 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationFetched:) name:VYBMyVybeStoreLocationFetchedNotification object:nil];
     
-    Zone *currZone = [[VYBMyVybeStore sharedStore] currZone];
-    if (currZone && [[VYBMyVybeStore sharedStore] suggestionsContainZone:currZone.zoneID]) {
-        [self.zoneLabel setText:currZone.name];
+    Zone *lastZone = [[VYBMyVybeStore sharedStore] currZone];
+    
+    if ([[ZoneFinder sharedInstance] suggestionsContainZone:lastZone]) {
+        [self.zoneLabel setText:lastZone.name];
     }
     
     _currVybe = [[VYBMyVybeStore sharedStore] currVybe];
@@ -87,9 +88,19 @@
 
 #pragma mark - Zone
 - (IBAction)selectZoneButtonPressed:(id)sender {
-    NSArray *suggestions = [[VYBMyVybeStore sharedStore] zoneSuggestions];
+    NSArray *suggestions = [[ZoneFinder sharedInstance] suggestions];
     if (suggestions && suggestions.count > 0) {
         [self displayCurrentPlaceSuggestions:suggestions];
+    }
+    else {
+        [[ZoneFinder sharedInstance] findZoneNearLocationInBackground:^(BOOL success) {
+            if (success) {
+                NSArray *suggestions = [[ZoneFinder sharedInstance] suggestions];
+                if (suggestions && suggestions.count > 0) {
+                    [self displayCurrentPlaceSuggestions:suggestions];
+                }
+            }
+        }];
     }
 }
 
