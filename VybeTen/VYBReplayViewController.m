@@ -55,7 +55,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationFetched:) name:VYBMyVybeStoreLocationFetchedNotification object:nil];
     
     Zone *currZone = [[VYBMyVybeStore sharedStore] currZone];
-    if (currZone) {
+    if (currZone && [[VYBMyVybeStore sharedStore] suggestionsContainZone:currZone.zoneID]) {
         [self.zoneLabel setText:currZone.name];
     }
     
@@ -87,51 +87,10 @@
 
 #pragma mark - Zone
 - (IBAction)selectZoneButtonPressed:(id)sender {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-        if (!error) {
-            VYBOldZoneFinder *oldZoneFinder = [[VYBOldZoneFinder alloc] init];
-            //TODO: _oldZoneFinder.numOfResults = 10;
-            [oldZoneFinder findZoneNearLocationInBackgroundWithLatitude:geoPoint.latitude longitude:geoPoint.longitude completionHandler:^(NSArray *results, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                });
-                if (!error) {
-                    _suggestions = results;
-                    [self displayCurrentPlaceSuggestions:results];
-                }
-            }];
-            
-            CLLocation *currLoc = [[CLLocation alloc] initWithLatitude:geoPoint.latitude longitude:geoPoint.longitude];
-            [_currVybe setLocationCL:currLoc];
-            
-            CLGeocoder *reverseGeocoder = [[CLGeocoder alloc] init];
-            [reverseGeocoder reverseGeocodeLocation:currLoc completionHandler:^(NSArray *placemarks, NSError *error) {
-                NSString *locationStr = [[NSString alloc] init];
-                NSString *tag = [[NSString alloc] init];
-                if (!error) {
-                    CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
-                    NSString *neighborhood = myPlacemark.subLocality;
-                    NSString *city = myPlacemark.locality;
-                    NSString *isoCountryCode = myPlacemark.ISOcountryCode;
-                    locationStr = [NSString stringWithFormat:@"%@,%@,%@",neighborhood, city, isoCountryCode];
-                    tag = neighborhood;
-                } else {
-                    locationStr = @"Earth, unknown, unknown";
-                    tag = @"Earth";
-                }
-                
-                [_currVybe setLocationString:locationStr];
-                [_currVybe setTag:tag];
-            }];
-            
-
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            });
-        }
-    }];
+    NSArray *suggestions = [[VYBMyVybeStore sharedStore] zoneSuggestions];
+    if (suggestions && suggestions.count > 0) {
+        [self displayCurrentPlaceSuggestions:suggestions];
+    }
 }
 
 - (void)displayCurrentPlaceSuggestions:(NSArray *)suggestions {

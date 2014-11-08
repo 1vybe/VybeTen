@@ -42,7 +42,7 @@
 		027DE0EF19E7484200F5F4C0 /* VYBCaptureRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 027DE0EE19E7484200F5F4C0 /* VYBCaptureRecorder.m */; };
 		0288603E19E4A02A007876AE /* VYBCapturePipeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 0288603D19E4A02A007876AE /* VYBCapturePipeline.m */; };
 		0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0293877C1969C1D200F41A12 /* VYBCaptureButton.m */; };
-		029729721A02A1EC0050406D /* VYBZoneFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029729711A02A1EC0050406D /* VYBZoneFinder.swift */; };
+		029729721A02A1EC0050406D /* ZoneFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029729711A02A1EC0050406D /* ZoneFinder.swift */; };
 		02C7A02719F580FC0065BF4E /* VYBFirstPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7A02519F580FC0065BF4E /* VYBFirstPageViewController.swift */; };
 		02C7A02819F580FC0065BF4E /* VYBFirstPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02C7A02619F580FC0065BF4E /* VYBFirstPageViewController.xib */; };
 		02CEE2AD1970A46A00AC361F /* VYBTimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CEE2AC1970A46A00AC361F /* VYBTimerView.m */; };
@@ -156,7 +156,7 @@
 		0288603D19E4A02A007876AE /* VYBCapturePipeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCapturePipeline.m; sourceTree = "<group>"; };
 		0293877B1969C1D200F41A12 /* VYBCaptureButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCaptureButton.h; sourceTree = "<group>"; };
 		0293877C1969C1D200F41A12 /* VYBCaptureButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCaptureButton.m; sourceTree = "<group>"; };
-		029729711A02A1EC0050406D /* VYBZoneFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VYBZoneFinder.swift; sourceTree = "<group>"; };
+		029729711A02A1EC0050406D /* ZoneFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoneFinder.swift; sourceTree = "<group>"; };
 		02C7A02519F580FC0065BF4E /* VYBFirstPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VYBFirstPageViewController.swift; sourceTree = "<group>"; };
 		02C7A02619F580FC0065BF4E /* VYBFirstPageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBFirstPageViewController.xib; sourceTree = "<group>"; };
 		02CEE2AB1970A46A00AC361F /* VYBTimerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTimerView.h; sourceTree = "<group>"; };
@@ -490,7 +490,7 @@
 				025EDB2318F65E45008B0CB2 /* VYBAnimator.h */,
 				025EDB2418F65E45008B0CB2 /* VYBAnimator.m */,
 				02512D071A0BEDA800155068 /* ZoneStore.swift */,
-				029729711A02A1EC0050406D /* VYBZoneFinder.swift */,
+				029729711A02A1EC0050406D /* ZoneFinder.swift */,
 				0221A0091A0340AD00C5C60E /* VYBOldZoneFinder.h */,
 				0221A00A1A0340AD00C5C60E /* VYBOldZoneFinder.m */,
 			);
@@ -710,7 +710,7 @@
 				0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */,
 				02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */,
 				025CC90F19D5229200A1208C /* UIImage+maskImage.m in Sources */,
-				029729721A02A1EC0050406D /* VYBZoneFinder.swift in Sources */,
+				029729721A02A1EC0050406D /* ZoneFinder.swift in Sources */,
 				02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */,
 				020BDABA19FFFF7500B02824 /* VYBAciveButton.m in Sources */,
 				027DE0EF19E7484200F5F4C0 /* VYBCaptureRecorder.m in Sources */,

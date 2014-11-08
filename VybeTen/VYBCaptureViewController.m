@@ -168,6 +168,8 @@
         
         [[VYBMyVybeStore sharedStore] prepareNewVybe];
         
+        [[ZoneFinder sharedInstance] findZoneFromCurrentLocationInBackground];
+        
         [recordButton setEnabled:NO];
         
         [recordButton setSelected:YES];

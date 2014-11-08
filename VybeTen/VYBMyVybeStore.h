@@ -11,9 +11,11 @@
 @class Zone;
 @interface VYBMyVybeStore : NSObject
 @property (nonatomic) Zone *currZone;
+@property (nonatomic) NSArray *zoneSuggestions;
 + (VYBMyVybeStore *)sharedStore;
 - (void)prepareNewVybe;
 - (void)uploadCurrentVybe;
+- (BOOL)suggestionsContainZone:(NSString *)zoneID;
 
 //- (void)addVybe:(VYBMyVybe *)aVybe;
 - (void)startUploadingOldVybes;

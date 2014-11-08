@@ -9,3 +9,5 @@
 #import "VYBConstants.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
+#import "VYBMyVybeStore.h"
+#import "VYBVybe.h"

@@ -81,6 +81,15 @@ static BOOL _uploadingOldVybes = NO;
     }
 }
 
+- (BOOL)suggestionsContainZone:(NSString *)zoneID {
+    for (Zone *aZone in self.zoneSuggestions) {
+        if ([aZone.zoneID isEqual:zoneID])
+            return YES;
+    }
+    return NO;
+}
+
+
 
 - (void)uploadCurrentVybe {
     
