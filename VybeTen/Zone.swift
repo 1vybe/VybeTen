@@ -14,9 +14,16 @@ import MapKit
     var name: String!
     var unlocked: Bool = false
     
-    var uniqueUsers = [String: Int]()
-    var numOfVybes = 0
+    var activeUsers = [String: Int]()
+    var numOfActiveVybes = 0
     var popularityScore = 0
+    
+    var myVybes = [PFObject]()
+    var numOfMyVybes: Int {
+        get {
+            return myVybes.count
+        }
+    }
 
     var coordinate: CLLocationCoordinate2D
     var title: String!
@@ -56,26 +63,28 @@ import MapKit
         name = aName
         zoneID = zID
     }
+
     
     func increasePopularityWithVybe(aVybe: PFObject!) {
-        if let aZoneID = aVybe[kVYBVybeZoneIDKey] as? String {
-            if aZoneID != zoneID {
-                println("Something is wrong zoneID mispatch")
-            }
-        }
         
         if let user = aVybe[kVYBVybeUserKey] as PFObject! {
             let username = user[kVYBUserUsernameKey] as String
-            uniqueUsers[username] = 1
+            activeUsers[username] = 1
         }
         
-        numOfVybes++
+        
+        numOfActiveVybes++
         
         self.updatePopularityScore()
     }
+
     
     private func updatePopularityScore() {
-        popularityScore = uniqueUsers.keys.array.count
+        popularityScore = activeUsers.keys.array.count
+    }
+    
+    func addMyVybe(aVybe: PFObject!) {
+        myVybes.append(aVybe)
     }
     
     

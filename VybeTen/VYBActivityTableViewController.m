@@ -22,7 +22,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *vybeCountLabel;
-@property (retain, nonatomic) NSMutableDictionary *sections;
+@property (retain, nonatomic) NSArray *sections;
 @property (retain, nonatomic) NSMutableDictionary *sectionToZoneNameMap;
 
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
@@ -163,42 +163,26 @@
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
     
-    [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects];
-    
     self.vybeCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.objects.count];
     
-    [self.sections removeAllObjects];
-    [self.sectionToZoneNameMap removeAllObjects];
-    
-    NSInteger section = 0;
-    NSInteger rowIndex = 0;
-    for (PFObject *object in self.objects) {
-        NSString *zoneName;
-        if ([object objectForKey:kVYBVybeZoneNameKey] == nil) {
-            zoneName = @"Earth";
-        } else {
-            zoneName = [object objectForKey:kVYBVybeZoneNameKey];
-        }
-        NSMutableArray *objectsInSection = [self.sections objectForKey:zoneName];
-        if (!objectsInSection) {
-            objectsInSection = [NSMutableArray array];
+    [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
+        if (success) {
+            self.sections = [[ZoneStore sharedInstance] unlockedZones];
             
-            // this is the first time we see this zone - increment the section index
-            [self.sectionToZoneNameMap setObject:zoneName forKey:[NSNumber numberWithInteger:section++]];
+            for (Zone *aZone in self.sections) {
+                NSLog(@"%@: %ld", aZone.name, aZone.popularityScore);
+            }
+            [self.tableView reloadData];
         }
-        
-        [objectsInSection addObject:[NSNumber numberWithInteger:rowIndex++]];
-        [self.sections setObject:objectsInSection forKey:zoneName];
-    }
+    }];
 }
 
 - (PFObject *)objectAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *zoneName = [self zoneForSection:indexPath.section];
+    Zone *zone = self.sections[indexPath.section];
+    PFObject *vybe = [zone.myVybes objectAtIndex:indexPath.row];
+//    NSArray *rowIndecesInSection = [];
     
-    NSArray *rowIndecesInSection = [self.sections objectForKey:zoneName];
-    
-    NSNumber *rowIndex = [rowIndecesInSection objectAtIndex:indexPath.row];
-    return [self.objects objectAtIndex:[rowIndex intValue]];
+    return vybe;
 }
 
 
@@ -250,18 +234,20 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.sections.allKeys.count;
+    return self.sections.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSString *zoneName = [self zoneForSection:section];
-    NSArray *rowIndecesInSection = [self.sections objectForKey:zoneName];
-    return rowIndecesInSection.count;
+    if (self.sections && self.sections.count > 0) {
+        Zone *zone = self.sections[section];
+        return zone.myVybes.count;
+    }
+    return 0;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSString *zoneName = [self zoneForSection:section];
-    return zoneName;
+    Zone *zone = self.sections[section];
+    return zone.name;
 }
 
 #pragma mark Segue

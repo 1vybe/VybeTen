@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class VYBZone;
+@class Zone;
 @interface VYBVybe : NSObject
 @property (nonatomic) CLLocation *locationCL;
 //@property (nonatomic) VYBZone *vybeZone;
@@ -22,7 +21,7 @@
 - (NSString *)zoneID;
 - (NSString *)zoneName;
 
-- (void)setVybeZone:(VYBZone *)zone;
+- (void)setVybeZone:(Zone *)zone;
 - (void)setTag:(NSString *)tag;
 - (void)setLocationString:(NSString *)locationString;
 - (BOOL)hasLocationData;
