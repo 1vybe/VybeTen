@@ -129,7 +129,6 @@ static BOOL _uploadingOldVybes = NO;
             
             // Update user lastVybeLocation and lastVybeTime field.
             [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
-            [[PFUser currentUser] setObject:[_currVybe zoneID] forKey:kVYBUserLastVybedZoneKey];
             [[PFUser currentUser] saveInBackground];
         }
         else {

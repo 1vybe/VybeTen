@@ -57,6 +57,7 @@
     Zone *lastZone = [[VYBMyVybeStore sharedStore] currZone];
     
     if ([[ZoneFinder sharedInstance] suggestionsContainZone:lastZone]) {
+        [[VYBMyVybeStore sharedStore] setCurrZone:lastZone];
         [self.zoneLabel setText:lastZone.name];
     }
     
@@ -88,20 +89,14 @@
 
 #pragma mark - Zone
 - (IBAction)selectZoneButtonPressed:(id)sender {
-    NSArray *suggestions = [[ZoneFinder sharedInstance] suggestions];
-    if (suggestions && suggestions.count > 0) {
-        [self displayCurrentPlaceSuggestions:suggestions];
-    }
-    else {
-        [[ZoneFinder sharedInstance] findZoneNearLocationInBackground:^(BOOL success) {
-            if (success) {
-                NSArray *suggestions = [[ZoneFinder sharedInstance] suggestions];
-                if (suggestions && suggestions.count > 0) {
-                    [self displayCurrentPlaceSuggestions:suggestions];
-                }
+    [[ZoneFinder sharedInstance] findZoneNearLocationInBackground:^(BOOL success) {
+        if (success) {
+            NSArray *suggestions = [[ZoneFinder sharedInstance] suggestions];
+            if (suggestions && suggestions.count > 0) {
+                [self displayCurrentPlaceSuggestions:suggestions];
             }
-        }];
-    }
+        }
+    }];
 }
 
 - (void)displayCurrentPlaceSuggestions:(NSArray *)suggestions {
@@ -164,15 +159,10 @@
 
 
 - (IBAction)acceptButtonPressed:(id)sender {
-    Zone *currZone = [[VYBMyVybeStore sharedStore] currZone];
-    if (currZone) {
-        [[VYBMyVybeStore sharedStore] uploadCurrentVybe];
-        [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
-    }
-    else {
-        //TODO: highlight zone button so they know what to do
-        
-    }
+    [[VYBMyVybeStore sharedStore] uploadCurrentVybe];
+    
+    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+
 }
 
 
