@@ -163,13 +163,15 @@
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
     
-    self.countLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.objects.count];
-    
     if (self.objects) {
         [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
             if (success) {
                 self.sections = [[ZoneStore sharedInstance] unlockedZones];
                 
+                self.countLabel.text = [NSString stringWithFormat:@"%lu Locations - %lu Vybes",
+                                        (unsigned long)self.sections.count,
+                                        (unsigned long)self.objects.count];
+    
                 for (Zone *aZone in self.sections) {
                     NSLog(@"%@: %ld, %@", aZone.name, aZone.popularityScore, aZone.myMostRecentVybeTimestamp);
                 }
