@@ -41,7 +41,7 @@
         self.paginationEnabled = NO;
         self.pullToRefreshEnabled = YES;
         self.objectsPerPage = 500;
-        self.sections = [NSMutableDictionary dictionary];
+        self.sections = [NSArray array];
         self.sectionToZoneNameMap = [NSMutableDictionary dictionary];
     }
     return self;
