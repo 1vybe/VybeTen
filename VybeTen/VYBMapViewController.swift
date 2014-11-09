@@ -16,6 +16,7 @@ import MapKit
     }
     
     var _zonesOnScreen: [Zone]!
+    var currLocation: MKAnnotation!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,8 +35,8 @@ import MapKit
     private func preloadZones() {
         if _zonesOnScreen != nil {
             for aZone in _zonesOnScreen {
-                aZone.title = aZone.name
-                mapView.addAnnotation(aZone)
+                let simpleAnnotation = SimpleAnnotation(zone: aZone)
+                mapView.addAnnotation(simpleAnnotation)
             }
         }
     }
@@ -55,6 +56,10 @@ import MapKit
             let span = MKCoordinateSpanMake(0.05, 0.05)
             let region = MKCoordinateRegionMake(location, span)
             self.mapView.setRegion(region, animated: true)
+            
+            let annotation = SimpleAnnotation(coordinate: location)
+            // this is current location annoation
+            annotation.isCurrentLocation = true
             self.mapView.addAnnotation(annotation)
         }
 
@@ -74,20 +79,28 @@ import MapKit
     }
     
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+        let simpleAnnotation = annotation as SimpleAnnotation
+        if simpleAnnotation.isCurrentLocation {
+            let pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "currentLocatinPin")
+            pin.pinColor = MKPinAnnotationColor.Green
+            
+            return pin
+        }
+        
         var pin = mapView.dequeueReusableAnnotationViewWithIdentifier("zonePin") as MKAnnotationView!
 
         if pin == nil {
-            pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "zonePin")
-        
-            pin.canShowCallout = true
+            pin = MKAnnotationView(annotation: annotation, reuseIdentifier: "zonePin")
         }
+        
+        
+        pin.canShowCallout = true
         
         let accessoryView = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as UIButton
         pin.rightCalloutAccessoryView = accessoryView
         
 
-        var zoneAnnotation = annotation as Zone
-        if zoneAnnotation.unlocked {
+        if simpleAnnotation.unlocked {
             pin.image = UIImage(named: "map_blue_pin.png")
         }
         else {
@@ -122,4 +135,25 @@ import MapKit
         return Int(UIInterfaceOrientationMask.Portrait.rawValue)
     }
 
+    class SimpleAnnotation: NSObject, MKAnnotation {
+        var coordinate: CLLocationCoordinate2D
+        var title: String
+        var zoneID: String
+        var unlocked: Bool
+        var isCurrentLocation = false
+        
+        init(coordinate coord: CLLocationCoordinate2D) {
+            coordinate = coord
+            title = "Me"
+            zoneID = ""
+            unlocked = false
+        }
+        
+        init(zone: Zone) {
+            coordinate = zone.coordinate
+            title = zone.name
+            zoneID = zone.zoneID
+            unlocked = zone.unlocked
+        }
+    }
 }
