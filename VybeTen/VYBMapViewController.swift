@@ -41,13 +41,25 @@ import MapKit
     }
     
     private func setUpMapRegion() {
-        // Somewhere in montreal
-        let location = CLLocationCoordinate2DMake(45.503039, -73.570120)
-        let span = MKCoordinateSpanMake(0.05, 0.05)
-        let region = MKCoordinateRegionMake(location, span)
-        
-        mapView.setRegion(region, animated: false)
         mapView.delegate = self
+        
+        PFGeoPoint.geoPointForCurrentLocationInBackground { (geoPoint: PFGeoPoint!, error: NSError!) -> Void in
+            var location: CLLocationCoordinate2D
+            if error == nil {
+                location = CLLocationCoordinate2DMake(geoPoint.latitude, geoPoint.longitude)
+            }
+            else {
+                // Somewhere in montreal
+                location = CLLocationCoordinate2DMake(45.503039, -73.570120)
+            }
+            let span = MKCoordinateSpanMake(0.05, 0.05)
+            let region = MKCoordinateRegionMake(location, span)
+            self.mapView.setRegion(region, animated: true)
+            self.mapView.addAnnotation(annotation)
+        }
+
+        
+
     }
     
     private func moveMapToRegionAround(location: CLLocationCoordinate2D) {
