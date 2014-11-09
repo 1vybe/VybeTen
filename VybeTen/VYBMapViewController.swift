@@ -101,6 +101,13 @@ import MapKit
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
+    
+    override func shouldAutorotate() -> Bool {
+        return false
+    }
 
+    override func supportedInterfaceOrientations() -> Int {
+        return Int(UIInterfaceOrientationMask.Portrait.rawValue)
+    }
 
 }
