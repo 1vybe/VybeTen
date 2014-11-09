@@ -163,7 +163,7 @@
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
     
-    self.vybeCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.objects.count];
+    self.countLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.objects.count];
     
     if (self.objects) {
         [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
