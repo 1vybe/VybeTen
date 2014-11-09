@@ -76,7 +76,6 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (id)initWithPageIndex:(NSInteger)pageIndex {
@@ -556,16 +555,6 @@
 
 }
 
-- (void)applicationDidBecomeActiveNotificationReceived:(id)sender {
-    if ( [[PFUser currentUser] objectForKey:@"tribe"] ) {
-        PFObject *myTribe = [[PFUser currentUser] objectForKey:@"tribe"];
-        [myTribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-            if (!error) {
-                
-            }
-        }];
-    }
-}
 
 #pragma mark - Map
 
