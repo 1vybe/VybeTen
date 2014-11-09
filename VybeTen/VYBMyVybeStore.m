@@ -65,12 +65,6 @@ static BOOL _uploadingOldVybes = NO;
     [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
 
     _currVybe = [[VYBVybe alloc] initWithParseObject:nVybe];
-    
-    // By default a vybe will be tagged to your last checked-in zone
-    if (_currZone) {
-        [_currVybe setVybeZone:_currZone];
-    }
-    
 }
 
 - (void)setCurrZone:(Zone *)currZone {
@@ -89,52 +83,46 @@ static BOOL _uploadingOldVybes = NO;
         
         [VYBUtility saveThumbnailImageForVybe:vybeToUpload];
         
-//        if ( [(VYBAppDelegate *)[UIApplication sharedApplication].delegate isParseReachable] ) {
-            NSData *video = [NSData dataWithContentsOfFile:[vybeToUpload videoFilePath]];
-            NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToUpload thumbnailFilePath]];
-            
-            PFFile *videoFile = [PFFile fileWithData:video];
-            PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
-            
-            UIProgressView *uploadProgressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-            [uploadProgressView setFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 50)];
-            [[UIApplication sharedApplication].keyWindow addSubview:uploadProgressView];
+        NSData *video = [NSData dataWithContentsOfFile:[vybeToUpload videoFilePath]];
+        NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToUpload thumbnailFilePath]];
+        
+        PFFile *videoFile = [PFFile fileWithData:video];
+        PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
+        
+        UIProgressView *uploadProgressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+        [uploadProgressView setFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 50)];
+        [[UIApplication sharedApplication].keyWindow addSubview:uploadProgressView];
 
-            [thumbnailFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (!error) {
-                    [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                        if (!error) {
-                            PFObject *vybe = [vybeToUpload parseObject];
-                            [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-                            [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
-                            [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                                if (succeeded) {
-                                    [self didUploadVybe:vybeToUpload];
-                                } else {
-                                    [self currentUploadingFailed];
-                                }
-                                [uploadProgressView removeFromSuperview];
-                            }];
-                        } else {
-                            [self currentUploadingFailed];
+        [thumbnailFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (!error) {
+                [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (!error) {
+                        PFObject *vybe = [vybeToUpload parseObject];
+                        [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
+                        [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
+                        [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                            if (succeeded) {
+                                [self didUploadVybe:vybeToUpload];
+                            } else {
+                                [self uploadingFailedWith:vybeToUpload];
+                            }
                             [uploadProgressView removeFromSuperview];
-                        }
-                    } progressBlock:^(int percentDone) {
-                        uploadProgressView.progress = percentDone / 100.0;
-                    }];
-                } else {
-                    [self currentUploadingFailed];
-                    [uploadProgressView removeFromSuperview];
-                }
-            }];
-            
-            // Update user lastVybeLocation and lastVybeTime field.
-            [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
-            [[PFUser currentUser] saveInBackground];
-//        }
-//        else {
-//            [self currentUploadingFailed];
-//        }
+                        }];
+                    } else {
+                        [self uploadingFailedWith:vybeToUpload];
+                        [uploadProgressView removeFromSuperview];
+                    }
+                } progressBlock:^(int percentDone) {
+                    uploadProgressView.progress = percentDone / 100.0;
+                }];
+            } else {
+                [self uploadingFailedWith:vybeToUpload];
+                [uploadProgressView removeFromSuperview];
+            }
+        }];
+        // Update user lastVybeLocation and lastVybeTime field.
+        [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
+        [[PFUser currentUser] saveInBackground];
     });
 
 }
@@ -153,15 +141,15 @@ static BOOL _uploadingOldVybes = NO;
     [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Posted"];
 }
 
-- (void)currentUploadingFailed {
-    [self saveCurrentVybe];
+- (void)uploadingFailedWith:(VYBVybe *)vybeToUpload {
+    [self saveVybe:vybeToUpload];
     _currVybe = nil;
 }
 
-- (void)saveCurrentVybe {
+- (void)saveVybe:(VYBVybe *)vybeToSave {
     BOOL success = NO;
     @synchronized (_vybesToUpload) {
-        [_vybesToUpload addObject:_currVybe];
+        [_vybesToUpload addObject:vybeToSave];
         success = [self saveChanges];
     }
     
@@ -199,7 +187,7 @@ static BOOL _uploadingOldVybes = NO;
     }
     
     BOOL success = [self uploadVybe:oldVybe];
-    
+
     @synchronized (_vybesToUpload) {
         if (success) {
             [_vybesToUpload removeObject:oldVybe];
@@ -208,6 +196,8 @@ static BOOL _uploadingOldVybes = NO;
     }
 
     if (success) {
+        NSLog(@"uploaded old vybe: %@", [oldVybe parseObject]);
+
         [self clearLocalCacheForVybe:oldVybe];
         [self uploadDelayedVybe];
     }
@@ -245,14 +235,11 @@ static BOOL _uploadingOldVybes = NO;
     if ( ! success )
         return NO;
     
-    [self clearLocalCacheForVybe:aVybe];
-                
     // Only update current user's lastVybedTime and lastVybeLocation if this vybe is fresher
     NSDate *currUserLastVybedTime = [PFUser currentUser][kVYBUserLastVybedTimeKey];
     if (currUserLastVybedTime &&
         ([currUserLastVybedTime timeIntervalSinceDate:vybe[kVYBVybeTimestampKey]] < 0)) {
         [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
-        [[PFUser currentUser] setObject:[aVybe zoneID] forKey:kVYBUserLastVybedZoneKey];
         success = [[PFUser currentUser] save];
         
         return success;

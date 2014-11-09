@@ -81,12 +81,13 @@ private let _sharedInstance = ZoneFinder()
         self.findZoneNearLocationInBackground({ _ in })
     }
     
-    func suggestionsContainZone(zone: Zone?) -> Bool {
+    func suggestionsContainZone(zone: Zone) -> Bool {
         for aZone in suggestions {
-            if aZone.zoneID == zone?.zoneID {
+            if aZone.zoneID == zone.zoneID {
                 return true
             }
         }
+
         return false
     }
     

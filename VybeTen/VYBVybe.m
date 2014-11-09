@@ -30,7 +30,8 @@
 }
 
 - (VYBVybe *)initWithVybeObject:(VYBVybe *)aVybe {
-    self = [self initWithParseObject:[aVybe parseObject]];
+    // raw parse object doese not include PFObjects such as user, geoPoint, and ACL because they are not NSCoding.
+    self = [self initWithParseObject:[aVybe rawParseObject]];
     if (self) {
         uniqueFileName = aVybe.uniqueFileName;
         locationCL = aVybe.locationCL;
@@ -87,6 +88,12 @@
     
     if (self.locationCL)
         [parseObj setObject:[PFGeoPoint geoPointWithLocation:self.locationCL] forKey:kVYBVybeGeotag];
+    
+    return parseObj;
+}
+
+- (PFObject *)rawParseObject {
+    PFObject *parseObj = [PFObject objectWithClassName:kVYBVybeClassKey dictionary:self.parseObjectDictionary];
     
     return parseObj;
 }

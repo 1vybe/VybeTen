@@ -58,6 +58,11 @@ private let _zoneStoreSharedInstance = ZoneStore()
     }
     
     private func createUnlockedZonesFromVybes(result: [PFObject]!) {
+        // First empty the cached
+        if self._unlockedZones != nil {
+            self._unlockedZones.removeAll()
+        }
+        
         for aVybe in result {
             self.putUnlockedVybeIntoZone(aVybe)
         }

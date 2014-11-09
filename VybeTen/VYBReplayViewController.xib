@@ -23,10 +23,9 @@
                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="player_bottom_overlay" translatesAutoresizingMaskIntoConstraints="NO" id="AiM-47-sjF">
-                    <rect key="frame" x="113" y="467" width="375" height="133"/>
+                    <rect key="frame" x="0.0" y="467" width="600" height="133"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="133" id="6jt-yO-7IQ"/>
-                        <constraint firstAttribute="width" constant="375" id="dvt-Oe-PLD"/>
                     </constraints>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VEJ-4U-kAQ" userLabel="reject">
@@ -111,7 +110,6 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="AiM-47-sjF" firstAttribute="top" secondItem="uAt-Cu-ztK" secondAttribute="bottom" id="1bW-LB-HxP"/>
                 <constraint firstAttribute="bottom" secondItem="cKp-4D-Bm4" secondAttribute="bottom" id="68C-a4-bXN"/>
                 <constraint firstAttribute="trailing" secondItem="cKp-4D-Bm4" secondAttribute="trailing" id="77Y-wJ-1s8"/>
                 <constraint firstItem="w5U-9M-d51" firstAttribute="leading" secondItem="nyo-fB-iNN" secondAttribute="trailing" constant="27" id="7gB-3r-EPY"/>
@@ -131,15 +129,12 @@
                 <constraint firstItem="cKp-4D-Bm4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="nZa-KQ-qkC"/>
                 <constraint firstItem="VEJ-4U-kAQ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="oTh-f2-J6U"/>
                 <constraint firstItem="WTG-dg-RZy" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="q0c-se-F0E"/>
+                <constraint firstItem="AiM-47-sjF" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="rNe-RZ-7vJ"/>
                 <constraint firstAttribute="trailing" secondItem="uAt-Cu-ztK" secondAttribute="trailing" id="ran-Uu-Rxa"/>
+                <constraint firstAttribute="trailing" secondItem="AiM-47-sjF" secondAttribute="trailing" id="ssq-zx-dfz"/>
                 <constraint firstAttribute="centerX" secondItem="AiM-47-sjF" secondAttribute="centerX" id="w4Y-EN-KU5"/>
                 <constraint firstAttribute="bottom" secondItem="uAt-Cu-ztK" secondAttribute="bottom" id="wTz-wY-WlB"/>
             </constraints>
-            <variation key="default">
-                <mask key="constraints">
-                    <exclude reference="1bW-LB-HxP"/>
-                </mask>
-            </variation>
         </view>
     </objects>
     <resources>

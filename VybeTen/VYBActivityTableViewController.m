@@ -163,21 +163,21 @@
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
     
-    [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
-        if (success) {
-            self.sections = [[ZoneStore sharedInstance] unlockedZones];
+    self.vybeCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.objects.count];
     
-            self.countLabel.text = [NSString stringWithFormat:@"%lu Locations - %lu Vybes",
-                                    (unsigned long)self.sections.count,
-                                    (unsigned long)self.objects.count];
-            
-            for (Zone *aZone in self.sections) {
-                NSLog(@"%@: %ld, %@", aZone.name, aZone.popularityScore, aZone.myMostRecentVybeTimestamp);
+    if (self.objects) {
+        [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
+            if (success) {
+                self.sections = [[ZoneStore sharedInstance] unlockedZones];
+                
+                for (Zone *aZone in self.sections) {
+                    NSLog(@"%@: %ld, %@", aZone.name, aZone.popularityScore, aZone.myMostRecentVybeTimestamp);
+                }
+                
+                [self.tableView reloadData];
             }
-            
-            [self.tableView reloadData];
-        }
-    }];
+        }];
+    }
 }
 
 - (PFObject *)objectAtIndexPath:(NSIndexPath *)indexPath {

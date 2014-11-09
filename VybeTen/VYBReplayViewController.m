@@ -33,8 +33,10 @@
 @end
 
 @implementation VYBReplayViewController {
-    VYBVybe *_currVybe;
+    NSString *_videoPath;
+    
     NSArray *_suggestions;
+    
 }
 
 - (void)dealloc {
@@ -42,6 +44,14 @@
     self.playerView = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBMyVybeStoreLocationFetchedNotification object:nil];
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        _videoPath = [[[VYBMyVybeStore sharedStore] currVybe] videoFilePath];
+    }
+    return self;
 }
 
 - (void)viewDidLoad
@@ -52,22 +62,18 @@
     
     [self.playerView setPlayer:self.player];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationFetched:) name:VYBMyVybeStoreLocationFetchedNotification object:nil];
-    
     Zone *lastZone = [[VYBMyVybeStore sharedStore] currZone];
     
-    if ([[ZoneFinder sharedInstance] suggestionsContainZone:lastZone]) {
+    if (lastZone && [[ZoneFinder sharedInstance] suggestionsContainZone:lastZone]) {
         [[VYBMyVybeStore sharedStore] setCurrZone:lastZone];
         [self.zoneLabel setText:lastZone.name];
     }
-    
-    _currVybe = [[VYBMyVybeStore sharedStore] currVybe];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
   
-    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[_currVybe videoFilePath]];
+    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:_videoPath];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
     
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
@@ -168,7 +174,7 @@
 
 - (IBAction)rejectButtonPressed:(id)sender {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[_currVybe videoFilePath]];
+        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:_videoPath];
         NSError *error;
         [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&error];
         if (error) {
@@ -179,10 +185,6 @@
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
-- (void)locationFetched:(NSNotification *)notification {
-    //[self.acceptButton setEnabled:YES];
-}
-
 
 #pragma mark - DeviceOrientation
 
@@ -191,8 +193,7 @@
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    VYBVybe *currVybe = [[VYBMyVybeStore sharedStore] currVybe];
-    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[currVybe videoFilePath]];
+    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:_videoPath];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
 
     switch (asset.videoOrientation) {

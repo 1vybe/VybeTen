@@ -78,7 +78,6 @@ import MapKit
             activeUsers[username] = 1
         }
         
-        
         numOfActiveVybes++
         
         self.updatePopularityScore()
@@ -90,7 +89,7 @@ import MapKit
     }
     
     func addMyVybe(aVybe: PFObject!) {
-        myVybes.append(aVybe)
+        myVybes += [aVybe]
     }
     
     

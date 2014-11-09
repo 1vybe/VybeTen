@@ -47,6 +47,8 @@
     // fetch fresh contents for acknowledged user
     else {
         [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
+        
+        [[VYBMyVybeStore sharedStore] startUploadingOldVybes];
     }
 }
 
