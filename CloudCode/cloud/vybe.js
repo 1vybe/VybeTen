@@ -15,14 +15,9 @@ Parse.Cloud.beforeSave('Vybe', function(request, response) {
 });
 
 Parse.Cloud.afterSave('Vybe', function(request) {
-  // Only send push notifications for new vybes
+  // Continue only for new vybes
   if (request.object.existed()) {
     return;
-  }
-
-  // Send iOS push notifications to tribe members
-  if (request.user.has('tribe')) {
-    sendPush(request);
   }
 
   if (request.object.get('isPublic')) {
@@ -56,8 +51,6 @@ Parse.Cloud.afterSave('Vybe', function(request) {
       aUser.save();
     });
   });
-
-
 });
 
 Parse.Cloud.job("removeDeletedVybesFromFeeds", function(request, status) {
@@ -474,7 +467,7 @@ function get_active_zone_vybes(options, request, response) {
 
   var query = new Parse.Query('Vybe');
   query.include('user')
-  
+
  if (recent)
     query.addDescending('timestamp');
   if (hide_user)
@@ -515,7 +508,7 @@ function get_active_vybes(options, request, response) {
 
   var query = new Parse.Query('Vybe');
   query.include('user')
-  
+
  if (recent)
     query.addDescending('timestamp');
   if (hide_user)
@@ -523,7 +516,7 @@ function get_active_vybes(options, request, response) {
   if (limit)
     query.limit(limit);
 
- // 24 hour window 
+ // 24 hour window
   var currTime = new Date();
   var ttlAgo = new Date();
   ttlAgo.setHours(currTime.getHours() - 24);
