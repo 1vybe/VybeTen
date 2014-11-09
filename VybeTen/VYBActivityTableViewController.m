@@ -21,7 +21,7 @@
 @interface VYBActivityTableViewController () <UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *vybeCountLabel;
+@property (weak, nonatomic) IBOutlet UILabel *countLabel;
 @property (retain, nonatomic) NSArray *sections;
 @property (retain, nonatomic) NSMutableDictionary *sectionToZoneNameMap;
 
@@ -163,11 +163,13 @@
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
     
-    self.vybeCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.objects.count];
-    
     [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
         if (success) {
             self.sections = [[ZoneStore sharedInstance] unlockedZones];
+    
+            self.countLabel.text = [NSString stringWithFormat:@"%lu Locations - %lu Vybes",
+                                    (unsigned long)self.sections.count,
+                                    (unsigned long)self.objects.count];
             
             for (Zone *aZone in self.sections) {
                 NSLog(@"%@: %ld, %@", aZone.name, aZone.popularityScore, aZone.myMostRecentVybeTimestamp);
