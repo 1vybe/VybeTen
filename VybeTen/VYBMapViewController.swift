@@ -62,9 +62,6 @@ import MapKit
             annotation.isCurrentLocation = true
             self.mapView.addAnnotation(annotation)
         }
-
-        
-
     }
     
     private func moveMapToRegionAround(location: CLLocationCoordinate2D) {
@@ -111,7 +108,7 @@ import MapKit
     }
     
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
-        let zone = view.annotation as Zone
+        let zone = view.annotation as SimpleAnnotation
         let playerVC = VYBPlayerViewController()
         self.presentViewController(playerVC, animated: true) { () -> Void in
             playerVC.playActiveVybesFromZone(zone.zoneID)
