@@ -30,7 +30,9 @@
 
 @end
 
-@implementation VYBActivityTableViewController
+@implementation VYBActivityTableViewController {
+    NSInteger _selectedSection;
+}
 
 #pragma mark - Lifecycle
 
@@ -55,6 +57,8 @@
     
     // Remove empty cells.
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    _selectedSection = -1;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -193,6 +197,18 @@
 
 #pragma mark UITableViewDelegate
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    Zone *zone = self.sections[section];
+    
+    UIButton *sectionButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 85.0f)];
+    [sectionButton setBackgroundColor:[UIColor blueColor]];
+    [sectionButton setTitle:zone.name forState:UIControlStateNormal];
+    sectionButton.tag = section;
+    [sectionButton addTarget:self action:@selector(sectionClicked:) forControlEvents:UIControlEventTouchUpInside];
+
+    return sectionButton;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     
@@ -204,8 +220,72 @@
     }];
 }
 
+- (void)sectionClicked:(UIButton *)sectionButton {
+    if (sectionButton.tag == _selectedSection) {
+        _selectedSection = -1;
+        
+        Zone *zoneToCollapse = self.sections[sectionButton.tag];
+        NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
+        for (int i = 0; i < zoneToCollapse.myVybes.count; i++) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:sectionButton.tag];
+            [pathsToRemove addObject:indexPath];
+        }
+        
+        [self.tableView beginUpdates];
+        [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationRight];
+        [self.tableView endUpdates];
+    }
+    else {
+        NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
+
+        if (_selectedSection >= 0) {
+            Zone *zoneToCollapse = self.sections[_selectedSection];
+            for (int i = 0; i < zoneToCollapse.myVybes.count; i++) {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:_selectedSection];
+                [pathsToRemove addObject:indexPath];
+            }
+        }
+        
+        _selectedSection = sectionButton.tag;
+
+        Zone *zoneToExpand = self.sections[sectionButton.tag];
+        NSMutableArray *pathsToAdd = [[NSMutableArray alloc] init];
+        for (int i = 0; i < zoneToExpand.myVybes.count; i++) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:sectionButton.tag];
+            [pathsToAdd addObject:indexPath];
+        }
+        
+        [self.tableView beginUpdates];
+        [self.tableView insertRowsAtIndexPaths:pathsToAdd withRowAnimation:UITableViewRowAnimationLeft];
+        if (pathsToRemove.count > 0)
+            [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationRight];
+        [self.tableView endUpdates];
+    }
+}
+
 
 #pragma mark UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return self.sections.count;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (!self.sections) {
+        return 0;
+    }
+    
+    if (section != _selectedSection) {
+        return 0;
+    }
+    
+    if (self.sections && self.sections.count > 0) {
+        Zone *zone = self.sections[section];
+        return zone.myVybes.count;
+    }
+    
+    return 0;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
     VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
@@ -238,17 +318,7 @@
     return [tableView dequeueReusableCellWithIdentifier:@"LoadMoreCell"];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.sections.count;
-}
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.sections && self.sections.count > 0) {
-        Zone *zone = self.sections[section];
-        return zone.myVybes.count;
-    }
-    return 0;
-}
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     Zone *zone = self.sections[section];
