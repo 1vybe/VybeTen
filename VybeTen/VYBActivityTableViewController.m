@@ -232,7 +232,7 @@
         }
         
         [self.tableView beginUpdates];
-        [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationRight];
+        [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationMiddle];
         [self.tableView endUpdates];
     }
     else {
@@ -255,10 +255,11 @@
             [pathsToAdd addObject:indexPath];
         }
         
+        
         [self.tableView beginUpdates];
-        [self.tableView insertRowsAtIndexPaths:pathsToAdd withRowAnimation:UITableViewRowAnimationLeft];
+        [self.tableView insertRowsAtIndexPaths:pathsToAdd withRowAnimation:UITableViewRowAnimationMiddle];
         if (pathsToRemove.count > 0)
-            [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationRight];
+            [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationMiddle];
         [self.tableView endUpdates];
     }
 }
