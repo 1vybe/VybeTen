@@ -116,7 +116,7 @@ Parse.Cloud.define('get_vybes_in_zone', function (request, response) {
 
   var query = new Parse.Query('Vybe');
   query.include('user');
-  query.addDescending('timestamp');
+  query.ascending('timestamp');
   query.greaterThanOrEqualTo('timestamp', timestamp);  // Ignore past vybes
   query.notEqualTo('isPublic', false);  // Don't get private vybes
   if (zoneID) {
@@ -129,7 +129,7 @@ Parse.Cloud.define('get_vybes_in_zone', function (request, response) {
   query.find({
     success: function(vybesObjects) {
       console.log(vybesObjects.length + ' vybes found after this vybe in this zone');
-      response.success(vybesObjects.reverse());  // Sort result in chronological order
+      response.success(vybesObjects);
     },
     error: function() {
       response.error('Request to get_vybes_in_zone() has failed.');
@@ -145,7 +145,7 @@ Parse.Cloud.define('get_count_for_zone', function (request, response) {
 
   var query = new Parse.Query('Vybe');
   query.include('user');
-  query.addDescending('timestamp');
+  query.ascending('timestamp');
   query.greaterThanOrEqualTo('timestamp', timestamp);  // Ignore past vybes
   query.notEqualTo('isPublic', false);  // Don't get private vybes
   if (zoneID) {
