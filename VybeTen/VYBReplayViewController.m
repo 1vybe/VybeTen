@@ -76,6 +76,7 @@
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:_videoPath];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
     
+
     self.currItem = [AVPlayerItem playerItemWithAsset:asset];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
     [self.player replaceCurrentItemWithPlayerItem:self.currItem];
@@ -138,11 +139,11 @@
     }
     else {
         UIActionSheet *actionsheet = [[UIActionSheet alloc] initWithTitle:@"Where are you vybing?" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
-        for (Zone *aZone in _suggestions) {
+        for (Zone *aZone in suggestions) {
             [actionsheet addButtonWithTitle:aZone.name];
         }
         [actionsheet addButtonWithTitle:@"Go Back"];
-        actionsheet.cancelButtonIndex = _suggestions.count;
+        actionsheet.cancelButtonIndex = suggestions.count;
         dispatch_async(dispatch_get_main_queue(), ^{
             [actionsheet showInView:[UIApplication sharedApplication].keyWindow];
         });
@@ -152,12 +153,14 @@
 #pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    // cancel button 
-    if (buttonIndex == _suggestions.count) {
+    NSArray *suggestions = [[ZoneFinder sharedInstance] suggestions];
+
+    // cancel button
+    if (buttonIndex == suggestions.count) {
 
     }
     else {
-        Zone *zone = _suggestions[buttonIndex];
+        Zone *zone = suggestions[buttonIndex];
         [self.zoneLabel setText:zone.name];
         [[VYBMyVybeStore sharedStore] setCurrZone:zone];
     }
