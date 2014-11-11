@@ -198,15 +198,31 @@
 #pragma mark UITableViewDelegate
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    Zone *zone = self.sections[section];
+    VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ZoneCell"];
     
-    UIButton *sectionButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 85.0f)];
-    [sectionButton setBackgroundColor:[UIColor blueColor]];
-    [sectionButton setTitle:zone.name forState:UIControlStateNormal];
-    sectionButton.tag = section;
-    [sectionButton addTarget:self action:@selector(sectionClicked:) forControlEvents:UIControlEventTouchUpInside];
+    Zone *zone = self.sections[section];
+    PFObject *lastVybe = zone.myVybes.firstObject;
 
-    return sectionButton;
+    cell.locationLabel.text = zone.name;
+    
+    UIButton *button = (UIButton *)[cell viewWithTag:666];
+    button.tag = section;
+    
+    NSDate *timestampDate = lastVybe[kVYBVybeTimestampKey];
+    cell.timestampLabel.text = [NSString stringWithFormat:@"%ld Vybes - Last Vybe taken %@", zone.myVybes.count, [VYBUtility reverseTime:timestampDate]];
+    cell.thumbnailImageView.file = lastVybe[kVYBVybeThumbnailKey];
+
+    [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
+        if (!error) {
+            if (image) {
+                cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:[UIImage imageNamed:@"ThumbnailMask"]];
+            } else {
+                cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
+            }
+        }
+    }];
+    
+    return cell.contentView;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -220,7 +236,7 @@
     }];
 }
 
-- (void)sectionClicked:(UIButton *)sectionButton {
+- (IBAction)sectionClicked:(UIButton *)sectionButton {
     if (sectionButton.tag == _selectedSection) {
         _selectedSection = -1;
         
@@ -291,13 +307,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
     VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
     
-    NSString *zoneName = object[kVYBVybeZoneNameKey];
-    if (zoneName && zoneName.length > 0) {
-        cell.locationLabel.text = zoneName;
-    } else {
-        cell.locationLabel.text = @"Earth";
-    }
-    
     NSDate *timestampDate = object[kVYBVybeTimestampKey];
     cell.timestampLabel.text = [NSString stringWithFormat:@"%@  (%@)", [VYBUtility localizedDateStringFrom:timestampDate], [VYBUtility reverseTime:timestampDate]];
     
@@ -313,17 +322,6 @@
     }];
     
     return cell;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForNextPageAtIndexPath:(NSIndexPath *)indexPath {
-    return [tableView dequeueReusableCellWithIdentifier:@"LoadMoreCell"];
-}
-
-
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    Zone *zone = self.sections[section];
-    return zone.name;
 }
 
 #pragma mark Segue

@@ -372,7 +372,7 @@
         // TODO: Localize timezone
         NSTimeZone *timeZone = [NSTimeZone localTimeZone];
         [dFormatterLocalized setTimeZone:timeZone];
-        [dFormatterLocalized setDateFormat:@"MM/dd HH:mm"];
+        [dFormatterLocalized setDateFormat:@"MMM dd, yyyy HH:mm"];
     }
     return [dFormatterLocalized stringFromDate:aDate];
 }
