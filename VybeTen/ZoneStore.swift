@@ -11,29 +11,35 @@ import UIKit
 private let _zoneStoreSharedInstance = ZoneStore()
 
 @objc class ZoneStore: NSObject {
-    private var _activeZones: [Zone]!
-    private var _activeUnlockedZones: [Zone]!
-    private var _unlockedZones: [Zone]! // unlocked zones group my vybes
+    private var _activeZones = [Zone]()
+    private var _activeUnlockedZones = [Zone]()
+    private var _unlockedZones = [Zone]() // unlocked zones group my vybes
     
     class var sharedInstance: ZoneStore {
         return _zoneStoreSharedInstance
     }
     
-    func didFetchUnlockedVybes(result: [PFObject]!, completionHandler: ((success: Bool) -> Void)) {
-        self.createUnlockedZonesFromVybes(result)
+    func didFetchUnlockedVybes(result: [AnyObject]!, completionHandler: ((success: Bool) -> Void)!) {
+        completionHandler(success: false)
+        // First clear caches
+        _activeZones = [Zone]()
+        _activeUnlockedZones = [Zone]()
+        _unlockedZones = [Zone]()
         
-        // Fetch active vybes
-        let functionName = "get_active_vybes"
-        let params = [NSObject: AnyObject]()
-        PFCloud.callFunctionInBackground(functionName, withParameters:params) { (result: AnyObject!, error: NSError!) -> Void in
-            if error == nil {
-                if result.count > 0 {
-                    let vybeObjects = result as [PFObject]!
-                    // Group vybes into zones
+        if let vybes = result as? [PFObject] {
+            // First Group UNLOCKED zones
+            self.createUnlockedZonesFromVybes(vybes)
+            
+            // Fetch ACTIVE zones
+            let params = [:]
+            PFCloud.callFunctionInBackground("get_active_vybes", withParameters:params) { (result: AnyObject!, error: NSError!) -> Void in
+                if error == nil {
+                    let vybeObjects = result as [PFObject]
+                    // Group ACTIVE vybes into zones
                     self.createActiveZonesFromVybes(vybeObjects)
                     
                     // Mark active zones as UNLOCKED
-                    self.updateUnlockedActiveZones()
+                    self.unlockActiveZones()
                     
                     // Rearrange unlocked zones by popularity score
                     self.updatePopularityScoreForUnlockedZones()
@@ -44,34 +50,41 @@ private let _zoneStoreSharedInstance = ZoneStore()
                         }
                         return zone1.popularityScore > zone2.popularityScore
                     })
-                    
-                    completionHandler(success: true)
+
+
+                    // Fetch Fresh vybes for ACTIVE zones
+                    PFCloud.callFunctionInBackground("get_fresh_vybes", withParameters: params) { (result: AnyObject!, error: NSError!) -> Void in
+                        if error == nil {
+                            if let freshVybes = result as? [PFObject] {
+                                for fVybe in freshVybes {
+                                    if let zone = self.activeZoneForVybe(fVybe) {
+                                        zone.addFreshContent(fVybe)
+                                    }
+                                }
+                                self.displayZoneInfo()
+                            }
+                        }
+                        completionHandler(success: true)
+                    }
                 }
                 else {
                     completionHandler(success: false)
                 }
             }
-            else {
-                completionHandler(success: false)
-            }
+        }
+        else {
+            completionHandler(success: false)
         }
     }
-    
-    private func createUnlockedZonesFromVybes(result: [PFObject]!) {
-        // First empty the cached
-        if self._unlockedZones != nil {
-            self._unlockedZones.removeAll()
-        }
-        
+
+    private func createUnlockedZonesFromVybes(result: [PFObject]) {
         for aVybe in result {
             self.putUnlockedVybeIntoZone(aVybe)
         }
         
-        println("there are \(self._unlockedZones.count) unlocked zones")
-        
     }
     
-    private func putUnlockedVybeIntoZone(aVybe: PFObject!) {
+    private func putUnlockedVybeIntoZone(aVybe: PFObject) {
         if let zone = self.unlockedZoneForVybe(aVybe) {
             zone.addMyVybe(aVybe)
         }
@@ -82,11 +95,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
         }
     }
     
-    private func unlockedZoneForVybe(aVybe: PFObject!) -> Zone! {
-        if _unlockedZones == nil {
-            return nil
-        }
-        
+    private func unlockedZoneForVybe(aVybe: PFObject) -> Zone? {
         var zoneID = "777"
         if let zID = aVybe[kVYBVybeZoneIDKey] as? String {
             zoneID = zID;
@@ -100,29 +109,13 @@ private let _zoneStoreSharedInstance = ZoneStore()
         
         return nil
     }
-    
-    private func addUnlockedZone(zone: Zone!) {
-        if _unlockedZones == nil {
-            _unlockedZones = [zone]
-        }
-        else {
-            _unlockedZones.append(zone)
-        }
-    }
-    
-    
-    private func updateUnlockedActiveZones() {
-        for aZone in _activeZones {
-            for uZone in _unlockedZones {
-                if (uZone.zoneID == aZone.zoneID) {
-                    aZone.unlocked = true
-                }
-            }
-        }
-    }
-    
 
-    private func createActiveZonesFromVybes(vybes: [PFObject]!) {
+    private func addUnlockedZone(zone: Zone) {
+
+        _unlockedZones += [zone]
+    }
+    
+    private func createActiveZonesFromVybes(vybes: [PFObject]) {
         for aVybe in vybes {
             self.putActiveVybeIntoZone(aVybe)
         }
@@ -130,13 +123,12 @@ private let _zoneStoreSharedInstance = ZoneStore()
         println("there are \(self._activeZones.count) active zones")
     }
     
-    
-    private func putActiveVybeIntoZone(aVybe: PFObject!) {
+    private func putActiveVybeIntoZone(aVybe: PFObject) {
         // Zone exists. Only update popularity
         if let zone = self.activeZoneForVybe(aVybe) {
             zone.increasePopularityWithVybe(aVybe)
         }
-        // Vybe comes from a new zone. Create a new zone
+            // Vybe comes from a new zone. Create a new zone
         else {
             let zone = self.createZoneFromVybe(aVybe)
             zone.increasePopularityWithVybe(aVybe)
@@ -144,11 +136,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
         }
     }
     
-    private func activeZoneForVybe(aVybe: PFObject!) -> Zone! {
-        if _activeZones == nil {
-            return nil
-        }
-        
+    private func activeZoneForVybe(aVybe: PFObject) -> Zone? {
         var zoneID = "777"
         
         if aVybe[kVYBVybeZoneIDKey] != nil {
@@ -163,9 +151,23 @@ private let _zoneStoreSharedInstance = ZoneStore()
         
         return nil
     }
+
+    private func addActiveZone(zone: Zone) {
+
+        _activeZones += [zone]
+    }
+ 
+    private func unlockActiveZones() {
+        for aZone in _activeZones {
+            for uZone in _unlockedZones {
+                if (uZone.zoneID == aZone.zoneID) {
+                    aZone.unlocked = true
+                }
+            }
+        }
+    }
     
-    
-    private func createZoneFromVybe(aVybe: PFObject!) -> Zone! {
+    private func createZoneFromVybe(aVybe: PFObject) -> Zone {
         var zone: Zone!
         
         if let zoneID = aVybe[kVYBVybeZoneIDKey] as? String {
@@ -195,16 +197,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
     }
     
     
-    private func addActiveZone(zone: Zone) {
-        if _activeZones == nil {
-            _activeZones = [zone]
-        }
-        else {
-            _activeZones.append(zone)
-        }
-    }
- 
-    
+
     private func updatePopularityScoreForUnlockedZones() {
         for aZone in _activeZones {
             for uZone in _unlockedZones {
@@ -215,11 +208,61 @@ private let _zoneStoreSharedInstance = ZoneStore()
         }
     }
     
-    func unlockedZones() -> [Zone]! {
+    private func unlockedZones() -> [Zone]! {
         return _unlockedZones
     }
-    
-    func activeZones() -> [Zone]! {
+
+    private func activeZones() -> [Zone]! {
         return _activeZones
     }
+    
+    func allZones() -> [Zone]! {
+        return _activeZones + _unlockedZones
+    }
+    
+//    func freshVybesFromZone(zoneID: String) -> [PFObject] {
+//        for aZone in _activeZones {
+//            if aZone.zoneID == zoneID {
+//                return aZone.freshContents
+//            }
+//        }
+//        return []
+//    }
+//
+//    func removeWatchedFromFreshFeed(aVybe: PFObject!) {
+//        // Update to cloud
+//        let functionName = "remove_from_feed"
+//        PFCloud.callFunctionInBackground(functionName, withParameters: ["vybeID": aVybe.objectId]) { (vybeObj: AnyObject!, error: NSError!) -> Void in
+//            if error == nil {
+//                
+//            }
+//        }
+//        
+//        var zoneID = "777"
+//        
+//        if let zID = aVybe[kVYBVybeZoneIDKey] as? String {
+//            zoneID = zID
+//        }
+//        
+//        for aZone in _activeZones {
+//            if aZone.zoneID == zoneID {
+//                // First update(remove) freshContents for the corresponding Zone
+//                aZone.removeFromFreshContents(aVybe)
+//                // Update watchedContents to prevent from receiving stale contents (watched but not removed from cloud) in next refresh
+//                aZone.addWatchedContent(aVybe)
+//            }
+//        }
+//    }
+    
+    private func displayZoneInfo() {
+        println("#ACTIVE# [popScore] [numFreshContents] [numActiveVybes] ")
+        for aZone in _activeZones {
+            println("\(aZone.name): [\(aZone.popularityScore)] [\(aZone.freshContents.count)] [\(aZone.numOfActiveVybes)]")
+        }
+        println("#UNLOCKED# [mostRecentTimestamp] [numMyVybes]")
+        for aZone in _activeZones {
+            println("\(aZone.name): [\(aZone.myMostRecentVybeTimestamp)] [\(aZone.myVybes.count)]")
+        }
+    }
+
 }

@@ -345,7 +345,6 @@
 
 - (void)applicationDidBecomeActiveNotificationReceived:(id)sender {    
     // Refresh fetch of feed and activity count when app is brought to foreground
-    [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
     //[VYBUtility getNewActivityCountWithCompletion:nil];
 }
 

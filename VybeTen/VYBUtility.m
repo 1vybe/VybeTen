@@ -230,39 +230,6 @@
     return query;
 }
 
-#pragma mark - Feed
-// completion block is now always nil because it's using notification pattern to communicate.
-+ (void)fetchFreshVybeFeedWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock {
-    if (![PFUser currentUser]) {
-        return;
-    }
-    
-    NSString *functionName = @"get_fresh_vybes";
-    [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *objects, NSError *error) {
-        if (error) {
-            if (completionBlock) {
-                completionBlock(NO, error);
-            }
-        } else {
-            if (objects) {
-                for (PFObject *nVybe in objects) {
-                    if ([nVybe isKindOfClass:[NSNull class]])
-                        continue;
-                    [[VYBCache sharedCache] addFreshVybe:nVybe];
-                }
-                
-                if (completionBlock) {
-                    completionBlock(YES, nil);
-                }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:VYBFreshVybeFeedFetchedFromRemoteNotification object:self];
-                });
-            }
-        }
-    }];
-    
-}
-
 + (void)fetchActiveZones:(void (^)(NSArray *zones, NSError *error))completionBlock {
     NSString *functionName = @"get_active_vybes";
     [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *vybes, NSError *error) {

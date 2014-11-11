@@ -176,9 +176,16 @@
                                         (unsigned long)self.sections.count,
                                         (unsigned long)self.objects.count];
     
-                for (Zone *aZone in self.sections) {
-                    NSLog(@"%@: %ld, %@", aZone.name, aZone.popularityScore, aZone.myMostRecentVybeTimestamp);
+                NSLog(@"Active Zones: [popScore] [numActiveVybes] [numFreshVybes]");
+                for (Zone *aZone in [[ZoneStore sharedInstance] activeZones]) {
+                    NSLog(@"%@: [%ld] [%ld] [%ld]", aZone.name, aZone.popularityScore, aZone.numOfActiveVybes, aZone.freshContents.count);
                 }
+                
+                NSLog(@"Unlocked Zones: [popScore] [numActiveVybes] [myMostRecentVybeTime]");
+                for (Zone *aZone in self.sections) {
+                    NSLog(@"%@: [%ld] [%ld] [%@]", aZone.name, aZone.popularityScore, aZone.numOfActiveVybes, aZone.myMostRecentVybeTimestamp);
+                }
+                
                 
                 [self.tableView reloadData];
             }

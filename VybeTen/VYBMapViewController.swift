@@ -72,7 +72,7 @@ import MapKit
 
     
     func displayAllActiveVybes() {
-        _zonesOnScreen = ZoneStore.sharedInstance.activeZones()
+//        _zonesOnScreen = ZoneStore.sharedInstance.activeZones()
     }
     
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
@@ -111,7 +111,7 @@ import MapKit
         let zone = view.annotation as SimpleAnnotation
         let playerVC = VYBPlayerViewController()
         self.presentViewController(playerVC, animated: true) { () -> Void in
-            playerVC.playActiveVybesFromZone(zone.zoneID)
+            playerVC.playFreshVybesFromZone(zone.zoneID)
         }
     }
 

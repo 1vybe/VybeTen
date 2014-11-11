@@ -12,13 +12,15 @@ import MapKit
 @objc class Zone: NSObject, MKAnnotation {
     var zoneID: String!
     var name: String!
-    var unlocked: Bool = false
     
     var activeUsers = [String: Int]()
     var numOfActiveVybes = 0
     var popularityScore = 0
+    var freshContents = [PFObject]()
+    var watchedContents = [PFObject]()
     
     var myVybes = [PFObject]()
+    var unlocked = false
     var numOfMyVybes: Int {
         get {
             return myVybes.count
@@ -45,7 +47,6 @@ import MapKit
         }
     }
     
-
     init(foursquareVenue: NSDictionary!) {
         let location = foursquareVenue["location"] as NSDictionary?
         let latitude = location?["lat"] as Double
@@ -71,11 +72,12 @@ import MapKit
     }
 
     
-    func increasePopularityWithVybe(aVybe: PFObject!) {
+    func increasePopularityWithVybe(aVybe: PFObject) {
         
         if let user = aVybe[kVYBVybeUserKey] as PFObject! {
-            let username = user[kVYBUserUsernameKey] as String
-            activeUsers[username] = 1
+            // freshFeed is only array of vybes. User field is not included when a vybe is inserted into freshFeed in afterSave. So we compare User objectID
+            let userObjID = user.objectId
+            activeUsers[userObjID] = 1
         }
         
         numOfActiveVybes++
@@ -88,8 +90,32 @@ import MapKit
         popularityScore = activeUsers.keys.array.count
     }
     
-    func addMyVybe(aVybe: PFObject!) {
+    func addMyVybe(aVybe: PFObject) {
         myVybes += [aVybe]
+    }
+    
+    func addFreshContent(nVybe: PFObject) {
+        freshContents.append(nVybe)
+    }
+    
+    func removeFromFreshContents(dVybe: PFObject) {
+        var newFreshContents = [PFObject]()
+        for aVybe in freshContents {
+            if aVybe.objectId != dVybe.objectId {
+                newFreshContents.append(aVybe)
+            }
+        }
+        freshContents = newFreshContents
+    }
+    
+    //NOTE: Not being used right now
+    func addWatchedContent(nVybe: PFObject) {
+        for aVybe in watchedContents {
+            if aVybe.objectId == nVybe.objectId {
+                return
+            }
+        }
+        watchedContents.append(nVybe)
     }
     
     

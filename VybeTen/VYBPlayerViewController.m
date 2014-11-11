@@ -181,6 +181,20 @@
     [self playStream:self.initialStream atIndex:_initialStreamCurrIdx];
 }
 
+- (void)playFreshVybesFromZone:(NSString *)zoneID {
+    NSArray *freshContents = [[NSArray alloc] init];
+//    freshContents = [[ZoneStore sharedInstance] freshVybesFromZone:zoneID];
+    
+    if (freshContents && freshContents.count) {
+        _zoneVybes = freshContents;
+        _zoneCurrIdx = 0;
+        [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+    }
+    else {
+        [self playActiveVybesFromZone:zoneID];
+    }
+}
+
 - (void)playActiveVybesFromZone:(NSString *)zoneID {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSString *functionName = @"get_active_zone_vybes";
@@ -223,10 +237,8 @@
             AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
             
             [self playAsset:asset];
-            // this playerVC is ONLY playing zone vybes
-            if (!self.initialStream) {
-                [[VYBCache sharedCache] removeFreshVybe:currVybe];
-            }
+
+//            [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
         } else {
             PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -237,10 +249,7 @@
                     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
                     
                     [self playAsset:asset];
-                    // this playerVC is ONLY playing zone vybes
-                    if (!self.initialStream) {
-                        [[VYBCache sharedCache] removeFreshVybe:currVybe];
-                    }
+//                    [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
                 } else {
                     UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                     [av show];

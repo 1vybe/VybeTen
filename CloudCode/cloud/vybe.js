@@ -49,9 +49,9 @@ Parse.Cloud.afterSave('Vybe', function (request) {
       }
 
       feed.push(request.object);
-      aUser.set('freshFeed', feed);
-      aUser.save();
     });
+    aUser.set('freshFeed', feed);
+    aUser.save();
   });
 });
 
@@ -223,10 +223,40 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
 
   query.first({
     success: function(aUser) {
-      var freshVybes = aUser.get('freshFeed');
-      if (!freshVybes)
-        freshVybes = [];
-      response.success(freshVybes);
+      var currTime = new Date();
+      var ttlAgo = new Date();
+      ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window
+      
+      var feed = aUser.get('freshFeed');
+      var feedIds = [];
+
+      if (feed) {
+        console.log('There are ' + feed.length + ' feed for me');
+        for (i = 0; i < feed.length; i++) {
+          var aVybe = feed[i];
+          if (aVybe != null) {
+            feedIds.push(aVybe.id);
+          }
+        }
+
+        var vybeQuery = new Parse.Query('Vybe');
+        vybeQuery.include('user')
+        vybeQuery.greaterThanOrEqualTo('timestamp', ttlAgo);
+        vybeQuery.containedIn('objectId', feedIds);
+        console.log('There are ' + feedIds.length + ' feedIds');
+        vybeQuery.find({
+          success: function(freshObjs) {
+            console.log('There are ' + freshObjs.length + ' fresh vybes for me');
+            response.success(freshObjs);
+          },
+          error: function(error) {
+            console.log('Fetching fresh feed failed: ' + error);
+          }
+        });
+      }
+      else {
+        response.error('There is no feed for ' + aUser.username)
+      }
     },
     error: function(error) {
       response.error(error);
@@ -251,7 +281,7 @@ Parse.Cloud.define('remove_from_feed', function (request, response) {
           if (oVybe.id != wVybeID) {
             newFreshVybes.push(oVybe);
           } else {
-            console.log('removed from feed!');
+            console.log('vybe removed from feed!');
           }
         });
         aUser.set('freshFeed', newFreshVybes);

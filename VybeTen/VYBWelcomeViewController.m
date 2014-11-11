@@ -45,9 +45,7 @@
         return;
     }
     // fetch fresh contents for acknowledged user
-    else {
-        [VYBUtility fetchFreshVybeFeedWithCompletion:nil];
-        
+    else {        
         [[VYBMyVybeStore sharedStore] startUploadingOldVybes];
     }
 }
