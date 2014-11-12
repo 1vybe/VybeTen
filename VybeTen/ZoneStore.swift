@@ -12,7 +12,6 @@ private let _zoneStoreSharedInstance = ZoneStore()
 
 @objc class ZoneStore: NSObject {
     private var _activeZones = [Zone]()
-    private var _activeUnlockedZones = [Zone]()
     private var _unlockedZones = [Zone]() // unlocked zones group my vybes
     
     class var sharedInstance: ZoneStore {
@@ -23,7 +22,6 @@ private let _zoneStoreSharedInstance = ZoneStore()
         completionHandler(success: false)
         // First clear caches
         _activeZones = [Zone]()
-        _activeUnlockedZones = [Zone]()
         _unlockedZones = [Zone]()
         
         if let vybes = result as? [PFObject] {
@@ -41,16 +39,21 @@ private let _zoneStoreSharedInstance = ZoneStore()
                     // Mark active zones as UNLOCKED
                     self.unlockActiveZones()
                     
-                    // Rearrange unlocked zones by popularity score
-                    self.updatePopularityScoreForUnlockedZones()
-                    self._unlockedZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
+                    // Rearrange ACTIVE zones by popularityScore (number of active users) and by most recent time
+                    self._activeZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
                         if (zone1.popularityScore == zone2.popularityScore) {
-                            let comparisonResult = zone1.myMostRecentVybeTimestamp.compare(zone2.myMostRecentVybeTimestamp)
+                            let comparisonResult = zone1.mostRecentActiveVybeTimestamp.compare(zone2.mostRecentActiveVybeTimestamp)
                             return comparisonResult == NSComparisonResult.OrderedDescending
                         }
                         return zone1.popularityScore > zone2.popularityScore
                     })
-
+                    
+                    // Rearrange UNLOCKED zones by most recent score
+                    self.updatePopularityScoreForUnlockedZones()
+                    self._unlockedZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
+                            let comparisonResult = zone1.myMostRecentVybeTimestamp.compare(zone2.myMostRecentVybeTimestamp)
+                            return comparisonResult == NSComparisonResult.OrderedDescending
+                    })
 
                     // Fetch Fresh vybes for ACTIVE zones
                     PFCloud.callFunctionInBackground("get_fresh_vybes", withParameters: params) { (result: AnyObject!, error: NSError!) -> Void in
@@ -58,7 +61,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
                             if let freshVybes = result as? [PFObject] {
                                 for fVybe in freshVybes {
                                     if let zone = self.activeZoneForVybe(fVybe) {
-                                        zone.addFreshContent(fVybe)
+                                        zone.addFreshVybe(fVybe)
                                     }
                                 }
                                 self.displayZoneInfo()
@@ -111,7 +114,6 @@ private let _zoneStoreSharedInstance = ZoneStore()
     }
 
     private func addUnlockedZone(zone: Zone) {
-
         _unlockedZones += [zone]
     }
     
@@ -119,19 +121,17 @@ private let _zoneStoreSharedInstance = ZoneStore()
         for aVybe in vybes {
             self.putActiveVybeIntoZone(aVybe)
         }
-        
-        println("there are \(self._activeZones.count) active zones")
     }
     
     private func putActiveVybeIntoZone(aVybe: PFObject) {
         // Zone exists. Only update popularity
         if let zone = self.activeZoneForVybe(aVybe) {
-            zone.increasePopularityWithVybe(aVybe)
+            zone.addActiveVybe(aVybe)
         }
             // Vybe comes from a new zone. Create a new zone
         else {
             let zone = self.createZoneFromVybe(aVybe)
-            zone.increasePopularityWithVybe(aVybe)
+            zone.addActiveVybe(aVybe)
             self.addActiveZone(zone)
         }
     }
@@ -153,7 +153,6 @@ private let _zoneStoreSharedInstance = ZoneStore()
     }
 
     private func addActiveZone(zone: Zone) {
-
         _activeZones += [zone]
     }
  
@@ -196,8 +195,6 @@ private let _zoneStoreSharedInstance = ZoneStore()
         return zone
     }
     
-    
-
     private func updatePopularityScoreForUnlockedZones() {
         for aZone in _activeZones {
             for uZone in _unlockedZones {
@@ -208,59 +205,83 @@ private let _zoneStoreSharedInstance = ZoneStore()
         }
     }
     
-    private func unlockedZones() -> [Zone]! {
+    func unlockedZones() -> [Zone]! {
         return _unlockedZones
     }
 
-    private func activeZones() -> [Zone]! {
+    func activeZones() -> [Zone]! {
         return _activeZones
     }
     
-    func allZones() -> [Zone]! {
-        return _activeZones + _unlockedZones
+    func allUnlockedZones() -> [Zone]! {
+        var activeUnlockedZones = [Zone]()
+        for aZone in _activeZones {
+            if aZone.unlocked {
+                activeUnlockedZones.append(aZone)
+            }
+        }
+        return activeUnlockedZones + _unlockedZones
     }
     
-//    func freshVybesFromZone(zoneID: String) -> [PFObject] {
-//        for aZone in _activeZones {
-//            if aZone.zoneID == zoneID {
-//                return aZone.freshContents
-//            }
-//        }
-//        return []
-//    }
-//
-//    func removeWatchedFromFreshFeed(aVybe: PFObject!) {
-//        // Update to cloud
-//        let functionName = "remove_from_feed"
-//        PFCloud.callFunctionInBackground(functionName, withParameters: ["vybeID": aVybe.objectId]) { (vybeObj: AnyObject!, error: NSError!) -> Void in
-//            if error == nil {
-//                
-//            }
-//        }
-//        
-//        var zoneID = "777"
-//        
-//        if let zID = aVybe[kVYBVybeZoneIDKey] as? String {
-//            zoneID = zID
-//        }
-//        
-//        for aZone in _activeZones {
-//            if aZone.zoneID == zoneID {
-//                // First update(remove) freshContents for the corresponding Zone
-//                aZone.removeFromFreshContents(aVybe)
-//                // Update watchedContents to prevent from receiving stale contents (watched but not removed from cloud) in next refresh
-//                aZone.addWatchedContent(aVybe)
-//            }
-//        }
-//    }
+    func refreshFreshVybesInBackground(completionHandler: ((success: Bool) -> Void)) {
+        // Fetch Fresh vybes for ACTIVE zones
+        PFCloud.callFunctionInBackground("get_fresh_vybes", withParameters: [:]) { (result: AnyObject!, error: NSError!) -> Void in
+            if error == nil {
+                if let freshVybes = result as? [PFObject] {
+                    for fVybe in freshVybes {
+                        if let zone = self.activeZoneForVybe(fVybe) {
+                            zone.addFreshVybe(fVybe)
+                        }
+                    }
+                }
+                completionHandler(success: true)
+            }
+            else {
+                completionHandler(success: false)
+            }
+        }
+    }
+    
+    func freshVybesFromZone(zoneID: String) -> [PFObject]? {
+        for aZone in _activeZones {
+            if aZone.zoneID == zoneID {
+                return aZone.freshContents
+            }
+        }
+        return nil
+    }
+
+    func removeWatchedFromFreshFeed(aVybe: AnyObject!) {
+        if let dVybe = aVybe as? PFObject  {
+            var zoneID = "777"
+            
+            if let zID = aVybe.objectForKey(kVYBVybeZoneIDKey) as String! {
+                zoneID = zID
+            }
+            
+            for aZone in _activeZones {
+                if aZone.zoneID == zoneID {
+                    // First update(remove) freshContents for the corresponding Zone
+                    aZone.removeFromFreshContents(dVybe)
+                    // Update watchedContents to prevent from receiving stale contents (watched but not removed from cloud) in next refresh
+                    aZone.addWatchedContent(dVybe)
+                    //Update to cloud
+                    PFCloud.callFunctionInBackground("remove_from_feed", withParameters: ["vybeID" : dVybe.objectId]) { (result: AnyObject!, error: NSError!) -> Void in
+                    }
+                    break
+                }
+            }
+
+        }
+    }
     
     private func displayZoneInfo() {
-        println("#ACTIVE# [popScore] [numFreshContents] [numActiveVybes] ")
+        println("#ACTIVE# [popScore] [numFreshContents] [mostRecentTimestamp] [numActiveVybes] ")
         for aZone in _activeZones {
-            println("\(aZone.name): [\(aZone.popularityScore)] [\(aZone.freshContents.count)] [\(aZone.numOfActiveVybes)]")
+            println("\(aZone.name): [\(aZone.popularityScore)] [\(aZone.freshContents.count)] [\(aZone.mostRecentActiveVybeTimestamp)] [\(aZone.numOfActiveVybes)]")
         }
         println("#UNLOCKED# [mostRecentTimestamp] [numMyVybes]")
-        for aZone in _activeZones {
+        for aZone in _unlockedZones {
             println("\(aZone.name): [\(aZone.myMostRecentVybeTimestamp)] [\(aZone.myVybes.count)]")
         }
     }

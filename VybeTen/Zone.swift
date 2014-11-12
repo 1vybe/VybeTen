@@ -14,8 +14,15 @@ import MapKit
     var name: String!
     
     var activeUsers = [String: Int]()
+    var mostRecentVybe: PFObject!
+    var mostRecentActiveVybeTimestamp: NSDate {
+        get {
+            return mostRecentVybe[kVYBVybeTimestampKey] as NSDate
+        }
+    }
     var numOfActiveVybes = 0
     var popularityScore = 0
+    
     var freshContents = [PFObject]()
     var watchedContents = [PFObject]()
     
@@ -72,8 +79,7 @@ import MapKit
     }
 
     
-    func increasePopularityWithVybe(aVybe: PFObject) {
-        
+    func addActiveVybe(aVybe: PFObject) {
         if let user = aVybe[kVYBVybeUserKey] as PFObject! {
             // freshFeed is only array of vybes. User field is not included when a vybe is inserted into freshFeed in afterSave. So we compare User objectID
             let userObjID = user.objectId
@@ -81,6 +87,18 @@ import MapKit
         }
         
         numOfActiveVybes++
+        
+        if mostRecentVybe == nil {
+            mostRecentVybe = aVybe
+        }
+        else {
+            let aDate = mostRecentVybe[kVYBVybeTimestampKey] as NSDate
+            let cDate = aVybe[kVYBVybeTimestampKey] as NSDate
+            let comparison = aDate.compare(cDate)
+            if comparison == NSComparisonResult.OrderedAscending {
+                mostRecentVybe = aVybe
+            }
+        }
         
         self.updatePopularityScore()
     }
@@ -94,7 +112,12 @@ import MapKit
         myVybes += [aVybe]
     }
     
-    func addFreshContent(nVybe: PFObject) {
+    func addFreshVybe(nVybe: PFObject) {
+        for aVybe in freshContents {
+            if aVybe.objectId == nVybe.objectId {
+                return
+            }
+        }
         freshContents.append(nVybe)
     }
     

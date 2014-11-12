@@ -182,17 +182,22 @@
 }
 
 - (void)playFreshVybesFromZone:(NSString *)zoneID {
-    NSArray *freshContents = [[NSArray alloc] init];
-//    freshContents = [[ZoneStore sharedInstance] freshVybesFromZone:zoneID];
-    
-    if (freshContents && freshContents.count) {
-        _zoneVybes = freshContents;
-        _zoneCurrIdx = 0;
-        [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
-    }
-    else {
-        [self playActiveVybesFromZone:zoneID];
-    }
+  [[ZoneStore sharedInstance] refreshFreshVybesInBackground:^(BOOL success) {
+      if (success) {
+          NSArray *freshContents = [NSArray arrayWithArray:[[ZoneStore sharedInstance] freshVybesFromZone:zoneID]];
+          if (freshContents.count > 0) {
+              _zoneVybes = freshContents;
+              _zoneCurrIdx = 0;
+              [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+          }
+          else {
+              [self playActiveVybesFromZone:zoneID];
+          }
+      }
+      else {
+          [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+      }
+  }];
 }
 
 - (void)playActiveVybesFromZone:(NSString *)zoneID {
@@ -238,7 +243,7 @@
             
             [self playAsset:asset];
 
-//            [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
+            [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
         } else {
             PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -249,7 +254,7 @@
                     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
                     
                     [self playAsset:asset];
-//                    [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
+                    [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
                 } else {
                     UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                     [av show];

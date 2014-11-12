@@ -72,7 +72,7 @@ import MapKit
 
     
     func displayAllActiveVybes() {
-//        _zonesOnScreen = ZoneStore.sharedInstance.activeZones()
+        _zonesOnScreen = ZoneStore.sharedInstance.activeZones()
     }
     
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {

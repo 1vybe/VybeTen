@@ -47,11 +47,10 @@ Parse.Cloud.afterSave('Vybe', function (request) {
       if (!feed) {
         feed = [];
       }
-
       feed.push(request.object);
+      aUser.set('freshFeed', feed);
+      aUser.save();
     });
-    aUser.set('freshFeed', feed);
-    aUser.save();
   });
 });
 
@@ -274,20 +273,25 @@ Parse.Cloud.define('remove_from_feed', function (request, response) {
 
   query.first({
     success: function(aUser) {
-      var oldFreshVybes = aUser.get('freshFeed');
-      if (oldFreshVybes) {
-        var newFreshVybes = [];
-        _.each(oldFreshVybes, function (oVybe) {
-          if (oVybe.id != wVybeID) {
-            newFreshVybes.push(oVybe);
-          } else {
-            console.log('vybe removed from feed!');
+      var oldFeed = aUser.get('freshFeed');
+      if (oldFeed) {
+        var newFeed = [];
+        for (i = 0; i < oldFeed.length; i++) {
+          var oVybe = oldFeed[i];
+          if (oVybe.id == wVybeID) {
+            console.log("Found the old vybe!!!!");
           }
-        });
-        aUser.set('freshFeed', newFreshVybes);
+          else {
+            newFeed.push(oVybe);
+          }
+        }
+        aUser.set('freshFeed', newFeed);
         aUser.save();
+        response.success(wVybeID);
       }
-      response.success(wVybeID);
+      else {
+        response.error('removing failed because there is no feed for user ' + currUser.get('username'));
+      }
     },
     error: function(error) {
       response.error(error);

@@ -61,6 +61,11 @@
     _selectedSection = -1;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self loadObjects];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
@@ -170,21 +175,11 @@
     if (self.objects) {
         [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
             if (success) {
-                self.sections = [[ZoneStore sharedInstance] unlockedZones];
+                self.sections = [[ZoneStore sharedInstance] allUnlockedZones];
                 
                 self.countLabel.text = [NSString stringWithFormat:@"%lu Locations - %lu Vybes",
                                         (unsigned long)self.sections.count,
                                         (unsigned long)self.objects.count];
-    
-                NSLog(@"Active Zones: [popScore] [numActiveVybes] [numFreshVybes]");
-                for (Zone *aZone in [[ZoneStore sharedInstance] activeZones]) {
-                    NSLog(@"%@: [%ld] [%ld] [%ld]", aZone.name, aZone.popularityScore, aZone.numOfActiveVybes, aZone.freshContents.count);
-                }
-                
-                NSLog(@"Unlocked Zones: [popScore] [numActiveVybes] [myMostRecentVybeTime]");
-                for (Zone *aZone in self.sections) {
-                    NSLog(@"%@: [%ld] [%ld] [%@]", aZone.name, aZone.popularityScore, aZone.numOfActiveVybes, aZone.myMostRecentVybeTimestamp);
-                }
                 
                 
                 [self.tableView reloadData];
@@ -208,15 +203,26 @@
     VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ZoneCell"];
     
     Zone *zone = self.sections[section];
-    PFObject *lastVybe = zone.myVybes.firstObject;
-
     cell.locationLabel.text = zone.name;
     
     UIButton *button = (UIButton *)[cell viewWithTag:666];
     button.tag = section;
     
-    NSDate *timestampDate = lastVybe[kVYBVybeTimestampKey];
-    cell.timestampLabel.text = [NSString stringWithFormat:@"%ld Vybes - Last Vybe taken %@", zone.myVybes.count, [VYBUtility reverseTime:timestampDate]];
+    PFObject *lastVybe;
+    
+    if (zone.numOfActiveVybes > 0) {
+        lastVybe = zone.mostRecentVybe;
+        NSDate *timestampDate = zone.mostRecentActiveVybeTimestamp;
+
+        cell.timestampLabel.text = [NSString stringWithFormat:@"%@", [VYBUtility reverseTime:timestampDate]];
+    }
+    else {
+        lastVybe = zone.myVybes.firstObject;
+        NSDate *timestampDate = lastVybe[kVYBVybeTimestampKey];
+        
+        cell.timestampLabel.text = [NSString stringWithFormat:@"%ld Vybes - Last Vybe taken %@", zone.myVybes.count, [VYBUtility reverseTime:timestampDate]];
+    }
+    
     cell.thumbnailImageView.file = lastVybe[kVYBVybeThumbnailKey];
 
     [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
@@ -244,46 +250,58 @@
 }
 
 - (IBAction)sectionClicked:(UIButton *)sectionButton {
-    if (sectionButton.tag == _selectedSection) {
-        _selectedSection = -1;
+    Zone *zone = self.sections[sectionButton.tag];
+    // ACTIVE zone selected
+    if (zone.numOfActiveVybes > 0) {
         
-        Zone *zoneToCollapse = self.sections[sectionButton.tag];
-        NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
-        for (int i = 0; i < zoneToCollapse.myVybes.count; i++) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:sectionButton.tag];
-            [pathsToRemove addObject:indexPath];
-        }
-        
-        [self.tableView beginUpdates];
-        [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationMiddle];
-        [self.tableView endUpdates];
+        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+        [self presentViewController:playerVC animated:YES completion:^{
+            [playerVC playFreshVybesFromZone:zone.zoneID];
+        }];
     }
+    // UNLOCKED zone selected
     else {
-        NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
-
-        if (_selectedSection >= 0) {
-            Zone *zoneToCollapse = self.sections[_selectedSection];
+        if (sectionButton.tag == _selectedSection) {
+            _selectedSection = -1;
+            
+            Zone *zoneToCollapse = self.sections[sectionButton.tag];
+            NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
             for (int i = 0; i < zoneToCollapse.myVybes.count; i++) {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:_selectedSection];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:sectionButton.tag];
                 [pathsToRemove addObject:indexPath];
             }
-        }
-        
-        _selectedSection = sectionButton.tag;
-
-        Zone *zoneToExpand = self.sections[sectionButton.tag];
-        NSMutableArray *pathsToAdd = [[NSMutableArray alloc] init];
-        for (int i = 0; i < zoneToExpand.myVybes.count; i++) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:sectionButton.tag];
-            [pathsToAdd addObject:indexPath];
-        }
-        
-        
-        [self.tableView beginUpdates];
-        [self.tableView insertRowsAtIndexPaths:pathsToAdd withRowAnimation:UITableViewRowAnimationMiddle];
-        if (pathsToRemove.count > 0)
+            
+            [self.tableView beginUpdates];
             [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationMiddle];
-        [self.tableView endUpdates];
+            [self.tableView endUpdates];
+        }
+        else {
+            NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
+
+            if (_selectedSection >= 0) {
+                Zone *zoneToCollapse = self.sections[_selectedSection];
+                for (int i = 0; i < zoneToCollapse.myVybes.count; i++) {
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:_selectedSection];
+                    [pathsToRemove addObject:indexPath];
+                }
+            }
+            
+            _selectedSection = sectionButton.tag;
+
+            Zone *zoneToExpand = self.sections[sectionButton.tag];
+            NSMutableArray *pathsToAdd = [[NSMutableArray alloc] init];
+            for (int i = 0; i < zoneToExpand.myVybes.count; i++) {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:sectionButton.tag];
+                [pathsToAdd addObject:indexPath];
+            }
+            
+            
+            [self.tableView beginUpdates];
+            [self.tableView insertRowsAtIndexPaths:pathsToAdd withRowAnimation:UITableViewRowAnimationMiddle];
+            if (pathsToRemove.count > 0)
+                [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationMiddle];
+            [self.tableView endUpdates];
+        }
     }
 }
 
