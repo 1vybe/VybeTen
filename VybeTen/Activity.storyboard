@@ -128,6 +128,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="listBarImageView" destination="TG0-hr-TVV" id="Qvy-Ve-tBK"/>
                                     <outlet property="locationLabel" destination="hnX-7t-y9Q" id="0zx-WS-3Wo"/>
                                     <outlet property="thumbnailImageView" destination="BIQ-hL-LVg" id="Eea-ea-ncA"/>
                                     <outlet property="timestampLabel" destination="xDK-O9-DDE" id="C6J-Kj-iyD"/>

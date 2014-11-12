@@ -214,26 +214,37 @@
         lastVybe = zone.mostRecentVybe;
         NSDate *timestampDate = zone.mostRecentActiveVybeTimestamp;
 
-        cell.timestampLabel.text = [NSString stringWithFormat:@"%@", [VYBUtility reverseTime:timestampDate]];
+        // FRESH vybes
+        NSArray *freshContents = [[ZoneStore sharedInstance] freshVybesFromZone:zone.zoneID];
+        if (freshContents && freshContents.count) {
+            cell.timestampLabel.textColor = [UIColor whiteColor];
+            cell.locationLabel.textColor = [UIColor whiteColor];
+            cell.listBarImageView.image = [UIImage imageNamed:@"BlueCell.png"];
+            cell.timestampLabel.text = [NSString stringWithFormat:@"%d Vybes - %@", (int)freshContents.count, [VYBUtility reverseTime:timestampDate]];
+        }
+        else {
+            cell.timestampLabel.text = [NSString stringWithFormat:@"%@", [VYBUtility reverseTime:timestampDate]];
+        }
+        
+        cell.thumbnailImageView.file = lastVybe[kVYBVybeThumbnailKey];
+        
+        [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
+            if (!error) {
+                if (image) {
+                    cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:[UIImage imageNamed:@"ThumbnailMask"]];
+                } else {
+                    cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
+                }
+            }
+        }];
     }
     else {
         lastVybe = zone.myVybes.firstObject;
         NSDate *timestampDate = lastVybe[kVYBVybeTimestampKey];
         
-        cell.timestampLabel.text = [NSString stringWithFormat:@"%ld Vybes - Last Vybe taken %@", zone.myVybes.count, [VYBUtility reverseTime:timestampDate]];
+        cell.timestampLabel.text = [NSString stringWithFormat:@"%d Vybes - Last Vybe taken %@", (int)zone.myVybes.count, [VYBUtility reverseTime:timestampDate]];
+        cell.thumbnailImageView.hidden = YES;
     }
-    
-    cell.thumbnailImageView.file = lastVybe[kVYBVybeThumbnailKey];
-
-    [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
-        if (!error) {
-            if (image) {
-                cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:[UIImage imageNamed:@"ThumbnailMask"]];
-            } else {
-                cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
-            }
-        }
-    }];
     
     return cell.contentView;
 }
