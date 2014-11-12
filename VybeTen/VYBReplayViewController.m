@@ -135,6 +135,11 @@
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"Go Back" style:UIAlertActionStyleCancel handler:nil];
         [checkInController addAction:action];
         
+        [checkInController setModalPresentationStyle:UIModalPresentationPopover];
+        UIPopoverPresentationController *popOverController = [checkInController popoverPresentationController];
+        popOverController.sourceView = self.zoneLabel;
+        popOverController.sourceRect = CGRectMake(0, 0, 0, 0);
+        
         [self presentViewController:checkInController animated:YES completion:nil];
     }
     else {
