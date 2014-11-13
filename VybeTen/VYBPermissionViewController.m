@@ -222,10 +222,19 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
         else {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enable Location Service"
                                                                                      message:@"Please allow Vybe to access your location from Settings -> Privacy -> Location Services" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel
-                                                                handler:nil];
+            UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+                [self.navigationController popViewControllerAnimated:NO];
+            }];
             [alertController addAction:alertAction];
             [self presentViewController:alertController animated:NO completion:nil];
+        }
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if ([alertView.title isEqualToString:@"Enable Location Service"]) {
+        if (buttonIndex == alertView.cancelButtonIndex) {
+            [self.navigationController popViewControllerAnimated:NO];
         }
     }
 }

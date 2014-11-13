@@ -38,7 +38,6 @@
 - (IBAction)goPrevButtonPressed:(id)sender;
 
 - (IBAction)dismissButtonPressed;
-- (IBAction)mapButtonPressed;
 
 @property (nonatomic) NSArray *initialStream;
 
@@ -571,25 +570,6 @@
 
 
 #pragma mark - Map
-
-- (IBAction)mapButtonPressed {
-    [self.currPlayer pause];
-    // while on zone stream display all videos in that zone
-    if (_zoneVybes) {
-        if (_zoneVybes.count > 0) {
-            VYBMapViewController *mapVC = [[VYBMapViewController alloc] initWithNibName:@"VYBMapViewController" bundle:nil];
-            [self presentViewController:mapVC animated:YES completion:^{
-            }];
-        }
-    }
-    else {
-        PFObject *currVybe = self.initialStream[_initialStreamCurrIdx];
-        VYBMapViewController *mapVC = [[VYBMapViewController alloc] initWithNibName:@"VYBMapViewController" bundle:nil];
-        [self presentViewController:mapVC animated:YES completion:^{
-            //[mapVC displayNearbyAroundVybe:currVybe];
-        }];
-    }
-}
 
 
 

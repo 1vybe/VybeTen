@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VYBPermissionViewController : UIViewController <CLLocationManagerDelegate>
+@interface VYBPermissionViewController : UIViewController <CLLocationManagerDelegate, UIAlertViewDelegate>
 - (BOOL)checkPermissionSettings;
 
 @end
