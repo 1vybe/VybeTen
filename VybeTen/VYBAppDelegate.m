@@ -340,7 +340,9 @@
     
     // Checking permissions
     self.permissionController = [[VYBPermissionViewController alloc] init];
-    [self.mainNavController pushViewController:self.permissionController animated:NO];
+    BOOL granted = [self.permissionController checkPermissionSettings];
+    if (!granted)
+        [self.mainNavController pushViewController:self.permissionController animated:NO];
 }
 
 - (void)logOut {

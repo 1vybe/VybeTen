@@ -36,6 +36,8 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
         _locationManager = [[CLLocationManager alloc] init];
         [_locationManager setDelegate:self];
         _isLatestOS = [_locationManager respondsToSelector:@selector(requestAlwaysAuthorization)];
+        
+        _currentStage = VYBPermissionStageNone;
     }
     return self;
 }
@@ -43,21 +45,16 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-}
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    _currentStage = VYBPermissionStageNone;
-    
-    [self checkPermissionSettings];
+    [self displayPromptAtStage:_currentStage];
 }
 
 
 #pragma mark - Permissions
 
-- (void)checkPermissionSettings {
-    BOOL locationGranted = NO;
+- (BOOL)checkPermissionSettings {
+    BOOL locationGranted = ([CLLocationManager authorizationStatus] >= kCLAuthorizationStatusAuthorized);
+
     // In case prompt was asked from unexpected routes and the user responded, we need to update
     if ( _isLatestOS ) {
         if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
@@ -68,10 +65,6 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
             [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsVideoAccessPermissionGrantedKey forKey:kVYBUserDefaultsVideoAccessPermissionKey];
         }
         
-        locationGranted = (([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse)
-                           || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways);
-    } else {
-        locationGranted = ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized);
     }
     
     NSString *micPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsAudioAccessPermissionKey];
@@ -80,14 +73,14 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
     if ( [micPermission isEqualToString:kVYBUserDefaultsAudioAccessPermissionGrantedKey] ) {
         _currentStage = VYBPermissionStageAudioGranted;
     }
-    if ( (_currentStage > VYBPermissionStageNone) &&
+    if ( (_currentStage >= VYBPermissionStageAudioGranted) &&
         [cameraPermission isEqualToString:kVYBUserDefaultsVideoAccessPermissionGrantedKey]) {
         _currentStage = VYBPermissionStageVideoGranted;
     }
-    if ( (_currentStage > VYBPermissionStageVideoGranted) && locationGranted)
+    if ( (_currentStage >= VYBPermissionStageVideoGranted) && locationGranted)
         _currentStage = VYBPermissionStageAllGranted;
     
-    [self displayPromptAtStage:_currentStage];
+    return _currentStage == VYBPermissionStageAllGranted;
 }
 
 - (void)displayPromptAtStage:(NSInteger)stage {
