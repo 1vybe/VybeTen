@@ -229,7 +229,13 @@
         [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
             if (!error) {
                 if (image) {
-                    cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:[UIImage imageNamed:@"ThumbnailMask"]];
+                    UIImage *maskImage;
+                    if (image.size.height > image.size.width) {
+                        maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
+                    } else {
+                        maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
+                    }
+                    cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
                 } else {
                     cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
                 }
@@ -348,7 +354,13 @@
     [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
             if (image) {
-                cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:[UIImage imageNamed:@"ThumbnailMask"]];
+                UIImage *maskImage;
+                if (image.size.height > image.size.width) {
+                    maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
+                } else {
+                    maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
+                }
+                cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
             } else {
                 cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
             }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B23" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="eD8-nl-Ebb">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6249" systemVersion="14B23" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="eD8-nl-Ebb">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6243"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -100,7 +100,7 @@
                                             <color key="textColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Oval_mask" translatesAutoresizingMaskIntoConstraints="NO" id="BIQ-hL-LVg" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Oval_mask" translatesAutoresizingMaskIntoConstraints="NO" id="BIQ-hL-LVg" customClass="PFImageView">
                                             <rect key="frame" x="305" y="18" width="49" height="49"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="BIQ-hL-LVg" secondAttribute="height" multiplier="1:1" id="b2v-dK-oSt"/>
@@ -151,7 +151,7 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MyVybeThumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="GEu-je-d8v" customClass="PFImageView">
                                             <rect key="frame" x="302" y="7" width="56" height="56"/>
                                         </imageView>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Oval_mask" translatesAutoresizingMaskIntoConstraints="NO" id="Yyl-cu-X6Q" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Oval_mask" translatesAutoresizingMaskIntoConstraints="NO" id="Yyl-cu-X6Q" customClass="PFImageView">
                                             <rect key="frame" x="305" y="10" width="50" height="50"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="Yyl-cu-X6Q" secondAttribute="height" multiplier="1:1" id="Eua-ad-pOB"/>
