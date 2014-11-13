@@ -33,13 +33,13 @@ private let _zoneStoreSharedInstance = ZoneStore()
                 // Mark active zones as UNLOCKED
                 self.unlockActiveZones()
                 
-                // Rearrange ACTIVE zones by popularityScore (number of active users) and by most recent time
+                // Rearrange ACTIVE zones first by number of unwatched vybes and by most recent time
                 self._activeZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
-                    if (zone1.popularityScore == zone2.popularityScore) {
+                    if (zone1.freshContents.count == zone2.freshContents.count) {
                         let comparisonResult = zone1.mostRecentActiveVybeTimestamp.compare(zone2.mostRecentActiveVybeTimestamp)
                         return comparisonResult == NSComparisonResult.OrderedDescending
                     }
-                    return zone1.popularityScore > zone2.popularityScore
+                    return zone1.freshContents.count > zone2.freshContents.count
                 })
                 
                 // Rearrange UNLOCKED zones by most recent score
