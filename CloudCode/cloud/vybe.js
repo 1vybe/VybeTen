@@ -175,7 +175,13 @@ Parse.Cloud.define('get_active_zone_vybes', function (request, response) {
   var query = new Parse.Query('Vybe');
   query.include('user')
   query.addDescending('timestamp');
-  query.equalTo('zoneID', request.params.zoneID);
+  var zoneID = request.params.zoneID;
+  if (zoneID == '777') {
+    query.doesNotExist('zoneID');
+  }
+  else {
+    query.equalTo('zoneID', zoneID);
+  }
   query.greaterThanOrEqualTo('timestamp', ttlAgo);
 
    query.find({
