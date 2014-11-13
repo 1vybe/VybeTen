@@ -4,6 +4,8 @@
 #import <Parse/Parse.h>
 #import <Parse/PFObject+Subclass.h>
 
+#import <MBProgressHUD/MBProgressHUD.h>
+
 #import "VYBLoginViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBConstants.h"

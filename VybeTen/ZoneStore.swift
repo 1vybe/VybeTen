@@ -18,62 +18,68 @@ private let _zoneStoreSharedInstance = ZoneStore()
         return _zoneStoreSharedInstance
     }
     
+    func fetchActiveVybes(completionHandler: ((success: Bool) -> Void)) {
+        // First clear cache
+        _activeZones = [Zone]()
+        
+        // Fetch ACTIVE zones
+        let params = [:]
+        PFCloud.callFunctionInBackground("get_active_vybes", withParameters:params) { (result: AnyObject!, error: NSError!) -> Void in
+            if error == nil {
+                let vybeObjects = result as [PFObject]
+                // Group ACTIVE vybes into zones
+                self.createActiveZonesFromVybes(vybeObjects)
+                
+                // Mark active zones as UNLOCKED
+                self.unlockActiveZones()
+                
+                // Rearrange ACTIVE zones by popularityScore (number of active users) and by most recent time
+                self._activeZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
+                    if (zone1.popularityScore == zone2.popularityScore) {
+                        let comparisonResult = zone1.mostRecentActiveVybeTimestamp.compare(zone2.mostRecentActiveVybeTimestamp)
+                        return comparisonResult == NSComparisonResult.OrderedDescending
+                    }
+                    return zone1.popularityScore > zone2.popularityScore
+                })
+                
+                // Rearrange UNLOCKED zones by most recent score
+                self.updatePopularityScoreForUnlockedZones()
+                self._unlockedZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
+                    let comparisonResult = zone1.myMostRecentVybeTimestamp.compare(zone2.myMostRecentVybeTimestamp)
+                    return comparisonResult == NSComparisonResult.OrderedDescending
+                })
+                
+                // Fetch Fresh vybes for ACTIVE zones
+                PFCloud.callFunctionInBackground("get_fresh_vybes", withParameters: params) { (result: AnyObject!, error: NSError!) -> Void in
+                    if error == nil {
+                        if let freshVybes = result as? [PFObject] {
+                            for fVybe in freshVybes {
+                                if let zone = self.activeZoneForVybe(fVybe) {
+                                    zone.addFreshVybe(fVybe)
+                                }
+                            }
+                            self.displayZoneInfo()
+                        }
+                    }
+                    completionHandler(success: true)
+                }
+            }
+            else {
+                completionHandler(success: false)
+            }
+        }
+    }
+    
     func didFetchUnlockedVybes(result: [AnyObject]!, completionHandler: ((success: Bool) -> Void)!) {
         completionHandler(success: false)
-        // First clear caches
-        _activeZones = [Zone]()
+        // First clear cache
         _unlockedZones = [Zone]()
         
         if let vybes = result as? [PFObject] {
             // First Group UNLOCKED zones
             self.createUnlockedZonesFromVybes(vybes)
             
-            // Fetch ACTIVE zones
-            let params = [:]
-            PFCloud.callFunctionInBackground("get_active_vybes", withParameters:params) { (result: AnyObject!, error: NSError!) -> Void in
-                if error == nil {
-                    let vybeObjects = result as [PFObject]
-                    // Group ACTIVE vybes into zones
-                    self.createActiveZonesFromVybes(vybeObjects)
-                    
-                    // Mark active zones as UNLOCKED
-                    self.unlockActiveZones()
-                    
-                    // Rearrange ACTIVE zones by popularityScore (number of active users) and by most recent time
-                    self._activeZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
-                        if (zone1.popularityScore == zone2.popularityScore) {
-                            let comparisonResult = zone1.mostRecentActiveVybeTimestamp.compare(zone2.mostRecentActiveVybeTimestamp)
-                            return comparisonResult == NSComparisonResult.OrderedDescending
-                        }
-                        return zone1.popularityScore > zone2.popularityScore
-                    })
-                    
-                    // Rearrange UNLOCKED zones by most recent score
-                    self.updatePopularityScoreForUnlockedZones()
-                    self._unlockedZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
-                            let comparisonResult = zone1.myMostRecentVybeTimestamp.compare(zone2.myMostRecentVybeTimestamp)
-                            return comparisonResult == NSComparisonResult.OrderedDescending
-                    })
-
-                    // Fetch Fresh vybes for ACTIVE zones
-                    PFCloud.callFunctionInBackground("get_fresh_vybes", withParameters: params) { (result: AnyObject!, error: NSError!) -> Void in
-                        if error == nil {
-                            if let freshVybes = result as? [PFObject] {
-                                for fVybe in freshVybes {
-                                    if let zone = self.activeZoneForVybe(fVybe) {
-                                        zone.addFreshVybe(fVybe)
-                                    }
-                                }
-                                self.displayZoneInfo()
-                            }
-                        }
-                        completionHandler(success: true)
-                    }
-                }
-                else {
-                    completionHandler(success: false)
-                }
-            }
+            self.fetchActiveVybes(completionHandler)
         }
         else {
             completionHandler(success: false)

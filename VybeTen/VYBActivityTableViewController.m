@@ -63,6 +63,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     [self loadObjects];
 }
 
@@ -172,20 +173,17 @@
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
     
-    if (self.objects) {
-        [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
-            if (success) {
-                self.sections = [[ZoneStore sharedInstance] allUnlockedZones];
-                
-                self.countLabel.text = [NSString stringWithFormat:@"%lu Locations - %lu Vybes",
-                                        (unsigned long)self.sections.count,
-                                        (unsigned long)self.objects.count];
-                
-                
-                [self.tableView reloadData];
-            }
-        }];
-    }
+    [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
+        if (success) {
+            self.sections = [[ZoneStore sharedInstance] allUnlockedZones];
+            
+            self.countLabel.text = [NSString stringWithFormat:@"%lu Locations - %lu Vybes",
+                                    (unsigned long)self.sections.count,
+                                    (unsigned long)self.objects.count];
+            
+            [self.tableView reloadData];
+        }
+    }];
 }
 
 - (PFObject *)objectAtIndexPath:(NSIndexPath *)indexPath {

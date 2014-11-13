@@ -23,7 +23,16 @@ import MapKit
         
         self.setUpMapRegion()
         
-        self.preloadZones()
+        MBProgressHUD.showHUDAddedTo(self.mapView, animated: true)
+        ZoneStore.sharedInstance.fetchActiveVybes { (success) -> Void in
+            if let zonesOnScreen = ZoneStore.sharedInstance.activeZones() {
+                for aZone in zonesOnScreen {
+                    let simpleAnnotation = SimpleAnnotation(zone: aZone)
+                    self.mapView.addAnnotation(simpleAnnotation)
+                }
+            }
+            MBProgressHUD.hideAllHUDsForView(self.mapView, animated: true)
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -32,15 +41,7 @@ import MapKit
         self.setNeedsStatusBarAppearanceUpdate()
     }
     
-    private func preloadZones() {
-        if _zonesOnScreen != nil {
-            for aZone in _zonesOnScreen {
-                let simpleAnnotation = SimpleAnnotation(zone: aZone)
-                mapView.addAnnotation(simpleAnnotation)
-            }
-        }
-    }
-    
+
     private func setUpMapRegion() {
         mapView.delegate = self
         
