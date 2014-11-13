@@ -194,11 +194,11 @@
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="Rbi-gw-l9V">
-                            <rect key="frame" x="133" y="-6" width="109" height="56"/>
+                            <rect key="frame" x="133" y="-9" width="109" height="61"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="VYBE_txt" translatesAutoresizingMaskIntoConstraints="NO" id="iS9-4Y-Bn6">
-                                    <rect key="frame" x="0.0" y="19" width="109" height="18"/>
+                                    <rect key="frame" x="0.0" y="15" width="109" height="27"/>
                                 </imageView>
                             </subviews>
                         </view>
