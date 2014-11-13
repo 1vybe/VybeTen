@@ -15,7 +15,7 @@ private let _sharedInstance = ZoneFinder()
     let clientID = "O3P21TKG3FF1U11LDHT52PA50WLFPCBZUNHKBNK0OJRCOF12"
     let clientSecret = "JJ5VR1JFDUSIG0LBDKPFXFHUP3HACC004YDXSOZ4YZFRCMIB"
     
-    var numOfResults: Int = 10;
+    var numOfResults: Int = 20;
     
     var searchURL = ""
     var session: NSURLSession!

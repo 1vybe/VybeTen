@@ -177,9 +177,10 @@
         if (success) {
             self.sections = [[ZoneStore sharedInstance] allUnlockedZones];
             
-            self.countLabel.text = [NSString stringWithFormat:@"%lu Locations - %lu Vybes",
-                                    (unsigned long)self.sections.count,
-                                    (unsigned long)self.objects.count];
+            NSString *locationCntText = (self.sections.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.sections.count] : [NSString stringWithFormat:@"%d Location", (int)self.sections.count];
+            NSString *vybeCntText = (self.objects.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)self.objects.count] : [NSString stringWithFormat:@"%d Vybe", (int)self.objects.count];
+
+            self.countLabel.text = [NSString stringWithFormat:@"%@ - %@", locationCntText, vybeCntText];
             
             [self.tableView reloadData];
         }
@@ -218,7 +219,8 @@
             cell.timestampLabel.textColor = [UIColor whiteColor];
             cell.locationLabel.textColor = [UIColor whiteColor];
             cell.listBarImageView.image = [UIImage imageNamed:@"BlueCell.png"];
-            cell.timestampLabel.text = [NSString stringWithFormat:@"%d Vybes - %@", (int)freshContents.count, [VYBUtility reverseTime:timestampDate]];
+            NSString *vybeCntText = (freshContents.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)freshContents.count] : [NSString stringWithFormat:@"%d Vybe", (int)freshContents.count];
+            cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
         }
         else {
             cell.timestampLabel.text = [NSString stringWithFormat:@"%@", [VYBUtility reverseTime:timestampDate]];
@@ -246,7 +248,8 @@
         lastVybe = zone.myVybes.firstObject;
         NSDate *timestampDate = lastVybe[kVYBVybeTimestampKey];
         
-        cell.timestampLabel.text = [NSString stringWithFormat:@"%d Vybes - Last Vybe taken %@", (int)zone.myVybes.count, [VYBUtility reverseTime:timestampDate]];
+        NSString *vybeCntText = (zone.myVybes.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)zone.myVybes.count] : [NSString stringWithFormat:@"%d Vybe", (int)zone.myVybes.count];
+        cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - Last Vybe taken %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
         cell.thumbnailImageView.hidden = YES;
     }
     
