@@ -10,7 +10,9 @@ import UIKit
 
 private let _sharedInstance = ZoneFinder()
 
-@objc class ZoneFinder: NSObject  {
+@objc class ZoneFinder: NSObject, CLLocationManagerDelegate  {
+    var locationManager: CLLocationManager!
+    var locFetchCompletionClosure = { (success: Bool) -> () in }
     
     let clientID = "O3P21TKG3FF1U11LDHT52PA50WLFPCBZUNHKBNK0OJRCOF12"
     let clientSecret = "JJ5VR1JFDUSIG0LBDKPFXFHUP3HACC004YDXSOZ4YZFRCMIB"
@@ -41,44 +43,22 @@ private let _sharedInstance = ZoneFinder()
     func findZoneNearLocationInBackground(completionHandler: ((success: Bool) -> Void)) {
         self.setUpSessionWithFourSquare()
         
-        PFGeoPoint.geoPointForCurrentLocationInBackground { (geoPoint: PFGeoPoint!, error: NSError!) -> Void in
-            if error == nil {
-                let location = CLLocation(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
-                if let currVybe = VYBMyVybeStore.sharedStore().currVybe() {
-                    currVybe.locationCL = location
-                }
-                
-                self.searchURL += "&limit=\(self.numOfResults)"
-                self.searchURL += "&ll=\(geoPoint.latitude),\(geoPoint.longitude)"
-                
-                var dataTask = self.session.dataTaskWithURL(NSURL(string: self.searchURL)!, completionHandler: { (data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
-                    if error == nil {
-                        let statusCode = (response as NSHTTPURLResponse).statusCode
-                        
-                        if statusCode == 200 {
-                            if let zones = self.generateZonesFromData(data) {
-                                self.suggestions = zones
-                                completionHandler(success: true)
-                            }
-                        }
-                    }
-                    else {
-                        completionHandler(success: false)
-                    }
-                })
-                
-                dataTask.resume()
-            }
-            else {
-                completionHandler(success: false)
-            }
-            
+        locFetchCompletionClosure = completionHandler
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager = CLLocationManager()
+            locationManager.delegate = self
+            locationManager.startUpdatingLocation()
         }
-
+        else {
+            locFetchCompletionClosure(false)
+        }
     }
     
     func findZoneFromCurrentLocationInBackground() {
-        self.findZoneNearLocationInBackground({ _ in })
+        locFetchCompletionClosure = { _ in }
+        
+        self.findZoneNearLocationInBackground(locFetchCompletionClosure)
     }
     
     func suggestionsContainZone(zone: Zone) -> Bool {
@@ -106,4 +86,43 @@ private let _sharedInstance = ZoneFinder()
         }
         return nil
     }
+    
+    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+        locationManager.stopUpdatingLocation()
+
+        let currLocation = locations.last as CLLocation
+        
+        if let currVybe = VYBMyVybeStore.sharedStore().currVybe() {
+            currVybe.locationCL = currLocation
+        }
+        
+        self.searchURL += "&limit=\(self.numOfResults)"
+        self.searchURL += "&ll=\(currLocation.coordinate.latitude),\(currLocation.coordinate.longitude)"
+        
+        var dataTask = self.session.dataTaskWithURL(NSURL(string: self.searchURL)!, completionHandler: { (data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
+            if error == nil {
+                let statusCode = (response as NSHTTPURLResponse).statusCode
+                
+                if statusCode == 200 {
+                    if let zones = self.generateZonesFromData(data) {
+                        self.suggestions = zones
+                        self.locFetchCompletionClosure(true)
+                    }
+                    else {
+                        self.locFetchCompletionClosure(false)
+                    }
+                }
+            }
+            else {
+                self.locFetchCompletionClosure(false)
+            }
+        })
+        
+        dataTask.resume()
+    }
+    
+    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+        println(error)
+    }
+    
 }
