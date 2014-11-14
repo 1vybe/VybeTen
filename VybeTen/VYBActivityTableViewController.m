@@ -216,6 +216,8 @@
         // FRESH vybes
         NSArray *freshContents = [[ZoneStore sharedInstance] freshVybesFromZone:zone.zoneID];
         if (freshContents && freshContents.count) {
+            lastVybe = zone.freshContents.lastObject;
+            timestampDate = lastVybe[kVYBVybeTimestampKey];
             cell.timestampLabel.textColor = [UIColor whiteColor];
             cell.locationLabel.textColor = [UIColor whiteColor];
             cell.listBarImageView.image = [UIImage imageNamed:@"BlueCell.png"];

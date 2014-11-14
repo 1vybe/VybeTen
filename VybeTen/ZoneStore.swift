@@ -20,7 +20,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
     
     func fetchActiveVybes(completionHandler: ((success: Bool) -> Void)) {
         // First clear cache
-        _activeZones = [Zone]()
+        //_activeZones = [Zone]()
         
         // Fetch ACTIVE zones
         let params = [:]
@@ -33,17 +33,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
                 // Mark active zones as UNLOCKED
                 self.unlockActiveZones()
                 
-                // Rearrange ACTIVE zones first by number of unwatched vybes and by most recent time
-                self._activeZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
-                    if (zone1.freshContents.count == zone2.freshContents.count) {
-                        let comparisonResult = zone1.mostRecentActiveVybeTimestamp.compare(zone2.mostRecentActiveVybeTimestamp)
-                        return comparisonResult == NSComparisonResult.OrderedDescending
-                    }
-                    return zone1.freshContents.count > zone2.freshContents.count
-                })
-                
-                // Rearrange UNLOCKED zones by most recent score
-                self.updatePopularityScoreForUnlockedZones()
+                // Rearrange UNLOCKED zones by your most recent vybe timestamp
                 self._unlockedZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
                     let comparisonResult = zone1.myMostRecentVybeTimestamp.compare(zone2.myMostRecentVybeTimestamp)
                     return comparisonResult == NSComparisonResult.OrderedDescending
@@ -58,6 +48,15 @@ private let _zoneStoreSharedInstance = ZoneStore()
                                     zone.addFreshVybe(fVybe)
                                 }
                             }
+                            // Rearrange ACTIVE zones first by number of unwatched vybes and by most recent time
+                            self._activeZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
+                                if (zone1.freshContents.count == zone2.freshContents.count) {
+                                    let comparisonResult = zone1.mostRecentActiveVybeTimestamp.compare(zone2.mostRecentActiveVybeTimestamp)
+                                    return comparisonResult == NSComparisonResult.OrderedDescending
+                                }
+                                return zone1.freshContents.count > zone2.freshContents.count
+                            })
+                            
                             self.displayZoneInfo()
                         }
                     }
@@ -199,16 +198,6 @@ private let _zoneStoreSharedInstance = ZoneStore()
         zone.unlocked = false
         
         return zone
-    }
-    
-    private func updatePopularityScoreForUnlockedZones() {
-        for aZone in _activeZones {
-            for uZone in _unlockedZones {
-                if aZone.zoneID == uZone.zoneID {
-                    uZone.popularityScore = aZone.popularityScore
-                }
-            }
-        }
     }
     
     func unlockedZones() -> [Zone]! {

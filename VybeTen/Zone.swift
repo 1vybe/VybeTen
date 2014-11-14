@@ -17,7 +17,7 @@ import MapKit
     var mostRecentVybe: PFObject!
     var mostRecentActiveVybeTimestamp: NSDate {
         get {
-            return mostRecentVybe[kVYBVybeTimestampKey] as NSDate
+            return mostRecentVybe[kVYBVybeTimestampKey]? as NSDate
         }
     }
     var numOfActiveVybes = 0
@@ -80,6 +80,15 @@ import MapKit
 
     
     func addActiveVybe(aVybe: PFObject) {
+        if let vybeTime = aVybe[kVYBVybeTimestampKey] as? NSDate {
+            if mostRecentVybe != nil {
+                let result = vybeTime.compare(mostRecentVybe[kVYBVybeTimestampKey] as NSDate)
+                if result == NSComparisonResult.OrderedAscending {
+                    return
+                }
+            }
+        }
+        
         if let user = aVybe[kVYBVybeUserKey] as PFObject! {
             // freshFeed is only array of vybes. User field is not included when a vybe is inserted into freshFeed in afterSave. So we compare User objectID
             let userObjID = user.objectId
@@ -122,6 +131,10 @@ import MapKit
     }
     
     func removeFromFreshContents(dVybe: PFObject) {
+        // We want to keep the last fresh vybe 
+        if freshContents.count == 1 {
+            mostRecentVybe = dVybe
+        }
         var newFreshContents = [PFObject]()
         for aVybe in freshContents {
             if aVybe.objectId != dVybe.objectId {
