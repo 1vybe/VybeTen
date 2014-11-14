@@ -32,6 +32,11 @@
 
 @implementation VYBActivityTableViewController {
     NSInteger _selectedSection;
+    
+    UIView *activeLocationSectionView;
+    UIView *myLocationSectionView;
+    
+    NSInteger _numOfActiveZones;
 }
 
 #pragma mark - Lifecycle
@@ -59,6 +64,15 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     _selectedSection = -1;
+    
+    _numOfActiveZones = 0;
+    
+    activeLocationSectionView = [[[NSBundle mainBundle] loadNibNamed:@"ActivitySectionView" owner:nil options:nil] firstObject];
+    
+    myLocationSectionView = [[[NSBundle mainBundle] loadNibNamed:@"ActivitySectionView" owner:nil options:nil] firstObject];
+    UILabel *myLocation = (UILabel *)[myLocationSectionView viewWithTag:33];
+    [myLocation setText:@"M Y    L O C A T I O N S"];
+    [myLocation setTextColor:[UIColor colorWithRed:255.0/255.0 green:76.0/255.0 blue:70.0/255.0 alpha:1.0]];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -185,6 +199,8 @@
         if (success) {
             self.sections = [[ZoneStore sharedInstance] allUnlockedZones];
             
+            _numOfActiveZones = self.sections.count - [[ZoneStore sharedInstance] unlockedZones].count;
+            
             NSString *locationCntText = (self.sections.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.sections.count] : [NSString stringWithFormat:@"%d Location", (int)self.sections.count];
             NSString *vybeCntText = (self.objects.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)self.objects.count] : [NSString stringWithFormat:@"%d Vybe", (int)self.objects.count];
 
@@ -204,9 +220,31 @@
 }
 
 
-#pragma mark UITableViewDelegate
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (section == 0 || section == _numOfActiveZones)
+        return 36.0;
+    return 0.0;
+}
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (section == 0) {
+        return activeLocationSectionView;
+    }
+
+    if (section == _numOfActiveZones) {
+        return myLocationSectionView;
+    }
+    
+    return nil;
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+}
+
+#pragma mark UITableViewDelegate
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ZoneCell"];
     
     Zone *zone = self.sections[section];
