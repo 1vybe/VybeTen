@@ -11,6 +11,6 @@
 #import "GAITrackedViewController.h"
 
 @protocol VYBCapturePipelineDelegate;
-@interface VYBCaptureViewController : GAITrackedViewController
+@interface VYBCaptureViewController : UIViewController
 - (id)initWithPageIndex:(NSInteger)pageIndex;
 @end

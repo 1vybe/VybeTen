@@ -103,6 +103,15 @@ static BOOL _uploadingOldVybes = NO;
                         [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                             if (succeeded) {
                                 [self didUploadVybe:vybeToUpload];
+                                
+                                // GA stuff
+                                id tracker = [[GAI sharedInstance] defaultTracker];
+                                if (tracker) {
+                                    // upload success metric for capture_video event
+                                    [tracker set:[GAIFields customMetricForIndex:3] value:[[NSNumber numberWithInt:1] stringValue]];
+                                    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"capture" value:nil] build]];
+                                }
+                                
                             } else {
                                 [self uploadingFailedWith:vybeToUpload];
                             }
@@ -143,6 +152,14 @@ static BOOL _uploadingOldVybes = NO;
 
 - (void)uploadingFailedWith:(VYBVybe *)vybeToUpload {
     [self saveVybe:vybeToUpload];
+    
+    // GA stuff
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        // upload saved metric for capture_video event
+        [tracker set:[GAIFields customMetricForIndex:4] value:[[NSNumber numberWithInt:1] stringValue]];
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"capture" value:nil] build]];
+    }
     _currVybe = nil;
 }
 
@@ -196,8 +213,15 @@ static BOOL _uploadingOldVybes = NO;
     }
 
     if (success) {
+        // GA stuff
+        id tracker = [[GAI sharedInstance] defaultTracker];
+        if (tracker) {
+            // upload recovered metric for capture_video event
+            [tracker set:[GAIFields customMetricForIndex:5] value:[[NSNumber numberWithInt:1] stringValue]];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"capture" value:nil] build]];
+        }
         NSLog(@"uploaded old vybe: %@", [oldVybe parseObject]);
-
+        
         [self clearLocalCacheForVybe:oldVybe];
         [self uploadDelayedVybe];
     }

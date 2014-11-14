@@ -6,6 +6,12 @@
 
 #import <MBProgressHUD/MBProgressHUD.h>
 
+#import <GoogleAnalytics-iOS-SDK/GAI.h>
+#import <GoogleAnalytics-iOS-SDK/GAIFields.h>
+#import <GoogleAnalytics-iOS-SDK/GAIDictionaryBuilder.h>
+#import <GoogleAnalytics-iOS-SDK/GAITracker.h>
+
+
 #import "VYBLoginViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBConstants.h"

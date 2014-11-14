@@ -48,6 +48,8 @@ NSString *const kVYBUserLastVybedZoneKey                        = @"lastVybedZon
 NSString *const kVYBUserLastVybedTimeKey                        = @"lastVybedTime";
 NSString *const kVYBUserFreshFeedKey                            = @"freshFeed";
 NSString *const kVYBUserLastRefreshedKey                        = @"lastRefreshed";
+NSString *const kVYBUserTribeKey                                = @"tribe";
+
 
 /*
 NSString *const kVYBUserDisplayNameKey                          = @"displayName";

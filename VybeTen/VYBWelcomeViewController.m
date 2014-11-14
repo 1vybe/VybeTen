@@ -32,6 +32,19 @@
         
         // Refresh current user with server side data -- checks if user is still valid and so on
         [[PFUser currentUser] fetchInBackgroundWithTarget:self selector:@selector(refreshCurrentUserCallbackWithResult:error:)];
+        
+        // GA stuff - Setting User Group
+        PFObject *tribe = [[PFUser currentUser] objectForKey:kVYBUserTribeKey];
+        [tribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            if (!error) {
+                NSString *tribeName = @"Beta Users";
+                if ( [object[kVYBTribeNameKey] isEqualToString:@"Founders"] ) {
+                    tribeName = @"Founders";
+                }
+                // GA stuff - User Group Dimension
+                [[GAI sharedInstance].defaultTracker set:[GAIFields customDimensionForIndex:2] value:tribeName];
+            }
+        }];
     }
    }
 

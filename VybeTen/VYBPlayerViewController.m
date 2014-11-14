@@ -18,10 +18,6 @@
 #import "VYBConstants.h"
 #import "VYBActiveButton.h"
 #import "NSArray+PFObject.h"
-#import <GAI.h>
-#import <GAITracker.h>
-#import <GAIFields.h>
-#import <GAIDictionaryBuilder.h>
 
 @interface VYBPlayerViewController ()
 @property (nonatomic, weak) IBOutlet UIButton *portalButton;
@@ -130,6 +126,14 @@
     if (self.currPlayer && self.currItem) {
         [self.currPlayer play];
     }
+    
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        [tracker set:kGAIScreenName
+               value:@"Player Screen"];
+        
+        [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+    }
 }
 
 - (void)playZoneVybesFromVybe:(PFObject *)aVybe {
@@ -228,7 +232,13 @@
 #pragma mark - Behind the scene
 
 - (void)playStream:(NSArray *)stream atIndex:(NSInteger)streamIdx {
-    
+    // GA stuff
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"play_video" label:@"play" value:nil] build]];
+    }
+ 
+
     PFObject *currVybe = [stream objectAtIndex:streamIdx];
     [self syncUI:currVybe withCompletion:^{
         

@@ -91,6 +91,7 @@ extern NSString *const kVYBUserLastVybedZoneKey;
 extern NSString *const kVYBUserLastVybedTimeKey;
 extern NSString *const kVYBUserFreshFeedKey;
 extern NSString *const kVYBUserLastRefreshedKey;
+extern NSString *const kVYBUserTribeKey;
 
 //extern NSString *const kVYBUserDisplayNameKey;
 //extern NSString *const kVYBUserFacebookIDKey;

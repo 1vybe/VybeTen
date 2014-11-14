@@ -70,6 +70,14 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        [tracker set:kGAIScreenName
+           value:@"Activity Screen"];
+        
+        [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+    }
+    
     [self getPermissionIfNeeded];
 
     [VYBUtility updateLastRefreshForCurrentUser];
@@ -261,8 +269,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     
+    // GA stuff
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        NSString *dimensionValue = @"My Location";
+        [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
+    }
+    
     VYBPlayerViewController *playerController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-
     [self presentViewController:playerController animated:YES completion:^{
         PFObject *selectedVybe = [self objectAtIndexPath:indexPath];
         [playerController playZoneVybesFromVybe:selectedVybe];
@@ -273,6 +287,12 @@
     Zone *zone = self.sections[sectionButton.tag];
     // ACTIVE zone selected
     if (zone.numOfActiveVybes > 0) {
+        // GA stuff
+        id tracker = [[GAI sharedInstance] defaultTracker];
+        if (tracker) {
+            NSString *dimensionValue = @"Active Location";
+            [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
+        }
         
         VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
         [self presentViewController:playerVC animated:YES completion:^{

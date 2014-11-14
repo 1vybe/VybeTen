@@ -22,10 +22,7 @@
 #import "VYBCache.h"
 #import "VYBUtility.h"
 #import "VYBMyVybeStore.h"
-#import <GAI.h>
-#import <GAITracker.h>
-#import <GAIFields.h>
-#import <GAIDictionaryBuilder.h>
+
 
 @interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
     NSInteger _pageIndex;
@@ -131,9 +128,6 @@
     
     flashButton.selected = _flashOn;
     flipButton.selected = _isFrontCamera;
-    
-    // Google Analytics
-    self.screenName = @"Capture Screen";
 }
 
 - (void)viewDidAppear:(BOOL)animated {

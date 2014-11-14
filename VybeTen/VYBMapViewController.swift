@@ -41,6 +41,15 @@ import MapKit
         self.setNeedsStatusBarAppearanceUpdate()
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if let tracker = GAI.sharedInstance().defaultTracker {
+            tracker.set(kGAIScreenName, value: "Map Screen")
+            tracker.send(GAIDictionaryBuilder.createScreenView().build())
+        }
+    }
+    
 
     private func setUpMapRegion() {
         mapView.delegate = self
@@ -110,6 +119,25 @@ import MapKit
     
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
         let zone = view.annotation as SimpleAnnotation
+        
+        // GA stuff
+        if let tracker = GAI.sharedInstance().defaultTracker {
+            // player source dimension
+            let dimensionValue = "Map"
+            tracker.set(GAIFields.customDimensionForIndex(1), value: dimensionValue)
+            
+            // zone type metric for play active zone event
+            if zone.unlocked {
+                tracker.send(GAIDictionaryBuilder.createEventWithCategory("ui_action",
+                    action: "map_zone_clicked", label: "play", value: nil).set("1", forKey:GAIFields.customMetricForIndex(1)).build())
+            }
+            else {
+                tracker.send(GAIDictionaryBuilder.createEventWithCategory("ui_action",
+                    action: "map_zone_clicked", label: "play", value: nil).set("1", forKey:GAIFields.customMetricForIndex(2)).build())
+            }
+        }
+
+        
         let playerVC = VYBPlayerViewController()
         self.presentViewController(playerVC, animated: true) { () -> Void in
             playerVC.playFreshVybesFromZone(zone.zoneID)
