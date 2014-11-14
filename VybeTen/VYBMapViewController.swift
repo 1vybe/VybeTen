@@ -123,17 +123,13 @@ import MapKit
         // GA stuff
         if let tracker = GAI.sharedInstance().defaultTracker {
             // player source dimension
-            let dimensionValue = "Map"
-            tracker.set(GAIFields.customDimensionForIndex(1), value: dimensionValue)
-            
-            // zone type metric for play active zone event
             if zone.unlocked {
-                tracker.send(GAIDictionaryBuilder.createEventWithCategory("ui_action",
-                    action: "map_zone_clicked", label: "play", value: nil).set("1", forKey:GAIFields.customMetricForIndex(1)).build())
+                let dimensionValue = "map unlocked"
+                tracker.set(GAIFields.customDimensionForIndex(1), value: dimensionValue)
             }
             else {
-                tracker.send(GAIDictionaryBuilder.createEventWithCategory("ui_action",
-                    action: "map_zone_clicked", label: "play", value: nil).set("1", forKey:GAIFields.customMetricForIndex(2)).build())
+                let dimensionValue = "map locked"
+                tracker.set(GAIFields.customDimensionForIndex(1), value: dimensionValue)
             }
         }
 

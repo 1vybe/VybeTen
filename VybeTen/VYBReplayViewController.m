@@ -185,8 +185,7 @@
     id tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
         // upload cancel metric for capture_video event
-        [tracker set:[GAIFields customMetricForIndex:6] value:[[NSNumber numberWithInt:1] stringValue]];
-        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"capture" value:nil] build]];
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"cancel" value:nil] build]];
     }
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{

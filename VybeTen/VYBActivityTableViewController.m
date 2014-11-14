@@ -272,7 +272,7 @@
     // GA stuff
     id tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
-        NSString *dimensionValue = @"My Location";
+        NSString *dimensionValue = @"my unlocked";
         [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
     }
     
@@ -290,7 +290,7 @@
         // GA stuff
         id tracker = [[GAI sharedInstance] defaultTracker];
         if (tracker) {
-            NSString *dimensionValue = @"Active Location";
+            NSString *dimensionValue = @"active unlocked";
             [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
         }
         

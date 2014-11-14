@@ -108,8 +108,7 @@ static BOOL _uploadingOldVybes = NO;
                                 id tracker = [[GAI sharedInstance] defaultTracker];
                                 if (tracker) {
                                     // upload success metric for capture_video event
-                                    [tracker set:[GAIFields customMetricForIndex:3] value:[[NSNumber numberWithInt:1] stringValue]];
-                                    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"capture" value:nil] build]];
+                                    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"success" value:nil] build]];
                                 }
                                 
                             } else {
@@ -157,8 +156,7 @@ static BOOL _uploadingOldVybes = NO;
     id tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
         // upload saved metric for capture_video event
-        [tracker set:[GAIFields customMetricForIndex:4] value:[[NSNumber numberWithInt:1] stringValue]];
-        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"capture" value:nil] build]];
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"saved" value:nil] build]];
     }
     _currVybe = nil;
 }
@@ -217,8 +215,7 @@ static BOOL _uploadingOldVybes = NO;
         id tracker = [[GAI sharedInstance] defaultTracker];
         if (tracker) {
             // upload recovered metric for capture_video event
-            [tracker set:[GAIFields customMetricForIndex:5] value:[[NSNumber numberWithInt:1] stringValue]];
-            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"capture" value:nil] build]];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"recovered" value:nil] build]];
         }
         NSLog(@"uploaded old vybe: %@", [oldVybe parseObject]);
         
