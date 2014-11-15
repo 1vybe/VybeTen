@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol VYBPlayerViewControllerDelegate;
 @interface VYBPlayerViewController : UIViewController
+@property (nonatomic, weak) id<VYBPlayerViewControllerDelegate> delegate;
 - (id)initWithPageIndex:(NSInteger)pageIndex;
 - (NSInteger)pageIndex;
 
@@ -17,6 +19,10 @@
 - (void)playZoneVybesFromVybe:(PFObject *)aVybe;        // User clicked on one of his individual vybe
 - (void)playFreshVybesFromZone:(NSString *)zoneID;      // User clicked on one of active zones
 //- (void)playActiveVybesFromZone:(NSString *)zoneID;     // User clicked on one of active zones but there is no fresh content
-
+@end
+@protocol VYBPlayerViewControllerDelegate <NSObject>
+@required
+- (void)playerViewController:(VYBPlayerViewController *)playerVC didFinishSetup:(BOOL)ready;
 
 @end
+

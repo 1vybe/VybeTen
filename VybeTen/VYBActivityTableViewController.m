@@ -18,7 +18,7 @@
 
 #import "VYBLogInViewController.h"
 
-@interface VYBActivityTableViewController () <UIAlertViewDelegate>
+@interface VYBActivityTableViewController () <UIAlertViewDelegate, VYBPlayerViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *countLabel;
@@ -315,10 +315,10 @@
     }
     
     VYBPlayerViewController *playerController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-    [self presentViewController:playerController animated:YES completion:^{
-        PFObject *selectedVybe = [self objectAtIndexPath:indexPath];
-        [playerController playZoneVybesFromVybe:selectedVybe];
-    }];
+    playerController.delegate = self;
+    PFObject *selectedVybe = [self objectAtIndexPath:indexPath];
+    [playerController playZoneVybesFromVybe:selectedVybe];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 }
 
 - (IBAction)sectionClicked:(UIButton *)sectionButton {
@@ -332,10 +332,10 @@
             [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
         }
         
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-        [self presentViewController:playerVC animated:YES completion:^{
-            [playerVC playFreshVybesFromZone:zone.zoneID];
-        }];
+        playerVC.delegate = self;
+        [playerVC playFreshVybesFromZone:zone.zoneID];
     }
     // UNLOCKED zone selected
     else {
@@ -440,6 +440,14 @@
     {
         VYBMapViewController *mapVC = segue.destinationViewController;
         [mapVC displayAllActiveVybes];
+    }
+}
+
+- (void)playerViewController:(VYBPlayerViewController *)playerVC didFinishSetup:(BOOL)ready {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
+    if (ready) {
+        [self presentViewController:playerVC animated:YES completion:nil];
     }
 }
 
