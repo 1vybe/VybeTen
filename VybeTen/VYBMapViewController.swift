@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-@objc class VYBMapViewController: UIViewController, MKMapViewDelegate {
+@objc class VYBMapViewController: UIViewController, MKMapViewDelegate, VYBPlayerViewControllerDelegate {
     @IBOutlet weak var mapView: MKMapView!
     
     @IBAction func dismissButtonPressed(sender: AnyObject) {
@@ -135,9 +135,9 @@ import MapKit
 
         
         let playerVC = VYBPlayerViewController()
-        self.presentViewController(playerVC, animated: true) { () -> Void in
-            playerVC.playFreshVybesFromZone(zone.zoneID)
-        }
+        playerVC.delegate = self
+        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        playerVC.playFreshVybesFromZone(zone.zoneID)
     }
 
     override func didReceiveMemoryWarning() {
@@ -155,6 +155,13 @@ import MapKit
 
     override func supportedInterfaceOrientations() -> Int {
         return Int(UIInterfaceOrientationMask.Portrait.rawValue)
+    }
+    
+    func playerViewController(playerVC: VYBPlayerViewController!, didFinishSetup ready: Bool) {
+        MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
+        if ready {
+            self.presentViewController(playerVC, animated: true, completion: nil)
+        }
     }
 
     class SimpleAnnotation: NSObject, MKAnnotation {

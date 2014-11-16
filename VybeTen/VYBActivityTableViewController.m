@@ -36,7 +36,7 @@
     UIView *activeLocationSectionView;
     UIView *myLocationSectionView;
     
-    NSInteger _numOfActiveZones;
+    NSInteger _lastActiveZoneIndex;
 }
 
 #pragma mark - Lifecycle
@@ -64,8 +64,6 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     _selectedSection = -1;
-    
-    _numOfActiveZones = 0;
     
     activeLocationSectionView = [[[NSBundle mainBundle] loadNibNamed:@"ActivitySectionView" owner:nil options:nil] firstObject];
     
@@ -199,7 +197,7 @@
         if (success) {
             self.sections = [[ZoneStore sharedInstance] allUnlockedZones];
             
-            _numOfActiveZones = self.sections.count - [[ZoneStore sharedInstance] unlockedZones].count;
+            _lastActiveZoneIndex = self.sections.count - [[ZoneStore sharedInstance] unlockedZones].count - 1;
             
             NSString *locationCntText = (self.sections.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.sections.count] : [NSString stringWithFormat:@"%d Location", (int)self.sections.count];
             NSString *vybeCntText = (self.objects.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)self.objects.count] : [NSString stringWithFormat:@"%d Vybe", (int)self.objects.count];
@@ -220,18 +218,22 @@
 }
 
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 0 || section == _numOfActiveZones)
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    if (section == _lastActiveZoneIndex) {
         return 36.0;
+    }
     return 0.0;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (section == 0) {
-        return activeLocationSectionView;
+        return 121.0;
     }
+    return 85.0;
+}
 
-    if (section == _numOfActiveZones) {
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    if (section == _lastActiveZoneIndex) {
         return myLocationSectionView;
     }
     
@@ -244,7 +246,7 @@
 }
 
 #pragma mark UITableViewDelegate
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ZoneCell"];
     
     Zone *zone = self.sections[section];
@@ -301,6 +303,15 @@
         cell.thumbnailImageView.hidden = YES;
     }
     
+    if (section == 0) {
+        UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 121.0)];
+        [sectionView addSubview:activeLocationSectionView];
+        UIView *zoneView = cell.contentView;
+        [zoneView setFrame:CGRectMake(0, 36.0, self.view.bounds.size.width, 85.0)];
+        [sectionView addSubview:zoneView];
+        return sectionView;
+    }
+    
     return cell.contentView;
 }
 
@@ -314,11 +325,11 @@
         [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
     }
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     VYBPlayerViewController *playerController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
     playerController.delegate = self;
     PFObject *selectedVybe = [self objectAtIndexPath:indexPath];
     [playerController playZoneVybesFromVybe:selectedVybe];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 }
 
 - (IBAction)sectionClicked:(UIButton *)sectionButton {

@@ -48,7 +48,6 @@
     NSTimer *overlayTimer;
     
     NSInteger _pageIndex;
-    NSInteger _initialStreamCurrIdx;
     NSArray *_zoneVybes;
     NSInteger _zoneCurrIdx;
     
@@ -109,6 +108,14 @@
     [self.currPlayer pause];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if ( _zoneVybes ) {
+        [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+    }
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
@@ -129,15 +136,25 @@
 
 - (void)prepareFirstVideoInBackgroundWithCompletion:(void (^)(BOOL))completionBlock {
     PFObject *firstVideo = _zoneVybes[0];
-    PFFile *vid = [firstVideo objectForKey:kVYBVybeVideoKey];
-    [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        if (!error) {
-            completionBlock(YES);
-        }
-        else {
-            completionBlock(NO);
-        }
-    }];
+    NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
+    cacheURL = [cacheURL URLByAppendingPathComponent:[firstVideo objectId]];
+    cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
+        completionBlock(YES);
+    }
+    else {
+        PFFile *vid = [firstVideo objectForKey:kVYBVybeVideoKey];
+        [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            if (!error) {
+                [data writeToURL:cacheURL atomically:YES];
+                completionBlock(YES);
+            }
+            else {
+                completionBlock(NO);
+            }
+        }];
+    }
 }
 
 - (void)playZoneVybesFromVybe:(PFObject *)aVybe {
@@ -159,9 +176,6 @@
                                             _zoneVybes = objects;
                                             _zoneCurrIdx = 0;
                                             [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
-                                                if (success) {
-                                                    [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
-                                                }
                                                 [self.delegate playerViewController:self didFinishSetup:success];
                                             }];
                                         }
@@ -186,9 +200,6 @@
               _zoneVybes = freshContents;
               _zoneCurrIdx = 0;
               [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
-                  if (success) {
-                      [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
-                  }
                   [self.delegate playerViewController:self didFinishSetup:success];
               }];
           }
@@ -206,15 +217,11 @@
     NSString *functionName = @"get_active_zone_vybes";
     
     [PFCloud callFunctionInBackground:functionName withParameters:@{@"zoneID": zoneID} block:^(NSArray *objects, NSError *error) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         if (!error) {
             if (objects.count > 0) {
                 _zoneVybes = objects;
                 _zoneCurrIdx = 0;
                 [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
-                    if (success) {
-                        [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
-                    }
                     [self.delegate playerViewController:self didFinishSetup:success];
                 }];
             }
@@ -242,7 +249,11 @@
     }
 
     PFObject *currVybe = [stream objectAtIndex:streamIdx];
-    [self syncUIElementsWithVybe:currVybe];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self syncUIElementsWithVybe:currVybe];
+            self.goPrevButton.hidden = (streamIdx == 0);
+        self.goNextButton.hidden = (streamIdx == stream.count - 1);
+    });
     
     // Play after syncing UI elements
     NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
@@ -363,7 +374,7 @@
     
     // Reached the end of zone. Zone OUT
     if (_zoneCurrIdx == _zoneVybes.count - 1) {
-        return;
+        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
     }
     else {
         //[self.currPlayer pause];
