@@ -169,8 +169,8 @@ Parse.Cloud.define('get_count_for_zone', function (request, response) {
 // Default algorithm used in the app
 Parse.Cloud.define('get_active_zone_vybes', function (request, response) {
   var currTime = new Date();
-  var ttlAgo = new Date();
-  ttlAgo.setHours(currTime.getHours() - 24 * 7);  // 1 week window
+  var ttlAgo = new Date('2014-11-15T23:00:00Z'); // Temporary time interval (UTC)
+  //ttlAgo.setHours(currTime.getHours() - 24 * 7);  // 1 week window
 
   var query = new Parse.Query('Vybe');
   query.include('user')
@@ -198,8 +198,9 @@ Parse.Cloud.define('get_active_zone_vybes', function (request, response) {
 
 Parse.Cloud.define('get_active_vybes', function (request, response) {
   var currTime = new Date();
-  var ttlAgo = new Date();
-  ttlAgo.setHours(currTime.getHours() - 24 * 7);  // 1 week hour window
+  var ttlAgo = new Date('2014-11-15T23:00:00Z');
+  //ttlAgo.setHours(currTime.getHours() - 24 * 4);  // 1 week hour window
+
 
   var query = new Parse.Query('Vybe');
   query.include('user')
@@ -229,8 +230,8 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
   query.first({
     success: function(aUser) {
       var currTime = new Date();
-      var ttlAgo = new Date();
-      ttlAgo.setHours(currTime.getHours() - 24 * 7);  // 1 week window
+      var ttlAgo = new Date('2014-11-15T23:00:00Z'); // Temporary time interval (UTC)
+      //ttlAgo.setHours(currTime.getHours() - 24 * 7);  // 1 week window
       
       var feed = aUser.get('freshFeed');
       var feedIds = [];

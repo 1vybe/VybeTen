@@ -93,7 +93,7 @@
     // Initialize tracker. Replace with your tracking ID.
     id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:GA_TRACKING_ID];
     [tracker send:[[[GAIDictionaryBuilder createEventWithCategory:@"UX"
-                                                           action:@"appstart"
+                                                           action:@"App Start"
                                                             label:nil
                                                             value:nil] set:@"start" forKey:kGAISessionControl] build]];
     

@@ -33,20 +33,30 @@
         // Refresh current user with server side data -- checks if user is still valid and so on
         [[PFUser currentUser] fetchInBackgroundWithTarget:self selector:@selector(refreshCurrentUserCallbackWithResult:error:)];
         
-        // GA stuff - Setting User Group
-        PFObject *tribe = [[PFUser currentUser] objectForKey:kVYBUserTribeKey];
-        [tribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-            if (!error) {
-                NSString *tribeName = @"Beta Users";
-                if ( [object[kVYBTribeNameKey] isEqualToString:@"Founders"] ) {
-                    tribeName = @"Founders";
+        // GA stuff - Setting User ID
+        id tracker = [[GAI sharedInstance] defaultTracker];
+        if (tracker) {
+            [tracker set:@"&uid" value:[PFUser currentUser].username];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"UX"
+                                                                  action:@"User Logged In"
+                                                                   label:nil
+                                                                   value:nil] build]];
+            // Setting User Group
+            PFObject *tribe = [[PFUser currentUser] objectForKey:kVYBUserTribeKey];
+            [tribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                if (!error) {
+                    NSString *tribeName = @"Beta Users";
+                    if ( [object[kVYBTribeNameKey] isEqualToString:@"Founders"] ) {
+                        tribeName = @"Founders";
+                    }
+                    // GA stuff - User Group Dimension
+                    [[GAI sharedInstance].defaultTracker set:[GAIFields customDimensionForIndex:2] value:tribeName];
                 }
-                // GA stuff - User Group Dimension
-                [[GAI sharedInstance].defaultTracker set:[GAIFields customDimensionForIndex:2] value:tribeName];
-            }
-        }];
-    }
-   }
+            }];
+
+        }
+    }   
+}
 
 #pragma mark - Private
 
