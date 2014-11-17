@@ -305,7 +305,12 @@
     
     if (section == 0) {
         UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 121.0)];
-        [sectionView addSubview:activeLocationSectionView];
+        if (_numOfActiveZones == 0) {
+            [sectionView addSubview:myLocationSectionView];
+        }
+        else {
+            [sectionView addSubview:activeLocationSectionView];
+        }
         UIView *zoneView = cell.contentView;
         [zoneView setFrame:CGRectMake(0, 36.0, self.view.bounds.size.width, 85.0)];
         [sectionView addSubview:zoneView];

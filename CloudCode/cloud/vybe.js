@@ -170,7 +170,7 @@ Parse.Cloud.define('get_count_for_zone', function (request, response) {
 Parse.Cloud.define('get_active_zone_vybes', function (request, response) {
   var currTime = new Date();
   var ttlAgo = new Date();
-  ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window
+  ttlAgo.setHours(currTime.getHours() - 24 * 7);  // 1 week window
 
   var query = new Parse.Query('Vybe');
   query.include('user')
@@ -199,7 +199,7 @@ Parse.Cloud.define('get_active_zone_vybes', function (request, response) {
 Parse.Cloud.define('get_active_vybes', function (request, response) {
   var currTime = new Date();
   var ttlAgo = new Date();
-  ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window
+  ttlAgo.setHours(currTime.getHours() - 24 * 7);  // 1 week hour window
 
   var query = new Parse.Query('Vybe');
   query.include('user')
@@ -230,7 +230,7 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
     success: function(aUser) {
       var currTime = new Date();
       var ttlAgo = new Date();
-      ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window
+      ttlAgo.setHours(currTime.getHours() - 24 * 7);  // 1 week window
       
       var feed = aUser.get('freshFeed');
       var feedIds = [];
