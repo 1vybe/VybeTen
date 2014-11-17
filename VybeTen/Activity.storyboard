@@ -28,7 +28,7 @@
         <scene sceneID="nzO-I6-M23">
             <objects>
                 <tableViewController title="Activity Table View Controller" id="UzS-ES-twR" customClass="VYBActivityTableViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="70" sectionHeaderHeight="36" sectionFooterHeight="85" id="zmg-at-BNL">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="70" sectionHeaderHeight="85" sectionFooterHeight="1" id="zmg-at-BNL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -106,13 +106,13 @@
                                                 <constraint firstAttribute="width" secondItem="BIQ-hL-LVg" secondAttribute="height" multiplier="1:1" id="b2v-dK-oSt"/>
                                             </constraints>
                                         </imageView>
-                                        <button opaque="NO" tag="666" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="56D-Mr-Dgp">
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="56D-Mr-Dgp">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="85"/>
                                             <state key="normal">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <action selector="sectionClicked:" destination="UzS-ES-twR" eventType="touchUpInside" id="OES-fs-ksb"/>
+                                                <action selector="touchButtonPressed:" destination="lba-Bj-THQ" eventType="touchUpInside" id="QAo-EO-ayr"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -132,6 +132,7 @@
                                     <outlet property="locationLabel" destination="hnX-7t-y9Q" id="0zx-WS-3Wo"/>
                                     <outlet property="thumbnailImageView" destination="BIQ-hL-LVg" id="Eea-ea-ncA"/>
                                     <outlet property="timestampLabel" destination="xDK-O9-DDE" id="C6J-Kj-iyD"/>
+                                    <outlet property="touchButton" destination="56D-Mr-Dgp" id="otC-2B-6Ep"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="VybeCell" rowHeight="70" id="YK0-wJ-ZjC" customClass="VYBVybeTableViewCell">

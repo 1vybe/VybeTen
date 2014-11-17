@@ -31,4 +31,10 @@
     }
 }
 
+- (IBAction)touchButtonPressed:(id)sender {
+    if (self.delegate) {
+        [self.delegate didTapOnCell:self];
+    }
+}
+
 @end

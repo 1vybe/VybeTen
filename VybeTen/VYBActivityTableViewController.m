@@ -18,7 +18,7 @@
 
 #import "VYBLogInViewController.h"
 
-@interface VYBActivityTableViewController () <UIAlertViewDelegate, VYBPlayerViewControllerDelegate>
+@interface VYBActivityTableViewController () <UIAlertViewDelegate, VYBPlayerViewControllerDelegate, VYBVybeTableViewCellDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *countLabel;
@@ -27,6 +27,7 @@
 
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender;
+
 
 @end
 
@@ -62,6 +63,8 @@
     
     // Remove empty cells.
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    self.tableView.delegate = self;
     
     _selectedSection = -1;
     
@@ -195,11 +198,16 @@
     
     [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
         if (success) {
-            self.sections = [[ZoneStore sharedInstance] allUnlockedZones];
+            Zone *emptyZone = [[Zone alloc] initWithName:@"empty" zoneID:@"none"];
+            NSMutableArray *arr = [[NSMutableArray alloc] initWithObjects:emptyZone, nil];
+            [arr addObjectsFromArray:[[ZoneStore sharedInstance] activeUnlockedZones]];
+            [arr addObject:emptyZone];
+            [arr addObjectsFromArray:[[ZoneStore sharedInstance] unlockedZones]];
+            _numOfActiveZones = [[ZoneStore sharedInstance] activeUnlockedZones].count;
+            NSInteger numOfUnlockedZones = [[ZoneStore sharedInstance] unlockedZones].count;
+            self.sections = arr;
             
-            _numOfActiveZones = self.sections.count - [[ZoneStore sharedInstance] unlockedZones].count;
-            
-            NSString *locationCntText = (self.sections.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.sections.count] : [NSString stringWithFormat:@"%d Location", (int)self.sections.count];
+            NSString *locationCntText = (self.sections.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)numOfUnlockedZones] : [NSString stringWithFormat:@"%d Location", (int)numOfUnlockedZones];
             NSString *vybeCntText = (self.objects.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)self.objects.count] : [NSString stringWithFormat:@"%d Vybe", (int)self.objects.count];
 
             self.countLabel.text = [NSString stringWithFormat:@"%@ - %@", locationCntText, vybeCntText];
@@ -210,51 +218,43 @@
 }
 
 - (PFObject *)objectAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0 || indexPath.section == _numOfActiveZones + 1) {
+        return nil;
+    }
+    
     Zone *zone = self.sections[indexPath.section];
     PFObject *vybe = [zone.myVybes objectAtIndex:indexPath.row];
-//    NSArray *rowIndecesInSection = [];
     
     return vybe;
 }
 
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if (section == _lastActiveZoneIndex) {
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (section == 0 || section == _numOfActiveZones + 1){
         return 36.0;
     }
-    return 0.0;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
-        return 121.0;
-    }
+    
     return 85.0;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if (section == _lastActiveZoneIndex) {
-        return myLocationSectionView;
-    }
-    
-    return nil;
-}
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    
-}
 
 #pragma mark UITableViewDelegate
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (section == 0) {
+        return activeLocationSectionView;
+    }
+    
+    else if (section == _numOfActiveZones + 1) {
+        return myLocationSectionView;
+    }
+    
+    
     VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ZoneCell"];
+    cell.delegate = self;
+    cell.tag = section;
     
     Zone *zone = self.sections[section];
     cell.locationLabel.text = zone.name;
-    
-    UIButton *button = (UIButton *)[cell viewWithTag:666];
-    button.tag = section;
-    
+        
     PFObject *lastVybe;
     
     if (zone.numOfActiveVybes > 0) {
@@ -302,33 +302,8 @@
         cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - Last Vybe taken %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
         cell.thumbnailImageView.hidden = YES;
     }
-    
-    if (section == 0) {
-        UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 121.0)];
-        if (_numOfActiveZones == 0) {
-            [sectionView addSubview:myLocationSectionView];
-        }
-        else {
-            [sectionView addSubview:activeLocationSectionView];
-        }
-        UIView *zoneView = cell.contentView;
-        [zoneView setFrame:CGRectMake(0, 36.0, self.view.bounds.size.width, 85.0)];
-        [sectionView addSubview:zoneView];
-        return sectionView;
-    }
-    
-    else if (section == _numOfActiveZones) {
-        UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 121.0)];
-        
-        [sectionView addSubview:myLocationSectionView];
-        
-        UIView *zoneView = cell.contentView;
-        [zoneView setFrame:CGRectMake(0, 36.0, self.view.bounds.size.width, 85.0)];
-        [sectionView addSubview:zoneView];
-        return sectionView;
-    }
-    
-    return cell.contentView;
+
+    return cell;
 }
 
 
@@ -350,8 +325,8 @@
     [playerController playZoneVybesFromVybe:selectedVybe];
 }
 
-- (IBAction)sectionClicked:(UIButton *)sectionButton {
-    Zone *zone = self.sections[sectionButton.tag];
+- (void)didTapOnCell:(VYBVybeTableViewCell *)cell {
+    Zone *zone = self.sections[cell.tag];
     // ACTIVE zone selected
     if (zone.numOfActiveVybes > 0) {
         // GA stuff
@@ -368,13 +343,13 @@
     }
     // UNLOCKED zone selected
     else {
-        if (sectionButton.tag == _selectedSection) {
+        if (cell.tag == _selectedSection) {
             _selectedSection = -1;
             
-            Zone *zoneToCollapse = self.sections[sectionButton.tag];
+            Zone *zoneToCollapse = self.sections[cell.tag];
             NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
             for (int i = 0; i < zoneToCollapse.myVybes.count; i++) {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:sectionButton.tag];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:cell.tag];
                 [pathsToRemove addObject:indexPath];
             }
             
@@ -393,12 +368,12 @@
                 }
             }
             
-            _selectedSection = sectionButton.tag;
+            _selectedSection = cell.tag;
 
-            Zone *zoneToExpand = self.sections[sectionButton.tag];
+            Zone *zoneToExpand = self.sections[cell.tag];
             NSMutableArray *pathsToAdd = [[NSMutableArray alloc] init];
             for (int i = 0; i < zoneToExpand.myVybes.count; i++) {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:sectionButton.tag];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:cell.tag];
                 [pathsToAdd addObject:indexPath];
             }
             

@@ -208,14 +208,14 @@ private let _zoneStoreSharedInstance = ZoneStore()
         return _activeZones
     }
     
-    func allUnlockedZones() -> [Zone]! {
+    func activeUnlockedZones() -> [Zone]! {
         var activeUnlockedZones = [Zone]()
         for aZone in _activeZones {
             if aZone.unlocked {
                 activeUnlockedZones.append(aZone)
             }
         }
-        return activeUnlockedZones + _unlockedZones
+        return activeUnlockedZones
     }
     
     func refreshFreshVybesInBackground(completionHandler: ((success: Bool) -> Void)) {

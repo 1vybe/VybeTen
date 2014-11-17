@@ -226,7 +226,7 @@
                 }];
             }
             else {
-                //TODO: No vybe within past 24 hours.
+                //TODO: No vybe within past week.
                 [self.delegate playerViewController:self didFinishSetup:NO];
             }
         }
