@@ -57,7 +57,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
                                 return zone1.freshContents.count > zone2.freshContents.count
                             })
                             
-                            self.displayZoneInfo()
+//                            self.displayZoneInfo()
                         }
                     }
                     completionHandler(success: true)

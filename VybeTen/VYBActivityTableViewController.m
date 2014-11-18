@@ -22,7 +22,8 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *countLabel;
-@property (retain, nonatomic) NSArray *sections;
+@property (nonatomic) NSArray *activeLocations;
+@property (nonatomic) NSArray *myLocations;
 @property (retain, nonatomic) NSMutableDictionary *sectionToZoneNameMap;
 
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
@@ -32,27 +33,27 @@
 @end
 
 @implementation VYBActivityTableViewController {
+  
     NSInteger _selectedSection;
-    
-    UIView *activeLocationSectionView;
-    UIView *myLocationSectionView;
-    
+
     NSInteger _numOfActiveZones;
 }
 
 #pragma mark - Lifecycle
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        self.parseClassName = kVYBVybeClassKey;
-        self.paginationEnabled = NO;
-        self.pullToRefreshEnabled = YES;
-        self.objectsPerPage = 500;
-        self.sections = [NSArray array];
-        self.sectionToZoneNameMap = [NSMutableDictionary dictionary];
-    }
-    return self;
+  self = [super initWithCoder:aDecoder];
+  if (self) {
+    self.parseClassName = kVYBVybeClassKey;
+    self.paginationEnabled = NO;
+    self.pullToRefreshEnabled = YES;
+    self.objectsPerPage = 500;
+    self.activeLocations = [NSArray array];
+    self.myLocations = [NSArray array];
+    self.sectionToZoneNameMap = [NSMutableDictionary dictionary];
+  }
+  
+  return self;
 }
 
 - (void)viewDidLoad
@@ -67,13 +68,6 @@
     self.tableView.delegate = self;
     
     _selectedSection = -1;
-    
-    activeLocationSectionView = [[[NSBundle mainBundle] loadNibNamed:@"ActivitySectionView" owner:nil options:nil] firstObject];
-    
-    myLocationSectionView = [[[NSBundle mainBundle] loadNibNamed:@"ActivitySectionView" owner:nil options:nil] firstObject];
-    UILabel *myLocation = (UILabel *)[myLocationSectionView viewWithTag:33];
-    [myLocation setText:@"M Y    L O C A T I O N S"];
-    [myLocation setTextColor:[UIColor colorWithRed:255.0/255.0 green:76.0/255.0 blue:70.0/255.0 alpha:1.0]];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -198,16 +192,10 @@
     
     [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
         if (success) {
-            Zone *emptyZone = [[Zone alloc] initWithName:@"empty" zoneID:@"none"];
-            NSMutableArray *arr = [[NSMutableArray alloc] initWithObjects:emptyZone, nil];
-            [arr addObjectsFromArray:[[ZoneStore sharedInstance] activeUnlockedZones]];
-            [arr addObject:emptyZone];
-            [arr addObjectsFromArray:[[ZoneStore sharedInstance] unlockedZones]];
-            _numOfActiveZones = [[ZoneStore sharedInstance] activeUnlockedZones].count;
-            NSInteger numOfUnlockedZones = [[ZoneStore sharedInstance] unlockedZones].count;
-            self.sections = arr;
-            
-            NSString *locationCntText = (self.sections.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)numOfUnlockedZones] : [NSString stringWithFormat:@"%d Location", (int)numOfUnlockedZones];
+            self.activeLocations = [[ZoneStore sharedInstance] activeUnlockedZones];
+            self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
+          
+            NSString *locationCntText = (self.myLocations.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.myLocations.count] : [NSString stringWithFormat:@"%d Location", (int)self.myLocations.count];
             NSString *vybeCntText = (self.objects.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)self.objects.count] : [NSString stringWithFormat:@"%d Vybe", (int)self.objects.count];
 
             self.countLabel.text = [NSString stringWithFormat:@"%@ - %@", locationCntText, vybeCntText];
@@ -218,104 +206,183 @@
 }
 
 - (PFObject *)objectAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0 || indexPath.section == _numOfActiveZones + 1) {
-        return nil;
-    }
-    
-    Zone *zone = self.sections[indexPath.section];
-    PFObject *vybe = [zone.myVybes objectAtIndex:indexPath.row];
-    
-    return vybe;
+//  if (indexPath.section == 1) {
+//    //TODO: This needs to change
+//    Zone *zone = self.myLocations[indexPath.row];
+//    PFObject *vybe = [zone.myVybes objectAtIndex:indexPath.row];
+//    
+//    return vybe;
+//  }
+//    
+  return nil;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 0 || section == _numOfActiveZones + 1){
-        return 36.0;
-    }
-    
-    return 85.0;
-}
 
 
 #pragma mark UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+  return 36.0;
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+  return 2;
+}
+
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
-        return activeLocationSectionView;
-    }
+  if (section == 0) {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActiveLocationTitleView"];
+    return cell;
+  }
     
-    else if (section == _numOfActiveZones + 1) {
-        return myLocationSectionView;
-    }
-    
-    
+  else {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyLocationTitleView"];
+    return cell;
+  }
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+  if (section == 0) {
+    return self.activeLocations.count;
+  }
+  
+  if (section == 1) {
+    //TODO: This should change
+    return self.myLocations.count;
+  }
+  
+  return 0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+  return 85.0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
+  NSInteger section = indexPath.section;
+  
+  // Active Location Cell
+  if (section == 0) {
     VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ZoneCell"];
     cell.delegate = self;
-    cell.tag = section;
+    //cell.tag = section;
     
-    Zone *zone = self.sections[section];
+    Zone *zone = self.activeLocations[indexPath.row];
     cell.locationLabel.text = zone.name;
-        
-    PFObject *lastVybe;
     
-    if (zone.numOfActiveVybes > 0) {
-        lastVybe = zone.mostRecentVybe;
-        NSDate *timestampDate = zone.mostRecentActiveVybeTimestamp;
-
-        // FRESH vybes
-        NSArray *freshContents = [[ZoneStore sharedInstance] freshVybesFromZone:zone.zoneID];
-        if (freshContents && freshContents.count) {
-            lastVybe = zone.freshContents.lastObject;
-            timestampDate = lastVybe[kVYBVybeTimestampKey];
-            cell.timestampLabel.textColor = [UIColor whiteColor];
-            cell.locationLabel.textColor = [UIColor whiteColor];
-            cell.listBarImageView.image = [UIImage imageNamed:@"BlueCell.png"];
-            NSString *vybeCntText = (freshContents.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)freshContents.count] : [NSString stringWithFormat:@"%d Vybe", (int)freshContents.count];
-            cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
-        }
-        else {
-            cell.timestampLabel.text = [NSString stringWithFormat:@"%@", [VYBUtility reverseTime:timestampDate]];
-        }
-        
-        cell.thumbnailImageView.file = lastVybe[kVYBVybeThumbnailKey];
-        
-        [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
-            if (!error) {
-                if (image) {
-                    UIImage *maskImage;
-                    if (image.size.height > image.size.width) {
-                        maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
-                    } else {
-                        maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
-                    }
-                    cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
-                } else {
-                    cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
-                }
-            }
-        }];
+    PFObject *lastVybe = zone.mostRecentVybe;
+    NSDate *timestampDate = zone.mostRecentActiveVybeTimestamp;
+    
+    // FRESH vybes
+    NSArray *freshContents = [[ZoneStore sharedInstance] freshVybesFromZone:zone.zoneID];
+    if (freshContents && freshContents.count) {
+      lastVybe = zone.freshContents.lastObject;
+      timestampDate = lastVybe[kVYBVybeTimestampKey];
+      cell.timestampLabel.textColor = [UIColor whiteColor];
+      cell.locationLabel.textColor = [UIColor whiteColor];
+      cell.listBarImageView.image = [UIImage imageNamed:@"BlueCell.png"];
+      NSString *vybeCntText = (freshContents.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)freshContents.count] : [NSString stringWithFormat:@"%d Vybe", (int)freshContents.count];
+      cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
     }
     else {
-        lastVybe = zone.myVybes.firstObject;
-        NSDate *timestampDate = lastVybe[kVYBVybeTimestampKey];
-        
-        NSString *vybeCntText = (zone.myVybes.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)zone.myVybes.count] : [NSString stringWithFormat:@"%d Vybe", (int)zone.myVybes.count];
-        cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - Last Vybe taken %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
-        cell.thumbnailImageView.hidden = YES;
+      cell.timestampLabel.text = [NSString stringWithFormat:@"%@", [VYBUtility reverseTime:timestampDate]];
     }
-
+    
+    cell.thumbnailImageView.hidden = NO;
+    cell.thumbnailImageView.file = lastVybe[kVYBVybeThumbnailKey];
+    
+    [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
+      if (!error) {
+        if (image) {
+          UIImage *maskImage;
+          if (image.size.height > image.size.width) {
+            maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
+          } else {
+            maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
+          }
+          cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
+        } else {
+          cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
+        }
+      }
+    }];
+    
     return cell;
+  }
+  // My Location Cell
+  else {
+    VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ZoneCell"];
+    cell.delegate = self;
+    //cell.tag = section;
+    
+    Zone *zone = self.myLocations[indexPath.row];
+    cell.locationLabel.text = zone.name;
+    
+    PFObject *lastVybe = zone.myVybes.firstObject;
+    NSDate *timestampDate = lastVybe[kVYBVybeTimestampKey];
+    
+    NSString *vybeCntText = (zone.myVybes.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)zone.myVybes.count] : [NSString stringWithFormat:@"%d Vybe", (int)zone.myVybes.count];
+    cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - Last Vybe taken %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
+    cell.thumbnailImageView.hidden = YES;
+    
+    return cell;
+  }
+  
+  /*
+   VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
+   
+   NSDate *timestampDate = object[kVYBVybeTimestampKey];
+   cell.timestampLabel.text = [NSString stringWithFormat:@"%@  (%@)", [VYBUtility localizedDateStringFrom:timestampDate], [VYBUtility reverseTime:timestampDate]];
+   
+   cell.thumbnailImageView.file = object[kVYBVybeThumbnailKey];
+   [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
+   if (!error) {
+   if (image) {
+   UIImage *maskImage;
+   if (image.size.height > image.size.width) {
+   maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
+   } else {
+   maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
+   }
+   cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
+   } else {
+   cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
+   }
+   }
+   }];
+   */
 }
 
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    
+  
+  [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+  
+  NSInteger section = indexPath.section;
+  
+  // Active Location
+  if (section == 0) {
+    Zone *zone = self.activeLocations[indexPath.row];
+
     // GA stuff
     id tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
-        NSString *dimensionValue = @"my unlocked";
-        [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
+      NSString *dimensionValue = @"active unlocked";
+      [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
+    }
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
+    playerVC.delegate = self;
+    [playerVC playFreshVybesFromZone:zone.zoneID];
+  }
+  else {
+    // GA stuff
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+      NSString *dimensionValue = @"my unlocked";
+      [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
     }
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -323,24 +390,12 @@
     playerController.delegate = self;
     PFObject *selectedVybe = [self objectAtIndexPath:indexPath];
     [playerController playZoneVybesFromVybe:selectedVybe];
+  }
 }
-
+  
+/*
 - (void)didTapOnCell:(VYBVybeTableViewCell *)cell {
-    Zone *zone = self.sections[cell.tag];
-    // ACTIVE zone selected
-    if (zone.numOfActiveVybes > 0) {
-        // GA stuff
-        id tracker = [[GAI sharedInstance] defaultTracker];
-        if (tracker) {
-            NSString *dimensionValue = @"active unlocked";
-            [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
-        }
-        
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
-        playerVC.delegate = self;
-        [playerVC playFreshVybesFromZone:zone.zoneID];
-    }
+
     // UNLOCKED zone selected
     else {
         if (cell.tag == _selectedSection) {
@@ -387,55 +442,9 @@
     }
 }
 
-
+*/
 #pragma mark UITableViewDataSource
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.sections.count;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (!self.sections) {
-        return 0;
-    }
-    
-    if (section != _selectedSection) {
-        return 0;
-    }
-    
-    if (self.sections && self.sections.count > 0) {
-        Zone *zone = self.sections[section];
-        return zone.myVybes.count;
-    }
-    
-    return 0;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
-    VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
-    
-    NSDate *timestampDate = object[kVYBVybeTimestampKey];
-    cell.timestampLabel.text = [NSString stringWithFormat:@"%@  (%@)", [VYBUtility localizedDateStringFrom:timestampDate], [VYBUtility reverseTime:timestampDate]];
-    
-    cell.thumbnailImageView.file = object[kVYBVybeThumbnailKey];
-    [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
-        if (!error) {
-            if (image) {
-                UIImage *maskImage;
-                if (image.size.height > image.size.width) {
-                    maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
-                } else {
-                    maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
-                }
-                cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
-            } else {
-                cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
-            }
-        }
-    }];
-    
-    return cell;
-}
 
 #pragma mark Segue
 
@@ -446,6 +455,8 @@
         [mapVC displayAllActiveVybes];
     }
 }
+
+#pragma mark - PlayerViewControllerDelegate
 
 - (void)playerViewController:(VYBPlayerViewController *)playerVC didFinishSetup:(BOOL)ready {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
