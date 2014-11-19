@@ -19,7 +19,7 @@ Parse.Cloud.beforeSave('Vybe', function (request, response) {
 Parse.Cloud.afterSave('Vybe', function (request) {
   // Continue only for new vybes
   if (request.object.existed()) {
-    return;
+    response.error('duplicate vybe posted');
   }
 
   if (request.object.get('isPublic')) {
@@ -37,10 +37,36 @@ Parse.Cloud.afterSave('Vybe', function (request) {
   }
 
   // Insert this new vybe to each user's freshFeed
+  Parse.Cloud.useMasterKey();
   var query = new Parse.Query(Parse.User);
   query.notEqualTo('username', request.user.get('username'));
+  query.include('freshFeed');
+  query.each(function(user) {
+    console.log('feeding to ' + user.get('username'));
+
+    var feed = user.get('freshFeed', []);
+    if (feed === null) {
+      feed = [request.object];
+      console.log('first entry to feed!');
+    }
+    else {
+      console.log('feed already has ' + feed.length + 'vybes');
+      feed.push(request.object);
+    }
+    user.set('freshFeed', feed);
+    console.log('successfully fed to ' + user.get('username'));
+
+    return user.save();
+  }).then(function(success) {
+    console.log('feeding successfully completed');
+    response.success();
+  }, function(error) {
+    console.log('feeding failed ' + error);
+    response.error(error);
+  });
+});
+/*
   query.find().then(function(users) {
-    Parse.Cloud.useMasterKey();
     console.log('lets feed to ' + users.length + ' users');
     var promises = [];
     _.each(users, function(aUser) {
@@ -57,6 +83,7 @@ Parse.Cloud.afterSave('Vybe', function (request) {
     return Parse.Promise.when(promises);
   });
 });
+*/
 
 
 Parse.Cloud.afterDelete('Vybe', function (request) {
