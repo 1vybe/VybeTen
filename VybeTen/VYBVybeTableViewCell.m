@@ -13,7 +13,12 @@
 
 - (void)awakeFromNib
 {
-    // Initialization code
+  // Initialization code
+}
+
+- (UIEdgeInsets)layoutMargins
+{
+  return UIEdgeInsetsZero;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
@@ -27,16 +32,10 @@
   [super prepareForReuse];
   
   if ([self.reuseIdentifier isEqualToString:@"ZoneCell"]) {
-//    self.timestampLabel.textColor = [UIColor colorWithRed:200.0 green:200.0 blue:200.0 alpha:1.0];
-//    self.locationLabel.textColor = [UIColor colorWithRed:74.0 green:74.0 blue:74.0 alpha:1.0];
-//    self.listBarImageView.image = [UIImage imageNamed:@"ListBar.png"];
+    self.timestampLabel.textColor = [UIColor colorWithRed:200.0/255.0 green:200.0/255.0 blue:200.0/255.0 alpha:1.0];
+    self.locationLabel.textColor = [UIColor colorWithRed:74.0/255.0 green:74.0/255.0 blue:74.0/255.0 alpha:1.0];
+    self.listBarImageView.image = [UIImage imageNamed:@"ListBar.png"];
   }
-}
-
-- (IBAction)touchButtonPressed:(id)sender {
-    if (self.delegate) {
-        [self.delegate didTapOnCell:self];
-    }
 }
 
 @end

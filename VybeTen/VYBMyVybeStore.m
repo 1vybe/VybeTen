@@ -79,7 +79,7 @@ static BOOL _uploadingOldVybes = NO;
 - (void)uploadCurrentVybe {
     
     dispatch_async(_currentUploadQueue, ^{
-        VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe] ;
+        VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe];
         
         [VYBUtility saveThumbnailImageForVybe:vybeToUpload];
         

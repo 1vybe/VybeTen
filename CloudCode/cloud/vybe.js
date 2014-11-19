@@ -42,6 +42,7 @@ Parse.Cloud.afterSave('Vybe', function (request) {
   query.find().then(function(users) {
     Parse.Cloud.useMasterKey();
     console.log('lets feed to ' + users.length + ' users');
+    var promises = [];
     _.each(users, function(aUser) {
       var feed = aUser.get('freshFeed');
       if (!feed) {
@@ -49,8 +50,11 @@ Parse.Cloud.afterSave('Vybe', function (request) {
       }
       feed.push(request.object);
       aUser.set('freshFeed', feed);
-      aUser.save();
+      promises.push(aUser.save());
+      console.log('successfully fed to ' + aUser.get('username'));
     });
+
+    return Parse.Promise.when(promises);
   });
 });
 
@@ -88,6 +92,7 @@ Parse.Cloud.job("removeDeletedVybesFromFeeds", function (request, status) {
   var query = new Parse.Query(Parse.User);
   query.include('freshFeed');
 
+
   query.each(function(user) {
       var username = user.get('username');
       var freshFeed = user.get('freshFeed', []);
@@ -98,6 +103,40 @@ Parse.Cloud.job("removeDeletedVybesFromFeeds", function (request, status) {
         user.set('freshFeed', newFreshFeed);
         return user.save();
       }
+  }).then(function() {
+    // Set the job's success status
+    status.success("Job completed successfully.");
+  }, function(error) {
+    // Set the job's error status
+    status.error("Uh oh, something went wrong.");
+  });
+});
+
+Parse.Cloud.job("removeOldVybesFromFeeds", function (request, status) {
+  // Set up to modify user data
+  Parse.Cloud.useMasterKey();
+
+  // Query for all users
+  var query = new Parse.Query(Parse.User);
+  query.exists('freshFeed');
+  query.include('freshFeed');
+
+  var ttlAgo = new Date('2014-11-15T23:00:00Z'); // Temporary time interval (UTC)
+
+  query.each(function(user) {
+    var username = user.get('username');
+    console.log('cleaning for ' + username);
+    var freshFeed = user.get('freshFeed', []);
+    if (freshFeed !== null) {
+      var newFreshFeed = freshFeed.filter(function(vybe) { return vybe !== null; });
+      newFreshFeed = newFreshFeed.filter(function(vybe) { return vybe.get('timestamp') > ttlAgo; });
+      var deleteCount = freshFeed.length - newFreshFeed.length;
+      if (deleteCount) {
+        console.log("Deleting " + deleteCount + " Vybes from " + username + "'s feed.");
+        user.set('freshFeed', newFreshFeed);
+        return user.save();
+      }
+    }
   }).then(function() {
     // Set the job's success status
     status.success("Job completed successfully.");
@@ -237,7 +276,7 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
       var feedIds = [];
 
       if (feed) {
-        console.log('There are ' + feed.length + ' feed for me');
+        console.log('There are ' + feed.length + ' feed for ' + aUser.get('username'));
         for (i = 0; i < feed.length; i++) {
           var aVybe = feed[i];
           if (aVybe != null) {
@@ -252,7 +291,7 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
         console.log('There are ' + feedIds.length + ' feedIds');
         vybeQuery.find({
           success: function(freshObjs) {
-            console.log('There are ' + freshObjs.length + ' fresh vybes for me');
+            console.log('There are ' + freshObjs.length + ' fresh vybes for ' + aUser.get('username'));
             response.success(freshObjs);
           },
           error: function(error) {

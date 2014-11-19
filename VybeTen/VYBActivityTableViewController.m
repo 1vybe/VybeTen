@@ -18,12 +18,13 @@
 
 #import "VYBLogInViewController.h"
 
-@interface VYBActivityTableViewController () <UIAlertViewDelegate, VYBPlayerViewControllerDelegate, VYBVybeTableViewCellDelegate>
+@interface VYBActivityTableViewController () <UIAlertViewDelegate, VYBPlayerViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *countLabel;
 @property (nonatomic) NSArray *activeLocations;
 @property (nonatomic) NSArray *myLocations;
+@property (nonatomic) NSArray *expandedVybeCells;
 @property (retain, nonatomic) NSMutableDictionary *sectionToZoneNameMap;
 
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
@@ -34,9 +35,7 @@
 
 @implementation VYBActivityTableViewController {
   
-    NSInteger _selectedSection;
-
-    NSInteger _numOfActiveZones;
+    NSInteger _selectedMyLocationIndex;
 }
 
 #pragma mark - Lifecycle
@@ -51,23 +50,24 @@
     self.activeLocations = [NSArray array];
     self.myLocations = [NSArray array];
     self.sectionToZoneNameMap = [NSMutableDictionary dictionary];
+    
+    _selectedMyLocationIndex = -1;
   }
   
   return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    self.usernameLabel.text = [PFUser currentUser].username;
-    
-    // Remove empty cells.
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    
-    self.tableView.delegate = self;
-    
-    _selectedSection = -1;
+- (void)viewDidLoad {
+  [super viewDidLoad];
+  
+  self.usernameLabel.text = [PFUser currentUser].username;
+
+  // Remove empty cells.
+  self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+  
+  self.tableView.delegate = self;
+  
+  _selectedMyLocationIndex = -1;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -160,9 +160,6 @@
     }
 }
 
-- (NSString *)zoneForSection:(NSInteger)section {
-    return [self.sectionToZoneNameMap objectForKey:[NSNumber numberWithInteger:section]];
-}
 
 #pragma mark - UIAlertViewDelegate
 
@@ -205,38 +202,28 @@
     }];
 }
 
-- (PFObject *)objectAtIndexPath:(NSIndexPath *)indexPath {
-//  if (indexPath.section == 1) {
-//    //TODO: This needs to change
-//    Zone *zone = self.myLocations[indexPath.row];
-//    PFObject *vybe = [zone.myVybes objectAtIndex:indexPath.row];
-//    
-//    return vybe;
-//  }
-//    
-  return nil;
-}
-
-
-
 #pragma mark UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
   return 36.0;
 }
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   return 2;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
   if (section == 0) {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActiveLocationTitleView"];
-    return cell;
+    UIView *activeLocations = [[[NSBundle mainBundle] loadNibNamed:@"ActivitySectionView" owner:nil options:nil] firstObject];
+    
+    return activeLocations;
   }
     
   else {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyLocationTitleView"];
-    return cell;
+    NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"ActivitySectionView" owner:nil options:nil];
+    UIView *myLocations = array[1];
+    
+    return myLocations;
   }
 }
 
@@ -247,25 +234,36 @@
   }
   
   if (section == 1) {
-    //TODO: This should change
-    return self.myLocations.count;
+    if (_selectedMyLocationIndex < 0) {
+      return self.myLocations.count;
+    } else {
+      Zone *myLocation = self.myLocations[_selectedMyLocationIndex];
+      NSInteger numOfMyVybes = myLocation.myVybes.count;
+      
+      return self.myLocations.count + numOfMyVybes;
+    }
   }
   
   return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+  if (indexPath.section == 1) {
+    PFObject *aVybe = [self vybeCellForIndexPath:indexPath];
+    if (aVybe) {
+      return 70.0f;
+    }
+  }
+  
   return 85.0;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   NSInteger section = indexPath.section;
   
   // Active Location Cell
   if (section == 0) {
     VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ZoneCell"];
-    cell.delegate = self;
-    //cell.tag = section;
     
     Zone *zone = self.activeLocations[indexPath.row];
     cell.locationLabel.text = zone.name;
@@ -284,7 +282,7 @@
       NSString *vybeCntText = (freshContents.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)freshContents.count] : [NSString stringWithFormat:@"%d Vybe", (int)freshContents.count];
       cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
     }
-    else {
+    else {      
       cell.timestampLabel.text = [NSString stringWithFormat:@"%@", [VYBUtility reverseTime:timestampDate]];
     }
     
@@ -309,59 +307,66 @@
     
     return cell;
   }
-  // My Location Cell
+  // My Locations
   else {
-    VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ZoneCell"];
-    cell.delegate = self;
-    //cell.tag = section;
+    PFObject *aVybe = [self vybeCellForIndexPath:indexPath];
     
-    Zone *zone = self.myLocations[indexPath.row];
-    cell.locationLabel.text = zone.name;
+    // Vybe Cell
+    if (aVybe) {
+      VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
+      NSDate *timestampDate = aVybe[kVYBVybeTimestampKey];
+      cell.timestampLabel.text = [NSString stringWithFormat:@"%@  (%@)", [VYBUtility localizedDateStringFrom:timestampDate], [VYBUtility reverseTime:timestampDate]];
+      
+      cell.thumbnailImageView.file = aVybe[kVYBVybeThumbnailKey];
+      [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
+        if (!error) {
+          if (image) {
+            UIImage *maskImage;
+            if (image.size.height > image.size.width) {
+              maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
+            } else {
+              maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
+            }
+            cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
+          } else {
+            cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
+          }
+        }
+      }];
+      
+      return cell;
+    }
     
-    PFObject *lastVybe = zone.myVybes.firstObject;
-    NSDate *timestampDate = lastVybe[kVYBVybeTimestampKey];
-    
-    NSString *vybeCntText = (zone.myVybes.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)zone.myVybes.count] : [NSString stringWithFormat:@"%d Vybe", (int)zone.myVybes.count];
-    cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - Last Vybe taken %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
-    cell.thumbnailImageView.hidden = YES;
-    
-    return cell;
+    // My Location cell
+    else {
+      VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ZoneCell"];
+      
+      cell.thumbnailImageView.hidden = YES;
+      
+      NSInteger newIndex = [self convertToIndexInMyLocations:indexPath];
+      
+      Zone *zone = self.myLocations[newIndex];
+      
+      cell.locationLabel.text = zone.name;
+      
+      PFObject *lastVybe = zone.myVybes.firstObject;
+      NSDate *timestampDate = lastVybe[kVYBVybeTimestampKey];
+      
+      NSString *vybeCntText = (zone.myVybes.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)zone.myVybes.count] : [NSString stringWithFormat:@"%d Vybe", (int)zone.myVybes.count];
+      cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - Last Vybe taken %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
+      cell.thumbnailImageView.hidden = YES;
+      
+      return cell;
+    }
   }
-  
-  /*
-   VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
-   
-   NSDate *timestampDate = object[kVYBVybeTimestampKey];
-   cell.timestampLabel.text = [NSString stringWithFormat:@"%@  (%@)", [VYBUtility localizedDateStringFrom:timestampDate], [VYBUtility reverseTime:timestampDate]];
-   
-   cell.thumbnailImageView.file = object[kVYBVybeThumbnailKey];
-   [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
-   if (!error) {
-   if (image) {
-   UIImage *maskImage;
-   if (image.size.height > image.size.width) {
-   maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
-   } else {
-   maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
-   }
-   cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
-   } else {
-   cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
-   }
-   }
-   }];
-   */
 }
 
-
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  
-  [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+  //[super tableView:tableView didSelectRowAtIndexPath:indexPath];
   
   NSInteger section = indexPath.section;
   
-  // Active Location
+  // Active Locations
   if (section == 0) {
     Zone *zone = self.activeLocations[indexPath.row];
 
@@ -377,73 +382,111 @@
     playerVC.delegate = self;
     [playerVC playFreshVybesFromZone:zone.zoneID];
   }
+  // My Locations
   else {
-    // GA stuff
-    id tracker = [[GAI sharedInstance] defaultTracker];
-    if (tracker) {
-      NSString *dimensionValue = @"my unlocked";
-      [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
+    PFObject *aVybe = [self vybeCellForIndexPath:indexPath];
+    // My vybe cell selected
+    if (aVybe) {
+      // GA stuff
+      id tracker = [[GAI sharedInstance] defaultTracker];
+      if (tracker) {
+        NSString *dimensionValue = @"my unlocked";
+        [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
+      }
+      
+      [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+      VYBPlayerViewController *playerController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+      playerController.delegate = self;
+      [playerController playZoneVybesFromVybe:aVybe];
     }
-    
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    VYBPlayerViewController *playerController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-    playerController.delegate = self;
-    PFObject *selectedVybe = [self objectAtIndexPath:indexPath];
-    [playerController playZoneVybesFromVybe:selectedVybe];
+    // My Location zone cell selected. Rearrange and animate table cells
+    else {
+      NSInteger rIndex = [self convertToIndexInMyLocations:indexPath];
+      // Collapse when clicked again
+      if (rIndex == _selectedMyLocationIndex) {
+        _selectedMyLocationIndex = -1;
+        
+        Zone *zoneToCollapse = self.myLocations[rIndex];
+        NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
+        for (int i = 0; i < zoneToCollapse.myVybes.count; i++) {
+          NSIndexPath *indexPath = [NSIndexPath indexPathForRow:rIndex + 1 + i inSection:1];
+          [pathsToRemove addObject:indexPath];
+        }
+        
+        [self.tableView beginUpdates];
+        [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationMiddle];
+        [self.tableView endUpdates];
+      }
+      // Collapse existing expanded cells and expand newly selected My Location cell
+      else {
+        NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
+        
+        if (_selectedMyLocationIndex >= 0) {
+          Zone *zoneToCollapse = self.myLocations[_selectedMyLocationIndex];
+          for (int i = 0; i < zoneToCollapse.myVybes.count; i++) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectedMyLocationIndex + 1 + i inSection:1];
+            [pathsToRemove addObject:indexPath];
+          }
+        }
+        
+        _selectedMyLocationIndex = rIndex;
+        
+        Zone *zoneToExpand = self.myLocations[_selectedMyLocationIndex];
+        NSMutableArray *pathsToAdd = [[NSMutableArray alloc] init];
+        for (int i = 0; i < zoneToExpand.myVybes.count; i++) {
+          NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_selectedMyLocationIndex + 1 + i inSection:1];
+          [pathsToAdd addObject:indexPath];
+        }
+        
+        
+        [self.tableView beginUpdates];
+        [self.tableView insertRowsAtIndexPaths:pathsToAdd withRowAnimation:UITableViewRowAnimationMiddle];
+        if (pathsToRemove.count > 0)
+          [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationMiddle];
+        [self.tableView endUpdates];
+      }
+      
+    }
   }
 }
+
+
+- (PFObject *)vybeCellForIndexPath:(NSIndexPath *)indexPath {
+  // No My Location cell is expanded
+  if (_selectedMyLocationIndex < 0) {
+    return nil;
+  }
   
-/*
-- (void)didTapOnCell:(VYBVybeTableViewCell *)cell {
-
-    // UNLOCKED zone selected
-    else {
-        if (cell.tag == _selectedSection) {
-            _selectedSection = -1;
-            
-            Zone *zoneToCollapse = self.sections[cell.tag];
-            NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
-            for (int i = 0; i < zoneToCollapse.myVybes.count; i++) {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:cell.tag];
-                [pathsToRemove addObject:indexPath];
-            }
-            
-            [self.tableView beginUpdates];
-            [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationMiddle];
-            [self.tableView endUpdates];
-        }
-        else {
-            NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
-
-            if (_selectedSection >= 0) {
-                Zone *zoneToCollapse = self.sections[_selectedSection];
-                for (int i = 0; i < zoneToCollapse.myVybes.count; i++) {
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:_selectedSection];
-                    [pathsToRemove addObject:indexPath];
-                }
-            }
-            
-            _selectedSection = cell.tag;
-
-            Zone *zoneToExpand = self.sections[cell.tag];
-            NSMutableArray *pathsToAdd = [[NSMutableArray alloc] init];
-            for (int i = 0; i < zoneToExpand.myVybes.count; i++) {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:cell.tag];
-                [pathsToAdd addObject:indexPath];
-            }
-            
-            
-            [self.tableView beginUpdates];
-            [self.tableView insertRowsAtIndexPaths:pathsToAdd withRowAnimation:UITableViewRowAnimationMiddle];
-            if (pathsToRemove.count > 0)
-                [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationMiddle];
-            [self.tableView endUpdates];
-        }
-    }
+  // My Location cells above the selected index
+  if (indexPath.row <= _selectedMyLocationIndex) {
+    return nil;
+  }
+  
+  Zone *selected = self.myLocations[_selectedMyLocationIndex];
+  NSInteger numOfMyVybes = selected.myVybes.count;
+  
+  // My Location celss below the selected index
+  if (indexPath.row > _selectedMyLocationIndex + numOfMyVybes) {
+    return nil;
+  }
+  
+  return selected.myVybes[indexPath.row - _selectedMyLocationIndex - 1];;
 }
 
-*/
-#pragma mark UITableViewDataSource
+- (NSInteger)convertToIndexInMyLocations:(NSIndexPath *)indexPath {
+  NSInteger row = [indexPath row];
+  
+  if (_selectedMyLocationIndex < 0)
+    return row;
+  
+  if (row <= _selectedMyLocationIndex) {
+    return row;
+  }
+  
+  Zone *selected = self.myLocations[_selectedMyLocationIndex];
+  
+  return row - selected.myVybes.count;
+}
 
 
 #pragma mark Segue

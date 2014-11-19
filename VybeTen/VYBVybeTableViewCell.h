@@ -16,8 +16,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
 @property (nonatomic, weak) IBOutlet PFImageView *thumbnailImageView;
 @property (nonatomic, weak) IBOutlet UIImageView *listBarImageView;
-@property (nonatomic, weak) IBOutlet UIButton *touchButton;
-- (IBAction)touchButtonPressed:(id)sender;
+
 @end
 @protocol VYBVybeTableViewCellDelegate <NSObject>
 @required

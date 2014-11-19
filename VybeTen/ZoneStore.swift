@@ -57,7 +57,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
                                 return zone1.freshContents.count > zone2.freshContents.count
                             })
                             
-//                            self.displayZoneInfo()
+                            self.displayZoneInfo()
                         }
                     }
                     completionHandler(success: true)
@@ -70,7 +70,6 @@ private let _zoneStoreSharedInstance = ZoneStore()
     }
     
     func didFetchUnlockedVybes(result: [AnyObject]!, completionHandler: ((success: Bool) -> Void)!) {
-        completionHandler(success: false)
         // First clear cache
         _unlockedZones = [Zone]()
         

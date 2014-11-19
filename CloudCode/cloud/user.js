@@ -22,7 +22,7 @@ Parse.Cloud.beforeSave(Parse.User, function(request, response) {
         }
       },
       error: function(error) {
-        response.error("Could not validate uniqueness for this User object.");
+        response.error(error);
       }
     });
   }
