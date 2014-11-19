@@ -179,21 +179,24 @@
 }
 
 - (void)recordingStopped {
-    _isRecording = NO;
+  _isRecording = NO;
 
-    [self syncUIWithRecordingStatus];
-    [recordButton setEnabled:YES];
-    [recordButton setSelected:NO];
-    [recordButton setTitle:@"" forState:UIControlStateNormal];
+  [self syncUIWithRecordingStatus];
+  [recordButton setEnabled:YES];
+  [recordButton setSelected:NO];
+  [recordButton setTitle:@"" forState:UIControlStateNormal];
 
 
-    [UIApplication sharedApplication].idleTimerDisabled = NO;
-    
-    [[UIApplication sharedApplication] endBackgroundTask:_backgroundRecordingID];
-    _backgroundRecordingID = UIBackgroundTaskInvalid;
-    
-    VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] initWithNibName:@"VYBReplayViewController" bundle:nil];
-    [self presentViewController:replayVC animated:NO completion:nil];
+  [UIApplication sharedApplication].idleTimerDisabled = NO;
+  
+  [[UIApplication sharedApplication] endBackgroundTask:_backgroundRecordingID];
+  _backgroundRecordingID = UIBackgroundTaskInvalid;
+
+  VYBVybe *currVybe = [[VYBMyVybeStore sharedStore] currVybe];
+  [VYBUtility saveThumbnailImageForVybe:currVybe];
+
+  VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] initWithNibName:@"VYBReplayViewController" bundle:nil];
+  [self presentViewController:replayVC animated:NO completion:nil];
 }
 
 #pragma mark - VYBCapturePipelineDelegate

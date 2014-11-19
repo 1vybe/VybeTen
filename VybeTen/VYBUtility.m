@@ -273,20 +273,26 @@
 
 #pragma mark Thumbnail
 
-+ (void)saveThumbnailImageForVybe:(VYBVybe *)mVybe {
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:[mVybe videoFilePath]] ;
-    // Generating and saving a thumbnail for the captured vybe
-    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
-    AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-    // To transform the snapshot to be in the orientation the video was taken with
-    [generate setAppliesPreferredTrackTransform:YES];
-    NSError *err = NULL;
-    CMTime time = CMTimeMake(1, 60);
-    CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
-    UIImage *tempImg = [[UIImage alloc] initWithCGImage:imgRef];
-    NSData *thumbData = UIImageJPEGRepresentation(tempImg, 0.3);
-    NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[mVybe thumbnailFilePath]];
-    [thumbData writeToURL:thumbURL atomically:YES];
++ (BOOL)saveThumbnailImageForVybe:(VYBVybe *)mVybe {
+  NSURL *url = [[NSURL alloc] initFileURLWithPath:[mVybe videoFilePath]] ;
+  // Generating and saving a thumbnail for the captured vybe
+  AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
+  AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+  // To transform the snapshot to be in the orientation the video was taken with
+  [generate setAppliesPreferredTrackTransform:YES];
+  NSError *err = NULL;
+  CMTime time = CMTimeMake(1, 60);
+  CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
+  if (err) {
+    NSLog(@"Error getting a frame for thumbnail");
+  }
+  UIImage *tempImg = [[UIImage alloc] initWithCGImage:imgRef];
+  NSData *thumbData = UIImageJPEGRepresentation(tempImg, 0.3);
+  NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[mVybe thumbnailFilePath]];
+  BOOL success = [thumbData writeToURL:thumbURL options:NSDataWritingAtomic error:&err];
+  if (!success)
+    NSLog(@"Error saving thumbnail image: %@", err);
+  return success;
 }
 
 
@@ -330,6 +336,27 @@
     location = (adminArea && adminArea.length > 0) ? [location stringByAppendingFormat:@", %@", adminArea] : location;
     
     return location;
+}
+
++ (NSString *)timeStringForPlayer:(NSDate *)aDate {
+  double timePassed = [[NSDate date] timeIntervalSinceDate:aDate];
+  if (timePassed < 60 * 3) {
+    return [self reverseTime:aDate];
+  }
+  
+  return [self simpleLocalizedDateStringFrom:aDate];
+}
+
++ (NSString *)simpleLocalizedDateStringFrom:(NSDate *)aDate {
+  static NSDateFormatter *simpleDateFormatterLocalized = nil;
+  if (!simpleDateFormatterLocalized) {
+    simpleDateFormatterLocalized = [[NSDateFormatter alloc] init];
+    // TODO: Localize timezone
+    NSTimeZone *timeZone = [NSTimeZone localTimeZone];
+    [simpleDateFormatterLocalized setTimeZone:timeZone];
+    [simpleDateFormatterLocalized setDateFormat:@"MMM dd h:mm a"];
+  }
+  return [simpleDateFormatterLocalized stringFromDate:aDate];
 }
 
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate {

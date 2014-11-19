@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
@@ -64,17 +64,6 @@
                         <action selector="signUpButtonPressed:" destination="-1" eventType="touchUpInside" id="fl8-KR-IhD"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ou-tS-gfP" userLabel="tryOutButton">
-                    <rect key="frame" x="226" y="539" width="149" height="32"/>
-                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                    <state key="normal" title="Or skip this for now">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="tryOutButtonPressed:" destination="-1" eventType="touchUpInside" id="dCy-NS-42x"/>
-                    </connections>
-                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
@@ -85,13 +74,11 @@
                 <constraint firstAttribute="bottom" secondItem="mSf-gD-Zgj" secondAttribute="bottom" constant="73" id="HVK-Aw-eLS"/>
                 <constraint firstAttribute="trailing" secondItem="JHJ-er-Tmz" secondAttribute="trailing" id="KmB-TY-CVA"/>
                 <constraint firstAttribute="bottom" secondItem="JHJ-er-Tmz" secondAttribute="bottom" id="TLz-Fd-vKf"/>
-                <constraint firstAttribute="bottom" secondItem="0ou-tS-gfP" secondAttribute="bottom" constant="29" id="fHZ-bq-Zu6"/>
                 <constraint firstItem="JHJ-er-Tmz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="kdu-bN-fqI"/>
                 <constraint firstAttribute="bottom" secondItem="p11-5v-zxj" secondAttribute="bottom" constant="155" id="rfj-pY-CEu"/>
                 <constraint firstItem="3AU-6k-uD5" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="82" id="sEn-ob-2FT"/>
                 <constraint firstItem="JHJ-er-Tmz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="t5I-Ys-ZBh"/>
                 <constraint firstItem="Ecx-uM-EsV" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="215" id="wF0-8T-Vn4"/>
-                <constraint firstAttribute="centerX" secondItem="0ou-tS-gfP" secondAttribute="centerX" id="x97-sn-8F9"/>
             </constraints>
         </view>
     </objects>

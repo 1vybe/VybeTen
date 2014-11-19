@@ -23,7 +23,8 @@
 
 + (void)fetchActiveZones:(void (^)(NSArray *zones, NSError *error))completionBlock;
 //+ (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
-+ (void)saveThumbnailImageForVybe:(VYBVybe *)mVybe;
++ (BOOL)saveThumbnailImageForVybe:(VYBVybe *)mVybe;
++ (NSString *)timeStringForPlayer:(NSDate *)aDate;
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate;
 + (NSString *)reverseTime:(NSDate *)aDate;
 + (void)reverseGeoCode:(PFGeoPoint *)aLocation withCompletion:(void (^)(NSArray *placemarks, NSError *error))completionBlock;

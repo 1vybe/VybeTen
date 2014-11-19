@@ -33,25 +33,25 @@
 @end
 
 @implementation VYBReplayViewController {
-    NSString *_videoPath;
-    
-    NSArray *_suggestions;
-    
+  NSString *_videoPath;
+  NSString *_thumbnailPath;
+  NSArray *_suggestions;
 }
 
 - (void)dealloc {
-    self.player = nil;
-    self.playerView = nil;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBMyVybeStoreLocationFetchedNotification object:nil];
+  self.player = nil;
+  self.playerView = nil;
+  
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBMyVybeStoreLocationFetchedNotification object:nil];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        _videoPath = [[[VYBMyVybeStore sharedStore] currVybe] videoFilePath];
-    }
-    return self;
+  self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+  if (self) {
+    _videoPath = [[[VYBMyVybeStore sharedStore] currVybe] videoFilePath];
+    _thumbnailPath = [[[VYBMyVybeStore sharedStore] currVybe] thumbnailFilePath];
+  }
+  return self;
 }
 
 - (void)viewDidLoad
@@ -181,23 +181,30 @@
 
 
 - (IBAction)rejectButtonPressed:(id)sender {
-    // GA stuff
-    id tracker = [[GAI sharedInstance] defaultTracker];
-    if (tracker) {
-        // upload cancel metric for capture_video event
-        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"cancel" value:nil] build]];
-    }
+  // GA stuff
+  id tracker = [[GAI sharedInstance] defaultTracker];
+  if (tracker) {
+    // upload cancel metric for capture_video event
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"cancel" value:nil] build]];
+  }
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:_videoPath];
-        NSError *error;
-        [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&error];
-        if (error) {
-            NSLog(@"Failed to delete the cancelled vybe.");
-        }
-    });
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+    NSError *error;
     
-    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+    NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:_videoPath];
+    [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&error];
+    if (error) {
+      NSLog(@"Failed to delete a video file for a cancelled vybe.");
+    }
+    
+    outputURL = [[NSURL alloc] initFileURLWithPath:_thumbnailPath];
+    [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&error];
+    if (error) {
+      NSLog(@"Failed to delete a thumbnail file for a cancelled vybe.");
+    }
+  });
+  
+  [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 

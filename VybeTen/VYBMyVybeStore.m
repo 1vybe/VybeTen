@@ -80,9 +80,7 @@ static BOOL _uploadingOldVybes = NO;
     
     dispatch_async(_currentUploadQueue, ^{
         VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe];
-        
-        [VYBUtility saveThumbnailImageForVybe:vybeToUpload];
-        
+      
         NSData *video = [NSData dataWithContentsOfFile:[vybeToUpload videoFilePath]];
         NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToUpload thumbnailFilePath]];
         

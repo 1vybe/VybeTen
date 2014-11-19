@@ -318,7 +318,7 @@
     [self.locationLabel setText:zoneName];
 
     NSString *timeString = [[NSString alloc] init];
-    timeString = [VYBUtility reverseTime:aVybe[kVYBVybeTimestampKey]];
+    timeString = [VYBUtility timeStringForPlayer:aVybe[kVYBVybeTimestampKey]];
     [self.timeLabel setText:timeString];
     
     PFObject *user = aVybe[kVYBVybeUserKey];
