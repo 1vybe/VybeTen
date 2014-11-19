@@ -276,7 +276,7 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
       var currTime = new Date();
       //var ttlAgo = new Date('2014-11-15T23:00:00Z'); // Temporary time interval (UTC)
       var ttlAgo = new Date();
-      ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window
+      ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window.
       
       var feed = aUser.get('freshFeed');
       var feedIds = [];
