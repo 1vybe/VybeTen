@@ -56,34 +56,10 @@ Parse.Cloud.afterSave('Vybe', function (request) {
     user.set('freshFeed', feed);
     console.log('successfully fed to ' + user.get('username'));
 
-    return user.save();
-  }).then(function(success) {
-    console.log('feeding successfully completed');
-    response.success();
-  }, function(error) {
-    console.log('feeding failed ' + error);
-    response.error(error);
+    user.save();
   });
-});
-/*
-  query.find().then(function(users) {
-    console.log('lets feed to ' + users.length + ' users');
-    var promises = [];
-    _.each(users, function(aUser) {
-      var feed = aUser.get('freshFeed');
-      if (!feed) {
-        feed = [];
-      }
-      feed.push(request.object);
-      aUser.set('freshFeed', feed);
-      promises.push(aUser.save());
-      console.log('successfully fed to ' + aUser.get('username'));
-    });
 
-    return Parse.Promise.when(promises);
-  });
 });
-*/
 
 
 Parse.Cloud.afterDelete('Vybe', function (request) {
