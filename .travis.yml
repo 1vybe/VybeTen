@@ -1,0 +1,7 @@
+language: objective-c
+xcode_workspace: VybeTen.xcworkspace
+xcode_scheme: VybeTen
+branches:
+  only:
+    - travis
+
