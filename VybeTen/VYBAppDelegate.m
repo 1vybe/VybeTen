@@ -53,84 +53,88 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-    // Use Reachability to monitor connectivity
-    [self monitorReachability];
-    
-    /* HockeyApp Initilization */
-    BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
-    [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
-    hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
-    hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
-    [hockeyManager startManager];
-    
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+  
+  // Use Reachability to monitor connectivity
+  [self monitorReachability];
+  
+  /* HockeyApp Initilization */
+  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
+  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
+  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
+  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
+  [hockeyManager startManager];
+  
+  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 
     
-    // Parse Initialization
-    [Parse setApplicationId:PARSE_APPLICATION_ID
-                  clientKey:PARSE_CLIENT_KEY];
+  // Parse Initialization
+  [Parse setApplicationId:PARSE_APPLICATION_ID
+                clientKey:PARSE_CLIENT_KEY];
     
-    // Parse Analaytics
+  BOOL preBackgroundPush = ![application respondsToSelector:@selector(backgroundRefreshStatus)];
+  BOOL oldPushHandlerOnly = ![self respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)];
+  BOOL noPushPayload = ![launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+  if (preBackgroundPush || oldPushHandlerOnly || noPushPayload) {
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-    
-    
-    // Register defaults for NSUserDefaults
-    NSURL *prefsFileURL = [[NSBundle mainBundle] URLForResource:@"DefaultPreferences" withExtension:@"plist"];
-    NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfURL:prefsFileURL];
-    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
-    
-    // Register for remote notification
-    [self checkNotificationPermissionAndRegister:application];
-    
-    // Optional: automatically send uncaught exceptions to Google Analytics.
-    [GAI sharedInstance].trackUncaughtExceptions = YES;
-    // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
-    [GAI sharedInstance].dispatchInterval = 20;
-    // Optional: set Logger to VERBOSE for debug information.
-    [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelNone];
-    // Initialize tracker. Replace with your tracking ID.
-    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:GA_TRACKING_ID];
-    [tracker send:[[[GAIDictionaryBuilder createEventWithCategory:@"UX"
-                                                           action:@"App Start"
-                                                            label:nil
-                                                            value:nil] set:@"start" forKey:kGAISessionControl] build]];
-    
-    // Clearing Push-noti Badge number
-    /*
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+  }
+  
+  
+  // Register defaults for NSUserDefaults
+  NSURL *prefsFileURL = [[NSBundle mainBundle] URLForResource:@"DefaultPreferences" withExtension:@"plist"];
+  NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfURL:prefsFileURL];
+  [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+  
+  // Register for remote notification
+  [self checkNotificationPermissionAndRegister:application];
+  
+  // Optional: automatically send uncaught exceptions to Google Analytics.
+  [GAI sharedInstance].trackUncaughtExceptions = YES;
+  // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
+  [GAI sharedInstance].dispatchInterval = 20;
+  // Optional: set Logger to VERBOSE for debug information.
+  [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelNone];
+  // Initialize tracker. Replace with your tracking ID.
+  id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:GA_TRACKING_ID];
+  [tracker send:[[[GAIDictionaryBuilder createEventWithCategory:@"UX"
+                                                         action:@"App Start"
+                                                          label:nil
+                                                          value:nil] set:@"start" forKey:kGAISessionControl] build]];
+  
+  // Clearing Push-noti Badge number
+  /*
+  PFInstallation *currentInstallation = [PFInstallation currentInstallation];
 
-    if (currentInstallation.badge != 0) {
-        currentInstallation.badge = 0;
-        [currentInstallation saveEventually];
-    }
-    */
-        
-    // Access Control
-    PFACL *defaultACL = [PFACL ACL];
-    // Enable public read access by default, with any newly created PFObjects belonging to the current user
-    [defaultACL setPublicReadAccess:YES];
-    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
-    
-    /* navigation bar settings */
-    [self setupAppearance];
+  if (currentInstallation.badge != 0) {
+      currentInstallation.badge = 0;
+      [currentInstallation saveEventually];
+  }
+  */
+      
+  // Access Control
+  PFACL *defaultACL = [PFACL ACL];
+  // Enable public read access by default, with any newly created PFObjects belonging to the current user
+  [defaultACL setPublicReadAccess:YES];
+  [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+  
+  /* navigation bar settings */
+  [self setupAppearance];
 
-    self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
-    
-    self.mainNavController = [[VYBNavigationController alloc] initWithRootViewController:self.welcomeViewController];
-    self.mainNavController.navigationBarHidden = YES;
-    
-    [self.window setRootViewController:self.mainNavController];
-    
-    self.window.backgroundColor = [UIColor blackColor];
-    [self.window makeKeyAndVisible];
+  self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
+  
+  self.mainNavController = [[VYBNavigationController alloc] initWithRootViewController:self.welcomeViewController];
+  self.mainNavController.navigationBarHidden = YES;
+  
+  [self.window setRootViewController:self.mainNavController];
+  
+  self.window.backgroundColor = [UIColor blackColor];
+  [self.window makeKeyAndVisible];
 
-    
-    // Handle push if the app is launched from notification
-    [self handlePush:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
-    
-    return YES;
+  
+  // Handle push if the app is launched from notification
+  [self handlePush:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
+  
+  return YES;
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(id)viewController {
@@ -265,29 +269,26 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
+  [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
     
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-        // Tracks app open due to a push notification when the app was not active
-    }
+  if ([UIApplication sharedApplication].applicationState == UIApplicationStateInactive) {
+    // Tracks app open due to a push notification when the app was not active
+    [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
+  }
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
-    
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-        application.applicationIconBadgeNumber = application.applicationIconBadgeNumber + 1;
-    }
-    /*
-    if ([userInfo objectForKey:kVYBPushPayloadVybeIDKey]) {
-        PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-        currentInstallation.badge = currentInstallation.badge + 1;
-        
-        [[VYBUserStore sharedStore] setNewPrivateVybeCount:[[VYBUserStore sharedStore] newPrivateVybeCount] + 1];
-        [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:self];
-    }
-    */
+  [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
+  
+  if ([UIApplication sharedApplication].applicationState == UIApplicationStateInactive) {
+    [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
+  }
+  
+  if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+    application.applicationIconBadgeNumber = application.applicationIconBadgeNumber + 1;
+  }
+  
 }
 
 

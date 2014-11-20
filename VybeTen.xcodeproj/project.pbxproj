@@ -874,7 +874,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1baaf6ff-d6ec-4733-94d9-7f8e1b55ed6e";
+				PROVISIONING_PROFILE = "d151eabc-7a7b-45e3-ba9b-b17607961cc9";
 				SWIFT_OBJC_BRIDGING_HEADER = "VybeTen/VybeTen-Bridging-Header.h";
 			};
 			name = Release;
