@@ -21,6 +21,11 @@ DerivedData
 *.ipa
 *.xcuserstate
 
+# Build products
+#
+*.mobileprovision
+*.app.dSYM.zip
+
 # CocoaPods
 #
 # We recommend against adding the Pods directory to your .gitignore. However
