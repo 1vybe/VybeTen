@@ -50,6 +50,14 @@ typedef enum {
     VYBActivityPageIndex = 1
 } VYBPageControllerIndex;
 
+typedef enum {
+  CurrentUploadStatusIdle = 0,
+  CurrentUploadStatusUploading,
+  CurrentUploadStatusFailed,
+  CurrentUploadStatusSuccess
+} CurrentUploadStatus;
+
+
 #pragma mark - NSNotification
 extern NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification;
 extern NSString *const VYBAppDelegateApplicationDidBecomeActiveNotification;

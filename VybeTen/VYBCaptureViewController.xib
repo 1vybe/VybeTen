@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6249" systemVersion="14A388b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6243"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="ProximaNovaSoft-Regular.otf">
@@ -17,6 +17,7 @@
                 <outlet property="flashButton" destination="jPK-KL-Kst" id="f78-1p-p9v"/>
                 <outlet property="flipButton" destination="7vo-Gu-Tx0" id="H0U-It-ehr"/>
                 <outlet property="recordButton" destination="iEb-4Z-c7N" id="6xj-4L-I8S"/>
+                <outlet property="uploadProgressView" destination="jlt-dL-x42" id="Cht-jr-qxm"/>
                 <outlet property="view" destination="iN0-l3-epB" id="ms6-DC-4sx"/>
             </connections>
         </placeholder>
@@ -84,6 +85,22 @@
                         <action selector="flipButtonPressed:" destination="-1" eventType="touchUpInside" id="ql3-4B-Gaq"/>
                     </connections>
                 </button>
+                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jlt-dL-x42" customClass="CircleProgressView" customModule="VybeTen" customModuleProvider="target">
+                    <rect key="frame" x="430" y="15" width="35" height="35"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="35" id="RKg-Vx-xZm"/>
+                        <constraint firstAttribute="height" constant="35" id="jfj-8L-s1P"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="image" keyPath="trackImage" value="progressImage"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="progress">
+                            <real key="value" value="0.0"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="trackWidth">
+                            <real key="value" value="5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
             </subviews>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="jPK-KL-Kst" secondAttribute="bottom" constant="15" id="0vY-vj-zsY"/>
@@ -95,13 +112,15 @@
                 <constraint firstItem="pxE-bC-V0j" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Bsp-wu-2pQ"/>
                 <constraint firstAttribute="trailing" secondItem="jPK-KL-Kst" secondAttribute="trailing" constant="15" id="NZ2-vd-iqU"/>
                 <constraint firstAttribute="trailing" secondItem="pxE-bC-V0j" secondAttribute="trailing" id="RjX-wj-7bv"/>
+                <constraint firstAttribute="trailing" secondItem="jlt-dL-x42" secondAttribute="trailing" constant="15" id="U3l-tA-Xkr"/>
                 <constraint firstAttribute="bottom" secondItem="iEb-4Z-c7N" secondAttribute="bottom" constant="20" id="eCK-HP-ib5"/>
+                <constraint firstItem="jlt-dL-x42" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="iFJ-iQ-4Wf"/>
                 <constraint firstItem="pxE-bC-V0j" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="kR1-9l-zhI"/>
                 <constraint firstAttribute="trailing" secondItem="rNG-mo-RpY" secondAttribute="trailing" constant="15" id="s24-0h-PF9"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="268" y="408"/>
+            <point key="canvasLocation" x="268" y="385"/>
         </view>
     </objects>
     <resources>
@@ -111,5 +130,6 @@
         <image name="capture_flip" width="40" height="40"/>
         <image name="capture_record_normal" width="85" height="85"/>
         <image name="capture_record_recording" width="85" height="85"/>
+        <image name="progressImage" width="250" height="250"/>
     </resources>
 </document>

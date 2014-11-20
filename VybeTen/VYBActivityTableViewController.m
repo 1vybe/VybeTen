@@ -18,6 +18,8 @@
 
 #import "VYBLogInViewController.h"
 
+#import "VYBMyVybeStore.h"
+
 @interface VYBActivityTableViewController () <UIAlertViewDelegate, VYBPlayerViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
@@ -30,15 +32,21 @@
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender;
 
-
 @end
 
 @implementation VYBActivityTableViewController {
+  NSInteger _selectedMyLocationIndex;
   
-    NSInteger _selectedMyLocationIndex;
+  PFObject *_vybeInUpload;
 }
 
+static void *YCContext = &YCContext;
+
 #pragma mark - Lifecycle
+
+- (void)dealloc {
+  [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadPercent" context:YCContext];
+}
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
@@ -52,6 +60,8 @@
     self.sectionToZoneNameMap = [NSMutableDictionary dictionary];
     
     _selectedMyLocationIndex = -1;
+    
+    _vybeInUpload = nil;
   }
   
   return self;
@@ -59,6 +69,9 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
+  // current video uploading progress is funnelled using KVO. Observer is MyVybeStore
+  [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadPercent" options:NSKeyValueObservingOptionNew context:YCContext];
   
   self.usernameLabel.text = [PFUser currentUser].username;
 
@@ -68,6 +81,7 @@
   self.tableView.delegate = self;
   
   _selectedMyLocationIndex = -1;
+  
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -498,6 +512,24 @@
         [mapVC displayAllActiveVybes];
     }
 }
+
+#pragma mark - Current Upload Progress KVO
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+  if (context == YCContext) {
+    if ([keyPath isEqualToString:@"currentUploadPercent"]) {
+      int newPercent = [[change objectForKey:NSKeyValueChangeNewKey] intValue];
+      [self updateVybeUploadProgress:newPercent];
+      return;
+    }
+  }
+  
+  [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
+- (void)updateVybeUploadProgress:(int)newPercent {
+
+}
+
 
 #pragma mark - PlayerViewControllerDelegate
 

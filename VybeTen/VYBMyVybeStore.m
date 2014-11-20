@@ -15,148 +15,156 @@
 #import "VYBMyVybeStore.h"
 
 @interface VYBMyVybeStore () {
-    VYBVybe *_currVybe;
-    dispatch_queue_t _currentUploadQueue;
-    
-    NSMutableArray *_vybesToUpload;
-    dispatch_queue_t _oldUploadQueue;
+  VYBVybe *_currVybe;
+  dispatch_queue_t _currentUploadQueue;
+  
+  NSMutableArray *_vybesToUpload;
+  dispatch_queue_t _oldUploadQueue;
 }
+@property (nonatomic) int currentUploadPercent;
+@property (nonatomic) NSInteger currentUploadStatus;
 
 @end
-@implementation VYBMyVybeStore
 
-static CLLocation *_bestLocation;
-static BOOL _uploadingOldVybes = NO;
+@implementation VYBMyVybeStore {
+  BOOL _uploadingOldVybes;
+}
+@synthesize currentUploadPercent, currentUploadStatus;
 
 + (VYBMyVybeStore *)sharedStore {
-    static VYBMyVybeStore *sharedStore = nil;
-    if (!sharedStore) {
-        sharedStore = [[super allocWithZone:nil] init];
-    }
-    
-    return sharedStore;
+  static VYBMyVybeStore *sharedStore = nil;
+  if (!sharedStore) {
+      sharedStore = [[super allocWithZone:nil] init];
+  }
+  
+  return sharedStore;
 }
 
 + (id)allocWithZone:(struct _NSZone *)zone {
-    return [self sharedStore];
+  return [self sharedStore];
 }
 
 - (id)init {
-    self = [super init];
-    if (self) {
-        _currentUploadQueue = dispatch_queue_create("vybestore current upload queue", DISPATCH_QUEUE_SERIAL);
-        
-        _oldUploadQueue = dispatch_queue_create("vybestore old upload queue", DISPATCH_QUEUE_SERIAL);
-        
-        // Load saved videos from Vybe's Documents directory
-        NSString *path = [self myVybesArchivePath];
-        _vybesToUpload = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithFile:path]];
-        if (!_vybesToUpload)
-            _vybesToUpload = [[NSMutableArray alloc] init];
-    }
+  self = [super init];
+  if (self) {
+    _uploadingOldVybes = NO;
     
-    return self;
+    currentUploadPercent = 0;
+    currentUploadStatus = CurrentUploadStatusIdle;
+    
+    _currentUploadQueue = dispatch_queue_create("vybestore current upload queue", DISPATCH_QUEUE_SERIAL);
+    
+    _oldUploadQueue = dispatch_queue_create("vybestore old upload queue", DISPATCH_QUEUE_SERIAL);
+    
+    // Load saved videos from Vybe's Documents directory
+    NSString *path = [self myVybesArchivePath];
+    _vybesToUpload = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithFile:path]];
+  
+    if (!_vybesToUpload)
+      _vybesToUpload = [[NSMutableArray alloc] init];
+  }
+  
+  return self;
 }
 
 - (void)prepareNewVybe {
-    PFObject *nVybe = [PFObject objectWithClassName:kVYBVybeClassKey];
-    [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
-    [nVybe setObject:[NSNumber numberWithBool:YES] forKey:kVYBVybeTypePublicKey];
-    [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
+  PFObject *nVybe = [PFObject objectWithClassName:kVYBVybeClassKey];
+  [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
+  [nVybe setObject:[NSNumber numberWithBool:YES] forKey:kVYBVybeTypePublicKey];
+  [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
 
-    _currVybe = [[VYBVybe alloc] initWithParseObject:nVybe];
+  _currVybe = [[VYBVybe alloc] initWithParseObject:nVybe];
 }
 
 - (void)setCurrZone:(Zone *)currZone {
-    _currZone = currZone;
-    // Update current vybe's zone here
-    if (_currVybe) {
-        [_currVybe setVybeZone:_currZone];
-    }
+  _currZone = currZone;
+  // Update current vybe's zone here
+  if (_currVybe) {
+      [_currVybe setVybeZone:_currZone];
+  }
 }
 
 
 - (void)uploadCurrentVybe {
-    
-    dispatch_async(_currentUploadQueue, ^{
-        VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe];
-      
-        NSData *video = [NSData dataWithContentsOfFile:[vybeToUpload videoFilePath]];
-        NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToUpload thumbnailFilePath]];
-        
-        PFFile *videoFile = [PFFile fileWithData:video];
-        PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
-        
-        UIProgressView *uploadProgressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-        [uploadProgressView setFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 50)];
-        [[UIApplication sharedApplication].keyWindow addSubview:uploadProgressView];
+  [self setCurrentUploadStatus:CurrentUploadStatusUploading];
 
-        [thumbnailFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error) {
-                [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    if (!error) {
-                        PFObject *vybe = [vybeToUpload parseObject];
-                        [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-                        [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
-                        [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                            if (succeeded) {
-                                [self didUploadVybe:vybeToUpload];
-                                
-                                // GA stuff
-                                id tracker = [[GAI sharedInstance] defaultTracker];
-                                if (tracker) {
-                                    // upload success metric for capture_video event
-                                    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"success" value:nil] build]];
-                                }
-                                
-                            } else {
-                                [self uploadingFailedWith:vybeToUpload];
-                            }
-                            [uploadProgressView removeFromSuperview];
-                        }];
-                    } else {
-                        [self uploadingFailedWith:vybeToUpload];
-                        [uploadProgressView removeFromSuperview];
-                    }
-                } progressBlock:^(int percentDone) {
-                    uploadProgressView.progress = percentDone / 100.0;
-                }];
-            } else {
+  dispatch_async(_currentUploadQueue, ^{
+    VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe];
+  
+    NSData *video = [NSData dataWithContentsOfFile:[vybeToUpload videoFilePath]];
+    NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToUpload thumbnailFilePath]];
+    
+    PFFile *videoFile = [PFFile fileWithData:video];
+    PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
+ 
+    [thumbnailFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+      if (!error) {
+        [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+          if (!error) {
+            PFObject *vybe = [vybeToUpload parseObject];
+            [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
+            [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
+            [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+              if (succeeded) {
+                [self didUploadVybe:vybeToUpload];
+              } else {
                 [self uploadingFailedWith:vybeToUpload];
-                [uploadProgressView removeFromSuperview];
+              }
+            }];
+            } else {
+              [self uploadingFailedWith:vybeToUpload];
             }
+        } progressBlock:^(int percentDone) {
+//                  NSLog(@"[MyVybestore] current upload: %d", percentDone);
+          [self setCurrentUploadPercent:percentDone];
         }];
-        // Update user lastVybeLocation and lastVybeTime field.
-        [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
-        [[PFUser currentUser] saveInBackground];
-    });
+      } else {
+        [self uploadingFailedWith:vybeToUpload];
+      }
+    }];
+    // Update user lastVybeLocation and lastVybeTime field.
+    [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
+    [[PFUser currentUser] saveInBackground];
+  });
 
 }
 
 
 - (void)didUploadVybe:(VYBVybe *)cVybe {
     NSAssert(cVybe, @"did upload a vybe but currVybe is nil now");
-    @synchronized (_vybesToUpload) {
-        // It's possible that Parse retried to upload and succedded before uplaodDelayedVybe was called on that old vybe
-        if ( [_vybesToUpload containsObject:cVybe] ) {
-            [_vybesToUpload removeObject:cVybe];
-        }
+  
+  // GA stuff
+  id tracker = [[GAI sharedInstance] defaultTracker];
+  if (tracker) {
+    // upload success metric for capture_video event
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"success" value:nil] build]];
+  }
+  
+  [self setCurrentUploadStatus:CurrentUploadStatusSuccess];
+
+  @synchronized (_vybesToUpload) {
+    // It's possible that Parse retried to upload and succedded before uplaodDelayedVybe was called on that old vybe
+    if ( [_vybesToUpload containsObject:cVybe] ) {
+      [_vybesToUpload removeObject:cVybe];
     }
-    
-    [self clearLocalCacheForVybe:cVybe];
-    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Posted"];
+  }
+  
+  [self clearLocalCacheForVybe:cVybe];
+  [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Posted"];
 }
 
 - (void)uploadingFailedWith:(VYBVybe *)vybeToUpload {
-    [self saveVybe:vybeToUpload];
-    
-    // GA stuff
-    id tracker = [[GAI sharedInstance] defaultTracker];
-    if (tracker) {
-        // upload saved metric for capture_video event
-        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"saved" value:nil] build]];
-    }
-    _currVybe = nil;
+  [self setCurrentUploadStatus:CurrentUploadStatusFailed];
+
+  [self saveVybe:vybeToUpload];
+  
+  // GA stuff
+  id tracker = [[GAI sharedInstance] defaultTracker];
+  if (tracker) {
+      // upload saved metric for capture_video event
+      [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"saved" value:nil] build]];
+  }
+  _currVybe = nil;
 }
 
 - (void)saveVybe:(VYBVybe *)vybeToSave {

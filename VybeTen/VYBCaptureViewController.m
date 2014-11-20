@@ -33,6 +33,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *activityButton;
 @property (nonatomic, weak) IBOutlet VYBCameraView *cameraView;
 @property (nonatomic, weak) IBOutlet UIButton *recordButton;
+@property (nonatomic, weak) IBOutlet CircleProgressView *uploadProgressView;
 
 - (IBAction)activityButtonPressed:(id)sender;
 - (IBAction)flipButtonPressed:(id)sender;
@@ -44,6 +45,7 @@
 
 @end
 
+static void *XYZContext = &XYZContext;
 @implementation VYBCaptureViewController {
     NSDate *startTime;
     NSTimer *_timeBomb;
@@ -67,14 +69,14 @@
 @synthesize capturePipeline;
 
 - (void)dealloc {
-    [capturePipeline stopRunning];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBUtilityActivityCountUpdatedNotification object:nil];
-    
-    NSLog(@"CaptureVC deallocated");
+  [capturePipeline stopRunning];
+  
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBUtilityActivityCountUpdatedNotification object:nil];
+
+  NSLog(@"CaptureVC deallocated");
 }
 
 - (id)initWithPageIndex:(NSInteger)pageIndex {
@@ -94,31 +96,38 @@
 
 - (void)viewDidLoad
 {
-    _captureOrientation = AVCaptureVideoOrientationPortrait;
-    
-    // Subscribing to Notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroundNotificationReceived:) name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityCountChanged) name:VYBUtilityActivityCountUpdatedNotification object:nil];
-    
-    
-    // In case capture screen is loaded AFTER initial loading from appdelegate is done already
-    [self activityCountChanged];
-    
-    // Device orientation detection
-    [MotionOrientation initialize];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(deviceRotated:)
-                                                 name:MotionOrientationChangedNotification
-                                               object:nil];
-    
-    [(AVCaptureVideoPreviewLayer *)[self.cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    
-    capturePipeline = [[VYBCapturePipeline alloc] init];
-    [capturePipeline setDelegate:self callbackQueue:dispatch_get_main_queue()];
-    
-    [super viewDidLoad];
+  _captureOrientation = AVCaptureVideoOrientationPortrait;
+  
+  // Subscribing to Notifications
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroundNotificationReceived:) name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityCountChanged) name:VYBUtilityActivityCountUpdatedNotification object:nil];
+  
+  
+  // In case capture screen is loaded AFTER initial loading from appdelegate is done already
+  [self activityCountChanged];
+  
+  // Device orientation detection
+  [MotionOrientation initialize];
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(deviceRotated:)
+                                               name:MotionOrientationChangedNotification
+                                             object:nil];
+  
+  [(AVCaptureVideoPreviewLayer *)[self.cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+  
+  capturePipeline = [[VYBCapturePipeline alloc] init];
+  [capturePipeline setDelegate:self callbackQueue:dispatch_get_main_queue()];
+  
+  [super viewDidLoad];
+  
+  self.uploadProgressView.hidden = YES;
+
+  [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadPercent" options:NSKeyValueObservingOptionNew context:XYZContext];
+  [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadStatus" options:NSKeyValueObservingOptionNew context:XYZContext];
+  
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -355,6 +364,48 @@
 
 }
 
+#pragma mark - Vybe Upload Progress
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+  if (context == XYZContext) {
+    if ([keyPath isEqualToString:@"currentUploadPercent"]) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self.uploadProgressView setProgress:[[change objectForKey:NSKeyValueChangeNewKey] intValue]/100.0];
+      });
+      return;
+    }
+    if ([keyPath isEqualToString:@"currentUploadStatus"]) {
+      NSInteger status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+      if (status == CurrentUploadStatusUploading) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+          self.activityButton.hidden = YES;
+          self.uploadProgressView.hidden = NO;
+          [self.uploadProgressView setProgress:0.0];
+          NSLog(@"Uploading started");
+        });
+        return;
+      }
+      if (status == CurrentUploadStatusSuccess) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+          self.uploadProgressView.hidden = YES;
+          self.activityButton.hidden = NO;
+          NSLog(@"Uploading Success");
+        });
+        return;
+      }
+      if (status == CurrentUploadStatusFailed) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+          self.uploadProgressView.hidden = YES;
+          self.activityButton.hidden = NO;
+          NSLog(@"Uploading failed");
+        });
+        return;
+      }
+    }
+  }
+  
+  [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
 
 #pragma mark - ()
 
