@@ -75,6 +75,9 @@ static void *XYZContext = &XYZContext;
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBUtilityActivityCountUpdatedNotification object:nil];
+  
+  [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadPercent" context:XYZContext];
+  [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadStatus" context:XYZContext];
 
   NSLog(@"CaptureVC deallocated");
 }

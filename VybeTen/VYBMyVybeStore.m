@@ -22,7 +22,7 @@
   dispatch_queue_t _oldUploadQueue;
 }
 @property (nonatomic) int currentUploadPercent;
-@property (nonatomic) NSInteger currentUploadStatus;
+
 
 @end
 
@@ -115,7 +115,6 @@
               [self uploadingFailedWith:vybeToUpload];
             }
         } progressBlock:^(int percentDone) {
-//                  NSLog(@"[MyVybestore] current upload: %d", percentDone);
           [self setCurrentUploadPercent:percentDone];
         }];
       } else {

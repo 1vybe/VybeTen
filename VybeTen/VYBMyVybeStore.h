@@ -11,9 +11,12 @@
 @class Zone;
 @interface VYBMyVybeStore : NSObject
 @property (nonatomic) Zone *currZone;
+@property (nonatomic) NSInteger currentUploadStatus;
+
 + (VYBMyVybeStore *)sharedStore;
 - (void)prepareNewVybe;
 - (void)uploadCurrentVybe;
+
 
 //- (void)addVybe:(VYBMyVybe *)aVybe;
 - (void)startUploadingOldVybes;

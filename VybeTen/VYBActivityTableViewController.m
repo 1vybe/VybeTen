@@ -28,6 +28,7 @@
 @property (nonatomic) NSArray *myLocations;
 @property (nonatomic) NSArray *expandedVybeCells;
 @property (retain, nonatomic) NSMutableDictionary *sectionToZoneNameMap;
+@property (nonatomic) UIView *uploadProgressView;
 
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender;
@@ -39,13 +40,14 @@
   
   PFObject *_vybeInUpload;
 }
+@synthesize uploadProgressView;
 
-static void *YCContext = &YCContext;
+static void *ZOTContext = &ZOTContext;
 
 #pragma mark - Lifecycle
 
 - (void)dealloc {
-  [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadPercent" context:YCContext];
+  [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadStatus" context:ZOTContext];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -70,8 +72,8 @@ static void *YCContext = &YCContext;
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  // current video uploading progress is funnelled using KVO. Observer is MyVybeStore
-  [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadPercent" options:NSKeyValueObservingOptionNew context:YCContext];
+  // current video uploading progress is funnelled using KVO.
+  [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadStatus" options:NSKeyValueObservingOptionNew context:ZOTContext];
   
   self.usernameLabel.text = [PFUser currentUser].username;
 
@@ -82,12 +84,24 @@ static void *YCContext = &YCContext;
   
   _selectedMyLocationIndex = -1;
   
+  uploadProgressView = [[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:nil options:nil] firstObject];
+  CGRect frame = uploadProgressView.bounds;
+  frame.origin.y = self.tableView.bounds.size.height - uploadProgressView.bounds.size.height;
+  [self.view addSubview:self.uploadProgressView];
+  uploadProgressView.hidden = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [self loadObjects];
+  [super viewWillAppear:animated];
+
+  // Your vybe upload status
+  if ([[VYBMyVybeStore sharedStore] currentUploadStatus] == CurrentUploadStatusUploading) {
+    UILabel *label = (UILabel *)[uploadProgressView viewWithTag:33];
+    [label setText:@"UPLOADING"];
+    uploadProgressView.hidden = NO;
+  }
+  
+  [self loadObjects];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -506,30 +520,69 @@ static void *YCContext = &YCContext;
 #pragma mark Segue
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if([segue.identifier isEqualToString:@"ShowActiveMap"])
-    {
-        VYBMapViewController *mapVC = segue.destinationViewController;
-        [mapVC displayAllActiveVybes];
-    }
+  if([segue.identifier isEqualToString:@"ShowActiveMap"])
+  {
+    VYBMapViewController *mapVC = segue.destinationViewController;
+    [mapVC displayAllActiveVybes];
+  }
 }
 
 #pragma mark - Current Upload Progress KVO
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-  if (context == YCContext) {
-    if ([keyPath isEqualToString:@"currentUploadPercent"]) {
-      int newPercent = [[change objectForKey:NSKeyValueChangeNewKey] intValue];
-      [self updateVybeUploadProgress:newPercent];
-      return;
+  if (context == ZOTContext) {
+    if ([keyPath isEqualToString:@"currentUploadStatus"]) {
+      NSInteger status = [[change objectForKey:NSKeyValueChangeNewKey] intValue];
+      switch (status) {
+        case CurrentUploadStatusUploading: {
+          dispatch_async(dispatch_get_main_queue(), ^{
+            UILabel *label = (UILabel *)[uploadProgressView viewWithTag:33];
+            [label setText:@"UPLOADING"];
+            uploadProgressView.alpha = 1.0;
+          });
+          return;
+        }
+        case CurrentUploadStatusSuccess: {
+          NSLog(@"[Activity] Upload Success");
+          dispatch_async(dispatch_get_main_queue(), ^{
+            UILabel *label = (UILabel *)[uploadProgressView viewWithTag:33];
+            [label setText:@"SUCCESS"];
+            [UIView animateWithDuration:0.3 delay:1.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+              uploadProgressView.alpha = 0.0;
+            } completion:nil];
+       
+          });
+          return;
+        }
+        case CurrentUploadStatusFailed:
+          NSLog(@"[Activity] Upload Failed");
+          [self uploadFailDetected];
+          return;
+      }
     }
   }
   
   [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
-- (void)updateVybeUploadProgress:(int)newPercent {
-
+- (void)uploadFailDetected {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    UILabel *label = (UILabel *)[uploadProgressView viewWithTag:33];
+    [label setText:@"SAVED"];
+    [UIView animateWithDuration:0.3 delay:1.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+      uploadProgressView.alpha = 0.0;
+    } completion:nil];
+  });
 }
 
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+  CGRect frame = uploadProgressView.frame;
+  frame.origin.y = scrollView.contentOffset.y + self.tableView.frame.size.height - uploadProgressView.frame.size.height;
+  uploadProgressView.frame = frame;
+  
+  [self.view bringSubviewToFront:uploadProgressView];
+}
 
 #pragma mark - PlayerViewControllerDelegate
 

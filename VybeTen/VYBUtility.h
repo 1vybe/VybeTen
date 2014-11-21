@@ -30,8 +30,10 @@
 + (void)reverseGeoCode:(PFGeoPoint *)aLocation withCompletion:(void (^)(NSArray *placemarks, NSError *error))completionBlock;
 + (NSString *)convertPlacemarkToLocation:(CLPlacemark *)placemark;
 + (CGAffineTransform)getTransformFromOrientation:(NSInteger)orientation;
-+ (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title;
 + (UIImage*) maskImage:(UIImage *)image withMask:(UIImage *)maskImage;
+
++ (void)showUploadProgressBarFromBottom:(UIView *)aView;
++ (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title;
 
 #pragma mark Display Name
 

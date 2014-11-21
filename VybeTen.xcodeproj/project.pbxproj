@@ -46,6 +46,7 @@
 		029729721A02A1EC0050406D /* ZoneFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029729711A02A1EC0050406D /* ZoneFinder.swift */; };
 		02A45CEF1A1E664E00425F9C /* PizzaProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A45CEE1A1E664E00425F9C /* PizzaProgressView.swift */; };
 		02A45CF31A1E821300425F9C /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A45CF21A1E821300425F9C /* CircleProgressView.swift */; };
+		02A45CF51A1EC61800425F9C /* UploadProgressBottomBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A45CF41A1EC61800425F9C /* UploadProgressBottomBar.xib */; };
 		02C7A02719F580FC0065BF4E /* VYBFirstPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7A02519F580FC0065BF4E /* VYBFirstPageViewController.swift */; };
 		02C7A02819F580FC0065BF4E /* VYBFirstPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02C7A02619F580FC0065BF4E /* VYBFirstPageViewController.xib */; };
 		02CEE2AD1970A46A00AC361F /* VYBTimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CEE2AC1970A46A00AC361F /* VYBTimerView.m */; };
@@ -163,6 +164,7 @@
 		029729711A02A1EC0050406D /* ZoneFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoneFinder.swift; sourceTree = "<group>"; };
 		02A45CEE1A1E664E00425F9C /* PizzaProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PizzaProgressView.swift; sourceTree = "<group>"; };
 		02A45CF21A1E821300425F9C /* CircleProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
+		02A45CF41A1EC61800425F9C /* UploadProgressBottomBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UploadProgressBottomBar.xib; sourceTree = "<group>"; };
 		02C7A02519F580FC0065BF4E /* VYBFirstPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VYBFirstPageViewController.swift; sourceTree = "<group>"; };
 		02C7A02619F580FC0065BF4E /* VYBFirstPageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBFirstPageViewController.xib; sourceTree = "<group>"; };
 		02CEE2AB1970A46A00AC361F /* VYBTimerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTimerView.h; sourceTree = "<group>"; };
@@ -379,6 +381,7 @@
 				028D930B1A16C271002B7642 /* ActivitySectionView.xib */,
 				02A45CEE1A1E664E00425F9C /* PizzaProgressView.swift */,
 				02A45CF21A1E821300425F9C /* CircleProgressView.swift */,
+				02A45CF41A1EC61800425F9C /* UploadProgressBottomBar.xib */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -637,6 +640,7 @@
 			files = (
 				02D11D0B18DF62AC0018DA97 /* Montreal-Light.otf in Resources */,
 				0266802919F15CB000030836 /* VYBPlayerViewController.xib in Resources */,
+				02A45CF51A1EC61800425F9C /* UploadProgressBottomBar.xib in Resources */,
 				02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */,
 				02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */,
 				02F80C46196F600300FB2A48 /* AvenirLTStd-Book.otf in Resources */,

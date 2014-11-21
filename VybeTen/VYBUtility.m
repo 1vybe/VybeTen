@@ -407,36 +407,41 @@
 }
 
 + (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[[UIApplication sharedApplication] delegate].window];
-        [[[UIApplication sharedApplication] delegate].window addSubview:hud];
-        hud.mode = MBProgressHUDModeCustomView;
-        if (aIamge) {
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:aIamge];
-            hud.customView = imageView;
-        }
-        hud.labelText = title;
-        [hud show:YES];
-        [hud hide:YES afterDelay:1.0];
-    });
+  dispatch_async(dispatch_get_main_queue(), ^{
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[[UIApplication sharedApplication] delegate].window];
+    [[[UIApplication sharedApplication] delegate].window addSubview:hud];
+    hud.mode = MBProgressHUDModeCustomView;
+    if (aIamge) {
+      UIImageView *imageView = [[UIImageView alloc] initWithImage:aIamge];
+      hud.customView = imageView;
+    }
+    hud.labelText = title;
+    [hud show:YES];
+    [hud hide:YES afterDelay:1.0];
+  });
+}
+
++ (void)showUploadProgressBarFromBottom:(UIView *)aView {
+  UIView *progressView = [[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:nil options:nil] firstObject];
+  [aView addSubview:progressView];
+  [progressView setFrame:CGRectMake(0, aView.bounds.size.height - progressView.bounds.size.height, progressView.bounds.size.width, progressView.bounds.size.height)];
 }
 
 + (CGAffineTransform)getTransformFromOrientation:(NSInteger)orientation {
     CGAffineTransform transform;
     switch (orientation) {
-        case AVCaptureVideoOrientationPortrait:
-            transform = CGAffineTransformMakeRotation(0);
-            break;
-        case AVCaptureVideoOrientationPortraitUpsideDown:
-            transform = CGAffineTransformMakeRotation(M_PI);
-            break;
-        case AVCaptureVideoOrientationLandscapeLeft:
-            transform = CGAffineTransformMakeRotation(M_PI_2);
-            break;
-        case AVCaptureVideoOrientationLandscapeRight:
-            transform = CGAffineTransformMakeRotation(-M_PI_2);
-            break;
-
+      case AVCaptureVideoOrientationPortrait:
+        transform = CGAffineTransformMakeRotation(0);
+        break;
+      case AVCaptureVideoOrientationPortraitUpsideDown:
+        transform = CGAffineTransformMakeRotation(M_PI);
+        break;
+      case AVCaptureVideoOrientationLandscapeLeft:
+        transform = CGAffineTransformMakeRotation(M_PI_2);
+        break;
+      case AVCaptureVideoOrientationLandscapeRight:
+        transform = CGAffineTransformMakeRotation(-M_PI_2);
+        break;
     }
     
     return transform;
