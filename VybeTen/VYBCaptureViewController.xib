@@ -39,6 +39,7 @@
                     <state key="normal" image="capture_activity_button">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <state key="selected" image="ACTIVITY_save2"/>
                     <connections>
                         <action selector="activityButtonPressed:" destination="-1" eventType="touchUpInside" id="Q7F-jd-feC"/>
                     </connections>
@@ -92,12 +93,14 @@
                         <constraint firstAttribute="height" constant="35" id="jfj-8L-s1P"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="image" keyPath="trackImage" value="progressImage"/>
                         <userDefinedRuntimeAttribute type="number" keyPath="progress">
                             <real key="value" value="0.0"/>
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="number" keyPath="trackWidth">
                             <real key="value" value="5"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="color" keyPath="trackFillColor">
+                            <color key="value" red="0.2156862745" green="1" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
@@ -124,12 +127,12 @@
         </view>
     </objects>
     <resources>
+        <image name="ACTIVITY_save2" width="30" height="31"/>
         <image name="capture_activity_button" width="35" height="35"/>
         <image name="capture_flash_off" width="40" height="40"/>
         <image name="capture_flash_on" width="40" height="40"/>
         <image name="capture_flip" width="40" height="40"/>
         <image name="capture_record_normal" width="85" height="85"/>
         <image name="capture_record_recording" width="85" height="85"/>
-        <image name="progressImage" width="250" height="250"/>
     </resources>
 </document>

@@ -176,7 +176,6 @@
     [[VYBMyVybeStore sharedStore] uploadCurrentVybe];
     
     [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
-
 }
 
 

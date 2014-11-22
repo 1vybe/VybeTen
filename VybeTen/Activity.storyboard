@@ -54,7 +54,7 @@
                                         <constraint firstAttribute="width" constant="45" id="8dE-VZ-OI4"/>
                                         <constraint firstAttribute="height" constant="45" id="ghm-8o-0Dg"/>
                                     </constraints>
-                                    <state key="normal" image="MapIcon">
+                                    <state key="normal" image="NewMap">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
@@ -107,20 +107,30 @@
                                                 <constraint firstAttribute="width" secondItem="BIQ-hL-LVg" secondAttribute="height" multiplier="1:1" id="b2v-dK-oSt"/>
                                             </constraints>
                                         </imageView>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="GreenLight_SavedVybed" translatesAutoresizingMaskIntoConstraints="NO" id="a4Q-em-sNn">
+                                            <rect key="frame" x="324" y="38" width="10" height="10"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="10" id="DL6-JP-WvT"/>
+                                                <constraint firstAttribute="width" constant="10" id="QuM-Uh-N6H"/>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="xDK-O9-DDE" firstAttribute="leading" secondItem="lxA-xk-y27" secondAttribute="leading" constant="15" id="4N4-k2-grb"/>
+                                        <constraint firstAttribute="trailing" secondItem="a4Q-em-sNn" secondAttribute="trailing" constant="41" id="EPr-5b-H0q"/>
                                         <constraint firstAttribute="trailing" secondItem="BIQ-hL-LVg" secondAttribute="trailing" constant="21" id="Hdz-NR-d6Z"/>
                                         <constraint firstAttribute="bottom" secondItem="xDK-O9-DDE" secondAttribute="bottom" constant="20" id="MiI-nc-qFP"/>
                                         <constraint firstItem="BIQ-hL-LVg" firstAttribute="leading" secondItem="hnX-7t-y9Q" secondAttribute="trailing" constant="18" id="NH4-2l-TcX"/>
                                         <constraint firstAttribute="bottom" secondItem="BIQ-hL-LVg" secondAttribute="bottom" constant="18" id="RMs-bc-I2Y"/>
                                         <constraint firstItem="BIQ-hL-LVg" firstAttribute="top" secondItem="lxA-xk-y27" secondAttribute="top" constant="18" id="V0e-Re-WcZ"/>
+                                        <constraint firstAttribute="centerY" secondItem="a4Q-em-sNn" secondAttribute="centerY" id="bMS-4x-DT2"/>
                                         <constraint firstItem="hnX-7t-y9Q" firstAttribute="top" secondItem="lxA-xk-y27" secondAttribute="top" constant="20" id="chH-WP-KaI"/>
                                         <constraint firstItem="hnX-7t-y9Q" firstAttribute="leading" secondItem="lxA-xk-y27" secondAttribute="leading" constant="15" id="wG5-t9-rkL"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
+                                    <outlet property="greenLightSavedVybe" destination="a4Q-em-sNn" id="hsp-n0-ugt"/>
                                     <outlet property="listBarImageView" destination="TG0-hr-TVV" id="Qvy-Ve-tBK"/>
                                     <outlet property="locationLabel" destination="hnX-7t-y9Q" id="0zx-WS-3Wo"/>
                                     <outlet property="thumbnailImageView" destination="BIQ-hL-LVg" id="t4l-nY-CXk"/>
@@ -234,7 +244,7 @@
                                     <action selector="dismissButtonPressed:" destination="4nu-fI-UsT" eventType="touchUpInside" id="uRx-Gi-yRl"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" alpha="0.69999999999999973" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="map_guide" translatesAutoresizingMaskIntoConstraints="NO" id="UHR-p0-8Ff">
+                            <imageView userInteractionEnabled="NO" alpha="0.69999999999999973" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Key" translatesAutoresizingMaskIntoConstraints="NO" id="UHR-p0-8Ff">
                                 <rect key="frame" x="16" y="570" width="190" height="82"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="190" id="aMG-E5-TTK"/>
@@ -264,15 +274,16 @@
         </scene>
     </scenes>
     <resources>
+        <image name="GreenLight_SavedVybed" width="10" height="10"/>
+        <image name="Key" width="188" height="82"/>
         <image name="ListBar" width="375" height="85"/>
-        <image name="MapIcon" width="45" height="45"/>
         <image name="MyVybeThumbnail" width="56" height="56"/>
+        <image name="NewMap" width="44" height="45"/>
         <image name="NuVybeCell" width="375" height="70"/>
         <image name="Oval_mask" width="55" height="55"/>
         <image name="Settings" width="21" height="21"/>
         <image name="VYBE_txt" width="109" height="18"/>
         <image name="VybeLogo_Nav" width="33" height="16"/>
-        <image name="map_guide" width="189" height="82"/>
         <image name="player_close_button" width="40" height="40"/>
     </resources>
     <color key="tintColor" red="1" green="0.31936163649999999" blue="0.31620065790000002" alpha="1" colorSpace="calibratedRGB"/>

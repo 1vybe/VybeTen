@@ -29,6 +29,7 @@ import MapKit
 
   // UNLOCKED zone
   var myVybes = [PFObject]()
+  var savedVybes = [VYBVybe]()
   var unlocked = false
   var numOfMyVybes: Int {
       get {
@@ -120,7 +121,31 @@ import MapKit
   }
   
   func addMyVybe(aVybe: PFObject) {
-      myVybes += [aVybe]
+    myVybes += [aVybe]
+  }
+  
+  func addSavedVybe(sVybe: VYBVybe) {
+    let parseVybe = sVybe.parseObject()
+    parseVybe["uniqueId"] = sVybe.uniqueFileName
+    for aVybe in savedVybes {
+      if aVybe.uniqueFileName == sVybe.uniqueFileName {
+        return
+      }
+    }
+    
+    myVybes = [parseVybe] + myVybes
+    savedVybes += [sVybe]
+  }
+  
+  func savedObject(aVybe: PFObject) -> VYBVybe? {
+    for sVybe in savedVybes {
+      if let uniqueID = aVybe["uniqueId"] as? String {
+        if uniqueID == sVybe.uniqueFileName {
+          return sVybe
+        }
+      }
+    }
+    return nil
   }
   
   func addFreshVybe(nVybe: PFObject) {

@@ -67,10 +67,6 @@
         [(VYBAppDelegate*)[[UIApplication sharedApplication] delegate] logOut];
         return;
     }
-    // fetch fresh contents for acknowledged user
-    else {        
-        [[VYBMyVybeStore sharedStore] startUploadingOldVybes];
-    }
 }
 
 @end

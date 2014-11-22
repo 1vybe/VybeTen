@@ -409,12 +409,6 @@
     NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
     //NSLog(@"Reachability changed: %@", curReach);
     networkStatus = [curReach currentReachabilityStatus];
-
-    // Try
-    if ([self isParseReachable] && [PFUser currentUser] ) {
-        // Parse is reachable and calling this method will only upload a vybe if there is
-        [[VYBMyVybeStore sharedStore] startUploadingOldVybes];
-    }
 }
 
 

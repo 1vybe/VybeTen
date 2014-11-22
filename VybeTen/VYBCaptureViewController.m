@@ -134,25 +134,26 @@ static void *XYZContext = &XYZContext;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [capturePipeline startRunning];
-    
-    flashButton.selected = _flashOn;
-    flipButton.selected = _isFrontCamera;
+  [super viewWillAppear:animated];
+  
+  [capturePipeline startRunning];
+
+  
+  flashButton.selected = _flashOn;
+  flipButton.selected = _isFrontCamera;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    // Hide status bar
-    [self setNeedsStatusBarAppearanceUpdate];
-    
-    [[GAI sharedInstance].defaultTracker set:kGAIScreenName
-                                       value:@"Capture Screen"];
-    // Send the screen view.
-    [[GAI sharedInstance].defaultTracker
-     send:[[GAIDictionaryBuilder createAppView] build]];
+  [super viewDidAppear:animated];
+  
+  // Hide status bar
+  [self setNeedsStatusBarAppearanceUpdate];
+  
+  [[GAI sharedInstance].defaultTracker set:kGAIScreenName
+                                     value:@"Capture Screen"];
+  // Send the screen view.
+  [[GAI sharedInstance].defaultTracker
+   send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -392,6 +393,7 @@ static void *XYZContext = &XYZContext;
         dispatch_async(dispatch_get_main_queue(), ^{
           self.uploadProgressView.hidden = YES;
           self.activityButton.hidden = NO;
+          [self.activityButton setSelected:NO];
           NSLog(@"Uploading Success");
         });
         return;
@@ -400,6 +402,7 @@ static void *XYZContext = &XYZContext;
         dispatch_async(dispatch_get_main_queue(), ^{
           self.uploadProgressView.hidden = YES;
           self.activityButton.hidden = NO;
+          [self.activityButton setSelected:YES];
           NSLog(@"Uploading failed");
         });
         return;

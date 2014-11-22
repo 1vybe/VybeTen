@@ -24,23 +24,22 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *countLabel;
+@property (weak, nonatomic) UIButton *uploadStatusButton;
 @property (nonatomic) NSArray *activeLocations;
 @property (nonatomic) NSArray *myLocations;
-@property (nonatomic) NSArray *expandedVybeCells;
-@property (retain, nonatomic) NSMutableDictionary *sectionToZoneNameMap;
-@property (nonatomic) UIView *uploadProgressView;
+
+@property (nonatomic) NSArray *savedVybes;
 
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender;
+- (IBAction)uploadStatusButtonPressed:(id)sender;
 
 @end
 
 @implementation VYBActivityTableViewController {
   NSInteger _selectedMyLocationIndex;
-  
-  PFObject *_vybeInUpload;
 }
-@synthesize uploadProgressView;
+@synthesize uploadStatusButton;
 
 static void *ZOTContext = &ZOTContext;
 
@@ -59,11 +58,10 @@ static void *ZOTContext = &ZOTContext;
     self.objectsPerPage = 500;
     self.activeLocations = [NSArray array];
     self.myLocations = [NSArray array];
-    self.sectionToZoneNameMap = [NSMutableDictionary dictionary];
+    self.savedVybes = [NSArray array];
     
     _selectedMyLocationIndex = -1;
     
-    _vybeInUpload = nil;
   }
   
   return self;
@@ -84,11 +82,9 @@ static void *ZOTContext = &ZOTContext;
   
   _selectedMyLocationIndex = -1;
   
-  uploadProgressView = [[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:nil options:nil] firstObject];
-  CGRect frame = uploadProgressView.bounds;
-  frame.origin.y = self.tableView.bounds.size.height - uploadProgressView.bounds.size.height;
-  [self.view addSubview:self.uploadProgressView];
-  uploadProgressView.hidden = YES;
+  uploadStatusButton = (UIButton *)[[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:self options:nil] firstObject];
+  [self.view addSubview:uploadStatusButton];
+  uploadStatusButton.alpha = 0.0;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -96,9 +92,8 @@ static void *ZOTContext = &ZOTContext;
 
   // Your vybe upload status
   if ([[VYBMyVybeStore sharedStore] currentUploadStatus] == CurrentUploadStatusUploading) {
-    UILabel *label = (UILabel *)[uploadProgressView viewWithTag:33];
-    [label setText:@"UPLOADING"];
-    uploadProgressView.hidden = NO;
+    [uploadStatusButton setTitle:@"UPLOADING" forState:UIControlStateNormal];
+    uploadStatusButton.alpha = 1.0;
   }
   
   [self loadObjects];
@@ -213,21 +208,27 @@ static void *ZOTContext = &ZOTContext;
 }
 
 - (void)objectsDidLoad:(NSError *)error {
-    [super objectsDidLoad:error];
+  [super objectsDidLoad:error];
+  
+  [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
+    if (success) {
+      self.activeLocations = [[ZoneStore sharedInstance] activeUnlockedZones];
+      self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
     
-    [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
-        if (success) {
-            self.activeLocations = [[ZoneStore sharedInstance] activeUnlockedZones];
-            self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
-          
-            NSString *locationCntText = (self.myLocations.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.myLocations.count] : [NSString stringWithFormat:@"%d Location", (int)self.myLocations.count];
-            NSString *vybeCntText = (self.objects.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)self.objects.count] : [NSString stringWithFormat:@"%d Vybe", (int)self.objects.count];
+      NSString *locationCntText = (self.myLocations.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.myLocations.count] : [NSString stringWithFormat:@"%d Location", (int)self.myLocations.count];
+      NSString *vybeCntText = (self.objects.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)self.objects.count] : [NSString stringWithFormat:@"%d Vybe", (int)self.objects.count];
 
-            self.countLabel.text = [NSString stringWithFormat:@"%@ - %@", locationCntText, vybeCntText];
-            
-            [self.tableView reloadData];
-        }
-    }];
+      self.countLabel.text = [NSString stringWithFormat:@"%@ - %@", locationCntText, vybeCntText];
+      
+      [self addSavedVybesToTable];
+      
+      [self.tableView reloadData];
+    }
+    else {
+      [self addSavedVybesToTable];
+      [self.tableView reloadData];
+    }
+  }];
 }
 
 #pragma mark UITableViewDelegate
@@ -315,6 +316,8 @@ static void *ZOTContext = &ZOTContext;
     }
     
     cell.thumbnailImageView.hidden = NO;
+    cell.greenLightSavedVybe.hidden = YES;
+
     cell.thumbnailImageView.file = lastVybe[kVYBVybeThumbnailKey];
     
     [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
@@ -345,22 +348,28 @@ static void *ZOTContext = &ZOTContext;
       NSDate *timestampDate = aVybe[kVYBVybeTimestampKey];
       cell.timestampLabel.text = [NSString stringWithFormat:@"%@  (%@)", [VYBUtility localizedDateStringFrom:timestampDate], [VYBUtility reverseTime:timestampDate]];
       
-      cell.thumbnailImageView.file = aVybe[kVYBVybeThumbnailKey];
-      [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
-        if (!error) {
-          if (image) {
-            UIImage *maskImage;
-            if (image.size.height > image.size.width) {
-              maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
+      NSString *localID = aVybe[@"uniqueId"];
+      if (localID && localID.length) {
+        cell.thumbnailImageView.image = [UIImage imageNamed:@"RefreshThumbnail"];
+      }
+      else {
+        cell.thumbnailImageView.file = aVybe[kVYBVybeThumbnailKey];
+        [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
+          if (!error) {
+            if (image) {
+              UIImage *maskImage;
+              if (image.size.height > image.size.width) {
+                maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
+              } else {
+                maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
+              }
+              cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
             } else {
-              maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
+              cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
             }
-            cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
-          } else {
-            cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
           }
-        }
-      }];
+        }];
+      }
       
       return cell;
     }
@@ -374,6 +383,12 @@ static void *ZOTContext = &ZOTContext;
       NSInteger newIndex = [self convertToIndexInMyLocations:indexPath];
       
       Zone *zone = self.myLocations[newIndex];
+      if (zone.savedVybes && zone.savedVybes.count) {
+        cell.greenLightSavedVybe.hidden = NO;
+      }
+      else {
+        cell.greenLightSavedVybe.hidden = YES;
+      }
       
       cell.locationLabel.text = zone.name;
       
@@ -415,17 +430,28 @@ static void *ZOTContext = &ZOTContext;
     PFObject *aVybe = [self vybeCellForIndexPath:indexPath];
     // My vybe cell selected
     if (aVybe) {
-      // GA stuff
-      id tracker = [[GAI sharedInstance] defaultTracker];
-      if (tracker) {
-        NSString *dimensionValue = @"my unlocked";
-        [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
+      NSString *localID = aVybe[@"uniqueId"];
+      if (localID && localID.length) {
+        if ([[VYBMyVybeStore sharedStore] currentUploadStatus] == CurrentUploadStatusUploading) {
+          [VYBUtility showToastWithImage:nil title:@"Upload in progress already :)"];
+        }
+        else {
+          [self uploadStatusButtonPressed:nil];
+        }
       }
-      
-      [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-      VYBPlayerViewController *playerController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-      playerController.delegate = self;
-      [playerController playZoneVybesFromVybe:aVybe];
+      else {
+        // GA stuff
+        id tracker = [[GAI sharedInstance] defaultTracker];
+        if (tracker) {
+          NSString *dimensionValue = @"my unlocked";
+          [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
+        }
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        VYBPlayerViewController *playerController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+        playerController.delegate = self;
+        [playerController playZoneVybesFromVybe:aVybe];
+      }
     }
     // My Location zone cell selected. Rearrange and animate table cells
     else {
@@ -535,20 +561,20 @@ static void *ZOTContext = &ZOTContext;
       switch (status) {
         case CurrentUploadStatusUploading: {
           dispatch_async(dispatch_get_main_queue(), ^{
-            UILabel *label = (UILabel *)[uploadProgressView viewWithTag:33];
-            [label setText:@"UPLOADING"];
-            uploadProgressView.alpha = 1.0;
+            [uploadStatusButton setTitle:@"UPLOADING" forState:UIControlStateNormal];
+            uploadStatusButton.alpha = 1.0;
           });
           return;
         }
         case CurrentUploadStatusSuccess: {
           NSLog(@"[Activity] Upload Success");
           dispatch_async(dispatch_get_main_queue(), ^{
-            UILabel *label = (UILabel *)[uploadProgressView viewWithTag:33];
-            [label setText:@"SUCCESS"];
+            [uploadStatusButton setTitle:@"SUCCESS!" forState:UIControlStateNormal];
             [UIView animateWithDuration:0.3 delay:1.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-              uploadProgressView.alpha = 0.0;
-            } completion:nil];
+              uploadStatusButton.alpha = 0.0;
+            } completion:^(BOOL finished) {
+              [self loadObjects];
+            }];
        
           });
           return;
@@ -564,24 +590,32 @@ static void *ZOTContext = &ZOTContext;
   [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
+- (IBAction)uploadStatusButtonPressed:(id)sender {
+  [[VYBMyVybeStore sharedStore] startUploadingOldVybes];
+}
+
 - (void)uploadFailDetected {
   dispatch_async(dispatch_get_main_queue(), ^{
-    UILabel *label = (UILabel *)[uploadProgressView viewWithTag:33];
-    [label setText:@"SAVED"];
-    [UIView animateWithDuration:0.3 delay:1.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-      uploadProgressView.alpha = 0.0;
-    } completion:nil];
+    NSString *title = @"SAVED";
+    [uploadStatusButton setTitle:title forState:UIControlStateNormal];
+    [self addSavedVybesToTable];
+    [self.tableView reloadData];
   });
+}
+
+- (void)addSavedVybesToTable {
+  [[ZoneStore sharedInstance] addSavedVybesToUnlockedZones];
+  self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
 }
 
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-  CGRect frame = uploadProgressView.frame;
-  frame.origin.y = scrollView.contentOffset.y + self.tableView.frame.size.height - uploadProgressView.frame.size.height;
-  uploadProgressView.frame = frame;
+  CGRect frame = uploadStatusButton.frame;
+  frame.origin.y = scrollView.contentOffset.y + self.tableView.frame.size.height - uploadStatusButton.frame.size.height;
+  uploadStatusButton.frame = frame;
   
-  [self.view bringSubviewToFront:uploadProgressView];
+  [self.view bringSubviewToFront:uploadStatusButton];
 }
 
 #pragma mark - PlayerViewControllerDelegate

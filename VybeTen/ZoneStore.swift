@@ -58,7 +58,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
                 return zone1.freshContents.count > zone2.freshContents.count
               })
               
-              self.displayZoneInfo()
+//              self.displayZoneInfo()
             }
           }
           completionHandler(success: true)
@@ -89,7 +89,6 @@ private let _zoneStoreSharedInstance = ZoneStore()
     for aVybe in result {
       self.putUnlockedVybeIntoZone(aVybe)
     }
-    
   }
   
   private func putUnlockedVybeIntoZone(aVybe: PFObject) {
@@ -116,6 +115,11 @@ private let _zoneStoreSharedInstance = ZoneStore()
     }
     
     return nil
+  }
+  
+  private func unlockedZoneForVybe(aVybe: VYBVybe) -> Zone? {
+    let parseVybe = aVybe.parseObject()
+    return self.unlockedZoneForVybe(parseVybe)
   }
 
   private func addUnlockedZone(zone: Zone) {
@@ -214,6 +218,13 @@ private let _zoneStoreSharedInstance = ZoneStore()
     return zone
   }
   
+  private func createZoneFromVybe(aVybe: VYBVybe) -> Zone {
+    let parseObj = aVybe.parseObject()
+    return self.createZoneFromVybe(parseObj)
+  }
+
+  
+
   func unlockedZones() -> [Zone]! {
     return _unlockedZones
   }
@@ -280,6 +291,24 @@ private let _zoneStoreSharedInstance = ZoneStore()
           break
         }
       }
+    }
+  }
+  
+  func addSavedVybesToUnlockedZones() {
+    if let savedVybes = VYBMyVybeStore.sharedStore().savedVybes() as? [VYBVybe] {
+      for aVybe in savedVybes {
+        if let zone = self.unlockedZoneForVybe(aVybe) {
+          zone.addSavedVybe(aVybe)
+        } else {
+          let zone = self.createZoneFromVybe(aVybe)
+          zone.addSavedVybe(aVybe)
+          self.addUnlockedZone(zone)
+        }
+      }
+      self._unlockedZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
+        let comparisonResult = zone1.myMostRecentVybeTimestamp.compare(zone2.myMostRecentVybeTimestamp)
+        return comparisonResult == NSComparisonResult.OrderedDescending
+      })
     }
   }
   

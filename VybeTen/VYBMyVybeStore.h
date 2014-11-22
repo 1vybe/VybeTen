@@ -17,6 +17,8 @@
 - (void)prepareNewVybe;
 - (void)uploadCurrentVybe;
 
+- (NSArray *)savedVybes;
+
 
 //- (void)addVybe:(VYBMyVybe *)aVybe;
 - (void)startUploadingOldVybes;

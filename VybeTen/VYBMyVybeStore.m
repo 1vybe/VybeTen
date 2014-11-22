@@ -139,7 +139,9 @@
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"success" value:nil] build]];
   }
   
-  [self setCurrentUploadStatus:CurrentUploadStatusSuccess];
+  if (!_uploadingOldVybes) {
+    [self setCurrentUploadStatus:CurrentUploadStatusSuccess];
+  }
 
   @synchronized (_vybesToUpload) {
     // It's possible that Parse retried to upload and succedded before uplaodDelayedVybe was called on that old vybe
@@ -147,7 +149,7 @@
       [_vybesToUpload removeObject:cVybe];
     }
   }
-  
+  NSLog(@"clearing cache for fresh vybe");
   [self clearLocalCacheForVybe:cVybe];
   [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Posted"];
 }
@@ -179,54 +181,64 @@
 }
 
 - (void)startUploadingOldVybes {
-    BOOL parseIsReachable = [(VYBAppDelegate *)[UIApplication sharedApplication].delegate isParseReachable];
-    if ( ! parseIsReachable ) {
-        return;
-    }
-    
-    if (_uploadingOldVybes)
-        return;
-    
-    _uploadingOldVybes = YES;
+  BOOL parseIsReachable = [(VYBAppDelegate *)[UIApplication sharedApplication].delegate isParseReachable];
+  if ( ! parseIsReachable ) {
+    return;
+  }
+  
+  if (_uploadingOldVybes)
+    return;
 
-    dispatch_async(_oldUploadQueue, ^{
-        [self uploadDelayedVybe];
-    });
+  if (_vybesToUpload.count < 1) {
+    return;
+  }
+
+  _uploadingOldVybes = YES;
+  [self setCurrentUploadStatus:CurrentUploadStatusUploading];
+  
+  dispatch_async(_oldUploadQueue, ^{
+    [self uploadDelayedVybe];
+  });
 }
 
 - (void)uploadDelayedVybe {
-    VYBVybe *oldVybe;
-    
-    @synchronized (_vybesToUpload) {
-        if (_vybesToUpload.count < 1) {
-            _uploadingOldVybes = NO;
-            return;
-        }
-        
-        oldVybe = [_vybesToUpload firstObject];
+  VYBVybe *oldVybe;
+  
+  @synchronized (_vybesToUpload) {
+    if (_vybesToUpload.count < 1) {
+      _uploadingOldVybes = NO;
+      [self setCurrentUploadStatus:CurrentUploadStatusSuccess];
+
+      return;
     }
     
-    BOOL success = [self uploadVybe:oldVybe];
+    oldVybe = [_vybesToUpload firstObject];
+  }
+  
+  BOOL success = [self uploadVybe:oldVybe];
 
-    @synchronized (_vybesToUpload) {
-        if (success) {
-            [_vybesToUpload removeObject:oldVybe];
-            [self saveChanges];
-        }
-    }
-
+  @synchronized (_vybesToUpload) {
     if (success) {
-        // GA stuff
-        id tracker = [[GAI sharedInstance] defaultTracker];
-        if (tracker) {
-            // upload recovered metric for capture_video event
-            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"recovered" value:nil] build]];
-        }
-        NSLog(@"uploaded old vybe: %@", [oldVybe parseObject]);
-        
-        [self clearLocalCacheForVybe:oldVybe];
-        [self uploadDelayedVybe];
+      [_vybesToUpload removeObject:oldVybe];
+      [self saveChanges];
     }
+  }
+
+  if (success) {
+    // GA stuff
+    id tracker = [[GAI sharedInstance] defaultTracker];
+    if (tracker) {
+        // upload recovered metric for capture_video event
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"recovered" value:nil] build]];
+    }
+    NSLog(@"uploaded old vybe: %@", [oldVybe parseObject]);
+    
+    [self clearLocalCacheForVybe:oldVybe];
+    [self uploadDelayedVybe];
+  }
+  else {
+    [self setCurrentUploadStatus:CurrentUploadStatusFailed];
+  }
 }
 
 - (BOOL)uploadVybe:(VYBVybe *)aVybe {
@@ -275,18 +287,24 @@
 
 
 - (void)clearLocalCacheForVybe:(VYBVybe *)aVybe {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[aVybe videoFilePath]];
-        NSURL *thumbnailURL = [[NSURL alloc] initFileURLWithPath:[aVybe thumbnailFilePath]];
-        
-        NSError *error;
-        [[NSFileManager defaultManager] removeItemAtURL:videoURL error:&error];
-        [[NSFileManager defaultManager] removeItemAtURL:thumbnailURL error:&error];
-    });
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[aVybe videoFilePath]];
+    NSURL *thumbnailURL = [[NSURL alloc] initFileURLWithPath:[aVybe thumbnailFilePath]];
+    
+    NSError *error;
+    [[NSFileManager defaultManager] removeItemAtURL:videoURL error:&error];
+    NSLog(@"local cache for video cleared");
+    [[NSFileManager defaultManager] removeItemAtURL:thumbnailURL error:&error];
+    NSLog(@"local cache for thumbnail cleared");
+  });
 }
 
 - (VYBVybe *)currVybe {
     return _currVybe;
+}
+
+- (NSArray *)savedVybes {
+  return [NSArray arrayWithArray:_vybesToUpload];
 }
 
 - (NSString *)myVybesArchivePath {

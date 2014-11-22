@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 @class Zone;
 @interface VYBVybe : NSObject
+@property (nonatomic) NSString *uniqueFileName;
 @property (nonatomic) CLLocation *locationCL;
 //@property (nonatomic) VYBZone *vybeZone;
 
