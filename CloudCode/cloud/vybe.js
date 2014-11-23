@@ -40,22 +40,11 @@ Parse.Cloud.afterSave('Vybe', function (request) {
   Parse.Cloud.useMasterKey();
   var query = new Parse.Query(Parse.User);
   query.notEqualTo('username', request.user.get('username'));
-  query.include('freshFeed');
   query.each(function(user) {
     console.log('feeding to ' + user.get('username'));
 
-    var feed = user.get('freshFeed', []);
-    if (feed === null) {
-      feed = [request.object];
-      console.log('first entry to feed!');
-    }
-    else {
-      console.log('feed already has ' + feed.length + 'vybes');
-      feed.push(request.object);
-    }
-    user.set('freshFeed', feed);
-    console.log('successfully fed to ' + user.get('username'));
-
+    var feed = user.relation('feed');
+    feed.add(request.object);
     user.save();
   });
 
@@ -121,25 +110,28 @@ Parse.Cloud.job("removeOldVybesFromFeeds", function (request, status) {
 
   // Query for all users
   var query = new Parse.Query(Parse.User);
-  query.exists('freshFeed');
-  query.include('freshFeed');
+  query.exists('feed');
 
-  var ttlAgo = new Date('2014-11-15T23:00:00Z'); // Temporary time interval (UTC)
+  var ttlAgo = new Date(request.params.dateString);
 
   query.each(function(user) {
     var username = user.get('username');
     console.log('cleaning for ' + username);
-    var freshFeed = user.get('freshFeed', []);
-    if (freshFeed !== null) {
-      var newFreshFeed = freshFeed.filter(function(vybe) { return vybe !== null; });
-      newFreshFeed = newFreshFeed.filter(function(vybe) { return vybe.get('timestamp') > ttlAgo; });
-      var deleteCount = freshFeed.length - newFreshFeed.length;
-      if (deleteCount) {
-        console.log("Deleting " + deleteCount + " Vybes from " + username + "'s feed.");
-        user.set('freshFeed', newFreshFeed);
+    var feed = user.relation('freshFeed');
+    feed.query().find({
+      success: function(list) {
+        for(i = 0; i < list.length; i++) {
+          var aVybe = list[i];
+          if (aVybe.get('timestamp') < ttlAgo) {
+            feed.remove(aVybe);
+          }
+        }
         return user.save();
+      },
+      error: function(error) {
+        return;
       }
-    }
+    });
   }).then(function() {
     // Set the job's success status
     status.success("Job completed successfully.");
