@@ -135,26 +135,26 @@
 }
 
 - (void)prepareFirstVideoInBackgroundWithCompletion:(void (^)(BOOL))completionBlock {
-    PFObject *firstVideo = _zoneVybes[0];
-    NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
-    cacheURL = [cacheURL URLByAppendingPathComponent:[firstVideo objectId]];
-    cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
+  PFObject *firstVideo = _zoneVybes[0];
+  NSURL *cacheURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
+  cacheURL = [cacheURL URLByAppendingPathComponent:[firstVideo objectId]];
+  cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
     
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
+  if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
+    completionBlock(YES);
+  }
+  else {
+    PFFile *vid = [firstVideo objectForKey:kVYBVybeVideoKey];
+    [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+      if (!error) {
+        [data writeToURL:cacheURL atomically:YES];
         completionBlock(YES);
-    }
-    else {
-        PFFile *vid = [firstVideo objectForKey:kVYBVybeVideoKey];
-        [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            if (!error) {
-                [data writeToURL:cacheURL atomically:YES];
-                completionBlock(YES);
-            }
-            else {
-                completionBlock(NO);
-            }
-        }];
-    }
+      }
+      else {
+        completionBlock(NO);
+      }
+    }];
+  }
 }
 
 - (void)playZoneVybesFromVybe:(PFObject *)aVybe {
@@ -242,47 +242,45 @@
 #pragma mark - Behind the scene
 
 - (void)playStream:(NSArray *)stream atIndex:(NSInteger)streamIdx {
-    // GA stuff
-    id tracker = [[GAI sharedInstance] defaultTracker];
-    if (tracker) {
-        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"play_video" label:@"play" value:nil] build]];
-    }
+  // GA stuff
+  id tracker = [[GAI sharedInstance] defaultTracker];
+  if (tracker) {
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"play_video" label:@"play" value:nil] build]];
+  }
 
-    PFObject *currVybe = [stream objectAtIndex:streamIdx];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self syncUIElementsWithVybe:currVybe];
-            self.goPrevButton.hidden = (streamIdx == 0);
-        self.goNextButton.hidden = (streamIdx == stream.count - 1);
-    });
-    
+  PFObject *currVybe = [stream objectAtIndex:streamIdx];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self syncUIElementsWithVybe:currVybe];
+        self.goPrevButton.hidden = (streamIdx == 0);
+    self.goNextButton.hidden = (streamIdx == stream.count - 1);
+  });
+  
     // Play after syncing UI elements
-    NSURL *cacheURL = (NSURL *)[[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
-    cacheURL = [cacheURL URLByAppendingPathComponent:[currVybe objectId]];
-    cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
+  NSURL *cacheURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
+  cacheURL = [cacheURL URLByAppendingPathComponent:[currVybe objectId]];
+  cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
+  
+  if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+    [self playAsset:asset];
+
+  } else {
+    PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+      if (!error) {
+        [data writeToURL:cacheURL atomically:YES];
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
         
         [self playAsset:asset];
-
         [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
-    } else {
-        PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            if (!error) {
-                [data writeToURL:cacheURL atomically:YES];
-                AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
-                
-                [self playAsset:asset];
-                [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
-            } else {
-                UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-                [av show];
-            }
-        }];
-    }
+      } else {
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [av show];
+      }
+    }];
+  }
 }
 
 
