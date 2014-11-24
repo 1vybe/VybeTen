@@ -21,7 +21,7 @@
 
 
 //- (void)addVybe:(VYBMyVybe *)aVybe;
-- (void)startUploadingOldVybes;
+- (void)startUploadingSavedVybes;
 - (NSString *)myVybesArchivePath;
 - (VYBVybe *)currVybe;
 

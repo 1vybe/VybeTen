@@ -292,6 +292,8 @@
   BOOL success = [thumbData writeToURL:thumbURL options:NSDataWritingAtomic error:&err];
   if (!success)
     NSLog(@"Error saving thumbnail image: %@", err);
+  else
+    NSLog(@"[utility] thumbnail successfully saved");
   return success;
 }
 

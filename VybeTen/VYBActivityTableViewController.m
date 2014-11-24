@@ -591,7 +591,7 @@ static void *ZOTContext = &ZOTContext;
 }
 
 - (IBAction)uploadStatusButtonPressed:(id)sender {
-  [[VYBMyVybeStore sharedStore] startUploadingOldVybes];
+  [[VYBMyVybeStore sharedStore] startUploadingSavedVybes];
 }
 
 - (void)uploadFailDetected {

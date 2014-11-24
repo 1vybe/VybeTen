@@ -10,7 +10,8 @@ Parse.Cloud.beforeSave('Vybe', function (request, response) {
 
   if(!objectUser) {
     response.error('A Vybe should have a valid user.');
-  } else {
+  } 
+  else {
     response.success();
   }
 });
@@ -46,6 +47,7 @@ Parse.Cloud.afterSave('Vybe', function (request) {
     var feed = user.relation('feed');
     feed.add(request.object);
     user.save();
+    console.log('successfully fed to ' + user.get('username'));
   });
 
 });
@@ -110,16 +112,16 @@ Parse.Cloud.job("removeOldVybesFromFeeds", function (request, status) {
 
   // Query for all users
   var query = new Parse.Query(Parse.User);
-  query.exists('feed');
 
   var ttlAgo = new Date(request.params.dateString);
 
   query.each(function(user) {
     var username = user.get('username');
     console.log('cleaning for ' + username);
-    var feed = user.relation('freshFeed');
+    var feed = user.relation('feed');
     feed.query().find({
       success: function(list) {
+        console.log('there are ' + list.length + ' feed for this user');
         for(i = 0; i < list.length; i++) {
           var aVybe = list[i];
           if (aVybe.get('timestamp') < ttlAgo) {
@@ -129,7 +131,8 @@ Parse.Cloud.job("removeOldVybesFromFeeds", function (request, status) {
         return user.save();
       },
       error: function(error) {
-        return;
+        console.log('failed clearing for user ' + user.get('username'));
+        //return error;
       }
     });
   }).then(function() {
@@ -261,7 +264,6 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
 
   var query = new Parse.Query(Parse.User);
   query.equalTo('username', currUser.get('username'));
-  query.include('freshFeed');
 
   query.first({
     success: function(aUser) {
@@ -270,36 +272,25 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
       var ttlAgo = new Date();
       ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window.
       
-      var feed = aUser.get('freshFeed');
-      var feedIds = [];
-
-      if (feed) {
-        console.log('There are ' + feed.length + ' feed for ' + aUser.get('username'));
-        for (i = 0; i < feed.length; i++) {
-          var aVybe = feed[i];
-          if (aVybe != null) {
-            feedIds.push(aVybe.id);
+      var feed = aUser.relation('feed');
+      var freshContents = [];
+      var feedQuery = feed.query();
+      feedQuery.include('user');
+      feedQuery.find({
+        success: function(list) {
+          console.log('There are ' + list.length + ' feed for ' + aUser.get('username'));
+          for (i = 0; i < list.length; i++) {
+            var aVybe = list[i];
+            if (aVybe.get('timestamp') > ttlAgo) {
+              freshContents.push(aVybe);
+            }
           }
+          response.success(freshContents);
+        },
+        error: function(error) {
+          response.error(error);
         }
-
-        var vybeQuery = new Parse.Query('Vybe');
-        vybeQuery.include('user')
-        vybeQuery.greaterThanOrEqualTo('timestamp', ttlAgo);
-        vybeQuery.containedIn('objectId', feedIds);
-        console.log('There are ' + feedIds.length + ' feedIds');
-        vybeQuery.find({
-          success: function(freshObjs) {
-            console.log('There are ' + freshObjs.length + ' fresh vybes for ' + aUser.get('username'));
-            response.success(freshObjs);
-          },
-          error: function(error) {
-            console.log('Fetching fresh feed failed: ' + error);
-          }
-        });
-      }
-      else {
-        response.error('There is no feed for ' + aUser.username)
-      }
+      });
     },
     error: function(error) {
       response.error(error);
@@ -309,33 +300,28 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
 
 
 Parse.Cloud.define('remove_from_feed', function (request, response) {
-  var wVybeID = request.params.vybeID;
+  var watchedObjID = request.params.vybeID;
   var currUser = request.user;
 
-  var query = new Parse.Query(Parse.User);
-  query.equalTo('username', currUser.get('username'));
-
-  query.first({
-    success: function(aUser) {
-      var oldFeed = aUser.get('freshFeed');
-      if (oldFeed) {
-        var newFeed = [];
-        for (i = 0; i < oldFeed.length; i++) {
-          var oVybe = oldFeed[i];
-          if (oVybe.id == wVybeID) {
-            console.log("Found the old vybe!!!!");
-          }
-          else {
-            newFeed.push(oVybe);
-          }
+  var vybeQuery = new Parse.Query('Vybe');
+  vybeQuery.equalTo('objectId', watchedObjID);
+  vybeQuery.first({
+    success: function(watchedObj) {
+      var query = new Parse.Query(Parse.User);
+      query.equalTo('username', currUser.get('username'));
+      query.first({
+        success: function(aUser) {
+          console.log(aUser.get('username') + ' watched this vybe so lets delete');
+          var feed = aUser.relation('feed');
+          feed.remove(watchedObj);
+          aUser.save();
+      
+          response.success(watchedObj);
+        },
+        error: function(error) {
+          response.error(error);
         }
-        aUser.set('freshFeed', newFeed);
-        aUser.save();
-        response.success(wVybeID);
-      }
-      else {
-        response.error('removing failed because there is no feed for user ' + currUser.get('username'));
-      }
+      }); 
     },
     error: function(error) {
       response.error(error);

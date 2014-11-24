@@ -13,6 +13,7 @@
 #import "VYBConstants.h"
 #import "VYBUtility.h"
 #import "VYBMyVybeStore.h"
+#import "NSMutableArray+VYBVybe.h"
 
 @interface VYBMyVybeStore () {
   VYBVybe *_currVybe;
@@ -92,35 +93,34 @@
     VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe];
   
     NSData *video = [NSData dataWithContentsOfFile:[vybeToUpload videoFilePath]];
-    NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToUpload thumbnailFilePath]];
-    
     PFFile *videoFile = [PFFile fileWithData:video];
-    PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
  
-    [thumbnailFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
       if (!error) {
-        [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-          if (!error) {
-            PFObject *vybe = [vybeToUpload parseObject];
-            [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-            [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
-            [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-              if (succeeded) {
-                [self didUploadVybe:vybeToUpload];
-              } else {
-                [self uploadingFailedWith:vybeToUpload];
-              }
-            }];
-            } else {
-              [self uploadingFailedWith:vybeToUpload];
-            }
-        } progressBlock:^(int percentDone) {
-          [self setCurrentUploadPercent:percentDone];
+        PFObject *vybe = [vybeToUpload parseObject];
+        [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
+        
+        NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToUpload thumbnailFilePath]];
+        if (thumbnail) {
+          PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
+          [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
+          [thumbnailFile saveInBackground];
+        }
+        
+        [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+          if (succeeded) {
+            [self didUploadVybe:vybeToUpload];
+          } else {
+            [self uploadingFailedWith:vybeToUpload];
+          }
         }];
       } else {
         [self uploadingFailedWith:vybeToUpload];
       }
+    } progressBlock:^(int percentDone) {
+      [self setCurrentUploadPercent:percentDone];
     }];
+
     // Update user lastVybeLocation and lastVybeTime field.
     [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
     [[PFUser currentUser] saveInBackground];
@@ -145,9 +145,7 @@
 
   @synchronized (_vybesToUpload) {
     // It's possible that Parse retried to upload and succedded before uplaodDelayedVybe was called on that old vybe
-    if ( [_vybesToUpload containsObject:cVybe] ) {
-      [_vybesToUpload removeObject:cVybe];
-    }
+    [_vybesToUpload removeVybeObject:cVybe];
   }
   NSLog(@"clearing cache for fresh vybe");
   [self clearLocalCacheForVybe:cVybe];
@@ -171,7 +169,7 @@
 - (void)saveVybe:(VYBVybe *)vybeToSave {
     BOOL success = NO;
     @synchronized (_vybesToUpload) {
-        [_vybesToUpload addObject:vybeToSave];
+        [_vybesToUpload addVybeObject:vybeToSave];
         success = [self saveChanges];
     }
     
@@ -180,7 +178,7 @@
     }
 }
 
-- (void)startUploadingOldVybes {
+- (void)startUploadingSavedVybes {
   BOOL parseIsReachable = [(VYBAppDelegate *)[UIApplication sharedApplication].delegate isParseReachable];
   if ( ! parseIsReachable ) {
     return;
@@ -197,11 +195,11 @@
   [self setCurrentUploadStatus:CurrentUploadStatusUploading];
   
   dispatch_async(_oldUploadQueue, ^{
-    [self uploadDelayedVybe];
+    [self uploadSavedVybe];
   });
 }
 
-- (void)uploadDelayedVybe {
+- (void)uploadSavedVybe {
   VYBVybe *oldVybe;
   
   @synchronized (_vybesToUpload) {
@@ -215,11 +213,11 @@
     oldVybe = [_vybesToUpload firstObject];
   }
   
-  BOOL success = [self uploadVybe:oldVybe];
+  BOOL success = [self uploadSavedVybe:oldVybe];
 
   @synchronized (_vybesToUpload) {
     if (success) {
-      [_vybesToUpload removeObject:oldVybe];
+      [_vybesToUpload removeVybeObject:oldVybe];
       [self saveChanges];
     }
   }
@@ -234,47 +232,49 @@
     NSLog(@"uploaded old vybe: %@", [oldVybe parseObject]);
     
     [self clearLocalCacheForVybe:oldVybe];
-    [self uploadDelayedVybe];
+    [self uploadSavedVybe];
   }
   else {
     [self setCurrentUploadStatus:CurrentUploadStatusFailed];
   }
 }
 
-- (BOOL)uploadVybe:(VYBVybe *)aVybe {
-    if (!aVybe)
-        return NO;
-    
-    PFObject *vybe = [aVybe parseObject];
+- (BOOL)uploadSavedVybe:(VYBVybe *)aVybe {
+  if (!aVybe)
+    return NO;
+  
+  PFObject *vybe = [aVybe parseObject];
 
-    NSData *video = [NSData dataWithContentsOfFile:[aVybe videoFilePath]];
-    NSData *thumbnail = [NSData dataWithContentsOfFile:[aVybe thumbnailFilePath]];
-    
-    if ( ! video )
-        return NO;
-    if ( ! thumbnail )
-        return NO;
-    //NSAssert(video, @"cached video does not exist");
-    //NSAssert(thumbnail, @"cached thumbnail does not exist");
+  NSData *video = [NSData dataWithContentsOfFile:[aVybe videoFilePath]];
+  NSData *thumbnail = [NSData dataWithContentsOfFile:[aVybe thumbnailFilePath]];
+  
+  if ( ! video ) {
+    [_vybesToUpload removeVybeObject:aVybe];
+    return YES;
+  }
+   //NSAssert(video, @"cached video does not exist");
+  //NSAssert(thumbnail, @"cached thumbnail does not exist");
 
-    PFFile *videoFile = [PFFile fileWithData:video];
+  PFFile *videoFile = [PFFile fileWithData:video];
+  [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
+  BOOL success = [videoFile save];
+  if (thumbnail) {
     PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
-
-    BOOL success = [thumbnailFile save];
-    if ( ! success )
-        return NO;
-    success = [videoFile save];
-    if ( ! success )
-        return NO;
-
-    [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
     [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
-    success = [vybe save];
-    if ( ! success )
-        return NO;
-    
+    success = [thumbnailFile save];
+  }
+  
+  if ( ! success )
+    return NO;
+
+  success = [vybe save];
+  
+  if ( ! success )
+    return NO;
+  
+  /*
     // Only update current user's lastVybedTime and lastVybeLocation if this vybe is fresher
-    NSDate *currUserLastVybedTime = [PFUser currentUser][kVYBUserLastVybedTimeKey];
+    NSDate *currUserLastVybedTime = [[PFUser currentUser] objectForKey:kVYBUserLastVybedTimeKey];
     if (currUserLastVybedTime &&
         ([currUserLastVybedTime timeIntervalSinceDate:vybe[kVYBVybeTimestampKey]] < 0)) {
         [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
@@ -282,20 +282,29 @@
         
         return success;
     }
-    return YES;
+  */
+  return YES;
 }
 
 
 - (void)clearLocalCacheForVybe:(VYBVybe *)aVybe {
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[aVybe videoFilePath]];
     NSURL *thumbnailURL = [[NSURL alloc] initFileURLWithPath:[aVybe thumbnailFilePath]];
     
     NSError *error;
     [[NSFileManager defaultManager] removeItemAtURL:videoURL error:&error];
-    NSLog(@"local cache for video cleared");
+    if (!error) {
+      NSLog(@"local cache for video cleared");
+    } else {
+      NSLog(@"local cache for video clear FAILED");
+    }
     [[NSFileManager defaultManager] removeItemAtURL:thumbnailURL error:&error];
-    NSLog(@"local cache for thumbnail cleared");
+    if (!error) {
+      NSLog(@"local cache for thumbnail cleared");
+    } else {
+      NSLog(@"local cache for thumbnail clear FAILED");
+    }
   });
 }
 
@@ -308,16 +317,16 @@
 }
 
 - (NSString *)myVybesArchivePath {
-    NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    
-    NSString *documentDirectory = [documentDirectories objectAtIndex:0];
-    
-    return [documentDirectory stringByAppendingPathComponent:@"myVybes.archive"];
+  NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  
+  NSString *documentDirectory = [documentDirectories objectAtIndex:0];
+  
+  return [documentDirectory stringByAppendingPathComponent:@"myVybes.archive"];
 }
 
 - (BOOL)saveChanges {
-    NSString *path = [self myVybesArchivePath];
-    return [NSKeyedArchiver archiveRootObject:_vybesToUpload toFile:path];
+  NSString *path = [self myVybesArchivePath];
+  return [NSKeyedArchiver archiveRootObject:_vybesToUpload toFile:path];
 }
 
 
