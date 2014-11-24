@@ -146,6 +146,7 @@
   @synchronized (_vybesToUpload) {
     // It's possible that Parse retried to upload and succedded before uplaodDelayedVybe was called on that old vybe
     [_vybesToUpload removeVybeObject:cVybe];
+    [self saveChanges];
   }
   NSLog(@"clearing cache for fresh vybe");
   [self clearLocalCacheForVybe:cVybe];
@@ -250,6 +251,7 @@
   
   if ( ! video ) {
     [_vybesToUpload removeVybeObject:aVybe];
+    [self saveChanges];
     return YES;
   }
    //NSAssert(video, @"cached video does not exist");
