@@ -309,6 +309,31 @@ private let _zoneStoreSharedInstance = ZoneStore()
     }
   }
   
+  func deleteMyVybeInBackground(obj: AnyObject!, completionHandler: ((success: Bool) -> Void)) {
+    let vybe = obj as PFObject
+    vybe.deleteInBackgroundWithBlock { (success: Bool, error: NSError!) -> Void in
+      if error == nil {
+        if success {
+          if let zone = self.unlockedZoneForVybe(vybe) {
+          
+            for index in 0...zone.myVybes.count {
+              if zone.myVybes[index] == vybe {
+                zone.myVybes.removeAtIndex(index)
+                break
+              }
+            }
+            
+          }
+        }
+        completionHandler(success: success)
+      }
+      else {
+        completionHandler(success: false)
+      }
+    }
+  }
+
+  
   private func displayZoneInfo() {
     println("#ACTIVE# Name:  [numFreshContents] [popScore] [mostRecentTimestamp] ")
     for aZone in _activeZones {

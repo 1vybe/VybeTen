@@ -76,13 +76,18 @@ static void *ZOTContext = &ZOTContext;
   // Remove empty cells.
   self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
   
-  self.tableView.delegate = self;
+//  self.tableView.allowsMultipleSelectionDuringEditing = NO;
   
   _selectedMyLocationIndex = -1;
   
   uploadStatusButton = (UIButton *)[[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:self options:nil] firstObject];
   [self.view addSubview:uploadStatusButton];
   uploadStatusButton.alpha = 0.0;
+  
+  UIScreenEdgePanGestureRecognizer *panGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+  panGesture.edges = UIRectEdgeLeft;
+  
+  [[self.view window] addGestureRecognizer:panGesture];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -502,6 +507,28 @@ static void *ZOTContext = &ZOTContext;
   }
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+  PFObject *obj = [self vybeCellForIndexPath:indexPath];
+  if (obj)
+    return YES;
+  
+  return NO;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+  if (editingStyle == UITableViewCellEditingStyleDelete) {
+    PFObject *obj = [self vybeCellForIndexPath:indexPath];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[ZoneStore sharedInstance] deleteMyVybeInBackground:obj completionHandler:^(BOOL success) {
+      if (success) {
+        [self didDeleteMyVybe];
+      }
+      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }];
+  }
+}
+
+#pragma mark - Helpers
 
 - (PFObject *)vybeCellForIndexPath:(NSIndexPath *)indexPath {
   // No My Location cell is expanded
@@ -540,6 +567,10 @@ static void *ZOTContext = &ZOTContext;
   return row - selected.myVybes.count;
 }
 
+- (void)didDeleteMyVybe {
+  self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
+  [self.tableView reloadData];
+}
 
 #pragma mark Segue
 
@@ -605,6 +636,13 @@ static void *ZOTContext = &ZOTContext;
   [[ZoneStore sharedInstance] addSavedVybesToUnlockedZones];
   self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
 }
+
+#pragma mark - Screen Swipe 
+
+- (void)handlePanGesture:(UISwipeGestureRecognizer *)recognizer {
+  
+}
+
 
 #pragma mark - UIScrollViewDelegate
 

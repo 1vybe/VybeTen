@@ -123,13 +123,12 @@
   self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
   
   self.mainNavController = [[VYBNavigationController alloc] initWithRootViewController:self.welcomeViewController];
-  self.mainNavController.navigationBarHidden = YES;
+  //self.mainNavController.navigationBarHidden = YES;
   
   [self.window setRootViewController:self.mainNavController];
   
   self.window.backgroundColor = [UIColor blackColor];
   [self.window makeKeyAndVisible];
-
   
   // Handle push if the app is launched from notification
   [self handlePush:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
@@ -334,22 +333,9 @@
 }
 
 - (void)setUpViewControllers {
-    // Capture (page 1)
-    self.captureVC = [[VYBCaptureViewController alloc] initWithPageIndex:VYBCapturePageIndex];
-    
-    // Activity (page 2)
-    self.activityNavigationVC = (VYBNavigationController *)[[UIStoryboard storyboardWithName:@"Activity" bundle:nil] instantiateInitialViewController];
-    self.activityNavigationVC.pageIndex = VYBActivityPageIndex;
-    
-    // Page view controller
-    self.viewControllers = [[NSArray alloc] initWithObjects:self.captureVC, self.activityNavigationVC, nil];
-    self.pageController = [[VYBPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
-                                                               navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
-                                                                             options:nil];
-    self.pageController.dataSource = self;
-    [self.pageController setViewControllers:@[self.captureVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    
-    [self.mainNavController pushViewController:self.pageController animated:NO];
+    self.activityVC = [[UIStoryboard storyboardWithName:@"Activity" bundle:nil] instantiateInitialViewController];
+  
+    [self.mainNavController pushViewController:self.activityVC animated:NO];
     
     // Checking permissions
     self.permissionController = [[VYBPermissionViewController alloc] init];
