@@ -43,19 +43,21 @@
 
 
 @implementation VYBPlayerViewController {
-    NSInteger downloadingVybeIndex;
-    BOOL menuMode;
-    NSTimer *overlayTimer;
-    
-    NSInteger _pageIndex;
-    NSArray *_zoneVybes;
-    NSInteger _zoneCurrIdx;
-    
-    AVCaptureVideoOrientation lastOrientation;
-    
-    UIView *backgroundView;
-    
-    BOOL _isPlaying;
+  NSInteger downloadingVybeIndex;
+  BOOL menuMode;
+  NSTimer *overlayTimer;
+  
+  NSInteger _pageIndex;
+  NSArray *_zoneVybes;
+  NSInteger _zoneCurrIdx;
+  
+  AVCaptureVideoOrientation lastOrientation;
+  
+  UIView *backgroundView;
+  
+  BOOL _isPlaying;
+  
+  BOOL _isFreshStream;
 }
 @synthesize dismissButton;
 
@@ -194,22 +196,23 @@
 
 - (void)playFreshVybesFromZone:(NSString *)zoneID {
   [[ZoneStore sharedInstance] refreshFreshVybesInBackground:^(BOOL success) {
-      if (success) {
-          NSArray *freshContents = [NSArray arrayWithArray:[[ZoneStore sharedInstance] freshVybesFromZone:zoneID]];
-          if (freshContents.count > 0) {
-              _zoneVybes = freshContents;
-              _zoneCurrIdx = 0;
-              [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
-                  [self.delegate playerViewController:self didFinishSetup:success];
-              }];
-          }
-          else {
-              [self playActiveVybesFromZone:zoneID];
-          }
+    if (success) {
+      NSArray *freshContents = [NSArray arrayWithArray:[[ZoneStore sharedInstance] freshVybesFromZone:zoneID]];
+      if (freshContents.count > 0) {
+        _zoneVybes = freshContents;
+        _zoneCurrIdx = 0;
+        _isFreshStream = YES;
+        [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
+            [self.delegate playerViewController:self didFinishSetup:success];
+        }];
       }
       else {
-          [self.delegate playerViewController:self didFinishSetup:NO];
+        [self playActiveVybesFromZone:zoneID];
       }
+    }
+    else {
+      [self.delegate playerViewController:self didFinishSetup:NO];
+    }
   }];
 }
 
@@ -263,8 +266,10 @@
   if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
     [self playAsset:asset];
-
-    [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
+    
+    if (_isFreshStream) {
+      [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
+    }
   } else {
     PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -275,7 +280,10 @@
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
         
         [self playAsset:asset];
-        [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
+        // Because we want to request to server to remove the watched vybe from the feed only when needed.
+        if (_isFreshStream) {
+          [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
+        }
       } else {
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [av show];

@@ -269,6 +269,7 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
       var freshContents = [];
       var feedQuery = feed.query();
       feedQuery.include('user');
+      feedQuery.addAscending('timestamp');
       feedQuery.find({
         success: function(list) {
           console.log('There are ' + list.length + ' feed for ' + aUser.get('username'));
