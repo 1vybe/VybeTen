@@ -123,7 +123,7 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" tableViewCell="YK0-wJ-ZjC" id="eud-5z-hNB">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="NuVybeCell" translatesAutoresizingMaskIntoConstraints="NO" id="Jhc-oP-IHI">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NuVybeCell" translatesAutoresizingMaskIntoConstraints="NO" id="Jhc-oP-IHI">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timestamp" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y2a-BU-8V2">
@@ -148,6 +148,8 @@
                                         <constraint firstItem="Yyl-cu-X6Q" firstAttribute="centerY" secondItem="GEu-je-d8v" secondAttribute="centerY" id="Jdr-jg-tqU"/>
                                         <constraint firstItem="Yyl-cu-X6Q" firstAttribute="top" secondItem="eud-5z-hNB" secondAttribute="top" constant="10" id="OeI-44-Ty8"/>
                                         <constraint firstItem="y2a-BU-8V2" firstAttribute="leading" secondItem="eud-5z-hNB" secondAttribute="leading" constant="15" id="VNt-fw-xNO"/>
+                                        <constraint firstAttribute="trailing" secondItem="Jhc-oP-IHI" secondAttribute="trailing" id="Yso-Td-kY8"/>
+                                        <constraint firstAttribute="centerY" secondItem="Jhc-oP-IHI" secondAttribute="centerY" id="cdg-zu-n0Q"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="y2a-BU-8V2" secondAttribute="bottomMargin" constant="27" id="kbK-nb-b8E"/>
                                         <constraint firstAttribute="bottom" secondItem="Yyl-cu-X6Q" secondAttribute="bottom" constant="10" id="loU-sC-Yop"/>
                                         <constraint firstItem="Yyl-cu-X6Q" firstAttribute="centerX" secondItem="GEu-je-d8v" secondAttribute="centerX" id="yGX-52-nVE"/>
