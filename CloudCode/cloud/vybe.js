@@ -61,19 +61,12 @@ Parse.Cloud.afterDelete('Vybe', function (request) {
 
   // Query for all users
   var query = new Parse.Query(Parse.User);
-  query.equalTo('freshFeed', deletedVybe);
-  query.include('freshFeed');
 
   query.each(function(user) {
       var username = user.get('username');
-      var freshFeed = user.get('freshFeed', []);
-      var newFreshFeed = freshFeed.filter(function(vybe) { return vybe !== null; });
-      var deleteCount = freshFeed.length - newFreshFeed.length;
-      if (deleteCount) {
-        console.log("Deleting " + deleteCount + " Vybes from " + username + "'s feed.");
-        user.set('freshFeed', newFreshFeed);
-        return user.save();
-      }
+      var feed = user.relation('feed');
+      feed.remove(deletedVybe);
+      return user.save();
   });
 });
 

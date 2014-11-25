@@ -172,13 +172,17 @@ import MapKit
   }
   
   //NOTE: Not being used right now
-  func addWatchedContent(nVybe: PFObject) {
-      for aVybe in watchedContents {
-          if aVybe.objectId == nVybe.objectId {
-              return
-          }
-      }
-      watchedContents.append(nVybe)
+  func addWatchedContent(vybe: PFObject) {
+    for aVybe in watchedContents {
+        if aVybe.objectId == vybe.objectId {
+            return
+        }
+    }
+    watchedContents.append(vybe)
+    //Update to cloud
+    PFCloud.callFunctionInBackground("remove_from_feed", withParameters: ["vybeID" : vybe.objectId]) { (result: AnyObject!, error: NSError!) -> Void in
+      
+    }
   }
   
   

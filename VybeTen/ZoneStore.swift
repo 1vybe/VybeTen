@@ -285,9 +285,6 @@ private let _zoneStoreSharedInstance = ZoneStore()
           aZone.removeFromFreshContents(dVybe)
           // Update watchedContents to prevent from receiving stale contents (watched but not removed from cloud) in next refresh
           aZone.addWatchedContent(dVybe)
-          //Update to cloud
-          PFCloud.callFunctionInBackground("remove_from_feed", withParameters: ["vybeID" : dVybe.objectId]) { (result: AnyObject!, error: NSError!) -> Void in
-          }
           break
         }
       }

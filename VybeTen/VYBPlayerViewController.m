@@ -264,6 +264,7 @@
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
     [self playAsset:asset];
 
+    [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
   } else {
     PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
