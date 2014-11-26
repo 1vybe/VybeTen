@@ -1,28 +1,39 @@
 PODS:
   - Bolts (1.1.3)
-  - Foursquare-API-v2 (1.4.7)
-  - GoogleAnalytics-iOS-SDK (3.10)
-  - HockeySDK (3.6.1)
+  - Facebook-iOS-SDK (3.20.0):
+    - Bolts (~> 1.0)
+  - GoogleAnalytics-iOS-SDK (3.10):
+    - GoogleAnalytics-iOS-SDK/Core (= 3.10)
+  - GoogleAnalytics-iOS-SDK/Core (3.10)
+  - HockeySDK (3.6.2)
   - MBProgressHUD (0.9)
   - MotionOrientation@PTEz (1.1.0)
-  - Parse (1.4.2):
+  - Parse (1.5.0):
     - Bolts (~> 1.1.3)
+  - ParseFacebookUtils (1.5.0.1):
+    - Facebook-iOS-SDK (~> 3.20)
+    - Parse (~> 1.5.0)
+  - ParseUI (1.0.1):
+    - Parse (~> 1.5.0)
+    - ParseFacebookUtils (~> 1.5.0)
 
 DEPENDENCIES:
-  - Foursquare-API-v2
   - GoogleAnalytics-iOS-SDK (~> 3.0)
   - HockeySDK (~> 3.5)
   - MBProgressHUD (~> 0.8)
   - MotionOrientation@PTEz (~> 1.1.0)
-  - Parse (= 1.4.2)
+  - Parse (~> 1.5.0)
+  - ParseUI (~> 1.0.1)
 
 SPEC CHECKSUMS:
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
-  Foursquare-API-v2: 97ce6ee55f7ea871ceec0255bba50845551b51c3
-  GoogleAnalytics-iOS-SDK: e5872d2acc120613d954320e206c7e3bc8357d7c
-  HockeySDK: 15b24068466aa5ee421eed0cc1d58428d698edf6
+  Facebook-iOS-SDK: 5854404b4b651f612a8ef79ca06d766858f4cb8e
+  GoogleAnalytics-iOS-SDK: f422062075d9ccb1ea8d783fc5ba3829461e9502
+  HockeySDK: bfd1f5ac75938b07499c4ac12932244b72a2e70b
   MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
   MotionOrientation@PTEz: ec58ced639faa14d30e63db9ef5cba8ded38b3b5
-  Parse: fc9ceb6edbc6bb6a1a1f3c33f0db3293a6894f94
+  Parse: 7de25b6f70f0b233e5d25835f62eabfa91e4f9d7
+  ParseFacebookUtils: df2c8634a66883326629099af3690f1862fe126d
+  ParseUI: 7a9d600d93fbb56b1a4019d5a3a0f43d74516a01
 
 COCOAPODS: 0.35.0

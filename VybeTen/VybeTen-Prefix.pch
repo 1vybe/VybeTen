@@ -14,6 +14,7 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
     #import <Parse/Parse.h>
+    #import <ParseUI/ParseUI.h>
     #import <GoogleAnalytics-iOS-SDK/GAI.h>
     #import <GoogleAnalytics-iOS-SDK/GAIFields.h>
     #import <GoogleAnalytics-iOS-SDK/GAIDictionaryBuilder.h>

@@ -12,11 +12,11 @@
 #define COCOAPODS_VERSION_MINOR_Bolts 1
 #define COCOAPODS_VERSION_PATCH_Bolts 3
 
-// Foursquare-API-v2
-#define COCOAPODS_POD_AVAILABLE_Foursquare_API_v2
-#define COCOAPODS_VERSION_MAJOR_Foursquare_API_v2 1
-#define COCOAPODS_VERSION_MINOR_Foursquare_API_v2 4
-#define COCOAPODS_VERSION_PATCH_Foursquare_API_v2 7
+// Facebook-iOS-SDK
+#define COCOAPODS_POD_AVAILABLE_Facebook_iOS_SDK
+#define COCOAPODS_VERSION_MAJOR_Facebook_iOS_SDK 3
+#define COCOAPODS_VERSION_MINOR_Facebook_iOS_SDK 20
+#define COCOAPODS_VERSION_PATCH_Facebook_iOS_SDK 0
 
 // GoogleAnalytics-iOS-SDK
 #define COCOAPODS_POD_AVAILABLE_GoogleAnalytics_iOS_SDK
@@ -24,11 +24,17 @@
 #define COCOAPODS_VERSION_MINOR_GoogleAnalytics_iOS_SDK 10
 #define COCOAPODS_VERSION_PATCH_GoogleAnalytics_iOS_SDK 0
 
+// GoogleAnalytics-iOS-SDK/Core
+#define COCOAPODS_POD_AVAILABLE_GoogleAnalytics_iOS_SDK_Core
+#define COCOAPODS_VERSION_MAJOR_GoogleAnalytics_iOS_SDK_Core 3
+#define COCOAPODS_VERSION_MINOR_GoogleAnalytics_iOS_SDK_Core 10
+#define COCOAPODS_VERSION_PATCH_GoogleAnalytics_iOS_SDK_Core 0
+
 // HockeySDK
 #define COCOAPODS_POD_AVAILABLE_HockeySDK
 #define COCOAPODS_VERSION_MAJOR_HockeySDK 3
 #define COCOAPODS_VERSION_MINOR_HockeySDK 6
-#define COCOAPODS_VERSION_PATCH_HockeySDK 1
+#define COCOAPODS_VERSION_PATCH_HockeySDK 2
 
 // MBProgressHUD
 #define COCOAPODS_POD_AVAILABLE_MBProgressHUD
@@ -45,6 +51,19 @@
 // Parse
 #define COCOAPODS_POD_AVAILABLE_Parse
 #define COCOAPODS_VERSION_MAJOR_Parse 1
-#define COCOAPODS_VERSION_MINOR_Parse 4
-#define COCOAPODS_VERSION_PATCH_Parse 2
+#define COCOAPODS_VERSION_MINOR_Parse 5
+#define COCOAPODS_VERSION_PATCH_Parse 0
+
+// ParseFacebookUtils
+#define COCOAPODS_POD_AVAILABLE_ParseFacebookUtils
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 1.5.0.1.
+
+// ParseUI
+#define COCOAPODS_POD_AVAILABLE_ParseUI
+#define COCOAPODS_VERSION_MAJOR_ParseUI 1
+#define COCOAPODS_VERSION_MINOR_ParseUI 0
+#define COCOAPODS_VERSION_PATCH_ParseUI 1
 
