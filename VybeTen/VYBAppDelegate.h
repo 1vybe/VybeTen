@@ -12,7 +12,7 @@
 #import "VYBPageViewController.h"
 
 @class VYBPlayerViewController;
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource, VYBFirstPageViewControllerDelegate>
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

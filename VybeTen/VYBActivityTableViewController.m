@@ -16,8 +16,6 @@
 
 #import "VYBPlayerViewController.h"
 
-#import "VYBLogInViewController.h"
-
 #import "VYBMyVybeStore.h"
 
 @interface VYBActivityTableViewController () <UIAlertViewDelegate, VYBPlayerViewControllerDelegate>

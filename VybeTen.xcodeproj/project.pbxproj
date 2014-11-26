@@ -33,8 +33,6 @@
 		025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 025EDB2418F65E45008B0CB2 /* VYBAnimator.m */; };
 		0262054419A67B3600E994F9 /* UINavigationController+Autorotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0262054319A67B3600E994F9 /* UINavigationController+Autorotate.m */; };
 		026216BE19EA470600EC6544 /* VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 026216BD19EA470600EC6544 /* VYBVybe.m */; };
-		026385EE197972BA00B377EC /* VYBSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 026385EC197972BA00B377EC /* VYBSignUpViewController.m */; };
-		026385EF197972BA00B377EC /* VYBSignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 026385ED197972BA00B377EC /* VYBSignUpViewController.xib */; };
 		0266802819F15CB000030836 /* VYBPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0266802619F15CB000030836 /* VYBPlayerViewController.m */; };
 		0266802919F15CB000030836 /* VYBPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0266802719F15CB000030836 /* VYBPlayerViewController.xib */; };
 		0275087C19252D5C00B070EE /* VYBUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0275087B19252D5C00B070EE /* VYBUtility.m */; };
@@ -47,8 +45,6 @@
 		02A45CEF1A1E664E00425F9C /* PizzaProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A45CEE1A1E664E00425F9C /* PizzaProgressView.swift */; };
 		02A45CF31A1E821300425F9C /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A45CF21A1E821300425F9C /* CircleProgressView.swift */; };
 		02A45CF51A1EC61800425F9C /* UploadProgressBottomBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A45CF41A1EC61800425F9C /* UploadProgressBottomBar.xib */; };
-		02C7A02719F580FC0065BF4E /* VYBFirstPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7A02519F580FC0065BF4E /* VYBFirstPageViewController.swift */; };
-		02C7A02819F580FC0065BF4E /* VYBFirstPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02C7A02619F580FC0065BF4E /* VYBFirstPageViewController.xib */; };
 		02CEE2AD1970A46A00AC361F /* VYBTimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CEE2AC1970A46A00AC361F /* VYBTimerView.m */; };
 		02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CEE2AF1970C2F900AC361F /* VYBReplayViewController.m */; };
 		02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */; };
@@ -66,8 +62,6 @@
 		02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */; };
 		02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */; };
 		02D255E11992A4DE0053B89F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02D255E01992A4DE0053B89F /* MapKit.framework */; };
-		02E4556A1989727200B22554 /* VYBLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E455681989727200B22554 /* VYBLogInViewController.m */; };
-		02E4556B1989727200B22554 /* VYBLogInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E455691989727200B22554 /* VYBLogInViewController.xib */; };
 		02E943B219C916C50057E8EE /* VYBReplayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E943B119C916C50057E8EE /* VYBReplayViewController.xib */; };
 		02F36B2C1986F5A200B7D842 /* VYBUserStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F36B2B1986F5A200B7D842 /* VYBUserStore.m */; };
 		02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F36B2E1986F62800B7D842 /* VYBUser.m */; };
@@ -84,6 +78,7 @@
 		876FD1CBA2104ACB85FFFB93 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D4D61F35BF543039A00CFD0 /* libPods.a */; };
 		88063E6819F22F1E00C90A2D /* Activity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88063E6719F22F1E00C90A2D /* Activity.storyboard */; };
 		88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */; };
+		884E6D021A26E1EB00E9732F /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884E6D011A26E1EB00E9732F /* SignUpViewController.swift */; };
 		8861F0D019A81C8C000249DB /* NSString+Username.m in Sources */ = {isa = PBXBuildFile; fileRef = 8861F0CF19A81C8C000249DB /* NSString+Username.m */; };
 		8861F0D319A81E08000249DB /* NSString+Email.m in Sources */ = {isa = PBXBuildFile; fileRef = 8861F0D219A81E08000249DB /* NSString+Email.m */; };
 		88828D9B19344AEB005CB06C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 88828D9A19344AEB005CB06C /* Reachability.m */; };
@@ -91,6 +86,7 @@
 		888F1FE719B2740B00546643 /* ProximaNovaSoft-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 888F1FE419B2740B00546643 /* ProximaNovaSoft-Bold.otf */; };
 		888F1FE819B2740B00546643 /* ProximaNovaSoft-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 888F1FE519B2740B00546643 /* ProximaNovaSoft-Regular.otf */; };
 		888F1FE919B2740B00546643 /* ProximaNovaSoft-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 888F1FE619B2740B00546643 /* ProximaNovaSoft-Semibold.otf */; };
+		88CA12331A272BB700D4B097 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA12321A272BB700D4B097 /* LogInViewController.swift */; };
 		88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F72A111914C721007C7370 /* AnimatedTransitioning.m */; };
 		88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F72A131914C721007C7370 /* TransitionDelegate.m */; };
 		88FF430519AFFCEB00D18872 /* VYBActivityTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88FF430419AFFCEB00D18872 /* VYBActivityTableViewController.m */; };
@@ -145,9 +141,6 @@
 		026216B919EA43DE00EC6544 /* VybeTen-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VybeTen-Bridging-Header.h"; sourceTree = "<group>"; };
 		026216BC19EA470600EC6544 /* VYBVybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybe.h; sourceTree = "<group>"; };
 		026216BD19EA470600EC6544 /* VYBVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybe.m; sourceTree = "<group>"; };
-		026385EB197972BA00B377EC /* VYBSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBSignUpViewController.h; sourceTree = "<group>"; };
-		026385EC197972BA00B377EC /* VYBSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBSignUpViewController.m; sourceTree = "<group>"; };
-		026385ED197972BA00B377EC /* VYBSignUpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBSignUpViewController.xib; sourceTree = "<group>"; };
 		0266802519F15CB000030836 /* VYBPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerViewController.h; sourceTree = "<group>"; };
 		0266802619F15CB000030836 /* VYBPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerViewController.m; sourceTree = "<group>"; };
 		0266802719F15CB000030836 /* VYBPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBPlayerViewController.xib; sourceTree = "<group>"; };
@@ -166,8 +159,6 @@
 		02A45CEE1A1E664E00425F9C /* PizzaProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PizzaProgressView.swift; sourceTree = "<group>"; };
 		02A45CF21A1E821300425F9C /* CircleProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
 		02A45CF41A1EC61800425F9C /* UploadProgressBottomBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UploadProgressBottomBar.xib; sourceTree = "<group>"; };
-		02C7A02519F580FC0065BF4E /* VYBFirstPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VYBFirstPageViewController.swift; sourceTree = "<group>"; };
-		02C7A02619F580FC0065BF4E /* VYBFirstPageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBFirstPageViewController.xib; sourceTree = "<group>"; };
 		02CEE2AB1970A46A00AC361F /* VYBTimerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBTimerView.h; sourceTree = "<group>"; };
 		02CEE2AC1970A46A00AC361F /* VYBTimerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBTimerView.m; sourceTree = "<group>"; };
 		02CEE2AE1970C2F900AC361F /* VYBReplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBReplayViewController.h; sourceTree = "<group>"; };
@@ -187,9 +178,6 @@
 		02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Xlight.otf"; sourceTree = "<group>"; };
 		02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-XlightIta.otf"; sourceTree = "<group>"; };
 		02D255E01992A4DE0053B89F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		02E455671989727200B22554 /* VYBLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBLogInViewController.h; sourceTree = "<group>"; };
-		02E455681989727200B22554 /* VYBLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBLogInViewController.m; sourceTree = "<group>"; };
-		02E455691989727200B22554 /* VYBLogInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBLogInViewController.xib; sourceTree = "<group>"; };
 		02E943B119C916C50057E8EE /* VYBReplayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBReplayViewController.xib; sourceTree = "<group>"; };
 		02F36B2A1986F5A200B7D842 /* VYBUserStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUserStore.h; sourceTree = "<group>"; };
 		02F36B2B1986F5A200B7D842 /* VYBUserStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUserStore.m; sourceTree = "<group>"; };
@@ -202,7 +190,6 @@
 		604B628418B495BB00D3EF19 /* VybeTen-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VybeTen-Info.plist"; sourceTree = "<group>"; };
 		604B628618B495BB00D3EF19 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		604B628818B495BB00D3EF19 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		604B628A18B495BB00D3EF19 /* VybeTen-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VybeTen-Prefix.pch"; sourceTree = "<group>"; };
 		604B628B18B495BB00D3EF19 /* VYBAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VYBAppDelegate.h; sourceTree = "<group>"; };
 		604B628C18B495BB00D3EF19 /* VYBAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VYBAppDelegate.m; sourceTree = "<group>"; };
 		604B628E18B495BB00D3EF19 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -217,6 +204,7 @@
 		88063E6719F22F1E00C90A2D /* Activity.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Activity.storyboard; sourceTree = "<group>"; };
 		88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBWelcomeViewController.h; sourceTree = "<group>"; };
 		88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBWelcomeViewController.m; sourceTree = "<group>"; };
+		884E6D011A26E1EB00E9732F /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		8861F0CE19A81C8C000249DB /* NSString+Username.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Username.h"; sourceTree = "<group>"; };
 		8861F0CF19A81C8C000249DB /* NSString+Username.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Username.m"; sourceTree = "<group>"; };
 		8861F0D119A81E08000249DB /* NSString+Email.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Email.h"; sourceTree = "<group>"; };
@@ -227,6 +215,8 @@
 		888F1FE419B2740B00546643 /* ProximaNovaSoft-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNovaSoft-Bold.otf"; sourceTree = "<group>"; };
 		888F1FE519B2740B00546643 /* ProximaNovaSoft-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNovaSoft-Regular.otf"; sourceTree = "<group>"; };
 		888F1FE619B2740B00546643 /* ProximaNovaSoft-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNovaSoft-Semibold.otf"; sourceTree = "<group>"; };
+		88C734991A2707DD00B718D3 /* VybeTen-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VybeTen-Prefix.pch"; sourceTree = "<group>"; };
+		88CA12321A272BB700D4B097 /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		88F72A101914C721007C7370 /* AnimatedTransitioning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimatedTransitioning.h; sourceTree = "<group>"; };
 		88F72A111914C721007C7370 /* AnimatedTransitioning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimatedTransitioning.m; sourceTree = "<group>"; };
 		88F72A121914C721007C7370 /* TransitionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionDelegate.h; sourceTree = "<group>"; };
@@ -283,14 +273,8 @@
 			children = (
 				88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */,
 				88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */,
-				02C7A02519F580FC0065BF4E /* VYBFirstPageViewController.swift */,
-				02C7A02619F580FC0065BF4E /* VYBFirstPageViewController.xib */,
-				026385EC197972BA00B377EC /* VYBSignUpViewController.m */,
-				026385EB197972BA00B377EC /* VYBSignUpViewController.h */,
-				026385ED197972BA00B377EC /* VYBSignUpViewController.xib */,
-				02E455671989727200B22554 /* VYBLogInViewController.h */,
-				02E455681989727200B22554 /* VYBLogInViewController.m */,
-				02E455691989727200B22554 /* VYBLogInViewController.xib */,
+				88CA12321A272BB700D4B097 /* LogInViewController.swift */,
+				884E6D011A26E1EB00E9732F /* SignUpViewController.swift */,
 				020F1C481977054900C3AA40 /* VYBPermissionViewController.h */,
 				020F1C491977054900C3AA40 /* VYBPermissionViewController.m */,
 				0207236419F1991800817A02 /* VYBPermissionViewController.xib */,
@@ -519,9 +503,9 @@
 			children = (
 				02D11CF418DF62680018DA97 /* resources */,
 				604B628418B495BB00D3EF19 /* VybeTen-Info.plist */,
+				88C734991A2707DD00B718D3 /* VybeTen-Prefix.pch */,
 				604B628518B495BB00D3EF19 /* InfoPlist.strings */,
 				604B628818B495BB00D3EF19 /* main.m */,
-				604B628A18B495BB00D3EF19 /* VybeTen-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -653,13 +637,10 @@
 				88063E6819F22F1E00C90A2D /* Activity.storyboard in Resources */,
 				604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */,
 				02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */,
-				02E4556B1989727200B22554 /* VYBLogInViewController.xib in Resources */,
 				02D11D0D18DF62AC0018DA97 /* Montreal-Medium.otf in Resources */,
 				022AC50319AD9757008A9C64 /* VYBCaptureViewController.xib in Resources */,
-				02C7A02819F580FC0065BF4E /* VYBFirstPageViewController.xib in Resources */,
 				028D930C1A16C271002B7642 /* ActivitySectionView.xib in Resources */,
 				02D11D0C18DF62AC0018DA97 /* Montreal-LightIta.otf in Resources */,
-				026385EF197972BA00B377EC /* VYBSignUpViewController.xib in Resources */,
 				02D11D1018DF62AC0018DA97 /* Montreal-RegularIta.otf in Resources */,
 				02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */,
 				0237C13719EEF44A00AC6F81 /* DefaultPreferences.plist in Resources */,
@@ -725,7 +706,6 @@
 				88FF430519AFFCEB00D18872 /* VYBActivityTableViewController.m in Sources */,
 				8861F0D319A81E08000249DB /* NSString+Email.m in Sources */,
 				8861F0D019A81C8C000249DB /* NSString+Username.m in Sources */,
-				02C7A02719F580FC0065BF4E /* VYBFirstPageViewController.swift in Sources */,
 				02CEE2AD1970A46A00AC361F /* VYBTimerView.m in Sources */,
 				0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */,
 				02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */,
@@ -737,13 +717,11 @@
 				74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
 				02A45CEF1A1E664E00425F9C /* PizzaProgressView.swift in Sources */,
-				02E4556A1989727200B22554 /* VYBLogInViewController.m in Sources */,
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				025408E419BA10E5009C7C71 /* NSMutableArray+PFObject.m in Sources */,
 				020BDABD1A008C7500B02824 /* VYBPortalButton.m in Sources */,
 				024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
-				026385EE197972BA00B377EC /* VYBSignUpViewController.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
 				88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */,
 				88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */,
@@ -757,10 +735,12 @@
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
 				023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */,
 				025408E119BA0FD7009C7C71 /* NSArray+PFObject.m in Sources */,
+				88CA12331A272BB700D4B097 /* LogInViewController.swift in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
 				0266802819F15CB000030836 /* VYBPlayerViewController.m in Sources */,
 				0221A00B1A0340AD00C5C60E /* VYBOldZoneFinder.m in Sources */,
 				02F5B1F119D32594008C42C3 /* VYBDynamicSizeView.m in Sources */,
+				884E6D021A26E1EB00E9732F /* SignUpViewController.swift in Sources */,
 				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,
 				0262054419A67B3600E994F9 /* UINavigationController+Autorotate.m in Sources */,
 				0288603E19E4A02A007876AE /* VYBCapturePipeline.m in Sources */,
@@ -850,7 +830,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				PROVISIONING_PROFILE = "6bbb7a47-d947-4163-9556-7a3756448bc6";
 				PROVISIONING_PROFILE = "d151eabc-7a7b-45e3-ba9b-b17607961cc9";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

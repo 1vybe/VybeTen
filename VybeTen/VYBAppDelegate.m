@@ -303,18 +303,30 @@
 }
 
 - (void)presentFirstPageViewControllerAnimated:(BOOL)animated {
-    VYBFirstPageViewController *firstPageVC = [[VYBFirstPageViewController alloc] initWithNibName:@"VYBFirstPageViewController" bundle:nil];
-    [firstPageVC setDelegate:self];
-    [self.mainNavController pushViewController:firstPageVC animated:animated];
+//    VYBLogInViewController *logInViewController = [[VYBLogInViewController alloc] init];
+    LogInViewController *logInViewController = [[LogInViewController alloc] init];
+    logInViewController.fields = PFLogInFieldsDefault;
+    logInViewController.delegate = self;
+
+    SignUpViewController *signUpController = [[SignUpViewController alloc] init];
+    signUpController.fields = PFSignUpFieldsDefault;
+    signUpController.delegate = self;
+    
+    logInViewController.signUpController = signUpController;
+    [self.mainNavController pushViewController:logInViewController animated:animated];
 }
+
+#pragma mark -
+#pragma mark PFLogInViewControllerDelegate
+
+- (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user {
+    [self.mainNavController popToRootViewControllerAnimated:NO];
+}
+
+#pragma mark -
 
 - (void)presentFirstPage {
     [self presentFirstPageViewControllerAnimated:YES];
-}
-
-- (void)didLogInuser:(PFUser *)user {
-    // It will take you to welcomeVC
-    [self.mainNavController popToRootViewControllerAnimated:NO];
 }
 
 - (void)proceedToMainInterface {

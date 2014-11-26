@@ -3,6 +3,7 @@
 //
 #import <Parse/Parse.h>
 #import <Parse/PFObject+Subclass.h>
+#import <ParseUI/ParseUI.h>
 
 #import <MBProgressHUD/MBProgressHUD.h>
 
@@ -11,8 +12,6 @@
 #import <GoogleAnalytics-iOS-SDK/GAIDictionaryBuilder.h>
 #import <GoogleAnalytics-iOS-SDK/GAITracker.h>
 
-
-#import "VYBLoginViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBConstants.h"
 #import "VYBCache.h"
