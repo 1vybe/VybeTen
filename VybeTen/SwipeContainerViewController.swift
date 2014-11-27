@@ -8,11 +8,13 @@
 
 import UIKit
 
-@objc class SwipeContainerController: UIViewController {
+@objc class SwipeContainerController: UIViewController, UIGestureRecognizerDelegate {
   private var containerView = UIView()
   private var selectedViewController: UIViewController?
   
   var viewControllers: [UIViewController]!
+  
+  var swipeInteractor = SwipeInteractionManager()
   
   init(viewControllers arr: [UIViewController]!) {
     super.init()
@@ -21,8 +23,6 @@ import UIKit
     viewControllers = arr
     
     containerView = UIView()
-    
-    
   }
   
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -47,12 +47,16 @@ import UIKit
     
     self.view = rootView
     
-    let swipeToLeft = UISwipeGestureRecognizer(target: self, action: "panGestureRecognized:")
-    swipeToLeft.direction = UISwipeGestureRecognizerDirection.Left
-    let swipeToRight = UISwipeGestureRecognizer(target: self, action: "panGestureRecognized:")
-    swipeToRight.direction = UISwipeGestureRecognizerDirection.Right
-    containerView.addGestureRecognizer(swipeToLeft)
-    containerView.addGestureRecognizer(swipeToRight)
+//    let swipeToLeft = UISwipeGestureRecognizer(target: self, action: "panGestureRecognized:")
+//    swipeToLeft.direction = UISwipeGestureRecognizerDirection.Left
+//    let swipeToRight = UISwipeGestureRecognizer(target: self, action: "panGestureRecognized:")
+//    swipeToRight.direction = UISwipeGestureRecognizerDirection.Right
+    let panGesture = UIPanGestureRecognizer(target: self, action: "panGestureRecognized:")
+    panGesture.delegate = self
+//    let swipeToRight = UIScreenEdgePanGestureRecognizer(target: self, action: "panGestureRecognized:")
+//    swipeToRight.edges = UIRectEdge.Left
+    containerView.addGestureRecognizer(panGesture)
+//    containerView.addGestureRecognizer(swipeToRight)
   }
   
   override func viewDidLoad() {
@@ -64,16 +68,67 @@ import UIKit
   }
   
   
-  func panGestureRecognized(recognizer: UISwipeGestureRecognizer!) {
-    if recognizer.direction == UISwipeGestureRecognizerDirection.Right {
-      if let toViewController = self.previousViewController() {
-        self.setSelectedViewController(toViewController)
+  func panGestureRecognized(recognizer: UIPanGestureRecognizer!) {
+    let state = recognizer.state
+
+    switch state {
+    case UIGestureRecognizerState.Began:
+      let leftToRight = recognizer.velocityInView(containerView).x > 0
+      if leftToRight {
+        if let toViewController = self.previousViewController() {
+          self.setSelectedViewController(toViewController)
+        }
+      } else {
+        if let toViewController = self.nextViewController() {
+          self.setSelectedViewController(toViewController)
+        }
       }
-    } else {
-      if let toViewController = self.nextViewController() {
-        self.setSelectedViewController(toViewController)
+    case .Changed:
+      let leftToRight = swipeInteractor.leftToRight
+      let translation = recognizer.translationInView(containerView).x
+      var percent = translation / CGRectGetWidth(containerView.bounds)
+      if !leftToRight { percent = -1 * percent }
+      swipeInteractor.updateInteractiveTransition(percent)
+    case .Ended:
+      var velocity = recognizer.velocityInView(containerView).x
+      if !swipeInteractor.leftToRight { velocity = -1 * velocity }
+     
+      if velocity > 0 {
+        swipeInteractor.finishInteractiveTransition()
+      } else {
+        swipeInteractor.cancelInteractiveTransition()
+      }
+    case .Cancelled:
+      swipeInteractor.cancelInteractiveTransition()
+    default:
+      return
+    }
+  }
+  
+  func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    if let gesture = gestureRecognizer as? UIPanGestureRecognizer {
+      if let otherGesture = otherGestureRecognizer as? UIPanGestureRecognizer {
+        let velocity = gesture.velocityInView(gesture.view).x
+        if selectedViewController is VYBActivityTableViewController && velocity < 0 {
+          return true
+        }
       }
     }
+    
+    return false
+  }
+  
+  func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    if let gesture = gestureRecognizer as? UIPanGestureRecognizer {
+      if let otherGesture = otherGestureRecognizer as? UIPanGestureRecognizer {
+        let velocity = gesture.velocityInView(gesture.view).x
+        if selectedViewController is VYBActivityTableViewController && velocity < 0 {
+          return true
+        }
+      }
+    }
+    
+    return false
   }
   
   private func previousViewController() -> UIViewController? {
@@ -124,10 +179,12 @@ import UIKit
     let fromViewController = selectedViewController!
     fromViewController.willMoveToParentViewController(nil)
     
-    var swipeAnimator = SwipeAnimator()
-    var swipeTransition = SwipeTransitionContext(fromViewController: fromViewController, toController: toViewController, swipeToleft: (toViewController == viewControllers[1]))
-    swipeTransition.animated = true
-    swipeTransition.completionClosure = { (completed: Bool) -> Void in
+    var animator = SwipeAnimator()
+    var transitionContext = SwipeTransitionContext(fromViewController: fromViewController, toController: toViewController, swipeToleft: (toViewController == viewControllers[1]))
+    transitionContext.animated = true
+    
+    transitionContext.interactive = true
+    transitionContext.completionClosure = { (completed: Bool) -> Void in
       if completed {
         fromViewController.view.removeFromSuperview()
         fromViewController.removeFromParentViewController()
@@ -139,8 +196,8 @@ import UIKit
       }
     }
     
-    swipeAnimator.animateTransition(swipeTransition)
-    self.finishTransitionToViewController(toViewController)
+    swipeInteractor.animator = animator
+    swipeInteractor.startInteractiveTransition(transitionContext)
   }
   
   func setSelectedViewController(viewController: UIViewController) {
@@ -153,6 +210,74 @@ import UIKit
   
 }
 
+class SwipeInteractionManager: NSObject, UIViewControllerInteractiveTransitioning {
+  var animator: UIViewControllerAnimatedTransitioning!
+  var transitionContext: SwipeTransitionContext!
+  
+  var completionSpeed: CGFloat = 1
+  var percentCompleted: CGFloat!
+  var duration: CGFloat {
+    get {
+      return CGFloat(animator.transitionDuration(transitionContext))
+    }
+  }
+
+  var cancelTick: CADisplayLink!
+
+  var leftToRight: Bool!
+  
+  func startInteractiveTransition(transitionContext: UIViewControllerContextTransitioning) {
+    self.transitionContext = transitionContext as SwipeTransitionContext
+    leftToRight = !self.transitionContext.swipeToLeft
+    
+    transitionContext.containerView().layer.speed = 0
+    
+    animator.animateTransition(transitionContext)
+  }
+  
+  func updateInteractiveTransition(percent: CGFloat) {
+    percentCompleted = percent
+  
+    transitionContext.containerView().layer.timeOffset = CFTimeInterval(self.duration * percentCompleted)
+    transitionContext.updateInteractiveTransition(percentCompleted)
+  }
+  
+  func finishInteractiveTransition() {
+    var layer = transitionContext.containerView().layer
+    
+    layer.speed = Float(self.completionSpeed)
+    
+    let pausedTime = layer.timeOffset
+    layer.timeOffset = 0
+    layer.beginTime = 0
+    let timePassed = layer.convertTime(CACurrentMediaTime(), fromLayer: nil) - pausedTime
+    layer.beginTime = timePassed
+    
+    transitionContext.finishInteractiveTransition()
+  }
+  
+  func cancelInteractiveTransition() {
+    cancelTick = CADisplayLink(target: self, selector: "tickedToCancel:")
+    cancelTick.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
+    
+    transitionContext.cancelInteractiveTransition()
+  }
+  
+  func tickedToCancel(tick: CADisplayLink) {
+    let layer = transitionContext.containerView().layer
+    let timeOffset = layer.timeOffset - tick.duration
+    if timeOffset < 0 {
+      cancelTick.invalidate()
+      layer.speed = 1
+    } else {
+      layer.timeOffset = timeOffset
+    }
+  }
+
+  
+  
+}
+
 class SwipeTransitionContext: NSObject, UIViewControllerContextTransitioning {
   var container: UIView
   var fromViewController: UIViewController
@@ -160,6 +285,8 @@ class SwipeTransitionContext: NSObject, UIViewControllerContextTransitioning {
   var animated: Bool
   var interactive: Bool
   var swipeToLeft: Bool
+  
+  var _transitionWasCancelled: Bool
   
   var completionClosure: (Bool -> Void)?
   
@@ -173,6 +300,8 @@ class SwipeTransitionContext: NSObject, UIViewControllerContextTransitioning {
     interactive = false
     
     swipeToLeft = left
+    
+    _transitionWasCancelled = false
     
     super.init()
   }
@@ -254,18 +383,15 @@ class SwipeTransitionContext: NSObject, UIViewControllerContextTransitioning {
   func presentationStyle() -> UIModalPresentationStyle {
     return UIModalPresentationStyle.Custom
   }
-
   
   func cancelInteractiveTransition() {
-    
+    _transitionWasCancelled = true
   }
   
-  func updateInteractiveTransition(percentComplete: CGFloat) {
-    
-  }
+  func updateInteractiveTransition(percentComplete: CGFloat) { }
   
   func finishInteractiveTransition() {
-    
+    _transitionWasCancelled = false
   }
   
   func targetTransform() -> CGAffineTransform {
@@ -273,13 +399,12 @@ class SwipeTransitionContext: NSObject, UIViewControllerContextTransitioning {
   }
   
   func transitionWasCancelled() -> Bool {
-    return true
+    return _transitionWasCancelled
   }
   
   func completeTransition(didComplete: Bool) {
     completionClosure?(didComplete)
   }
-
 }
 
 class SwipeAnimator: NSObject, UIViewControllerAnimatedTransitioning {
@@ -296,15 +421,18 @@ class SwipeAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     UIView.animateWithDuration(self.transitionDuration(transitionContext), delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
       toViewController.view.frame = transitionContext.finalFrameForViewController(toViewController)
       fromViewController.view.frame = transitionContext.finalFrameForViewController(fromViewController)
-    }) { (Bool) -> Void in
-      
+      }) { (completed: Bool) -> Void in
+        if transitionContext.transitionWasCancelled() {
+        fromViewController.view.frame = transitionContext.initialFrameForViewController(fromViewController)
+        }
+        transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
     }
 
   }
   
   
   func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
-    return 2.0
+    return 0.3
   }
 }
 
