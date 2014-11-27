@@ -140,10 +140,10 @@ private let _zoneStoreSharedInstance = ZoneStore()
             newActiveZones += [aZone]
           }
         }
-        
-        _activeZones = newActiveZones
       }
     }
+    
+    _activeZones = newActiveZones
   }
   
   private func putActiveVybeIntoZone(aVybe: PFObject) {
