@@ -25,11 +25,11 @@ class SimpleInteractionManager: NSObject, UIViewControllerTransitioningDelegate 
   }
   
   func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-    return SwipeAnimationController(direction: SwipeAnimationController.Direction.Right)
+    return nil
   }
   
   func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-    return SwipeAnimationController(direction: SwipeAnimationController.Direction.Left)
+    return nil
   }
   
   func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {

@@ -77,7 +77,6 @@
 		74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */; };
 		74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */; };
 		74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */; };
-		74F9CA071A25759F00D2C3F4 /* SwipeAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F9CA061A25759F00D2C3F4 /* SwipeAnimationController.swift */; };
 		876FD1CBA2104ACB85FFFB93 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D4D61F35BF543039A00CFD0 /* libPods.a */; };
 		88063E6819F22F1E00C90A2D /* Activity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88063E6719F22F1E00C90A2D /* Activity.storyboard */; };
 		88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */; };
@@ -206,7 +205,6 @@
 		74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+VYBVybe.m"; sourceTree = "<group>"; };
 		74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleInteractionManager.swift; sourceTree = "<group>"; };
 		74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeContainerViewController.swift; sourceTree = "<group>"; };
-		74F9CA061A25759F00D2C3F4 /* SwipeAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeAnimationController.swift; sourceTree = "<group>"; };
 		88063E6719F22F1E00C90A2D /* Activity.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Activity.storyboard; sourceTree = "<group>"; };
 		88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBWelcomeViewController.h; sourceTree = "<group>"; };
 		88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBWelcomeViewController.m; sourceTree = "<group>"; };
@@ -393,7 +391,6 @@
 				027C708019AF08C6007BB8FE /* Container */,
 				74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */,
 				74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */,
-				74F9CA061A25759F00D2C3F4 /* SwipeAnimationController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
