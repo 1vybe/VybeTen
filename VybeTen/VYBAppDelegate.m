@@ -33,11 +33,9 @@
 @property (nonatomic, strong) NSString *uniqueID;
 
 @property (nonatomic) VYBNavigationController *mainNavController;
+@property (nonatomic, strong) SwipeContainerController *swipeContainerController;
 @property (nonatomic) VYBPermissionViewController *permissionController;
-@property (nonatomic, strong) VYBPageViewController *pageController;
-@property (nonatomic, strong) VYBNavigationController *activityNavigationVC;
-@property (nonatomic, strong) VYBCaptureViewController *captureVC;
-@property (nonatomic, strong) VYBActivityTableViewController *activityVC;
+//@property (nonatomic, strong) VYBActivityTableViewController *activityVC;
 @property (nonatomic, strong) VYBWelcomeViewController *welcomeViewController;
 
 - (void)setupAppearance;
@@ -123,7 +121,7 @@
   self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
   
   self.mainNavController = [[VYBNavigationController alloc] initWithRootViewController:self.welcomeViewController];
-  //self.mainNavController.navigationBarHidden = YES;
+  self.mainNavController.navigationBarHidden = YES;
   
   [self.window setRootViewController:self.mainNavController];
   
@@ -150,21 +148,6 @@
         return nil;
     
     return self.viewControllers[prevPageIndex];
-}
-
-- (void)moveToPage:(NSInteger)newPageIdx {
-    NSInteger currIdx = [self currPageIndex];
-    
-    if (currIdx < newPageIdx) {
-        [self.pageController setViewControllers:@[self.viewControllers[newPageIdx]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
-    } else {
-        [self.pageController setViewControllers:@[self.viewControllers[newPageIdx]] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
-    }
-}
-
-- (NSInteger)currPageIndex {
-    VYBNavigationController *currPage = [self.pageController.viewControllers lastObject];
-    return [currPage pageIndex];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -333,15 +316,18 @@
 }
 
 - (void)setUpViewControllers {
-    self.activityVC = [[UIStoryboard storyboardWithName:@"Activity" bundle:nil] instantiateInitialViewController];
+  VYBActivityTableViewController *activityVC = [[UIStoryboard storyboardWithName:@"Activity" bundle:nil] instantiateInitialViewController];
+  VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
   
-    [self.mainNavController pushViewController:self.activityVC animated:NO];
-    
-    // Checking permissions
-    self.permissionController = [[VYBPermissionViewController alloc] init];
-    BOOL granted = [self.permissionController checkPermissionSettings];
-    if (!granted)
-        [self.mainNavController pushViewController:self.permissionController animated:NO];
+  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[captureVC, activityVC]];
+  
+  [self.mainNavController pushViewController:self.swipeContainerController animated:NO];
+  
+  // Checking permissions
+  self.permissionController = [[VYBPermissionViewController alloc] init];
+  BOOL granted = [self.permissionController checkPermissionSettings];
+  if (!granted)
+      [self.mainNavController pushViewController:self.permissionController animated:NO];
 }
 
 - (void)logOut {
@@ -366,9 +352,7 @@
     // clear out cached data, view controllers, etc
     [self.mainNavController popToRootViewControllerAnimated:NO];
     
-    self.captureVC = nil;
-    self.activityVC = nil;
-    self.activityNavigationVC = nil;
+
     self.viewControllers = nil;
     self.permissionController = nil;
 }

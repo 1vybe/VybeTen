@@ -13,6 +13,7 @@
 #import <GoogleAnalytics-iOS-SDK/GAITracker.h>
 
 #import "VYBPlayerViewController.h"
+#import "VYBCaptureViewController.h"
 #import "VYBConstants.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"

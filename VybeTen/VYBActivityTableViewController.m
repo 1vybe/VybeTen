@@ -10,6 +10,7 @@
 #import "VYBVybeTableViewCell.h"
 
 #import "VYBAppDelegate.h"
+#import "VYBCaptureViewController.h"
 
 #import "VYBUtility.h"
 #import "VYBCache.h"
@@ -23,10 +24,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *countLabel;
 @property (weak, nonatomic) UIButton *uploadStatusButton;
+
 @property (nonatomic) NSArray *activeLocations;
 @property (nonatomic) NSArray *myLocations;
-
 @property (nonatomic) NSArray *savedVybes;
+
+@property (nonatomic) SimpleInteractionManager *swipeInteractionManager;
+@property (nonatomic) VYBCaptureViewController *captureViewController;
 
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender;
@@ -83,11 +87,14 @@ static void *ZOTContext = &ZOTContext;
   uploadStatusButton = (UIButton *)[[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:self options:nil] firstObject];
   [self.view addSubview:uploadStatusButton];
   uploadStatusButton.alpha = 0.0;
+
+  self.captureViewController = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
+  self.swipeInteractionManager = [[SimpleInteractionManager alloc] initWithSourceController:self destinationController:self.captureViewController];
   
-  UIScreenEdgePanGestureRecognizer *panGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+  UIScreenEdgePanGestureRecognizer *panGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self.swipeInteractionManager action:@selector(swipeToRightGestureDetected:)];
   panGesture.edges = UIRectEdgeLeft;
   
-  [[self.view window] addGestureRecognizer:panGesture];
+  [self.view addGestureRecognizer:panGesture];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -495,7 +502,6 @@ static void *ZOTContext = &ZOTContext;
           [pathsToAdd addObject:indexPath];
         }
         
-        
         [self.tableView beginUpdates];
         [self.tableView insertRowsAtIndexPaths:pathsToAdd withRowAnimation:UITableViewRowAnimationMiddle];
         if (pathsToRemove.count > 0)
@@ -640,7 +646,9 @@ static void *ZOTContext = &ZOTContext;
 #pragma mark - Screen Swipe 
 
 - (void)handlePanGesture:(UISwipeGestureRecognizer *)recognizer {
-  
+  VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
+  [captureVC setTransitioningDelegate:self.swipeInteractionManager];
+  [self presentViewController:captureVC animated:YES completion:nil];
 }
 
 

@@ -130,7 +130,6 @@ static void *XYZContext = &XYZContext;
   [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadPercent" options:NSKeyValueObservingOptionNew context:XYZContext];
   [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadStatus" options:NSKeyValueObservingOptionNew context:XYZContext];
   
-
 }
 
 - (void)viewWillAppear:(BOOL)animated {

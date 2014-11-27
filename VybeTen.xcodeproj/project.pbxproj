@@ -75,6 +75,9 @@
 		607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 607CA69918C5C80C0060B420 /* VYBPlayerView.m */; };
 		60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */; };
 		74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */; };
+		74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */; };
+		74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */; };
+		74F9CA071A25759F00D2C3F4 /* SwipeAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F9CA061A25759F00D2C3F4 /* SwipeAnimationController.swift */; };
 		876FD1CBA2104ACB85FFFB93 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D4D61F35BF543039A00CFD0 /* libPods.a */; };
 		88063E6819F22F1E00C90A2D /* Activity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88063E6719F22F1E00C90A2D /* Activity.storyboard */; };
 		88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */; };
@@ -201,6 +204,9 @@
 		60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybeStore.m; sourceTree = "<group>"; };
 		74C5D9721A22F8B40006695B /* NSMutableArray+VYBVybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+VYBVybe.h"; sourceTree = "<group>"; };
 		74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+VYBVybe.m"; sourceTree = "<group>"; };
+		74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleInteractionManager.swift; sourceTree = "<group>"; };
+		74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeContainerViewController.swift; sourceTree = "<group>"; };
+		74F9CA061A25759F00D2C3F4 /* SwipeAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeAnimationController.swift; sourceTree = "<group>"; };
 		88063E6719F22F1E00C90A2D /* Activity.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Activity.storyboard; sourceTree = "<group>"; };
 		88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBWelcomeViewController.h; sourceTree = "<group>"; };
 		88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBWelcomeViewController.m; sourceTree = "<group>"; };
@@ -385,6 +391,9 @@
 				88FF430419AFFCEB00D18872 /* VYBActivityTableViewController.m */,
 				022F4A651A0126DE00C20526 /* VYBMapViewController.swift */,
 				027C708019AF08C6007BB8FE /* Container */,
+				74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */,
+				74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */,
+				74F9CA061A25759F00D2C3F4 /* SwipeAnimationController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -706,6 +715,8 @@
 				88FF430519AFFCEB00D18872 /* VYBActivityTableViewController.m in Sources */,
 				8861F0D319A81E08000249DB /* NSString+Email.m in Sources */,
 				8861F0D019A81C8C000249DB /* NSString+Username.m in Sources */,
+				02C7A02719F580FC0065BF4E /* VYBFirstPageViewController.swift in Sources */,
+				74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */,
 				02CEE2AD1970A46A00AC361F /* VYBTimerView.m in Sources */,
 				0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */,
 				02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */,
@@ -716,6 +727,7 @@
 				027DE0EF19E7484200F5F4C0 /* VYBCaptureRecorder.m in Sources */,
 				74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
+				74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */,
 				02A45CEF1A1E664E00425F9C /* PizzaProgressView.swift in Sources */,
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				025408E419BA10E5009C7C71 /* NSMutableArray+PFObject.m in Sources */,
@@ -741,6 +753,7 @@
 				0221A00B1A0340AD00C5C60E /* VYBOldZoneFinder.m in Sources */,
 				02F5B1F119D32594008C42C3 /* VYBDynamicSizeView.m in Sources */,
 				884E6D021A26E1EB00E9732F /* SignUpViewController.swift in Sources */,
+				74F9CA071A25759F00D2C3F4 /* SwipeAnimationController.swift in Sources */,
 				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,
 				0262054419A67B3600E994F9 /* UINavigationController+Autorotate.m in Sources */,
 				0288603E19E4A02A007876AE /* VYBCapturePipeline.m in Sources */,
