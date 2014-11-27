@@ -29,8 +29,7 @@
 @property (nonatomic) NSArray *myLocations;
 @property (nonatomic) NSArray *savedVybes;
 
-@property (nonatomic) SimpleInteractionManager *swipeInteractionManager;
-@property (nonatomic) VYBCaptureViewController *captureViewController;
+//@property (nonatomic) SimpleInteractionManager *swipeInteractionManager;
 
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender;
@@ -63,7 +62,6 @@ static void *ZOTContext = &ZOTContext;
     self.savedVybes = [NSArray array];
     
     _selectedMyLocationIndex = -1;
-    
   }
   
   return self;
@@ -79,22 +77,13 @@ static void *ZOTContext = &ZOTContext;
 
   // Remove empty cells.
   self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-  
-//  self.tableView.allowsMultipleSelectionDuringEditing = NO;
-  
+    
   _selectedMyLocationIndex = -1;
   
   uploadStatusButton = (UIButton *)[[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:self options:nil] firstObject];
   [self.view addSubview:uploadStatusButton];
   uploadStatusButton.alpha = 0.0;
 
-  self.captureViewController = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
-  self.swipeInteractionManager = [[SimpleInteractionManager alloc] initWithSourceController:self destinationController:self.captureViewController];
-  
-  UIScreenEdgePanGestureRecognizer *panGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self.swipeInteractionManager action:@selector(swipeToRightGestureDetected:)];
-  panGesture.edges = UIRectEdgeLeft;
-  
-  [self.view addGestureRecognizer:panGesture];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -641,14 +630,6 @@ static void *ZOTContext = &ZOTContext;
 - (void)addSavedVybesToTable {
   [[ZoneStore sharedInstance] addSavedVybesToUnlockedZones];
   self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
-}
-
-#pragma mark - Screen Swipe 
-
-- (void)handlePanGesture:(UISwipeGestureRecognizer *)recognizer {
-  VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] init];
-  [captureVC setTransitioningDelegate:self.swipeInteractionManager];
-  [self presentViewController:captureVC animated:YES completion:nil];
 }
 
 

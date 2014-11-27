@@ -156,10 +156,10 @@ static void *XYZContext = &XYZContext;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    
-    // Show status bar
-    [self setNeedsStatusBarAppearanceUpdate];
+  [super viewDidDisappear:animated];
+  
+  // Show status bar
+  [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (IBAction)recordButtonPressed:(id)sende {

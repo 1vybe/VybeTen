@@ -10,11 +10,7 @@ import UIKit
 
 @objc class SwipeContainerController: UIViewController {
   private var containerView = UIView()
-  private var selectedViewController: UIViewController? {
-    didSet {
-      self.transitionToViewController(selectedViewController!)
-    }
-  }
+  private var selectedViewController: UIViewController?
   
   var viewControllers: [UIViewController]!
   
@@ -39,7 +35,7 @@ import UIKit
     var rootView = UIView()
     
     containerView = UIView()
-    containerView.setTranslatesAutoresizingMaskIntoConstraints(true)
+    containerView.setTranslatesAutoresizingMaskIntoConstraints(false)
     rootView.addSubview(containerView)
     
     rootView.addConstraint(NSLayoutConstraint(item: containerView, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: rootView, attribute: NSLayoutAttribute.Width, multiplier: 1, constant: 0))
@@ -49,10 +45,15 @@ import UIKit
     
     self.view = rootView
     
-    let gesture = UIScreenEdgePanGestureRecognizer(target: self, action: "panGestureRecognized:")
-    gesture.edges = UIRectEdge.Left | .Right
-    
-    containerView.addGestureRecognizer(gesture)
+//    let gesture = UIScreenEdgePanGestureRecognizer(target: self, action:"panGestureRecognized:")
+//    gesture.edges = UIRectEdge.Left | .Right
+//    let gesture = UIPanGestureRecognizer(target: self, action:"panGestureRecognized:")
+    let swipeToLeft = UISwipeGestureRecognizer(target: self, action: "panGestureRecognized:")
+    swipeToLeft.direction = UISwipeGestureRecognizerDirection.Left
+    let swipeToRight = UISwipeGestureRecognizer(target: self, action: "panGestureRecognized:")
+    swipeToRight.direction = UISwipeGestureRecognizerDirection.Right
+    containerView.addGestureRecognizer(swipeToLeft)
+    containerView.addGestureRecognizer(swipeToRight)
   }
   
   override func viewDidLoad() {
@@ -64,16 +65,14 @@ import UIKit
   }
   
   
-  private func panGestureRecognized(recognizer: UIScreenEdgePanGestureRecognizer!) {
-    let swipeToRight = recognizer.velocityInView(recognizer.view).x > 0
-    
-    if swipeToRight {
+  func panGestureRecognized(recognizer: UISwipeGestureRecognizer!) {
+    if recognizer.direction == UISwipeGestureRecognizerDirection.Right {
       if let toViewController = self.previousViewController() {
-        self.selectedViewController = toViewController
+        self.setSelectedViewController(toViewController)
       }
     } else {
       if let toViewController = self.nextViewController() {
-        self.selectedViewController = toViewController
+        self.setSelectedViewController(toViewController)
       }
     }
   }
@@ -81,8 +80,8 @@ import UIKit
   private func previousViewController() -> UIViewController? {
     for i in 0...viewControllers.count {
       if viewControllers[i] == selectedViewController {
-        if let prevController = viewControllers[i - 1] as UIViewController? {
-          return prevController
+        if i > 0 {
+          return viewControllers[i - 1]
         }
         break
       }
@@ -94,8 +93,8 @@ import UIKit
   private func nextViewController() -> UIViewController? {
     for i in 0...viewControllers.count {
       if viewControllers[i] == selectedViewController {
-        if let nextController = viewControllers[i + 1] as UIViewController? {
-          return nextController
+        if i < viewControllers.count - 1  {
+          return viewControllers[i + 1]
         }
         break
       }
@@ -110,12 +109,12 @@ import UIKit
     }
     
     let toView = toViewController.view
-//    toView.setTranslatesAutoresizingMaskIntoConstraints(true)
-//    toView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | .FlexibleHeight
-//    toView.frame = containerView.bounds
+    toView.setTranslatesAutoresizingMaskIntoConstraints(true)
+    toView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | .FlexibleHeight
+    toView.frame = containerView.bounds
     self.addChildViewController(toViewController)
     
-    if let fromViewController = selectedViewController? {
+    if let fromViewController = selectedViewController {
       fromViewController.willMoveToParentViewController(nil)
       
       containerView.addSubview(toView)
@@ -129,8 +128,13 @@ import UIKit
       containerView.addSubview(toView)
       toViewController.didMoveToParentViewController(self)
       self.finishTransitionToViewController(toViewController)
-      return
     }
+    
+    self.finishTransitionToViewController(toViewController)
+  }
+  
+  func setSelectedViewController(viewController: UIViewController) {
+    self.transitionToViewController(viewController)
   }
   
   func finishTransitionToViewController(toViewController: UIViewController) {
