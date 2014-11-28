@@ -195,8 +195,8 @@
                             <rect key="frame" x="133" y="-9" width="109" height="61"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="VYBE_txt" translatesAutoresizingMaskIntoConstraints="NO" id="iS9-4Y-Bn6">
-                                    <rect key="frame" x="0.0" y="15" width="109" height="27"/>
+                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="VYBE_Nav" translatesAutoresizingMaskIntoConstraints="NO" id="iS9-4Y-Bn6">
+                                    <rect key="frame" x="0.0" y="22" width="109" height="18"/>
                                 </imageView>
                             </subviews>
                         </view>
@@ -282,7 +282,7 @@
         <image name="NuVybeCell" width="375" height="70"/>
         <image name="Oval_mask" width="55" height="55"/>
         <image name="Settings" width="21" height="21"/>
-        <image name="VYBE_txt" width="109" height="18"/>
+        <image name="VYBE_Nav" width="109" height="18"/>
         <image name="VybeLogo_Nav" width="33" height="16"/>
         <image name="player_close_button" width="40" height="40"/>
     </resources>
