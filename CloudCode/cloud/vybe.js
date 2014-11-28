@@ -10,7 +10,7 @@ Parse.Cloud.beforeSave('Vybe', function (request, response) {
 
   if(!objectUser) {
     response.error('A Vybe should have a valid user.');
-  } 
+  }
   else {
     response.success();
   }
@@ -20,7 +20,7 @@ Parse.Cloud.beforeSave('Vybe', function (request, response) {
 Parse.Cloud.afterSave('Vybe', function (request) {
   // Continue only for new vybes
   if (request.object.existed()) {
-    response.error('duplicate vybe posted');
+    return;
   }
 
   if (request.object.get('isPublic')) {
@@ -264,7 +264,7 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
       //var ttlAgo = new Date('2014-11-15T23:00:00Z'); // Temporary time interval (UTC)
       var ttlAgo = new Date();
       ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window.
-      
+
       var feed = aUser.relation('feed');
       var freshContents = [];
       var feedQuery = feed.query();
@@ -309,13 +309,13 @@ Parse.Cloud.define('remove_from_feed', function (request, response) {
           var feed = aUser.relation('feed');
           feed.remove(watchedObj);
           aUser.save();
-      
+
           response.success(watchedObj);
         },
         error: function(error) {
           response.error(error);
         }
-      }); 
+      });
     },
     error: function(error) {
       response.error(error);
