@@ -238,6 +238,7 @@ Parse.Cloud.define('get_active_vybes', function (request, response) {
   query.include('user')
   query.addDescending('timestamp');
   query.greaterThanOrEqualTo('timestamp',ttlAgo);
+  query.limit(10000)
 
   query.find({
     success: function(vybesObjects) {
