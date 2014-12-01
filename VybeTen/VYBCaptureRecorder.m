@@ -115,8 +115,7 @@ typedef NS_ENUM (NSInteger,VYBRecorderStatus) {
         } else {
             // should work on any device requires more space
             audioOutputSettings = [ NSDictionary dictionaryWithObjectsAndKeys:
-                                   [ NSNumber numberWithInt: kAudioFormatAppleLossless ], AVFormatIDKey,
-                                   [ NSNumber numberWithInt: 16 ], AVEncoderBitDepthHintKey,
+                                   [ NSNumber numberWithInt: kAudioFormatMPEG4AAC ], AVFormatIDKey,
                                    [ NSNumber numberWithFloat: 44100.0 ], AVSampleRateKey,
                                    [ NSNumber numberWithInt: 1 ], AVNumberOfChannelsKey,
                                    [ NSData dataWithBytes: &acl length: sizeof( acl ) ], AVChannelLayoutKey,

@@ -25,7 +25,7 @@
 
 
 @interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
-    NSInteger _pageIndex;
+  NSInteger _pageIndex;
 }
 
 @property (nonatomic, weak) IBOutlet UIButton *flipButton;
@@ -47,20 +47,20 @@
 
 static void *XYZContext = &XYZContext;
 @implementation VYBCaptureViewController {
-    NSDate *startTime;
-    NSTimer *_timeBomb;
-    NSInteger _timerCount;
-    CMTime lastSampleTime;
-    
-    BOOL _flashOn;
-    BOOL _isFrontCamera;
-    BOOL _isRecording;
-        
-    AVCaptureVideoOrientation _captureOrientation;
-    
-    UIBackgroundTaskIdentifier _backgroundRecordingID;
-    
-    VYBOldZoneFinder *_oldZoneFinder;
+  NSDate *startTime;
+  NSTimer *_timeBomb;
+  NSInteger _timerCount;
+  CMTime lastSampleTime;
+  
+  BOOL _flashOn;
+  BOOL _isFrontCamera;
+  BOOL _isRecording;
+  
+  AVCaptureVideoOrientation _captureOrientation;
+  
+  UIBackgroundTaskIdentifier _backgroundRecordingID;
+  
+  VYBOldZoneFinder *_oldZoneFinder;
 }
 
 @synthesize flipButton;
@@ -78,23 +78,23 @@ static void *XYZContext = &XYZContext;
   
   [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadPercent" context:XYZContext];
   [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadStatus" context:XYZContext];
-
+  
   NSLog(@"CaptureVC deallocated");
 }
 
 - (id)initWithPageIndex:(NSInteger)pageIndex {
-    self = [super init];
-    if (self) {
-        if (pageIndex != VYBCapturePageIndex)
-            return nil;
-        
-        _pageIndex = pageIndex;
-    }
-    return self;
+  self = [super init];
+  if (self) {
+    if (pageIndex != VYBCapturePageIndex)
+      return nil;
+    
+    _pageIndex = pageIndex;
+  }
+  return self;
 }
 
 - (NSInteger)pageIndex {
-    return _pageIndex;
+  return _pageIndex;
 }
 
 - (void)viewDidLoad
@@ -126,7 +126,7 @@ static void *XYZContext = &XYZContext;
   [super viewDidLoad];
   
   self.uploadProgressView.hidden = YES;
-
+  
   [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadPercent" options:NSKeyValueObservingOptionNew context:XYZContext];
   [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadStatus" options:NSKeyValueObservingOptionNew context:XYZContext];
   
@@ -136,7 +136,7 @@ static void *XYZContext = &XYZContext;
   [super viewWillAppear:animated];
   
   [capturePipeline startRunning];
-
+  
   
   flashButton.selected = _flashOn;
   flipButton.selected = _isFrontCamera;
@@ -153,50 +153,50 @@ static void *XYZContext = &XYZContext;
 }
 
 - (IBAction)recordButtonPressed:(id)sende {
-    if (!_isRecording) {
-        [UIApplication sharedApplication].idleTimerDisabled = YES;
-        
-        if ( [[UIDevice currentDevice] isMultitaskingSupported] )
-            _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
-        
-        [[VYBMyVybeStore sharedStore] prepareNewVybe];
-        
-        [[ZoneFinder sharedInstance] findZoneFromCurrentLocationInBackground];
-        
-        [recordButton setEnabled:NO];
-        
-        [recordButton setSelected:YES];
-        
-        [capturePipeline setRecordingOrientation:_captureOrientation];
-        [capturePipeline startRecording];
-        _isRecording = YES;
-        [self syncUIWithRecordingStatus];
-    }
-
-    else {
-        [recordButton setEnabled:NO];
-        [_timeBomb invalidate];
-        [capturePipeline stopRecording];
-    }
+  if (!_isRecording) {
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    
+    if ( [[UIDevice currentDevice] isMultitaskingSupported] )
+      _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
+    
+    [[VYBMyVybeStore sharedStore] prepareNewVybe];
+    
+    [[ZoneFinder sharedInstance] findZoneFromCurrentLocationInBackground];
+    
+    [recordButton setEnabled:NO];
+    
+    [recordButton setSelected:YES];
+    
+    [capturePipeline setRecordingOrientation:_captureOrientation];
+    [capturePipeline startRecording];
+    _isRecording = YES;
+    [self syncUIWithRecordingStatus];
+  }
+  
+  else {
+    [recordButton setEnabled:NO];
+    [_timeBomb invalidate];
+    [capturePipeline stopRecording];
+  }
 }
 
 - (void)recordingStopped {
   _isRecording = NO;
-
+  
   [self syncUIWithRecordingStatus];
   [recordButton setEnabled:YES];
   [recordButton setSelected:NO];
   [recordButton setTitle:@"" forState:UIControlStateNormal];
-
-
+  
+  
   [UIApplication sharedApplication].idleTimerDisabled = NO;
   
   [[UIApplication sharedApplication] endBackgroundTask:_backgroundRecordingID];
   _backgroundRecordingID = UIBackgroundTaskInvalid;
-
+  
   VYBVybe *currVybe = [[VYBMyVybeStore sharedStore] currVybe];
   [VYBUtility saveThumbnailImageForVybe:currVybe];
-
+  
   VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] initWithNibName:@"VYBReplayViewController" bundle:nil];
   [self presentViewController:replayVC animated:NO completion:nil];
 }
@@ -204,60 +204,60 @@ static void *XYZContext = &XYZContext;
 #pragma mark - VYBCapturePipelineDelegate
 
 - (void)capturePipeline:(VYBCapturePipeline *)pipeline sessionPreviewReadyForDisplay:(AVCaptureSession *)session {
-    [self.cameraView setSession:session];
+  [self.cameraView setSession:session];
 }
 
 - (void)capturePipeline:(VYBCapturePipeline *)pipeline didStopWithError:(NSError *)error {
-    
+  
 }
 
 - (void)capturePipelineRecordingDidStart:(VYBCapturePipeline *)pipeline {
-    [recordButton setEnabled:YES];
-    _timeBomb = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
-    [recordButton setTitle:[NSString stringWithFormat:@"%d", VYBE_LENGTH_SEC] forState:UIControlStateSelected];
-    _timerCount = 15;
+  [recordButton setEnabled:YES];
+  _timeBomb = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
+  [recordButton setTitle:[NSString stringWithFormat:@"%d", VYBE_LENGTH_SEC] forState:UIControlStateSelected];
+  _timerCount = 15;
 }
 
 - (void)capturePipelineRecordingWillStop:(VYBCapturePipeline *)pipeline {
-    [recordButton setEnabled:NO];
+  [recordButton setEnabled:NO];
 }
 
 - (void)capturePipelineRecordingDidStop:(VYBCapturePipeline *)pipeline {
-    [self recordingStopped];
+  [self recordingStopped];
 }
 
 - (void)capturePipeline:(VYBCapturePipeline *)pipeline recordingDidFailWithError:(NSError *)error {
-    [self recordingStopped];
-    
-    NSLog(@"[CaptureVC] recording failed: %@", error);
+  [self recordingStopped];
+  
+  NSLog(@"[CaptureVC] recording failed: %@", error);
 }
 
 
 #pragma mark - Capture Settings
 
 - (IBAction)flipButtonPressed:(id)sender {
-    
-    [[self flipButton] setEnabled:NO];
-    [[self flashButton] setEnabled:NO];
-    [[self activityButton] setEnabled:NO];
-    
-    [capturePipeline flipCameraWithCompletion:^(AVCaptureDevicePosition cameraPosition){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _isFrontCamera = (cameraPosition == AVCaptureDevicePositionFront);
-            [[self flipButton] setSelected:_isFrontCamera];
-            [[self flipButton] setEnabled:YES];
-            [[self flashButton] setEnabled:YES];
-            [[self flashButton] setHidden:_isFrontCamera];
-            [[self activityButton] setEnabled:YES];
-        });
-    }];
+  
+  [[self flipButton] setEnabled:NO];
+  [[self flashButton] setEnabled:NO];
+  [[self activityButton] setEnabled:NO];
+  
+  [capturePipeline flipCameraWithCompletion:^(AVCaptureDevicePosition cameraPosition){
+    dispatch_async(dispatch_get_main_queue(), ^{
+      _isFrontCamera = (cameraPosition == AVCaptureDevicePositionFront);
+      [[self flipButton] setSelected:_isFrontCamera];
+      [[self flipButton] setEnabled:YES];
+      [[self flashButton] setEnabled:YES];
+      [[self flashButton] setHidden:_isFrontCamera];
+      [[self activityButton] setEnabled:YES];
+    });
+  }];
 }
 
 
 - (IBAction)flashButtonPressed:(id)sender {
-    _flashOn = !_flashOn;
-    flashButton.selected = _flashOn;
-    [capturePipeline setFlashOn:_flashOn];
+  _flashOn = !_flashOn;
+  flashButton.selected = _flashOn;
+  [capturePipeline setFlashOn:_flashOn];
 }
 
 
@@ -265,75 +265,75 @@ static void *XYZContext = &XYZContext;
 
 
 - (void)timer:(NSTimer *)timer {
-    _timerCount = _timerCount - 1;
-
-    if (_timerCount > 0) {
-        [recordButton setTitle:[NSString stringWithFormat:@"%ld", _timerCount] forState:UIControlStateSelected];
+  _timerCount = _timerCount - 1;
+  
+  if (_timerCount > 0) {
+    [recordButton setTitle:[NSString stringWithFormat:@"%ld", _timerCount] forState:UIControlStateSelected];
+  }
+  else {
+    if (_isRecording) {
+      [recordButton setEnabled:NO];
+      [_timeBomb invalidate];
+      _timeBomb = nil;
+      [capturePipeline stopRecording];
     }
-    else {
-        if (_isRecording) {
-            [recordButton setEnabled:NO];
-            [_timeBomb invalidate];
-            _timeBomb = nil;
-            [capturePipeline stopRecording];
-        }
-
-    }
+    
+  }
 }
 
 #pragma mark - DeviceOrientation
 
 - (BOOL)shouldAutorotate {
-    return NO;
+  return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+  return UIInterfaceOrientationMaskPortrait;
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-    return UIInterfaceOrientationPortrait;
+  return UIInterfaceOrientationPortrait;
 }
 
 - (void)deviceRotated:(NSNotification *)notification {
-    UIDeviceOrientation currentOrientation = [MotionOrientation sharedInstance].deviceOrientation;
-
-    double rotation = 0;
-    switch (currentOrientation) {
-        case UIDeviceOrientationFaceDown:
-        case UIDeviceOrientationFaceUp:
-        case UIDeviceOrientationUnknown:
-            return;
-        case UIDeviceOrientationPortrait:
-            rotation = 0;
-            _captureOrientation = AVCaptureVideoOrientationPortrait;
-            break;
-        case UIDeviceOrientationPortraitUpsideDown:
-            rotation = -M_PI;
-            _captureOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
-            break;
-        case UIDeviceOrientationLandscapeLeft:
-            rotation = M_PI_2;
-            _captureOrientation = AVCaptureVideoOrientationLandscapeRight;
-            break;
-        case UIDeviceOrientationLandscapeRight:
-            _captureOrientation = AVCaptureVideoOrientationLandscapeLeft;
-            rotation = -M_PI_2;
-            break;
-    }
-    
-    CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
-    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        [self.flipButton setTransform:transform];
-        [self.flashButton setTransform:transform];
-        [self.activityButton setTransform:transform];
-        [recordButton setTransform:transform];
-    } completion:nil];
+  UIDeviceOrientation currentOrientation = [MotionOrientation sharedInstance].deviceOrientation;
+  
+  double rotation = 0;
+  switch (currentOrientation) {
+    case UIDeviceOrientationFaceDown:
+    case UIDeviceOrientationFaceUp:
+    case UIDeviceOrientationUnknown:
+      return;
+    case UIDeviceOrientationPortrait:
+      rotation = 0;
+      _captureOrientation = AVCaptureVideoOrientationPortrait;
+      break;
+    case UIDeviceOrientationPortraitUpsideDown:
+      rotation = -M_PI;
+      _captureOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
+      break;
+    case UIDeviceOrientationLandscapeLeft:
+      rotation = M_PI_2;
+      _captureOrientation = AVCaptureVideoOrientationLandscapeRight;
+      break;
+    case UIDeviceOrientationLandscapeRight:
+      _captureOrientation = AVCaptureVideoOrientationLandscapeLeft;
+      rotation = -M_PI_2;
+      break;
+  }
+  
+  CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
+  [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+    [self.flipButton setTransform:transform];
+    [self.flashButton setTransform:transform];
+    [self.activityButton setTransform:transform];
+    [recordButton setTransform:transform];
+  } completion:nil];
 }
 
 
 - (BOOL)prefersStatusBarHidden {
-    return YES;
+  return YES;
 }
 
 
@@ -342,19 +342,19 @@ static void *XYZContext = &XYZContext;
 - (void)remoteNotificationReceived:(id)sender {
 }
 
-- (void)applicationDidBecomeActiveNotificationReceived:(id)sender {    
-    // Refresh fetch of feed and activity count when app is brought to foreground
-    //[VYBUtility getNewActivityCountWithCompletion:nil];
+- (void)applicationDidBecomeActiveNotificationReceived:(id)sender {
+  // Refresh fetch of feed and activity count when app is brought to foreground
+  //[VYBUtility getNewActivityCountWithCompletion:nil];
 }
 
 - (void)applicationDidEnterBackgroundNotificationReceived:(id)sender {
-    // stop recording
-    
-    // clear out all
+  // stop recording
+  
+  // clear out all
 }
 
 - (void)activityCountChanged {
-
+  
 }
 
 #pragma mark - Vybe Upload Progress
@@ -406,9 +406,9 @@ static void *XYZContext = &XYZContext;
 
 
 - (void)syncUIWithRecordingStatus {
-    self.activityButton.hidden = _isRecording;
-    flipButton.hidden = _isRecording;
-    flashButton.hidden = _isRecording || _isFrontCamera;
+  self.activityButton.hidden = _isRecording;
+  flipButton.hidden = _isRecording;
+  flashButton.hidden = _isRecording || _isFrontCamera;
 }
 
 - (IBAction)activityButtonPressed:(id)sender {
@@ -418,10 +418,8 @@ static void *XYZContext = &XYZContext;
 
 - (void)didReceiveMemoryWarning
 {
-    [super didReceiveMemoryWarning];
-    NSLog(@"[Capture] Memory Warning");
+  [super didReceiveMemoryWarning];
+  NSLog(@"[Capture] Memory Warning");
 }
-
-
 
 @end
