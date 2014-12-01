@@ -303,14 +303,11 @@ static void *XYZContext = &XYZContext;
     case UIDeviceOrientationFaceDown:
     case UIDeviceOrientationFaceUp:
     case UIDeviceOrientationUnknown:
+    case UIDeviceOrientationPortraitUpsideDown:
       return;
     case UIDeviceOrientationPortrait:
       rotation = 0;
       _captureOrientation = AVCaptureVideoOrientationPortrait;
-      break;
-    case UIDeviceOrientationPortraitUpsideDown:
-      rotation = -M_PI;
-      _captureOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
       break;
     case UIDeviceOrientationLandscapeLeft:
       rotation = M_PI_2;
