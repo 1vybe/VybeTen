@@ -38,7 +38,7 @@ import MapKit
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.setNeedsStatusBarAppearanceUpdate()
+//        self.setNeedsStatusBarAppearanceUpdate()
     }
     
     override func viewDidAppear(animated: Bool) {

@@ -127,8 +127,8 @@ static void *ZOTContext = &ZOTContext;
 #pragma mark - IBActions
 
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender {
-    VYBAppDelegate *appDel = (VYBAppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDel moveToPage:VYBCapturePageIndex];
+  SwipeContainerController *swipeContainer = (SwipeContainerController *)self.parentViewController.parentViewController;
+  [swipeContainer moveToCaptureScreen];
 }
 
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender {
@@ -666,5 +666,8 @@ static void *ZOTContext = &ZOTContext;
     }
 }
 
+- (BOOL)prefersStatusBarHidden {
+  return NO;
+}
 
 @end

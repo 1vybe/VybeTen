@@ -170,13 +170,13 @@
                     <navigationItem key="navigationItem" id="n5s-Dd-GxH">
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" image="VybeLogo_Nav" id="8oV-BS-cDQ">
-                            <color key="tintColor" red="1" green="0.25882352941176473" blue="0.22745098039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="tintColor" red="1" green="0.25882352939999997" blue="0.2274509804" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="captureButtonPressed:" destination="UzS-ES-twR" id="Lea-gt-sHo"/>
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="Rbi-gw-l9V">
-                            <rect key="frame" x="133" y="-9" width="109" height="61"/>
+                            <rect key="frame" x="133" y="-12" width="109" height="67"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="VYBE_Nav" translatesAutoresizingMaskIntoConstraints="NO" id="iS9-4Y-Bn6">
