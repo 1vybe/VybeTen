@@ -19,7 +19,7 @@
 
 #import "VYBMyVybeStore.h"
 
-@interface VYBActivityTableViewController () <UIAlertViewDelegate, VYBPlayerViewControllerDelegate>
+@interface VYBActivityTableViewController () <UIAlertViewDelegate, VYBPlayerViewControllerDelegate, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *countLabel;
@@ -81,9 +81,10 @@ static void *ZOTContext = &ZOTContext;
   _selectedMyLocationIndex = -1;
   
   uploadStatusButton = (UIButton *)[[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:self options:nil] firstObject];
+  [uploadStatusButton setFrame:CGRectMake(0, 0, self.view.bounds.size.width, uploadStatusButton.bounds.size.height)];
   [self.view addSubview:uploadStatusButton];
   uploadStatusButton.alpha = 0.0;
-
+  
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -341,7 +342,7 @@ static void *ZOTContext = &ZOTContext;
   else {
     PFObject *aVybe = [self vybeCellForIndexPath:indexPath];
     
-    // Vybe Cell
+    // Vybe cells
     if (aVybe) {
       VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
       NSDate *timestampDate = aVybe[kVYBVybeTimestampKey];
@@ -504,9 +505,9 @@ static void *ZOTContext = &ZOTContext;
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
   PFObject *obj = [self vybeCellForIndexPath:indexPath];
-  if (obj)
+  if (obj) {
     return YES;
-  
+  }
   return NO;
 }
 

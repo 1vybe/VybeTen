@@ -48,16 +48,16 @@ import UIKit
     
     self.view = rootView
     
-//    let swipeToLeft = UISwipeGestureRecognizer(target: self, action: "panGestureRecognized:")
-//    swipeToLeft.direction = UISwipeGestureRecognizerDirection.Left
-//    let swipeToRight = UISwipeGestureRecognizer(target: self, action: "panGestureRecognized:")
-//    swipeToRight.direction = UISwipeGestureRecognizerDirection.Right
-    let panGesture = UIPanGestureRecognizer(target: self, action: "panGestureRecognized:")
-    panGesture.delegate = self
-//    let swipeToRight = UIScreenEdgePanGestureRecognizer(target: self, action: "panGestureRecognized:")
-//    swipeToRight.edges = UIRectEdge.Left
-    containerView.addGestureRecognizer(panGesture)
-//    containerView.addGestureRecognizer(swipeToRight)
+
+    let screenEdgePanGesture_Right = UIScreenEdgePanGestureRecognizer(target: self, action: "handleScreenEdgePanGesture:")
+    screenEdgePanGesture_Right.edges = UIRectEdge.Right
+    screenEdgePanGesture_Right.delegate = self
+    let screenEdgePanGesture_Left = UIScreenEdgePanGestureRecognizer(target: self, action: "handleScreenEdgePanGesture:")
+    screenEdgePanGesture_Left.edges = UIRectEdge.Left
+    screenEdgePanGesture_Left.delegate = self
+    
+    containerView.addGestureRecognizer(screenEdgePanGesture_Left)
+    containerView.addGestureRecognizer(screenEdgePanGesture_Right)
   }
   
   override func viewDidLoad() {
@@ -136,7 +136,6 @@ import UIKit
         fromViewController.view.removeFromSuperview()
         fromViewController.removeFromParentViewController()
         toViewController.didMoveToParentViewController(self)
-//        self.finishTransitionToViewController(toViewController)
       } else {
         toViewController.view.removeFromSuperview()
         self.selectedViewController = fromViewController
@@ -154,11 +153,7 @@ import UIKit
     
   }
   
-//  func finishTransitionToViewController(toViewController: UIViewController) {
-//    selectedViewController = toViewController
-//  }
-  
-  func panGestureRecognized(recognizer: UIPanGestureRecognizer!) {
+  func handleScreenEdgePanGesture(recognizer: UIScreenEdgePanGestureRecognizer) {
     let state = recognizer.state
     switch state {
     case UIGestureRecognizerState.Began:
@@ -174,25 +169,28 @@ import UIKit
         }
       }
     case .Changed:
-      let leftToRight = swipeInteractor.leftToRight
-      var translation = recognizer.translationInView(containerView).x
-      // To prevent user scrolling in the opposite direction of the initial direction beyond the original x position. 
-      if !leftToRight {
-        translation = min(translation, 0)
-        translation = translation * -1
-      } else {
-        translation = max(translation, 0)
+      if let leftToRight = swipeInteractor.leftToRight {
+        var translation = recognizer.translationInView(containerView).x
+        // To prevent user scrolling in the opposite direction of the initial direction beyond the original x position. 
+        if !leftToRight {
+          translation = min(translation, 0)
+          translation = translation * -1
+        } else {
+          translation = max(translation, 0)
+        }
+        var percent = translation / CGRectGetWidth(containerView.bounds)
+        swipeInteractor.updateInteractiveTransition(percent)
       }
-      var percent = translation / CGRectGetWidth(containerView.bounds)
-      swipeInteractor.updateInteractiveTransition(percent)
     case .Ended:
-      var velocity = recognizer.velocityInView(containerView).x
-      if !swipeInteractor.leftToRight { velocity = -1 * velocity }
-      
-      if velocity > 0 {
-        swipeInteractor.finishInteractiveTransition()
-      } else {
-        swipeInteractor.cancelInteractiveTransition()
+      if let leftToRight = swipeInteractor.leftToRight {
+        var velocity = recognizer.velocityInView(containerView).x
+        if !leftToRight { velocity = -1 * velocity }
+        
+        if velocity > 0 {
+          swipeInteractor.finishInteractiveTransition()
+        } else {
+          swipeInteractor.cancelInteractiveTransition()
+        }
       }
     case .Cancelled:
       swipeInteractor.cancelInteractiveTransition()
@@ -216,7 +214,11 @@ import UIKit
     return true
   }
   
+  func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
+  }
 }
+
 class SwipeInteractionManager: NSObject, UIViewControllerInteractiveTransitioning {
   var animator: UIViewControllerAnimatedTransitioning!
   var transitionContext: SwipeTransitionContext!
@@ -231,7 +233,7 @@ class SwipeInteractionManager: NSObject, UIViewControllerInteractiveTransitionin
 
   var cancelTick: CADisplayLink!
 
-  var leftToRight: Bool!
+  var leftToRight: Bool?
   
   func startInteractiveTransition(transitionContext: UIViewControllerContextTransitioning) {
     self.transitionContext = transitionContext as SwipeTransitionContext
@@ -280,9 +282,6 @@ class SwipeInteractionManager: NSObject, UIViewControllerInteractiveTransitionin
       layer.timeOffset = timeOffset
     }
   }
-
-  
-  
 }
 
 class SwipeTransitionContext: NSObject, UIViewControllerContextTransitioning {
