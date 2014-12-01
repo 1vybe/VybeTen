@@ -4,64 +4,36 @@
 	<head>
 		<title>Vybe</title>
 	</head>
-
-	<figure id="video_player">
-		<div id="video_container">
-			<video controls poster="regency/1.jpg">
-				<source src="regency/1.mp4" type="video/mp4">
-			</video>
+	<body>
+		<div id="video_player">
+			<div id="video_container">
+				<video controls poster="regency/1.jpg">
+					<source src="regency/1.mp4" type="video/mp4">
+				</video>
+			</div>
+			<div id='playlist'>
+				<a href="regency/1.mp4"></a>
+				<a href="regency/2.mp4"></a>
+				<a href="regency/3.mp4"></a>
+			</div>
 		</div>
-		<figcaption>
-			<a href="regency/1.mp4"><img src="regency/1.jpg" alt="Stereo Timelapse 1"></a>
-			<a href="regency/2.mp4"><img src="regency/2.jpg" alt="Stereo Timelapse 2"></a>
-			<a href="regency/3.mp4"><img src="regency/3.jpg" alt="Stereo Timelapse 3"></a>
-		</figcaption>
-	</figure>
-
+	</body>
 	<style>
+		body {
+			background-color: black;
+		}
 		#video_player {
-			display: table; line-height: 0;
-			font-size: 0; background: #000;
-			max-width: 1000px;
 			margin: 0 auto;
 		}
-		#video_container { position: relative; }
-		#video_player div, #video_player figcaption {
-			display: table-cell;
-			vertical-align: top;
-		}
 		#video_container video {
-			position: absolute; display: block;
 			width: 100%; height: 100%;
-			top: 0;
-		}
-		#video_player figcaption { width: 25%; }
-		#video_player figcaption a { display: block; }
-		#video_player figcaption a {
-			opacity: .5;
-			transition: 1s opacity;
-		}
-		#video_player figcaption a img, figure video {
-			width: 100%; height: auto;
-		}
-		#video_player figcaption a.currentvid,
-		#video_player figcaption a:hover,
-		#video_player figcaption a:focus { opacity: 1; }
-		@media (max-width: 700px) {
-			#video_player video, #video_player figcaption {
-				display: table-row;
-			}
-			#video_container { padding-top: 56.25%; }
-			#video_player figcaption a {
-				display: inline-block; width: 33.33%;
-			}
 		}
 	</style>
 
 	<script type="text/javascript">
 		var video_player = document.getElementById("video_player");
 		video = video_player.getElementsByTagName("video")[0],
-		video_links = video_player.getElementsByTagName("figcaption")[0],
+		video_links = document.getElementById("playlist"),
 		source = video.getElementsByTagName("source"),
 		link_list = [],
 		path = 'regency/',
@@ -100,13 +72,7 @@
 				playVid(nextVid);
 			})
 
-			video.addEventListener('mouseenter', function() {
-				video.setAttribute("controls","true");
-			})
-
-			video.addEventListener('mouseleave', function() {
-				video.removeAttribute("controls");
-			})
+			allLnks[0].click();
 		})()
 	</script>
 
