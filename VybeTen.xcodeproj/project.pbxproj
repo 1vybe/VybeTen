@@ -712,7 +712,6 @@
 				88FF430519AFFCEB00D18872 /* VYBActivityTableViewController.m in Sources */,
 				8861F0D319A81E08000249DB /* NSString+Email.m in Sources */,
 				8861F0D019A81C8C000249DB /* NSString+Username.m in Sources */,
-				02C7A02719F580FC0065BF4E /* VYBFirstPageViewController.swift in Sources */,
 				74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */,
 				02CEE2AD1970A46A00AC361F /* VYBTimerView.m in Sources */,
 				0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */,
@@ -750,7 +749,6 @@
 				0221A00B1A0340AD00C5C60E /* VYBOldZoneFinder.m in Sources */,
 				02F5B1F119D32594008C42C3 /* VYBDynamicSizeView.m in Sources */,
 				884E6D021A26E1EB00E9732F /* SignUpViewController.swift in Sources */,
-				74F9CA071A25759F00D2C3F4 /* SwipeAnimationController.swift in Sources */,
 				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,
 				0262054419A67B3600E994F9 /* UINavigationController+Autorotate.m in Sources */,
 				0288603E19E4A02A007876AE /* VYBCapturePipeline.m in Sources */,
@@ -840,7 +838,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				PROVISIONING_PROFILE = "d151eabc-7a7b-45e3-ba9b-b17607961cc9";
+				PROVISIONING_PROFILE = "36e49e5e-ccab-4766-8f33-443e99e597ac";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

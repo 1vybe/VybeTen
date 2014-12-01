@@ -412,7 +412,7 @@ static void *XYZContext = &XYZContext;
 }
 
 - (IBAction)activityButtonPressed:(id)sender {
-  SwipeContainerController *swipeContainer = (SwipeContainerController *)self.parentViewController.parentViewController;
+  SwipeContainerController *swipeContainer = (SwipeContainerController *)self.parentViewController;
   [swipeContainer moveToActivityScreen];
 }
 

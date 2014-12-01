@@ -7,12 +7,11 @@
 //
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
-#import "VybeTen-Swift.h"
 #import "VYBNavigationController.h"
 #import "VYBPageViewController.h"
 
 @class VYBPlayerViewController;
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, UIPageViewControllerDataSource, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
@@ -22,7 +21,6 @@
 @property (nonatomic, readonly) int networkStatus;
 
 - (BOOL)isParseReachable;
-- (void)moveToPage:(NSInteger)pageIdx;
 
 - (void)presentFirstPage;
 - (void)proceedToMainInterface;

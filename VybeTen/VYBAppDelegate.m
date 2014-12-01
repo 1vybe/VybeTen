@@ -198,8 +198,7 @@
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    if (_viewControllers && ([_viewControllers count] > 0))
-        [self moveToPage:VYBCapturePageIndex];
+  [self.swipeContainerController moveToCaptureScreen];
 }
 
 #pragma mark - Notification

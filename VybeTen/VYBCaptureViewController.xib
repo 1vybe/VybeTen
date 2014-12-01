@@ -28,7 +28,7 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pxE-bC-V0j" customClass="VYBCameraView">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
-                    <color key="backgroundColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rNG-mo-RpY" userLabel="activityButton">
                     <rect key="frame" x="430" y="15" width="35" height="35"/>
