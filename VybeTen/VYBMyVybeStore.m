@@ -35,7 +35,7 @@
 + (VYBMyVybeStore *)sharedStore {
   static VYBMyVybeStore *sharedStore = nil;
   if (!sharedStore) {
-      sharedStore = [[super allocWithZone:nil] init];
+    sharedStore = [[super allocWithZone:nil] init];
   }
   
   return sharedStore;
@@ -60,7 +60,7 @@
     // Load saved videos from Vybe's Documents directory
     NSString *path = [self myVybesArchivePath];
     _vybesToUpload = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithFile:path]];
-  
+    
     if (!_vybesToUpload)
       _vybesToUpload = [[NSMutableArray alloc] init];
   }
@@ -73,7 +73,7 @@
   [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
   [nVybe setObject:[NSNumber numberWithBool:YES] forKey:kVYBVybeTypePublicKey];
   [nVybe setObject:[NSDate date] forKey:kVYBVybeTimestampKey];
-
+  
   _currVybe = [[VYBVybe alloc] initWithParseObject:nVybe];
 }
 
@@ -81,20 +81,20 @@
   _currZone = currZone;
   // Update current vybe's zone here
   if (_currVybe) {
-      [_currVybe setVybeZone:_currZone];
+    [_currVybe setVybeZone:_currZone];
   }
 }
 
 
 - (void)uploadCurrentVybe {
   [self setCurrentUploadStatus:CurrentUploadStatusUploading];
-
+  
   dispatch_async(_currentUploadQueue, ^{
     VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe];
-  
+    
     NSData *video = [NSData dataWithContentsOfFile:[vybeToUpload videoFilePath]];
     PFFile *videoFile = [PFFile fileWithData:video];
- 
+    
     [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
       if (!error) {
         PFObject *vybe = [vybeToUpload parseObject];
@@ -120,17 +120,17 @@
     } progressBlock:^(int percentDone) {
       [self setCurrentUploadPercent:percentDone];
     }];
-
+    
     // Update user lastVybeLocation and lastVybeTime field.
     [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
     [[PFUser currentUser] saveInBackground];
   });
-
+  
 }
 
 
 - (void)didUploadVybe:(VYBVybe *)cVybe {
-    NSAssert(cVybe, @"did upload a vybe but currVybe is nil now");
+  NSAssert(cVybe, @"did upload a vybe but currVybe is nil now");
   
   // GA stuff
   id tracker = [[GAI sharedInstance] defaultTracker];
@@ -142,7 +142,7 @@
   if (!_uploadingOldVybes) {
     [self setCurrentUploadStatus:CurrentUploadStatusSuccess];
   }
-
+  
   @synchronized (_vybesToUpload) {
     // It's possible that Parse retried to upload and succedded before uplaodDelayedVybe was called on that old vybe
     [_vybesToUpload removeVybeObject:cVybe];
@@ -155,28 +155,28 @@
 
 - (void)uploadingFailedWith:(VYBVybe *)vybeToUpload {
   [self setCurrentUploadStatus:CurrentUploadStatusFailed];
-
+  
   [self saveVybe:vybeToUpload];
   
   // GA stuff
   id tracker = [[GAI sharedInstance] defaultTracker];
   if (tracker) {
-      // upload saved metric for capture_video event
-      [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"saved" value:nil] build]];
+    // upload saved metric for capture_video event
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"saved" value:nil] build]];
   }
   _currVybe = nil;
 }
 
 - (void)saveVybe:(VYBVybe *)vybeToSave {
-    BOOL success = NO;
-    @synchronized (_vybesToUpload) {
-        [_vybesToUpload addVybeObject:vybeToSave];
-        success = [self saveChanges];
-    }
-    
-    if (success) {
-        [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
-    }
+  BOOL success = NO;
+  @synchronized (_vybesToUpload) {
+    [_vybesToUpload addVybeObject:vybeToSave];
+    success = [self saveChanges];
+  }
+  
+  if (success) {
+    [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Saved"];
+  }
 }
 
 - (void)startUploadingSavedVybes {
@@ -187,11 +187,11 @@
   
   if (_uploadingOldVybes)
     return;
-
+  
   if (_vybesToUpload.count < 1) {
     return;
   }
-
+  
   _uploadingOldVybes = YES;
   [self setCurrentUploadStatus:CurrentUploadStatusUploading];
   
@@ -207,7 +207,7 @@
     if (_vybesToUpload.count < 1) {
       _uploadingOldVybes = NO;
       [self setCurrentUploadStatus:CurrentUploadStatusSuccess];
-
+      
       return;
     }
     
@@ -215,20 +215,20 @@
   }
   
   BOOL success = [self uploadSavedVybe:oldVybe];
-
+  
   @synchronized (_vybesToUpload) {
     if (success) {
       [_vybesToUpload removeVybeObject:oldVybe];
       [self saveChanges];
     }
   }
-
+  
   if (success) {
     // GA stuff
     id tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
-        // upload recovered metric for capture_video event
-        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"recovered" value:nil] build]];
+      // upload recovered metric for capture_video event
+      [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"recovered" value:nil] build]];
     }
     NSLog(@"uploaded old vybe: %@", [oldVybe parseObject]);
     
@@ -245,7 +245,7 @@
     return NO;
   
   PFObject *vybe = [aVybe parseObject];
-
+  
   NSData *video = [NSData dataWithContentsOfFile:[aVybe videoFilePath]];
   NSData *thumbnail = [NSData dataWithContentsOfFile:[aVybe thumbnailFilePath]];
   
@@ -254,9 +254,9 @@
     [self saveChanges];
     return YES;
   }
-   //NSAssert(video, @"cached video does not exist");
+  //NSAssert(video, @"cached video does not exist");
   //NSAssert(thumbnail, @"cached thumbnail does not exist");
-
+  
   PFFile *videoFile = [PFFile fileWithData:video];
   [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
   BOOL success = [videoFile save];
@@ -268,23 +268,23 @@
   
   if ( ! success )
     return NO;
-
+  
   success = [vybe save];
   
   if ( ! success )
     return NO;
   
   /*
-    // Only update current user's lastVybedTime and lastVybeLocation if this vybe is fresher
-    NSDate *currUserLastVybedTime = [[PFUser currentUser] objectForKey:kVYBUserLastVybedTimeKey];
-    if (currUserLastVybedTime &&
-        ([currUserLastVybedTime timeIntervalSinceDate:vybe[kVYBVybeTimestampKey]] < 0)) {
-        [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
-        success = [[PFUser currentUser] save];
-        
-        return success;
-    }
-  */
+   // Only update current user's lastVybedTime and lastVybeLocation if this vybe is fresher
+   NSDate *currUserLastVybedTime = [[PFUser currentUser] objectForKey:kVYBUserLastVybedTimeKey];
+   if (currUserLastVybedTime &&
+   ([currUserLastVybedTime timeIntervalSinceDate:vybe[kVYBVybeTimestampKey]] < 0)) {
+   [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
+   success = [[PFUser currentUser] save];
+   
+   return success;
+   }
+   */
   return YES;
 }
 
@@ -311,7 +311,7 @@
 }
 
 - (VYBVybe *)currVybe {
-    return _currVybe;
+  return _currVybe;
 }
 
 - (NSArray *)savedVybes {

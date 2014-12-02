@@ -12,7 +12,7 @@
 @implementation NSMutableArray (VYBVybe)
 - (void)addVybeObject:(VYBVybe *)aVybe {
   for (VYBVybe *obj in self) {
-    if (obj.uniqueFileName == aVybe.uniqueFileName) {
+    if ([obj.uniqueFileName isEqualToString:aVybe.uniqueFileName]) {
       NSLog(@"Cannot add the same vybe");
       return;
     }
@@ -21,7 +21,7 @@
 }
 - (void)removeVybeObject:(VYBVybe *)aVybe {
   for (VYBVybe *obj in self) {
-    if (obj.uniqueFileName == aVybe.uniqueFileName) {
+    if ([obj.uniqueFileName isEqualToString:aVybe.uniqueFileName]) {
       [self removeObject:obj];
       return;
     }
