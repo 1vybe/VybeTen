@@ -74,10 +74,10 @@ static void *ZOTContext = &ZOTContext;
   [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadStatus" options:NSKeyValueObservingOptionNew context:ZOTContext];
   
   self.usernameLabel.text = [PFUser currentUser].username;
-
+  
   // Remove empty cells.
   self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    
+  
   _selectedMyLocationIndex = -1;
   
   uploadStatusButton = (UIButton *)[[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:self options:nil] firstObject];
@@ -89,7 +89,7 @@ static void *ZOTContext = &ZOTContext;
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
-
+  
   // Your vybe upload status
   if ([[VYBMyVybeStore sharedStore] currentUploadStatus] == CurrentUploadStatusUploading) {
     [uploadStatusButton setTitle:@"UPLOADING" forState:UIControlStateNormal];
@@ -103,29 +103,29 @@ static void *ZOTContext = &ZOTContext;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    id tracker = [[GAI sharedInstance] defaultTracker];
-    if (tracker) {
-        [tracker set:kGAIScreenName
+  [super viewDidAppear:animated];
+  
+  id tracker = [[GAI sharedInstance] defaultTracker];
+  if (tracker) {
+    [tracker set:kGAIScreenName
            value:@"Activity Screen"];
-        
-        [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
-    }
     
-    [self getPermissionIfNeeded];
-
-    [VYBUtility updateLastRefreshForCurrentUser];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+  }
+  
+  [self getPermissionIfNeeded];
+  
+  [VYBUtility updateLastRefreshForCurrentUser];
 }
 
 #pragma mark - UIView
 
 - (BOOL)shouldAutorotate {
-    return NO;
+  return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+  return UIInterfaceOrientationMaskPortrait;
 }
 
 #pragma mark - IBActions
@@ -136,54 +136,54 @@ static void *ZOTContext = &ZOTContext;
 }
 
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Logout" otherButtonTitles:nil];
-    [actionSheet showFromBarButtonItem:sender animated:YES];
+  UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Logout" otherButtonTitles:nil];
+  [actionSheet showFromBarButtonItem:sender animated:YES];
 }
 
 #pragma mark - Private
 
 - (void)getPermissionIfNeeded {
-    
-    // iOS8
-    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        // Check notification permission settings
-        if ([[[UIApplication sharedApplication] currentUserNotificationSettings] types] > 0) {
-            [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsNotificationPermissionGrantedKey forKey:kVYBUserDefaultsNotificationPermissionKey];
-        }
-        
-        NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
-        if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionUndeterminedKey] ) {
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Push Notification"
-                                                                                     message:@"We would like to notify when there are live happenings around you"
-                                                                              preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
-                                                                   style:UIAlertActionStyleCancel handler:nil];
-            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
-                                                               style:UIAlertActionStyleDefault
-                                                             handler:^(UIAlertAction *action) {
-                                                                 UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
-                                                                                                                 UIUserNotificationTypeBadge |
-                                                                                                                 UIUserNotificationTypeSound);
-                                                                 UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
-                                                                                                                                          categories:nil];
-                                                                 [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-                                                             }];
-            [alertController addAction:cancelAction];
-            [alertController addAction:okAction];
-            
-            [self presentViewController:alertController animated:NO completion:nil];
-        }
-        else if ([notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionDeniedKey]) {
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enable Notification"
-                                                                                     message:@"Please let us notify you so you know what's happening around you when you want from Settings -> Notifications"
-                                                                              preferredStyle:UIAlertControllerStyleAlert];
-            
-            UIAlertAction *emptyAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
-            [alertController addAction:emptyAction];
-            
-            [self presentViewController:alertController animated:NO completion:nil];
-        }
+  
+  // iOS8
+  if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+    // Check notification permission settings
+    if ([[[UIApplication sharedApplication] currentUserNotificationSettings] types] > 0) {
+      [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsNotificationPermissionGrantedKey forKey:kVYBUserDefaultsNotificationPermissionKey];
     }
+    
+    NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
+    if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionUndeterminedKey] ) {
+      UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Push Notification"
+                                                                               message:@"We would like to notify when there are live happenings around you"
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+      UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                             style:UIAlertActionStyleCancel handler:nil];
+      UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction *action) {
+                                                         UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
+                                                                                                         UIUserNotificationTypeBadge |
+                                                                                                         UIUserNotificationTypeSound);
+                                                         UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
+                                                                                                                                  categories:nil];
+                                                         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+                                                       }];
+      [alertController addAction:cancelAction];
+      [alertController addAction:okAction];
+      
+      [self presentViewController:alertController animated:NO completion:nil];
+    }
+    else if ([notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionDeniedKey]) {
+      UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enable Notification"
+                                                                               message:@"Please let us notify you so you know what's happening around you when you want from Settings -> Notifications"
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+      
+      UIAlertAction *emptyAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+      [alertController addAction:emptyAction];
+      
+      [self presentViewController:alertController animated:NO completion:nil];
+    }
+  }
 }
 
 
@@ -191,22 +191,22 @@ static void *ZOTContext = &ZOTContext;
 
 // iOS7 and prior
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if ( [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"OK"] ) {
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert |
-                                                                               UIRemoteNotificationTypeBadge |
-                                                                               UIRemoteNotificationTypeSound)];
-    }
+  if ( [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"OK"] ) {
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert |
+                                                                           UIRemoteNotificationTypeBadge |
+                                                                           UIRemoteNotificationTypeSound)];
+  }
 }
 
 #pragma mark - PFQueryTableView
 
 - (PFQuery *)queryForTable {
-    PFQuery *query = [PFQuery queryWithClassName:self.parseClassName];
-    [query whereKey:kVYBVybeUserKey equalTo:[PFUser currentUser]];
-    [query orderByDescending:kVYBVybeZoneNameKey];
-    [query addDescendingOrder:kVYBVybeTimestampKey];
+  PFQuery *query = [PFQuery queryWithClassName:self.parseClassName];
+  [query whereKey:kVYBVybeUserKey equalTo:[PFUser currentUser]];
+  [query orderByDescending:kVYBVybeZoneNameKey];
+  [query addDescendingOrder:kVYBVybeTimestampKey];
   
-    return query;
+  return query;
 }
 
 - (void)objectsDidLoad:(NSError *)error {
@@ -216,10 +216,10 @@ static void *ZOTContext = &ZOTContext;
     if (success) {
       self.activeLocations = [[ZoneStore sharedInstance] activeZones];
       self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
-    
+      
       NSString *locationCntText = (self.myLocations.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.myLocations.count] : [NSString stringWithFormat:@"%d Location", (int)self.myLocations.count];
       NSString *vybeCntText = (self.objects.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)self.objects.count] : [NSString stringWithFormat:@"%d Vybe", (int)self.objects.count];
-
+      
       self.countLabel.text = [NSString stringWithFormat:@"%@ - %@", locationCntText, vybeCntText];
       
       [self addSavedVybesToTable];
@@ -249,7 +249,7 @@ static void *ZOTContext = &ZOTContext;
     
     return activeLocations;
   }
-    
+  
   else {
     NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"ActivitySectionView" owner:nil options:nil];
     UIView *myLocations = array[1];
@@ -420,7 +420,7 @@ static void *ZOTContext = &ZOTContext;
   // Active Locations
   if (section == 0) {
     Zone *zone = self.activeLocations[indexPath.row];
-
+    
     // GA stuff
     id tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
@@ -609,7 +609,7 @@ static void *ZOTContext = &ZOTContext;
             } completion:^(BOOL finished) {
               [self loadObjects];
             }];
-       
+            
           });
           return;
         }
@@ -656,11 +656,11 @@ static void *ZOTContext = &ZOTContext;
 #pragma mark - PlayerViewControllerDelegate
 
 - (void)playerViewController:(VYBPlayerViewController *)playerVC didFinishSetup:(BOOL)ready {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-
-    if (ready) {
-        [self presentViewController:playerVC animated:YES completion:nil];
-    }
+  [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+  
+  if (ready) {
+    [self presentViewController:playerVC animated:YES completion:nil];
+  }
 }
 
 
@@ -668,12 +668,12 @@ static void *ZOTContext = &ZOTContext;
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    switch (buttonIndex) {
-        case 0:
-            NSLog(@"Logging out");
-            [(VYBAppDelegate *)[UIApplication sharedApplication].delegate logOut];
-            break;
-    }
+  switch (buttonIndex) {
+    case 0:
+      NSLog(@"Logging out");
+      [(VYBAppDelegate *)[UIApplication sharedApplication].delegate logOut];
+      break;
+  }
 }
 
 - (BOOL)prefersStatusBarHidden {

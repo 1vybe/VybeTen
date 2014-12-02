@@ -17,7 +17,7 @@
 
 @interface VYBMyVybeStore () {
   VYBVybe *_currVybe;
-  dispatch_queue_t _currentUploadQueue;
+//  dispatch_queue_t _currentUploadQueue;
   
   NSMutableArray *_vybesToUpload;
   dispatch_queue_t _oldUploadQueue;
@@ -89,42 +89,40 @@
 - (void)uploadCurrentVybe {
   [self setCurrentUploadStatus:CurrentUploadStatusUploading];
   
-  dispatch_async(_currentUploadQueue, ^{
-    VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe];
-    
-    NSData *video = [NSData dataWithContentsOfFile:[vybeToUpload videoFilePath]];
-    PFFile *videoFile = [PFFile fileWithData:video];
-    
-    [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-      if (!error) {
-        PFObject *vybe = [vybeToUpload parseObject];
-        [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-        
-        NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToUpload thumbnailFilePath]];
-        if (thumbnail) {
-          PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
-          [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
-          [thumbnailFile saveInBackground];
-        }
-        
-        [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-          if (succeeded) {
-            [self didUploadVybe:vybeToUpload];
-          } else {
-            [self uploadingFailedWith:vybeToUpload];
-          }
-        }];
-      } else {
-        [self uploadingFailedWith:vybeToUpload];
+  VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe];
+  
+  NSData *video = [NSData dataWithContentsOfFile:[vybeToUpload videoFilePath]];
+  PFFile *videoFile = [PFFile fileWithData:video];
+  
+  [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    if (!error) {
+      PFObject *vybe = [vybeToUpload parseObject];
+      [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
+      
+      NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToUpload thumbnailFilePath]];
+      if (thumbnail) {
+        PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
+        [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
+        [thumbnailFile saveInBackground];
       }
-    } progressBlock:^(int percentDone) {
-      [self setCurrentUploadPercent:percentDone];
-    }];
-    
-    // Update user lastVybeLocation and lastVybeTime field.
-    [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
-    [[PFUser currentUser] saveInBackground];
-  });
+      
+      [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+          [self didUploadVybe:vybeToUpload];
+        } else {
+          [self uploadingFailedWith:vybeToUpload];
+        }
+      }];
+    } else {
+      [self uploadingFailedWith:vybeToUpload];
+    }
+  } progressBlock:^(int percentDone) {
+    [self setCurrentUploadPercent:percentDone];
+  }];
+  
+  // Update user lastVybeLocation and lastVybeTime field.
+  [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
+  [[PFUser currentUser] saveInBackground];
   
 }
 
