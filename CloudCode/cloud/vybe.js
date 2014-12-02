@@ -271,16 +271,11 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
       var feedQuery = feed.query();
       feedQuery.include('user');
       feedQuery.addAscending('timestamp');
+      feedQuery.greaterThanOrEqualTo('timestamp', ttlAgo);
       feedQuery.find({
         success: function(list) {
-          console.log('There are ' + list.length + ' feed for ' + aUser.get('username'));
-          for (i = 0; i < list.length; i++) {
-            var aVybe = list[i];
-            if (aVybe.get('timestamp') > ttlAgo) {
-              freshContents.push(aVybe);
-            }
-          }
-          response.success(freshContents);
+          console.log('There are ' + list.length + ' FRESH feed for ' + aUser.get('username'));
+          response.success(list);
         },
         error: function(error) {
           response.error(error);

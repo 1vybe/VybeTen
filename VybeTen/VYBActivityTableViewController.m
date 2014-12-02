@@ -95,6 +95,9 @@ static void *ZOTContext = &ZOTContext;
     [uploadStatusButton setTitle:@"UPLOADING" forState:UIControlStateNormal];
     uploadStatusButton.alpha = 1.0;
   }
+  else {
+    uploadStatusButton.alpha = 0.0;
+  }
   
   [self loadObjects];
 }
@@ -212,7 +215,7 @@ static void *ZOTContext = &ZOTContext;
   
   [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
     if (success) {
-      self.activeLocations = [[ZoneStore sharedInstance] activeUnlockedZones];
+      self.activeLocations = [[ZoneStore sharedInstance] activeZones];
       self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
     
       NSString *locationCntText = (self.myLocations.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.myLocations.count] : [NSString stringWithFormat:@"%d Location", (int)self.myLocations.count];
@@ -292,7 +295,7 @@ static void *ZOTContext = &ZOTContext;
   
   // Active Location Cell
   if (section == 0) {
-    VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ZoneCell"];
+    VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ActiveLocationCell"];
     
     Zone *zone = self.activeLocations[indexPath.row];
     cell.locationLabel.text = zone.name;
@@ -305,18 +308,14 @@ static void *ZOTContext = &ZOTContext;
     if (freshContents && freshContents.count) {
       lastVybe = zone.freshContents.lastObject;
       timestampDate = lastVybe[kVYBVybeTimestampKey];
-      cell.timestampLabel.textColor = [UIColor whiteColor];
-      cell.locationLabel.textColor = [UIColor whiteColor];
-      cell.listBarImageView.image = [UIImage imageNamed:@"BlueCell.png"];
+      [cell setUnwatched:YES];
+
       NSString *vybeCntText = (freshContents.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)freshContents.count] : [NSString stringWithFormat:@"%d Vybe", (int)freshContents.count];
       cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
     }
     else {      
       cell.timestampLabel.text = [NSString stringWithFormat:@"%@", [VYBUtility reverseTime:timestampDate]];
     }
-    
-    cell.thumbnailImageView.hidden = NO;
-    cell.greenLightSavedVybe.hidden = YES;
 
     cell.thumbnailImageView.file = lastVybe[kVYBVybeThumbnailKey];
     
@@ -344,7 +343,7 @@ static void *ZOTContext = &ZOTContext;
     
     // Vybe cells
     if (aVybe) {
-      VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"VybeCell"];
+      VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"MyVybeCell"];
       NSDate *timestampDate = aVybe[kVYBVybeTimestampKey];
       cell.timestampLabel.text = [NSString stringWithFormat:@"%@  (%@)", [VYBUtility localizedDateStringFrom:timestampDate], [VYBUtility reverseTime:timestampDate]];
       
@@ -376,9 +375,7 @@ static void *ZOTContext = &ZOTContext;
     
     // My Location cell
     else {
-      VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ZoneCell"];
-      
-      cell.thumbnailImageView.hidden = YES;
+      VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"MyLocationCell"];
       
       NSInteger newIndex = [self convertToIndexInMyLocations:indexPath];
       
@@ -397,9 +394,23 @@ static void *ZOTContext = &ZOTContext;
       
       NSString *vybeCntText = (zone.myVybes.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)zone.myVybes.count] : [NSString stringWithFormat:@"%d Vybe", (int)zone.myVybes.count];
       cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - Last Vybe taken %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
-      cell.thumbnailImageView.hidden = YES;
       
       return cell;
+    }
+  }
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+  NSInteger section = indexPath.section;
+  
+  // Active Location Cell
+  if (section == 0) {
+    Zone *zone = self.activeLocations[indexPath.row];
+
+    // FRESH vybes
+    NSArray *freshContents = [[ZoneStore sharedInstance] freshVybesFromZone:zone.zoneID];
+    if (freshContents && freshContents.count) {
+      [(VYBVybeTableViewCell *)cell setUnwatched:YES];
     }
   }
 }
@@ -494,8 +505,9 @@ static void *ZOTContext = &ZOTContext;
         
         [self.tableView beginUpdates];
         [self.tableView insertRowsAtIndexPaths:pathsToAdd withRowAnimation:UITableViewRowAnimationMiddle];
-        if (pathsToRemove.count > 0)
+        if (pathsToRemove.count > 0) {
           [self.tableView deleteRowsAtIndexPaths:pathsToRemove withRowAnimation:UITableViewRowAnimationMiddle];
+        }
         [self.tableView endUpdates];
       }
       

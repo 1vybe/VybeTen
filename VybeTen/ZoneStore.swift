@@ -30,9 +30,6 @@ private let _zoneStoreSharedInstance = ZoneStore()
         // Group ACTIVE vybes into zones
         self.createActiveZonesFromVybes(vybeObjects)
         
-        // Mark active zones as UNLOCKED
-        self.unlockActiveZones()
-        
         // Rearrange UNLOCKED zones by your most recent vybe timestamp
         self._unlockedZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
           let comparisonResult = zone1.myMostRecentVybeTimestamp.compare(zone2.myMostRecentVybeTimestamp)
@@ -58,7 +55,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
                 return zone1.freshContents.count > zone2.freshContents.count
               })
               
-//              self.displayZoneInfo()
+              self.displayZoneInfo()
             }
           }
           completionHandler(success: true)

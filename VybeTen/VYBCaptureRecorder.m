@@ -101,26 +101,14 @@ typedef NS_ENUM (NSInteger,VYBRecorderStatus) {
         bzero( &acl, sizeof(acl));
         acl.mChannelLayoutTag = kAudioChannelLayoutTag_Mono;
         
-        NSDictionary* audioOutputSettings = nil;
-        // Both type of audio inputs causes output video file to be corrupted.
-        if( NO ) {
-            // should work from iphone 3GS on and from ipod 3rd generation
-            audioOutputSettings = [NSDictionary dictionaryWithObjectsAndKeys:
+        NSDictionary* audioOutputSettings = [NSDictionary dictionaryWithObjectsAndKeys:
                                    [ NSNumber numberWithInt: kAudioFormatMPEG4AAC ], AVFormatIDKey,
                                    [ NSNumber numberWithInt: 1 ], AVNumberOfChannelsKey,
                                    [ NSNumber numberWithFloat: 44100.0 ], AVSampleRateKey,
-                                   [ NSNumber numberWithInt: 64000 ], AVEncoderBitRateKey,
+                                   [ NSNumber numberWithInt: 256000 ], AVEncoderBitRateKey,
                                    [ NSData dataWithBytes: &acl length: sizeof( acl ) ], AVChannelLayoutKey,
                                    nil];
-        } else {
-            // should work on any device requires more space
-            audioOutputSettings = [ NSDictionary dictionaryWithObjectsAndKeys:
-                                   [ NSNumber numberWithInt: kAudioFormatMPEG4AAC ], AVFormatIDKey,
-                                   [ NSNumber numberWithFloat: 44100.0 ], AVSampleRateKey,
-                                   [ NSNumber numberWithInt: 1 ], AVNumberOfChannelsKey,
-                                   [ NSData dataWithBytes: &acl length: sizeof( acl ) ], AVChannelLayoutKey,
-                                   nil ];
-        }
+
         _audioWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:audioOutputSettings];
         _audioWriterInput.expectsMediaDataInRealTime = YES;
         NSParameterAssert(_audioWriterInput);
