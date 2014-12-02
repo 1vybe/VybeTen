@@ -14,6 +14,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
 @property (nonatomic, weak) IBOutlet PFImageView *thumbnailImageView;
 @property (nonatomic, weak) IBOutlet UIView *separatorLineView;
+@property (nonatomic, weak) IBOutlet UIView *unwatchedBarView;
 @property (nonatomic, weak) IBOutlet UIImageView *greenLightSavedVybe;
-- (void)setUnwatched:(BOOL)unwatched;
+- (void)setUnlocked:(BOOL)unlocked;
+//- (void)setUnwatched:(BOOL)unwatched;
 @end

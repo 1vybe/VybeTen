@@ -205,8 +205,7 @@ static void *ZOTContext = &ZOTContext;
     [query whereKey:kVYBVybeUserKey equalTo:[PFUser currentUser]];
     [query orderByDescending:kVYBVybeZoneNameKey];
     [query addDescendingOrder:kVYBVybeTimestampKey];
-    query.limit = 500;
-    
+  
     return query;
 }
 
@@ -295,28 +294,31 @@ static void *ZOTContext = &ZOTContext;
   
   // Active Location Cell
   if (section == 0) {
-    VYBVybeTableViewCell *cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ActiveLocationCell"];
-    
     Zone *zone = self.activeLocations[indexPath.row];
-    cell.locationLabel.text = zone.name;
-    
-    PFObject *lastVybe = zone.mostRecentVybe;
-    NSDate *timestampDate = zone.mostRecentActiveVybeTimestamp;
+    NSArray *freshContents = [[ZoneStore sharedInstance] freshVybesFromZone:zone.zoneID];
+    VYBVybeTableViewCell *cell;
+    PFObject *lastVybe;
     
     // FRESH vybes
-    NSArray *freshContents = [[ZoneStore sharedInstance] freshVybesFromZone:zone.zoneID];
     if (freshContents && freshContents.count) {
+      cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"UnwatchedActiveLocationCell"];
+      
       lastVybe = zone.freshContents.lastObject;
-      timestampDate = lastVybe[kVYBVybeTimestampKey];
-      [cell setUnwatched:YES];
-
+      NSDate *timestampDate = lastVybe[kVYBVybeTimestampKey];
+      
       NSString *vybeCntText = (freshContents.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)freshContents.count] : [NSString stringWithFormat:@"%d Vybe", (int)freshContents.count];
       cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
     }
-    else {      
+    else {
+      cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ActiveLocationCell"];
+      lastVybe = zone.mostRecentVybe;
+      NSDate *timestampDate = zone.mostRecentActiveVybeTimestamp;
+      
       cell.timestampLabel.text = [NSString stringWithFormat:@"%@", [VYBUtility reverseTime:timestampDate]];
     }
-
+    
+    cell.locationLabel.text = zone.name;
+    
     cell.thumbnailImageView.file = lastVybe[kVYBVybeThumbnailKey];
     
     [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
@@ -406,12 +408,7 @@ static void *ZOTContext = &ZOTContext;
   // Active Location Cell
   if (section == 0) {
     Zone *zone = self.activeLocations[indexPath.row];
-
-    // FRESH vybes
-    NSArray *freshContents = [[ZoneStore sharedInstance] freshVybesFromZone:zone.zoneID];
-    if (freshContents && freshContents.count) {
-      [(VYBVybeTableViewCell *)cell setUnwatched:YES];
-    }
+    [(VYBVybeTableViewCell *)cell setUnlocked:zone.unlocked];
   }
 }
 
