@@ -7,14 +7,14 @@
 	<body>
 		<div id="video_player">
 			<div id="video_container">
-				<video controls poster="regency/1.jpg">
-					<source src="regency/1.mp4" type="video/mp4">
+				<video controls poster="media/1.jpg">
+					<source src="media/1.mp4" type="video/mp4">
 				</video>
 			</div>
 			<div id='playlist'>
-				<a href="regency/1.mp4"></a>
-				<a href="regency/2.mp4"></a>
-				<a href="regency/3.mp4"></a>
+				<a href="media/1.mp4"></a>
+				<a href="media/2.mp4"></a>
+				<a href="media/3.mp4"></a>
 			</div>
 		</div>
 	</body>
@@ -36,7 +36,7 @@
 		video_links = document.getElementById("playlist"),
 		source = video.getElementsByTagName("source"),
 		link_list = [],
-		path = 'regency/',
+		path = 'media/',
 		currentVid = 0,
 		allLnks = video_links.children,
 		lnkNum = allLnks.length;
