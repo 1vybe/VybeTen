@@ -340,7 +340,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="600"/>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fyZ-LC-QOJ">
-                                <rect key="frame" x="15" y="15" width="40" height="40"/>
+                                <rect key="frame" x="15" y="11" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="aOn-n1-TOg"/>
                                     <constraint firstAttribute="height" constant="40" id="tYV-Fo-9NV"/>
@@ -352,24 +352,24 @@
                                     <action selector="dismissButtonPressed:" destination="4nu-fI-UsT" eventType="touchUpInside" id="uRx-Gi-yRl"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" alpha="0.69999999999999973" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Key" translatesAutoresizingMaskIntoConstraints="NO" id="UHR-p0-8Ff">
-                                <rect key="frame" x="16" y="503" width="190" height="82"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MapTitleView" translatesAutoresizingMaskIntoConstraints="NO" id="lof-Vd-9uC" userLabel="MapTitleView">
+                                <rect key="frame" x="76" y="13" width="223" height="36"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="190" id="aMG-E5-TTK"/>
-                                    <constraint firstAttribute="height" constant="82" id="umJ-ie-gEa"/>
+                                    <constraint firstAttribute="height" constant="36" id="kLP-Py-dGs"/>
+                                    <constraint firstAttribute="width" constant="223" id="xA1-39-GCJ"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="fyZ-LC-QOJ" firstAttribute="centerY" secondItem="lof-Vd-9uC" secondAttribute="centerY" id="GQk-Gi-JFU"/>
+                            <constraint firstItem="lof-Vd-9uC" firstAttribute="top" secondItem="Ln7-Ne-h9A" secondAttribute="top" constant="13" id="T4j-Ri-VfK"/>
                             <constraint firstItem="ppP-wo-Pn9" firstAttribute="top" secondItem="Ln7-Ne-h9A" secondAttribute="top" id="Uhv-4W-l53"/>
                             <constraint firstItem="cLA-nl-7AN" firstAttribute="top" secondItem="ppP-wo-Pn9" secondAttribute="bottom" id="YfA-QX-f5I"/>
                             <constraint firstItem="fyZ-LC-QOJ" firstAttribute="leading" secondItem="Ln7-Ne-h9A" secondAttribute="leading" constant="15" id="YvJ-gt-aPo"/>
-                            <constraint firstItem="fyZ-LC-QOJ" firstAttribute="top" secondItem="Ln7-Ne-h9A" secondAttribute="top" constant="15" id="exQ-j4-rLz"/>
                             <constraint firstItem="ppP-wo-Pn9" firstAttribute="leading" secondItem="Ln7-Ne-h9A" secondAttribute="leading" id="gHk-oX-WSg"/>
-                            <constraint firstAttribute="bottom" secondItem="UHR-p0-8Ff" secondAttribute="bottom" constant="15" id="kOd-0v-bb6"/>
+                            <constraint firstAttribute="centerX" secondItem="lof-Vd-9uC" secondAttribute="centerX" id="mja-Ad-PJh"/>
                             <constraint firstAttribute="trailing" secondItem="ppP-wo-Pn9" secondAttribute="trailing" id="mrm-Jn-Ige"/>
-                            <constraint firstItem="UHR-p0-8Ff" firstAttribute="leading" secondItem="Ln7-Ne-h9A" secondAttribute="leading" constant="16" id="o1Z-Xw-ogE"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -385,9 +385,9 @@
     </scenes>
     <resources>
         <image name="GreenLight_SavedVybed" width="10" height="10"/>
-        <image name="Key" width="188" height="82"/>
         <image name="ListBar" width="375" height="85"/>
         <image name="MAPTxt" width="23" height="8"/>
+        <image name="MapTitleView" width="233" height="36"/>
         <image name="MyVybeThumbnail" width="56" height="56"/>
         <image name="NewMap" width="34" height="35"/>
         <image name="Oval_mask" width="55" height="55"/>

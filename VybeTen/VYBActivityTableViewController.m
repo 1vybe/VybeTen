@@ -573,7 +573,7 @@ static void *ZOTContext = &ZOTContext;
   if([segue.identifier isEqualToString:@"ShowActiveMap"])
   {
     VYBMapViewController *mapVC = segue.destinationViewController;
-    [mapVC displayAllActiveVybes];
+//    [mapVC displayAllActiveVybes];
   }
 }
 
