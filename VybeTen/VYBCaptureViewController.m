@@ -11,18 +11,15 @@
 #import <ImageIO/ImageIO.h>
 #import <CoreLocation/CoreLocation.h>
 #import <MotionOrientation@PTEz/MotionOrientation.h>
-#import "VYBAppDelegate.h"
 #import "VYBCapturePipeline.h"
 #import "VYBCaptureViewController.h"
 #import "VYBReplayViewController.h"
 #import "VYBCaptureButton.h"
 #import "VYBActiveButton.h"
-#import "VYBOldZoneFinder.h"
 #import "VYBCameraView.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
 #import "VYBMyVybeStore.h"
-
 
 @interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
   NSInteger _pageIndex;
@@ -60,7 +57,6 @@ static void *XYZContext = &XYZContext;
   
   UIBackgroundTaskIdentifier _backgroundRecordingID;
   
-  VYBOldZoneFinder *_oldZoneFinder;
 }
 
 @synthesize flipButton;
@@ -284,15 +280,11 @@ static void *XYZContext = &XYZContext;
 #pragma mark - DeviceOrientation
 
 - (BOOL)shouldAutorotate {
-  return NO;
+  return YES;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
   return UIInterfaceOrientationMaskPortrait;
-}
-
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-  return UIInterfaceOrientationPortrait;
 }
 
 - (void)deviceRotated:(NSNotification *)notification {

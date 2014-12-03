@@ -121,7 +121,7 @@ static void *ZOTContext = &ZOTContext;
 #pragma mark - UIView
 
 - (BOOL)shouldAutorotate {
-  return NO;
+  return YES;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {

@@ -38,6 +38,7 @@ import UIKit
     var rootView = UIView()
     
     containerView = UIView()
+    containerView.autoresizingMask = UIViewAutoresizing.FlexibleHeight | .FlexibleWidth
     containerView.setTranslatesAutoresizingMaskIntoConstraints(false)
     rootView.addSubview(containerView)
     
@@ -200,10 +201,16 @@ import UIKit
   }
   
   override func shouldAutorotate() -> Bool {
-    return false
+    if selectedViewController != nil {
+      return selectedViewController!.shouldAutorotate()
+    }
+    return true
   }
   
   override func supportedInterfaceOrientations() -> Int {
+    if selectedViewController != nil {
+      return selectedViewController!.supportedInterfaceOrientations()
+    }
     return Int(UIInterfaceOrientationMask.Portrait.rawValue)
   }
   

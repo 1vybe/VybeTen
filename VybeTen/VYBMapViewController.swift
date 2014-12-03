@@ -150,7 +150,7 @@ import MapKit
     }
     
     override func shouldAutorotate() -> Bool {
-        return false
+        return true
     }
 
     override func supportedInterfaceOrientations() -> Int {

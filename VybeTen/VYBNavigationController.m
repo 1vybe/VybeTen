@@ -11,41 +11,41 @@
 @implementation VYBNavigationController
 
 + (VYBNavigationController *)navigationControllerForPageIndex:(NSInteger)pageIndex withRootViewController:(UIViewController *)rootViewController {
-    if (pageIndex >= 0 && pageIndex < 3) {
-        return [[self alloc] initWithPageIndex:pageIndex withRootViewController:rootViewController];
-    }
-    return nil;
+  if (pageIndex >= 0 && pageIndex < 3) {
+    return [[self alloc] initWithPageIndex:pageIndex withRootViewController:rootViewController];
+  }
+  return nil;
 }
 
 - (id)initWithPageIndex:(NSInteger)pageIndex withRootViewController:(UIViewController *)rootViewController {
-    self = [super initWithRootViewController:rootViewController];
-    if (self) {
-        _pageIndex = pageIndex;
-    }
-    
-    return self;
+  self = [super initWithRootViewController:rootViewController];
+  if (self) {
+    _pageIndex = pageIndex;
+  }
+  
+  return self;
 }
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    // To remove a navigation bar's back button text 
-    //self.navigationBar.topItem.title = @"";
-    [super pushViewController:viewController animated:animated];
+  // To remove a navigation bar's back button text
+  //self.navigationBar.topItem.title = @"";
+  [super pushViewController:viewController animated:animated];
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return [self.topViewController prefersStatusBarHidden];
+  return [self.topViewController prefersStatusBarHidden];
 }
 
 - (BOOL)shouldAutorotate {
-    return [self.topViewController shouldAutorotate];
+  return [self.topViewController shouldAutorotate];
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return [self.topViewController supportedInterfaceOrientations];
+  return [self.topViewController supportedInterfaceOrientations];
 }
 
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-    return [self.topViewController preferredInterfaceOrientationForPresentation];
-}
+//- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+//  return [self.topViewController preferredInterfaceOrientationForPresentation];
+//}
 
 @end

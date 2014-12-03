@@ -76,14 +76,13 @@
 
 - (void)setCurrZone:(Zone *)currZone {
   _currZone = currZone;
-  // Update current vybe's zone here
-  if (_currVybe) {
-    [_currVybe setVybeZone:_currZone];
-  }
 }
 
 
 - (void)uploadCurrentVybe {
+  if (_currZone) {
+    [_currVybe setVybeZone:_currZone];
+  }
   [self setCurrentUploadStatus:CurrentUploadStatusUploading];
   
   VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe];
