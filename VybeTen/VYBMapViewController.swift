@@ -114,7 +114,8 @@ import MapKit
     
     pin.canShowCallout = true
     
-    let accessoryView = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as UIButton
+    let accessoryView = UIButton(frame: CGRectMake(0, 0, 41, 41))
+    accessoryView.setImage(UIImage(named: "map_pin_play_blue"), forState: UIControlState.Normal)
     pin.rightCalloutAccessoryView = accessoryView
     
     if simpleAnnotation.unwatched {
