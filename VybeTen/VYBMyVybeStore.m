@@ -17,7 +17,6 @@
 
 @interface VYBMyVybeStore () {
   VYBVybe *_currVybe;
-//  dispatch_queue_t _currentUploadQueue;
   
   NSMutableArray *_vybesToUpload;
   dispatch_queue_t _oldUploadQueue;
@@ -52,8 +51,6 @@
     
     currentUploadPercent = 0;
     currentUploadStatus = CurrentUploadStatusIdle;
-    
-    _currentUploadQueue = dispatch_queue_create("vybestore current upload queue", DISPATCH_QUEUE_SERIAL);
     
     _oldUploadQueue = dispatch_queue_create("vybestore old upload queue", DISPATCH_QUEUE_SERIAL);
     

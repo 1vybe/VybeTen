@@ -205,7 +205,7 @@ static void *ZOTContext = &ZOTContext;
   [query whereKey:kVYBVybeUserKey equalTo:[PFUser currentUser]];
   [query orderByDescending:kVYBVybeZoneNameKey];
   [query addDescendingOrder:kVYBVybeTimestampKey];
-  
+  [query setLimit:1000];
   return query;
 }
 
@@ -399,16 +399,6 @@ static void *ZOTContext = &ZOTContext;
       
       return cell;
     }
-  }
-}
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-  NSInteger section = indexPath.section;
-  
-  // Active Location Cell
-  if (section == 0) {
-    Zone *zone = self.activeLocations[indexPath.row];
-    [(VYBVybeTableViewCell *)cell setUnlocked:zone.unlocked];
   }
 }
 
