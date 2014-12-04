@@ -83,7 +83,7 @@ static void *ZOTContext = &ZOTContext;
   uploadStatusButton = (UIButton *)[[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:self options:nil] firstObject];
   [uploadStatusButton setFrame:CGRectMake(0, 0, self.view.bounds.size.width, uploadStatusButton.bounds.size.height)];
   [self.view addSubview:uploadStatusButton];
-  uploadStatusButton.alpha = 0.0;
+  uploadStatusButton.hidden = YES;
   
 }
 
@@ -93,10 +93,10 @@ static void *ZOTContext = &ZOTContext;
   // Your vybe upload status
   if ([[VYBMyVybeStore sharedStore] currentUploadStatus] == CurrentUploadStatusUploading) {
     [uploadStatusButton setTitle:@"UPLOADING" forState:UIControlStateNormal];
-    uploadStatusButton.alpha = 1.0;
+    uploadStatusButton.hidden = NO;
   }
   else {
-    uploadStatusButton.alpha = 0.0;
+    uploadStatusButton.hidden = YES;
   }
   
   [self loadObjects];
@@ -567,16 +567,6 @@ static void *ZOTContext = &ZOTContext;
   [self.tableView reloadData];
 }
 
-#pragma mark Segue
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-  if([segue.identifier isEqualToString:@"ShowActiveMap"])
-  {
-    VYBMapViewController *mapVC = segue.destinationViewController;
-//    [mapVC displayAllActiveVybes];
-  }
-}
-
 #pragma mark - Current Upload Progress KVO
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
   if (context == ZOTContext) {
@@ -586,7 +576,7 @@ static void *ZOTContext = &ZOTContext;
         case CurrentUploadStatusUploading: {
           dispatch_async(dispatch_get_main_queue(), ^{
             [uploadStatusButton setTitle:@"UPLOADING" forState:UIControlStateNormal];
-            uploadStatusButton.alpha = 1.0;
+            uploadStatusButton.hidden = NO;
           });
           return;
         }
@@ -594,8 +584,8 @@ static void *ZOTContext = &ZOTContext;
           NSLog(@"[Activity] Upload Success");
           dispatch_async(dispatch_get_main_queue(), ^{
             [uploadStatusButton setTitle:@"SUCCESS!" forState:UIControlStateNormal];
-            [UIView animateWithDuration:0.3 delay:1.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-              uploadStatusButton.alpha = 0.0;
+            [UIView animateWithDuration:0.3 delay:1.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+              uploadStatusButton.hidden = YES;
             } completion:^(BOOL finished) {
               [self loadObjects];
             }];
@@ -640,7 +630,9 @@ static void *ZOTContext = &ZOTContext;
   frame.origin.y = scrollView.contentOffset.y + self.tableView.frame.size.height - uploadStatusButton.frame.size.height;
   uploadStatusButton.frame = frame;
   
-  [self.view bringSubviewToFront:uploadStatusButton];
+  if (!uploadStatusButton.hidden) {
+    [self.view bringSubviewToFront:uploadStatusButton];
+  }
 }
 
 #pragma mark - PlayerViewControllerDelegate

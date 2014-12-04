@@ -69,7 +69,7 @@
       [self.timestampLabel setTextColor:[UIColor colorWithRed:146/255.0 green:146/255.0 blue:146/255.0 alpha:1.0]];
     }
     if ([self.reuseIdentifier isEqualToString:@"MyVybeCell"]) {
-      [self.contentView setBackgroundColor:[UIColor colorWithRed:229/255.0 green:229/255.0 blue:229/255.0 alpha:1.0]];
+      [self.contentView setBackgroundColor:[UIColor whiteColor]];
       [self.timestampLabel setTextColor:[UIColor colorWithRed:146/255.0 green:146/255.0 blue:146/255.0 alpha:1.0]];
     }
   }

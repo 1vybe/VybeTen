@@ -290,17 +290,9 @@
     
     NSError *error;
     [[NSFileManager defaultManager] removeItemAtURL:videoURL error:&error];
-    if (!error) {
-      NSLog(@"local cache for video cleared");
-    } else {
-      NSLog(@"local cache for video clear FAILED");
-    }
+    
     [[NSFileManager defaultManager] removeItemAtURL:thumbnailURL error:&error];
-    if (!error) {
-      NSLog(@"local cache for thumbnail cleared");
-    } else {
-      NSLog(@"local cache for thumbnail clear FAILED");
-    }
+
   });
 }
 

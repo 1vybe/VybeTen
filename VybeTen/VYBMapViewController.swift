@@ -131,20 +131,6 @@ import MapKit
   func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
     let zone = view.annotation as SimpleAnnotation
     
-    // GA stuff
-    if let tracker = GAI.sharedInstance().defaultTracker {
-      // player source dimension
-      if zone.unwatched {
-        let dimensionValue = "map unlocked"
-        tracker.set(GAIFields.customDimensionForIndex(1), value: dimensionValue)
-      }
-      else {
-        let dimensionValue = "map locked"
-        tracker.set(GAIFields.customDimensionForIndex(1), value: dimensionValue)
-      }
-    }
-    
-    
     let playerVC = VYBPlayerViewController()
     playerVC.delegate = self
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
