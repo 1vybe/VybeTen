@@ -581,7 +581,6 @@ static void *ZOTContext = &ZOTContext;
           return;
         }
         case CurrentUploadStatusSuccess: {
-          NSLog(@"[Activity] Upload Success");
           dispatch_async(dispatch_get_main_queue(), ^{
             [uploadStatusButton setTitle:@"SUCCESS!" forState:UIControlStateNormal];
             [UIView animateWithDuration:0.3 delay:1.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
@@ -594,7 +593,6 @@ static void *ZOTContext = &ZOTContext;
           return;
         }
         case CurrentUploadStatusFailed:
-          NSLog(@"[Activity] Upload Failed");
           [self uploadFailDetected];
           return;
       }
@@ -652,7 +650,6 @@ static void *ZOTContext = &ZOTContext;
 {
   switch (buttonIndex) {
     case 0:
-      NSLog(@"Logging out");
       [(VYBAppDelegate *)[UIApplication sharedApplication].delegate logOut];
       break;
   }

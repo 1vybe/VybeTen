@@ -204,7 +204,7 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
     if ( [CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
         // iOS7 and prior
         if ( _isLatestOS ) {
-            [_locationManager requestAlwaysAuthorization];
+            [_locationManager requestWhenInUseAuthorization];
         }
         else {
             [_locationManager startUpdatingLocation];

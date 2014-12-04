@@ -161,16 +161,8 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
     
     BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
-    if (success)
-        NSLog(@"Vybe in bg. My vybes are saved. :)");
-    else
-        NSLog(@"Vybe in bg. My vybes will be lost. :(");
     
     success = [[VYBUserStore sharedStore] saveChanges];
-    if (success)
-        NSLog(@"Vybe in bg. User info is saved. :)");
-    else
-        NSLog(@"Vybe in bg. User info is lost. :(");
     
 }
 
@@ -179,16 +171,8 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
-    if (success)
-        NSLog(@"Vybe terminated. My vybes are saved. :)");
-    else
-        NSLog(@"Vybe terminated. My vybes will be lost. :(");
     
     success = [[VYBUserStore sharedStore] saveChanges];
-    if (success)
-        NSLog(@"Vybe terminated. User info is saved. :)");
-    else
-        NSLog(@"Vybe terminated. User info is lost. :(");
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -245,7 +229,6 @@
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
 	if (error.code != 3010) { // 3010 is for the iPhone Simulator
-        NSLog(@"Application failed to register for push notifications: %@", error);
 	}
 }
 

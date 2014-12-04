@@ -227,15 +227,10 @@
     
     NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:_videoPath];
     [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&error];
-    if (error) {
-      NSLog(@"Failed to delete a video file for a cancelled vybe.");
-    }
     
     outputURL = [[NSURL alloc] initFileURLWithPath:_thumbnailPath];
     [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&error];
-    if (error) {
-      NSLog(@"Failed to delete a thumbnail file for a cancelled vybe.");
-    }
+
   });
   [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait];
   [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];

@@ -13,7 +13,6 @@
 - (void)addVybeObject:(VYBVybe *)aVybe {
   for (VYBVybe *obj in self) {
     if ([obj.uniqueFileName isEqualToString:aVybe.uniqueFileName]) {
-      NSLog(@"Cannot add the same vybe");
       return;
     }
   }

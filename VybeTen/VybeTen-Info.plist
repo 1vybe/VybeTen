@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.vybe.mvp</string>
+	<string>com.vybe.app</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -33,7 +33,7 @@
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSLocationAlwaysUsageDescription</key>
+	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>So you know where you are vybing :)</string>
 	<key>UIAppFonts</key>
 	<array>

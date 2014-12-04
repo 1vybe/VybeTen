@@ -142,7 +142,6 @@
     [_vybesToUpload removeVybeObject:cVybe];
     [self saveChanges];
   }
-  NSLog(@"clearing cache for fresh vybe");
   [self clearLocalCacheForVybe:cVybe];
   [VYBUtility showToastWithImage:[UIImage imageNamed:@"button_check.png"] title:@"Posted"];
 }
