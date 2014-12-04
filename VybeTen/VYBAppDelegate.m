@@ -64,12 +64,12 @@
   [hockeyManager startManager];
   
   [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-
-    
+  
+  
   // Parse Initialization
   [Parse setApplicationId:PARSE_APPLICATION_ID
                 clientKey:PARSE_CLIENT_KEY];
-    
+  
   BOOL preBackgroundPush = ![application respondsToSelector:@selector(backgroundRefreshStatus)];
   BOOL oldPushHandlerOnly = ![self respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)];
   BOOL noPushPayload = ![launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
@@ -101,14 +101,14 @@
   
   // Clearing Push-noti Badge number
   /*
-  PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-
-  if (currentInstallation.badge != 0) {
-      currentInstallation.badge = 0;
-      [currentInstallation saveEventually];
-  }
-  */
-      
+   PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+   
+   if (currentInstallation.badge != 0) {
+   currentInstallation.badge = 0;
+   [currentInstallation saveEventually];
+   }
+   */
+  
   // Access Control
   PFACL *defaultACL = [PFACL ACL];
   // Enable public read access by default, with any newly created PFObjects belonging to the current user
@@ -117,7 +117,7 @@
   
   /* navigation bar settings */
   [self setupAppearance];
-
+  
   self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
   
   self.mainNavController = [[VYBNavigationController alloc] initWithRootViewController:self.welcomeViewController];
@@ -135,50 +135,50 @@
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(id)viewController {
-    NSInteger nextPageIndex = [viewController pageIndex] + 1;
-    if (nextPageIndex == self.viewControllers.count)
-        return nil;
-    
-    return self.viewControllers[nextPageIndex];
+  NSInteger nextPageIndex = [viewController pageIndex] + 1;
+  if (nextPageIndex == self.viewControllers.count)
+    return nil;
+  
+  return self.viewControllers[nextPageIndex];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(id)viewController {
-    NSInteger prevPageIndex = [viewController pageIndex] - 1;
-    if (prevPageIndex < 0)
-        return nil;
-    
-    return self.viewControllers[prevPageIndex];
+  NSInteger prevPageIndex = [viewController pageIndex] - 1;
+  if (prevPageIndex < 0)
+    return nil;
+  
+  return self.viewControllers[prevPageIndex];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+  // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+  // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
-    
-    BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
-    
-    success = [[VYBUserStore sharedStore] saveChanges];
-    
+  [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
+  
+  BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
+  
+  success = [[VYBUserStore sharedStore] saveChanges];
+  
 }
 
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
-    
-    success = [[VYBUserStore sharedStore] saveChanges];
+  // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+  BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
+  
+  success = [[VYBUserStore sharedStore] saveChanges];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidBecomeActiveNotification object:self];
+  [[UIApplication sharedApplication] cancelAllLocalNotifications];
+  
+  [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidBecomeActiveNotification object:self];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -188,53 +188,45 @@
 #pragma mark - Notification
 
 - (void)checkNotificationPermissionAndRegister:(UIApplication *)application {
-    // iOS8
-    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
-
-        if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionGrantedKey] ) {
-            [application registerForRemoteNotifications];
-        }
-        // Else Do nothing because request should be made from Activity screen
-    }
+  // iOS8
+  if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+    NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
     
-    else {
-        // Register for Push Notifications for iOS7 and prior
-        [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                         UIRemoteNotificationTypeAlert |
-                                                         UIRemoteNotificationTypeSound)];
+    if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionGrantedKey] ) {
+      [application registerForRemoteNotifications];
     }
-
+    // Else Do nothing because request should be made from Activity screen
+  }
 }
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
-    if (notificationSettings.types == UIUserNotificationTypeNone) {
-        // Permission denied
-        [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsNotificationPermissionDeniedKey forKey:kVYBUserDefaultsNotificationPermissionKey];
-    }
-    else {
-        // Permission granted
-        [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsNotificationPermissionGrantedKey forKey:kVYBUserDefaultsNotificationPermissionKey];
-    }
-    
-    [application registerForRemoteNotifications];
+  if (notificationSettings.types == UIUserNotificationTypeNone) {
+    // Permission denied
+    [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsNotificationPermissionDeniedKey forKey:kVYBUserDefaultsNotificationPermissionKey];
+  }
+  else {
+    // Permission granted
+    [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsNotificationPermissionGrantedKey forKey:kVYBUserDefaultsNotificationPermissionKey];
+  }
+  
+  [application registerForRemoteNotifications];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-
-    [currentInstallation setDeviceTokenFromData:deviceToken];
-    [currentInstallation saveEventually];
+  PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+  
+  [currentInstallation setDeviceTokenFromData:deviceToken];
+  [currentInstallation saveEventually];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-	if (error.code != 3010) { // 3010 is for the iPhone Simulator
-	}
+  if (error.code != 3010) { // 3010 is for the iPhone Simulator
+  }
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
   [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
-    
+  
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateInactive) {
     // Tracks app open due to a push notification when the app was not active
     [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
@@ -242,7 +234,7 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-
+  
   [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
   
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateInactive) {
@@ -257,44 +249,46 @@
 
 
 - (void)handlePush:(NSDictionary *)payload {
-    
+  
 }
 
 #pragma mark - AppDelegate
 
 - (BOOL)isParseReachable {
-    return self.networkStatus != NotReachable;
+  return self.networkStatus != NotReachable;
 }
 
 - (void)presentFirstPageViewControllerAnimated:(BOOL)animated {
-//    VYBLogInViewController *logInViewController = [[VYBLogInViewController alloc] init];
-    LogInViewController *logInViewController = [[LogInViewController alloc] init];
-    logInViewController.fields = PFLogInFieldsDefault;
-    logInViewController.delegate = self;
-
-    SignUpViewController *signUpController = [[SignUpViewController alloc] init];
-    signUpController.fields = PFSignUpFieldsDefault;
-    signUpController.delegate = self;
-    
-    logInViewController.signUpController = signUpController;
-    [self.mainNavController pushViewController:logInViewController animated:animated];
+  //    VYBLogInViewController *logInViewController = [[VYBLogInViewController alloc] init];
+  LogInViewController *logInViewController = [[LogInViewController alloc] init];
+  logInViewController.fields = PFLogInFieldsDefault;
+  logInViewController.delegate = self;
+  
+  SignUpViewController *signUpController = [[SignUpViewController alloc] init];
+  signUpController.fields = PFSignUpFieldsDefault;
+  signUpController.delegate = logInViewController;
+  
+  logInViewController.signUpController = signUpController;
+  [self.mainNavController pushViewController:logInViewController animated:animated];
 }
 
 #pragma mark -
 #pragma mark PFLogInViewControllerDelegate
 
 - (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user {
-    [self.mainNavController popToRootViewControllerAnimated:NO];
+  [self proceedToMainInterface];
 }
 
 #pragma mark -
 
 - (void)presentFirstPage {
-    [self presentFirstPageViewControllerAnimated:YES];
+  [self presentFirstPageViewControllerAnimated:YES];
 }
 
 - (void)proceedToMainInterface {
-    [self setUpViewControllers];
+  [self.mainNavController popToRootViewControllerAnimated:NO];
+
+  [self setUpViewControllers];
 }
 
 - (void)setUpViewControllers {
@@ -310,70 +304,70 @@
   self.permissionController = [[VYBPermissionViewController alloc] init];
   BOOL granted = [self.permissionController checkPermissionSettings];
   if (!granted)
-      [self.mainNavController pushViewController:self.permissionController animated:NO];
+    [self.mainNavController pushViewController:self.permissionController animated:NO];
 }
 
 - (void)logOut {
-    // clear cache
-    [[VYBCache sharedCache] clear];
-    
-//    // clear NSUserDefaults
-//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPAPUserDefaultsCacheFacebookFriendsKey];
-//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kVYBUserDefaultsActivityFeedViewControllerLastRefreshKey];
-//    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    // Unsubscribe from push notifications by removing the user association from the current installation.
-    [[PFInstallation currentInstallation] removeObjectForKey:kVYBInstallationUserKey];
-    [[PFInstallation currentInstallation] saveInBackground];
-    
-    // Clear all caches
-    [PFQuery clearAllCachedResults];
-    
-    // Log out
-    [PFUser logOut];
-    
-    // clear out cached data, view controllers, etc
-    [self.mainNavController popToRootViewControllerAnimated:NO];
-    
-
-    self.viewControllers = nil;
-    self.permissionController = nil;
+  // clear cache
+  [[VYBCache sharedCache] clear];
+  
+  //    // clear NSUserDefaults
+  //    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPAPUserDefaultsCacheFacebookFriendsKey];
+  //    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kVYBUserDefaultsActivityFeedViewControllerLastRefreshKey];
+  //    [[NSUserDefaults standardUserDefaults] synchronize];
+  
+  // Unsubscribe from push notifications by removing the user association from the current installation.
+  [[PFInstallation currentInstallation] removeObjectForKey:kVYBInstallationUserKey];
+  [[PFInstallation currentInstallation] saveInBackground];
+  
+  // Clear all caches
+  [PFQuery clearAllCachedResults];
+  
+  // Log out
+  [PFUser logOut];
+  
+  // clear out cached data, view controllers, etc
+  [self.mainNavController popToRootViewControllerAnimated:NO];
+  
+  
+  self.viewControllers = nil;
+  self.permissionController = nil;
 }
 
 #pragma mark - ()
 
 - (void)setupAppearance {
-    [[UINavigationBar appearance] setTintColor:COLOR_MAIN];
-    // title font
-    NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
-    [titleBarAttributes setValue:[UIFont fontWithName:@"ProximaNovaSoft-Regular" size:20.0] forKey:NSFontAttributeName];
-    [titleBarAttributes setValue:COLOR_MAIN forKey:NSForegroundColorAttributeName];
-    [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
-    
-    // back button image
-//    [[UINavigationBar appearance] setBackIndicatorImage:[UIImage imageNamed:@"button_navi_back.png"]];
-//    [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
+  [[UINavigationBar appearance] setTintColor:COLOR_MAIN];
+  // title font
+  NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
+  [titleBarAttributes setValue:[UIFont fontWithName:@"ProximaNovaSoft-Regular" size:20.0] forKey:NSFontAttributeName];
+  [titleBarAttributes setValue:COLOR_MAIN forKey:NSForegroundColorAttributeName];
+  [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
+  
+  // back button image
+  //    [[UINavigationBar appearance] setBackIndicatorImage:[UIImage imageNamed:@"button_navi_back.png"]];
+  //    [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:[UIImage imageNamed:@"button_navi_back.png"]];
 }
 
 - (void)monitorReachability {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-    
-    self.hostReach = [Reachability reachabilityWithHostName: @"api.parse.com"];
-    [self.hostReach startNotifier];
-    
-    self.internetReach = [Reachability reachabilityForInternetConnection];
-    [self.internetReach startNotifier];
-    
-    self.wifiReach = [Reachability reachabilityForLocalWiFi];
-    [self.wifiReach startNotifier];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+  
+  self.hostReach = [Reachability reachabilityWithHostName: @"api.parse.com"];
+  [self.hostReach startNotifier];
+  
+  self.internetReach = [Reachability reachabilityForInternetConnection];
+  [self.internetReach startNotifier];
+  
+  self.wifiReach = [Reachability reachabilityForLocalWiFi];
+  [self.wifiReach startNotifier];
 }
 
 //Called by Reachability whenever status changes.
 - (void)reachabilityChanged:(NSNotification* )note {
-    Reachability *curReach = (Reachability *)[note object];
-    NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
-    //NSLog(@"Reachability changed: %@", curReach);
-    networkStatus = [curReach currentReachabilityStatus];
+  Reachability *curReach = (Reachability *)[note object];
+  NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
+  //NSLog(@"Reachability changed: %@", curReach);
+  networkStatus = [curReach currentReachabilityStatus];
 }
 
 

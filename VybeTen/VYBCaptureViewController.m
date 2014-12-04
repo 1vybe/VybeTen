@@ -264,7 +264,7 @@ static void *XYZContext = &XYZContext;
   _timerCount = _timerCount - 1;
   
   if (_timerCount > 0) {
-    [recordButton setTitle:[NSString stringWithFormat:@"%ld", _timerCount] forState:UIControlStateSelected];
+    [recordButton setTitle:[NSString stringWithFormat:@"%u", (int)_timerCount] forState:UIControlStateSelected];
   }
   else {
     if (_isRecording) {

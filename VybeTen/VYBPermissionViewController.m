@@ -53,7 +53,7 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
 #pragma mark - Permissions
 
 - (BOOL)checkPermissionSettings {
-    BOOL locationGranted = ([CLLocationManager authorizationStatus] >= kCLAuthorizationStatusAuthorized);
+    BOOL locationGranted = ([CLLocationManager authorizationStatus] >= kCLAuthorizationStatusAuthorizedWhenInUse);
 
     // In case prompt was asked from unexpected routes and the user responded, we need to update
     if ( _isLatestOS ) {

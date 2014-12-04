@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="UzS-ES-twR">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -334,7 +333,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="600"/>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fyZ-LC-QOJ">
-                                <rect key="frame" x="15" y="11" width="40" height="40"/>
+                                <rect key="frame" x="15" y="7" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="aOn-n1-TOg"/>
                                     <constraint firstAttribute="height" constant="40" id="tYV-Fo-9NV"/>
@@ -347,10 +346,10 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MapTitleView" translatesAutoresizingMaskIntoConstraints="NO" id="lof-Vd-9uC" userLabel="MapTitleView">
-                                <rect key="frame" x="76" y="13" width="223" height="36"/>
+                                <rect key="frame" x="164" y="13" width="196" height="28"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="36" id="kLP-Py-dGs"/>
-                                    <constraint firstAttribute="width" constant="223" id="xA1-39-GCJ"/>
+                                    <constraint firstAttribute="height" constant="28" id="kLP-Py-dGs"/>
+                                    <constraint firstAttribute="width" constant="196" id="xA1-39-GCJ"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -359,12 +358,18 @@
                             <constraint firstItem="fyZ-LC-QOJ" firstAttribute="centerY" secondItem="lof-Vd-9uC" secondAttribute="centerY" id="GQk-Gi-JFU"/>
                             <constraint firstItem="lof-Vd-9uC" firstAttribute="top" secondItem="Ln7-Ne-h9A" secondAttribute="top" constant="13" id="T4j-Ri-VfK"/>
                             <constraint firstItem="ppP-wo-Pn9" firstAttribute="top" secondItem="Ln7-Ne-h9A" secondAttribute="top" id="Uhv-4W-l53"/>
+                            <constraint firstAttribute="trailing" secondItem="lof-Vd-9uC" secondAttribute="trailing" constant="15" id="WVK-WZ-z3M"/>
                             <constraint firstItem="cLA-nl-7AN" firstAttribute="top" secondItem="ppP-wo-Pn9" secondAttribute="bottom" id="YfA-QX-f5I"/>
                             <constraint firstItem="fyZ-LC-QOJ" firstAttribute="leading" secondItem="Ln7-Ne-h9A" secondAttribute="leading" constant="15" id="YvJ-gt-aPo"/>
                             <constraint firstItem="ppP-wo-Pn9" firstAttribute="leading" secondItem="Ln7-Ne-h9A" secondAttribute="leading" id="gHk-oX-WSg"/>
                             <constraint firstAttribute="centerX" secondItem="lof-Vd-9uC" secondAttribute="centerX" id="mja-Ad-PJh"/>
                             <constraint firstAttribute="trailing" secondItem="ppP-wo-Pn9" secondAttribute="trailing" id="mrm-Jn-Ige"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="mja-Ad-PJh"/>
+                            </mask>
+                        </variation>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="600"/>
@@ -381,7 +386,7 @@
         <image name="GreenLight_SavedVybed" width="10" height="10"/>
         <image name="ListBar" width="375" height="85"/>
         <image name="MAPTxt" width="23" height="8"/>
-        <image name="MapTitleView" width="233" height="36"/>
+        <image name="MapTitleView" width="196" height="28"/>
         <image name="NewMap" width="34" height="35"/>
         <image name="OverlayThumbnail" width="50" height="50"/>
         <image name="Settings" width="21" height="21"/>

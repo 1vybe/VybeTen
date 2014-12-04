@@ -340,8 +340,6 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
   }
 }
 
-#warning WWDC 409 tells its discouraged to call session startRunning/stopRunning
-
 #pragma mark - VYBCaptureRecorderDelegate
 
 - (void)captureRecorderDidStartRecording:(VYBCaptureRecorder *)recorder {

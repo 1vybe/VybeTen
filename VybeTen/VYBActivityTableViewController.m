@@ -189,14 +189,6 @@ static void *ZOTContext = &ZOTContext;
 
 #pragma mark - UIAlertViewDelegate
 
-// iOS7 and prior
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-  if ( [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"OK"] ) {
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert |
-                                                                           UIRemoteNotificationTypeBadge |
-                                                                           UIRemoteNotificationTypeSound)];
-  }
-}
 
 #pragma mark - PFQueryTableView
 
