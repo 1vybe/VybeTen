@@ -101,26 +101,6 @@
   [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
 }
 
-//- (void)displayViewInOrientation:(AVCaptureVideoOrientation)orientation {
-//  CGFloat rotation = 0;
-//  switch (orientation) {
-//    case AVCaptureVideoOrientationPortrait:
-//    case AVCaptureVideoOrientationPortraitUpsideDown:
-//      break;
-//    case AVCaptureVideoOrientationLandscapeLeft:
-//      rotation = -M_PI_2;
-//      break;
-//    case AVCaptureVideoOrientationLandscapeRight:
-//      rotation = M_PI_2;
-//      break;
-//  }
-//  
-//  CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
-//  self.view.transform = transform;
-//  [self.playerView layoutIfNeeded];
-//  [self.overlayView layoutIfNeeded];
-//}
-
 - (void)playerItemDidReachEnd {
   [self.currItem seekToTime:kCMTimeZero];
   [self.player play];

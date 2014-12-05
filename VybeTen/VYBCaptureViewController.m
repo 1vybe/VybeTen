@@ -71,12 +71,11 @@ static void *XYZContext = &XYZContext;
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBUtilityActivityCountUpdatedNotification object:nil];
-  [[NSNotificationCenter defaultCenter] removeObserver:self name:MotionOrientationChangedNotification object:nil];
   
   [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadPercent" context:XYZContext];
   [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadStatus" context:XYZContext];
   
-  NSLog(@"CaptureVC deallocated");
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:MotionOrientationChangedNotification object:nil];
 }
 
 - (id)initWithPageIndex:(NSInteger)pageIndex {
@@ -109,11 +108,12 @@ static void *XYZContext = &XYZContext;
   [self activityCountChanged];
   
   // Device orientation detection
-  [MotionOrientation initialize];
+  [MotionOrientation initialize];  
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(deviceRotated:)
                                                name:MotionOrientationChangedNotification
                                              object:nil];
+
   
   [(AVCaptureVideoPreviewLayer *)[self.cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspectFill];
   
@@ -133,7 +133,7 @@ static void *XYZContext = &XYZContext;
   
   [capturePipeline startRunning];
   
-  
+  [self resetRotationOfElements];
   flashButton.selected = _flashOn;
   flipButton.selected = _isFrontCamera;
 }
@@ -291,6 +291,7 @@ static void *XYZContext = &XYZContext;
 - (void)deviceRotated:(NSNotification *)notification {
   UIDeviceOrientation currentOrientation = [MotionOrientation sharedInstance].deviceOrientation;
   
+  CGAffineTransform transform = CGAffineTransformIdentity;
   double rotation = 0;
   switch (currentOrientation) {
     case UIDeviceOrientationFaceDown:
@@ -304,24 +305,28 @@ static void *XYZContext = &XYZContext;
       break;
     case UIDeviceOrientationLandscapeLeft:
       rotation = M_PI_2;
+      transform = CGAffineTransformMakeRotation(rotation);
       _captureOrientation = AVCaptureVideoOrientationLandscapeRight;
       break;
     case UIDeviceOrientationLandscapeRight:
-      _captureOrientation = AVCaptureVideoOrientationLandscapeLeft;
       rotation = -M_PI_2;
+      transform = CGAffineTransformMakeRotation(rotation);
+      _captureOrientation = AVCaptureVideoOrientationLandscapeLeft;
       break;
   }
   
-  CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
   dispatch_async(dispatch_get_main_queue(), ^{
-    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
       [self.flipButton setTransform:transform];
       [self.flashButton setTransform:transform];
       [self.activityButton setTransform:transform];
       [recordButton setTransform:transform];
     } completion:nil];
   });
+}
 
+- (void)resetRotationOfElements {
+  [self deviceRotated:nil];
 }
 
 
