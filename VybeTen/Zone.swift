@@ -57,6 +57,10 @@ import MapKit
       }
   }
   
+  deinit {
+    
+  }
+  
   init(foursquareVenue: NSDictionary!) {
       let location = foursquareVenue["location"] as NSDictionary?
       let latitude = location?["lat"] as Double

@@ -30,7 +30,7 @@
 + (void)reverseGeoCode:(PFGeoPoint *)aLocation withCompletion:(void (^)(NSArray *placemarks, NSError *error))completionBlock;
 + (NSString *)convertPlacemarkToLocation:(CLPlacemark *)placemark;
 + (CGAffineTransform)getTransformFromOrientation:(NSInteger)orientation;
-+ (UIImage*) maskImage:(UIImage *)image withMask:(UIImage *)maskImage;
++ (UIImage*)maskImage:(UIImage *)image withMask:(UIImage *)maskImage;
 
 + (void)showUploadProgressBarFromBottom:(UIView *)aView;
 + (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title;

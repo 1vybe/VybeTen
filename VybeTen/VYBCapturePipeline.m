@@ -80,6 +80,7 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
 
 - (void)startRunning {
   dispatch_async(_sessionQueue, ^{
+    
     [self setUpSession];
     
     [_session startRunning];
@@ -117,8 +118,6 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
     [_session addOutput:audioDataOutput];
   }
   _audioConnection = [audioDataOutput connectionWithMediaType:AVMediaTypeAudio];
-  
-  
   
   // Adding video device input to session
   AVCaptureDevice *videoDevice = [VYBCapturePipeline deviceWithMediaType:AVMediaTypeVideo preferringPosition:AVCaptureDevicePositionBack];

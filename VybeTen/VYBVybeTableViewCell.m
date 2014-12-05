@@ -15,7 +15,6 @@
 
 - (void)awakeFromNib
 {
-  // Initialization code
 }
 
 - (UIEdgeInsets)layoutMargins
@@ -66,7 +65,7 @@
 
 - (void)prepareForReuse {
   [super prepareForReuse];
-  
+    
   [self setSelected:NO];
   [self setHighlighted:NO];
 }

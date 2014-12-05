@@ -71,6 +71,7 @@ static void *XYZContext = &XYZContext;
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBUtilityActivityCountUpdatedNotification object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:MotionOrientationChangedNotification object:nil];
   
   [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadPercent" context:XYZContext];
   [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadStatus" context:XYZContext];
@@ -125,7 +126,6 @@ static void *XYZContext = &XYZContext;
   
   [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadPercent" options:NSKeyValueObservingOptionNew context:XYZContext];
   [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadStatus" options:NSKeyValueObservingOptionNew context:XYZContext];
-  
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -201,6 +201,7 @@ static void *XYZContext = &XYZContext;
 
 - (void)capturePipeline:(VYBCapturePipeline *)pipeline sessionPreviewReadyForDisplay:(AVCaptureSession *)session {
   [self.cameraView setSession:session];
+  
 }
 
 - (void)capturePipeline:(VYBCapturePipeline *)pipeline didStopWithError:(NSError *)error {
@@ -312,12 +313,15 @@ static void *XYZContext = &XYZContext;
   }
   
   CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
-  [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-    [self.flipButton setTransform:transform];
-    [self.flashButton setTransform:transform];
-    [self.activityButton setTransform:transform];
-    [recordButton setTransform:transform];
-  } completion:nil];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+      [self.flipButton setTransform:transform];
+      [self.flashButton setTransform:transform];
+      [self.activityButton setTransform:transform];
+      [recordButton setTransform:transform];
+    } completion:nil];
+  });
+
 }
 
 
