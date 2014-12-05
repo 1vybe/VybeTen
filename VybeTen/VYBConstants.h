@@ -99,13 +99,9 @@ extern NSString *const kVYBUserLastVybedZoneKey;
 extern NSString *const kVYBUserLastVybedTimeKey;
 extern NSString *const kVYBUserFreshFeedKey;
 extern NSString *const kVYBUserLastRefreshedKey;
+extern NSString *const kVYBUserBlockedUsersKey;
 extern NSString *const kVYBUserTribeKey;
 
-//extern NSString *const kVYBUserDisplayNameKey;
-//extern NSString *const kVYBUserFacebookIDKey;
-//extern NSString *const kVYBUserFacebookFriendsKey;
-//extern NSString *const kVYBUserLastVybedTime;
-//extern NSString *const kVYBUserMostRecentVybeKey;
 
 
 #pragma mark - PFObject Vybe Class

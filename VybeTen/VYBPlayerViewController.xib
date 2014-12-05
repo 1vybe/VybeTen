@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VYBPlayerViewController">
             <connections>
+                <outlet property="blockOverlayButton" destination="04P-Ta-89Y" id="zrs-s6-kNP"/>
                 <outlet property="dismissButton" destination="lH2-Xq-FWU" id="B27-vS-keY"/>
+                <outlet property="flagButton" destination="9iV-Su-8js" id="Blf-4r-tVf"/>
+                <outlet property="flagOverlayButton" destination="a4Z-Ix-1xE" id="ahC-iC-qDj"/>
                 <outlet property="goNextButton" destination="Pb2-69-N8y" id="3t8-tW-Ofm"/>
                 <outlet property="goPrevButton" destination="Vij-MN-ZuP" id="rwy-vS-Z1J"/>
                 <outlet property="locationLabel" destination="2xr-fh-a0w" id="cA0-kh-x5y"/>
-                <outlet property="mapButton" destination="cMN-bL-OwK" id="ovz-hp-e1v"/>
                 <outlet property="timeLabel" destination="UPQ-0i-rrO" id="4c8-UE-Biw"/>
                 <outlet property="userButton" destination="thN-J3-OUv" id="ioR-z5-rt0"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -70,20 +72,6 @@
                         <action selector="dismissButtonPressed" destination="-1" eventType="touchUpInside" id="fQ7-eI-AD4"/>
                     </connections>
                 </button>
-                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cMN-bL-OwK" userLabel="mapButton">
-                    <rect key="frame" x="280" y="520" width="40" height="40"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="40" id="XQe-zu-QkS"/>
-                        <constraint firstAttribute="height" constant="40" id="do5-f1-rHO"/>
-                    </constraints>
-                    <state key="normal" image="player_map_button">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="mapButtonPressed" destination="-1" eventType="touchUpInside" id="OOo-gm-R3R"/>
-                    </connections>
-                </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2xr-fh-a0w" userLabel="locationLabel">
                     <rect key="frame" x="15" y="563" width="207" height="22"/>
                     <constraints>
@@ -113,41 +101,74 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9iV-Su-8js" userLabel="Flag">
+                    <rect key="frame" x="20" y="552" width="18" height="23"/>
+                    <state key="normal" image="Player_Flag">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="flagButtonPressed" destination="-1" eventType="touchUpInside" id="9Et-10-bBi"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="04P-Ta-89Y" userLabel="block_user_overlay">
+                    <rect key="frame" x="44" y="457" width="112" height="45"/>
+                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="16"/>
+                    <state key="normal" title="Block User" backgroundImage="Player_ReportUser-btn">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <state key="selected" backgroundImage="Player_ReportUser-btnON"/>
+                    <connections>
+                        <action selector="blockOverlayButtonPressed" destination="-1" eventType="touchUpInside" id="Ymm-od-c42"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a4Z-Ix-1xE" userLabel="flag_overylay">
+                    <rect key="frame" x="444" y="457" width="112" height="45"/>
+                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="16"/>
+                    <state key="normal" title="Flag Vybe" backgroundImage="Player_FlagVybe-btn">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <state key="selected" backgroundImage="Player_FlagVybe-BtnON"/>
+                    <connections>
+                        <action selector="flagOverlayButtonPressed" destination="-1" eventType="touchUpInside" id="Vks-L3-0BK"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="cMN-bL-OwK" secondAttribute="bottom" constant="42" id="2JL-dR-ArK"/>
-                <constraint firstAttribute="centerX" secondItem="cMN-bL-OwK" secondAttribute="centerX" id="4DG-8P-Yn9"/>
                 <constraint firstAttribute="centerX" secondItem="FUM-j7-JZe" secondAttribute="centerX" id="4bn-Rs-2OS"/>
+                <constraint firstItem="9iV-Su-8js" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="H9v-y5-0B2"/>
                 <constraint firstAttribute="bottom" secondItem="UPQ-0i-rrO" secondAttribute="bottom" constant="15" id="Iqn-t4-LrI"/>
                 <constraint firstAttribute="trailing" secondItem="Pb2-69-N8y" secondAttribute="trailing" id="P8w-2S-sOY"/>
+                <constraint firstAttribute="bottom" secondItem="9iV-Su-8js" secondAttribute="bottom" constant="25" id="PIu-2M-pUS"/>
                 <constraint firstAttribute="bottom" secondItem="thN-J3-OUv" secondAttribute="bottom" constant="45" id="UkW-OI-Vp3"/>
+                <constraint firstItem="04P-Ta-89Y" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="44" id="V0C-zO-t52"/>
                 <constraint firstAttribute="trailing" secondItem="UPQ-0i-rrO" secondAttribute="trailing" constant="15" id="VNG-OV-7gD"/>
                 <constraint firstAttribute="bottom" secondItem="FUM-j7-JZe" secondAttribute="bottom" id="Yty-f2-X9K"/>
+                <constraint firstAttribute="bottom" secondItem="04P-Ta-89Y" secondAttribute="bottom" constant="98" id="axP-Qf-wLS"/>
                 <constraint firstItem="lH2-Xq-FWU" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="bfu-PK-bjc"/>
-                <constraint firstItem="cMN-bL-OwK" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="dSl-PC-WxB"/>
                 <constraint firstAttribute="centerY" secondItem="Vij-MN-ZuP" secondAttribute="centerY" id="fkI-HM-iB3"/>
+                <constraint firstAttribute="trailing" secondItem="a4Z-Ix-1xE" secondAttribute="trailing" constant="44" id="gIO-zA-Y7R"/>
                 <constraint firstItem="2xr-fh-a0w" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="hpp-Ku-osE"/>
                 <constraint firstItem="thN-J3-OUv" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="l8d-Bt-Gjo"/>
-                <constraint firstAttribute="bottom" secondItem="cMN-bL-OwK" secondAttribute="bottom" constant="40" id="mvR-Xz-P0q"/>
                 <constraint firstItem="lH2-Xq-FWU" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="15" id="qGi-X7-iTW"/>
+                <constraint firstAttribute="bottom" secondItem="a4Z-Ix-1xE" secondAttribute="bottom" constant="98" id="rq9-HA-0oC"/>
                 <constraint firstAttribute="centerY" secondItem="Pb2-69-N8y" secondAttribute="centerY" id="u1c-Sv-adY"/>
                 <constraint firstItem="Vij-MN-ZuP" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="utX-77-c0b"/>
                 <constraint firstAttribute="bottom" secondItem="2xr-fh-a0w" secondAttribute="bottom" constant="15" id="zX8-nu-aHw"/>
             </constraints>
-            <variation key="default">
-                <mask key="constraints">
-                    <exclude reference="2JL-dR-ArK"/>
-                    <exclude reference="dSl-PC-WxB"/>
-                </mask>
-            </variation>
             <point key="canvasLocation" x="429" y="273"/>
         </view>
     </objects>
     <resources>
+        <image name="Player_Flag" width="18" height="23"/>
+        <image name="Player_FlagVybe-BtnON" width="112" height="45"/>
+        <image name="Player_FlagVybe-btn" width="112" height="45"/>
+        <image name="Player_ReportUser-btn" width="112" height="45"/>
+        <image name="Player_ReportUser-btnON" width="112" height="45"/>
         <image name="TransparentImage" width="180" height="180"/>
         <image name="player_bottom_overlay" width="375" height="133"/>
         <image name="player_close_button" width="40" height="40"/>
-        <image name="player_map_button" width="40" height="40"/>
         <image name="player_next_button" width="114" height="340"/>
         <image name="player_prev_button" width="115" height="342"/>
     </resources>

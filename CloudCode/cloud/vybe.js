@@ -199,93 +199,121 @@ Parse.Cloud.define('get_count_for_zone', function (request, response) {
 // Default algorithm used in the app
 Parse.Cloud.define('get_active_zone_vybes', function (request, response) {
   var currTime = new Date();
-  //var ttlAgo = new Date('2014-11-15T23:00:00Z'); // Temporary time interval (UTC)
   var ttlAgo = new Date();
   ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window
 
-  var query = new Parse.Query('Vybe');
-  query.include('user')
-  query.addDescending('timestamp');
-  var zoneID = request.params.zoneID;
-  if (zoneID == '777') {
-    query.doesNotExist('zoneID');
-  }
-  else {
-    query.equalTo('zoneID', zoneID);
-  }
-  query.greaterThanOrEqualTo('timestamp', ttlAgo);
+  var currUser = request.user;
+  var blockedRelation = currUser.relation('blockedUsers');
+  blockedRelation.query().find({
+      success: function(list) {
+        console.log('[get_active_zone_vybes] there are ' + list.length + ' blocked users for ' + currUser.get('username'));
+        var query = new Parse.Query('Vybe');
+        query.include('user')
+        query.notContainedIn('user', list);
+        query.addDescending('timestamp');
+        var zoneID = request.params.zoneID;
+        if (zoneID == '777') {
+          query.doesNotExist('zoneID');
+        }
+        else {
+          query.equalTo('zoneID', zoneID);
+        }
+        query.greaterThanOrEqualTo('timestamp', ttlAgo);
 
-   query.find({
-      success: function(vybesObjects) {
-        console.log('active vybes found ' + vybesObjects.length);
-        response.success(vybesObjects.reverse());  // Sort result in chronological order
+         query.find({
+            success: function(vybesObjects) {
+              console.log('active vybes found ' + vybesObjects.length);
+              response.success(vybesObjects.reverse());  // Sort result in chronological order
+            },
+            error: function() {
+              response.error('Request to get_active_zone_vybes() has failed.');
+            }
+        });
       },
-      error: function() {
-        response.error('Request to get_active_zone_vybes() has failed.');
+      error: function(error) {
+        response.error('[get_active_zone_vybes] failed getting blockedUsers for user ' + currUser.get('username'));
       }
-  });
+    }); 
 });
 
 
 Parse.Cloud.define('get_active_vybes', function (request, response) {
   var currTime = new Date();
-  //var ttlAgo = new Date('2014-11-15T23:00:00Z');
   var ttlAgo = new Date();
   ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window
 
+  var currUser = request.user;
+  var blockedRelation = currUser.relation('blockedUsers');
+  blockedRelation.query().find({
+      success: function(list) {
+        console.log('there are ' + list.length + ' blocked users for ' + currUser.get('username')); 
+        var query = new Parse.Query('Vybe');
+        query.include('user');
+        query.notContainedIn('user', list);
+        query.addDescending('timestamp');
+        query.greaterThanOrEqualTo('timestamp',ttlAgo);
+        query.limit(10000)
 
-  var query = new Parse.Query('Vybe');
-  query.include('user')
-  query.addDescending('timestamp');
-  query.greaterThanOrEqualTo('timestamp',ttlAgo);
-  query.limit(10000)
+        query.find({
+          success: function(vybesObjects) {
+            console.log('active vybes found ' + vybesObjects.length);
+            response.success(vybesObjects.reverse());  // Sort result in chronological order
+          },
+          error: function() {
+            response.error('[get_active_vybes] Request to get_active_zone_vybes() has failed.');
+          }
+        });
+      },
+      error: function(error) {
+        response.error('[get_active_vybes] failed getting blockedUsers for user ' + currUser.get('username'));
+      }
+    }); 
 
-  query.find({
-    success: function(vybesObjects) {
-      console.log('active vybes found ' + vybesObjects.length);
-      response.success(vybesObjects.reverse());  // Sort result in chronological order
-    },
-    error: function() {
-      response.error('Request to get_active_zone_vybes() has failed.');
-    }
-  });
 });
 
 
 // Retrieve only fresh vybes for the requesting user
 Parse.Cloud.define('get_fresh_vybes', function (request, response) {
   var currUser = request.user;
+  var blockedRelation = currUser.relation('blockedUsers');
+   blockedRelation.query().find({
+      success: function(list) {
+        console.log('[get_fresh_vybes] there are ' + list.length + ' blocked users for ' + currUser.get('username')); 
+        var query = new Parse.Query(Parse.User);
+        query.equalTo('username', currUser.get('username'));
+        query.first({
+          success: function(aUser) {
+            var currTime = new Date();
+            var ttlAgo = new Date();
+            ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window.
 
-  var query = new Parse.Query(Parse.User);
-  query.equalTo('username', currUser.get('username'));
+            var feed = aUser.relation('feed');
+            var freshContents = [];
+            var feedQuery = feed.query();
+            feedQuery.include('user');
+            feedQuery.notContainedIn('user', list);
+            feedQuery.addAscending('timestamp');
+            feedQuery.greaterThanOrEqualTo('timestamp', ttlAgo);
+            feedQuery.find({
+              success: function(list) {
+                console.log('[get_fresh_vybes] There are ' + list.length + ' FRESH feed for ' + aUser.get('username'));
+                response.success(list);
+              },
+              error: function(error) {
+                response.error(error);
+              }
+            });
+          },
+          error: function(error) {
+            response.error(error);
+          }
+        });
+      },
+      error: function(error) {
+        response.error('[get_fresh_vybes] failed getting blockedUsers for user ' + currUser.get('username'));
+      }
+    }); 
 
-  query.first({
-    success: function(aUser) {
-      var currTime = new Date();
-      //var ttlAgo = new Date('2014-11-15T23:00:00Z'); // Temporary time interval (UTC)
-      var ttlAgo = new Date();
-      ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window.
-
-      var feed = aUser.relation('feed');
-      var freshContents = [];
-      var feedQuery = feed.query();
-      feedQuery.include('user');
-      feedQuery.addAscending('timestamp');
-      feedQuery.greaterThanOrEqualTo('timestamp', ttlAgo);
-      feedQuery.find({
-        success: function(list) {
-          console.log('There are ' + list.length + ' FRESH feed for ' + aUser.get('username'));
-          response.success(list);
-        },
-        error: function(error) {
-          response.error(error);
-        }
-      });
-    },
-    error: function(error) {
-      response.error(error);
-    }
-  });
 });
 
 
@@ -317,4 +345,11 @@ Parse.Cloud.define('remove_from_feed', function (request, response) {
       response.error(error);
     }
   });
+});
+
+Parse.Cloud.define('flag_vybe', function (request, response) {
+  var flaggedContentID = request.params.vybeID;
+  var currUser = request.user;
+  console.log('FLAG:: vybe(' + flaggedContentID + ')');
+  response.success(flaggedContentID);
 });

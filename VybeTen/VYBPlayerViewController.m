@@ -23,14 +23,20 @@
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
 @property (nonatomic, weak) IBOutlet UIButton *userButton;
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
-@property (nonatomic, weak) IBOutlet UIButton *mapButton;
 @property (nonatomic, weak) IBOutlet UIButton *dismissButton;
 @property (nonatomic, weak) IBOutlet UIButton *goPrevButton;
 @property (nonatomic, weak) IBOutlet UIButton *goNextButton;
+@property (nonatomic, weak) IBOutlet UIButton *flagButton;
+@property (nonatomic, weak) IBOutlet UIButton *flagOverlayButton;
+@property (nonatomic, weak) IBOutlet UIButton *blockOverlayButton;
+
 - (IBAction)goNextButtonPressed:(id)sender;
 - (IBAction)goPrevButtonPressed:(id)sender;
 
 - (IBAction)dismissButtonPressed;
+- (IBAction)flagButtonPressed;
+- (IBAction)flagOverlayButtonPressed;
+- (IBAction)blockOverlayButtonPressed;
 
 @property (nonatomic, weak) VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayer *currPlayer;
@@ -65,74 +71,74 @@
 @synthesize currItem = _currItem;
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
 }
 
 - (id)initWithPageIndex:(NSInteger)pageIndex {
-    self = [super init];
-    if (self) {
-        _pageIndex = pageIndex;
-    }
-    return self;
+  self = [super init];
+  if (self) {
+    _pageIndex = pageIndex;
+  }
+  return self;
 }
 
 - (NSInteger)pageIndex {
-    return _pageIndex;
+  return _pageIndex;
 }
 
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    // Set up player view
-    VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
-    [playerView setFrame:[[UIScreen mainScreen] bounds]];
-    self.currPlayerView = playerView;
-    
-    self.currPlayer = [[AVPlayer alloc] init];
-    [playerView setPlayer:self.currPlayer];
-    
-    [self.view insertSubview:playerView atIndex:0];
-
-    // Add gestures on screen
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
-    tapGesture.numberOfTapsRequired = 1;
-    [self.view addGestureRecognizer:tapGesture];
-    
-    [self showOverlayMenu:NO];
+  [super viewDidLoad];
+  
+  // Set up player view
+  VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
+  [playerView setFrame:[[UIScreen mainScreen] bounds]];
+  self.currPlayerView = playerView;
+  
+  self.currPlayer = [[AVPlayer alloc] init];
+  [playerView setPlayer:self.currPlayer];
+  
+  [self.view insertSubview:playerView atIndex:0];
+  
+  // Add gestures on screen
+  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
+  tapGesture.numberOfTapsRequired = 1;
+  [self.view addGestureRecognizer:tapGesture];
+  
+  [self showOverlayMenu:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-    [self.currPlayer pause];
+  [super viewWillDisappear:animated];
+  
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+  [self.currPlayer pause];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    if ( _zoneVybes ) {
-        [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
-    }
+  [super viewWillAppear:animated];
+  
+  if ( _zoneVybes ) {
+    [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+  }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+  [super viewDidAppear:animated];
+  
+  [self setNeedsStatusBarAppearanceUpdate];
+  
+  if (self.currPlayer && self.currItem) {
+    [self.currPlayer play];
+  }
+  
+  id tracker = [[GAI sharedInstance] defaultTracker];
+  if (tracker) {
+    [tracker set:kGAIScreenName
+           value:@"Player Screen"];
     
-    [self setNeedsStatusBarAppearanceUpdate];
-    
-    if (self.currPlayer && self.currItem) {
-        [self.currPlayer play];
-    }
-    
-    id tracker = [[GAI sharedInstance] defaultTracker];
-    if (tracker) {
-        [tracker set:kGAIScreenName
-               value:@"Player Screen"];
-        
-        [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
-    }
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+  }
 }
 
 - (void)prepareFirstVideoInBackgroundWithCompletion:(void (^)(BOOL))completionBlock {
@@ -140,7 +146,7 @@
   NSURL *cacheURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
   cacheURL = [cacheURL URLByAppendingPathComponent:[firstVideo objectId]];
   cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
-    
+  
   if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
     completionBlock(YES);
   }
@@ -159,37 +165,37 @@
 }
 
 - (void)playZoneVybesFromVybe:(PFObject *)aVybe {
-    
-    NSString *zoneID;
-    if (aVybe[kVYBVybeZoneIDKey] == nil) {
-        zoneID = @"";
-    } else {
-        zoneID = aVybe[kVYBVybeZoneIDKey];
-    }
-    
-    [PFCloud callFunctionInBackground:@"get_vybes_in_zone"
-                       withParameters:@{ @"vybeID" : aVybe.objectId,
-                                         @"zoneID" : zoneID,
-                                         @"timestamp" : aVybe[kVYBVybeTimestampKey]}
-                                block:^(NSArray *objects, NSError *error) {
-                                    if (!error) {
-                                        if (objects.count > 0) {
-                                            _zoneVybes = objects;
-                                            _zoneCurrIdx = 0;
-                                            [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
-                                                [self.delegate playerViewController:self didFinishSetup:success];
-                                            }];
-                                        }
-                                        else {
-                                            [self.delegate playerViewController:self didFinishSetup:NO];
-                                            //Your vybe is the most recent so object count should always be at least 1
-                                        }
-    
-                                    }
-                                    else {
-                                        [self.delegate playerViewController:self didFinishSetup:NO];
-                                    }
-                                }];
+  
+  NSString *zoneID;
+  if (aVybe[kVYBVybeZoneIDKey] == nil) {
+    zoneID = @"";
+  } else {
+    zoneID = aVybe[kVYBVybeZoneIDKey];
+  }
+  
+  [PFCloud callFunctionInBackground:@"get_vybes_in_zone"
+                     withParameters:@{ @"vybeID" : aVybe.objectId,
+                                       @"zoneID" : zoneID,
+                                       @"timestamp" : aVybe[kVYBVybeTimestampKey]}
+                              block:^(NSArray *objects, NSError *error) {
+                                if (!error) {
+                                  if (objects.count > 0) {
+                                    _zoneVybes = objects;
+                                    _zoneCurrIdx = 0;
+                                    [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
+                                      [self.delegate playerViewController:self didFinishSetup:success];
+                                    }];
+                                  }
+                                  else {
+                                    [self.delegate playerViewController:self didFinishSetup:NO];
+                                    //Your vybe is the most recent so object count should always be at least 1
+                                  }
+                                  
+                                }
+                                else {
+                                  [self.delegate playerViewController:self didFinishSetup:NO];
+                                }
+                              }];
 }
 
 
@@ -202,7 +208,7 @@
         _zoneCurrIdx = 0;
         _isFreshStream = YES;
         [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
-            [self.delegate playerViewController:self didFinishSetup:success];
+          [self.delegate playerViewController:self didFinishSetup:success];
         }];
       }
       else {
@@ -216,26 +222,26 @@
 }
 
 - (void)playActiveVybesFromZone:(NSString *)zoneID {
-    NSString *functionName = @"get_active_zone_vybes";
-    
-    [PFCloud callFunctionInBackground:functionName withParameters:@{@"zoneID": zoneID} block:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            if (objects.count > 0) {
-                _zoneVybes = objects;
-                _zoneCurrIdx = 0;
-                [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
-                    [self.delegate playerViewController:self didFinishSetup:success];
-                }];
-            }
-            else {
-                //TODO: No vybe within past week.
-                [self.delegate playerViewController:self didFinishSetup:NO];
-            }
-        }
-        else {
-            [self.delegate playerViewController:self didFinishSetup:NO];
-        }
-    }];
+  NSString *functionName = @"get_active_zone_vybes";
+  
+  [PFCloud callFunctionInBackground:functionName withParameters:@{@"zoneID": zoneID} block:^(NSArray *objects, NSError *error) {
+    if (!error) {
+      if (objects.count > 0) {
+        _zoneVybes = objects;
+        _zoneCurrIdx = 0;
+        [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
+          [self.delegate playerViewController:self didFinishSetup:success];
+        }];
+      }
+      else {
+        //TODO: No vybe within past week.
+        [self.delegate playerViewController:self didFinishSetup:NO];
+      }
+    }
+    else {
+      [self.delegate playerViewController:self didFinishSetup:NO];
+    }
+  }];
 }
 
 
@@ -249,15 +255,15 @@
   if (tracker) {
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"play_video" label:@"play" value:nil] build]];
   }
-
+  
   PFObject *currVybe = [stream objectAtIndex:streamIdx];
   dispatch_async(dispatch_get_main_queue(), ^{
     [self syncUIElementsWithVybe:currVybe];
-        self.goPrevButton.hidden = (streamIdx == 0);
+    self.goPrevButton.hidden = (streamIdx == 0);
     self.goNextButton.hidden = (streamIdx == stream.count - 1);
   });
   
-    // Play after syncing UI elements
+  // Play after syncing UI elements
   NSURL *cacheURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
   cacheURL = [cacheURL URLByAppendingPathComponent:[currVybe objectId]];
   cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
@@ -295,46 +301,159 @@
 #pragma mark - DeviceOrientation
 
 - (BOOL)shouldAutorotate {
-    return NO;
+  return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+  return UIInterfaceOrientationMaskPortrait;
 }
 
 
 #pragma mark - ()
 
 - (BOOL)prefersStatusBarHidden {
-    return YES;
+  return YES;
 }
 
 
 - (void)didReceiveMemoryWarning
 {
-    [super didReceiveMemoryWarning];
+  [super didReceiveMemoryWarning];
 }
 
 - (void)syncUIElementsWithVybe:(PFObject *)aVybe {
-    // Display location and time
-    NSString *zoneName = aVybe[kVYBVybeZoneNameKey];
-    if (!zoneName) {
-        zoneName = @"Earth";
-    }
-    [self.locationLabel setText:zoneName];
-
-    NSString *timeString = [[NSString alloc] init];
-    timeString = [VYBUtility timeStringForPlayer:aVybe[kVYBVybeTimestampKey]];
-    [self.timeLabel setText:timeString];
-    
-    PFObject *user = aVybe[kVYBVybeUserKey];
-    NSString *username = user[kVYBUserUsernameKey];
-
-    if (username) {
-        [self.userButton setTitle:username forState:UIControlStateNormal];
-    }
+  // Display location and time
+  NSString *zoneName = aVybe[kVYBVybeZoneNameKey];
+  if (!zoneName) {
+    zoneName = @"Earth";
+  }
+  [self.locationLabel setText:zoneName];
+  
+  NSString *timeString = [[NSString alloc] init];
+  timeString = [VYBUtility timeStringForPlayer:aVybe[kVYBVybeTimestampKey]];
+  [self.timeLabel setText:timeString];
+  
+  PFObject *user = aVybe[kVYBVybeUserKey];
+  NSString *username = user[kVYBUserUsernameKey];
+  
+  if (username) {
+    [self.userButton setTitle:username forState:UIControlStateNormal];
+  }
 }
 
+- (void)playAsset:(AVAsset *)asset {
+  [self.currPlayerView setOrientation:[asset videoOrientation]];
+  
+  self.currItem = [AVPlayerItem playerItemWithAsset:asset];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+  [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
+  [self.currPlayer play];
+}
+
+
+
+- (IBAction)goNextButtonPressed:(id)sender {
+  [self playNextItem];
+}
+
+
+- (void)playNextItem {
+  // Remove notification for current item
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+  
+  if (_zoneVybes) {
+    [self playNextZoneVideo];
+  }
+}
+
+
+- (void)playNextZoneVideo {
+  NSAssert(_zoneVybes, @"Can't play next video in zone because zone is nil");
+  
+  // Reached the end of zone. Zone OUT
+  if (_zoneCurrIdx == _zoneVybes.count - 1) {
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+  }
+  else {
+    //[self.currPlayer pause];
+    
+    _zoneCurrIdx = _zoneCurrIdx + 1;
+    [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+  }
+}
+
+
+- (IBAction)goPrevButtonPressed:(id)sender {
+  [self playPrevItem];
+}
+
+- (void)playPrevItem {
+  // Remove notification for current item
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+  
+  if (_zoneVybes) {
+    [self playPrevZoneVideo];
+  }
+}
+
+- (void)playPrevZoneVideo {
+  NSAssert(_zoneVybes, @"Can't play prev video in zone because zone is nil");
+  
+  // Reached the beginning of the zone
+  if (_zoneCurrIdx == 0) {
+    return;
+  }
+  else {
+    _zoneCurrIdx = _zoneCurrIdx - 1;
+    [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+  }
+}
+
+
+- (void)playerItemDidReachEnd {
+  [self playNextItem];
+}
+
+- (IBAction)pauseButtonPressed:(id)sender {
+  if (self.currPlayer.rate == 0.0) {
+    [self.currPlayer play];
+  }
+  else {
+    [self.currPlayer pause];
+  }
+}
+
+- (void)tapOnce {
+  //    if (!menuMode) {
+  //        overlayTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(overlayTimerExpired:) userInfo:nil repeats:NO];
+  //    } else {
+  //        [overlayTimer invalidate];
+  //    }
+  
+  menuMode = !menuMode;
+  [self showOverlayMenu:menuMode];
+}
+
+- (void)overlayTimerExpired:(NSTimer *)timer {
+  [self showOverlayMenu:NO];
+}
+
+- (void)showOverlayMenu:(BOOL)show {
+  menuMode = show;
+  
+  [self menuModeChanged];
+}
+
+- (void)menuModeChanged {
+  self.locationLabel.hidden = !menuMode;
+  self.userButton.hidden = !menuMode;
+  self.dismissButton.hidden = !menuMode;
+  self.goPrevButton.selected = !menuMode;
+  self.goNextButton.selected = !menuMode;
+  self.flagOverlayButton.hidden = !menuMode;
+  self.blockOverlayButton.hidden = !menuMode;
+  self.flagButton.hidden = menuMode;
+}
 
 /**
  * User Interactions
@@ -344,128 +463,65 @@
 
 
 - (IBAction)dismissButtonPressed {
-    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+  [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
-
-
-- (void)playAsset:(AVAsset *)asset {
-    [self.currPlayerView setOrientation:[asset videoOrientation]];
-    
-    self.currItem = [AVPlayerItem playerItemWithAsset:asset];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-    [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
+- (IBAction)flagButtonPressed {
+  UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"You are reporting this content as inappropriate" preferredStyle:UIAlertControllerStyleAlert];  UIAlertAction *blockAction = [UIAlertAction actionWithTitle:@"Flag" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+    //Flag this vybe
+    NSString *functionName = @"flag_vybe";
+    PFObject *currObj = _zoneVybes[_zoneCurrIdx];
+    if (currObj) {
+      [PFCloud callFunctionInBackground:functionName withParameters:@{@"vybeID": currObj.objectId} block:^(NSString *flaggedObjID, NSError *error) {
+        NSLog(@"Reported! vybe(%@)", flaggedObjID);
+      }];
+    }
     [self.currPlayer play];
+  }];
+  UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+    [self.currPlayer play];
+  }];
+  [alertController addAction:blockAction];
+  [alertController addAction:cancelAction];
+  
+  [self.currPlayer pause];
+  [self presentViewController:alertController animated:YES completion:nil];
 }
 
-
-
-- (IBAction)goNextButtonPressed:(id)sender {
-    [self playNextItem];
+- (IBAction)flagOverlayButtonPressed {
+  [self flagButtonPressed];
 }
 
-
-- (void)playNextItem {
-    // Remove notification for current item
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-    
-    if (_zoneVybes) {
-        [self playNextZoneVideo];
-    }
-}
-
-
-- (void)playNextZoneVideo {
-    NSAssert(_zoneVybes, @"Can't play next video in zone because zone is nil");
-    
-    // Reached the end of zone. Zone OUT
-    if (_zoneCurrIdx == _zoneVybes.count - 1) {
-        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-    }
-    else {
-        //[self.currPlayer pause];
-
-        _zoneCurrIdx = _zoneCurrIdx + 1;
-        [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
-    }
-}
-
-
-- (IBAction)goPrevButtonPressed:(id)sender {
-    [self playPrevItem];
-}
-
-- (void)playPrevItem {
-    // Remove notification for current item
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
-    
-    if (_zoneVybes) {
-        [self playPrevZoneVideo];
-    }
-}
-
-- (void)playPrevZoneVideo {
-    NSAssert(_zoneVybes, @"Can't play prev video in zone because zone is nil");
-
-    // Reached the beginning of the zone
-    if (_zoneCurrIdx == 0) {
+- (IBAction)blockOverlayButtonPressed {
+  UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"You are blocking this user" message:@"You will not receive any content from this user." preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction *blockAction = [UIAlertAction actionWithTitle:@"Block" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+    PFObject *currObj = _zoneVybes[_zoneCurrIdx];
+    if (currObj) {
+      PFObject *aUser = currObj[kVYBVybeUserKey];
+      if ( [aUser isEqual:[PFUser currentUser]] ) {
         return;
+      }
+      PFRelation *blacklist = [[PFUser currentUser] relationForKey:kVYBUserBlockedUsersKey];
+      [blacklist addObject:aUser];
+      [[PFUser currentUser] saveInBackground];
     }
-    else {
-        _zoneCurrIdx = _zoneCurrIdx - 1;
-        [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
-    }
+    [self.currPlayer play];
+  }];
+  UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+    [self.currPlayer play];
+  }];
+  [alertController addAction:blockAction];
+  [alertController addAction:cancelAction];
+  
+  [self.currPlayer pause];
+  [self presentViewController:alertController animated:YES completion:nil];
 }
-
-
-- (void)playerItemDidReachEnd {
-    [self playNextItem];
-}
-
-- (IBAction)pauseButtonPressed:(id)sender {
-    if (self.currPlayer.rate == 0.0) {
-        [self.currPlayer play];
-    }
-    else {
-        [self.currPlayer pause];
-    }
-}
-
-- (void)tapOnce {
-//    if (!menuMode) {
-//        overlayTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(overlayTimerExpired:) userInfo:nil repeats:NO];
-//    } else {
-//        [overlayTimer invalidate];
-//    }
-    
-    menuMode = !menuMode;
-    [self showOverlayMenu:menuMode];
-}
-
-- (void)overlayTimerExpired:(NSTimer *)timer {
-    [self showOverlayMenu:NO];
-}
-
-- (void)showOverlayMenu:(BOOL)show {
-    menuMode = show;
-    
-    [self menuModeChanged];
-}
-
-- (void)menuModeChanged {
-    self.locationLabel.hidden = !menuMode;
-    self.userButton.hidden = !menuMode;
-    self.dismissButton.hidden = !menuMode;
-    self.goPrevButton.selected = !menuMode;
-    self.goNextButton.selected = !menuMode;
-}
-
 
 #pragma mark - VYBAppDelegateNotification
 
 
 - (void)remoteNotificationReceived:(id)sender {
-
+  
 }
 
 
