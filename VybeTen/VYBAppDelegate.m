@@ -305,6 +305,12 @@
   BOOL granted = [self.permissionController checkPermissionSettings];
   if (!granted)
     [self.mainNavController pushViewController:self.permissionController animated:NO];
+  
+  UserAgreementViewController *userAgreementVC = [[UserAgreementViewController alloc] initWithNibName:@"UserAgreementViewController" bundle:nil];
+  BOOL termsAgreed = [[[PFUser currentUser] objectForKey:kVYBUserTermsAgreedKey] boolValue];
+  if (!termsAgreed) {
+    [self.mainNavController pushViewController:userAgreementVC animated:NO];
+  }
 }
 
 - (void)logOut {

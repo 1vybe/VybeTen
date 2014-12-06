@@ -10,7 +10,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
 #import <CoreLocation/CoreLocation.h>
-#import <MotionOrientation@PTEz/MotionOrientation.h>
+//#import <MotionOrientation@PTEz/MotionOrientation.h>
 #import "VYBCapturePipeline.h"
 #import "VYBCaptureViewController.h"
 #import "VYBReplayViewController.h"
@@ -75,7 +75,7 @@ static void *XYZContext = &XYZContext;
   [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadPercent" context:XYZContext];
   [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadStatus" context:XYZContext];
   
-  [[NSNotificationCenter defaultCenter] removeObserver:self name:MotionOrientationChangedNotification object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (id)initWithPageIndex:(NSInteger)pageIndex {
@@ -108,10 +108,10 @@ static void *XYZContext = &XYZContext;
   [self activityCountChanged];
   
   // Device orientation detection
-  [MotionOrientation initialize];  
+  [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(deviceRotated:)
-                                               name:MotionOrientationChangedNotification
+                                               name:UIDeviceOrientationDidChangeNotification
                                              object:nil];
 
   
@@ -289,44 +289,49 @@ static void *XYZContext = &XYZContext;
 }
 
 - (void)deviceRotated:(NSNotification *)notification {
-  UIDeviceOrientation currentOrientation = [MotionOrientation sharedInstance].deviceOrientation;
+  UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation ;
   
-  CGAffineTransform transform = CGAffineTransformIdentity;
-  double rotation = 0;
+  double rotation;
   switch (currentOrientation) {
+    case UIDeviceOrientationUnknown:
     case UIDeviceOrientationFaceDown:
     case UIDeviceOrientationFaceUp:
-    case UIDeviceOrientationUnknown:
-    case UIDeviceOrientationPortraitUpsideDown:
-      return;
     case UIDeviceOrientationPortrait:
+    case UIDeviceOrientationPortraitUpsideDown:
       rotation = 0;
       _captureOrientation = AVCaptureVideoOrientationPortrait;
+      NSLog(@"device in PORTRAIT");
       break;
     case UIDeviceOrientationLandscapeLeft:
       rotation = M_PI_2;
-      transform = CGAffineTransformMakeRotation(rotation);
       _captureOrientation = AVCaptureVideoOrientationLandscapeRight;
+      NSLog(@"device in LANDSCAPE LEFT");
       break;
     case UIDeviceOrientationLandscapeRight:
       rotation = -M_PI_2;
-      transform = CGAffineTransformMakeRotation(rotation);
       _captureOrientation = AVCaptureVideoOrientationLandscapeLeft;
+      NSLog(@"device in LANDSCAPE RIGHT");
       break;
   }
   
+  CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
   dispatch_async(dispatch_get_main_queue(), ^{
-    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
       [self.flipButton setTransform:transform];
       [self.flashButton setTransform:transform];
       [self.activityButton setTransform:transform];
       [recordButton setTransform:transform];
+        [self.flipButton setNeedsDisplay];
+        [self.flashButton setNeedsDisplay];
+        [self.activityButton setNeedsDisplay];
+        [recordButton setNeedsDisplay];
     } completion:nil];
   });
 }
 
 - (void)resetRotationOfElements {
   [self deviceRotated:nil];
+
 }
 
 

@@ -74,6 +74,8 @@
 		6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */; };
 		607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 607CA69918C5C80C0060B420 /* VYBPlayerView.m */; };
 		60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */; };
+		740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */; };
+		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
 		74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */; };
 		74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */; };
 		74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */; };
@@ -202,6 +204,8 @@
 		607CA69918C5C80C0060B420 /* VYBPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerView.m; sourceTree = "<group>"; };
 		60F1BBB718BAAFA900070EEC /* VYBMyVybeStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyVybeStore.h; sourceTree = "<group>"; };
 		60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybeStore.m; sourceTree = "<group>"; };
+		740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
+		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
 		74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		74C5D9721A22F8B40006695B /* NSMutableArray+VYBVybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+VYBVybe.h"; sourceTree = "<group>"; };
 		74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+VYBVybe.m"; sourceTree = "<group>"; };
@@ -284,6 +288,8 @@
 				020F1C481977054900C3AA40 /* VYBPermissionViewController.h */,
 				020F1C491977054900C3AA40 /* VYBPermissionViewController.m */,
 				0207236419F1991800817A02 /* VYBPermissionViewController.xib */,
+				740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */,
+				740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */,
 			);
 			name = "Intro/ Registration";
 			sourceTree = "<group>";
@@ -658,6 +664,7 @@
 				74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */,
 				888F1FE919B2740B00546643 /* ProximaNovaSoft-Semibold.otf in Resources */,
 				02E943B219C916C50057E8EE /* VYBReplayViewController.xib in Resources */,
+				740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
 				02D11D0918DF62AC0018DA97 /* Montreal-Heavy.otf in Resources */,
 				02D11D0E18DF62AC0018DA97 /* Montreal-MediumIta.otf in Resources */,
@@ -746,6 +753,7 @@
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
 				023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */,
+				740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */,
 				025408E119BA0FD7009C7C71 /* NSArray+PFObject.m in Sources */,
 				88CA12331A272BB700D4B097 /* LogInViewController.swift in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
