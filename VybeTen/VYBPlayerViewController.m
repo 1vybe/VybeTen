@@ -256,16 +256,24 @@
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"play_video" label:@"play" value:nil] build]];
   }
   
-  PFObject *currVybe = [stream objectAtIndex:streamIdx];
+  PFObject *vybeBeingWatched = [stream objectAtIndex:streamIdx];
+  PFUser *fromUser = [vybeBeingWatched objectForKey:kVYBVybeUserKey];
+  // Filter out contents from blocked users
+  NSArray *usersBlocked = [[VYBCache sharedCache] usersBlockedByMe];
+  if ([usersBlocked containsPFObject:fromUser]) {
+    [self playNextItem];
+    return;
+  }
+
   dispatch_async(dispatch_get_main_queue(), ^{
-    [self syncUIElementsWithVybe:currVybe];
+    [self syncUIElementsWithVybe:vybeBeingWatched];
     self.goPrevButton.hidden = (streamIdx == 0);
     self.goNextButton.hidden = (streamIdx == stream.count - 1);
   });
   
   // Play after syncing UI elements
   NSURL *cacheURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
-  cacheURL = [cacheURL URLByAppendingPathComponent:[currVybe objectId]];
+  cacheURL = [cacheURL URLByAppendingPathComponent:[vybeBeingWatched objectId]];
   cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
   
   if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
@@ -273,10 +281,10 @@
     [self playAsset:asset];
     
     if (_isFreshStream) {
-      [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
+      [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:vybeBeingWatched];
     }
   } else {
-    PFFile *vid = [currVybe objectForKey:kVYBVybeVideoKey];
+    PFFile *vid = [vybeBeingWatched objectForKey:kVYBVybeVideoKey];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
       [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -287,7 +295,7 @@
         [self playAsset:asset];
         // Because we want to request to server to remove the watched vybe from the feed only when needed.
         if (_isFreshStream) {
-          [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:currVybe];
+          [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:vybeBeingWatched];
         }
       } else {
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
@@ -335,10 +343,14 @@
   
   PFObject *user = aVybe[kVYBVybeUserKey];
   NSString *username = user[kVYBUserUsernameKey];
-  
   if (username) {
     [self.userButton setTitle:username forState:UIControlStateNormal];
   }
+  
+  self.flagButton.selected = [[VYBCache sharedCache] vybeFlaggedByMe:aVybe];
+  self.flagOverlayButton.selected = [[VYBCache sharedCache] vybeFlaggedByMe:aVybe];
+  
+  self.blockOverlayButton.selected = NO;
 }
 
 - (void)playAsset:(AVAsset *)asset {
@@ -467,25 +479,48 @@
 }
 
 - (IBAction)flagButtonPressed {
-  UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"You are reporting this content as inappropriate" preferredStyle:UIAlertControllerStyleAlert];  UIAlertAction *blockAction = [UIAlertAction actionWithTitle:@"Flag" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-    //Flag this vybe
-    NSString *functionName = @"flag_vybe";
+  if (self.flagButton.selected) {
+    NSString *functionName = @"unflag_vybe";
     PFObject *currObj = _zoneVybes[_zoneCurrIdx];
     if (currObj) {
-      [PFCloud callFunctionInBackground:functionName withParameters:@{@"vybeID": currObj.objectId} block:^(NSString *flaggedObjID, NSError *error) {
-        NSLog(@"Reported! vybe(%@)", flaggedObjID);
+      [PFCloud callFunctionInBackground:functionName withParameters:@{@"vybeID": currObj.objectId} block:^(PFObject *unflaggedObj, NSError *error) {
+        if (!error) {
+          NSLog(@"Reported UNFLAG: vybe(%@)", unflaggedObj);
+        }
       }];
     }
-    [self.currPlayer play];
-  }];
-  UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-    [self.currPlayer play];
-  }];
-  [alertController addAction:blockAction];
-  [alertController addAction:cancelAction];
-  
-  [self.currPlayer pause];
-  [self presentViewController:alertController animated:YES completion:nil];
+    
+    [[VYBCache sharedCache] setAttributesForVybe:currObj flaggedByCurrentUser:NO];
+    self.flagButton.selected = NO;
+    self.flagOverlayButton.selected = NO;
+  }
+  else {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"You are reporting this content as inappropriate" preferredStyle:UIAlertControllerStyleAlert];  UIAlertAction *blockAction = [UIAlertAction actionWithTitle:@"Flag" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+      //Flag this vybe
+      NSString *functionName = @"flag_vybe";
+      PFObject *currObj = _zoneVybes[_zoneCurrIdx];
+      if (currObj) {
+        [PFCloud callFunctionInBackground:functionName withParameters:@{@"vybeID": currObj.objectId} block:^(PFObject *flaggedObj, NSError *error) {
+          if (!error) {
+            NSLog(@"Reported FLAG: vybe(%@)", flaggedObj.objectId);
+          }
+        }];
+      }
+      
+      [[VYBCache sharedCache] setAttributesForVybe:currObj flaggedByCurrentUser:YES];
+      self.flagButton.selected = YES;
+      self.flagOverlayButton.selected = YES;
+      [self.currPlayer play];
+    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+      [self.currPlayer play];
+    }];
+    [alertController addAction:blockAction];
+    [alertController addAction:cancelAction];
+    
+    [self.currPlayer pause];
+    [self presentViewController:alertController animated:YES completion:nil];
+  }
 }
 
 - (IBAction)flagOverlayButtonPressed {
@@ -493,28 +528,47 @@
 }
 
 - (IBAction)blockOverlayButtonPressed {
-  UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"You are blocking this user" message:@"You will not receive any content from this user." preferredStyle:UIAlertControllerStyleAlert];
-  UIAlertAction *blockAction = [UIAlertAction actionWithTitle:@"Block" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+  if (self.blockOverlayButton.selected) {
+    self.blockOverlayButton.selected = NO;
     PFObject *currObj = _zoneVybes[_zoneCurrIdx];
     if (currObj) {
-      PFObject *aUser = currObj[kVYBVybeUserKey];
-      if ( [aUser isEqual:[PFUser currentUser]] ) {
+      PFUser *aUser = currObj[kVYBVybeUserKey];
+      if ( [aUser.objectId isEqualToString:[PFUser currentUser].objectId] ) {
         return;
       }
       PFRelation *blacklist = [[PFUser currentUser] relationForKey:kVYBUserBlockedUsersKey];
-      [blacklist addObject:aUser];
+      [blacklist removeObject:aUser];
       [[PFUser currentUser] saveInBackground];
+      [[VYBCache sharedCache] removeBlockedUser:aUser forUser:[PFUser currentUser]];
     }
-    [self.currPlayer play];
-  }];
-  UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-    [self.currPlayer play];
-  }];
-  [alertController addAction:blockAction];
-  [alertController addAction:cancelAction];
-  
-  [self.currPlayer pause];
-  [self presentViewController:alertController animated:YES completion:nil];
+  }
+  else {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"You are blocking this user" message:@"You will not receive any content from this user." preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *blockAction = [UIAlertAction actionWithTitle:@"Block" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+      PFObject *currObj = _zoneVybes[_zoneCurrIdx];
+      if (currObj) {
+        PFUser *aUser = currObj[kVYBVybeUserKey];
+        if ( [aUser isEqual:[PFUser currentUser]] ) {
+          return;
+        }
+        self.blockOverlayButton.selected = YES;
+
+        PFRelation *blacklist = [[PFUser currentUser] relationForKey:kVYBUserBlockedUsersKey];
+        [blacklist addObject:aUser];
+        [[PFUser currentUser] saveInBackground];
+        [[VYBCache sharedCache] addBlockedUser:aUser forUser:[PFUser currentUser]];
+      }
+      [self.currPlayer play];
+    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+      [self.currPlayer play];
+    }];
+    [alertController addAction:blockAction];
+    [alertController addAction:cancelAction];
+    
+    [self.currPlayer pause];
+    [self presentViewController:alertController animated:YES completion:nil];
+  }
 }
 
 #pragma mark - VYBAppDelegateNotification

@@ -106,6 +106,7 @@
                     <state key="normal" image="Player_Flag">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <state key="selected" image="Player_RedFlag"/>
                     <connections>
                         <action selector="flagButtonPressed" destination="-1" eventType="touchUpInside" id="9Et-10-bBi"/>
                     </connections>
@@ -164,6 +165,7 @@
         <image name="Player_Flag" width="18" height="23"/>
         <image name="Player_FlagVybe-BtnON" width="112" height="45"/>
         <image name="Player_FlagVybe-btn" width="112" height="45"/>
+        <image name="Player_RedFlag" width="19" height="24"/>
         <image name="Player_ReportUser-btn" width="112" height="45"/>
         <image name="Player_ReportUser-btnON" width="112" height="45"/>
         <image name="TransparentImage" width="180" height="180"/>

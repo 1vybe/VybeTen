@@ -51,6 +51,8 @@ NSString *const kVYBUserLastRefreshedKey                        = @"lastRefreshe
 NSString *const kVYBUserTribeKey                                = @"tribe";
 NSString *const kVYBUserBlockedUsersKey                         = @"blockedUsers";
 NSString *const kVYBUserTermsAgreedKey                          = @"termsAgreed";
+NSString *const kVYBUserFlagsKey                                = @"flags";
+
 
 
 /*
@@ -94,6 +96,7 @@ NSString *const kVYBVybeZoneLongitudeKey                        = @"zoneLongitud
 #pragma mark - Cached Photo Attributes
 // keys
 NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey = @"isLikedByCurrentUser";
+NSString *const kVYBVybeAttributesIsFlaggedByCurrentUserKey = @"isFlaggedByCurrentUser";
 NSString *const kVYBVybeAttributesLikeCountKey            = @"likeCount";
 NSString *const kVYBVybeAttributesLikersKey               = @"likers";
 NSString *const kVYBVybeAttributesCommentCountKey         = @"commentCount";
@@ -160,7 +163,7 @@ NSString *const kVYBUserAttributesSyncTribeKey                  = @"syncTribe";
 NSString *const kVYBUserAttributesVybeCountKey                  = @"vybeCount";
 NSString *const kVYBUserAttributesTribeCountKey                 = @"tribeCount";
 NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey    = @"isFollowedByCurrentUser";
-
+NSString *const kVYBUserAttributesBlockedUsersKey               = @"blockedUsers";
 
 #pragma mark - Cached Tribe Attributes
 // keys

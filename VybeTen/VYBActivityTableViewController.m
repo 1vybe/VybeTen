@@ -324,7 +324,7 @@ static void *ZOTContext = &ZOTContext;
           }
           cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
         } else {
-          cell.thumbnailImageView.image = [UIImage imageNamed:@"Oval_mask"];
+          cell.thumbnailImageView.image = [UIImage imageNamed:@"OverlayThumbnail"];
         }
       }
     }];
@@ -348,7 +348,21 @@ static void *ZOTContext = &ZOTContext;
       else {
         
         cell.thumbnailImageView.file = aVybe[kVYBVybeThumbnailKey];
-        [cell.thumbnailImageView loadInBackground];
+        [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
+          if (!error) {
+            if (image) {
+              UIImage *maskImage;
+              if (image.size.height > image.size.width) {
+                maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
+              } else {
+                maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
+              }
+              cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
+            } else {
+              cell.thumbnailImageView.image = [UIImage imageNamed:@"OverlayThumbnail"];
+            }
+          }
+        }];
       }
       
       return cell;

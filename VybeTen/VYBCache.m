@@ -127,6 +127,42 @@
     [self setAttributes:attributes forVybe:vybe];
 }
 
+- (void)setAttributesForVybe:(PFObject *)vybe flaggedByCurrentUser:(BOOL)flaggedByCurrentUser {
+  NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                              [NSNumber numberWithBool:flaggedByCurrentUser],kVYBVybeAttributesIsFlaggedByCurrentUserKey, nil];
+  [self setAttributes:attributes forVybe:vybe];
+}
+
+- (void)setBlockedUsers:(NSArray *)usersBlockedByMe forUser:(PFUser *)user {
+  NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
+  [attributes setObject:usersBlockedByMe forKey:kVYBUserAttributesBlockedUsersKey];
+  [self setAttributes:attributes forUser:user];
+}
+
+- (void)addBlockedUser:(PFUser *)blockedUser forUser:(PFUser *)user {
+  NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
+  NSArray *blackList = [NSArray arrayWithArray:[attributes objectForKey:kVYBUserAttributesBlockedUsersKey]];
+  if (blackList) {
+    blackList = [blackList arrayByAddingObject:blockedUser];
+  }
+  else {
+    blackList = @[blockedUser];
+  }
+  [attributes setObject:blackList forKey:kVYBUserAttributesBlockedUsersKey];
+  [self setAttributes:attributes forUser:user];
+}
+
+- (void)removeBlockedUser:(PFUser *)blockedUser forUser:(PFUser *)user {
+  NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
+  NSMutableArray *blackList = [NSMutableArray arrayWithArray:[attributes objectForKey:kVYBUserAttributesBlockedUsersKey]];
+  if (blackList) {
+    [blackList removePFObject:blockedUser];
+    [attributes setObject:blackList forKey:kVYBUserAttributesBlockedUsersKey];
+    [self setAttributes:attributes forUser:user];
+
+  }
+}
+
 - (void)setNearbyCount:(NSNumber *)count forVybe:(PFObject *)vybe {
     NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForVybe:vybe]];
     [attributes setObject:count forKey:kVYBVybeAttributesNearbyCountKey];
@@ -161,6 +197,22 @@
     }
     
     return NO;
+}
+
+- (BOOL)vybeFlaggedByMe:(PFObject *)vybe {
+  NSDictionary *attributes = [self attributesForVybe:vybe];
+  if (attributes) {
+    NSNumber *boolNum = [attributes objectForKey:kVYBVybeAttributesIsFlaggedByCurrentUserKey];
+    return [boolNum intValue] > 0;
+  }
+  
+  return NO;
+}
+
+- (NSArray *)usersBlockedByMe {
+  NSDictionary *attributes = [self attributesForUser:[PFUser currentUser]];
+  NSArray *blockedUsers = [attributes objectForKey:kVYBUserAttributesBlockedUsersKey];
+  return blockedUsers;
 }
 
 - (NSArray *)likersForVybe:(PFObject *)vybe {

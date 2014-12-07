@@ -101,6 +101,7 @@ extern NSString *const kVYBUserFreshFeedKey;
 extern NSString *const kVYBUserLastRefreshedKey;
 extern NSString *const kVYBUserBlockedUsersKey;
 extern NSString *const kVYBUserTermsAgreedKey;
+extern NSString *const kVYBUserFlagsKey;
 extern NSString *const kVYBUserTribeKey;
 
 
@@ -133,6 +134,7 @@ extern NSString *const kVYBVybeCityNameKey;
 #pragma mark - Cached Vybe Attributes
 // keys
 extern NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey;
+extern NSString *const kVYBVybeAttributesIsFlaggedByCurrentUserKey;
 extern NSString *const kVYBVybeAttributesLikeCountKey;
 extern NSString *const kVYBVybeAttributesLikersKey;
 extern NSString *const kVYBVybeAttributesCommentCountKey;
@@ -195,6 +197,7 @@ extern NSString *const kVYBUserAttributesSyncTribeKey;
 extern NSString *const kVYBUserAttributesVybeCountKey;
 extern NSString *const kVYBUserAttributesTribeCountKey;
 extern NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey;
+extern NSString *const kVYBUserAttributesBlockedUsersKey;
 
 
 #pragma mark - Cached Tribe Attributes

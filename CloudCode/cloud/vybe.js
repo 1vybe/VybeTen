@@ -349,7 +349,44 @@ Parse.Cloud.define('remove_from_feed', function (request, response) {
 
 Parse.Cloud.define('flag_vybe', function (request, response) {
   var flaggedContentID = request.params.vybeID;
+  console.log(' Vybe(' + flaggedContentID + ') is FLAGGED ');
+
   var currUser = request.user;
-  console.log('FLAG:: vybe(' + flaggedContentID + ')');
-  response.success(flaggedContentID);
+
+  var query = new Parse.Query('Vybe');
+  query.equalTo('objectId', flaggedContentID);
+  query.first({
+    success: function(flaggedObj) {
+      console.log(currUser.get('username') + ' flagged ' + flaggedContentID);
+      var flags = currUser.relation('flags');
+      flags.add(flaggedObj);
+      currUser.save();
+      response.success(flaggedObj);
+    },
+    error: function(error) {
+      response.error(error);
+    }
+  });
+});
+
+Parse.Cloud.define('unflag_vybe', function (request, response) {
+  var unflaggedContentID = request.params.vybeID;
+  console.log(' Vybe(' + unflaggedContentID + ') is UNFLAGGED ');
+
+  var currUser = request.user;
+
+  var query = new Parse.Query('Vybe');
+  query.equalTo('objectId', flaggedContentID);
+  query.first({
+    success: function(unflaggedObj) {
+      console.log(currUser.get('username') + ' unflagged ' + unflaggedContentID);
+      var flags = currUser.relation('flags');
+      flags.remove(unflaggedObj);
+      currUser.save();
+      response.success(unflaggedObj);
+    },
+    error: function(error) {
+      response.error(error);
+    }
+  });
 });

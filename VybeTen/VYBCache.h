@@ -27,11 +27,17 @@
 - (NSInteger)activityCount;
 
 - (void)setAttributesForVybe:(PFObject *)vybe likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser;
+- (void)setAttributesForVybe:(PFObject *)vybe flaggedByCurrentUser:(BOOL)flaggedByCurrentUser;
+- (void)setBlockedUsers:(NSArray *)usersBlockedByMe forUser:(PFUser *)user;
+- (void)addBlockedUser:(PFUser *)blockedUser forUser:(PFUser *)user;
+- (void)removeBlockedUser:(PFUser *)blockedUser forUser:(PFUser *)user;
 - (void)setNearbyCount:(NSNumber *)count forVybe:(PFObject *)vybe;
 - (NSDictionary *)attributesForVybe:(PFObject *)vybe;
 - (NSNumber *)likeCountForVybe:(PFObject *)vybe;
 - (NSArray *)likersForVybe:(PFObject *)vybe;
 - (BOOL)vybeLikedByMe:(PFObject *)vybe;
+- (BOOL)vybeFlaggedByMe:(PFObject *)vybe;
+- (NSArray *)usersBlockedByMe;
 - (NSNumber *)nearbyCountForVybe:(PFObject *)vybe;
 - (NSDictionary *)attributesForUser:(PFUser *)user;
 - (NSArray *)usersFollowedByMe;
