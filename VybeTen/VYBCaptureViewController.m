@@ -300,17 +300,14 @@ static void *XYZContext = &XYZContext;
     case UIDeviceOrientationPortraitUpsideDown:
       rotation = 0;
       _captureOrientation = AVCaptureVideoOrientationPortrait;
-      NSLog(@"device in PORTRAIT");
       break;
     case UIDeviceOrientationLandscapeLeft:
       rotation = M_PI_2;
       _captureOrientation = AVCaptureVideoOrientationLandscapeRight;
-      NSLog(@"device in LANDSCAPE LEFT");
       break;
     case UIDeviceOrientationLandscapeRight:
       rotation = -M_PI_2;
       _captureOrientation = AVCaptureVideoOrientationLandscapeLeft;
-      NSLog(@"device in LANDSCAPE RIGHT");
       break;
   }
   
@@ -377,7 +374,6 @@ static void *XYZContext = &XYZContext;
           self.activityButton.hidden = YES;
           self.uploadProgressView.hidden = NO;
           [self.uploadProgressView setProgress:0.0];
-          NSLog(@"Uploading started");
         });
         return;
       }
@@ -386,7 +382,6 @@ static void *XYZContext = &XYZContext;
           self.uploadProgressView.hidden = YES;
           self.activityButton.hidden = NO;
           [self.activityButton setSelected:NO];
-          NSLog(@"Uploading Success");
         });
         return;
       }
@@ -395,7 +390,6 @@ static void *XYZContext = &XYZContext;
           self.uploadProgressView.hidden = YES;
           self.activityButton.hidden = NO;
           [self.activityButton setSelected:YES];
-          NSLog(@"Uploading failed");
         });
         return;
       }

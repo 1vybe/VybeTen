@@ -9,6 +9,7 @@
 import UIKit
 
 class UserAgreementViewController: UIViewController {
+  @IBOutlet weak var termsTextView: UITextView!
   @IBOutlet weak var checkBoxButton: UIButton!
   @IBOutlet weak var acceptButton: UIButton!
   
@@ -36,7 +37,7 @@ class UserAgreementViewController: UIViewController {
     acceptButton.enabled = false
     acceptButton.alpha = 0.3;
     
-    // Do any additional setup after loading the view.
+    termsTextView.scrollRangeToVisible(NSRange(location: 0, length: 1))
   }
   
   override func didReceiveMemoryWarning() {
