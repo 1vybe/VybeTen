@@ -339,21 +339,31 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ppP-wo-Pn9">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="600"/>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fyZ-LC-QOJ">
-                                <rect key="frame" x="15" y="7" width="40" height="40"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fyZ-LC-QOJ" userLabel="dismissButton">
+                                <rect key="frame" x="15" y="15" width="28" height="28"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="40" id="aOn-n1-TOg"/>
-                                    <constraint firstAttribute="height" constant="40" id="tYV-Fo-9NV"/>
+                                    <constraint firstAttribute="width" constant="28" id="aOn-n1-TOg"/>
+                                    <constraint firstAttribute="height" constant="28" id="tYV-Fo-9NV"/>
                                 </constraints>
                                 <state key="normal" image="player_close_button">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eBZ-8r-BMb" userLabel="dismissAerial">
+                                <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="Iys-Zw-3Nq"/>
+                                    <constraint firstAttribute="height" constant="60" id="MFW-j0-KEf"/>
+                                </constraints>
+                                <state key="normal">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
-                                    <action selector="dismissButtonPressed:" destination="4nu-fI-UsT" eventType="touchUpInside" id="uRx-Gi-yRl"/>
+                                    <action selector="dismissButtonPressed:" destination="4nu-fI-UsT" eventType="touchUpInside" id="wzC-AN-A0s"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MapTitleView" translatesAutoresizingMaskIntoConstraints="NO" id="lof-Vd-9uC" userLabel="MapTitleView">
-                                <rect key="frame" x="164" y="13" width="196" height="28"/>
+                                <rect key="frame" x="90" y="15" width="196" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="kLP-Py-dGs"/>
                                     <constraint firstAttribute="width" constant="196" id="xA1-39-GCJ"/>
@@ -363,18 +373,20 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="fyZ-LC-QOJ" firstAttribute="centerY" secondItem="lof-Vd-9uC" secondAttribute="centerY" id="GQk-Gi-JFU"/>
+                            <constraint firstAttribute="centerX" secondItem="lof-Vd-9uC" secondAttribute="centerX" id="NAp-Ub-qgr"/>
                             <constraint firstItem="lof-Vd-9uC" firstAttribute="top" secondItem="Ln7-Ne-h9A" secondAttribute="top" constant="13" id="T4j-Ri-VfK"/>
                             <constraint firstItem="ppP-wo-Pn9" firstAttribute="top" secondItem="Ln7-Ne-h9A" secondAttribute="top" id="Uhv-4W-l53"/>
-                            <constraint firstAttribute="trailing" secondItem="lof-Vd-9uC" secondAttribute="trailing" constant="15" id="WVK-WZ-z3M"/>
                             <constraint firstItem="cLA-nl-7AN" firstAttribute="top" secondItem="ppP-wo-Pn9" secondAttribute="bottom" id="YfA-QX-f5I"/>
                             <constraint firstItem="fyZ-LC-QOJ" firstAttribute="leading" secondItem="Ln7-Ne-h9A" secondAttribute="leading" constant="15" id="YvJ-gt-aPo"/>
                             <constraint firstItem="ppP-wo-Pn9" firstAttribute="leading" secondItem="Ln7-Ne-h9A" secondAttribute="leading" id="gHk-oX-WSg"/>
-                            <constraint firstAttribute="centerX" secondItem="lof-Vd-9uC" secondAttribute="centerX" id="mja-Ad-PJh"/>
+                            <constraint firstItem="fyZ-LC-QOJ" firstAttribute="top" secondItem="Ln7-Ne-h9A" secondAttribute="top" constant="15" id="mh7-7x-bLU"/>
                             <constraint firstAttribute="trailing" secondItem="ppP-wo-Pn9" secondAttribute="trailing" id="mrm-Jn-Ige"/>
+                            <constraint firstItem="eBZ-8r-BMb" firstAttribute="top" secondItem="Ln7-Ne-h9A" secondAttribute="top" id="w2w-0w-MIr"/>
+                            <constraint firstItem="eBZ-8r-BMb" firstAttribute="leading" secondItem="Ln7-Ne-h9A" secondAttribute="leading" id="xlK-GY-Hig"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="mja-Ad-PJh"/>
+                                <exclude reference="T4j-Ri-VfK"/>
                             </mask>
                         </variation>
                     </view>

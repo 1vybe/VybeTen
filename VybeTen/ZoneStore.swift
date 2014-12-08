@@ -50,13 +50,17 @@ private let _zoneStoreSharedInstance = ZoneStore()
               
               // Rearrange ACTIVE zones first by number of unwatched vybes and by most recent time
               self._activeZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
-                if (zone1.freshContents.count == zone2.freshContents.count) {
+                if (zone1.freshContents.count > 0 && zone2.freshContents.count == 0) {
+                  return true
+                }
+                else if (zone1.freshContents.count == 0 && zone2.freshContents.count > 0) {
+                  return false
+                }
+                else {
                   let comparisonResult = zone1.mostRecentActiveVybeTimestamp.compare(zone2.mostRecentActiveVybeTimestamp)
                   return comparisonResult == NSComparisonResult.OrderedDescending
                 }
-                return zone1.freshContents.count > zone2.freshContents.count
               })
-              
 //              self.displayZoneInfo()
             }
           }
