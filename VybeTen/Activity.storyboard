@@ -88,6 +88,8 @@
                                             <rect key="frame" x="305" y="18" width="49" height="49"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="BIQ-hL-LVg" secondAttribute="height" multiplier="1:1" id="b2v-dK-oSt"/>
+                                                <constraint firstAttribute="height" constant="49" id="gcf-HT-xKm"/>
+                                                <constraint firstAttribute="width" constant="49" id="uX0-bQ-hDW"/>
                                             </constraints>
                                         </imageView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PBF-Rz-BLP" userLabel="Separator">
@@ -151,6 +153,8 @@
                                             <rect key="frame" x="305" y="18" width="49" height="49"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="zb7-Iu-HMo" secondAttribute="height" multiplier="1:1" id="Jfb-RF-Saf"/>
+                                                <constraint firstAttribute="height" constant="49" id="hEq-pe-VN3"/>
+                                                <constraint firstAttribute="width" constant="49" id="ltx-IL-9Za"/>
                                             </constraints>
                                         </imageView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fAr-AB-bTk" userLabel="Separator">
@@ -245,27 +249,29 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OverlayThumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="Yyl-cu-X6Q" customClass="PFImageView">
-                                            <rect key="frame" x="305" y="10" width="50" height="50"/>
+                                            <rect key="frame" x="305" y="10" width="49" height="49"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="Yyl-cu-X6Q" secondAttribute="height" multiplier="1:1" id="Eua-ad-pOB"/>
+                                                <constraint firstAttribute="height" constant="49" id="jmG-OK-ago"/>
+                                                <constraint firstAttribute="width" constant="49" id="xKc-f7-IGP"/>
                                             </constraints>
                                         </imageView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a4e-t3-X2U" userLabel="Separator">
                                             <rect key="frame" x="0.0" y="69" width="375" height="1"/>
-                                            <color key="backgroundColor" red="0.91764705882352937" green="0.91764705882352937" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="5TA-jU-FYd"/>
                                             </constraints>
                                         </view>
                                     </subviews>
+                                    <color key="backgroundColor" red="0.91764705879999997" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
-                                        <constraint firstAttribute="trailingMargin" secondItem="Yyl-cu-X6Q" secondAttribute="trailingMargin" constant="20" id="HFb-PI-XLQ"/>
                                         <constraint firstItem="y2a-BU-8V2" firstAttribute="top" secondItem="eud-5z-hNB" secondAttribute="top" constant="27" id="Hxp-hX-IjR"/>
-                                        <constraint firstItem="Yyl-cu-X6Q" firstAttribute="top" secondItem="eud-5z-hNB" secondAttribute="top" constant="10" id="OeI-44-Ty8"/>
                                         <constraint firstItem="y2a-BU-8V2" firstAttribute="leading" secondItem="eud-5z-hNB" secondAttribute="leading" constant="15" id="VNt-fw-xNO"/>
+                                        <constraint firstAttribute="trailing" secondItem="Yyl-cu-X6Q" secondAttribute="trailing" constant="21" id="X1i-Gl-QcU"/>
                                         <constraint firstItem="a4e-t3-X2U" firstAttribute="leading" secondItem="eud-5z-hNB" secondAttribute="leading" id="e6K-zU-UEM"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="y2a-BU-8V2" secondAttribute="bottomMargin" constant="27" id="kbK-nb-b8E"/>
-                                        <constraint firstAttribute="bottom" secondItem="Yyl-cu-X6Q" secondAttribute="bottom" constant="10" id="loU-sC-Yop"/>
+                                        <constraint firstAttribute="centerY" secondItem="Yyl-cu-X6Q" secondAttribute="centerY" id="usn-ua-lKQ"/>
                                         <constraint firstAttribute="bottom" secondItem="a4e-t3-X2U" secondAttribute="bottom" id="wzz-wU-LTN"/>
                                         <constraint firstAttribute="trailing" secondItem="a4e-t3-X2U" secondAttribute="trailing" id="xuy-fH-iKf"/>
                                     </constraints>

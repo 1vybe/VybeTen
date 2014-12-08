@@ -72,14 +72,19 @@
                         <action selector="dismissButtonPressed" destination="-1" eventType="touchUpInside" id="fQ7-eI-AD4"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2xr-fh-a0w" userLabel="locationLabel">
-                    <rect key="frame" x="15" y="563" width="207" height="22"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="When location string is too long it should be shrinked!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2xr-fh-a0w" userLabel="locationLabel">
+                    <rect key="frame" x="15" y="563" width="425" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="207" id="xWg-mo-Yh1"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="16"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="xWg-mo-Yh1"/>
+                        </mask>
+                    </variation>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="thN-J3-OUv" userLabel="userButton">
                     <rect key="frame" x="15" y="522" width="100" height="33"/>
@@ -92,10 +97,10 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ago" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPQ-0i-rrO" userLabel="timeLabel">
-                    <rect key="frame" x="399" y="563" width="186" height="22"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dec 28 12:28 PM" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPQ-0i-rrO" userLabel="timeLabel">
+                    <rect key="frame" x="455" y="563" width="130" height="22"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="186" id="ziG-Di-nIo"/>
+                        <constraint firstAttribute="width" constant="130" id="ELO-Eg-eq2"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="16"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -137,6 +142,7 @@
                 </button>
             </subviews>
             <constraints>
+                <constraint firstItem="UPQ-0i-rrO" firstAttribute="leading" secondItem="2xr-fh-a0w" secondAttribute="trailing" constant="15" id="1DV-7w-gjz"/>
                 <constraint firstAttribute="centerX" secondItem="FUM-j7-JZe" secondAttribute="centerX" id="4bn-Rs-2OS"/>
                 <constraint firstItem="9iV-Su-8js" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="H9v-y5-0B2"/>
                 <constraint firstAttribute="bottom" secondItem="UPQ-0i-rrO" secondAttribute="bottom" constant="15" id="Iqn-t4-LrI"/>

@@ -318,10 +318,7 @@ static void *XYZContext = &XYZContext;
       [self.flashButton setTransform:transform];
       [self.activityButton setTransform:transform];
       [recordButton setTransform:transform];
-        [self.flipButton setNeedsDisplay];
-        [self.flashButton setNeedsDisplay];
-        [self.activityButton setNeedsDisplay];
-        [recordButton setNeedsDisplay];
+
     } completion:nil];
   });
 }

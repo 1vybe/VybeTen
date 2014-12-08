@@ -15,6 +15,8 @@
 
 - (void)awakeFromNib
 {
+//  CAShapeLayer *maskLayer = [CAShapeLayer layer];
+  
 }
 
 - (UIEdgeInsets)layoutMargins
@@ -57,7 +59,7 @@
       [self.timestampLabel setTextColor:[UIColor colorWithRed:146/255.0 green:146/255.0 blue:146/255.0 alpha:1.0]];
     }
     if ([self.reuseIdentifier isEqualToString:@"MyVybeCell"]) {
-      [self.contentView setBackgroundColor:[UIColor whiteColor]];
+      [self.contentView setBackgroundColor:[UIColor colorWithRed:234/255.0 green:234/255.0 blue:234/255.0 alpha:1.0]];
       [self.timestampLabel setTextColor:[UIColor colorWithRed:146/255.0 green:146/255.0 blue:146/255.0 alpha:1.0]];
     }
   }
