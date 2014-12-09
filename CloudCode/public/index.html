@@ -1,93 +1,96 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="utf-8">
-		<title>Vybe</title>
-	</head>
+  <head>
+    <meta charset="utf-8">
+    <title>Vybe</title>
+    <style>
+      body {
+        background-color: black;
+      }
 
-	<body>
-		<div id="video_player">
-			<div id="video_container">
-				<video controls poster="media/1.jpg">
-					<source src="media/1.mp4" type="video/mp4">
-				</video>
-			</div>
-			<div id='playlist'>
-				<a href="media/1.mp4"></a>
-				<a href="media/2.mp4"></a>
-				<a href="media/3.mp4"></a>
-			</div>
-		</div>
-	</body>
+      video {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+      }
+    </style>
+  </head>
 
-	<style>
-		body {
-			background-color: black;
-		}
+  <body>
+    <div id="video_player">
+      <div id="video_container">
+        <video controls poster="media/1.jpg">
+          <source src="media/1.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div id='playlist'>
+        <a href="media/1.mp4"></a>
+        <a href="media/2.mp4"></a>
+        <a href="media/3.mp4"></a>
+      </div>
+    </div>
+  </body>
 
-		video {
-			width: 100%;
-			height: 100%;
-			position: absolute;
-		}
-	</style>
 
-	<script type="text/javascript">
-		var video_player = document.getElementById("video_player"),
-		video = video_player.getElementsByTagName("video")[0],
-		source = video.getElementsByTagName("source"),
-		playlist = document.getElementById("playlist"),
+  <script type="text/javascript">
+    (function() {
 
-		video_links = playlist.children,
-		link_list = [],
+      Parse.$ = jQuery;
 
-		path = 'media/',
+      var video_player = document.getElementById("video_player"),
+      video = video_player.getElementsByTagName("video")[0],
+      source = video.getElementsByTagName("source"),
+      playlist = document.getElementById("playlist"),
 
-		currentVid = 0;
+      video_links = playlist.children,
+      link_list = [],
 
-		video.removeAttribute("controls");
-		video.removeAttribute("poster");
+      path = 'media/',
 
-		(function() {
-			function playVid(index) {
-				playlist.children[index].classList.add("currentvid");
-				source[0].src = path + link_list[index] + ".mp4";
-				currentVid = index;
-				video.load();
-				video.play();
-			}
+      currentVid = 0;
 
-			for (var i=0; i<video_links.length; i++) {
-				var filename = video_links[i].href;
-				link_list[i] = filename.match(/([^\/]+)(?=\.\w+$)/)[0];
+      video.removeAttribute("controls");
+      video.removeAttribute("poster");
 
-				(function(index){
-					video_links[i].onclick = function(i){
-						i.preventDefault();
+      function playVid(index) {
+        playlist.children[index].classList.add("currentvid");
+        source[0].src = path + link_list[index] + ".mp4";
+        currentVid = index;
+        video.load();
+        video.play();
+      }
 
-						for (var i=0; i<video_links.length; i++) {
-							video_links[i].classList.remove("currentvid");
-						}
+      for (var i=0; i<video_links.length; i++) {
+        var filename = video_links[i].href;
+        link_list[i] = filename.match(/([^\/]+)(?=\.\w+$)/)[0];
 
-						playVid(index);
-					}
-				})(i);
-			}
+        (function(index){
+          video_links[i].onclick = function(i){
+            i.preventDefault();
 
-			video.addEventListener('ended', function () {
-				var nextVid = currentVid + 1;
+            for (var i=0; i<video_links.length; i++) {
+              video_links[i].classList.remove("currentvid");
+            }
 
-				if (nextVid >= video_links.length) {
-					nextVid = 0;
-				}
+            playVid(index);
+          }
+        })(i);
+      }
 
-				video_links[currentVid].classList.remove("currentvid");
-				playVid(nextVid);
-			})
+      video.addEventListener('ended', function () {
+        var nextVid = currentVid + 1;
 
-			video_links[0].click();
-		})()
-	</script>
+        if (nextVid >= video_links.length) {
+          nextVid = 0;
+        }
+
+        video_links[currentVid].classList.remove("currentvid");
+        playVid(nextVid);
+      })
+
+      video_links[0].click();
+    })()
+  </script>
 
 </html>
