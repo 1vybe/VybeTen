@@ -195,12 +195,15 @@
 
 
 - (IBAction)rejectButtonPressed:(id)sender {
+#ifdef DEBUG
+#else
   // GA stuff
   id tracker = [[GAI sharedInstance] defaultTracker];
   if (tracker) {
     // upload cancel metric for capture_video event
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"cancel" value:nil] build]];
   }
+#endif
   
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
     NSError *error;

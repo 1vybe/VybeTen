@@ -75,12 +75,11 @@
   BOOL noPushPayload = ![launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
   if (preBackgroundPush || oldPushHandlerOnly || noPushPayload) {
 #ifdef DEBUG
-    // We do not want to take debugging into account for analytics.
+    // We want to exclude debugging from analytics.
 #else
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
 #endif
   }
-  
   
   // Register defaults for NSUserDefaults
   NSURL *prefsFileURL = [[NSBundle mainBundle] URLForResource:@"DefaultPreferences" withExtension:@"plist"];
@@ -89,7 +88,10 @@
   
   // Register for remote notification
   [self checkNotificationPermissionAndRegister:application];
-  
+
+#ifdef DEBUG
+  // We want to exclude debugging from analytics.
+#else
   // Optional: automatically send uncaught exceptions to Google Analytics.
   [GAI sharedInstance].trackUncaughtExceptions = YES;
   // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
@@ -102,7 +104,8 @@
                                                          action:@"App Start"
                                                           label:nil
                                                           value:nil] set:@"start" forKey:kGAISessionControl] build]];
-  
+#endif
+
   // Clearing Push-noti Badge number
   /*
    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
@@ -112,9 +115,7 @@
    [currentInstallation saveEventually];
    }
    */
-#ifdef DEBUG
-  NSLog(@"DEBUG!!!!!!!!!!!!!!!");
-#endif
+
   // Access Control
   PFACL *defaultACL = [PFACL ACL];
   // Enable public read access by default, with any newly created PFObjects belonging to the current user

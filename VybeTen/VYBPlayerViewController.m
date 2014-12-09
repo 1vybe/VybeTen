@@ -131,7 +131,8 @@
   if (self.currPlayer && self.currItem) {
     [self.currPlayer play];
   }
-  
+#ifdef DEBUG
+#else
   id tracker = [[GAI sharedInstance] defaultTracker];
   if (tracker) {
     [tracker set:kGAIScreenName
@@ -139,6 +140,7 @@
     
     [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
   }
+#endif
 }
 
 - (void)prepareFirstVideoInBackgroundWithCompletion:(void (^)(BOOL))completionBlock {
@@ -250,11 +252,14 @@
 #pragma mark - Behind the scene
 
 - (void)playStream:(NSArray *)stream atIndex:(NSInteger)streamIdx {
+#ifdef DEBUG
+#else
   // GA stuff
   id tracker = [[GAI sharedInstance] defaultTracker];
   if (tracker) {
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"play_video" label:@"play" value:nil] build]];
   }
+#endif
   
   PFObject *vybeBeingWatched = [stream objectAtIndex:streamIdx];
   PFUser *fromUser = [vybeBeingWatched objectForKey:kVYBVybeUserKey];

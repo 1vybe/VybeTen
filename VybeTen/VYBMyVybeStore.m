@@ -125,13 +125,15 @@
 
 - (void)didUploadVybe:(VYBVybe *)cVybe {
   NSAssert(cVybe, @"did upload a vybe but currVybe is nil now");
-  
+#ifdef DEBUG
+#else
   // GA stuff
   id tracker = [[GAI sharedInstance] defaultTracker];
   if (tracker) {
     // upload success metric for capture_video event
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"success" value:nil] build]];
   }
+#endif
   
   if (!_uploadingOldVybes) {
     [self setCurrentUploadStatus:CurrentUploadStatusSuccess];
@@ -150,13 +152,15 @@
   [self setCurrentUploadStatus:CurrentUploadStatusFailed];
   
   [self saveVybe:vybeToUpload];
-  
+#ifdef DEBUG
+#else
   // GA stuff
   id tracker = [[GAI sharedInstance] defaultTracker];
   if (tracker) {
     // upload saved metric for capture_video event
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"saved" value:nil] build]];
   }
+#endif
   _currVybe = nil;
 }
 
@@ -217,12 +221,15 @@
   }
   
   if (success) {
+#ifdef DEBUG
+#else
     // GA stuff
     id tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
       // upload recovered metric for capture_video event
       [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"recovered" value:nil] build]];
     }
+#endif
     NSLog(@"uploaded old vybe: %@", [oldVybe parseObject]);
     
     [self clearLocalCacheForVybe:oldVybe];

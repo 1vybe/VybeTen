@@ -51,11 +51,13 @@ import MapKit
   
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
-    
+#if DEBUG
+#else
     if let tracker = GAI.sharedInstance().defaultTracker {
       tracker.set(kGAIScreenName, value: "Map Screen")
       tracker.send(GAIDictionaryBuilder.createScreenView().build())
     }
+#endif
   }
   
   

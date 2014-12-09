@@ -104,7 +104,10 @@ static void *ZOTContext = &ZOTContext;
 
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
-  
+
+#ifdef DEBUG
+  // We want to exclude debugging from analytics.
+#else
   id tracker = [[GAI sharedInstance] defaultTracker];
   if (tracker) {
     [tracker set:kGAIScreenName
@@ -112,6 +115,7 @@ static void *ZOTContext = &ZOTContext;
     
     [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
   }
+#endif
   
   [self getPermissionIfNeeded];
   
@@ -403,13 +407,15 @@ static void *ZOTContext = &ZOTContext;
   // Active Locations
   if (section == 0) {
     Zone *zone = self.activeLocations[indexPath.row];
-    
+#ifdef DEBUG
+#else
     // GA stuff
     id tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
       NSString *dimensionValue = @"active unlocked";
       [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
     }
+#endif
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
@@ -431,13 +437,15 @@ static void *ZOTContext = &ZOTContext;
         }
       }
       else {
+#ifdef DEBUG
+#else
         // GA stuff
         id tracker = [[GAI sharedInstance] defaultTracker];
         if (tracker) {
           NSString *dimensionValue = @"my unlocked";
           [tracker set:[GAIFields customDimensionForIndex:1] value:dimensionValue];
         }
-        
+#endif
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         VYBPlayerViewController *playerController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
         playerController.delegate = self;

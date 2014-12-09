@@ -32,7 +32,8 @@
     
     // Refresh current user with server side data -- checks if user is still valid and so on
     [[PFUser currentUser] fetchInBackgroundWithTarget:self selector:@selector(refreshCurrentUserCallbackWithResult:error:)];
-    
+#ifdef DEBUG
+#else
     // GA stuff - Setting User ID
     id tracker = [[GAI sharedInstance] defaultTracker];
     if (tracker) {
@@ -41,6 +42,7 @@
                                                             action:@"User Logged In"
                                                              label:nil
                                                              value:nil] build]];
+#endif
       // Setting User Group
       PFObject *tribe = [[PFUser currentUser] objectForKey:kVYBUserTribeKey];
       [tribe fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
@@ -49,8 +51,11 @@
           if ( [object[kVYBTribeNameKey] isEqualToString:@"Founders"] ) {
             tribeName = @"Founders";
           }
+#ifdef DEBUG
+#else
           // GA stuff - User Group Dimension
           [[GAI sharedInstance].defaultTracker set:[GAIFields customDimensionForIndex:2] value:tribeName];
+#endif
         }
       }];
       
