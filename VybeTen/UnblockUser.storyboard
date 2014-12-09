@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="fNe-RV-LRM">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <scenes>
+        <!--Blocked Users-->
+        <scene sceneID="efP-dJ-j4T">
+            <objects>
+                <tableViewController id="fNe-RV-LRM" customClass="BlockedUsersTableViewController" customModule="VybeTen" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="85" sectionHeaderHeight="22" sectionFooterHeight="22" id="ZNH-ZH-GA9">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="BlockedUserTableCell" id="ehq-Kd-T6w">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ehq-Kd-T6w" id="rGq-t8-8rb">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="33" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ty-TM-KzR" userLabel="Username">
+                                            <rect key="frame" x="30" y="28" width="56" height="28"/>
+                                            <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXg-14-VrT" userLabel="Switch">
+                                            <rect key="frame" x="518" y="22" width="52" height="22"/>
+                                            <state key="normal" image="BlockSwitch">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="selected" image="UnblockSwitch"/>
+                                        </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="28" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BLOCK" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WTn-hr-A0F" userLabel="label">
+                                            <rect key="frame" x="526" y="46" width="37" height="16"/>
+                                            <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="11"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" tag="77" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Glh-yt-HrY">
+                                            <rect key="frame" x="520" y="17" width="50" height="50"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="50" id="3UX-k5-6wK"/>
+                                                <constraint firstAttribute="height" constant="50" id="Sba-6O-Jko"/>
+                                            </constraints>
+                                            <state key="normal">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="centerY" secondItem="Glh-yt-HrY" secondAttribute="centerY" id="G43-YT-aR6"/>
+                                        <constraint firstAttribute="bottom" secondItem="WTn-hr-A0F" secondAttribute="bottom" constant="22" id="JY7-Fg-BpH"/>
+                                        <constraint firstAttribute="centerY" secondItem="2ty-TM-KzR" secondAttribute="centerY" id="cFu-zh-VFu"/>
+                                        <constraint firstItem="eXg-14-VrT" firstAttribute="top" secondItem="rGq-t8-8rb" secondAttribute="top" constant="22" id="ckz-Vc-EaI"/>
+                                        <constraint firstAttribute="trailing" secondItem="eXg-14-VrT" secondAttribute="trailing" constant="30" id="l7m-Gv-EBF"/>
+                                        <constraint firstAttribute="trailing" secondItem="Glh-yt-HrY" secondAttribute="trailing" constant="30" id="rOJ-U5-KSa"/>
+                                        <constraint firstItem="WTn-hr-A0F" firstAttribute="centerX" secondItem="eXg-14-VrT" secondAttribute="centerX" id="uoD-PE-vdj"/>
+                                        <constraint firstItem="2ty-TM-KzR" firstAttribute="leading" secondItem="rGq-t8-8rb" secondAttribute="leading" constant="30" id="xni-mc-P02"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="fNe-RV-LRM" id="Sln-lN-1QC"/>
+                            <outlet property="delegate" destination="fNe-RV-LRM" id="Bq1-Re-3td"/>
+                        </connections>
+                    </tableView>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Blocked Users" id="076-69-4dr">
+                        <barButtonItem key="leftBarButtonItem" style="plain" systemItem="cancel" id="8Gw-rj-bUh">
+                            <color key="tintColor" red="1" green="0.27450980390000002" blue="0.29803921570000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="cancelButtonPressed:" destination="fNe-RV-LRM" id="TmK-ho-I9X"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wNb-Mb-5Cv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="215" y="200"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="BlockSwitch" width="52" height="19"/>
+        <image name="UnblockSwitch" width="52" height="19"/>
+    </resources>
+</document>

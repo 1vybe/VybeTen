@@ -26,45 +26,46 @@ private let _zoneStoreSharedInstance = ZoneStore()
     let params = [:]
     PFCloud.callFunctionInBackground("get_active_vybes", withParameters:params) { (result: AnyObject!, error: NSError!) -> Void in
       if error == nil {
-        let vybeObjects = result as [PFObject]
-        // Group ACTIVE vybes into zones
-        self.createActiveZonesFromVybes(vybeObjects)
-        
-        self.unlockActiveZones()
-        
-        // Rearrange UNLOCKED zones by your most recent vybe timestamp
-        self._unlockedZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
-          let comparisonResult = zone1.myMostRecentVybeTimestamp.compare(zone2.myMostRecentVybeTimestamp)
-          return comparisonResult == NSComparisonResult.OrderedDescending
-        })
-        
-        // Fetch Fresh vybes for ACTIVE zones
-        PFCloud.callFunctionInBackground("get_fresh_vybes", withParameters: params) { (result: AnyObject!, error: NSError!) -> Void in
-          if error == nil {
-            if let freshVybes = result as? [PFObject] {
-              for fVybe in freshVybes {
-                if let zone = self.activeZoneForVybe(fVybe) {
-                  zone.addFreshVybe(fVybe)
+        if let vybeObjects = result as? [PFObject] {
+          // Group ACTIVE vybes into zones
+          self.createActiveZonesFromVybes(vybeObjects)
+          
+          self.unlockActiveZones()
+          
+          // Rearrange UNLOCKED zones by your most recent vybe timestamp
+          self._unlockedZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
+            let comparisonResult = zone1.myMostRecentVybeTimestamp.compare(zone2.myMostRecentVybeTimestamp)
+            return comparisonResult == NSComparisonResult.OrderedDescending
+          })
+          
+          // Fetch Fresh vybes for ACTIVE zones
+          PFCloud.callFunctionInBackground("get_fresh_vybes", withParameters: params) { (result: AnyObject!, error: NSError!) -> Void in
+            if error == nil {
+              if let freshVybes = result as? [PFObject] {
+                for fVybe in freshVybes {
+                  if let zone = self.activeZoneForVybe(fVybe) {
+                    zone.addFreshVybe(fVybe)
+                  }
                 }
+                
+                // Rearrange ACTIVE zones first by number of unwatched vybes and by most recent time
+                self._activeZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
+                  if (zone1.freshContents.count > 0 && zone2.freshContents.count == 0) {
+                    return true
+                  }
+                  else if (zone1.freshContents.count == 0 && zone2.freshContents.count > 0) {
+                    return false
+                  }
+                  else {
+                    let comparisonResult = zone1.mostRecentActiveVybeTimestamp.compare(zone2.mostRecentActiveVybeTimestamp)
+                    return comparisonResult == NSComparisonResult.OrderedDescending
+                  }
+                })
+  //              self.displayZoneInfo()
               }
-              
-              // Rearrange ACTIVE zones first by number of unwatched vybes and by most recent time
-              self._activeZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
-                if (zone1.freshContents.count > 0 && zone2.freshContents.count == 0) {
-                  return true
-                }
-                else if (zone1.freshContents.count == 0 && zone2.freshContents.count > 0) {
-                  return false
-                }
-                else {
-                  let comparisonResult = zone1.mostRecentActiveVybeTimestamp.compare(zone2.mostRecentActiveVybeTimestamp)
-                  return comparisonResult == NSComparisonResult.OrderedDescending
-                }
-              })
-//              self.displayZoneInfo()
             }
+            completionHandler(success: true)
           }
-          completionHandler(success: true)
         }
       }
       else {
@@ -139,7 +140,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
       if let leastActiveTime = leastActiveVybe[kVYBVybeTimestampKey] as? NSDate {
         for aZone in _activeZones {
           let result = aZone.mostRecentActiveVybeTimestamp.compare(leastActiveTime)
-          if result == NSComparisonResult.OrderedDescending {
+          if result == NSComparisonResult.OrderedDescending || result == NSComparisonResult.OrderedSame {
             newActiveZones += [aZone]
           }
         }

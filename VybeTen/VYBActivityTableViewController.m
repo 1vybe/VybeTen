@@ -140,7 +140,7 @@ static void *ZOTContext = &ZOTContext;
 }
 
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender {
-  UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Logout" otherButtonTitles:nil];
+  UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Logout" otherButtonTitles:@"Unblock Users", nil];
   [actionSheet showFromBarButtonItem:sender animated:YES];
 }
 
@@ -649,10 +649,15 @@ static void *ZOTContext = &ZOTContext;
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-  switch (buttonIndex) {
-    case 0:
+  if (buttonIndex == 0) {
       [(VYBAppDelegate *)[UIApplication sharedApplication].delegate logOut];
-      break;
+  }
+  else if (buttonIndex == 1) {
+    BlockedUsersTableViewController *blockedUsersTable = [[UIStoryboard storyboardWithName:@"UnblockUser"bundle:nil] instantiateInitialViewController];
+    [self.navigationController pushViewController:blockedUsersTable animated:NO];
+  }
+  else {
+    
   }
 }
 
