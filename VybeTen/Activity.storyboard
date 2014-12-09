@@ -264,7 +264,7 @@
                                             </constraints>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" red="0.91764705879999997" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstItem="y2a-BU-8V2" firstAttribute="top" secondItem="eud-5z-hNB" secondAttribute="top" constant="27" id="Hxp-hX-IjR"/>
                                         <constraint firstItem="y2a-BU-8V2" firstAttribute="leading" secondItem="eud-5z-hNB" secondAttribute="leading" constant="15" id="VNt-fw-xNO"/>

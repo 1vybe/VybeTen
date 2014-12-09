@@ -76,6 +76,8 @@
 		60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */; };
 		740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */; };
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
+		74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */; };
+		74A0FA571A36A8B50065059E /* UnblockUserStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74A0FA561A36A8B50065059E /* UnblockUserStoryboard.storyboard */; };
 		74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */; };
 		74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */; };
 		74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */; };
@@ -206,6 +208,8 @@
 		60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybeStore.m; sourceTree = "<group>"; };
 		740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
+		74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
+		74A0FA561A36A8B50065059E /* UnblockUserStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UnblockUserStoryboard.storyboard; sourceTree = "<group>"; };
 		74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		74C5D9721A22F8B40006695B /* NSMutableArray+VYBVybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+VYBVybe.h"; sourceTree = "<group>"; };
 		74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+VYBVybe.m"; sourceTree = "<group>"; };
@@ -326,6 +330,7 @@
 			children = (
 				88063E6719F22F1E00C90A2D /* Activity.storyboard */,
 				74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */,
+				74A0FA561A36A8B50065059E /* UnblockUserStoryboard.storyboard */,
 			);
 			name = Stories;
 			sourceTree = "<group>";
@@ -400,6 +405,7 @@
 				027C708019AF08C6007BB8FE /* Container */,
 				74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */,
 				74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */,
+				74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -653,6 +659,7 @@
 				604B628718B495BB00D3EF19 /* InfoPlist.strings in Resources */,
 				02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */,
 				02D11D0D18DF62AC0018DA97 /* Montreal-Medium.otf in Resources */,
+				74A0FA571A36A8B50065059E /* UnblockUserStoryboard.storyboard in Resources */,
 				022AC50319AD9757008A9C64 /* VYBCaptureViewController.xib in Resources */,
 				028D930C1A16C271002B7642 /* ActivitySectionView.xib in Resources */,
 				02D11D0C18DF62AC0018DA97 /* Montreal-LightIta.otf in Resources */,
@@ -758,6 +765,7 @@
 				88CA12331A272BB700D4B097 /* LogInViewController.swift in Sources */,
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
 				0266802819F15CB000030836 /* VYBPlayerViewController.m in Sources */,
+				74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */,
 				0221A00B1A0340AD00C5C60E /* VYBOldZoneFinder.m in Sources */,
 				02F5B1F119D32594008C42C3 /* VYBDynamicSizeView.m in Sources */,
 				884E6D021A26E1EB00E9732F /* SignUpViewController.swift in Sources */,

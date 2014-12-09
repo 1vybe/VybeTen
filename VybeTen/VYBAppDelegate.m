@@ -74,7 +74,11 @@
   BOOL oldPushHandlerOnly = ![self respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)];
   BOOL noPushPayload = ![launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
   if (preBackgroundPush || oldPushHandlerOnly || noPushPayload) {
+#ifdef DEBUG
+    // We do not want to take debugging into account for analytics.
+#else
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+#endif
   }
   
   
@@ -108,7 +112,9 @@
    [currentInstallation saveEventually];
    }
    */
-  
+#ifdef DEBUG
+  NSLog(@"DEBUG!!!!!!!!!!!!!!!");
+#endif
   // Access Control
   PFACL *defaultACL = [PFACL ACL];
   // Enable public read access by default, with any newly created PFObjects belonging to the current user
@@ -228,8 +234,11 @@
   [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
   
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateInactive) {
+#ifdef DEBUG
+#else
     // Tracks app open due to a push notification when the app was not active
     [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
+#endif
   }
 }
 
@@ -238,7 +247,10 @@
   [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
   
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateInactive) {
+#ifdef DEBUG
+#else
     [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
+#endif
   }
   
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
