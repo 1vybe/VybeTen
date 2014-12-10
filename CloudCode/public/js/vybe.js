@@ -8,6 +8,7 @@ $(function() {
 
 
   var player = $('.video-container video').get(0);
+  var preloader = $('.invisible.preload video').get(0);
 
 
   var Vybe = Parse.Object.extend("Vybe");
@@ -29,6 +30,14 @@ $(function() {
 
     currentVybe: function() {
       return this.at(this.index);
+    },
+
+    nextVybe: function() {
+      var nextIndex = this.index + 1;
+      if (nextIndex >= this.length) {
+        nextIndex = 0;
+      };
+      return this.at(nextIndex);
     },
 
     next: function() {
@@ -56,9 +65,12 @@ $(function() {
 
   var playVideo = function() {
     var currentVybe = playlist.currentVybe();
+    var nextVybe = playlist.nextVybe();
 
     player.src = currentVybe.get('video').url();
     player.poster = currentVybe.get('thumbnail').url();
+
+    preloader.src = nextVybe.get('video').url();
 
     player.play();
     console.log('playing vybe number ' + playlist.index);

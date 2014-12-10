@@ -18,15 +18,27 @@
         height: 100%;
         position: absolute;
       }
+
+      .invisible {
+        position: absolute!important;
+        top: -10000px!important;
+        left: -10000px!important;
+      }
     </style>
   </head>
 
   <body>
+
     <div id="liveplayer">
       <div class="video-container">
         <video preload="auto" src="" poster="" muted="muted"></video>
       </div>
     </div>
+
+    <div class='invisible preload'>
+      <video preload="auto" src=""></video>
+    </div>
+
   </body>
 
 </html>
