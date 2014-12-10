@@ -73,6 +73,26 @@
   
 }
 
++ (void)clearTempDirectory {
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    NSFileManager* fm = [NSFileManager defaultManager];
+    NSURL *path = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
+    NSArray* temp = [fm contentsOfDirectoryAtPath:NSTemporaryDirectory() error:NULL];
+    for (NSString *file in temp) {
+      NSURL *filePath = [path URLByAppendingPathComponent:file];
+      NSError *error;
+      NSDictionary* attrs = [fm attributesOfItemAtPath:[filePath path] error:&error];
+      if (attrs != nil) {
+        NSDate *date = (NSDate*)[attrs objectForKey: NSFileCreationDate];
+        // Delete all files created more than 3 days ago
+        if ([date timeIntervalSinceNow] < -60 * 60 * 24 * 3 ) {
+          [fm removeItemAtPath:[filePath path] error:&error];
+        }
+      }
+    }
+  });
+}
+
 
 #pragma mark - Like Vybes
 

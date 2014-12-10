@@ -326,6 +326,9 @@
   if (!termsAgreed) {
     [self.mainNavController pushViewController:userAgreementVC animated:NO];
   }
+  
+  // Regular clean-up tmp directory
+  [VYBUtility clearTempDirectory];
 }
 
 - (void)logOut {

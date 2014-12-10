@@ -75,7 +75,7 @@
   }
   else {
     // Update myFlags cache
-    PFRelation *myFlags = [[PFUser currentUser] objectForKey:kVYBUserFlagsKey];
+    PFRelation *myFlags = [[PFUser currentUser] relationForKey:kVYBUserFlagsKey];
     PFQuery *query = [myFlags query];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
       if (!error) {
@@ -86,7 +86,7 @@
     }];
     
     // Update blockedUsers cache
-    PFRelation *blockedUsers = [[PFUser currentUser] objectForKey:kVYBUserBlockedUsersKey];
+    PFRelation *blockedUsers = [[PFUser currentUser] relationForKey:kVYBUserBlockedUsersKey];
     PFQuery *userQuery = [blockedUsers query];
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
       if (!error) {

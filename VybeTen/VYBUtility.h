@@ -35,6 +35,8 @@
 + (void)showUploadProgressBarFromBottom:(UIView *)aView;
 + (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title;
 
++ (void)clearTempDirectory;
+
 #pragma mark Display Name
 
 + (NSString *)firstNameForDisplayName:(NSString *)displayName;

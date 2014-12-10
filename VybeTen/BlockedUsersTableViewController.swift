@@ -28,9 +28,18 @@ class BlockedUsersTableViewController: UITableViewController {
       navigationBar.titleTextAttributes = navBarTitleTextAttributes
     }
     
-    blockedUsers = VYBCache.sharedCache().usersBlockedByMe() as? [PFUser]
-    if blockedUsers == nil {
-      blockedUsers = []
+    blockedUsers = []
+    
+    let relation = PFUser.currentUser().relationForKey(kVYBUserBlockedUsersKey)
+    let userQuery = relation.query()
+    userQuery.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
+      if error == nil {
+        VYBCache.sharedCache().setBlockedUsers(result, forUser: PFUser.currentUser())
+        if result.count > 0 {
+          self.blockedUsers = result as [PFUser]
+          self.tableView.reloadData()
+        }
+      }
     }
   }
   
