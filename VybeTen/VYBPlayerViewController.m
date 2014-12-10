@@ -367,8 +367,12 @@
   }
   if ( [user.objectId isEqualToString:[PFUser currentUser].objectId] ) {
     self.blockOverlayButton.hidden = YES;
+    self.flagButton.hidden = YES;
+    self.flagOverlayButton.hidden = YES;
   } else {
     self.blockOverlayButton.hidden = !menuMode;
+    self.flagOverlayButton.hidden = !menuMode;
+    self.flagButton.hidden = menuMode;
   }
   
   self.flagButton.selected = [[VYBCache sharedCache] vybeFlaggedByMe:aVybe];
@@ -488,7 +492,6 @@
   self.dismissButton.hidden = !menuMode;
   self.goPrevButton.selected = !menuMode;
   self.goNextButton.selected = !menuMode;
-  self.flagOverlayButton.hidden = !menuMode;
   self.bumpButton.hidden = !menuMode;
   self.bumpCountLabel.hidden = !menuMode;
   self.pauseButton.hidden = !menuMode;
@@ -498,12 +501,14 @@
     PFObject *user = aVybe[kVYBVybeUserKey];
     if ( [user.objectId isEqualToString:[PFUser currentUser].objectId] ) {
       self.blockOverlayButton.hidden = YES;
+      self.flagOverlayButton.hidden = YES;
+      self.flagButton.hidden = YES;
     } else {
       self.blockOverlayButton.hidden = !menuMode;
+      self.flagOverlayButton.hidden = !menuMode;
+      self.flagButton.hidden = menuMode;
     }
   }
-
-  self.flagButton.hidden = menuMode;
 }
 
 /**
