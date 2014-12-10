@@ -69,7 +69,7 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Blocked Users" id="076-69-4dr">
-                        <barButtonItem key="leftBarButtonItem" style="plain" systemItem="cancel" id="8Gw-rj-bUh">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="8Gw-rj-bUh">
                             <color key="tintColor" red="1" green="0.27450980390000002" blue="0.29803921570000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="cancelButtonPressed:" destination="fNe-RV-LRM" id="TmK-ho-I9X"/>

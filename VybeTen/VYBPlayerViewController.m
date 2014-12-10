@@ -351,6 +351,11 @@
   if (username) {
     [self.userButton setTitle:username forState:UIControlStateNormal];
   }
+  if ( [user.objectId isEqualToString:[PFUser currentUser].objectId] ) {
+    self.blockOverlayButton.hidden = YES;
+  } else {
+    self.blockOverlayButton.hidden = !menuMode;
+  }
   
   self.flagButton.selected = [[VYBCache sharedCache] vybeFlaggedByMe:aVybe];
   self.flagOverlayButton.selected = [[VYBCache sharedCache] vybeFlaggedByMe:aVybe];
@@ -468,8 +473,17 @@
   self.goPrevButton.selected = !menuMode;
   self.goNextButton.selected = !menuMode;
   self.flagOverlayButton.hidden = !menuMode;
-  self.blockOverlayButton.hidden = !menuMode;
   self.flagButton.hidden = menuMode;
+
+  PFObject *aVybe = _zoneVybes[_zoneCurrIdx];
+  if (aVybe) {
+    PFObject *user = aVybe[kVYBVybeUserKey];
+    if ( [user.objectId isEqualToString:[PFUser currentUser].objectId] ) {
+      self.blockOverlayButton.hidden = YES;
+    } else {
+      self.blockOverlayButton.hidden = !menuMode;
+    }
+  }
 }
 
 /**
@@ -538,9 +552,6 @@
     PFObject *currObj = _zoneVybes[_zoneCurrIdx];
     if (currObj) {
       PFUser *aUser = currObj[kVYBVybeUserKey];
-      if ( [aUser.objectId isEqualToString:[PFUser currentUser].objectId] ) {
-        return;
-      }
       PFRelation *blacklist = [[PFUser currentUser] relationForKey:kVYBUserBlockedUsersKey];
       [blacklist removeObject:aUser];
       [[PFUser currentUser] saveInBackground];
@@ -548,31 +559,33 @@
     }
   }
   else {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"You are blocking this user" message:@"You will not receive any content from this user." preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *blockAction = [UIAlertAction actionWithTitle:@"Block" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-      PFObject *currObj = _zoneVybes[_zoneCurrIdx];
-      if (currObj) {
-        PFUser *aUser = currObj[kVYBVybeUserKey];
-        if ( [aUser isEqual:[PFUser currentUser]] ) {
-          return;
-        }
+    PFObject *currObj = _zoneVybes[_zoneCurrIdx];
+    if (currObj) {
+      PFUser *aUser = currObj[kVYBVybeUserKey];
+      if ( [aUser.objectId isEqualToString:[PFUser currentUser].objectId] ) {
+        return;
+      }
+      
+      UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"You are blocking this user" message:@"You will not receive any content from this user." preferredStyle:UIAlertControllerStyleAlert];
+      UIAlertAction *blockAction = [UIAlertAction actionWithTitle:@"Block" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         self.blockOverlayButton.selected = YES;
-
+        
         PFRelation *blacklist = [[PFUser currentUser] relationForKey:kVYBUserBlockedUsersKey];
         [blacklist addObject:aUser];
         [[PFUser currentUser] saveInBackground];
         [[VYBCache sharedCache] addBlockedUser:aUser forUser:[PFUser currentUser]];
-      }
-      [self.currPlayer play];
-    }];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-      [self.currPlayer play];
-    }];
-    [alertController addAction:blockAction];
-    [alertController addAction:cancelAction];
-    
-    [self.currPlayer pause];
-    [self presentViewController:alertController animated:YES completion:nil];
+        
+        [self.currPlayer play];
+      }];
+      UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        [self.currPlayer play];
+      }];
+      [alertController addAction:blockAction];
+      [alertController addAction:cancelAction];
+      
+      [self.currPlayer pause];
+      [self presentViewController:alertController animated:YES completion:nil];
+    }
   }
 }
 

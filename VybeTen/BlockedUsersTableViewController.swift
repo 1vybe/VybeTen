@@ -13,11 +13,12 @@ class BlockedUsersTableViewController: UITableViewController {
     self.navigationController?.popViewControllerAnimated(false)
   }
   
-  private var blockedUsers: [PFUser]?
+  private var blockedUsers: [AnyObject]!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    self.tableView.allowsSelection = false
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = false
     
@@ -28,6 +29,9 @@ class BlockedUsersTableViewController: UITableViewController {
     }
     
     blockedUsers = VYBCache.sharedCache().usersBlockedByMe() as? [PFUser]
+    if blockedUsers == nil {
+      blockedUsers = []
+    }
   }
   
   override func didReceiveMemoryWarning() {
@@ -43,10 +47,7 @@ class BlockedUsersTableViewController: UITableViewController {
   }
   
   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    if let array = blockedUsers {
-      return array.count
-    }
-    return 0
+    return blockedUsers.count
   }
   
   override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -56,7 +57,7 @@ class BlockedUsersTableViewController: UITableViewController {
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier("BlockedUserTableCell", forIndexPath: indexPath) as UITableViewCell
     
-    if let aUser = blockedUsers?[indexPath.row] {
+    if let aUser = blockedUsers[indexPath.row] as? PFUser {
       if let username = aUser[kVYBUserUsernameKey] as? String {
         let usernameLabel = cell.viewWithTag(33) as? UILabel
         usernameLabel?.text = username
@@ -64,46 +65,71 @@ class BlockedUsersTableViewController: UITableViewController {
     }
     
     if let switchButton = cell.viewWithTag(77) as? UIButton {
-      switchButton.tag = indexPath.row
+      switchButton.superview?.tag = indexPath.row
       switchButton.addTarget(self, action: "toggleSwitch:", forControlEvents: UIControlEvents.TouchUpInside)
     }
     return cell
   }
   
-  func toggleSwitch(sender: AnyObject) {
-    let buttonP = sender as UIButton
-    let indexPath = NSIndexPath(forRow: buttonP.tag, inSection: 0)
-    if let cell = self.tableView.cellForRowAtIndexPath(indexPath) {
-      // switch button
-      if let switchButton = cell.viewWithTag(12) as? UIButton {
-        if !switchButton.selected {
-          if let aUser = self.blockedUsers?[buttonP.tag] {
-            let currUser = PFUser.currentUser()
-            let blacklist = currUser.relationForKey(kVYBUserBlockedUsersKey)
-            blacklist.removeObject(aUser)
-            currUser.saveEventually()
-            VYBCache.sharedCache().removeBlockedUser(aUser, forUser: currUser)
-            self.blockedUsers = VYBCache.sharedCache().usersBlockedByMe() as? [PFUser]
-            UIView.animateWithDuration(0.6, delay: 0.0, options: UIViewAnimationOptions.BeginFromCurrentState, animations: { () -> Void in
-              switchButton.selected = true
-              // switch label
-              let switchLabel = cell.viewWithTag(28) as? UILabel
-              switchLabel?.text = "UNBLOCKED"
-              switchLabel?.textColor = UIColor(red: 92/255.0, green: 140/255.0, blue: 242/255.0, alpha: 1.0)
-              }, completion: { (completed: Bool) -> Void in
-                self.delay(0.4) {
-                  self.tableView.beginUpdates()
-                  self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Middle)
-                  self.tableView.endUpdates()
-                }
-            })
+//  override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+//    if let switchButton = cell.viewWithTag(77) as? UIButton {
+//      switchButton.tag = indexPath.row
+//    }
+//
+//  }
+  
+  func toggleSwitch(sender: AnyObject!) {
+    if let parentView = sender.superview! {
+      let row = parentView.tag
+      let indexPath = NSIndexPath(forRow: row, inSection: 0)
+      if let cell = self.tableView.cellForRowAtIndexPath(indexPath) {
+        // switch button
+        if let switchButton = cell.viewWithTag(12) as? UIButton {
+          if !switchButton.selected {
+            if let aUser = blockedUsers[row] as? PFUser {
+              let currUser = PFUser.currentUser()
+              let blacklist = currUser.relationForKey(kVYBUserBlockedUsersKey)
+              blacklist.removeObject(aUser)
+              currUser.saveEventually()
+              
+              UIView.animateWithDuration(0.6, delay: 0.0, options: UIViewAnimationOptions.BeginFromCurrentState, animations: { () -> Void in
+                switchButton.selected = true
+                // switch label
+                let switchLabel = cell.viewWithTag(28) as? UILabel
+                switchLabel?.text = "UNBLOCKED"
+                switchLabel?.textColor = UIColor(red: 92/255.0, green: 140/255.0, blue: 242/255.0, alpha: 1.0)
+                }, completion: { (completed: Bool) -> Void in
+                  self.delay(0.4) {
+                    VYBCache.sharedCache().removeBlockedUser(aUser, forUser: currUser)
+                    self.removeUserFromBlockedUsers(aUser)
+                    println("\(aUser[kVYBUserUsernameKey]) unblocked!")
+                    //                  self.blockedUsers?.
+                    self.tableView.beginUpdates()
+                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Middle)
+                    self.tableView.endUpdates()
+                    
+                    self.tableView.reloadData()
+                  }
+              })
+            }
           }
         }
       }
     }
-    
-    // need to reset it back to 77
-    buttonP.tag = 77
+  }
+  
+  private func removeUserFromBlockedUsers(user: PFUser) {
+    let count = blockedUsers.count
+    if count > 0 {
+      var index = 0
+      for idx in 0...count {
+        if blockedUsers[idx].objectId == user.objectId {
+          index = idx
+          break
+        }
+      }
+      blockedUsers.removeAtIndex(index)
+    }
   }
   
   func delay(delay:Double, closure:()->()) {
@@ -159,5 +185,8 @@ class BlockedUsersTableViewController: UITableViewController {
   // Pass the selected object to the new view controller.
   }
   */
+  override func supportedInterfaceOrientations() -> Int {
+    return Int(UIInterfaceOrientationMask.Portrait.rawValue)
+  }
   
 }
