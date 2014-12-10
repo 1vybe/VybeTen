@@ -25,17 +25,29 @@
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
 @property (nonatomic, weak) IBOutlet UIButton *userButton;
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
+
 @property (nonatomic, weak) IBOutlet UIButton *dismissButton;
+
 @property (nonatomic, weak) IBOutlet UIButton *goPrevButton;
 @property (nonatomic, weak) IBOutlet UIButton *goNextButton;
+
 @property (nonatomic, weak) IBOutlet UIButton *flagButton;
 @property (nonatomic, weak) IBOutlet UIButton *flagOverlayButton;
+
 @property (nonatomic, weak) IBOutlet UIButton *blockOverlayButton;
+
+@property (nonatomic, weak) IBOutlet UIButton *bumpButton;
+@property (nonatomic, weak) IBOutlet UILabel *bumpCountLabel;
+
+@property (nonatomic, weak) IBOutlet UIButton *pauseButton;
 
 - (IBAction)goNextButtonPressed:(id)sender;
 - (IBAction)goPrevButtonPressed:(id)sender;
 
 - (IBAction)dismissButtonPressed;
+
+- (IBAction)pauseButtonPressed:(id)sender;
+
 - (IBAction)flagButtonPressed;
 - (IBAction)flagOverlayButtonPressed;
 - (IBAction)blockOverlayButtonPressed;
@@ -440,9 +452,11 @@
 
 - (IBAction)pauseButtonPressed:(id)sender {
   if (self.currPlayer.rate == 0.0) {
+    self.pauseButton.selected = NO;
     [self.currPlayer play];
   }
   else {
+    self.pauseButton.selected = YES;
     [self.currPlayer pause];
   }
 }
@@ -475,7 +489,9 @@
   self.goPrevButton.selected = !menuMode;
   self.goNextButton.selected = !menuMode;
   self.flagOverlayButton.hidden = !menuMode;
-  self.flagButton.hidden = menuMode;
+  self.bumpButton.hidden = !menuMode;
+  self.bumpCountLabel.hidden = !menuMode;
+  self.pauseButton.hidden = !menuMode;
 
   PFObject *aVybe = _zoneVybes[_zoneCurrIdx];
   if (aVybe) {
@@ -486,6 +502,8 @@
       self.blockOverlayButton.hidden = !menuMode;
     }
   }
+
+  self.flagButton.hidden = menuMode;
 }
 
 /**
