@@ -6,53 +6,62 @@ $(function() {
   Parse.initialize("gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC",
                    "ElJrtZZx480g2CrqVdJ7B6YPKRUBgIYGRzY5fMOa");
 
-  var video_player = document.getElementById("video_player"),
-    video = video_player.getElementsByTagName("video")[0],
-    source = video.getElementsByTagName("source"),
-    playlist = document.getElementById("playlist"),
-    video_links = playlist.children,
-    link_list = [],
-    path = 'media/',
-    currentVid = 0;
 
-  video.removeAttribute("controls");
-  video.removeAttribute("poster");
+  var player = $('.video-container video').get(0);
 
-  function playVid(index) {
-    playlist.children[index].classList.add("currentvid");
-    source[0].src = path + link_list[index] + ".mp4";
-    currentVid = index;
-    video.load();
-    video.play();
-  }
 
-  for (var i=0; i<video_links.length; i++) {
-    var filename = video_links[i].href;
-    link_list[i] = filename.match(/([^\/]+)(?=\.\w+$)/)[0];
+  var Vybe = Parse.Object.extend("Vybe");
 
-    (function(index){
-      video_links[i].onclick = function(i){
-        i.preventDefault();
+  var Playlist = Parse.Collection.extend({
+    model: Vybe,
 
-        for (var i=0; i<video_links.length; i++) {
-          video_links[i].classList.remove("currentvid");
-        }
+    zoneID: '5158db1fe4b00e2014fc2dda',
 
-        playVid(index);
-      }
-    })(i);
-  }
+    initialize: function() {
+      this.index = 0;
 
-  video.addEventListener('ended', function () {
-    var nextVid = currentVid + 1;
+      this.query = new Parse.Query('Vybe')
+        .descending('timestamp')
+        .equalTo('zoneID', this.zoneID);
 
-    if (nextVid >= video_links.length) {
-      nextVid = 0;
+      this.fetch();
+    },
+
+    currentVybe: function() {
+      return this.at(this.index);
+    },
+
+    next: function() {
+      this.index += 1;
+      if (this.index >= this.length) {
+        this.index = 0;
+      };
     }
-
-    video_links[currentVid].classList.remove("currentvid");
-    playVid(nextVid);
   })
 
-  video_links[0].click();
+
+  var playlist = new Playlist();
+
+  playlist.on('reset', function(playlist) {
+    console.log('loaded playlist of length ' + playlist.length);
+
+    playVideo();
+  });
+
+  player.addEventListener('ended', function () {
+    playlist.next();
+
+    playVideo();
+  })
+
+  var playVideo = function() {
+    var currentVybe = playlist.currentVybe();
+
+    player.src = currentVybe.get('video').url();
+    player.poster = currentVybe.get('thumbnail').url();
+
+    player.play();
+    console.log('playing vybe number ' + playlist.index);
+  }
+
 });
