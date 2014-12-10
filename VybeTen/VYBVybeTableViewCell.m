@@ -15,8 +15,18 @@
 
 - (void)awakeFromNib
 {
-//  CAShapeLayer *maskLayer = [CAShapeLayer layer];
-  
+//  int radius = self.thumbnailImageView.bounds.size.width / 2;
+//  UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, self.thumbnailImageView.bounds.size.width, self.thumbnailImageView.bounds.size.height) cornerRadius:0];
+//  UIBezierPath *circlePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 2.0*radius, 2.0*radius) cornerRadius:radius];
+//  [path appendPath:circlePath];
+//  [path setUsesEvenOddFillRule:YES];
+//  
+//  CAShapeLayer *fillLayer = [CAShapeLayer layer];
+//  fillLayer.path = path.CGPath;
+//  fillLayer.fillRule = kCAFillRuleEvenOdd;
+//  fillLayer.fillColor = [UIColor whiteColor].CGColor;
+//  fillLayer.opacity = 1.0;
+//  [self.thumbnailImageView.layer addSublayer:fillLayer];
 }
 
 - (UIEdgeInsets)layoutMargins

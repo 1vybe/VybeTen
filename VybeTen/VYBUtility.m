@@ -15,7 +15,8 @@
 #import "VYBCache.h"
 #import "VYBConstants.h"
 #import "VYBMyVybeStore.h"
-#import "VYBAppDelegate.h"
+
+#import "VybeTen-Swift.h"
 
 @implementation VYBUtility
 
@@ -461,7 +462,11 @@
                                       CGImageGetDataProvider(maskRef), NULL, false);
   
   CGImageRef masked = CGImageCreateWithMask([image CGImage], mask);
-  return [UIImage imageWithCGImage:masked];
+  UIImage *simpleImg = [UIImage imageWithCGImage:masked];
+  
+  CGImageRelease(mask);
+  CGImageRelease(masked);
+  return simpleImg;
 }
 
 @end

@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import "VYBAppDelegate.h"
+#import "VybeTen-Swift.h"
+
 #import "VYBReplayViewController.h"
 #import "VYBPlayerView.h"
 #import "MBProgressHUD.h"
 #import "VYBUtility.h"
 #import "VYBMyVybeStore.h"
-#import "VYBOldZoneFinder.h"
 #import "VYBNavigationController.h"
 #import "AVAsset+VideoOrientation.h"
 

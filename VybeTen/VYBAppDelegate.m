@@ -25,6 +25,8 @@
 #import "VYBUtility.h"
 #import "Reachability.h"
 
+#import "VybeTen-Swift.h"
+
 @interface VYBAppDelegate ()
 
 @property (nonatomic, strong) Reachability *hostReach;

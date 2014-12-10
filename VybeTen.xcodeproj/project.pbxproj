@@ -14,7 +14,6 @@
 		020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 020FB84819744EBA005C9BA9 /* VYBCameraView.m */; };
 		021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */; };
 		0221A0081A02FB1600C5C60E /* Zone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0221A0071A02FB1600C5C60E /* Zone.swift */; };
-		0221A00B1A0340AD00C5C60E /* VYBOldZoneFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0221A00A1A0340AD00C5C60E /* VYBOldZoneFinder.m */; };
 		0222946D19FF2CE200A2AD62 /* VYBPizzaLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0222946C19FF2CE200A2AD62 /* VYBPizzaLayer.m */; };
 		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
 		022AC50319AD9757008A9C64 /* VYBCaptureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 022AC50219AD9757008A9C64 /* VYBCaptureViewController.xib */; };
@@ -113,8 +112,6 @@
 		021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+VideoOrientation.m"; sourceTree = "<group>"; };
 		021B5B6B19A7D0E300B906F3 /* VYBVybeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybeTableViewCell.h; sourceTree = "<group>"; };
 		0221A0071A02FB1600C5C60E /* Zone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Zone.swift; sourceTree = "<group>"; };
-		0221A0091A0340AD00C5C60E /* VYBOldZoneFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBOldZoneFinder.h; sourceTree = "<group>"; };
-		0221A00A1A0340AD00C5C60E /* VYBOldZoneFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBOldZoneFinder.m; sourceTree = "<group>"; };
 		0222946B19FF2CE200A2AD62 /* VYBPizzaLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPizzaLayer.h; sourceTree = "<group>"; };
 		0222946C19FF2CE200A2AD62 /* VYBPizzaLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPizzaLayer.m; sourceTree = "<group>"; };
 		0226CBAB194A0339005270D3 /* VYBNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBNavigationController.h; sourceTree = "<group>"; };
@@ -513,8 +510,6 @@
 				025EDB2418F65E45008B0CB2 /* VYBAnimator.m */,
 				02512D071A0BEDA800155068 /* ZoneStore.swift */,
 				029729711A02A1EC0050406D /* ZoneFinder.swift */,
-				0221A0091A0340AD00C5C60E /* VYBOldZoneFinder.h */,
-				0221A00A1A0340AD00C5C60E /* VYBOldZoneFinder.m */,
 			);
 			path = VybeTen;
 			sourceTree = "<group>";
@@ -766,7 +761,6 @@
 				025EDB2518F65E45008B0CB2 /* VYBAnimator.m in Sources */,
 				0266802819F15CB000030836 /* VYBPlayerViewController.m in Sources */,
 				74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */,
-				0221A00B1A0340AD00C5C60E /* VYBOldZoneFinder.m in Sources */,
 				02F5B1F119D32594008C42C3 /* VYBDynamicSizeView.m in Sources */,
 				884E6D021A26E1EB00E9732F /* SignUpViewController.swift in Sources */,
 				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,

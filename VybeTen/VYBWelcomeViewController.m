@@ -9,6 +9,7 @@
 #import "VYBWelcomeViewController.h"
 #import "VYBAppDelegate.h"
 #import "VYBUtility.h"
+#import "VYBCache.h"
 
 @implementation VYBWelcomeViewController
 

@@ -19,6 +19,8 @@
 #import "VYBActiveButton.h"
 #import "NSArray+PFObject.h"
 
+#import "VybeTen-Swift.h"
+
 @interface VYBPlayerViewController ()
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
 @property (nonatomic, weak) IBOutlet UIButton *userButton;

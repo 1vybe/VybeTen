@@ -21,6 +21,8 @@
 #import "VYBUtility.h"
 #import "VYBMyVybeStore.h"
 
+#import "VybeTen-Swift.h"
+
 @interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
   NSInteger _pageIndex;
 }
