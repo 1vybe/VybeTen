@@ -16,7 +16,7 @@ $(function() {
   var Playlist = Parse.Collection.extend({
     model: Vybe,
 
-    zoneID: '5158db1fe4b00e2014fc2dda',
+    zoneID: '4ad4c06bf964a52091f920e3',
 
     initialize: function() {
       this.index = 0;
