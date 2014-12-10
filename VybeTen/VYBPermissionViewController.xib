@@ -7,56 +7,45 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VYBPermissionViewController">
             <connections>
-                <outlet property="promptView" destination="XFK-6J-JiC" id="jiN-PF-fD4"/>
+                <outlet property="promptView" destination="TWs-Lz-uMg" id="fxg-af-pYF"/>
                 <outlet property="view" destination="iN0-l3-epB" id="Syv-KW-BaV"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <rect key="frame" x="0.0" y="0.0" width="372" height="674"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_ballons" translatesAutoresizingMaskIntoConstraints="NO" id="vzz-0v-SDy">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Permission(camera)" translatesAutoresizingMaskIntoConstraints="NO" id="TWs-Lz-uMg">
+                    <rect key="frame" x="0.0" y="0.0" width="372" height="674"/>
                 </imageView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XFK-6J-JiC" userLabel="promptView" customClass="UIImageView">
-                    <rect key="frame" x="162" y="84" width="276" height="432"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h4o-Bg-Kw2">
-                            <rect key="frame" x="73" y="332" width="130" height="70"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="70" id="V13-h1-9Zi"/>
-                                <constraint firstAttribute="width" constant="130" id="fwb-9O-fEa"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="21"/>
-                            <state key="normal" title="GOT IT">
-                                <color key="titleColor" red="1" green="0.31764705879999999" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="confirmButtonPressed:" destination="-1" eventType="touchUpInside" id="GnC-fh-gH8"/>
-                            </connections>
-                        </button>
-                    </subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vyc-N5-Zzj">
+                    <rect key="frame" x="136" y="474" width="100" height="100"/>
                     <constraints>
-                        <constraint firstAttribute="bottom" secondItem="h4o-Bg-Kw2" secondAttribute="bottom" constant="30" id="DiN-mL-beX"/>
-                        <constraint firstAttribute="centerX" secondItem="h4o-Bg-Kw2" secondAttribute="centerX" id="Gej-Av-rEF"/>
-                        <constraint firstAttribute="width" constant="276" id="PCW-uk-23d"/>
-                        <constraint firstAttribute="height" constant="432" id="Wt0-BO-kTT"/>
+                        <constraint firstAttribute="width" constant="100" id="eha-nD-ShC"/>
+                        <constraint firstAttribute="height" constant="100" id="lPd-Nf-j44"/>
                     </constraints>
-                </view>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="confirmButtonPressed:" destination="-1" eventType="touchUpInside" id="S01-Nd-e8V"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
-                <constraint firstAttribute="centerY" secondItem="XFK-6J-JiC" secondAttribute="centerY" id="1Xj-lv-eBL"/>
-                <constraint firstItem="vzz-0v-SDy" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="4BZ-dC-rXG"/>
-                <constraint firstAttribute="centerX" secondItem="XFK-6J-JiC" secondAttribute="centerX" id="HV4-4R-mOR"/>
-                <constraint firstAttribute="trailing" secondItem="vzz-0v-SDy" secondAttribute="trailing" id="VN9-l0-Y6w"/>
-                <constraint firstItem="vzz-0v-SDy" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="jbV-7z-UWJ"/>
-                <constraint firstAttribute="bottom" secondItem="vzz-0v-SDy" secondAttribute="bottom" id="vUW-ph-h3y"/>
+                <constraint firstAttribute="centerX" secondItem="vyc-N5-Zzj" secondAttribute="centerX" id="4Lz-Z3-kJw"/>
+                <constraint firstItem="TWs-Lz-uMg" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="9a3-dE-vJN"/>
+                <constraint firstItem="TWs-Lz-uMg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Nqo-6r-Fah"/>
+                <constraint firstAttribute="trailing" secondItem="TWs-Lz-uMg" secondAttribute="trailing" id="cdk-ZZ-i3h"/>
+                <constraint firstAttribute="bottom" secondItem="TWs-Lz-uMg" secondAttribute="bottom" id="jrD-v8-j08"/>
+                <constraint firstAttribute="bottom" secondItem="vyc-N5-Zzj" secondAttribute="bottom" constant="100" id="vvz-VX-BLr"/>
             </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="138" y="235"/>
         </view>
     </objects>
     <resources>
-        <image name="background_ballons" width="320" height="568"/>
+        <image name="Permission(camera)" width="375" height="667"/>
     </resources>
 </document>

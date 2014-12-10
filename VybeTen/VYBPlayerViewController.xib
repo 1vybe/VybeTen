@@ -31,11 +31,11 @@
                         <constraint firstAttribute="height" constant="133" id="yOK-aN-5fr"/>
                     </constraints>
                 </imageView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vij-MN-ZuP" userLabel="goPrevButton">
-                    <rect key="frame" x="0.0" y="130" width="115" height="340"/>
+                <button opaque="NO" contentMode="left" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vij-MN-ZuP" userLabel="goPrevButton">
+                    <rect key="frame" x="0.0" y="197" width="70" height="207"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="115" id="dgs-1a-6c4"/>
-                        <constraint firstAttribute="height" constant="340" id="sb1-2A-jP7"/>
+                        <constraint firstAttribute="width" constant="70" id="dgs-1a-6c4"/>
+                        <constraint firstAttribute="height" constant="207" id="sb1-2A-jP7"/>
                     </constraints>
                     <state key="normal" image="player_prev_button">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -46,10 +46,10 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pb2-69-N8y" userLabel="goNextButton">
-                    <rect key="frame" x="485" y="130" width="115" height="340"/>
+                    <rect key="frame" x="530" y="197" width="70" height="207"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="115" id="Ipi-MK-x7z"/>
-                        <constraint firstAttribute="height" constant="340" id="Q53-EW-l1o"/>
+                        <constraint firstAttribute="width" constant="70" id="Ipi-MK-x7z"/>
+                        <constraint firstAttribute="height" constant="207" id="Q53-EW-l1o"/>
                     </constraints>
                     <state key="normal" image="player_next_button">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -72,7 +72,7 @@
                         <action selector="dismissButtonPressed" destination="-1" eventType="touchUpInside" id="fQ7-eI-AD4"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="When location string is too long it should be shrinked!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2xr-fh-a0w" userLabel="locationLabel">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2xr-fh-a0w" userLabel="locationLabel">
                     <rect key="frame" x="15" y="563" width="425" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="207" id="xWg-mo-Yh1"/>
@@ -107,7 +107,11 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9iV-Su-8js" userLabel="Flag">
-                    <rect key="frame" x="20" y="552" width="18" height="23"/>
+                    <rect key="frame" x="15" y="562" width="23" height="23"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="23" id="6mp-W5-7fb"/>
+                        <constraint firstAttribute="width" constant="23" id="C6q-Ku-N5V"/>
+                    </constraints>
                     <state key="normal" image="Player_Flag">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -121,9 +125,10 @@
                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="16"/>
                     <state key="normal" title="Block User" backgroundImage="Player_ReportUser-btn">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" backgroundImage="Player_ReportUser-btnON"/>
+                    <state key="selected" backgroundImage="Player_ReportUser-btnON">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
                     <connections>
                         <action selector="blockOverlayButtonPressed" destination="-1" eventType="touchUpInside" id="Ymm-od-c42"/>
                     </connections>
@@ -133,9 +138,10 @@
                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="16"/>
                     <state key="normal" title="Flag Vybe" backgroundImage="Player_FlagVybe-btn">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" backgroundImage="Player_FlagVybe-BtnON"/>
+                    <state key="selected" backgroundImage="Player_FlagVybe-BtnON">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
                     <connections>
                         <action selector="flagOverlayButtonPressed" destination="-1" eventType="touchUpInside" id="Vks-L3-0BK"/>
                     </connections>
@@ -144,10 +150,10 @@
             <constraints>
                 <constraint firstItem="UPQ-0i-rrO" firstAttribute="leading" secondItem="2xr-fh-a0w" secondAttribute="trailing" constant="15" id="1DV-7w-gjz"/>
                 <constraint firstAttribute="centerX" secondItem="FUM-j7-JZe" secondAttribute="centerX" id="4bn-Rs-2OS"/>
-                <constraint firstItem="9iV-Su-8js" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="H9v-y5-0B2"/>
+                <constraint firstItem="9iV-Su-8js" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="H9v-y5-0B2"/>
                 <constraint firstAttribute="bottom" secondItem="UPQ-0i-rrO" secondAttribute="bottom" constant="15" id="Iqn-t4-LrI"/>
                 <constraint firstAttribute="trailing" secondItem="Pb2-69-N8y" secondAttribute="trailing" id="P8w-2S-sOY"/>
-                <constraint firstAttribute="bottom" secondItem="9iV-Su-8js" secondAttribute="bottom" constant="25" id="PIu-2M-pUS"/>
+                <constraint firstAttribute="bottom" secondItem="9iV-Su-8js" secondAttribute="bottom" constant="15" id="PIu-2M-pUS"/>
                 <constraint firstAttribute="bottom" secondItem="thN-J3-OUv" secondAttribute="bottom" constant="45" id="UkW-OI-Vp3"/>
                 <constraint firstItem="04P-Ta-89Y" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="44" id="V0C-zO-t52"/>
                 <constraint firstAttribute="trailing" secondItem="UPQ-0i-rrO" secondAttribute="trailing" constant="15" id="VNG-OV-7gD"/>
@@ -171,13 +177,13 @@
         <image name="Player_Flag" width="18" height="23"/>
         <image name="Player_FlagVybe-BtnON" width="112" height="45"/>
         <image name="Player_FlagVybe-btn" width="112" height="45"/>
-        <image name="Player_RedFlag" width="19" height="24"/>
+        <image name="Player_RedFlag" width="22" height="22"/>
         <image name="Player_ReportUser-btn" width="112" height="45"/>
         <image name="Player_ReportUser-btnON" width="112" height="45"/>
         <image name="TransparentImage" width="180" height="180"/>
         <image name="player_bottom_overlay" width="375" height="133"/>
         <image name="player_close_button" width="40" height="40"/>
-        <image name="player_next_button" width="114" height="340"/>
-        <image name="player_prev_button" width="115" height="342"/>
+        <image name="player_next_button" width="69" height="207"/>
+        <image name="player_prev_button" width="69" height="207"/>
     </resources>
 </document>
