@@ -45,6 +45,10 @@ $(function() {
       if (this.index >= this.length) {
         this.index = 0;
       };
+    },
+
+    comparator: function(vybe) {
+      return vybe.get('timestamp');
     }
   })
 
