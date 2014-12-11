@@ -109,14 +109,11 @@
 #endif
 
   // Clearing Push-noti Badge number
-  /*
-   PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-   
-   if (currentInstallation.badge != 0) {
-   currentInstallation.badge = 0;
-   [currentInstallation saveEventually];
-   }
-   */
+  PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+  if (currentInstallation.badge != 0) {
+    currentInstallation.badge = 0;
+    [currentInstallation saveEventually];
+  }
 
   // Access Control
   PFACL *defaultACL = [PFACL ACL];
@@ -141,22 +138,6 @@
   [self handlePush:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
   
   return YES;
-}
-
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(id)viewController {
-  NSInteger nextPageIndex = [viewController pageIndex] + 1;
-  if (nextPageIndex == self.viewControllers.count)
-    return nil;
-  
-  return self.viewControllers[nextPageIndex];
-}
-
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(id)viewController {
-  NSInteger prevPageIndex = [viewController pageIndex] - 1;
-  if (prevPageIndex < 0)
-    return nil;
-  
-  return self.viewControllers[prevPageIndex];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -254,6 +235,7 @@
 #else
     [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
 #endif
+    [self.swipeContainerController moveToActivityScreen];
   }
   
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {

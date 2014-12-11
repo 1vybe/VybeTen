@@ -148,6 +148,7 @@
   
   if (self.currPlayer && self.currItem) {
     [self.currPlayer play];
+    self.pauseButton.selected = NO;
   }
 #ifdef DEBUG
 #else
@@ -411,6 +412,8 @@
   }
   
   [self.currPlayer play];
+  self.pauseButton.selected = NO;
+
 }
 
 
@@ -605,11 +608,14 @@
       
       [[VYBCache sharedCache] setAttributesForVybe:currObj flaggedByCurrentUser:YES];
       self.flagOverlayButton.selected = YES;
+      
       [self.currPlayer play];
+      self.pauseButton.selected = NO;
       _userPausedFromOptions = NO;
     }];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
       [self.currPlayer play];
+      self.pauseButton.selected = NO;
       _userPausedFromOptions = NO;
     }];
     [alertController addAction:blockAction];
@@ -651,10 +657,12 @@
         [[VYBCache sharedCache] addBlockedUser:aUser forUser:[PFUser currentUser]];
         
         [self.currPlayer play];
+        self.pauseButton.selected = NO;
         _userPausedFromOptions = NO;
       }];
       UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
         [self.currPlayer play];
+        self.pauseButton.selected = NO;
         _userPausedFromOptions = NO;
       }];
       [alertController addAction:blockAction];
