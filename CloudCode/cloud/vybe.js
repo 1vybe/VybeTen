@@ -376,7 +376,7 @@ Parse.Cloud.define('unflag_vybe', function (request, response) {
   var currUser = request.user;
 
   var query = new Parse.Query('Vybe');
-  query.equalTo('objectId', flaggedContentID);
+  query.equalTo('objectId', unflaggedContentID);
   query.first({
     success: function(unflaggedObj) {
       console.log(currUser.get('username') + ' unflagged ' + unflaggedContentID);
