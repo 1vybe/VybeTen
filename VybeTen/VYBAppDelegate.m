@@ -139,9 +139,6 @@
   
   // Handle push if the app is launched from notification
   [self handlePush:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
-  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-    [NSException raise:NSGenericException format:@"Everything is ok. This is just a test crash."];
-  });
   
   return YES;
 }
