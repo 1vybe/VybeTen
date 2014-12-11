@@ -16,14 +16,15 @@ $(function() {
   var Playlist = Parse.Collection.extend({
     model: Vybe,
 
-    zoneID: '4ad4c06bf964a52091f920e3',
-
     initialize: function() {
+      var now = new Date();
+      var aDayAgo = new Date(now.getTime() - (1000*60*60*24));
+
       this.index = 0;
 
       this.query = new Parse.Query('Vybe')
         .descending('timestamp')
-        .equalTo('zoneID', this.zoneID);
+        .greaterThanOrEqualTo('timestamp', aDayAgo);
 
       this.fetch();
     },
@@ -44,6 +45,7 @@ $(function() {
       this.index += 1;
       if (this.index >= this.length) {
         this.index = 0;
+        this.fetch();
       };
     },
 
@@ -56,8 +58,6 @@ $(function() {
   var playlist = new Playlist();
 
   playlist.on('reset', function(playlist) {
-    console.log('loaded playlist of length ' + playlist.length);
-
     playVideo();
   });
 
@@ -65,7 +65,7 @@ $(function() {
     playlist.next();
 
     playVideo();
-  })
+  });
 
   var playVideo = function() {
     var currentVybe = playlist.currentVybe();
@@ -77,7 +77,6 @@ $(function() {
     preloader.src = nextVybe.get('video').url();
 
     player.play();
-    console.log('playing vybe number ' + playlist.index);
-  }
+  };
 
 });

@@ -233,7 +233,7 @@ Parse.Cloud.define('get_active_zone_vybes', function (request, response) {
       error: function(error) {
         response.error('[get_active_zone_vybes] failed getting blockedUsers for user ' + currUser.get('username'));
       }
-    }); 
+    });
 });
 
 
@@ -246,7 +246,7 @@ Parse.Cloud.define('get_active_vybes', function (request, response) {
   var blockedRelation = currUser.relation('blockedUsers');
   blockedRelation.query().find({
       success: function(list) {
-        console.log('there are ' + list.length + ' blocked users for ' + currUser.get('username')); 
+        console.log('there are ' + list.length + ' blocked users for ' + currUser.get('username'));
         var query = new Parse.Query('Vybe');
         query.include('user');
         query.notContainedIn('user', list);
@@ -267,7 +267,7 @@ Parse.Cloud.define('get_active_vybes', function (request, response) {
       error: function(error) {
         response.error('[get_active_vybes] failed getting blockedUsers for user ' + currUser.get('username'));
       }
-    }); 
+    });
 
 });
 
@@ -278,14 +278,14 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
   var blockedRelation = currUser.relation('blockedUsers');
    blockedRelation.query().find({
       success: function(list) {
-        console.log('[get_fresh_vybes] there are ' + list.length + ' blocked users for ' + currUser.get('username')); 
+        console.log('[get_fresh_vybes] there are ' + list.length + ' blocked users for ' + currUser.get('username'));
         var query = new Parse.Query(Parse.User);
         query.equalTo('username', currUser.get('username'));
         query.first({
           success: function(aUser) {
             var currTime = new Date();
-            var ttlAgo = new Date();
-            ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window.
+            var aDayAgo = new Date();
+            aDayAgo.setHours(currTime.getHours() - 24);  // 24 hour window.
 
             var feed = aUser.relation('feed');
             var freshContents = [];
@@ -312,7 +312,7 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
       error: function(error) {
         response.error('[get_fresh_vybes] failed getting blockedUsers for user ' + currUser.get('username'));
       }
-    }); 
+    });
 
 });
 
