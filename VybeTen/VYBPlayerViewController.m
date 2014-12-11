@@ -36,7 +36,6 @@
 @property (nonatomic, weak) IBOutlet UIButton *goPrevButton;
 @property (nonatomic, weak) IBOutlet UIButton *goNextButton;
 @property (nonatomic, weak) IBOutlet UIButton *pauseButton;
-@property (nonatomic, weak) IBOutlet UIButton *bumpButton;
 @property (nonatomic, weak) IBOutlet UILabel *bumpCountLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *optionsOverlay;
@@ -51,6 +50,8 @@
 
 - (IBAction)flagOverlayButtonPressed;
 - (IBAction)blockOverlayButtonPressed;
+
+- (IBAction)bmpButtonPressed:(id)sender;
 
 @property (nonatomic, weak) VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayer *currPlayer;
@@ -117,7 +118,7 @@
   [self.view insertSubview:playerView atIndex:0];
   
   // Add gestures on screen
-  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce)];
+  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce:)];
   tapGesture.numberOfTapsRequired = 1;
   [self.view addGestureRecognizer:tapGesture];
   
@@ -288,14 +289,19 @@
   }
 
   dispatch_async(dispatch_get_main_queue(), ^{
-    [self syncUIElementsWithVybe:vybeBeingWatched];
+    [self syncUIElementsInBackgroundFor:vybeBeingWatched withBlock:^(BOOL success) {
+      [self playVybe:vybeBeingWatched];
+    }];
     self.goPrevButton.hidden = (streamIdx == 0);
     self.goNextButton.hidden = (streamIdx == stream.count - 1);
   });
   
+}
+
+- (void)playVybe:(PFObject *)vybe {
   // Play after syncing UI elements
   NSURL *cacheURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
-  cacheURL = [cacheURL URLByAppendingPathComponent:[vybeBeingWatched objectId]];
+  cacheURL = [cacheURL URLByAppendingPathComponent:[vybe objectId]];
   cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
   
   if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
@@ -303,10 +309,10 @@
     [self playAsset:asset];
     
     if (_isFreshStream) {
-      [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:vybeBeingWatched];
+      [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:vybe];
     }
   } else {
-    PFFile *vid = [vybeBeingWatched objectForKey:kVYBVybeVideoKey];
+    PFFile *vid = [vybe objectForKey:kVYBVybeVideoKey];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
       [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -317,7 +323,7 @@
         [self playAsset:asset];
         // Because we want to request to server to remove the watched vybe from the feed only when needed.
         if (_isFreshStream) {
-          [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:vybeBeingWatched];
+          [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:vybe];
         }
       } else {
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
@@ -351,7 +357,7 @@
   [super didReceiveMemoryWarning];
 }
 
-- (void)syncUIElementsWithVybe:(PFObject *)aVybe {
+- (void)syncUIElementsInBackgroundFor:(PFObject *)aVybe withBlock:(void (^)(BOOL))completionBlock {
   // Display location and time
   NSString *zoneName = aVybe[kVYBVybeZoneNameKey];
   if (!zoneName) {
@@ -362,6 +368,8 @@
   NSString *timeString = [[NSString alloc] init];
   timeString = [VYBUtility timeStringForPlayer:aVybe[kVYBVybeTimestampKey]];
   [self.timeLabel setText:timeString];
+  
+  self.bmpButton.selected = [[VYBCache sharedCache] vybeLikedByMe:aVybe];
   
   PFObject *user = aVybe[kVYBVybeUserKey];
   NSString *username = user[kVYBUserUsernameKey];
@@ -382,6 +390,13 @@
   
   self.flagOverlayButton.selected = [[VYBCache sharedCache] vybeFlaggedByMe:aVybe];
   self.blockOverlayButton.selected = NO;
+  
+  [self updateBumpCountFor:aVybe];
+  // refresh cache
+  [VYBUtility updateBumpCountInBackground:aVybe withBlock:^(BOOL success) {
+    [self updateBumpCountFor:aVybe];
+    completionBlock(success);
+  }];
 }
 
 - (void)playAsset:(AVAsset *)asset {
@@ -473,7 +488,14 @@
   }
 }
 
-- (void)tapOnce {
+- (void)tapOnce:(UIGestureRecognizer *)recognizer {
+  
+  CGPoint location = [recognizer locationInView:self.view];
+  if (CGRectContainsPoint(self.goNextButton.frame, location) ||
+      CGRectContainsPoint(self.goPrevButton.frame, location)) {
+    return;
+  }
+  
   if (self.optionsOverlay.hidden) {
     menuMode = !menuMode;
     [self showOverlayMenu:menuMode];
@@ -492,7 +514,6 @@
 
 - (void)menuModeChanged {
   self.firstOverlay.hidden = !menuMode;
-  self.bmpButton.hidden = menuMode;
   
 //  PFObject *aVybe = _zoneVybes[_zoneCurrIdx];
 //  if (aVybe) {
@@ -512,6 +533,31 @@
  **/
 
 #pragma mark - User Interactions
+
+- (IBAction)bmpButtonPressed:(id)sender {
+  PFObject *currVybe = _zoneVybes[_zoneCurrIdx];
+  if (!currVybe)
+    return;
+  
+  if (self.bmpButton.selected) {
+    [VYBUtility unlikeVybeInBackground:currVybe block:nil];
+  } else {
+    [VYBUtility likeVybeInBackground:currVybe block:nil];
+  }
+  
+  [self updateBumpCountFor:currVybe];
+  self.bmpButton.selected = !self.bmpButton.selected;
+}
+
+- (void)updateBumpCountFor:(PFObject *)aVybe {
+  NSNumber *counter = [[VYBCache sharedCache] likeCountForVybe:aVybe];
+  if (counter && [counter intValue]) {
+    self.bumpCountLabel.text = [NSString stringWithFormat:@"%@", [[VYBCache sharedCache] likeCountForVybe:aVybe]];
+  }
+  else {
+    self.bumpCountLabel.text = @"";
+  }
+}
 
 - (IBAction)optionsButtonPressed:(id)sender {
   if (self.optionsButton.selected) {

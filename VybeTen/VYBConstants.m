@@ -150,6 +150,8 @@ NSString *const kVYBActivityFromUserKey                         = @"fromUser";
 NSString *const kVYBActivityToUserKey                           = @"toUser";
 NSString *const kVYBActivityContentKey                          = @"content";
 NSString *const kVYBActivityVybeKey                             = @"vybe";
+//NSString *const kVYBActivityTimestampKey                        = @"timestamp";
+
 
 // Type values
 NSString *const kVYBActivityTypeFollow                          = @"follow";

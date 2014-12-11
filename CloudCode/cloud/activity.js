@@ -49,9 +49,9 @@ var alertMessage = function(request) {
     }
   } else if (request.object.get("type") === "like") {
     if (request.user.get('username')) {
-      message = request.user.get('username') + ' likes your vybe.';
+      message = request.user.get('username') + ' bumped your vybe.';
     } else {
-      message = 'Someone likes your vybe.';
+      message = 'Someone bumped your vybe.';
     }
   } else if (request.object.get("type") === "follow") {
     if (request.user.get('username')) {

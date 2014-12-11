@@ -21,110 +21,110 @@
 #pragma mark - Initialization
 
 + (id)sharedCache {
-    static dispatch_once_t pred = 0;
-    __strong static id _sharedObject = nil;
-    dispatch_once(&pred, ^{
-        _sharedObject = [[self alloc] init];
-    });
-    return _sharedObject;
+  static dispatch_once_t pred = 0;
+  __strong static id _sharedObject = nil;
+  dispatch_once(&pred, ^{
+    _sharedObject = [[self alloc] init];
+  });
+  return _sharedObject;
 }
 
 - (id)init {
-    self = [super init];
-    if (self) {
-        self.cache = [[NSCache alloc] init];
-    }
-    return self;
+  self = [super init];
+  if (self) {
+    self.cache = [[NSCache alloc] init];
+  }
+  return self;
 }
 
 #pragma mark - VYBCache
 
 - (void)clear {
-    [self.cache removeAllObjects];
+  [self.cache removeAllObjects];
 }
 
 - (void)addFreshVybe:(PFObject *)nVybe {
-    NSString *locString = nVybe[kVYBVybeLocationStringKey];
-    NSArray *token = [locString componentsSeparatedByString:@","];
-    if (token.count != 3)
-        return;
-    
-    NSArray *watchedVybes = [self.cache objectForKey:@"watchedVybes"];
-    if ( [watchedVybes containsPFObject:nVybe] )
-        return;
-    
-    NSArray *freshVybes = [self.cache objectForKey:@"freshVybes"];
-    if ( [freshVybes containsPFObject:nVybe] )
-        return;
-    
-    NSArray *newArr;
-    if (freshVybes) {
-        newArr = [freshVybes arrayByAddingObject:nVybe];
-    } else {
-        newArr = [NSArray arrayWithObject:nVybe];
-    }
-    [self.cache setObject:newArr forKey:@"freshVybes"];
+  NSString *locString = nVybe[kVYBVybeLocationStringKey];
+  NSArray *token = [locString componentsSeparatedByString:@","];
+  if (token.count != 3)
+    return;
+  
+  NSArray *watchedVybes = [self.cache objectForKey:@"watchedVybes"];
+  if ( [watchedVybes containsPFObject:nVybe] )
+    return;
+  
+  NSArray *freshVybes = [self.cache objectForKey:@"freshVybes"];
+  if ( [freshVybes containsPFObject:nVybe] )
+    return;
+  
+  NSArray *newArr;
+  if (freshVybes) {
+    newArr = [freshVybes arrayByAddingObject:nVybe];
+  } else {
+    newArr = [NSArray arrayWithObject:nVybe];
+  }
+  [self.cache setObject:newArr forKey:@"freshVybes"];
 }
 
 - (void)removeFreshVybe:(PFObject *)oVybe {
-    NSString *removeFromFeed = @"remove_from_feed";
-    [PFCloud callFunctionInBackground:removeFromFeed withParameters:@{@"vybeID": oVybe.objectId}
-                                block:^(id object, NSError *error) {
-                                    if (!error) {
-                                        
-                                    }
-                                }];
-    
-    [self addWatchedVybe:oVybe];
-    
-    NSArray *oldFreshVybes = [self.cache objectForKey:@"freshVybes"];
-    if (oldFreshVybes) {
-        NSMutableArray *newFreshVybes = [NSMutableArray arrayWithArray:oldFreshVybes];
-        [newFreshVybes removePFObject:oVybe];
-        [self.cache setObject:newFreshVybes forKey:@"freshVybes"];
-    }
+  NSString *removeFromFeed = @"remove_from_feed";
+  [PFCloud callFunctionInBackground:removeFromFeed withParameters:@{@"vybeID": oVybe.objectId}
+                              block:^(id object, NSError *error) {
+                                if (!error) {
+                                  
+                                }
+                              }];
+  
+  [self addWatchedVybe:oVybe];
+  
+  NSArray *oldFreshVybes = [self.cache objectForKey:@"freshVybes"];
+  if (oldFreshVybes) {
+    NSMutableArray *newFreshVybes = [NSMutableArray arrayWithArray:oldFreshVybes];
+    [newFreshVybes removePFObject:oVybe];
+    [self.cache setObject:newFreshVybes forKey:@"freshVybes"];
+  }
 }
 
 - (void)addWatchedVybe:(PFObject *)oVybe {
-    NSArray *watchedVybes = [self.cache objectForKey:@"watchedVybes"];
-    NSArray *newArr;
-    if (watchedVybes && ![watchedVybes containsPFObject:oVybe]) {
-        newArr = [watchedVybes arrayByAddingObject:oVybe];
-    } else {
-        newArr = [NSArray arrayWithObject:oVybe];
-    }
-    [self.cache setObject:newArr forKey:@"watchedVybes"];
+  NSArray *watchedVybes = [self.cache objectForKey:@"watchedVybes"];
+  NSArray *newArr;
+  if (watchedVybes && ![watchedVybes containsPFObject:oVybe]) {
+    newArr = [watchedVybes arrayByAddingObject:oVybe];
+  } else {
+    newArr = [NSArray arrayWithObject:oVybe];
+  }
+  [self.cache setObject:newArr forKey:@"watchedVybes"];
 }
 
 - (NSArray *)freshVybes {
-    return [self.cache objectForKey:@"freshVybes"];
+  return [self.cache objectForKey:@"freshVybes"];
 }
 
 - (NSArray *)watchedVybes {
-    return [self.cache objectForKey:@"watchedVybes"];
+  return [self.cache objectForKey:@"watchedVybes"];
 }
 
 - (void)setActivityCount:(int)count {
-    [self.cache setObject:[NSNumber numberWithInt:count] forKey:@"activityCount"];
+  [self.cache setObject:[NSNumber numberWithInt:count] forKey:@"activityCount"];
 }
 
 - (NSInteger)activityCount {
-    NSNumber *cnt = [self.cache objectForKey:@"activityCount"];
-    if (cnt)
-        return [cnt integerValue];
-    else
-        return 0;
+  NSNumber *cnt = [self.cache objectForKey:@"activityCount"];
+  if (cnt)
+    return [cnt integerValue];
+  else
+    return 0;
 }
 
 - (void)setAttributesForVybe:(PFObject *)vybe likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser {
-    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                [NSNumber numberWithBool:likedByCurrentUser],kVYBVybeAttributesIsLikedByCurrentUserKey,
-                                @([likers count]),kVYBVybeAttributesLikeCountKey,
-                                likers,kVYBVybeAttributesLikersKey,
-                                @([commenters count]),kVYBVybeAttributesCommentCountKey,
-                                commenters,kVYBVybeAttributesCommentersKey,
-                                nil];
-    [self setAttributes:attributes forVybe:vybe];
+  NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                              [NSNumber numberWithBool:likedByCurrentUser],kVYBVybeAttributesIsLikedByCurrentUserKey,
+                              @([likers count]),kVYBVybeAttributesLikeCountKey,
+                              likers,kVYBVybeAttributesLikersKey,
+                              @([commenters count]),kVYBVybeAttributesCommentCountKey,
+                              commenters,kVYBVybeAttributesCommentersKey,
+                              nil];
+  [self setAttributes:attributes forVybe:vybe];
 }
 
 - (void)setAttributesForVybe:(PFObject *)vybe flaggedByCurrentUser:(BOOL)flaggedByCurrentUser {
@@ -159,44 +159,83 @@
     [blackList removePFObject:blockedUser];
     [attributes setObject:blackList forKey:kVYBUserAttributesBlockedUsersKey];
     [self setAttributes:attributes forUser:user];
-
+    
   }
 }
 
 - (void)setNearbyCount:(NSNumber *)count forVybe:(PFObject *)vybe {
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForVybe:vybe]];
-    [attributes setObject:count forKey:kVYBVybeAttributesNearbyCountKey];
-    [self setAttributes:attributes forVybe:vybe];
+  NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForVybe:vybe]];
+  [attributes setObject:count forKey:kVYBVybeAttributesNearbyCountKey];
+  [self setAttributes:attributes forVybe:vybe];
 }
 
 - (NSNumber *)nearbyCountForVybe:(PFObject *)vybe {
-    NSDictionary *attributes = [self attributesForVybe:vybe];
-    NSNumber *count = [attributes objectForKey:kVYBVybeAttributesNearbyCountKey];
-    return count;
+  NSDictionary *attributes = [self attributesForVybe:vybe];
+  NSNumber *count = [attributes objectForKey:kVYBVybeAttributesNearbyCountKey];
+  return count;
 }
 
 - (NSDictionary *)attributesForVybe:(PFObject *)vybe {
-    NSString *key = [self keyForVybe:vybe];
-    return [self.cache objectForKey:key];
+  NSString *key = [self keyForVybe:vybe];
+  return [self.cache objectForKey:key];
+}
+
+- (void)refreshBumpsForMeInBackground {
+
+  PFQuery *bumpQuery = [PFQuery queryWithClassName:kVYBActivityClassKey];
+  [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
+  [bumpQuery whereKey:kVYBActivityToUserKey equalTo:[PFUser currentUser]];
+  [bumpQuery includeKey:kVYBActivityVybeKey];
+  [bumpQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    if (!error) {
+      for (PFObject *activity in objects) {
+        [self addBump:activity[kVYBActivityVybeKey] fromUser:activity[kVYBActivityFromUserKey]];
+      }
+    }
+  }];
+}
+
+- (void)addBump:(PFObject *)vybe fromUser:(PFUser *)fromUser {
+  NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForVybe:vybe]];
+  
+  NSArray *bumpers = [attributes objectForKey:kVYBVybeAttributesLikersKey];
+  if (bumpers) {
+    if (![bumpers containsPFObject:fromUser]) {
+      bumpers = [bumpers arrayByAddingObject:fromUser];
+    }
+  }
+  else {
+    bumpers = [NSArray arrayWithObject:fromUser];
+  }
+  
+  [attributes setObject:bumpers forKey:kVYBVybeAttributesLikersKey];
+  [attributes setObject:@(bumpers.count) forKey:kVYBVybeAttributesLikeCountKey];
+  
+  if ([fromUser.objectId isEqualToString:[PFUser currentUser].objectId] ) {
+    [attributes setObject:[NSNumber numberWithBool:YES] forKey:kVYBVybeAttributesIsLikedByCurrentUserKey];
+  }
+  
+  [self setAttributes:attributes forVybe:vybe];
+  
 }
 
 - (NSNumber *)likeCountForVybe:(PFObject *)vybe {
-    NSDictionary *attributes = [self attributesForVybe:vybe];
-    if (attributes) {
-        return [attributes objectForKey:kVYBVybeAttributesLikeCountKey];
-    }
-    
-    return [NSNumber numberWithInt:0];
+  NSDictionary *attributes = [self attributesForVybe:vybe];
+  if (attributes) {
+    return [attributes objectForKey:kVYBVybeAttributesLikeCountKey];
+  }
+  
+  return [NSNumber numberWithInt:0];
 }
 
 - (BOOL)vybeLikedByMe:(PFObject *)vybe {
-    NSDictionary *attributes = [self attributesForVybe:vybe];
-    if (attributes) {
-        NSNumber *boolNum = [attributes objectForKey:kVYBVybeAttributesIsLikedByCurrentUserKey];
-        return [boolNum intValue] > 0;
-    }
-    
-    return NO;
+  NSDictionary *attributes = [self attributesForVybe:vybe];
+  if (attributes) {
+    NSNumber *boolNum = [attributes objectForKey:kVYBVybeAttributesIsLikedByCurrentUserKey];
+    return [boolNum intValue] > 0;
+  }
+  
+  return NO;
 }
 
 - (BOOL)vybeFlaggedByMe:(PFObject *)vybe {
@@ -216,131 +255,131 @@
 }
 
 - (NSArray *)likersForVybe:(PFObject *)vybe {
-    NSDictionary *attributes = [self attributesForVybe:vybe];
-    if (attributes) {
-        return [attributes objectForKey:kVYBVybeAttributesLikersKey];
-    }
-    
-    return nil;
+  NSDictionary *attributes = [self attributesForVybe:vybe];
+  if (attributes) {
+    return [attributes objectForKey:kVYBVybeAttributesLikersKey];
+  }
+  
+  return nil;
 }
 
 - (NSDictionary *)attributesForUser:(PFUser *)user {
-    NSDictionary *attributes = [self.cache objectForKey:[self keyForUser:user]];
-    return attributes;
+  NSDictionary *attributes = [self.cache objectForKey:[self keyForUser:user]];
+  return attributes;
 }
 
 - (NSNumber *)vybeCountForUser:(PFUser *)user {
-    NSDictionary *attributes = [self attributesForUser:user];
-    if (attributes) {
-        NSNumber *cnt = [attributes objectForKey:kVYBUserAttributesVybeCountKey];
-        if (cnt) {
-            return cnt;
-        }
+  NSDictionary *attributes = [self attributesForUser:user];
+  if (attributes) {
+    NSNumber *cnt = [attributes objectForKey:kVYBUserAttributesVybeCountKey];
+    if (cnt) {
+      return cnt;
     }
-    return [NSNumber numberWithInt:0];
+  }
+  return [NSNumber numberWithInt:0];
 }
 
 - (NSNumber *)tribeCountForUser:(PFUser *)user {
-    NSDictionary *attributes = [self attributesForUser:user];
-    if (attributes) {
-        NSNumber *cnt = [attributes objectForKey:kVYBUserAttributesTribeCountKey];
-        if (cnt) {
-            return cnt;
-        }
+  NSDictionary *attributes = [self attributesForUser:user];
+  if (attributes) {
+    NSNumber *cnt = [attributes objectForKey:kVYBUserAttributesTribeCountKey];
+    if (cnt) {
+      return cnt;
     }
-    return [NSNumber numberWithInt:0];
+  }
+  return [NSNumber numberWithInt:0];
 }
 
 - (BOOL)followStatusForUser:(PFUser *)user {
-    NSDictionary *attributes = [self attributesForUser:user];
-    if (attributes) {
-        NSNumber *followed = [attributes objectForKey:kVYBUserAttributesIsFollowedByCurrentUserKey];
-        if (followed) {
-            return [followed boolValue];
-        }
+  NSDictionary *attributes = [self attributesForUser:user];
+  if (attributes) {
+    NSNumber *followed = [attributes objectForKey:kVYBUserAttributesIsFollowedByCurrentUserKey];
+    if (followed) {
+      return [followed boolValue];
     }
-    return NO;
+  }
+  return NO;
 }
 
 - (NSArray *)usersFollowedByMe {
-    return nil;
+  return nil;
 }
 
 - (PFObject *)syncTribeForUser:(PFUser *)user {
-    NSDictionary *attributes = [self attributesForUser:user];
-    if (attributes) {
-        PFObject *tribe = [attributes objectForKey:kVYBUserAttributesSyncTribeKey];
-        if (tribe) {
-            return tribe;
-        }
+  NSDictionary *attributes = [self attributesForUser:user];
+  if (attributes) {
+    PFObject *tribe = [attributes objectForKey:kVYBUserAttributesSyncTribeKey];
+    if (tribe) {
+      return tribe;
     }
-    return nil;
+  }
+  return nil;
 }
 
 - (void)setVybeCount:(NSNumber *)count user:(PFUser *)user {
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
-    [attributes setObject:count forKey:kVYBUserAttributesVybeCountKey];
-    [self setAttributes:attributes forUser:user];
+  NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
+  [attributes setObject:count forKey:kVYBUserAttributesVybeCountKey];
+  [self setAttributes:attributes forUser:user];
 }
 
 - (void)setTribeCount:(NSNumber *)count user:(PFUser *)user {
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
-    [attributes setObject:count forKey:kVYBUserAttributesTribeCountKey];
-    [self setAttributes:attributes forUser:user];
+  NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
+  [attributes setObject:count forKey:kVYBUserAttributesTribeCountKey];
+  [self setAttributes:attributes forUser:user];
 }
 
 - (void)setFollowStatus:(BOOL)following user:(PFUser *)user {
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
-    [attributes setObject:[NSNumber numberWithBool:following] forKey:kVYBUserAttributesIsFollowedByCurrentUserKey];
-    [self setAttributes:attributes forUser:user];
+  NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
+  [attributes setObject:[NSNumber numberWithBool:following] forKey:kVYBUserAttributesIsFollowedByCurrentUserKey];
+  [self setAttributes:attributes forUser:user];
 }
 
 - (void)setSyncTribe:(PFObject *)tribe user:(PFUser *)user {
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
-    [attributes setObject:tribe forKey:kVYBUserAttributesSyncTribeKey];
-    [self setAttributes:attributes forUser:user];
+  NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
+  [attributes setObject:tribe forKey:kVYBUserAttributesSyncTribeKey];
+  [self setAttributes:attributes forUser:user];
 }
 
 - (void)setFacebookFriends:(NSArray *)friends {
-    NSString *key = kVYBUserDefaultsCacheFacebookFriendsKey;
-    [self.cache setObject:friends forKey:key];
-    [[NSUserDefaults standardUserDefaults] setObject:friends forKey:key];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+  NSString *key = kVYBUserDefaultsCacheFacebookFriendsKey;
+  [self.cache setObject:friends forKey:key];
+  [[NSUserDefaults standardUserDefaults] setObject:friends forKey:key];
+  [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSArray *)facebookFriends {
-    NSString *key = kVYBUserDefaultsCacheFacebookFriendsKey;
-    if ([self.cache objectForKey:key]) {
-        return [self.cache objectForKey:key];
-    }
-    
-    NSArray *friends = [[NSUserDefaults standardUserDefaults] objectForKey:key];
-    
-    if (friends) {
-        [self.cache setObject:friends forKey:key];
-    }
-    
-    return friends;
+  NSString *key = kVYBUserDefaultsCacheFacebookFriendsKey;
+  if ([self.cache objectForKey:key]) {
+    return [self.cache objectForKey:key];
+  }
+  
+  NSArray *friends = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+  
+  if (friends) {
+    [self.cache setObject:friends forKey:key];
+  }
+  
+  return friends;
 }
 
 #pragma mark - ()
 
 - (void)setAttributes:(NSDictionary *)attributes forVybe:(PFObject *)vybe {
-    NSString *key = [self keyForVybe:vybe];
-    [self.cache setObject:attributes forKey:key];
+  NSString *key = [self keyForVybe:vybe];
+  [self.cache setObject:attributes forKey:key];
 }
 
 - (void)setAttributes:(NSDictionary *)attributes forUser:(PFUser *)user {
-    NSString *key = [self keyForUser:user];
-    [self.cache setObject:attributes forKey:key];
+  NSString *key = [self keyForUser:user];
+  [self.cache setObject:attributes forKey:key];
 }
 
 - (NSString *)keyForVybe:(PFObject *)vybe {
-    return [NSString stringWithFormat:@"vybe_%@", [vybe objectId]];
+  return [NSString stringWithFormat:@"vybe_%@", [vybe objectId]];
 }
 
 - (NSString *)keyForUser:(PFUser *)user {
-    return [NSString stringWithFormat:@"user_%@", [user objectId]];
+  return [NSString stringWithFormat:@"user_%@", [user objectId]];
 }
 
 @end

@@ -10,4 +10,6 @@
 
 @interface NSMutableArray (PFObject)
 - (void)removePFObject:(PFObject *)pObj;
+- (void)addPFObject:(PFObject *)pObj;
+
 @end

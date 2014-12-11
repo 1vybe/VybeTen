@@ -14,7 +14,6 @@
 #import <Foundation/Foundation.h>
 
 @interface VYBCache : NSObject
-@property (nonatomic, strong) NSDate *lastRefresh;
 
 + (id)sharedCache;
 
@@ -33,9 +32,12 @@
 - (void)removeBlockedUser:(PFUser *)blockedUser forUser:(PFUser *)user;
 - (void)setNearbyCount:(NSNumber *)count forVybe:(PFObject *)vybe;
 - (NSDictionary *)attributesForVybe:(PFObject *)vybe;
+
+- (void)refreshBumpsForMeInBackground;
 - (NSNumber *)likeCountForVybe:(PFObject *)vybe;
 - (NSArray *)likersForVybe:(PFObject *)vybe;
 - (BOOL)vybeLikedByMe:(PFObject *)vybe;
+
 - (BOOL)vybeFlaggedByMe:(PFObject *)vybe;
 - (NSArray *)usersBlockedByMe;
 - (NSNumber *)nearbyCountForVybe:(PFObject *)vybe;

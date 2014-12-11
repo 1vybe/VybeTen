@@ -18,6 +18,7 @@
 
 + (void)likeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 + (void)unlikeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
++ (void)updateBumpCountInBackground:(PFObject *)vybe withBlock:(void (^)(BOOL succeeded))completionBlock;
 
 + (PFQuery *)queryForActivitiesOnVybe:(PFObject *)vybe cachePolicy:(PFCachePolicy)cachePolicy;
 

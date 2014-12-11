@@ -228,6 +228,8 @@ static void *ZOTContext = &ZOTContext;
       [self.tableView reloadData];
     }
   }];
+  
+  [[VYBCache sharedCache] refreshBumpsForMeInBackground];
 }
 
 #pragma mark UITableViewDelegate
@@ -345,13 +347,25 @@ static void *ZOTContext = &ZOTContext;
       NSDate *timestampDate = aVybe[kVYBVybeTimestampKey];
       cell.timestampLabel.text = [NSString stringWithFormat:@"%@  (%@)", [VYBUtility localizedDateStringFrom:timestampDate], [VYBUtility reverseTime:timestampDate]];
       
+      NSNumber *count = [[VYBCache sharedCache] likeCountForVybe:aVybe];
+      if (count && [count intValue] > 0) {
+        if ([count intValue] > 1) {
+          cell.bumpCountLabel.text = [NSString stringWithFormat:@"%@ Bumps", count];
+        }
+        else {
+          cell.bumpCountLabel.text = [NSString stringWithFormat:@"%@ Bump", count];
+        }
+      }
+      else {
+        cell.bumpCountLabel.text = @"";
+      }
+      
       NSString *localID = aVybe[@"uniqueId"];
       if (localID && localID.length) {
         cell.thumbnailImageView.image = [UIImage imageNamed:@"RefreshThumbnail"];
       }
       else {
         cell.thumbnailImageView.file = aVybe[kVYBVybeThumbnailKey];
-//        [cell.thumbnailImageView loadInBackground];
         [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
           if (!error) {
             if (image) {

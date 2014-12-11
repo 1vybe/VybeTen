@@ -93,6 +93,19 @@
         [[VYBCache sharedCache] setBlockedUsers:objects forUser:[PFUser currentUser]];
       }
     }];
+    
+    // Update my bumps
+    PFQuery *bumpQuery = [PFQuery queryWithClassName:kVYBActivityClassKey];
+    [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
+    [bumpQuery includeKey:kVYBActivityVybeKey];
+    [bumpQuery whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
+    [bumpQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+      if (!error) {
+        for (PFObject *activity in objects) {
+          [[VYBCache sharedCache] setAttributesForVybe:activity[kVYBActivityVybeKey] likers:@[[PFUser currentUser]] commenters:nil likedByCurrentUser:YES];
+        }
+      }
+    }];
   }
 }
 

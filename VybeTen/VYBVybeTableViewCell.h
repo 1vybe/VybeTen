@@ -11,9 +11,9 @@
 @interface VYBVybeTableViewCell : PFTableViewCell
 
 @property (nonatomic, weak) IBOutlet UILabel *timestampLabel;
+@property (nonatomic, weak) IBOutlet UILabel *bumpCountLabel;
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
 @property (nonatomic, weak) IBOutlet PFImageView *thumbnailImageView;
-@property (nonatomic, weak) IBOutlet UIImageView *separatorLineView;
 @property (nonatomic, weak) IBOutlet UIImageView *unwatchedBarView;
 @property (nonatomic, weak) IBOutlet UIImageView *greenLightSavedVybe;
 @end

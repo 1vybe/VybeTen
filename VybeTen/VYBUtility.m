@@ -232,6 +232,35 @@
   }];
 }
 
++ (void)updateBumpCountInBackground:(PFObject *)vybe withBlock:(void (^)(BOOL succeeded))completionBlock {
+  PFQuery *query = [self queryForActivitiesOnVybe:vybe cachePolicy:kPFCachePolicyNetworkOnly];
+  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    if (!error) {
+      NSMutableArray *likers = [NSMutableArray array];
+      BOOL isLikedByCurrentUser = NO;
+      
+      for (PFObject *activity in objects) {
+        if ([[activity objectForKey:kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeLike] && [activity objectForKey:kVYBActivityFromUserKey]) {
+          [likers addObject:[activity objectForKey:kVYBActivityFromUserKey]];
+        }
+        if ([[[activity objectForKey:kVYBActivityFromUserKey] objectId] isEqualToString:[[PFUser currentUser] objectId]]) {
+          if ([[activity objectForKey:kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeLike]) {
+            isLikedByCurrentUser = YES;
+          }
+        }
+      }
+      
+      [[VYBCache sharedCache] setAttributesForVybe:vybe likers:likers commenters:@[] likedByCurrentUser:isLikedByCurrentUser];
+      
+      completionBlock(YES);
+    }
+    else {
+      completionBlock(NO);
+    }
+  }];
+}
+
+
 #pragma mark Activities
 
 + (PFQuery *)queryForActivitiesOnVybe:(PFObject *)vybe cachePolicy:(PFCachePolicy)cachePolicy {

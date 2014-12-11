@@ -19,4 +19,13 @@
     }
 }
 
+- (void)addPFObject:(PFObject *)aVybe {
+  for (PFObject *obj in self) {
+    if ([obj.objectId isEqualToString:aVybe.objectId]) {
+      return;
+    }
+  }
+  [self addObject:aVybe];
+}
+
 @end

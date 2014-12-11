@@ -243,9 +243,15 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timestamp" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y2a-BU-8V2">
-                                            <rect key="frame" x="15" y="27" width="56" height="16"/>
+                                            <rect key="frame" x="15" y="18" width="56" height="16"/>
                                             <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="11"/>
                                             <color key="textColor" red="0.5725490196078431" green="0.5725490196078431" blue="0.5725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="88 Bumps" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="POT-v1-fI5" userLabel="bumpCount">
+                                            <rect key="frame" x="15" y="36" width="51" height="16"/>
+                                            <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="11"/>
+                                            <color key="textColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OverlayThumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="Yyl-cu-X6Q" customClass="PFImageView">
@@ -266,17 +272,25 @@
                                     </subviews>
                                     <color key="backgroundColor" red="0.97647058823529409" green="0.97647058823529409" blue="0.97647058823529409" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
-                                        <constraint firstItem="y2a-BU-8V2" firstAttribute="top" secondItem="eud-5z-hNB" secondAttribute="top" constant="27" id="Hxp-hX-IjR"/>
+                                        <constraint firstItem="y2a-BU-8V2" firstAttribute="top" secondItem="eud-5z-hNB" secondAttribute="top" constant="18" id="Hxp-hX-IjR"/>
                                         <constraint firstItem="y2a-BU-8V2" firstAttribute="leading" secondItem="eud-5z-hNB" secondAttribute="leading" constant="15" id="VNt-fw-xNO"/>
                                         <constraint firstAttribute="trailing" secondItem="Yyl-cu-X6Q" secondAttribute="trailing" constant="21" id="X1i-Gl-QcU"/>
+                                        <constraint firstItem="POT-v1-fI5" firstAttribute="leading" secondItem="eud-5z-hNB" secondAttribute="leading" constant="15" id="dWF-sr-cx2"/>
                                         <constraint firstItem="a4e-t3-X2U" firstAttribute="leading" secondItem="eud-5z-hNB" secondAttribute="leading" id="e6K-zU-UEM"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="y2a-BU-8V2" secondAttribute="bottomMargin" constant="27" id="kbK-nb-b8E"/>
                                         <constraint firstAttribute="centerY" secondItem="Yyl-cu-X6Q" secondAttribute="centerY" id="usn-ua-lKQ"/>
+                                        <constraint firstAttribute="bottom" secondItem="POT-v1-fI5" secondAttribute="bottom" constant="18" id="v5S-JJ-iXf"/>
                                         <constraint firstAttribute="bottom" secondItem="a4e-t3-X2U" secondAttribute="bottom" id="wzz-wU-LTN"/>
                                         <constraint firstAttribute="trailing" secondItem="a4e-t3-X2U" secondAttribute="trailing" id="xuy-fH-iKf"/>
                                     </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="kbK-nb-b8E"/>
+                                        </mask>
+                                    </variation>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="bumpCountLabel" destination="POT-v1-fI5" id="SxM-Og-QA6"/>
                                     <outlet property="thumbnailImageView" destination="Yyl-cu-X6Q" id="Udn-yj-oJP"/>
                                     <outlet property="timestampLabel" destination="y2a-BU-8V2" id="I22-VZ-Nnr"/>
                                 </connections>
@@ -322,7 +336,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="twK-2h-eJK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1414" y="2380"/>
+            <point key="canvasLocation" x="1413.5" y="2380"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="7DI-sv-a1C">
@@ -345,7 +359,7 @@
                                     <constraint firstAttribute="width" constant="28" id="aOn-n1-TOg"/>
                                     <constraint firstAttribute="height" constant="28" id="tYV-Fo-9NV"/>
                                 </constraints>
-                                <state key="normal" image="player_close_button">
+                                <state key="normal" image="Player_Close_Button">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
@@ -408,11 +422,11 @@
         <image name="MapTitleView" width="196" height="28"/>
         <image name="NewMap" width="34" height="35"/>
         <image name="OverlayThumbnail" width="50" height="50"/>
+        <image name="Player_Close_Button" width="40" height="40"/>
         <image name="Settings" width="21" height="21"/>
         <image name="UnwatchedBar" width="10" height="85"/>
         <image name="VYBE_Nav" width="109" height="18"/>
         <image name="VybeLogo_Nav" width="33" height="16"/>
-        <image name="player_close_button" width="40" height="40"/>
     </resources>
     <color key="tintColor" red="1" green="0.31936163649999999" blue="0.31620065790000002" alpha="1" colorSpace="calibratedRGB"/>
 </document>

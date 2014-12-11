@@ -185,6 +185,7 @@ extern NSString *const kVYBActivityFromUserKey;
 extern NSString *const kVYBActivityToUserKey;
 extern NSString *const kVYBActivityContentKey;
 extern NSString *const kVYBActivityVybeKey;
+extern NSString *const kVYBActivityTimestampKey;
 
 // Type values
 extern NSString *const kVYBActivityTypeFollow;
