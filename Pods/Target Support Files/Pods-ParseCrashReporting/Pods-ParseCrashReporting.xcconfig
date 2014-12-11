@@ -1,0 +1,2 @@
+PODS_PARSECRASHREPORTING_FRAMEWORK_SEARCH_PATHS = "$(PODS_ROOT)/ParseCrashReporting"
+PODS_PARSECRASHREPORTING_OTHER_LDFLAGS = -l"sqlite3" -l"stdc++.6" -l"z" -framework "CFNetwork" -framework "Foundation" -framework "MobileCoreServices" -framework "ParseCrashReporting" -framework "Security" -framework "SystemConfiguration"

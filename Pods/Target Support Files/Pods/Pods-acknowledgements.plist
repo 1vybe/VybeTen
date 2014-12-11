@@ -449,6 +449,14 @@ limitations under the License.
 			<key>FooterText</key>
 			<string>See https://www.parse.com/about/terms</string>
 			<key>Title</key>
+			<string>ParseCrashReporting</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
+			<string>See https://www.parse.com/about/terms</string>
+			<key>Title</key>
 			<string>ParseFacebookUtils</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
