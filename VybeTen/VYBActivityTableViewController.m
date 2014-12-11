@@ -317,7 +317,6 @@ static void *ZOTContext = &ZOTContext;
     cell.locationLabel.text = zone.name;
     
     cell.thumbnailImageView.file = lastVybe[kVYBVybeThumbnailKey];
-//    [cell.thumbnailImageView loadInBackground];
     [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
       if (!error) {
         if (image) {

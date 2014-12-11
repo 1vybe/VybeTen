@@ -22,33 +22,33 @@
 #import "VybeTen-Swift.h"
 
 @interface VYBPlayerViewController ()
-@property (nonatomic, weak) IBOutlet UILabel *locationLabel;
-@property (nonatomic, weak) IBOutlet UIButton *userButton;
+@property (nonatomic, weak) IBOutlet UIButton *bmpButton;
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
 
-@property (nonatomic, weak) IBOutlet UIButton *dismissButton;
+@property (nonatomic, weak) IBOutlet UIView *firstOverlay;
 
+@property (nonatomic, weak) IBOutlet UILabel *locationLabel;
+@property (nonatomic, weak) IBOutlet UIButton *userButton;
+@property (nonatomic, weak) IBOutlet UIButton *dismissButton;
+@property (nonatomic, weak) IBOutlet UIButton *optionsButton;
+
+@property (nonatomic, weak) IBOutlet UIView *interactionOverlay;
 @property (nonatomic, weak) IBOutlet UIButton *goPrevButton;
 @property (nonatomic, weak) IBOutlet UIButton *goNextButton;
-
-@property (nonatomic, weak) IBOutlet UIButton *flagButton;
-@property (nonatomic, weak) IBOutlet UIButton *flagOverlayButton;
-
-@property (nonatomic, weak) IBOutlet UIButton *blockOverlayButton;
-
+@property (nonatomic, weak) IBOutlet UIButton *pauseButton;
 @property (nonatomic, weak) IBOutlet UIButton *bumpButton;
 @property (nonatomic, weak) IBOutlet UILabel *bumpCountLabel;
 
-@property (nonatomic, weak) IBOutlet UIButton *pauseButton;
+@property (nonatomic, weak) IBOutlet UIView *optionsOverlay;
+@property (nonatomic, weak) IBOutlet UIButton *flagOverlayButton;
+@property (nonatomic, weak) IBOutlet UIButton *blockOverlayButton;
 
 - (IBAction)goNextButtonPressed:(id)sender;
 - (IBAction)goPrevButtonPressed:(id)sender;
-
-- (IBAction)dismissButtonPressed;
-
 - (IBAction)pauseButtonPressed:(id)sender;
+- (IBAction)dismissButtonPressed;
+- (IBAction)optionsButtonPressed:(id)sender;
 
-- (IBAction)flagButtonPressed;
 - (IBAction)flagOverlayButtonPressed;
 - (IBAction)blockOverlayButtonPressed;
 
@@ -77,6 +77,8 @@
   BOOL _isPlaying;
   
   BOOL _isFreshStream;
+  
+  BOOL _userPausedFromOptions;
 }
 @synthesize dismissButton;
 
@@ -119,7 +121,8 @@
   tapGesture.numberOfTapsRequired = 1;
   [self.view addGestureRecognizer:tapGesture];
   
-  [self showOverlayMenu:NO];
+  self.optionsOverlay.hidden = YES;
+  self.firstOverlay.hidden = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -366,18 +369,18 @@
     [self.userButton setTitle:username forState:UIControlStateNormal];
   }
   if ( [user.objectId isEqualToString:[PFUser currentUser].objectId] ) {
-    self.blockOverlayButton.hidden = YES;
-    self.flagButton.hidden = YES;
-    self.flagOverlayButton.hidden = YES;
+    // close down optionOverlay before hiding it
+    if (!self.optionsOverlay.hidden) {
+      self.optionsButton.selected = NO;
+      self.optionsOverlay.hidden = YES;
+      self.interactionOverlay.hidden = NO;
+    }
+    self.optionsButton.hidden = YES;
   } else {
-    self.blockOverlayButton.hidden = !menuMode;
-    self.flagOverlayButton.hidden = !menuMode;
-    self.flagButton.hidden = menuMode;
+    self.optionsButton.hidden = NO;
   }
   
-  self.flagButton.selected = [[VYBCache sharedCache] vybeFlaggedByMe:aVybe];
   self.flagOverlayButton.selected = [[VYBCache sharedCache] vybeFlaggedByMe:aVybe];
-  
   self.blockOverlayButton.selected = NO;
 }
 
@@ -387,6 +390,11 @@
   self.currItem = [AVPlayerItem playerItemWithAsset:asset];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
   [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
+  
+  if (_userPausedFromOptions) {
+    return;
+  }
+  
   [self.currPlayer play];
 }
 
@@ -466,49 +474,37 @@
 }
 
 - (void)tapOnce {
-  //    if (!menuMode) {
-  //        overlayTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(overlayTimerExpired:) userInfo:nil repeats:NO];
-  //    } else {
-  //        [overlayTimer invalidate];
-  //    }
-  
-  menuMode = !menuMode;
-  [self showOverlayMenu:menuMode];
+  if (self.optionsOverlay.hidden) {
+    menuMode = !menuMode;
+    [self showOverlayMenu:menuMode];
+  }
 }
 
 - (void)overlayTimerExpired:(NSTimer *)timer {
   [self showOverlayMenu:NO];
 }
 
-- (void)showOverlayMenu:(BOOL)show {
-  menuMode = show;
+- (void)showOverlayMenu:(BOOL)mode {
+  menuMode = mode;
   
   [self menuModeChanged];
 }
 
 - (void)menuModeChanged {
-  self.locationLabel.hidden = !menuMode;
-  self.userButton.hidden = !menuMode;
-  self.dismissButton.hidden = !menuMode;
-  self.goPrevButton.selected = !menuMode;
-  self.goNextButton.selected = !menuMode;
-  self.bumpButton.hidden = !menuMode;
-  self.bumpCountLabel.hidden = !menuMode;
-  self.pauseButton.hidden = !menuMode;
-
-  PFObject *aVybe = _zoneVybes[_zoneCurrIdx];
-  if (aVybe) {
-    PFObject *user = aVybe[kVYBVybeUserKey];
-    if ( [user.objectId isEqualToString:[PFUser currentUser].objectId] ) {
-      self.blockOverlayButton.hidden = YES;
-      self.flagOverlayButton.hidden = YES;
-      self.flagButton.hidden = YES;
-    } else {
-      self.blockOverlayButton.hidden = !menuMode;
-      self.flagOverlayButton.hidden = !menuMode;
-      self.flagButton.hidden = menuMode;
-    }
-  }
+  self.firstOverlay.hidden = !menuMode;
+  self.bmpButton.hidden = menuMode;
+  
+//  PFObject *aVybe = _zoneVybes[_zoneCurrIdx];
+//  if (aVybe) {
+//    PFObject *user = aVybe[kVYBVybeUserKey];
+//    if ( [user.objectId isEqualToString:[PFUser currentUser].objectId] ) {
+//      self.blockOverlayButton.hidden = YES;
+//      self.flagOverlayButton.hidden = YES;
+//    } else {
+//      self.blockOverlayButton.hidden = !menuMode;
+//      self.flagOverlayButton.hidden = !menuMode;
+//    }
+//  }
 }
 
 /**
@@ -517,13 +513,24 @@
 
 #pragma mark - User Interactions
 
+- (IBAction)optionsButtonPressed:(id)sender {
+  if (self.optionsButton.selected) {
+    self.optionsOverlay.hidden = YES;
+    self.interactionOverlay.hidden = NO;
+  }
+  else {
+    self.optionsOverlay.hidden = NO;
+    self.interactionOverlay.hidden = YES;
+  }
+  self.optionsButton.selected = !self.optionsButton.selected;
+}
 
 - (IBAction)dismissButtonPressed {
   [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
-- (IBAction)flagButtonPressed {
-  if (self.flagButton.selected) {
+- (IBAction)flagOverlayButtonPressed {
+  if (self.flagOverlayButton.selected) {
     NSString *functionName = @"unflag_vybe";
     PFObject *currObj = _zoneVybes[_zoneCurrIdx];
     if (currObj) {
@@ -535,7 +542,6 @@
     }
     
     [[VYBCache sharedCache] setAttributesForVybe:currObj flaggedByCurrentUser:NO];
-    self.flagButton.selected = NO;
     self.flagOverlayButton.selected = NO;
   }
   else {
@@ -552,23 +558,21 @@
       }
       
       [[VYBCache sharedCache] setAttributesForVybe:currObj flaggedByCurrentUser:YES];
-      self.flagButton.selected = YES;
       self.flagOverlayButton.selected = YES;
       [self.currPlayer play];
+      _userPausedFromOptions = NO;
     }];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
       [self.currPlayer play];
+      _userPausedFromOptions = NO;
     }];
     [alertController addAction:blockAction];
     [alertController addAction:cancelAction];
     
     [self.currPlayer pause];
+    _userPausedFromOptions = YES;
     [self presentViewController:alertController animated:YES completion:nil];
   }
-}
-
-- (IBAction)flagOverlayButtonPressed {
-  [self flagButtonPressed];
 }
 
 - (IBAction)blockOverlayButtonPressed {
@@ -601,14 +605,17 @@
         [[VYBCache sharedCache] addBlockedUser:aUser forUser:[PFUser currentUser]];
         
         [self.currPlayer play];
+        _userPausedFromOptions = NO;
       }];
       UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
         [self.currPlayer play];
+        _userPausedFromOptions = NO;
       }];
       [alertController addAction:blockAction];
       [alertController addAction:cancelAction];
       
       [self.currPlayer pause];
+      _userPausedFromOptions = YES;
       [self presentViewController:alertController animated:YES completion:nil];
     }
   }
