@@ -293,8 +293,7 @@
     [self syncUIElementsInBackgroundFor:vybeBeingWatched withBlock:^(BOOL success) {
       [self playVybe:vybeBeingWatched];
     }];
-    self.goPrevButton.hidden = (streamIdx == 0);
-    self.goNextButton.hidden = (streamIdx == stream.count - 1);
+
   });
   
 }
@@ -416,12 +415,9 @@
 
 }
 
-
-
 - (IBAction)goNextButtonPressed:(id)sender {
   [self playNextItem];
 }
-
 
 - (void)playNextItem {
   // Remove notification for current item
@@ -431,7 +427,6 @@
     [self playNextZoneVideo];
   }
 }
-
 
 - (void)playNextZoneVideo {
   NSAssert(_zoneVybes, @"Can't play next video in zone because zone is nil");
@@ -501,34 +496,25 @@
   
   if (self.optionsOverlay.hidden) {
     menuMode = !menuMode;
-    [self showOverlayMenu:menuMode];
+    [self menuModeChanged];
+    if (menuMode) {
+      self.goPrevButton.hidden = (_zoneCurrIdx == 0);
+      self.goNextButton.hidden = (_zoneCurrIdx == _zoneVybes.count - 1);
+      [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(overlayTimerExpired:) userInfo:nil repeats:NO];
+    }
   }
 }
 
 - (void)overlayTimerExpired:(NSTimer *)timer {
-  [self showOverlayMenu:NO];
+  self.goPrevButton.hidden = YES;
+  self.goNextButton.hidden = YES;
+  
+  [timer invalidate];
 }
 
-- (void)showOverlayMenu:(BOOL)mode {
-  menuMode = mode;
-  
-  [self menuModeChanged];
-}
 
 - (void)menuModeChanged {
   self.firstOverlay.hidden = !menuMode;
-  
-//  PFObject *aVybe = _zoneVybes[_zoneCurrIdx];
-//  if (aVybe) {
-//    PFObject *user = aVybe[kVYBVybeUserKey];
-//    if ( [user.objectId isEqualToString:[PFUser currentUser].objectId] ) {
-//      self.blockOverlayButton.hidden = YES;
-//      self.flagOverlayButton.hidden = YES;
-//    } else {
-//      self.blockOverlayButton.hidden = !menuMode;
-//      self.flagOverlayButton.hidden = !menuMode;
-//    }
-//  }
 }
 
 /**
