@@ -199,8 +199,8 @@ Parse.Cloud.define('get_count_for_zone', function (request, response) {
 // Default algorithm used in the app
 Parse.Cloud.define('get_active_zone_vybes', function (request, response) {
   var currTime = new Date();
-  var ttlAgo = new Date();
-  ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window
+  var aDayAgo = new Date();
+  aDayAgo.setHours(currTime.getHours() - 24);  // 24 hour window
 
   var currUser = request.user;
   var blockedRelation = currUser.relation('blockedUsers');
@@ -218,7 +218,7 @@ Parse.Cloud.define('get_active_zone_vybes', function (request, response) {
         else {
           query.equalTo('zoneID', zoneID);
         }
-        query.greaterThanOrEqualTo('timestamp', ttlAgo);
+        query.greaterThanOrEqualTo('timestamp', aDayAgo);
 
          query.find({
             success: function(vybesObjects) {
@@ -239,8 +239,8 @@ Parse.Cloud.define('get_active_zone_vybes', function (request, response) {
 
 Parse.Cloud.define('get_active_vybes', function (request, response) {
   var currTime = new Date();
-  var ttlAgo = new Date();
-  ttlAgo.setHours(currTime.getHours() - 24);  // 24 hour window
+  var aDayAgo = new Date();
+  aDayAgo.setHours(currTime.getHours() - 24);  // 24 hour window
 
   var currUser = request.user;
   var blockedRelation = currUser.relation('blockedUsers');
@@ -251,7 +251,7 @@ Parse.Cloud.define('get_active_vybes', function (request, response) {
         query.include('user');
         query.notContainedIn('user', list);
         query.addDescending('timestamp');
-        query.greaterThanOrEqualTo('timestamp',ttlAgo);
+        query.greaterThanOrEqualTo('timestamp',aDayAgo);
         query.limit(10000)
 
         query.find({
@@ -276,6 +276,10 @@ Parse.Cloud.define('get_active_vybes', function (request, response) {
 Parse.Cloud.define('get_fresh_vybes', function (request, response) {
   var currUser = request.user;
   var blockedRelation = currUser.relation('blockedUsers');
+  var currTime = new Date();
+  var aDayAgo = new Date();
+  aDayAgo.setHours(currTime.getHours() - 24);  // 24 hour window.
+
    blockedRelation.query().find({
       success: function(list) {
         console.log('[get_fresh_vybes] there are ' + list.length + ' blocked users for ' + currUser.get('username'));
@@ -283,9 +287,7 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
         query.equalTo('username', currUser.get('username'));
         query.first({
           success: function(aUser) {
-            var currTime = new Date();
-            var aDayAgo = new Date();
-            aDayAgo.setHours(currTime.getHours() - 24);  // 24 hour window.
+
 
             var feed = aUser.relation('feed');
             var freshContents = [];
@@ -293,7 +295,7 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
             feedQuery.include('user');
             feedQuery.notContainedIn('user', list);
             feedQuery.addAscending('timestamp');
-            feedQuery.greaterThanOrEqualTo('timestamp', ttlAgo);
+            feedQuery.greaterThanOrEqualTo('timestamp', aDayAgo);
             feedQuery.find({
               success: function(list) {
                 console.log('[get_fresh_vybes] There are ' + list.length + ' FRESH feed for ' + aUser.get('username'));
