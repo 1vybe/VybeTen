@@ -80,6 +80,8 @@
   BOOL _isFreshStream;
   
   BOOL _userPausedFromOptions;
+    
+  UILongPressGestureRecognizer *longPressRecognizer;
 }
 @synthesize dismissButton;
 
@@ -89,6 +91,8 @@
 
 - (void)dealloc {
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
+  
+  [[UIApplication sharedApplication].keyWindow removeGestureRecognizer:longPressRecognizer];
 }
 
 - (id)initWithPageIndex:(NSInteger)pageIndex {
@@ -121,6 +125,11 @@
   UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce:)];
   tapGesture.numberOfTapsRequired = 1;
   [self.view addGestureRecognizer:tapGesture];
+  
+  longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
+  longPressRecognizer.minimumPressDuration = 0.3;
+  longPressRecognizer.delegate = self;
+  [[UIApplication sharedApplication].keyWindow addGestureRecognizer:longPressRecognizer];
   
   self.optionsOverlay.hidden = YES;
   self.firstOverlay.hidden = YES;
@@ -522,6 +531,49 @@
  **/
 
 #pragma mark - User Interactions
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+  return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+  return YES;
+}
+
+- (void)longPressDetected:(UIGestureRecognizer *)recognizer {
+  CGPoint location = [recognizer locationInView:recognizer.view];
+  CGRect locationAerial = CGRectMake(0, self.view.bounds.size.height - 50, 100, 50);
+  if (CGRectContainsPoint(locationAerial, location)) {
+    switch (recognizer.state) {
+      case UIGestureRecognizerStateBegan:
+        [self presentMapViewController];
+        break;
+      case UIGestureRecognizerStateCancelled:
+      case UIGestureRecognizerStateEnded:
+        [self dismissMapViewController];
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+- (void)presentMapViewController {
+  PFObject *vybeObj = _zoneVybes[_zoneCurrIdx];
+  if (vybeObj[kVYBVybeZoneLatitudeKey]) {
+    double lat = [(NSNumber *)vybeObj[kVYBVybeZoneLatitudeKey] doubleValue];
+    double lng = [(NSNumber *)vybeObj[kVYBVybeZoneLongitudeKey] doubleValue];
+    CLLocationCoordinate2D targetLocation = CLLocationCoordinate2DMake(lat, lng);
+    
+    VYBMapViewController *mapVC = [[VYBMapViewController alloc] init];
+    mapVC.delegate = self;
+    [mapVC displayLocation:targetLocation];
+  }
+}
+
+- (void)dismissMapViewController {
+  [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (IBAction)bmpButtonPressed:(id)sender {
   PFObject *currVybe = _zoneVybes[_zoneCurrIdx];

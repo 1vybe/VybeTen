@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @protocol VYBPlayerViewControllerDelegate;
-@interface VYBPlayerViewController : UIViewController
+@interface VYBPlayerViewController : UIViewController <UIGestureRecognizerDelegate>
 @property (nonatomic, weak) id<VYBPlayerViewControllerDelegate> delegate;
 - (id)initWithPageIndex:(NSInteger)pageIndex;
 - (NSInteger)pageIndex;

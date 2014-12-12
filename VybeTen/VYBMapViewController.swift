@@ -9,6 +9,11 @@ import UIKit
 import MapKit
 
 @objc class VYBMapViewController: UIViewController, MKMapViewDelegate, VYBPlayerViewControllerDelegate {
+  var delegate: AnyObject?
+  
+  private var _isSimpleMap = false
+  private var targetCoordinate: CLLocationCoordinate2D?
+  
   @IBOutlet weak var mapView: MKMapView!
   
   @IBAction func dismissButtonPressed(sender: AnyObject) {
@@ -21,6 +26,24 @@ import MapKit
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    if _isSimpleMap {      
+      mapView = MKMapView(frame: self.view.frame)
+      self.view.addSubview(mapView)
+      
+      if let coordinate = targetCoordinate? {
+        mapView.delegate = self
+        let span = MKCoordinateSpanMake(0.05, 0.05)
+        let region = MKCoordinateRegionMake(coordinate, span)
+        self.mapView.setRegion(region, animated: true)
+        
+        // this is current location annoation
+        let currLocAnnotation = SimpleAnnotation(coordinate: coordinate)
+        
+        self.mapView.addAnnotation(currLocAnnotation)
+      }
+      return
+    }
+    
     self.setUpMapRegion()
     
     MBProgressHUD.showHUDAddedTo(self.mapView, animated: true)
@@ -31,20 +54,13 @@ import MapKit
       MBProgressHUD.hideAllHUDsForView(self.mapView, animated: true)
     }
   }
-  
-  private func updateZoneAnnoations(newZones: [Zone]) {
-    self.mapView.removeAnnotations(_activeZoneAnnotations)
-    _activeZoneAnnotations = []
-    
-    for aZone in newZones {
-      let simpleAnnotation = SimpleAnnotation(zone: aZone)
-      _activeZoneAnnotations.append(simpleAnnotation)
-      self.mapView.addAnnotation(simpleAnnotation)
-    }
-  }
-  
+
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
+    
+    if _isSimpleMap {
+      return
+    }
     
     self.refreshZoneAnnoation()
   }
@@ -60,6 +76,14 @@ import MapKit
 #endif
   }
   
+  func displayLocation(coordinate: CLLocationCoordinate2D) {
+    _isSimpleMap = true
+    targetCoordinate = coordinate
+    
+    if let presenterVC = self.delegate as? UIViewController {
+      presenterVC.presentViewController(self, animated: true, completion: nil)
+    }
+  }
   
   private func setUpMapRegion() {
     mapView.delegate = self
@@ -92,6 +116,18 @@ import MapKit
   }
   
   
+  private func updateZoneAnnoations(newZones: [Zone]) {
+    self.mapView.removeAnnotations(_activeZoneAnnotations)
+    _activeZoneAnnotations = []
+    
+    for aZone in newZones {
+      let simpleAnnotation = SimpleAnnotation(zone: aZone)
+      _activeZoneAnnotations.append(simpleAnnotation)
+      self.mapView.addAnnotation(simpleAnnotation)
+    }
+  }
+  
+  
   func refreshZoneAnnoation() {
     if let zonesOnScreen = ZoneStore.sharedInstance.activeZones() {
       self.updateZoneAnnoations(zonesOnScreen)
@@ -113,6 +149,11 @@ import MapKit
       pin = MKAnnotationView(annotation: annotation, reuseIdentifier: "zonePin")
     }
     
+    if _isSimpleMap {
+      pin.image = UIImage(named: "Pin_Watched")
+      
+      return pin
+    }
     
     pin.canShowCallout = true
     
@@ -185,3 +226,4 @@ import MapKit
     }
   }
 }
+
