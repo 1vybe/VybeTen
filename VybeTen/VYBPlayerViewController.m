@@ -543,32 +543,42 @@
 - (void)longPressDetected:(UIGestureRecognizer *)recognizer {
   CGPoint location = [recognizer locationInView:recognizer.view];
   CGRect locationAerial = CGRectMake(0, self.view.bounds.size.height - 50, 100, 50);
-  if (CGRectContainsPoint(locationAerial, location)) {
-    switch (recognizer.state) {
-      case UIGestureRecognizerStateBegan:
+  BOOL isInLocationAerial = CGRectContainsPoint(locationAerial, location);
+
+  switch (recognizer.state) {
+    case UIGestureRecognizerStateBegan:
+      if (isInLocationAerial) {
         [self presentMapViewController];
-        break;
-      case UIGestureRecognizerStateCancelled:
-      case UIGestureRecognizerStateEnded:
-        [self dismissMapViewController];
-        break;
-      default:
-        break;
-    }
+      }
+      break;
+    case UIGestureRecognizerStateCancelled:
+    case UIGestureRecognizerStateEnded:
+      [self dismissMapViewController];
+      break;
+    default:
+      break;
   }
+
+
 }
 
 - (void)presentMapViewController {
   PFObject *vybeObj = _zoneVybes[_zoneCurrIdx];
+  CLLocationCoordinate2D targetLocation;
+
   if (vybeObj[kVYBVybeZoneLatitudeKey]) {
     double lat = [(NSNumber *)vybeObj[kVYBVybeZoneLatitudeKey] doubleValue];
     double lng = [(NSNumber *)vybeObj[kVYBVybeZoneLongitudeKey] doubleValue];
-    CLLocationCoordinate2D targetLocation = CLLocationCoordinate2DMake(lat, lng);
-    
-    VYBMapViewController *mapVC = [[VYBMapViewController alloc] init];
-    mapVC.delegate = self;
-    [mapVC displayLocation:targetLocation];
+    targetLocation = CLLocationCoordinate2DMake(lat, lng);
   }
+  else if (vybeObj[kVYBVybeGeotag]) {
+    PFGeoPoint *geoPt = vybeObj[kVYBVybeGeotag];
+    targetLocation = CLLocationCoordinate2DMake(geoPt.latitude, geoPt.longitude);
+  }
+  
+  VYBMapViewController *mapVC = [[VYBMapViewController alloc] init];
+  mapVC.delegate = self;
+  [mapVC displayLocation:targetLocation];
 }
 
 - (void)dismissMapViewController {
