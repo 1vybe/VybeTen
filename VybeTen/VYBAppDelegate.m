@@ -12,10 +12,9 @@
 #import <GAIDictionaryBuilder.h>
 #import <GAITracker.h>
 #import <GAIFields.h>
-#import <HockeySDK/HockeySDK.h>
+//#import <HockeySDK/HockeySDK.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import "VYBAppDelegate.h"
-#import "VYBUserStore.h"
 #import "VYBCaptureViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBPermissionViewController.h"
@@ -60,19 +59,19 @@
   [self monitorReachability];
   
   /* HockeyApp Initilization */
-  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
-  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
-  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
-  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
-  [hockeyManager startManager];
-  
-  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-  
+//  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
+//  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
+//  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
+//  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
+//  [hockeyManager startManager];
+//  
+//  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+//  
   
   // Parse Initialization
   [ParseCrashReporting enable];
-  [Parse setApplicationId:PARSE_APPLICATION_ID
-                clientKey:PARSE_CLIENT_KEY];
+  [Parse setApplicationId:PARSE_APPLICATION_ID_DEV
+                clientKey:PARSE_CLIENT_KEY_DEV];
   
   BOOL preBackgroundPush = ![application respondsToSelector:@selector(backgroundRefreshStatus)];
   BOOL oldPushHandlerOnly = ![self respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)];
@@ -155,8 +154,6 @@
   
   BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
   
-  success = [[VYBUserStore sharedStore] saveChanges];
-  
 }
 
 
@@ -165,7 +162,6 @@
   // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
   BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
   
-  success = [[VYBUserStore sharedStore] saveChanges];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

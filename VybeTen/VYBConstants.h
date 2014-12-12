@@ -17,18 +17,17 @@
 #define DOWNLOADING     2
 #define DOWNLOADED      3
 
-
 /* House */
-#define PARSE_APPLICATION_ID        @"gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC"
-#define PARSE_CLIENT_KEY            @"6y6eMRZq5GAa5ihS2GSjFB0xwmnuatvuJBhYQ1Af"
-#define HOCKEY_APP_ID               @"66e11a95d2af956652e5f4efa38af51e"
-#define GA_TRACKING_ID              @"UA-49584125-4"
+#define PARSE_APPLICATION_ID_DEV        @"m5Im7uDcY5rieEbPyzRfV2Dq6YegS3kAQwxiDMFZ"
+#define PARSE_CLIENT_KEY_DEV            @"WLqeqlf4qVVk5jF6yHSWGxw3UzUQwUtmAk9vCPfB"
+#define HOCKEY_APP_ID                   @"66e11a95d2af956652e5f4efa38af51e"
+#define GA_TRACKING_ID_DEV              @"UA-49584125-4"
 
-/* WORLD
-#define GA_TRACKING_ID              @"UA-49584125-3"
-#define PARSE_APPLICATION_ID        @"m5Im7uDcY5rieEbPyzRfV2Dq6YegS3kAQwxiDMFZ"
-#define PARSE_CLIENT_KEY            @"WLqeqlf4qVVk5jF6yHSWGxw3UzUQwUtmAk9vCPfB"
-*/
+/* WORLD */
+#define PARSE_APPLICATION_ID            @"gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC"
+#define PARSE_CLIENT_KEY                @"6y6eMRZq5GAa5ihS2GSjFB0xwmnuatvuJBhYQ1Af"
+#define GA_TRACKING_ID                  @"UA-49584125-3"
+
 
 #define COLOR_MAIN              [UIColor colorWithRed:255.0/255.0 green:81.0/255.0 blue:81.0/255.0 alpha:1]
 #define COLOR_LOC_NAME_LABEL    [UIColor colorWithRed:76.0/255.0 green:76.0/255.0 blue:76.0/255.0 alpha:1]
