@@ -1,10 +1,10 @@
 {
     "applications": {
-        "Vybe": {
+        "VybeDev": {
             "applicationId": "m5Im7uDcY5rieEbPyzRfV2Dq6YegS3kAQwxiDMFZ", 
             "masterKey": "2PROAH5f6x9GH511CS0uSL4d1gHmG1nA2x9Y0sr1"
         }, 
-        "VybeDev": {
+        "Vybe": {
             "applicationId": "gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC", 
             "masterKey": "OgzdYpZf8z99FCbmwHHr6WheKe45p5pv7qOChHmk"
         }, 
