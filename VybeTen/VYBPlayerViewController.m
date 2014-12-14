@@ -24,7 +24,7 @@
 @interface VYBPlayerViewController ()
 @property (nonatomic, weak) IBOutlet UIButton *bmpButton;
 @property (nonatomic, weak) IBOutlet UILabel *bumpCountLabel;
-@property (nonatomic, weak) IBOutlet UILabel *bumpCountDynamic;
+@property (nonatomic, weak) IBOutlet UILabel *bumpCountGhost;
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *firstOverlay;
@@ -134,6 +134,7 @@
   
   self.optionsOverlay.hidden = YES;
   self.firstOverlay.hidden = YES;
+  self.bumpCountGhost.hidden = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -525,6 +526,11 @@
 
 - (void)menuModeChanged {
   self.firstOverlay.hidden = !menuMode;
+  self.bumpCountGhost.hidden = !menuMode;
+  PFObject *currVybe = _zoneVybes[_zoneCurrIdx];
+  if (currVybe) {
+    [self updateBumpCountFor:currVybe];
+  }
 }
 
 /**
@@ -602,12 +608,25 @@
 }
 
 - (void)updateBumpCountFor:(PFObject *)aVybe {
+  
   NSNumber *counter = [[VYBCache sharedCache] likeCountForVybe:aVybe];
   if (counter && [counter intValue]) {
-    self.bumpCountLabel.text = [NSString stringWithFormat:@"%@", [[VYBCache sharedCache] likeCountForVybe:aVybe]];
+    if (self.firstOverlay.hidden) {
+      self.bumpCountLabel.text = [NSString stringWithFormat:@"%@", counter];
+    }
+    else {
+      self.bumpCountGhost.text = [NSString stringWithFormat:@"%@", counter];
+      self.bumpCountLabel.text = ([counter intValue] > 1) ? @"Bumps" : @"Bump";
+    }
   }
   else {
-    self.bumpCountLabel.text = @"";
+    if (self.firstOverlay.hidden) {
+      self.bumpCountLabel.text = @"";
+    }
+    else {
+      self.bumpCountGhost.text = @"";
+      self.bumpCountLabel.text = @"";
+    }
   }
 }
 

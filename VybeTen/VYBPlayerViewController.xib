@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="blockOverlayButton" destination="BsT-WT-KSd" id="FOI-pW-Ox4"/>
                 <outlet property="bmpButton" destination="GIp-CI-r4q" id="Djt-Uv-lSu"/>
+                <outlet property="bumpCountGhost" destination="dfk-Iw-Edw" id="kVz-zC-iB9"/>
                 <outlet property="bumpCountLabel" destination="cDB-yi-w6C" id="KyB-vF-eYP"/>
                 <outlet property="dismissButton" destination="lH2-Xq-FWU" id="B27-vS-keY"/>
                 <outlet property="firstOverlay" destination="i5M-Pr-FkT" id="6xs-Ur-JgG"/>
@@ -21,6 +22,7 @@
                 <outlet property="optionsOverlay" destination="afv-fB-hBX" id="gXl-St-DZD"/>
                 <outlet property="pauseButton" destination="4Ea-VG-Ot5" id="uPF-6c-MXn"/>
                 <outlet property="timeLabel" destination="UPQ-0i-rrO" id="4c8-UE-Biw"/>
+                <outlet property="usernameLabel" destination="KPb-Hj-SQM" id="Fko-BQ-KWg"/>
                 <outlet property="view" destination="NzJ-pm-eNV" id="vAf-zx-lkw"/>
             </connections>
         </placeholder>
@@ -212,7 +214,7 @@
                         <action selector="bmpButtonPressed:" destination="-1" eventType="touchUpInside" id="6eQ-TK-B7p"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bumps" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cDB-yi-w6C" userLabel="bumpCountFixed">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bumps" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cDB-yi-w6C" userLabel="bumpCountLabel">
                     <rect key="frame" x="309" y="573" width="37" height="17"/>
                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="11"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -220,7 +222,7 @@
                     <color key="shadowColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                     <size key="shadowOffset" width="1" height="1"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="648" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfk-Iw-Edw" userLabel="bumpCount">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="648" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfk-Iw-Edw" userLabel="bumpCountGhost">
                     <rect key="frame" x="283" y="573" width="21" height="17"/>
                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="11"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
