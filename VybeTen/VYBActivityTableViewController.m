@@ -349,15 +349,12 @@ static void *ZOTContext = &ZOTContext;
       
       NSNumber *count = [[VYBCache sharedCache] likeCountForVybe:aVybe];
       if (count && [count intValue] > 0) {
-        if ([count intValue] > 1) {
-          cell.bumpCountLabel.text = [NSString stringWithFormat:@"%@ Bumps", count];
-        }
-        else {
-          cell.bumpCountLabel.text = [NSString stringWithFormat:@"%@ Bump", count];
-        }
+        cell.smallBumpImageView.hidden = NO;
+        cell.bumpCountLabel.text = [NSString stringWithFormat:@"%@", count];
       }
       else {
         cell.bumpCountLabel.text = @"";
+        cell.smallBumpImageView.hidden = YES;
       }
       
       NSString *localID = aVybe[@"uniqueId"];
