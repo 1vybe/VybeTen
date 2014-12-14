@@ -23,12 +23,14 @@
 
 @interface VYBPlayerViewController ()
 @property (nonatomic, weak) IBOutlet UIButton *bmpButton;
+@property (nonatomic, weak) IBOutlet UILabel *bumpCountLabel;
+@property (nonatomic, weak) IBOutlet UILabel *bumpCountDynamic;
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *firstOverlay;
 
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
-@property (nonatomic, weak) IBOutlet UIButton *userButton;
+@property (nonatomic, weak) IBOutlet UILabel *usernameLabel;
 @property (nonatomic, weak) IBOutlet UIButton *dismissButton;
 @property (nonatomic, weak) IBOutlet UIButton *optionsButton;
 
@@ -36,7 +38,6 @@
 @property (nonatomic, weak) IBOutlet UIButton *goPrevButton;
 @property (nonatomic, weak) IBOutlet UIButton *goNextButton;
 @property (nonatomic, weak) IBOutlet UIButton *pauseButton;
-@property (nonatomic, weak) IBOutlet UILabel *bumpCountLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *optionsOverlay;
 @property (nonatomic, weak) IBOutlet UIButton *flagOverlayButton;
@@ -383,7 +384,7 @@
   PFObject *user = aVybe[kVYBVybeUserKey];
   NSString *username = user[kVYBUserUsernameKey];
   if (username) {
-    [self.userButton setTitle:username forState:UIControlStateNormal];
+    [self.usernameLabel setText:username];
   }
   if ( [user.objectId isEqualToString:[PFUser currentUser].objectId] ) {
     // close down optionOverlay before hiding it

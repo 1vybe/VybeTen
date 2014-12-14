@@ -19,9 +19,8 @@
 @interface VYBReplayViewController () <UITextFieldDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, weak) IBOutlet UIButton *rejectButton;
-@property (nonatomic, weak) IBOutlet UILabel *acceptLabel;
 @property (nonatomic, weak) IBOutlet UIView *overlayView;
-@property (nonatomic, weak) IBOutlet UILabel *zoneLabel;
+@property (nonatomic, weak) IBOutlet UIButton *zoneButton;
 @property (nonatomic, weak) IBOutlet VYBPlayerView *playerView;
 
 - (IBAction)rejectButtonPressed:(id)sender;
@@ -69,7 +68,8 @@
   Zone *lastZone = [[VYBMyVybeStore sharedStore] currZone];
   if (lastZone && [[ZoneFinder sharedInstance] suggestionsContainZone:lastZone]) {
     [[VYBMyVybeStore sharedStore] setCurrZone:lastZone];
-    [self.zoneLabel setText:lastZone.name];
+    [self.zoneButton setTitle:lastZone.name forState:UIControlStateNormal];
+    [self.zoneButton setBackgroundImage:nil forState:UIControlStateNormal];
   }
   
   switch (currentAsset.videoOrientation) {
@@ -108,12 +108,19 @@
 
 #pragma mark - Zone
 - (IBAction)selectZoneButtonPressed:(id)sender {
+  [self.zoneButton setEnabled:NO];
   [[ZoneFinder sharedInstance] findZoneNearLocationInBackground:^(BOOL success) {
     if (success) {
       NSArray *suggestions = [[ZoneFinder sharedInstance] suggestions];
       if (suggestions && suggestions.count > 0) {
         [self displayCurrentPlaceSuggestions:suggestions];
       }
+      else {
+        [self.zoneButton setEnabled:YES];
+      }
+    }
+    else {
+      [self.zoneButton setEnabled:YES];
     }
   }];
 }
@@ -128,14 +135,18 @@
     
     UIAlertAction *noTagAction = [UIAlertAction actionWithTitle:@"No Check In" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
       [[VYBMyVybeStore sharedStore] setCurrZone:nil];
-      [self.zoneLabel setText:@"Check In"];
+      [self.zoneButton setEnabled:YES];
+      [self.zoneButton setTitle:@"Check-in location" forState:UIControlStateNormal];
+      [self.zoneButton setBackgroundImage:[UIImage imageNamed:@"Checkin-btn"] forState:UIControlStateNormal];
     }];
     [checkInController addAction:noTagAction];
     
     for (Zone *aZone in suggestions) {
       UIAlertAction *action = [UIAlertAction actionWithTitle:aZone.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [[VYBMyVybeStore sharedStore] setCurrZone:aZone];
-        [self.zoneLabel setText:aZone.name];
+        [self.zoneButton setTitle:aZone.name forState:UIControlStateNormal];
+        [self.zoneButton setBackgroundImage:nil forState:UIControlStateNormal];
+        [self.zoneButton setEnabled:YES];
       }];
       [checkInController addAction:action];
     }
@@ -146,7 +157,9 @@
       }
     }
     
-    UIAlertAction *action = [UIAlertAction actionWithTitle:@"Go Back" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"Go Back" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+      [self.zoneButton setEnabled:YES];
+    }];
     [checkInController addAction:action];
     
 //    [checkInController setModalPresentationStyle:UIModalPresentationPopover];
@@ -181,9 +194,11 @@
   }
   else {
     Zone *zone = suggestions[buttonIndex];
-    [self.zoneLabel setText:zone.name];
+    [self.zoneButton setTitle:zone.name forState:UIControlStateNormal];
+    [self.zoneButton setBackgroundImage:nil forState:UIControlStateNormal];
     [[VYBMyVybeStore sharedStore] setCurrZone:zone];
   }
+  [self.zoneButton setEnabled:YES];
 }
 
 
