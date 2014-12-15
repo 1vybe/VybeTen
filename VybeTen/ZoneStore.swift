@@ -356,14 +356,22 @@ private let _zoneStoreSharedInstance = ZoneStore()
       if error == nil {
         if success {
           if let zone = self.unlockedZoneForVybe(vybe) {
-          
             for index in 0...zone.myVybes.count {
               if zone.myVybes[index] == vybe {
                 zone.myVybes.removeAtIndex(index)
                 break
               }
             }
-            
+            // Remove this unlocked zone from Activity screen because it has no vybe
+            if zone.myVybes.count == 0 {
+              var newUnlocked = [Zone]()
+              for zoneObj in self._unlockedZones {
+                if zoneObj.zoneID != zone.zoneID {
+                  newUnlocked += [zoneObj]
+                }
+              }
+              self._unlockedZones = newUnlocked
+            }
           }
         }
         completionHandler(success: success)

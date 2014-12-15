@@ -576,7 +576,13 @@ static void *ZOTContext = &ZOTContext;
 }
 
 - (void)didDeleteMyVybe {
-  self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
+  NSArray *newArr = [[ZoneStore sharedInstance] unlockedZones];
+  // My Location zone cell will be entirely gone so we want to reset selectedIndex to default
+  if (newArr.count < self.myLocations.count) {
+    _selectedMyLocationIndex = -1;
+  }
+  self.myLocations = newArr;
+  
   [self.tableView reloadData];
 }
 
