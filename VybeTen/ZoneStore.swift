@@ -57,7 +57,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
                     return false
                   }
                   else {
-                    let comparisonResult = zone1.mostRecentActiveVybeTimestamp.compare(zone2.mostRecentActiveVybeTimestamp)
+                    let comparisonResult = zone1.mostRecentActiveVybeTimestamp?.compare(zone2.mostRecentActiveVybeTimestamp!)
                     return comparisonResult == NSComparisonResult.OrderedDescending
                   }
                 })
@@ -131,19 +131,20 @@ private let _zoneStoreSharedInstance = ZoneStore()
   }
   
   private func createActiveZonesFromVybes(vybes: [PFObject]) {
+    // First clear all vybes from active zones
+    for aZone in _activeZones {
+      aZone.clearActiveVybes()
+    }
+    
     for aVybe in vybes {
       self.putActiveVybeIntoZone(aVybe)
     }
-    // We use the least active vybe time because later we want to remove old active zones
+    
+    // Remove previously active zones that have no active vybe as of now (b/c time passed or vybes deleted)
     var newActiveZones = [Zone]()
-    if let leastActiveVybe = vybes.first {
-      if let leastActiveTime = leastActiveVybe[kVYBVybeTimestampKey] as? NSDate {
-        for aZone in _activeZones {
-          let result = aZone.mostRecentActiveVybeTimestamp.compare(leastActiveTime)
-          if result == NSComparisonResult.OrderedDescending || result == NSComparisonResult.OrderedSame {
-            newActiveZones += [aZone]
-          }
-        }
+    for aZone in _activeZones {
+      if aZone.mostRecentVybe != nil {
+        newActiveZones += [aZone]
       }
     }
     
