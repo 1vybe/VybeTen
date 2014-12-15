@@ -11,6 +11,8 @@
 #import "VYBUtility.h"
 #import "VYBCache.h"
 
+#import "VybeTen-Swift.h"
+
 @implementation VYBWelcomeViewController
 
 #pragma mark - Lifecycle
@@ -74,6 +76,9 @@
     return;
   }
   else {
+    // Update Config file from cloud
+    [[ConfigManager sharedInstance] fetchIfNeeded];
+    
     // Update myFlags cache
     PFRelation *myFlags = [[PFUser currentUser] relationForKey:kVYBUserFlagsKey];
     PFQuery *query = [myFlags query];

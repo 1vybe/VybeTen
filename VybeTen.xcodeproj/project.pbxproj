@@ -74,6 +74,7 @@
 		60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */; };
 		740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */; };
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
+		74551C811A3E91FA00D348BB /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74551C801A3E91FA00D348BB /* ConfigManager.swift */; };
 		74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */; };
 		74A0FA571A36A8B50065059E /* UnblockUser.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74A0FA561A36A8B50065059E /* UnblockUser.storyboard */; };
 		74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */; };
@@ -202,6 +203,7 @@
 		60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybeStore.m; sourceTree = "<group>"; };
 		740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
+		74551C801A3E91FA00D348BB /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
 		74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
 		74A0FA561A36A8B50065059E /* UnblockUser.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UnblockUser.storyboard; sourceTree = "<group>"; };
 		74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -494,6 +496,7 @@
 				023E538C191F142000C3CF78 /* VYBCache.m */,
 				0275087A19252D5C00B070EE /* VYBUtility.h */,
 				0275087B19252D5C00B070EE /* VYBUtility.m */,
+				74551C801A3E91FA00D348BB /* ConfigManager.swift */,
 				023E538E191F143F00C3CF78 /* Categories */,
 				027C707719AEFE4F007BB8FE /* Stories */,
 				027D924818EA85F300537822 /* Controller */,
@@ -773,6 +776,7 @@
 				884E6D021A26E1EB00E9732F /* SignUpViewController.swift in Sources */,
 				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,
 				0262054419A67B3600E994F9 /* UINavigationController+Autorotate.m in Sources */,
+				74551C811A3E91FA00D348BB /* ConfigManager.swift in Sources */,
 				0288603E19E4A02A007876AE /* VYBCapturePipeline.m in Sources */,
 				0222946D19FF2CE200A2AD62 /* VYBPizzaLayer.m in Sources */,
 				026216BE19EA470600EC6544 /* VYBVybe.m in Sources */,
