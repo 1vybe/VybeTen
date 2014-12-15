@@ -185,7 +185,9 @@ import MapKit
     watchedContents.append(vybe)
     //Update to cloud
     PFCloud.callFunctionInBackground("remove_from_feed", withParameters: ["vybeID" : vybe.objectId]) { (result: AnyObject!, error: NSError!) -> Void in
-      
+      if error != nil {
+        println("could not remove the vybe")
+      }
     }
   }
   

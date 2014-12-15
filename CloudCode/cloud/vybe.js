@@ -287,8 +287,6 @@ Parse.Cloud.define('get_fresh_vybes', function (request, response) {
         query.equalTo('username', currUser.get('username'));
         query.first({
           success: function(aUser) {
-
-
             var feed = aUser.relation('feed');
             var freshContents = [];
             var feedQuery = feed.query();

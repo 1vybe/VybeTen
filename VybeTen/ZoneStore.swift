@@ -227,8 +227,6 @@ private let _zoneStoreSharedInstance = ZoneStore()
     return self.createZoneFromVybe(parseObj)
   }
 
-  
-
   func unlockedZones() -> [Zone]! {
     return _unlockedZones
   }
@@ -267,12 +265,50 @@ private let _zoneStoreSharedInstance = ZoneStore()
   }
   
   func freshVybesFromZone(zoneID: String) -> [PFObject]? {
+    var contents: [PFObject]? = self.mergeFreshContentsAndMyContentsInZone(zoneID)
+
+    return contents
+  }
+  
+  private func mergeFreshContentsAndMyContentsInZone(zoneID: String) -> [PFObject]? {
+    var freshContents = [PFObject]()
     for aZone in _activeZones {
       if aZone.zoneID == zoneID {
-        return aZone.freshContents
+        freshContents = aZone.freshContents
+        break
       }
     }
-    return nil
+
+    var merged = freshContents
+    var myVybes = [PFObject]()
+    for aZone in _unlockedZones {
+      if aZone.zoneID == zoneID {
+        myVybes = aZone.myVybes
+        break
+      }
+    }
+    
+    for myObj in myVybes {
+      var idx = 0
+      innerLoop: for ; idx < merged.count; {
+        let myTime = myObj[kVYBVybeTimestampKey] as NSDate
+        let freshTime = merged[idx].objectForKey(kVYBVybeTimestampKey) as NSDate
+        
+        let comparison = myTime.compare(freshTime)
+        if comparison == NSComparisonResult.OrderedAscending {
+          break innerLoop
+        }
+        else {
+          idx++;
+        }
+      }
+      
+      if idx > 0 {
+        merged.insert(myObj, atIndex: idx)
+      }
+    }
+    
+    return merged
   }
 
   func removeWatchedFromFreshFeed(aVybe: AnyObject!) {

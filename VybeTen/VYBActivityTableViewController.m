@@ -200,6 +200,7 @@ static void *ZOTContext = &ZOTContext;
 - (PFQuery *)queryForTable {
   PFQuery *query = [PFQuery queryWithClassName:self.parseClassName];
   [query whereKey:kVYBVybeUserKey equalTo:[PFUser currentUser]];
+  [query includeKey:kVYBVybeUserKey];
   [query orderByDescending:kVYBVybeZoneNameKey];
   [query addDescendingOrder:kVYBVybeTimestampKey];
   [query setLimit:1000];
