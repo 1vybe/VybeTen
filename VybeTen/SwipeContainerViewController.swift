@@ -127,6 +127,11 @@ import UIKit
     let fromViewController = selectedViewController!
     fromViewController.willMoveToParentViewController(nil)
 
+    // We want to scroll to top everytime we swipe back to activity
+    if let captureVC = fromViewController as? VYBCaptureViewController {
+      NSNotificationCenter.defaultCenter().postNotificationName(VYBSwipeContainerControllerWillMoveToActivityScreenNotification, object: nil)
+    }
+
     var animator = SwipeAnimator()
     var transitionContext = SwipeTransitionContext(fromViewController: fromViewController, toController: toViewController, swipeToleft: (toViewController == viewControllers[1]))
     transitionContext.animated = true

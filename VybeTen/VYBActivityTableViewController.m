@@ -49,6 +49,8 @@ static void *ZOTContext = &ZOTContext;
 
 - (void)dealloc {
   [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadStatus" context:ZOTContext];
+  [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
+  [[NSNotificationCenter defaultCenter] postNotificationName:VYBSwipeContainerControllerWillMoveToActivityScreenNotification object:nil];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -70,6 +72,9 @@ static void *ZOTContext = &ZOTContext;
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToTop:) name:UIApplicationWillEnterForegroundNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToTop:) name:VYBSwipeContainerControllerWillMoveToActivityScreenNotification object:nil];
   
   // current video uploading progress is funnelled using KVO.
   [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadStatus" options:NSKeyValueObservingOptionNew context:ZOTContext];
@@ -650,6 +655,13 @@ static void *ZOTContext = &ZOTContext;
   if (!uploadStatusButton.hidden) {
     [self.view bringSubviewToFront:uploadStatusButton];
   }
+}
+
+- (void)scrollToTop:(id)sender {
+  // First collapse all the cells
+  _selectedMyLocationIndex = -1;
+  
+  [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
 }
 
 #pragma mark - PlayerViewControllerDelegate
