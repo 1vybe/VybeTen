@@ -9,13 +9,14 @@
 import UIKit
 
 private var _sharedInstance = ConfigManager()
-private let _refreshInterval: NSTimeInterval = 60 * 60 * 3
+//private let _refreshInterval: NSTimeInterval = 60 * 60 * 3
+private let _refreshInterval: NSTimeInterval = 0
 struct DateSingleton {
   static var lastRefresh: NSDate? = nil
 }
 
 class ConfigManager: NSObject {
-  var config: PFConfig!
+  var config: PFConfig?
   
   class var sharedInstance: ConfigManager {
     return _sharedInstance;
@@ -37,7 +38,8 @@ class ConfigManager: NSObject {
       PFConfig.getConfigInBackgroundWithBlock { (config: PFConfig!, error: NSError!) -> Void in
         if error == nil {
           self.config = config
-        } else {
+        }
+        else {
           self.config = PFConfig.currentConfig()
         }
         DateSingleton.lastRefresh = NSDate()
@@ -45,5 +47,29 @@ class ConfigManager: NSObject {
     }
   }
   
-  
+  func currentUserExcludedFromAnalytics() -> Bool {
+    let currConfig = PFConfig.currentConfig()
+    var founders: [String]
+    if let array = currConfig["founders"] as? [String] {
+      founders = array
+    }
+    else {
+      founders = ["jart", "W7", "mo", "Boodi", "jinsu", "solomon"]
+    }
+    for username in founders {
+      if let currUser = PFUser.currentUser() {
+        if let currUsername = currUser.objectForKey(kVYBUserUsernameKey) as? String {
+          if currUsername == username {
+            return true
+          }
+        }
+      }
+      else {
+        // no currentUser at this time so exclude it
+        return true
+      }
+    }
+    
+    return false
+  }
 }

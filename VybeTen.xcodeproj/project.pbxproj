@@ -881,6 +881,16 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/VybeTen-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"$(inherited)",
+					"BITHOCKEY_VERSION=\"@\\\"3.6.2\\\"\"",
+					"BITHOCKEY_C_VERSION=\"\\\"3.6.2\\\"\"",
+					"BITHOCKEY_BUILD=\"@\\\"35\\\"\"",
+					"BITHOCKEY_C_BUILD=\"\\\"35\\\"\"",
+					"DEBUG=1",
+				);
 				INFOPLIST_FILE = "VybeTen/VybeTen-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

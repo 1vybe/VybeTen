@@ -12,7 +12,8 @@
 #import <GAIDictionaryBuilder.h>
 #import <GAITracker.h>
 #import <GAIFields.h>
-//#import <HockeySDK/HockeySDK.h>
+//NOTE: Take out this part when releasing to TESTFLIGHT
+#import <HockeySDK/HockeySDK.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
@@ -58,16 +59,16 @@
   // Use Reachability to monitor connectivity
   [self monitorReachability];
   
+  //NOTE: Take out this part when releasing to TESTFLIGHT
   /* HockeyApp Initilization */
-//  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
-//  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
-//  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
-//  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
-//  [hockeyManager startManager];
-//  
-//  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-//  
+  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
+  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
+  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
+  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
+  [hockeyManager startManager];
+  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
   
+  //NOTE: Change this part when releasing to TESTFLIGHT
   // Parse Initialization
   [ParseCrashReporting enable];
   [Parse setApplicationId:PARSE_APPLICATION_ID_DEV
@@ -77,13 +78,14 @@
   BOOL oldPushHandlerOnly = ![self respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)];
   BOOL noPushPayload = ![launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
   if (preBackgroundPush || oldPushHandlerOnly || noPushPayload) {
+// We want to exclude debugging from analytics.
 #ifdef DEBUG
-    // We want to exclude debugging from analytics.
 #else
-    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    if (![[ConfigManager sharedInstance] currentUserExcludedFromAnalytics]) {
+      [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    }
 #endif
   }
-  
   
   // Register defaults for NSUserDefaults
   NSURL *prefsFileURL = [[NSBundle mainBundle] URLForResource:@"DefaultPreferences" withExtension:@"plist"];
@@ -220,7 +222,9 @@
 #ifdef DEBUG
 #else
     // Tracks app open due to a push notification when the app was not active
-    [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
+    if (![[ConfigManager sharedInstance] currentUserExcludedFromAnalytics]) {
+      [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
+    }
 #endif
   }
 }
@@ -232,7 +236,9 @@
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateInactive) {
 #ifdef DEBUG
 #else
-    [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
+    if (![[ConfigManager sharedInstance] currentUserExcludedFromAnalytics]) {
+      [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
+    }
 #endif
     [self.swipeContainerController moveToActivityScreen];
   }
@@ -273,6 +279,12 @@
 #pragma mark PFLogInViewControllerDelegate
 
 - (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user {
+#ifdef DEBUG
+#else
+  if (![[ConfigManager sharedInstance] currentUserExcludedFromAnalytics]) {
+    [PFAnalytics trackAppOpenedWithLaunchOptions:nil];
+  }
+#endif
   [self proceedToMainInterface];
 }
 
