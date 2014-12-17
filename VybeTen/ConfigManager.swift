@@ -47,6 +47,15 @@ class ConfigManager: NSObject {
     }
   }
   
+  func featuredZoneID() -> String? {
+    if let zoneID = self.config?["featuredZoneID"] as? String {
+      return zoneID
+    }
+    
+    // New City Gas
+    return "4f722440e4b0995f2face125"
+  }
+  
   func currentUserExcludedFromAnalytics() -> Bool {
     let currConfig = PFConfig.currentConfig()
     var founders: [String]

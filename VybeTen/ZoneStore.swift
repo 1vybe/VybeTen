@@ -50,6 +50,12 @@ private let _zoneStoreSharedInstance = ZoneStore()
                 
                 // Rearrange ACTIVE zones first by number of unwatched vybes and by most recent time
                 self._activeZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
+                  if (zone1.isFeatured && !zone2.isFeatured) {
+                    return true
+                  }
+                  if (!zone1.isFeatured && zone2.isFeatured) {
+                    return false
+                  }
                   if (zone1.freshContents.count > 0 && zone2.freshContents.count == 0) {
                     return true
                   }
@@ -82,10 +88,46 @@ private let _zoneStoreSharedInstance = ZoneStore()
       // First Group UNLOCKED zones
       self.createUnlockedZonesFromVybes(vybes)
       
-      self.fetchActiveVybes(completionHandler)
+      // Let's get featured zone first
+      var query = PFQuery(className: kVYBVybeClassKey)
+      query.includeKey(kVYBVybeUserKey)
+      query.limit = 1000
+      query.orderByAscending(kVYBVybeTimestampKey)
+      let featuredID = ConfigManager.sharedInstance.featuredZoneID()
+      query.whereKey(kVYBVybeZoneIDKey, equalTo: featuredID)
+
+      query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+        if error == nil {
+          if let vybes = result as? [PFObject] {
+            self.createFeaturedZoneFrom(vybes)
+          }
+          
+          self.fetchActiveVybes(completionHandler)
+        } else {
+          completionHandler(success: false)
+        }
+      })
     }
     else {
       completionHandler(success: false)
+    }
+  }
+  
+  private func createFeaturedZoneFrom(vybes: [PFObject]) {
+    if let last = vybes.last {
+      let zone = self.createZoneFromVybe(last)
+      zone.isFeatured = true
+      zone.mostRecentVybe = last
+      
+      for aZone in _activeZones {
+        if aZone.zoneID == zone.zoneID {
+          return
+        }
+      }
+      for obj in vybes {
+        zone.featureVybes += [obj]
+      }
+      _activeZones += [zone]
     }
   }
 
@@ -133,7 +175,9 @@ private let _zoneStoreSharedInstance = ZoneStore()
   private func createActiveZonesFromVybes(vybes: [PFObject]) {
     // First clear all vybes from active zones
     for aZone in _activeZones {
-      aZone.clearActiveVybes()
+      if !aZone.isFeatured {
+        aZone.clearActiveVybes()
+      }
     }
     
     for aVybe in vybes {

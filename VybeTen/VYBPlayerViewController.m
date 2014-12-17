@@ -230,6 +230,13 @@
                               }];
 }
 
+- (void)playFeaturedVybes:(NSArray *)vybes {
+  _zoneVybes = vybes;
+  _zoneCurrIdx = 0;
+  [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
+    [self.delegate playerViewController:self didFinishSetup:success];
+  }];
+}
 
 - (void)playFreshVybesFromZone:(NSString *)zoneID {
   [[ZoneStore sharedInstance] refreshFreshVybesInBackground:^(BOOL success) {

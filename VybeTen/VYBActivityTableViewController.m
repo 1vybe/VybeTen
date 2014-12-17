@@ -315,7 +315,12 @@ static void *ZOTContext = &ZOTContext;
       cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
     }
     else {
-      cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ActiveLocationCell"];
+      if (zone.isFeatured) {
+        cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"FeaturedLocationCell"];
+        lastVybe = zone.mostRecentVybe;
+      } else {
+        cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ActiveLocationCell"];
+      }
       lastVybe = zone.mostRecentVybe;
       NSDate *timestampDate = zone.mostRecentActiveVybeTimestamp;
       
@@ -330,9 +335,17 @@ static void *ZOTContext = &ZOTContext;
         if (image) {
           UIImage *maskImage;
           if (image.size.height > image.size.width) {
-            maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
+            if (zone.isFeatured) {
+              maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait_old"];
+            } else {
+              maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
+            }
           } else {
-            maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
+            if (zone.isFeatured) {
+              maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape_old"];
+            } else {
+              maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
+            }
           }
           cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
         } else {
@@ -437,7 +450,11 @@ static void *ZOTContext = &ZOTContext;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
     playerVC.delegate = self;
-    [playerVC playFreshVybesFromZone:zone.zoneID];
+    if (zone.isFeatured) {
+      [playerVC playFeaturedVybes:zone.featureVybes];
+    } else {
+      [playerVC playFreshVybesFromZone:zone.zoneID];
+    }
   }
   // My Locations
   else {

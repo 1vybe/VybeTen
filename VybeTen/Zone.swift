@@ -13,6 +13,10 @@ import MapKit
   var zoneID: String!
   var name: String!
   
+  // FEATURED
+  var isFeatured: Bool = false
+  var featureVybes = [PFObject]()
+  
   // ACTIVE zone
   var activeUsers = [String: Int]()
   var mostRecentVybe: PFObject?
