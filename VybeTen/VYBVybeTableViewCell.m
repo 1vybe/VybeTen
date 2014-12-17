@@ -45,8 +45,7 @@
       [self.locationLabel setTextColor:[UIColor whiteColor]];
       [self.timestampLabel setTextColor:[UIColor whiteColor]];
     }
-    if ([self.reuseIdentifier isEqualToString:@"ActiveLocationCell"]) {
-
+    if ([self.reuseIdentifier isEqualToString:@"ActiveLocationCell"] || [self.reuseIdentifier isEqualToString:@"FeaturedLocationCell"]) {
         [self.contentView setBackgroundColor:[UIColor colorWithRed:227/255.0 green:227/255.0 blue:227/255.0 alpha:1.0]];
       [self.locationLabel setTextColor:[UIColor whiteColor]];
       [self.timestampLabel setTextColor:[UIColor whiteColor]];
@@ -63,7 +62,7 @@
       [self.locationLabel setTextColor:[UIColor colorWithRed:74/255.0 green:74/255.0 blue:74/255.0 alpha:1.0]];
       [self.timestampLabel setTextColor:[UIColor colorWithRed:146/255.0 green:146/255.0 blue:146/255.0 alpha:1.0]];
     }
-    if ([self.reuseIdentifier isEqualToString:@"ActiveLocationCell"]) {
+    if ([self.reuseIdentifier isEqualToString:@"ActiveLocationCell"] || [self.reuseIdentifier isEqualToString:@"FeaturedLocationCell"]) {
       [self.contentView setBackgroundColor:[UIColor whiteColor]];
       [self.locationLabel setTextColor:[UIColor colorWithRed:74/255.0 green:74/255.0 blue:74/255.0 alpha:1.0]];
       [self.timestampLabel setTextColor:[UIColor colorWithRed:146/255.0 green:146/255.0 blue:146/255.0 alpha:1.0]];
