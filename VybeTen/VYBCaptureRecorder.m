@@ -69,7 +69,7 @@ typedef NS_ENUM (NSInteger,VYBRecorderStatus) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         NSError *error = nil;
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[[[VYBMyVybeStore sharedStore] currVybe] videoFilePath]];
-        _assetWriter = [[AVAssetWriter alloc] initWithURL:outputURL fileType:AVFileTypeQuickTimeMovie error:&error];
+        _assetWriter = [[AVAssetWriter alloc] initWithURL:outputURL fileType:AVFileTypeMPEG4 error:&error];
         NSParameterAssert(_assetWriter);
         
         // Add video input
