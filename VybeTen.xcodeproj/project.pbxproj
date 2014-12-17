@@ -81,6 +81,8 @@
 		74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */; };
 		74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */; };
 		74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */; };
+		74E570EF1A41D430005072E1 /* Notification.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74E570EE1A41D430005072E1 /* Notification.storyboard */; };
+		74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */; };
 		876FD1CBA2104ACB85FFFB93 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D4D61F35BF543039A00CFD0 /* libPods.a */; };
 		88063E6819F22F1E00C90A2D /* Activity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88063E6719F22F1E00C90A2D /* Activity.storyboard */; };
 		88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */; };
@@ -211,6 +213,8 @@
 		74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+VYBVybe.m"; sourceTree = "<group>"; };
 		74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleInteractionManager.swift; sourceTree = "<group>"; };
 		74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeContainerViewController.swift; sourceTree = "<group>"; };
+		74E570EE1A41D430005072E1 /* Notification.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Notification.storyboard; sourceTree = "<group>"; };
+		74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTableViewController.swift; sourceTree = "<group>"; };
 		88063E6719F22F1E00C90A2D /* Activity.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Activity.storyboard; sourceTree = "<group>"; };
 		88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBWelcomeViewController.h; sourceTree = "<group>"; };
 		88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBWelcomeViewController.m; sourceTree = "<group>"; };
@@ -327,6 +331,7 @@
 				88063E6719F22F1E00C90A2D /* Activity.storyboard */,
 				74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */,
 				74A0FA561A36A8B50065059E /* UnblockUser.storyboard */,
+				74E570EE1A41D430005072E1 /* Notification.storyboard */,
 			);
 			name = Stories;
 			sourceTree = "<group>";
@@ -402,6 +407,7 @@
 				74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */,
 				74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */,
 				74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */,
+				74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -663,6 +669,7 @@
 				02D11D0F18DF62AC0018DA97 /* Montreal-Regular.otf in Resources */,
 				888F1FE819B2740B00546643 /* ProximaNovaSoft-Regular.otf in Resources */,
 				74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */,
+				74E570EF1A41D430005072E1 /* Notification.storyboard in Resources */,
 				888F1FE919B2740B00546643 /* ProximaNovaSoft-Semibold.otf in Resources */,
 				02E943B219C916C50057E8EE /* VYBReplayViewController.xib in Resources */,
 				740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */,
@@ -741,6 +748,7 @@
 				02CEE2AD1970A46A00AC361F /* VYBTimerView.m in Sources */,
 				0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */,
 				02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */,
+				74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */,
 				025CC90F19D5229200A1208C /* UIImage+maskImage.m in Sources */,
 				029729721A02A1EC0050406D /* ZoneFinder.swift in Sources */,
 				02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */,

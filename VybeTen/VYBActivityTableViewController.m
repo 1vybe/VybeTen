@@ -25,6 +25,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *countLabel;
 @property (weak, nonatomic) UIButton *uploadStatusButton;
+@property (weak, nonatomic) UIButton *notificationButton;
 
 @property (nonatomic) NSArray *activeLocations;
 @property (nonatomic) NSArray *myLocations;
@@ -35,13 +36,14 @@
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender;
 - (IBAction)uploadStatusButtonPressed:(id)sender;
+- (IBAction)notificationButtonPressed:(id)sender;
 
 @end
 
 @implementation VYBActivityTableViewController {
   NSInteger _selectedMyLocationIndex;
 }
-@synthesize uploadStatusButton;
+@synthesize uploadStatusButton, notificationButton;
 
 static void *ZOTContext = &ZOTContext;
 
@@ -49,8 +51,9 @@ static void *ZOTContext = &ZOTContext;
 
 - (void)dealloc {
   [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadStatus" context:ZOTContext];
-  [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
-  [[NSNotificationCenter defaultCenter] postNotificationName:VYBSwipeContainerControllerWillMoveToActivityScreenNotification object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheRefreshedBumpActivitiesForCurrentUser object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBSwipeContainerControllerWillMoveToActivityScreenNotification object:nil];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -75,6 +78,7 @@ static void *ZOTContext = &ZOTContext;
   
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToTop:) name:UIApplicationWillEnterForegroundNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToTop:) name:VYBSwipeContainerControllerWillMoveToActivityScreenNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateNotificationCount) name:VYBCacheRefreshedBumpActivitiesForCurrentUser object:nil];
   
   // current video uploading progress is funnelled using KVO.
   [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadStatus" options:NSKeyValueObservingOptionNew context:ZOTContext];
@@ -91,6 +95,10 @@ static void *ZOTContext = &ZOTContext;
   [self.view addSubview:uploadStatusButton];
   uploadStatusButton.hidden = YES;
   
+  notificationButton = (UIButton *)[[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:self options:nil] lastObject];
+  [notificationButton setFrame:CGRectMake(0, 0, self.view.bounds.size.width, notificationButton.bounds.size.height)];
+  [self.view addSubview:notificationButton];
+  
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -104,6 +112,9 @@ static void *ZOTContext = &ZOTContext;
   else {
     uploadStatusButton.hidden = YES;
   }
+  
+  // Update Activity count
+  [self updateNotificationCount];
   
   [self loadObjects];
 }
@@ -124,8 +135,6 @@ static void *ZOTContext = &ZOTContext;
 #endif
   
   [self getPermissionIfNeeded];
-  
-  [VYBUtility updateLastRefreshForCurrentUser];
 }
 
 #pragma mark - UIView
@@ -665,12 +674,30 @@ static void *ZOTContext = &ZOTContext;
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+  // Adjust y-positions of two hovering buttons
   CGRect frame = uploadStatusButton.frame;
   frame.origin.y = scrollView.contentOffset.y + self.tableView.frame.size.height - uploadStatusButton.frame.size.height;
   uploadStatusButton.frame = frame;
+  notificationButton.frame = frame;
   
   if (!uploadStatusButton.hidden) {
     [self.view bringSubviewToFront:uploadStatusButton];
+  }
+  if (!notificationButton.hidden) {
+    [self.view bringSubviewToFront:notificationButton];
+  }
+  // Hide Notification Bar when scroll up and show when down
+  CGPoint velocity = [[scrollView panGestureRecognizer] velocityInView:self.view];
+  if (velocity.y < 0) {
+    if (!notificationButton.hidden) {
+      notificationButton.hidden = YES;
+      [notificationButton setNeedsDisplay];
+    }
+  } else if (velocity.y > 0) {
+    if (notificationButton.hidden) {
+      notificationButton.hidden = NO;
+      [notificationButton setNeedsDisplay];
+    }
   }
 }
 
@@ -691,6 +718,23 @@ static void *ZOTContext = &ZOTContext;
   }
 }
 
+#pragma mark - Notification Bar
+
+- (IBAction)notificationButtonPressed:(id)sender {
+  NotificationTableViewController *notificationTable = (NotificationTableViewController *)[[UIStoryboard storyboardWithName:@"Notification" bundle:nil] instantiateInitialViewController];
+  [self.navigationController pushViewController:notificationTable animated:YES];
+}
+
+- (void)updateNotificationCount {
+  NSInteger count = [[VYBCache sharedCache] newBumpActivityCountForCurrentUser];
+  
+  if (count > 0) {
+    [self.notificationButton setTitle:[NSString stringWithFormat:@"%ld", (long)count] forState:UIControlStateNormal];
+  } else {
+    [self.notificationButton setTitle:@"B U M P   A C T I V I T Y" forState:UIControlStateNormal];
+  }
+  
+}
 
 #pragma mark - UIActionSheetDelegate
 

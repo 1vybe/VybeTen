@@ -20,6 +20,8 @@ NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification     =
 NSString *const VYBCacheFreshVybeCountChangedNotification       = @"com.vybe.app.cache.freshVybeCountChanged";
 NSString *const VYBMyVybeStoreLocationFetchedNotification       = @"com.vybe.app.myvybestore.locationFetched";
 NSString *const VYBSwipeContainerControllerWillMoveToActivityScreenNotification = @"com.vybe.app.swipeContainerController.willMoveToActivityScreen";
+NSString *const VYBCacheRefreshedBumpActivitiesForCurrentUser = @"com.vybe.app.cache.refreshedBumpActivitiesForCurrentUser";
+
 
 #pragma mark - NSUserDefaults
 NSString *const kVYBUserDefaultsCacheFacebookFriendsKey         = @"com.vybe.app.userDefaults.cache.facebookFriends";
@@ -151,7 +153,7 @@ NSString *const kVYBActivityFromUserKey                         = @"fromUser";
 NSString *const kVYBActivityToUserKey                           = @"toUser";
 NSString *const kVYBActivityContentKey                          = @"content";
 NSString *const kVYBActivityVybeKey                             = @"vybe";
-//NSString *const kVYBActivityTimestampKey                        = @"timestamp";
+NSString *const kVYBActivityTimestampKey                        = @"timestamp";
 
 
 // Type values
@@ -167,6 +169,8 @@ NSString *const kVYBUserAttributesVybeCountKey                  = @"vybeCount";
 NSString *const kVYBUserAttributesTribeCountKey                 = @"tribeCount";
 NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey    = @"isFollowedByCurrentUser";
 NSString *const kVYBUserAttributesBlockedUsersKey               = @"blockedUsers";
+NSString *const kVYBUserAttributesBumpsForMeKey                 = @"bumpsForMe";
+NSString *const kVYBUserAttributesBumpsFromMeKey                = @"bumpsFromMe";
 
 #pragma mark - Cached Tribe Attributes
 // keys

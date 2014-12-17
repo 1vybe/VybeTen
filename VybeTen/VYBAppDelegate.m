@@ -41,7 +41,6 @@
 //@property (nonatomic, strong) VYBActivityTableViewController *activityVC;
 @property (nonatomic, strong) VYBWelcomeViewController *welcomeViewController;
 
-- (void)setupAppearance;
 @end
 
 @implementation VYBAppDelegate
@@ -124,9 +123,6 @@
   // Enable public read access by default, with any newly created PFObjects belonging to the current user
   [defaultACL setPublicReadAccess:YES];
   [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
-  
-  /* navigation bar settings */
-  [self setupAppearance];
   
   self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
   
@@ -353,16 +349,6 @@
 }
 
 #pragma mark - ()
-
-- (void)setupAppearance {
-  [[UINavigationBar appearance] setTintColor:COLOR_MAIN];
-  // title font
-  NSMutableDictionary *titleBarAttributes = [NSMutableDictionary dictionaryWithDictionary: [[UINavigationBar appearance] titleTextAttributes]];
-  [titleBarAttributes setValue:[UIFont fontWithName:@"ProximaNovaSoft-Regular" size:20.0] forKey:NSFontAttributeName];
-  [titleBarAttributes setValue:COLOR_MAIN forKey:NSForegroundColorAttributeName];
-  [[UINavigationBar appearance] setTitleTextAttributes:titleBarAttributes];
-
-}
 
 - (void)monitorReachability {
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];

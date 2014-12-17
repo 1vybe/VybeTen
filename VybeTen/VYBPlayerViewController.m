@@ -230,6 +230,23 @@
                               }];
 }
 
+- (void)playOnce:(PFObject *)vybe {
+  PFUser *user = vybe[kVYBVybeUserKey];
+  [user fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+    if (!error) {
+      _zoneVybes = [NSArray arrayWithObject:vybe];
+      _zoneCurrIdx = 0;
+      
+      [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
+        [self.delegate playerViewController:self didFinishSetup:success];
+      }];
+    } else {
+      [self.delegate playerViewController:self didFinishSetup:NO];
+    }
+  }];
+}
+
+
 - (void)playFeaturedVybes:(NSArray *)vybes {
   _zoneVybes = vybes;
   _zoneCurrIdx = 0;

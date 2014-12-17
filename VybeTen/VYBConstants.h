@@ -68,6 +68,7 @@ extern NSString *const VYBUtilityActivityCountUpdatedNotification;
 extern NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification;
 extern NSString *const VYBMyVybeStoreLocationFetchedNotification;
 extern NSString *const VYBSwipeContainerControllerWillMoveToActivityScreenNotification;
+extern NSString *const VYBCacheRefreshedBumpActivitiesForCurrentUser;
 
 
 #pragma mark - NSUserDefaults
@@ -199,6 +200,8 @@ extern NSString *const kVYBUserAttributesVybeCountKey;
 extern NSString *const kVYBUserAttributesTribeCountKey;
 extern NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey;
 extern NSString *const kVYBUserAttributesBlockedUsersKey;
+extern NSString *const kVYBUserAttributesBumpsForMeKey;
+extern NSString *const kVYBUserAttributesBumpsFromMeKey;
 
 
 #pragma mark - Cached Tribe Attributes

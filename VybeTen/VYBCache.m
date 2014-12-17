@@ -183,16 +183,38 @@
 - (void)refreshBumpsForMeInBackground {
 
   PFQuery *bumpQuery = [PFQuery queryWithClassName:kVYBActivityClassKey];
+  [bumpQuery orderByDescending:@"createdAt"];
   [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
   [bumpQuery whereKey:kVYBActivityToUserKey equalTo:[PFUser currentUser]];
   [bumpQuery includeKey:kVYBActivityVybeKey];
+  [bumpQuery includeKey:kVYBActivityFromUserKey];
   [bumpQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     if (!error) {
       for (PFObject *activity in objects) {
+        // Updating attributes for vybe
         [self addBump:activity[kVYBActivityVybeKey] fromUser:activity[kVYBActivityFromUserKey]];
+        // Also we want to update attributes for current user
+        [self addBumpForCurrentUser:activity];
       }
+      // Send notification to Activity screen
+      [[NSNotificationCenter defaultCenter] postNotificationName:VYBCacheRefreshedBumpActivitiesForCurrentUser object:nil];
     }
   }];
+}
+
+- (void)addBumpForCurrentUser:(PFObject *)activity {
+  NSMutableDictionary *myAttributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:[PFUser currentUser]]];
+  NSArray *bumpsForMe = [myAttributes objectForKey:kVYBUserAttributesBumpsForMeKey];
+  if (bumpsForMe) {
+    bumpsForMe = [bumpsForMe arrayByAddingObject:activity];
+  } else {
+    if (![bumpsForMe containsPFObject:activity]) {
+      bumpsForMe = [NSArray arrayWithObject:activity];
+    }
+  }
+  [myAttributes setObject:bumpsForMe forKey:kVYBUserAttributesBumpsForMeKey];
+  
+  [self setAttributes:myAttributes forUser:[PFUser currentUser]];
 }
 
 - (void)addBump:(PFObject *)vybe fromUser:(PFUser *)fromUser {
@@ -216,8 +238,43 @@
   }
   
   [self setAttributes:attributes forVybe:vybe];
-  
 }
+
+- (NSArray *)bumpActivitiesForUser:(PFUser *)user {
+  NSDictionary *attributes = [self attributesForUser:user];
+  NSArray *bumpActivities = [attributes objectForKey:kVYBUserAttributesBumpsForMeKey];
+  
+  return bumpActivities;
+}
+
+- (NSInteger)newBumpActivityCountForCurrentUser {
+  NSInteger count = 0;
+  
+  NSDate *lastRefresh = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsActivityLastRefreshKey];
+  
+  NSArray *activities = [self bumpActivitiesForUser:[PFUser currentUser]];
+  for (PFObject *activity in activities) {
+    PFUser *fromUser = activity[kVYBActivityFromUserKey];
+    if ( ! [fromUser.objectId isEqualToString:[PFUser currentUser].objectId] ) {
+      if (lastRefresh && [lastRefresh timeIntervalSinceDate:activity.createdAt] > 0) {
+        // Nothing
+      } else {
+        count++;
+      }
+    }
+  }
+  
+  return count;
+}
+
+//- (NSInteger)bumpCountForUser:(PFUser *)user {
+//  NSArray *bumpActivities = [self bumpActivitiesForUser:user];
+//  if (bumpActivities) {
+//    return bumpActivities.count;
+//  } else {
+//    return 0;
+//  }
+//}
 
 - (NSNumber *)likeCountForVybe:(PFObject *)vybe {
   NSDictionary *attributes = [self attributesForVybe:vybe];

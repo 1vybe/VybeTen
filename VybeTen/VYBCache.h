@@ -25,6 +25,10 @@
 - (void)setActivityCount:(int)count;
 - (NSInteger)activityCount;
 
+- (NSArray *)bumpActivitiesForUser:(PFUser *)user;
+- (NSInteger)newBumpActivityCountForCurrentUser;
+//- (NSInteger)bumpCountForUser:(PFUser *)user;
+
 - (void)setAttributesForVybe:(PFObject *)vybe likers:(NSArray *)likers commenters:(NSArray *)commenters likedByCurrentUser:(BOOL)likedByCurrentUser;
 - (void)setAttributesForVybe:(PFObject *)vybe flaggedByCurrentUser:(BOOL)flaggedByCurrentUser;
 - (void)setBlockedUsers:(NSArray *)usersBlockedByMe forUser:(PFUser *)user;

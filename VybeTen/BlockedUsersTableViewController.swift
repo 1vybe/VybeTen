@@ -22,10 +22,12 @@ class BlockedUsersTableViewController: UITableViewController {
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = false
     
-    // Change navigation bar title font style
-    let navBarTitleTextAttributes = [ NSForegroundColorAttributeName: UIColor(red: 96/255.0, green: 96/255.0, blue: 96/255.0, alpha: 1.0) ]
-    if let navigationBar = self.navigationController?.navigationBar {
-      navigationBar.titleTextAttributes = navBarTitleTextAttributes
+    let textAttributes = NSMutableDictionary()
+    if let font = UIFont(name: "Avenir Next", size: 14.0) {
+      let textColor = UIColor(red: 247.0/255.0, green: 76.0/255.0, blue: 70.0/255.0, alpha: 1.0)
+      textAttributes.setObject(font, forKey: NSFontAttributeName)
+      textAttributes.setObject(textColor, forKey: NSForegroundColorAttributeName)
+      self.navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
     
     blockedUsers = []

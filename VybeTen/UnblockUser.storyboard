@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <scenes>
-        <!--Blocked Users-->
+        <!--BLOCKED USERS-->
         <scene sceneID="efP-dJ-j4T">
             <objects>
                 <tableViewController id="fNe-RV-LRM" customClass="BlockedUsersTableViewController" customModule="VybeTen" customModuleProvider="target" sceneMemberID="viewController">
@@ -68,9 +68,9 @@
                         </connections>
                     </tableView>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Blocked Users" id="076-69-4dr">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="8Gw-rj-bUh">
-                            <color key="tintColor" red="1" green="0.27450980390000002" blue="0.29803921570000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <navigationItem key="navigationItem" title="BLOCKED USERS" id="076-69-4dr">
+                        <barButtonItem key="leftBarButtonItem" image="Close3BarButton" id="8Gw-rj-bUh">
+                            <color key="tintColor" red="1" green="0.29803921570000003" blue="0.27450980390000002" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="cancelButtonPressed:" destination="fNe-RV-LRM" id="TmK-ho-I9X"/>
                             </connections>
@@ -85,6 +85,7 @@
     </scenes>
     <resources>
         <image name="BlockSwitch" width="52" height="19"/>
+        <image name="Close3BarButton" width="18" height="18"/>
         <image name="UnblockSwitch" width="52" height="19"/>
     </resources>
 </document>

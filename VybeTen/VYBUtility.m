@@ -63,14 +63,16 @@
   // Update lastRefreshed of current user to now
   PFObject *currUsr = [PFUser currentUser];
   
-  [currUsr setObject:[NSDate date] forKey:kVYBUserLastRefreshedKey];
+  NSDate *now = [NSDate date];
+  [currUsr setObject:now forKey:kVYBUserLastRefreshedKey];
   [currUsr saveInBackground];
+  
+  [[NSUserDefaults standardUserDefaults] setObject:now forKey:kVYBUserDefaultsActivityLastRefreshKey];
   
   // Set icon bagde to 0
   PFInstallation *currentInstallation = [PFInstallation currentInstallation];
   currentInstallation.badge = 0;
   [currentInstallation saveInBackground];
-  
 }
 
 + (void)clearTempDirectory {
