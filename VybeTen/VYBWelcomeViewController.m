@@ -100,7 +100,7 @@
                                                            label:nil
                                                            value:nil] build]];
     // GA stuff - User Group Dimension
-    if ([[ConfigManager sharedInstance] currentUserExemptFromAnalytics]) {
+    if ([[ConfigManager sharedInstance] currentUserExcludedFromAnalytics]) {
       NSString *tribeName = @"Founders";
       [tracker set:[GAIFields customDimensionForIndex:2] value:tribeName];
     }
