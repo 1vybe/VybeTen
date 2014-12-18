@@ -177,7 +177,7 @@
   PFObject *firstVideo = _zoneVybes[0];
   NSURL *cacheURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
   cacheURL = [cacheURL URLByAppendingPathComponent:[firstVideo objectId]];
-  cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
+  cacheURL = [cacheURL URLByAppendingPathExtension:@"mp4"];
   
   if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
     completionBlock(YES);
@@ -337,7 +337,7 @@
   // Play after syncing UI elements
   NSURL *cacheURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
   cacheURL = [cacheURL URLByAppendingPathComponent:[vybe objectId]];
-  cacheURL = [cacheURL URLByAppendingPathExtension:@"mov"];
+  cacheURL = [cacheURL URLByAppendingPathExtension:@"mp4"];
   
   if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];

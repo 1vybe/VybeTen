@@ -103,7 +103,7 @@
     
     NSString *videoPath = [thePath stringByAppendingPathComponent:self.uniqueFileName];
     
-    return [videoPath stringByAppendingPathExtension:@"mov"];
+    return [videoPath stringByAppendingPathExtension:@"mp4"];
 }
 
 - (NSString *)thumbnailFilePath {
