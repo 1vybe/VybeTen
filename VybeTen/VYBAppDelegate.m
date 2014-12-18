@@ -38,7 +38,6 @@
 @property (nonatomic) VYBNavigationController *mainNavController;
 @property (nonatomic, strong) SwipeContainerController *swipeContainerController;
 @property (nonatomic) VYBPermissionViewController *permissionController;
-//@property (nonatomic, strong) VYBActivityTableViewController *activityVC;
 @property (nonatomic, strong) VYBWelcomeViewController *welcomeViewController;
 
 @end
@@ -70,8 +69,8 @@
   //NOTE: Change this part when releasing to TESTFLIGHT
   // Parse Initialization
   [ParseCrashReporting enable];
-  [Parse setApplicationId:PARSE_APPLICATION_ID_DEV
-                clientKey:PARSE_CLIENT_KEY_DEV];
+  [Parse setApplicationId:PARSE_APPLICATION_ID
+                clientKey:PARSE_CLIENT_KEY];
   
   BOOL preBackgroundPush = ![application respondsToSelector:@selector(backgroundRefreshStatus)];
   BOOL oldPushHandlerOnly = ![self respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)];
