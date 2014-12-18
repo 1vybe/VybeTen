@@ -17,14 +17,11 @@ $(function() {
     model: Vybe,
 
     initialize: function() {
-      var now = new Date();
-      var aDayAgo = new Date(now.getTime() - (1000*60*60*24));
-
       this.index = 0;
 
       this.query = new Parse.Query('Vybe')
         .descending('timestamp')
-        .greaterThanOrEqualTo('timestamp', aDayAgo);
+        .equalTo('zoneName', "New City Gas");
 
       this.fetch();
     },
