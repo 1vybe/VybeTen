@@ -70,8 +70,8 @@
   //NOTE: Change this part when releasing to TESTFLIGHT
   // Parse Initialization
   [ParseCrashReporting enable];
-  [Parse setApplicationId:PARSE_APPLICATION_ID
-                clientKey:PARSE_CLIENT_KEY];
+  [Parse setApplicationId:PARSE_APPLICATION_ID_DEV
+                clientKey:PARSE_CLIENT_KEY_DEV];
   
   BOOL preBackgroundPush = ![application respondsToSelector:@selector(backgroundRefreshStatus)];
   BOOL oldPushHandlerOnly = ![self respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)];

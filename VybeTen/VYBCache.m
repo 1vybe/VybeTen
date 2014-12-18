@@ -181,11 +181,15 @@
 }
 
 - (void)refreshBumpsForMeInBackground {
-
   PFQuery *bumpQuery = [PFQuery queryWithClassName:kVYBActivityClassKey];
   [bumpQuery orderByDescending:@"createdAt"];
   [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
   [bumpQuery whereKey:kVYBActivityToUserKey equalTo:[PFUser currentUser]];
+  NSDate *lastRefresh = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsActivityLastRefreshKey];
+  // We want to filter out by last refresh AFTER all activities are fetched once first
+  if (lastRefresh && [self bumpActivitiesForUser:[PFUser currentUser]].count) {
+    [bumpQuery whereKey:@"createdAt" greaterThan:lastRefresh];
+  }
   [bumpQuery includeKey:kVYBActivityVybeKey];
   [bumpQuery includeKey:kVYBActivityFromUserKey];
   [bumpQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -206,11 +210,11 @@
   NSMutableDictionary *myAttributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:[PFUser currentUser]]];
   NSArray *bumpsForMe = [myAttributes objectForKey:kVYBUserAttributesBumpsForMeKey];
   if (bumpsForMe) {
-    bumpsForMe = [bumpsForMe arrayByAddingObject:activity];
-  } else {
     if (![bumpsForMe containsPFObject:activity]) {
-      bumpsForMe = [NSArray arrayWithObject:activity];
+      bumpsForMe = [bumpsForMe arrayByAddingObject:activity];
     }
+  } else {
+    bumpsForMe = [NSArray arrayWithObject:activity];
   }
   [myAttributes setObject:bumpsForMe forKey:kVYBUserAttributesBumpsForMeKey];
   

@@ -114,7 +114,7 @@ static void *ZOTContext = &ZOTContext;
   }
   
   // Update Activity count
-  [self updateNotificationCount];
+  [[VYBCache sharedCache] refreshBumpsForMeInBackground];
   
   [self loadObjects];
 }
@@ -224,6 +224,9 @@ static void *ZOTContext = &ZOTContext;
 - (void)objectsDidLoad:(NSError *)error {
   [super objectsDidLoad:error];
   
+  // Update Activity count
+  [[VYBCache sharedCache] refreshBumpsForMeInBackground];
+  
   [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
     if (success) {
       self.activeLocations = [[ZoneStore sharedInstance] activeZones];
@@ -243,8 +246,6 @@ static void *ZOTContext = &ZOTContext;
       [self.tableView reloadData];
     }
   }];
-  
-  [[VYBCache sharedCache] refreshBumpsForMeInBackground];
 }
 
 #pragma mark UITableViewDelegate

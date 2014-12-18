@@ -9,10 +9,16 @@
 import UIKit
 
 class NotificationTableViewController: UITableViewController, VYBPlayerViewControllerDelegate {
-  var objects = [PFObject]()
+  var activities = [PFObject]()
+  
+  deinit {
+    NSNotificationCenter.defaultCenter().removeObserver(self, name: VYBCacheRefreshedBumpActivitiesForCurrentUser, object: nil)
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "refreshActivityTable", name: VYBCacheRefreshedBumpActivitiesForCurrentUser, object: nil)
     
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = false
@@ -28,20 +34,13 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
     
-    if let user = PFUser.currentUser() {
-      if let allActivities = VYBCache.sharedCache().bumpActivitiesForUser(user) as? [PFObject] {
-        // we do NOT want to include bumps from ourself
-        for activity in allActivities {
-          if let fromUser = activity[kVYBActivityFromUserKey] as? PFObject {
-            if fromUser.objectId != PFUser.currentUser().objectId {
-              objects += [activity]
-            }
-          }
-        }
-      }
-    }
-    
-    VYBUtility.updateLastRefreshForCurrentUser()
+    VYBCache.sharedCache().refreshBumpsForMeInBackground()
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+
+    VYBCache.sharedCache().refreshBumpsForMeInBackground()
   }
   
   override func didReceiveMemoryWarning() {
@@ -56,13 +55,18 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   }
   
   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return objects.count
+    return activities.count
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("BumpForMeCell", forIndexPath: indexPath) as UITableViewCell
+    var cell: UITableViewCell
   
-    let activityObj = objects[indexPath.row]
+    let activityObj = activities[indexPath.row]
+    if self.isUnwatchedActivity(activityObj) {
+      cell = tableView.dequeueReusableCellWithIdentifier("NewBumpForMeCell", forIndexPath: indexPath) as UITableViewCell
+    } else {
+      cell = tableView.dequeueReusableCellWithIdentifier("BumpForMeCell", forIndexPath: indexPath) as UITableViewCell
+    }
     
     var fromUsername = "Someone"
     if let fromUser = activityObj[kVYBActivityFromUserKey] as? PFObject {
@@ -101,11 +105,13 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   }
   
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    let activityObj = objects[indexPath.row]
+    let activityObj = activities[indexPath.row]
     if let vybe = activityObj[kVYBActivityVybeKey] as? PFObject {
       var playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
       playerVC.delegate = self
       playerVC.playOnce(vybe)
+      
+      NSUserDefaults.standardUserDefaults().setObject(activityObj.createdAt, forKey: kVYBUserDefaultsActivityLastRefreshKey)
     }
   }
   
@@ -116,11 +122,64 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   }
   
   @IBAction func closeButtonPressed(sender: AnyObject) {
+    // If a user dismisses this screen, we assume the user has seen all new activities
+    VYBUtility.updateLastRefreshForCurrentUser()
+
     self.navigationController?.popViewControllerAnimated(true)
   }
   
   override func prefersStatusBarHidden() -> Bool {
     return false
+  }
+  
+  // MARK: - VYBCacheRefreshedBumpActivities Notification
+  
+  func refreshActivityTable() {
+    activities = []
+    if let user = PFUser.currentUser() {
+      if let allActivities = VYBCache.sharedCache().bumpActivitiesForUser(user) as? [PFObject] {
+        // we do NOT want to include bumps from ourself
+        for activity in allActivities {
+          if let fromUser = activity[kVYBActivityFromUserKey] as? PFObject {
+            if fromUser.objectId != user.objectId {
+              activities += [activity]
+            }
+          }
+        }
+      }
+    }
+    
+    activities.sort { (activity1: PFObject, activity2: PFObject) -> Bool in
+      let comparisonResult = activity1.createdAt.compare(activity2.createdAt)
+      return comparisonResult == NSComparisonResult.OrderedDescending
+    }
+    
+    self.tableView.reloadData()
+  }
+  
+  // MARK: - Helper Functions
+  
+  private func isUnwatchedActivity(activity: PFObject) -> Bool {
+    if let lastRefresh = NSUserDefaults.standardUserDefaults().objectForKey(kVYBUserDefaultsActivityLastRefreshKey) as? NSDate {
+      let comparisonResult = lastRefresh.compare(activity.createdAt)
+      
+      if comparisonResult == NSComparisonResult.OrderedSame ||
+        comparisonResult == NSComparisonResult.OrderedDescending {
+        return false
+      } else {
+        return true
+      }
+    }
+    return true
+  }
+  
+  // MARK: - Orientation
+  override func shouldAutorotate() -> Bool {
+    return true
+  }
+  
+  override func supportedInterfaceOrientations() -> Int {
+    return Int(UIInterfaceOrientationMask.Portrait.rawValue)
   }
   
   /*
