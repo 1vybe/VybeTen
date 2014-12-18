@@ -168,6 +168,12 @@ import MapKit
         return
       }
     }
+    
+    for aVybe in watchedContents {
+      if aVybe.objectId == nVybe.objectId {
+        return
+      }
+    }
     freshContents.append(nVybe)
   }
   
@@ -197,6 +203,8 @@ import MapKit
     PFCloud.callFunctionInBackground("remove_from_feed", withParameters: ["vybeID" : vybe.objectId]) { (result: AnyObject!, error: NSError!) -> Void in
       if error != nil {
         println("could not remove the vybe")
+      } else {
+        println("did remove the vybe")
       }
     }
   }

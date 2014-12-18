@@ -54,6 +54,7 @@ NSString *const kVYBUserLastRefreshedKey                        = @"lastRefreshe
 NSString *const kVYBUserTribeKey                                = @"tribe";
 NSString *const kVYBUserBlockedUsersKey                         = @"blockedUsers";
 NSString *const kVYBUserTermsAgreedKey                          = @"termsAgreed";
+NSString *const kVYBUserPromptsSeenKey                          = @"userPromptsSeen";
 NSString *const kVYBUserFlagsKey                                = @"flags";
 
 

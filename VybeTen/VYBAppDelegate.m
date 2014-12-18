@@ -69,8 +69,8 @@
   //NOTE: Change this part when releasing to TESTFLIGHT
   // Parse Initialization
   [ParseCrashReporting enable];
-  [Parse setApplicationId:PARSE_APPLICATION_ID_DEV
-                clientKey:PARSE_CLIENT_KEY_DEV];
+  [Parse setApplicationId:PARSE_APPLICATION_ID
+                clientKey:PARSE_CLIENT_KEY];
   
   BOOL preBackgroundPush = ![application respondsToSelector:@selector(backgroundRefreshStatus)];
   BOOL oldPushHandlerOnly = ![self respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)];
@@ -310,11 +310,14 @@
   if (!granted)
     [self.mainNavController pushViewController:self.permissionController animated:NO];
   
-  UserAgreementViewController *userAgreementVC = [[UserAgreementViewController alloc] initWithNibName:@"UserAgreementViewController" bundle:nil];
   UserPromptsViewController *userPrompts = [[UIStoryboard storyboardWithName:@"UserPrompts" bundle:nil] instantiateInitialViewController];
+  BOOL userPromptsSeen = [[[PFUser currentUser] objectForKey:kVYBUserPromptsSeenKey] boolValue];
+  if (!userPromptsSeen) {
+    [self.mainNavController pushViewController:userPrompts animated:NO];
+  }
+  UserAgreementViewController *userAgreementVC = [[UserAgreementViewController alloc] initWithNibName:@"UserAgreementViewController" bundle:nil];
   BOOL termsAgreed = [[[PFUser currentUser] objectForKey:kVYBUserTermsAgreedKey] boolValue];
   if (!termsAgreed) {
-    [self.mainNavController pushViewController:userPrompts animated:NO];
     [self.mainNavController pushViewController:userAgreementVC animated:NO];
   }
   

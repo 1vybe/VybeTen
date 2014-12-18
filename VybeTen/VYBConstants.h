@@ -102,6 +102,7 @@ extern NSString *const kVYBUserFreshFeedKey;
 extern NSString *const kVYBUserLastRefreshedKey;
 extern NSString *const kVYBUserBlockedUsersKey;
 extern NSString *const kVYBUserTermsAgreedKey;
+extern NSString *const kVYBUserPromptsSeenKey;
 extern NSString *const kVYBUserFlagsKey;
 extern NSString *const kVYBUserTribeKey;
 
