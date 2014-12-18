@@ -10,6 +10,7 @@ import UIKit
 
 class NotificationTableViewController: UITableViewController, VYBPlayerViewControllerDelegate {
   var activities = [PFObject]()
+  var watchedItems = [PFObject]()
   
   deinit {
     NSNotificationCenter.defaultCenter().removeObserver(self, name: VYBCacheRefreshedBumpActivitiesForCurrentUser, object: nil)
@@ -111,8 +112,19 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
       playerVC.delegate = self
       playerVC.playOnce(vybe)
       
+      self.addWatchedActivity(activityObj)
       NSUserDefaults.standardUserDefaults().setObject(activityObj.createdAt, forKey: kVYBUserDefaultsActivityLastRefreshKey)
     }
+  }
+  
+  private func addWatchedActivity(activity: PFObject) {
+    for obj in watchedItems {
+      if obj.objectId == activity.objectId {
+        return
+      }
+    }
+    
+    watchedItems += [activity]
   }
   
   // MARK: - PlayerViewControllerDelegate
@@ -160,6 +172,12 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   // MARK: - Helper Functions
   
   private func isUnwatchedActivity(activity: PFObject) -> Bool {
+    for obj in watchedItems {
+      if obj.objectId == activity.objectId {
+        return false
+      }
+    }
+    
     if let lastRefresh = NSUserDefaults.standardUserDefaults().objectForKey(kVYBUserDefaultsActivityLastRefreshKey) as? NSDate {
       let comparisonResult = lastRefresh.compare(activity.createdAt)
       
