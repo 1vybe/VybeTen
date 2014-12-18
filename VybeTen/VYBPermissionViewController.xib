@@ -13,14 +13,14 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="402" height="525"/>
+            <rect key="frame" x="0.0" y="0.0" width="246" height="362"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Permission(camera)" translatesAutoresizingMaskIntoConstraints="NO" id="TWs-Lz-uMg">
-                    <rect key="frame" x="0.0" y="0.0" width="402" height="525"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Permission_Camera" translatesAutoresizingMaskIntoConstraints="NO" id="TWs-Lz-uMg">
+                    <rect key="frame" x="0.0" y="0.0" width="246" height="362"/>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vyc-N5-Zzj">
-                    <rect key="frame" x="151" y="325" width="100" height="100"/>
+                    <rect key="frame" x="73" y="232" width="100" height="100"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="100" id="eha-nD-ShC"/>
                         <constraint firstAttribute="height" constant="100" id="lPd-Nf-j44"/>
@@ -33,19 +33,20 @@
                     </connections>
                 </button>
             </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="vyc-N5-Zzj" secondAttribute="centerX" id="4Lz-Z3-kJw"/>
                 <constraint firstItem="TWs-Lz-uMg" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="9a3-dE-vJN"/>
                 <constraint firstItem="TWs-Lz-uMg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Nqo-6r-Fah"/>
                 <constraint firstAttribute="trailing" secondItem="TWs-Lz-uMg" secondAttribute="trailing" id="cdk-ZZ-i3h"/>
                 <constraint firstAttribute="bottom" secondItem="TWs-Lz-uMg" secondAttribute="bottom" id="jrD-v8-j08"/>
-                <constraint firstAttribute="bottom" secondItem="vyc-N5-Zzj" secondAttribute="bottom" constant="100" id="vvz-VX-BLr"/>
+                <constraint firstAttribute="bottom" secondItem="vyc-N5-Zzj" secondAttribute="bottom" constant="30" id="vvz-VX-BLr"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="153" y="160.5"/>
+            <point key="canvasLocation" x="75" y="79"/>
         </view>
     </objects>
     <resources>
-        <image name="Permission(camera)" width="375" height="667"/>
+        <image name="Permission_Camera" width="375" height="667"/>
     </resources>
 </document>

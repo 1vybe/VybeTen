@@ -88,15 +88,15 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
         [self.navigationController popViewControllerAnimated:NO];
     }
     if (stage == VYBPermissionStageNone) {
-        [self.promptView setImage:[UIImage imageNamed:@"Permission(camera)"]];
+        [self.promptView setImage:[UIImage imageNamed:@"Permission_Camera"]];
         return;
     }
     if (stage == VYBPermissionStageAudioGranted) {
-        [self.promptView setImage:[UIImage imageNamed:@"Permission(camera)"]];
+        [self.promptView setImage:[UIImage imageNamed:@"Permission_Camera"]];
         return;
     }
     if (stage == VYBPermissionStageVideoGranted) {
-        [self.promptView setImage:[UIImage imageNamed:@"Permission(location)"]];
+        [self.promptView setImage:[UIImage imageNamed:@"Permission_Location"]];
         return;
     }
 }
@@ -164,7 +164,7 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
                 // change the image view accordingly
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.promptView.alpha = 0.0f;
-                    [self.promptView setImage:[UIImage imageNamed:@"Permission(location)"]];
+                    [self.promptView setImage:[UIImage imageNamed:@"Permission_Location"]];
                     [UIView animateWithDuration:1.0 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
                         self.promptView.alpha = 1.0f;
                     } completion:nil];

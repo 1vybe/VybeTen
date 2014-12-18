@@ -69,8 +69,8 @@
   //NOTE: Change this part when releasing to TESTFLIGHT
   // Parse Initialization
   [ParseCrashReporting enable];
-  [Parse setApplicationId:PARSE_APPLICATION_ID
-                clientKey:PARSE_CLIENT_KEY];
+  [Parse setApplicationId:PARSE_APPLICATION_ID_DEV
+                clientKey:PARSE_CLIENT_KEY_DEV];
   
   BOOL preBackgroundPush = ![application respondsToSelector:@selector(backgroundRefreshStatus)];
   BOOL oldPushHandlerOnly = ![self respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)];
@@ -311,8 +311,10 @@
     [self.mainNavController pushViewController:self.permissionController animated:NO];
   
   UserAgreementViewController *userAgreementVC = [[UserAgreementViewController alloc] initWithNibName:@"UserAgreementViewController" bundle:nil];
+  UserPromptsViewController *userPrompts = [[UIStoryboard storyboardWithName:@"UserPrompts" bundle:nil] instantiateInitialViewController];
   BOOL termsAgreed = [[[PFUser currentUser] objectForKey:kVYBUserTermsAgreedKey] boolValue];
   if (!termsAgreed) {
+    [self.mainNavController pushViewController:userPrompts animated:NO];
     [self.mainNavController pushViewController:userAgreementVC animated:NO];
   }
   

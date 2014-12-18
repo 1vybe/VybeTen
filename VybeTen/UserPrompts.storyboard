@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="0Ub-hQ-a9S">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <scenes>
+        <!--User Prompts View Controller-->
+        <scene sceneID="PIH-KR-8Ey">
+            <objects>
+                <viewController id="0Ub-hQ-a9S" customClass="UserPromptsViewController" customModule="VybeTen" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="29X-XC-hpI"/>
+                        <viewControllerLayoutGuide type="bottom" id="erP-ma-D4l"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="cVB-yB-qLE">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Intro1" translatesAutoresizingMaskIntoConstraints="NO" id="G7W-bh-8cM">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="G7W-bh-8cM" firstAttribute="top" secondItem="cVB-yB-qLE" secondAttribute="top" id="KPl-CN-HIe"/>
+                            <constraint firstItem="erP-ma-D4l" firstAttribute="top" secondItem="G7W-bh-8cM" secondAttribute="bottom" id="Xid-KD-EmK"/>
+                            <constraint firstItem="G7W-bh-8cM" firstAttribute="leading" secondItem="cVB-yB-qLE" secondAttribute="leading" id="c4H-hb-fZa"/>
+                            <constraint firstAttribute="trailing" secondItem="G7W-bh-8cM" secondAttribute="trailing" id="myg-jl-dVO"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="promptView" destination="G7W-bh-8cM" id="WpK-pb-hOD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ak8-dH-cQt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="261" y="253"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Intro1" width="375" height="667"/>
+    </resources>
+</document>
