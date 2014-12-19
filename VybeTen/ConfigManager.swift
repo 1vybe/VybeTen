@@ -56,6 +56,15 @@ class ConfigManager: NSObject {
     return "4f722440e4b0995f2face125"
   }
   
+  func featuredChannels() -> [String] {
+    var channels = [String]()
+    if let list = self.config?["featuredChannels"] as? [String] {
+      channels = list
+    }
+    
+    return channels
+  }
+  
   func currentUserExcludedFromAnalytics() -> Bool {
     let currConfig = PFConfig.currentConfig()
     var founders: [String]

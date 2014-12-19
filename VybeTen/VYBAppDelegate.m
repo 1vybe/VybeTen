@@ -69,8 +69,8 @@
   //NOTE: Change this part when releasing to TESTFLIGHT
   // Parse Initialization
   [ParseCrashReporting enable];
-  [Parse setApplicationId:PARSE_APPLICATION_ID_DEV
-                clientKey:PARSE_CLIENT_KEY_DEV];
+  [Parse setApplicationId:PARSE_APPLICATION_ID
+                clientKey:PARSE_CLIENT_KEY];
   
   BOOL preBackgroundPush = ![application respondsToSelector:@selector(backgroundRefreshStatus)];
   BOOL oldPushHandlerOnly = ![self respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)];
@@ -148,17 +148,12 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
   [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
-  
-  BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
-  
 }
 
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
   // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-  BOOL success = [[VYBMyVybeStore sharedStore] saveChanges];
-  
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -169,6 +164,8 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
   [self.swipeContainerController moveToCaptureScreen];
+
+  [[ConfigManager sharedInstance] fetchIfNeeded];
 }
 
 #pragma mark - Notification

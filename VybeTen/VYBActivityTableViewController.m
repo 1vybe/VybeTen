@@ -229,7 +229,7 @@ static void *ZOTContext = &ZOTContext;
   
   [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
     if (success) {
-      self.activeLocations = [[ZoneStore sharedInstance] activeZones];
+      self.activeLocations = [[ZoneStore sharedInstance] activeAndFeaturedZones];
       self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
       
       NSString *locationCntText = (self.myLocations.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.myLocations.count] : [NSString stringWithFormat:@"%d Location", (int)self.myLocations.count];
@@ -345,13 +345,13 @@ static void *ZOTContext = &ZOTContext;
         if (image) {
           UIImage *maskImage;
           if (image.size.height > image.size.width) {
-            if (zone.isFeatured) {
+            if ([zone.name isEqualToString:@"New City Gas"]) {
               maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait_old"];
             } else {
               maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
             }
           } else {
-            if (zone.isFeatured) {
+            if ([zone.name isEqualToString:@"New City Gas"]) {
               maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape_old"];
             } else {
               maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
@@ -461,7 +461,7 @@ static void *ZOTContext = &ZOTContext;
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
     playerVC.delegate = self;
     if (zone.isFeatured) {
-      [playerVC playFeaturedVybes:zone.featureVybes];
+      [playerVC playFeaturedVybes:zone.featuredVybes];
     } else {
       [playerVC playFreshVybesFromZone:zone.zoneID];
     }

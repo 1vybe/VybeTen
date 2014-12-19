@@ -11,6 +11,7 @@ import UIKit
 private let _zoneStoreSharedInstance = ZoneStore()
 
 @objc class ZoneStore: NSObject {
+  private var _featuredZones = [Zone]()
   private var _activeZones = [Zone]()
   private var _unlockedZones = [Zone]() // unlocked zones group my vybes
   
@@ -50,10 +51,10 @@ private let _zoneStoreSharedInstance = ZoneStore()
                 
                 // Rearrange ACTIVE zones first by number of unwatched vybes and by most recent time
                 self._activeZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
-                  if (zone1.isFeatured && !zone2.isFeatured) {
+                  if (zone1.isTrending && !zone2.isTrending) {
                     return true
                   }
-                  if (!zone1.isFeatured && zone2.isFeatured) {
+                  if (!zone1.isTrending && zone2.isTrending) {
                     return false
                   }
                   if (zone1.freshContents.count > 0 && zone2.freshContents.count == 0) {
@@ -83,53 +84,87 @@ private let _zoneStoreSharedInstance = ZoneStore()
   func didFetchUnlockedVybes(result: [AnyObject]!, completionHandler: ((success: Bool) -> Void)!) {
     // First clear cache
     _unlockedZones = [Zone]()
+    _featuredZones = [Zone]()
     
     if let vybes = result as? [PFObject] {
       // First Group UNLOCKED zones
       self.createUnlockedZonesFromVybes(vybes)
       
-      // Let's get featured zone first
-      var query = PFQuery(className: kVYBVybeClassKey)
-      query.includeKey(kVYBVybeUserKey)
-      query.limit = 1000
-      query.orderByAscending(kVYBVybeTimestampKey)
-      let featuredID = ConfigManager.sharedInstance.featuredZoneID()
-      query.whereKey(kVYBVybeZoneIDKey, equalTo: featuredID)
-
-      query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-        if error == nil {
-          if let vybes = result as? [PFObject] {
-            self.createFeaturedZoneFrom(vybes)
-          }
-          
-          self.fetchActiveVybes(completionHandler)
-        } else {
-          completionHandler(success: false)
-        }
-      })
+      // Let's get FEATURED zones
+      self.fetchFeaturedZones()
+      
+      self.fetchActiveVybes(completionHandler)
     }
     else {
       completionHandler(success: false)
     }
   }
   
-  private func createFeaturedZoneFrom(vybes: [PFObject]) {
-    if let last = vybes.last {
-      let zone = self.createZoneFromVybe(last)
-      zone.isFeatured = true
-      zone.mostRecentVybe = last
-      
-      for aZone in _activeZones {
-        if aZone.zoneID == zone.zoneID {
-          return
+  // MARK: - Featured zones
+
+  private func fetchFeaturedZones() {
+    let featuredChannels = ConfigManager.sharedInstance.featuredChannels()
+
+    var query = PFQuery(className: kVYBVybeClassKey)
+    query.includeKey(kVYBVybeUserKey)
+    query.limit = 1000
+    query.orderByDescending(kVYBVybeTimestampKey)
+    query.whereKey(kVYBVybeZoneIDKey, containedIn: featuredChannels)
+
+    query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+      if error == nil {
+        if let vybes = result as? [PFObject] {
+          self.createFeaturedZonesFrom(vybes)
         }
       }
-      for obj in vybes {
-        zone.featureVybes += [obj]
-      }
-      _activeZones += [zone]
+    })
+
+  }
+  
+  private func createFeaturedZonesFrom(vybes: [PFObject]) {
+    for aVybe in vybes {
+      self.putFeaturedVybeIntoZone(aVybe)
     }
   }
+  
+  private func putFeaturedVybeIntoZone(vybe: PFObject) {
+    if let zone = self.featuredZoneForVybe(vybe) {
+      zone.addFeaturedVybe(vybe)
+    } else {
+      let zone = self.createZoneFromVybe(vybe)
+      zone.isFeatured = true
+      zone.mostRecentVybe = vybe
+      
+      zone.addFeaturedVybe(vybe)
+      self.addFeaturedZone(zone)
+    }
+  }
+  
+  private func featuredZoneForVybe(vybe: PFObject) -> Zone? {
+    var zoneID: String = "777"
+    if let znID = vybe[kVYBVybeZoneIDKey] as? String {
+      zoneID = znID
+    }
+    for zone in _featuredZones {
+      if zone.zoneID == zoneID {
+        return zone
+      }
+    }
+    
+    return nil
+  }
+  
+  private func addFeaturedZone(zone: Zone) {
+    for zn in _featuredZones {
+      if zone.zoneID == zn.zoneID {
+        return
+      }
+    }
+    
+    _featuredZones += [zone]
+  }
+  
+  // MARK: - Unlocked zones
 
   private func createUnlockedZonesFromVybes(result: [PFObject]) {
     for aVybe in result {
@@ -278,6 +313,10 @@ private let _zoneStoreSharedInstance = ZoneStore()
 
   func activeZones() -> [Zone]! {
     return _activeZones
+  }
+  
+  func activeAndFeaturedZones() -> [Zone]! {
+    return _featuredZones + _activeZones
   }
   
   func activeUnlockedZones() -> [Zone]! {

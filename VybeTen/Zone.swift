@@ -15,9 +15,11 @@ import MapKit
   
   // FEATURED
   var isFeatured: Bool = false
-  var featureVybes = [PFObject]()
+  var featuredVybes = [PFObject]()
   
   // ACTIVE zone
+  var isTrending: Bool = false
+  
   var activeUsers = [String: Int]()
   var mostRecentVybe: PFObject?
   var mostRecentActiveVybeTimestamp: NSDate? {
@@ -136,6 +138,10 @@ import MapKit
   
   func addMyVybe(aVybe: PFObject) {
     myVybes += [aVybe]
+  }
+  
+  func addFeaturedVybe(vybe: PFObject) {
+    featuredVybes = [vybe] + featuredVybes
   }
   
   func addSavedVybe(sVybe: VYBVybe) {
