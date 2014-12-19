@@ -431,25 +431,25 @@
   int i;
   if (timePassed < 60) {
     i = timePassed / 1;
-    unit = @"second";
+    unit = @"sec";
   } else if (timePassed < 60 * 60) {
     i = timePassed / 60;
-    unit = @"minute";
+    unit = @"min";
   } else if (timePassed < 3600 * 24.0) {
     i = timePassed / 3600;
-    unit = @"hour";
+    unit = @"hr";
   } else if (timePassed < 3600 * 24 * 7) {
     i = timePassed/ 3600 / 24;
-    unit = @"day";
+    unit = @"d";
   } else if (timePassed < 3600 * 24 * 7 * 4) {
     i = timePassed / 3600 / 24 / 7;
-    unit = @"week";
+    unit = @"w";
   } else if (timePassed < 3600 * 24 * 7 * 4 * 12) {
     i = timePassed / 3600 / 24 / 7 / 4;
-    unit = @"month";
+    unit = @"m";
   } else {
     i = timePassed / 3600 / 24 / 7 / 4 / 12;
-    unit = @"year";
+    unit = @"yr";
   }
   
   if (i > 1) {
