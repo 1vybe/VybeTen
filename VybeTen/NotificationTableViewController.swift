@@ -113,7 +113,6 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
       playerVC.playOnce(vybe)
       
       self.addWatchedActivity(activityObj)
-      NSUserDefaults.standardUserDefaults().setObject(activityObj.createdAt, forKey: kVYBUserDefaultsActivityLastRefreshKey)
     }
   }
   

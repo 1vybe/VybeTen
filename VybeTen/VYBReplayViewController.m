@@ -72,18 +72,24 @@
     [self.zoneButton setBackgroundImage:nil forState:UIControlStateNormal];
   }
   
+  NSNumber *value;
   switch (currentAsset.videoOrientation) {
     case AVCaptureVideoOrientationPortrait:
     case AVCaptureVideoOrientationPortraitUpsideDown:
-      [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait];
+      value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
+      //      [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait];
       break;
     case AVCaptureVideoOrientationLandscapeLeft:
-      [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
+      value = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft];
+      //      [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
       break;
     case AVCaptureVideoOrientationLandscapeRight:
-      [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeLeft];
+      value = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
+      //      [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeLeft];
       break;
   }
+  // NOTE: - It's uncertain why setting currentDevice's orientation and statusBar's to the same does not produce the same outcome. 
+  [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

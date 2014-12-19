@@ -453,7 +453,9 @@
   }
   
   if (i > 1) {
-    unit = [unit stringByAppendingString:@"s"];
+    if ([unit isEqualToString:@"hr"]) {
+      unit = [unit stringByAppendingString:@"s"];
+    }
   }
   NSString *theTime = [NSString stringWithFormat:@"%d %@ ago", i, unit];
   
@@ -491,10 +493,10 @@
       transform = CGAffineTransformMakeRotation(M_PI);
       break;
     case AVCaptureVideoOrientationLandscapeLeft:
-      transform = CGAffineTransformMakeRotation(M_PI_2);
+      transform = CGAffineTransformMakeRotation(-M_PI_2);
       break;
     case AVCaptureVideoOrientationLandscapeRight:
-      transform = CGAffineTransformMakeRotation(-M_PI_2);
+      transform = CGAffineTransformMakeRotation(M_PI_2);
       break;
   }
   
