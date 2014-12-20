@@ -135,6 +135,7 @@ static void *ZOTContext = &ZOTContext;
 #endif
   
   [self getPermissionIfNeeded];
+  [[ConfigManager sharedInstance] fetchIfNeeded];
 }
 
 #pragma mark - UIView
