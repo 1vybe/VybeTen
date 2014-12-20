@@ -18,9 +18,11 @@
                 <outlet property="goPrevButton" destination="Vij-MN-ZuP" id="rwy-vS-Z1J"/>
                 <outlet property="interactionOverlay" destination="1lu-wa-wpT" id="gcZ-8D-5nL"/>
                 <outlet property="locationLabel" destination="2xr-fh-a0w" id="cA0-kh-x5y"/>
+                <outlet property="nextAerialButton" destination="LBJ-7f-ux9" id="PNZ-ry-Szb"/>
                 <outlet property="optionsButton" destination="0It-Qq-qG9" id="izg-7e-rXW"/>
                 <outlet property="optionsOverlay" destination="afv-fB-hBX" id="gXl-St-DZD"/>
                 <outlet property="pauseButton" destination="4Ea-VG-Ot5" id="uPF-6c-MXn"/>
+                <outlet property="prevAerialButton" destination="2AZ-xX-PyP" id="2Wc-hz-ogl"/>
                 <outlet property="timeLabel" destination="UPQ-0i-rrO" id="4c8-UE-Biw"/>
                 <outlet property="usernameLabel" destination="KPb-Hj-SQM" id="Fko-BQ-KWg"/>
                 <outlet property="view" destination="NzJ-pm-eNV" id="vAf-zx-lkw"/>

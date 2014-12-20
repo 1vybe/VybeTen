@@ -37,6 +37,8 @@
 @property (nonatomic, weak) IBOutlet UIView *interactionOverlay;
 @property (nonatomic, weak) IBOutlet UIButton *goPrevButton;
 @property (nonatomic, weak) IBOutlet UIButton *goNextButton;
+@property (nonatomic, weak) IBOutlet UIButton *nextAerialButton;
+@property (nonatomic, weak) IBOutlet UIButton *prevAerialButton;
 @property (nonatomic, weak) IBOutlet UIButton *pauseButton;
 
 @property (nonatomic, weak) IBOutlet UIView *optionsOverlay;
@@ -58,7 +60,35 @@
 @property (nonatomic) AVPlayer *currPlayer;
 @property (nonatomic) AVPlayerItem *currItem;
 
+
 - (void)playAsset:(AVAsset *)asset;
+
+@end
+
+@interface DownloadQueue : NSObject
+@end
+
+@implementation DownloadQueue {
+  NSArray *queue;
+}
+
+- (BOOL)isDownloading:(PFFile *)aFile {
+  for (PFFile *file in queue) {
+    if ([file.url isEqualToString:aFile.url]) {
+      return YES;
+    }
+  }
+  
+  return NO;
+}
+
+- (void)insert:(PFFile *)newFile {
+  if (queue) {
+    queue = [queue arrayByAddingObject:newFile];
+  } else {
+    queue = [NSArray arrayWithObject:newFile];
+  }
+}
 
 @end
 
@@ -83,6 +113,8 @@
   BOOL _userPausedFromOptions;
     
   UILongPressGestureRecognizer *longPressRecognizer;
+  
+  DownloadQueue *downloadQueue;
 }
 @synthesize dismissButton;
 
@@ -96,21 +128,10 @@
   [[UIApplication sharedApplication].keyWindow removeGestureRecognizer:longPressRecognizer];
 }
 
-- (id)initWithPageIndex:(NSInteger)pageIndex {
-  self = [super init];
-  if (self) {
-    _pageIndex = pageIndex;
-  }
-  return self;
-}
-
-- (NSInteger)pageIndex {
-  return _pageIndex;
-}
-
-
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
+  downloadQueue = [[DownloadQueue alloc] init];
   
   // Set up player view
   VYBPlayerView *playerView = [[VYBPlayerView alloc] init];
@@ -173,27 +194,30 @@
 #endif
 }
 
-- (void)prepareFirstVideoInBackgroundWithCompletion:(void (^)(BOOL))completionBlock {
-  PFObject *firstVideo = _zoneVybes[0];
+- (void)prepareVideoInBackgroundFor:(PFObject *)vybe withCompletion:(void (^)(BOOL))completionBlock {
   NSURL *cacheURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
-  cacheURL = [cacheURL URLByAppendingPathComponent:[firstVideo objectId]];
+  cacheURL = [cacheURL URLByAppendingPathComponent:[vybe objectId]];
   cacheURL = [cacheURL URLByAppendingPathExtension:@"mp4"];
   
-  if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
-    completionBlock(YES);
-  }
-  else {
-    PFFile *vid = [firstVideo objectForKey:kVYBVybeVideoKey];
-    [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-      if (!error) {
-        [data writeToURL:cacheURL atomically:YES];
-        completionBlock(YES);
-      }
-      else {
-        completionBlock(NO);
-      }
-    }];
-  }
+  [VYBUtility updateBumpCountInBackground:vybe withBlock:^(BOOL success) {
+    PFFile *vid = [vybe objectForKey:kVYBVybeVideoKey];
+    if ( ! [downloadQueue isDownloading:vid]) {
+      [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        if (!error) {
+          [data writeToURL:cacheURL atomically:YES];
+          
+          [self playVybe:vybe];
+          completionBlock(YES);
+        }
+        else {
+          completionBlock(NO);
+        }
+      }];
+      
+      [downloadQueue insert:vid];
+    }
+    completionBlock(NO);
+  }];
 }
 
 - (void)playZoneVybesFromVybe:(PFObject *)aVybe {
@@ -214,13 +238,12 @@
                                   if (objects.count > 0) {
                                     _zoneVybes = objects;
                                     _zoneCurrIdx = 0;
-                                    [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
+                                    [self prepareVideoInBackgroundFor:_zoneVybes[0] withCompletion:^(BOOL success) {
                                       [self.delegate playerViewController:self didFinishSetup:success];
                                     }];
                                   }
                                   else {
                                     [self.delegate playerViewController:self didFinishSetup:NO];
-                                    //Your vybe is the most recent so object count should always be at least 1
                                   }
                                   
                                 }
@@ -237,7 +260,7 @@
       _zoneVybes = [NSArray arrayWithObject:vybe];
       _zoneCurrIdx = 0;
       
-      [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
+      [self prepareVideoInBackgroundFor:_zoneVybes[0] withCompletion:^(BOOL success) {
         [self.delegate playerViewController:self didFinishSetup:success];
       }];
     } else {
@@ -250,7 +273,7 @@
 - (void)playFeaturedVybes:(NSArray *)vybes {
   _zoneVybes = vybes;
   _zoneCurrIdx = 0;
-  [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
+  [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
     [self.delegate playerViewController:self didFinishSetup:success];
   }];
 }
@@ -263,7 +286,7 @@
         _zoneVybes = freshContents;
         _zoneCurrIdx = 0;
         _isFreshStream = YES;
-        [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
+        [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
           [self.delegate playerViewController:self didFinishSetup:success];
         }];
       }
@@ -285,7 +308,7 @@
       if (objects.count > 0) {
         _zoneVybes = objects;
         _zoneCurrIdx = 0;
-        [self prepareFirstVideoInBackgroundWithCompletion:^(BOOL success) {
+        [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
           [self.delegate playerViewController:self didFinishSetup:success];
         }];
       }
@@ -324,47 +347,45 @@
     return;
   }
 
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [self syncUIElementsInBackgroundFor:vybeBeingWatched withBlock:^(BOOL success) {
-      [self playVybe:vybeBeingWatched];
-    }];
-
-  });
-  
+  [self playVybe:vybeBeingWatched];
 }
 
 - (void)playVybe:(PFObject *)vybe {
+  PFObject *currVybe = _zoneVybes[_zoneCurrIdx];
+  if ( ! [currVybe.objectId isEqualToString:vybe.objectId]) {
+    return;
+  }
+  
   // Play after syncing UI elements
   NSURL *cacheURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
   cacheURL = [cacheURL URLByAppendingPathComponent:[vybe objectId]];
   cacheURL = [cacheURL URLByAppendingPathExtension:@"mp4"];
   
   if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self syncUIElementsFor:vybe];
+    });
+    
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
     [self playAsset:asset];
     
     if (_isFreshStream) {
       [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:vybe];
     }
-  } else {
-    PFFile *vid = [vybe objectForKey:kVYBVybeVideoKey];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-      if (!error) {
-        [data writeToURL:cacheURL atomically:YES];
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
-        
-        [self playAsset:asset];
-        // Because we want to request to server to remove the watched vybe from the feed only when needed.
-        if (_isFreshStream) {
-          [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:vybe];
+    if (_zoneCurrIdx + 1 < _zoneVybes.count) {
+      PFObject *nextItem = _zoneVybes[_zoneCurrIdx + 1];
+      [self prepareVideoInBackgroundFor:nextItem withCompletion:^(BOOL success) {
+        PFObject *currItem = _zoneVybes[_zoneCurrIdx];
+        if ( [currItem.objectId isEqualToString:nextItem.objectId]) {
+          [self.nextAerialButton setEnabled:YES];
         }
-      } else {
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Network Temporarily Unavailable" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [av show];
-      }
-    }];
+      }];
+    }
+  } else {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.nextAerialButton setEnabled:NO];
   }
 }
 
@@ -392,7 +413,7 @@
   [super didReceiveMemoryWarning];
 }
 
-- (void)syncUIElementsInBackgroundFor:(PFObject *)aVybe withBlock:(void (^)(BOOL))completionBlock {
+- (void)syncUIElementsFor:(PFObject *)aVybe {
   // Display location and time
   NSString *zoneName = aVybe[kVYBVybeZoneNameKey];
   if (!zoneName) {
@@ -427,11 +448,6 @@
   self.blockOverlayButton.selected = NO;
   
   [self updateBumpCountFor:aVybe];
-  // refresh cache
-  [VYBUtility updateBumpCountInBackground:aVybe withBlock:^(BOOL success) {
-    [self updateBumpCountFor:aVybe];
-    completionBlock(success);
-  }];
 }
 
 - (void)playAsset:(AVAsset *)asset {

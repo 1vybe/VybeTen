@@ -11,8 +11,7 @@
 @protocol VYBPlayerViewControllerDelegate;
 @interface VYBPlayerViewController : UIViewController <UIGestureRecognizerDelegate>
 @property (nonatomic, weak) id<VYBPlayerViewControllerDelegate> delegate;
-- (id)initWithPageIndex:(NSInteger)pageIndex;
-- (NSInteger)pageIndex;
+
 
 //TODO: Called should call this method inside the completion block when it is calling presentViewController:
 
