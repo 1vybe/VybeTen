@@ -122,6 +122,9 @@ static void *XYZContext = &XYZContext;
   
   [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadPercent" options:NSKeyValueObservingOptionNew context:XYZContext];
   [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadStatus" options:NSKeyValueObservingOptionNew context:XYZContext];
+  
+//  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusOnTouchArea:)];
+//  [self.view addGestureRecognizer:tapGesture];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -428,6 +431,18 @@ static void *XYZContext = &XYZContext;
   }
   
   [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
+#pragma mark - Tap to focus
+
+- (void)focusOnTouchArea:(UIGestureRecognizer *)gesture {
+  if (_isRecording) {
+    return;
+  }
+  CGPoint touchPt = [gesture locationInView:self.view];
+  CGPoint scaledPt = [(AVCaptureVideoPreviewLayer *)self.cameraView.layer captureDevicePointOfInterestForPoint:touchPt];
+  
+  [self.capturePipeline setFocusPoint:scaledPt];
 }
 
 #pragma mark - ()

@@ -392,6 +392,27 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
   }
 }
 
+- (void)setFocusPoint:(CGPoint)point {
+  dispatch_async(_sessionQueue, ^{
+    AVCaptureDevice *videoDevice = [_videoDeviceInput device];
+    NSError *error;
+    [videoDevice lockForConfiguration:&error];
+    if (error) {
+      NSLog(@"Tap to Focus Error: %@", error);
+    } else {
+      if ([videoDevice isFocusPointOfInterestSupported]) {
+        [videoDevice setFocusPointOfInterest:point];
+        NSLog(@"focus set to %@", NSStringFromCGPoint(point));
+      }
+      if ([videoDevice isExposurePointOfInterestSupported]) {
+        [videoDevice setExposurePointOfInterest:point];
+        NSLog(@"exposure set to %@", NSStringFromCGPoint(point));
+      }
+      [videoDevice unlockForConfiguration];
+    }
+  });
+}
+
 - (void)flipCameraWithCompletion:(void (^)())completionBlock {
   dispatch_async(_sessionQueue, ^{
     AVCaptureDevicePosition currentPosition = [[_videoDeviceInput device] position];
@@ -448,16 +469,7 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
     if ([captureDevice isLowLightBoostSupported]) {
       [captureDevice setAutomaticallyEnablesLowLightBoostWhenAvailable:YES];
     }
-    if ([captureDevice isSmoothAutoFocusSupported]) {
-      [captureDevice setSmoothAutoFocusEnabled:YES];
-    }
-    if ([captureDevice isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
-      [captureDevice setFocusMode:AVCaptureFocusModeAutoFocus];
-    }
-    if ([captureDevice isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
-      [captureDevice setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
-    }
-    [captureDevice unlockForConfiguration];
+     [captureDevice unlockForConfiguration];
   } else {
     NSLog(@"Low light boost configuration failed: %@", error);
   }
