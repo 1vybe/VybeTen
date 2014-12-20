@@ -99,6 +99,22 @@ Parse.Cloud.job("removeDeletedVybesFromFeeds", function (request, status) {
   });
 });
 
+Parse.Cloud.job("resetUserPromptsSeen", function (request, status) {
+  // Set up to modify user data
+  Parse.Cloud.useMasterKey();
+
+    // Query for all users
+  var query = new Parse.Query(Parse.User);
+  query.each(function(user) {
+    user.set('resetUserPromptsSeen', false);
+    return user.save();
+  }).then(function() {
+    status.success("Job completed");
+  }, function(error) {
+    status.error("Job failed");
+  });
+});
+
 Parse.Cloud.job("removeOldVybesFromFeeds", function (request, status) {
   // Set up to modify user data
   Parse.Cloud.useMasterKey();

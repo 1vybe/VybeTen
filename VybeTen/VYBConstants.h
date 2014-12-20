@@ -90,6 +90,8 @@ extern NSString *const kVYBUserDefaultsVideoAccessPermissionDeniedKey;
 extern NSString *const kVYBUserDefaultsVideoAccessPermissionUndeterminedKey;
 extern NSString *const kVYBUserDefaultsVideoAccessPermissionGrantedKey;
 
+extern NSString *const kVYBUserDefaultsUserPromptsSeenKey;
+
 
 #pragma mark - PFObject User Class
 // field keys

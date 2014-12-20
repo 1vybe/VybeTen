@@ -13,7 +13,7 @@
 #import <GAITracker.h>
 #import <GAIFields.h>
 //NOTE: Take out this part when releasing to TESTFLIGHT
-#import <HockeySDK/HockeySDK.h>
+//#import <HockeySDK/HockeySDK.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
@@ -59,12 +59,12 @@
   
   //NOTE: Take out this part when releasing to TESTFLIGHT
   /* HockeyApp Initilization */
-  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
-  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
-  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
-  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
-  [hockeyManager startManager];
-  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+//  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
+//  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
+//  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
+//  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
+//  [hockeyManager startManager];
+//  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
   
   //NOTE: Change this part when releasing to TESTFLIGHT
   // Parse Initialization
@@ -308,7 +308,7 @@
     [self.mainNavController pushViewController:self.permissionController animated:NO];
   
   UserPromptsViewController *userPrompts = [[UIStoryboard storyboardWithName:@"UserPrompts" bundle:nil] instantiateInitialViewController];
-  BOOL userPromptsSeen = [[[PFUser currentUser] objectForKey:kVYBUserPromptsSeenKey] boolValue];
+  BOOL userPromptsSeen = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsUserPromptsSeenKey];
   if (!userPromptsSeen) {
     [self.mainNavController pushViewController:userPrompts animated:NO];
   }
