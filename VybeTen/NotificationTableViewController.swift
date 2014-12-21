@@ -129,7 +129,9 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   // MARK: - PlayerViewControllerDelegate
   
   func playerViewController(playerVC: VYBPlayerViewController!, didFinishSetup ready: Bool) {
-    self.presentViewController(playerVC, animated: true, completion: nil)
+    if ready {
+      self.presentViewController(playerVC, animated: true, completion: nil)
+    }
   }
   
   @IBAction func closeButtonPressed(sender: AnyObject) {

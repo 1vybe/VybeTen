@@ -72,9 +72,9 @@
   NSArray *queue;
 }
 
-- (BOOL)isDownloading:(PFFile *)aFile {
-  for (PFFile *file in queue) {
-    if ([file.url isEqualToString:aFile.url]) {
+- (BOOL)isDownloading:(PFObject *)vybe {
+  for (PFObject *aVybe in queue) {
+    if ([aVybe.objectId isEqualToString:vybe.objectId]) {
       return YES;
     }
   }
@@ -82,12 +82,24 @@
   return NO;
 }
 
-- (void)insert:(PFFile *)newFile {
+- (void)insert:(PFObject *)newObj {
   if (queue) {
-    queue = [queue arrayByAddingObject:newFile];
+    queue = [queue arrayByAddingObject:newObj];
   } else {
-    queue = [NSArray arrayWithObject:newFile];
+    queue = [NSArray arrayWithObject:newObj];
   }
+}
+
+- (void)remove:(PFObject *)dObj {
+  NSMutableArray *newQueue = [NSMutableArray array];
+  if (newQueue) {
+    for (PFObject *vybe in queue) {
+      if ( ! [vybe.objectId isEqualToString:dObj.objectId]) {
+        [newQueue addObject:vybe];
+      }
+    }
+  }
+  queue = newQueue;
 }
 
 @end
@@ -195,28 +207,34 @@
 }
 
 - (void)prepareVideoInBackgroundFor:(PFObject *)vybe withCompletion:(void (^)(BOOL))completionBlock {
+  if ( [downloadQueue isDownloading:vybe] ) {
+    return;
+  }
+  
   NSURL *cacheURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
   cacheURL = [cacheURL URLByAppendingPathComponent:[vybe objectId]];
   cacheURL = [cacheURL URLByAppendingPathExtension:@"mp4"];
   
+  [downloadQueue insert:vybe];
+  
   [VYBUtility updateBumpCountInBackground:vybe withBlock:^(BOOL success) {
     PFFile *vid = [vybe objectForKey:kVYBVybeVideoKey];
-    if ( ! [downloadQueue isDownloading:vid]) {
-      [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        if (!error) {
-          [data writeToURL:cacheURL atomically:YES];
-          
-          [self playVybe:vybe];
+    [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+      if (!error) {
+        [data writeToURL:cacheURL atomically:YES];
+        
+        [self playVybe:vybe];
+        if (completionBlock) {
           completionBlock(YES);
         }
-        else {
+      }
+      else {
+        if (completionBlock) {
           completionBlock(NO);
         }
-      }];
-      
-      [downloadQueue insert:vid];
-    }
-    completionBlock(NO);
+      }
+      [downloadQueue remove:vybe];
+    }];
   }];
 }
 
@@ -362,8 +380,6 @@
   cacheURL = [cacheURL URLByAppendingPathExtension:@"mp4"];
   
   if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    
     dispatch_async(dispatch_get_main_queue(), ^{
       [self syncUIElementsFor:vybe];
     });
@@ -374,6 +390,7 @@
     if (_isFreshStream) {
       [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:vybe];
     }
+    
     if (_zoneCurrIdx + 1 < _zoneVybes.count) {
       PFObject *nextItem = _zoneVybes[_zoneCurrIdx + 1];
       [self prepareVideoInBackgroundFor:nextItem withCompletion:^(BOOL success) {
