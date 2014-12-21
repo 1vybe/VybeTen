@@ -23,6 +23,11 @@ Parse.Cloud.afterSave('Activity', function(request) {
     return;
   }
 
+  // We don't want to send a push for bumping ur own vybe
+  if (toUser.id === request.user.id) {
+    return;
+  }
+
 
   var query = new Parse.Query(Parse.Installation);
   query.equalTo('user', toUser);
