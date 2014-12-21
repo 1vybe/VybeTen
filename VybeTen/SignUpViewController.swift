@@ -9,14 +9,14 @@
 import Foundation
 
 class SignUpViewController: PFSignUpViewController {
-    // MARK: View Life Cycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let vybeLogoImage = UIImage(named: "VYBE_Txt")
-        self.signUpView.logo = UIImageView(image: vybeLogoImage)
-        
-        let signUpBackgroundImage = UIImage(named: "SignUp-BtnB")
-        self.signUpView.signUpButton.setBackgroundImage(signUpBackgroundImage, forState: .Normal)
-    }
+  // MARK: View Life Cycle
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    let vybeLogoImage = UIImage(named: "VYBE_Txt")
+    self.signUpView.logo = UIImageView(image: vybeLogoImage)
+    
+    let signUpBackgroundImage = UIImage(named: "SignUp-BtnB")
+    self.signUpView.signUpButton.setBackgroundImage(signUpBackgroundImage, forState: .Normal)
+  }
 }
