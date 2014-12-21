@@ -381,6 +381,7 @@
   
   if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheURL path]]) {
     dispatch_async(dispatch_get_main_queue(), ^{
+      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
       [self syncUIElementsFor:vybe];
     });
     
@@ -396,13 +397,17 @@
       [self prepareVideoInBackgroundFor:nextItem withCompletion:^(BOOL success) {
         PFObject *currItem = _zoneVybes[_zoneCurrIdx];
         if ( [currItem.objectId isEqualToString:nextItem.objectId]) {
-          [self.nextAerialButton setEnabled:YES];
+          dispatch_async(dispatch_get_main_queue(), ^{
+            [self.nextAerialButton setEnabled:YES];
+          });
         }
       }];
     }
   } else {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [self.nextAerialButton setEnabled:NO];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+      [self.nextAerialButton setEnabled:NO];
+    });
   }
 }
 

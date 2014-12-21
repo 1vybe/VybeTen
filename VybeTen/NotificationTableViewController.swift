@@ -84,22 +84,24 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
     
     if let vybe = activityObj[kVYBActivityVybeKey] as? PFObject {
       var thumbnailView = cell.viewWithTag(72) as PFImageView
-      thumbnailView.file = vybe[kVYBVybeThumbnailKey] as PFFile
-      thumbnailView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
-        if error == nil {
-          if image != nil {
-            var maskImage: UIImage?
-            if image.size.height > image.size.width {
-              maskImage = UIImage(named: "thumbnail_mask_portrait")
-            } else {
-              maskImage = UIImage(named: "thumbnail_mask_landscape")
+      if let thumbnailFile = vybe[kVYBVybeThumbnailKey] as? PFFile {
+        thumbnailView.file = thumbnailFile
+        thumbnailView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
+          if error == nil {
+            if image != nil {
+              var maskImage: UIImage?
+              if image.size.height > image.size.width {
+                maskImage = UIImage(named: "thumbnail_mask_portrait")
+              } else {
+                maskImage = UIImage(named: "thumbnail_mask_landscape")
+              }
+              thumbnailView.image = VYBUtility.maskImage(image, withMask: maskImage)
             }
-            thumbnailView.image = VYBUtility.maskImage(image, withMask: maskImage)
+          } else {
+            thumbnailView.image = UIImage(named: "OverlayThumbnail")
           }
-        } else {
-          thumbnailView.image = UIImage(named: "OverlayThumbnail")
-        }
-      })
+        })
+      }
     }
     
     return cell
