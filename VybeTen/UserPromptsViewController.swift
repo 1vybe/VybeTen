@@ -43,7 +43,7 @@ class UserPromptsViewController: UIViewController {
       promptView.image = prompts[currIndex]
       self.promptView.setNeedsDisplay()
     } else {
-      NSUserDefaults.standardUserDefaults().setObject(true, forKey: kVYBUserDefaultsUserPromptsSeenKey)
+      NSUserDefaults.standardUserDefaults().setObject(NSNumber(bool: true), forKey: kVYBUserDefaultsUserPromptsSeenKey)
       self.navigationController?.popViewControllerAnimated(true)
     }
   }

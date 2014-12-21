@@ -308,7 +308,7 @@
     [self.mainNavController pushViewController:self.permissionController animated:NO];
   
   UserPromptsViewController *userPrompts = [[UIStoryboard storyboardWithName:@"UserPrompts" bundle:nil] instantiateInitialViewController];
-  BOOL userPromptsSeen = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsUserPromptsSeenKey];
+  BOOL userPromptsSeen = [[[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsUserPromptsSeenKey] boolValue];
   if (!userPromptsSeen) {
     [self.mainNavController pushViewController:userPrompts animated:NO];
   }
