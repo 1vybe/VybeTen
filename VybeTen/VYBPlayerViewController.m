@@ -579,8 +579,10 @@
 }
 
 - (void)overlayTimerExpired:(NSTimer *)timer {
-  self.goPrevButton.hidden = YES;
-  self.goNextButton.hidden = YES;
+  if (self.optionsOverlay.hidden) {
+    menuMode = NO;
+    [self menuModeChanged];
+  }
   
   
   [timer invalidate];
