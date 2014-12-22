@@ -406,3 +406,45 @@ Parse.Cloud.define('unflag_vybe', function (request, response) {
     }
   });
 });
+
+Parse.Cloud.define('getFeaturedChannels', function (request, response) {
+
+  var featured = [];
+
+  Parse.Config.get().then(function(config) {
+    var featuredEvents = config.get("featuredEvents");
+    var featuredChannels = config.get("featuredChannels");
+    var featuredTimestamps = config.get("featuredTimestamps");
+
+    featured = _.zip(featuredEvents, featuredChannels, featuredTimestamps);
+    console.log('Featured: ' + featured);
+
+    var promises = [];
+
+    _.each(featured, function(featured) {
+      var featuredEvent = featured[0];
+      var featuredZoneID =  featured[1];
+      var featuredTimestampStart = new Date(featured[2]);
+      var featuredTimestampEnd = new Date(featured[2]);
+      featuredTimestampEnd.setHours(featuredTimestampEnd.getHours() + 24);
+      featured[2] = new Date(featured[2]);
+
+      var query = new Parse.Query('Vybe');
+      query.equalTo('zoneID', featuredZoneID);
+      query.ascending('timestamp');
+      query.greaterThanOrEqualTo('timestamp', featuredTimestampStart);  // Ignore past vybes
+      query.lessThan('timestamp', featuredTimestampEnd);
+      promises.push(query.first())
+    });
+
+    return Parse.Promise.when(promises);
+  }).then(function() {
+    _.each(arguments, function(vybe, index) {
+      featured[index].push(vybe.get('thumbnail'));
+    });
+    response.success(featured);
+  }, function(error) {
+    response.error(error);
+  });
+
+});
