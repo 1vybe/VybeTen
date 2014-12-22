@@ -116,6 +116,7 @@
                                     <constraints>
                                         <constraint firstItem="Fmo-8t-gqt" firstAttribute="leading" secondItem="dCn-8o-gNb" secondAttribute="trailing" constant="5" id="10Z-By-zWS"/>
                                         <constraint firstItem="e4p-mx-bZd" firstAttribute="top" secondItem="o7b-UK-9ra" secondAttribute="top" constant="18" id="8vA-6O-V4x"/>
+                                        <constraint firstItem="e4p-mx-bZd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fmo-8t-gqt" secondAttribute="trailing" constant="10" id="9Ey-bM-Q76"/>
                                         <constraint firstItem="dl6-Jv-tw5" firstAttribute="leading" secondItem="o7b-UK-9ra" secondAttribute="leading" id="9iL-fg-SBH"/>
                                         <constraint firstAttribute="bottom" secondItem="dl6-Jv-tw5" secondAttribute="bottom" id="HZq-mw-kUy"/>
                                         <constraint firstItem="Fmo-8t-gqt" firstAttribute="top" secondItem="o7b-UK-9ra" secondAttribute="top" constant="20" id="Oci-wb-I1P"/>

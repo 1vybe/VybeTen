@@ -147,15 +147,6 @@
                                 <constraint firstItem="lH2-Xq-FWU" firstAttribute="top" secondItem="1lu-wa-wpT" secondAttribute="top" constant="15" id="ryE-Yc-076"/>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KPb-Hj-SQM" userLabel="userLabel">
-                            <rect key="frame" x="137" y="572" width="100" height="18"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="100" id="vr8-0i-HFp"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="13"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2xr-fh-a0w" userLabel="locationLabel">
                             <rect key="frame" x="10" y="555" width="43" height="16"/>
                             <constraints>
@@ -188,7 +179,6 @@
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="0It-Qq-qG9" secondAttribute="trailing" constant="15" id="4k9-0y-oXx"/>
                         <constraint firstAttribute="trailing" secondItem="afv-fB-hBX" secondAttribute="trailing" id="5Yk-1R-I0O"/>
-                        <constraint firstAttribute="centerX" secondItem="KPb-Hj-SQM" secondAttribute="centerX" id="5vG-NY-Wwo"/>
                         <constraint firstItem="1lu-wa-wpT" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="7AN-RH-kUE"/>
                         <constraint firstItem="2xr-fh-a0w" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="AoK-aY-7cw"/>
                         <constraint firstAttribute="bottom" secondItem="1lu-wa-wpT" secondAttribute="bottom" id="Cdt-B3-ecT"/>
@@ -198,34 +188,33 @@
                         <constraint firstAttribute="bottom" secondItem="2xr-fh-a0w" secondAttribute="bottom" constant="29" id="Vqe-WG-rTw"/>
                         <constraint firstItem="1lu-wa-wpT" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="bWy-Ug-unw"/>
                         <constraint firstItem="0It-Qq-qG9" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="15" id="cgO-NC-beP"/>
-                        <constraint firstAttribute="bottom" secondItem="KPb-Hj-SQM" secondAttribute="bottom" constant="10" id="dNZ-ov-o8q"/>
                         <constraint firstAttribute="bottom" secondItem="afv-fB-hBX" secondAttribute="bottom" id="mP1-3J-fmr"/>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GIp-CI-r4q" userLabel="bumpButton">
-                    <rect key="frame" x="305" y="525" width="45" height="45"/>
+                    <rect key="frame" x="311" y="536" width="64" height="64"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="45" id="aog-pc-Z93"/>
-                        <constraint firstAttribute="width" constant="45" id="diQ-SW-3eC"/>
+                        <constraint firstAttribute="height" constant="64" id="aog-pc-Z93"/>
+                        <constraint firstAttribute="width" constant="64" id="diQ-SW-3eC"/>
                     </constraints>
-                    <state key="normal" image="SmallBump(off)">
+                    <state key="normal" image="Bump(off)">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <state key="selected" image="SmallBump(on)"/>
+                    <state key="selected" image="Bump(on)"/>
                     <connections>
                         <action selector="bmpButtonPressed:" destination="-1" eventType="touchUpInside" id="6eQ-TK-B7p"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bumps" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cDB-yi-w6C" userLabel="bumpCountLabel">
-                    <rect key="frame" x="309" y="573" width="37" height="17"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="13" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cDB-yi-w6C" userLabel="bumpCountLabel">
+                    <rect key="frame" x="336" y="542" width="15" height="17"/>
                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="11"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                     <color key="shadowColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                     <size key="shadowOffset" width="1" height="1"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="648" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfk-Iw-Edw" userLabel="bumpCountGhost">
-                    <rect key="frame" x="283" y="573" width="21" height="17"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bumps" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfk-Iw-Edw" userLabel="bumpCountGhost">
+                    <rect key="frame" x="325" y="583" width="37" height="17"/>
                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="11"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
@@ -258,6 +247,15 @@
                         <action selector="goNextButtonPressed:" destination="-1" eventType="touchUpInside" id="6bB-nM-LPt"/>
                     </connections>
                 </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KPb-Hj-SQM">
+                    <rect key="frame" x="137" y="572" width="100" height="18"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="100" id="vr8-0i-HFp"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="13"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dec 28 12:28 PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPQ-0i-rrO" userLabel="timeLabel">
                     <rect key="frame" x="10" y="574" width="90" height="16"/>
                     <constraints>
@@ -269,29 +267,33 @@
                 </label>
             </subviews>
             <constraints>
+                <constraint firstAttribute="centerX" secondItem="KPb-Hj-SQM" secondAttribute="centerX" id="10P-3t-cK2"/>
                 <constraint firstAttribute="centerY" secondItem="2AZ-xX-PyP" secondAttribute="centerY" id="1ek-eq-pmb"/>
                 <constraint firstItem="UPQ-0i-rrO" firstAttribute="leading" secondItem="NzJ-pm-eNV" secondAttribute="leading" constant="10" id="3Od-z4-Psn"/>
                 <constraint firstItem="2AZ-xX-PyP" firstAttribute="leading" secondItem="NzJ-pm-eNV" secondAttribute="leading" id="3e9-XA-bmd"/>
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="top" secondItem="NzJ-pm-eNV" secondAttribute="top" id="6O1-5Q-B5F"/>
                 <constraint firstAttribute="centerY" secondItem="LBJ-7f-ux9" secondAttribute="centerY" id="8VG-KU-gCx"/>
                 <constraint firstAttribute="bottom" secondItem="UPQ-0i-rrO" secondAttribute="bottom" constant="10" id="96E-u9-Bq2"/>
-                <constraint firstItem="cDB-yi-w6C" firstAttribute="leading" secondItem="dfk-Iw-Edw" secondAttribute="trailing" constant="5" id="Fom-g8-ByB"/>
                 <constraint firstAttribute="bottom" secondItem="FUM-j7-JZe" secondAttribute="bottom" id="GX6-HT-uCc"/>
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="leading" secondItem="NzJ-pm-eNV" secondAttribute="leading" id="IWL-PO-StZ"/>
-                <constraint firstAttribute="bottom" secondItem="dfk-Iw-Edw" secondAttribute="bottom" constant="10" id="Nde-tF-CoK"/>
-                <constraint firstAttribute="bottom" secondItem="cDB-yi-w6C" secondAttribute="bottom" constant="10" id="PUB-fh-q4P"/>
+                <constraint firstAttribute="bottom" secondItem="KPb-Hj-SQM" secondAttribute="bottom" constant="10" id="Mkm-pq-EUO"/>
                 <constraint firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="R0X-2U-EEj"/>
-                <constraint firstAttribute="bottom" secondItem="GIp-CI-r4q" secondAttribute="bottom" constant="30" id="XX8-hn-EN6"/>
+                <constraint firstItem="GIp-CI-r4q" firstAttribute="bottom" secondItem="dfk-Iw-Edw" secondAttribute="bottom" id="RgL-ym-whh"/>
                 <constraint firstAttribute="trailing" secondItem="LBJ-7f-ux9" secondAttribute="trailing" id="eEb-jh-lcN"/>
-                <constraint firstAttribute="trailing" secondItem="GIp-CI-r4q" secondAttribute="trailing" constant="25" id="ejX-3c-rz2"/>
+                <constraint firstItem="cDB-yi-w6C" firstAttribute="top" secondItem="GIp-CI-r4q" secondAttribute="top" constant="6" id="fRB-Cu-pnS"/>
                 <constraint firstAttribute="centerX" secondItem="FUM-j7-JZe" secondAttribute="centerX" id="iT1-31-J0l"/>
+                <constraint firstItem="GIp-CI-r4q" firstAttribute="centerX" secondItem="dfk-Iw-Edw" secondAttribute="centerX" id="peD-KI-xNT"/>
                 <constraint firstItem="cDB-yi-w6C" firstAttribute="centerX" secondItem="GIp-CI-r4q" secondAttribute="centerX" id="rmq-pg-HGe"/>
+                <constraint firstAttribute="trailing" secondItem="GIp-CI-r4q" secondAttribute="trailing" id="vv6-sE-4p9"/>
+                <constraint firstAttribute="bottom" secondItem="GIp-CI-r4q" secondAttribute="bottom" id="w1V-h0-aYF"/>
                 <constraint firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="zMp-1G-fbd"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
     </objects>
     <resources>
+        <image name="Bump(off)" width="64" height="64"/>
+        <image name="Bump(on)" width="64" height="64"/>
         <image name="Player_BlackFade_More" width="375" height="667"/>
         <image name="Player_Close_Button" width="40" height="40"/>
         <image name="Player_Dismiss_Button" width="40" height="40"/>
@@ -302,8 +304,6 @@
         <image name="Player_Play" width="33" height="40"/>
         <image name="Player_ReportUser-btn" width="174" height="52"/>
         <image name="Player_ReportUser-btnON" width="174" height="52"/>
-        <image name="SmallBump(off)" width="45" height="45"/>
-        <image name="SmallBump(on)" width="45" height="45"/>
         <image name="TransparentImage" width="180" height="180"/>
         <image name="player_bottom_overlay" width="375" height="133"/>
         <image name="player_next_button" width="69" height="207"/>

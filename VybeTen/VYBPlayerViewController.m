@@ -582,6 +582,7 @@
   self.goPrevButton.hidden = YES;
   self.goNextButton.hidden = YES;
   
+  
   [timer invalidate];
 }
 
@@ -677,8 +678,8 @@
       self.bumpCountLabel.text = [NSString stringWithFormat:@"%@", counter];
     }
     else {
-      self.bumpCountGhost.text = [NSString stringWithFormat:@"%@", counter];
-      self.bumpCountLabel.text = ([counter intValue] > 1) ? @"Bumps" : @"Bump";
+      self.bumpCountLabel.text = [NSString stringWithFormat:@"%@", counter];
+      self.bumpCountGhost.text = ([counter intValue] > 1) ? @"Bumps" : @"Bump";
     }
   }
   else {
