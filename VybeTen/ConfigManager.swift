@@ -11,8 +11,16 @@ import UIKit
 private var _sharedInstance = ConfigManager()
 //private let _refreshInterval: NSTimeInterval = 60 * 60 * 3
 private let _refreshInterval: NSTimeInterval = 0
+
 struct DateSingleton {
   static var lastRefresh: NSDate? = nil
+}
+
+struct FeaturedChannel {
+  var eventName: String
+  var zoneID: String
+  var fromDate: NSDate
+  var toDate: NSDate
 }
 
 class ConfigManager: NSObject {
@@ -56,9 +64,9 @@ class ConfigManager: NSObject {
     return "4f722440e4b0995f2face125"
   }
   
-  func featuredChannels() -> [String] {
-    var channels = [String]()
-    if let list = self.config?["featuredChannels"] as? [String] {
+  func featuredChannels() -> [AnyObject] {
+    var channels = [AnyObject]()
+    if let list = self.config?["featuredChannels"] as? [AnyObject]{
       channels = list
     }
     

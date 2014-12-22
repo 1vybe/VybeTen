@@ -15,7 +15,9 @@ import MapKit
   
   // FEATURED
   var isFeatured: Bool = false
-  var featuredVybes = [PFObject]()
+  var eventName: String?
+  var fromDate: NSDate?
+  var featuredThumbnail: PFFile?
   
   // ACTIVE zone
   var isTrending: Bool = false
@@ -140,10 +142,6 @@ import MapKit
     myVybes += [aVybe]
   }
   
-  func addFeaturedVybe(vybe: PFObject) {
-    featuredVybes = [vybe] + featuredVybes
-  }
-  
   func addSavedVybe(sVybe: VYBVybe) {
     let parseVybe = sVybe.parseObject()
     parseVybe["uniqueId"] = sVybe.uniqueFileName
@@ -213,6 +211,10 @@ import MapKit
         println("did remove the vybe")
       }
     }
+  }
+  
+  func featuredThumbnailFile() -> PFFile? {
+    return featuredThumbnail
   }
   
   

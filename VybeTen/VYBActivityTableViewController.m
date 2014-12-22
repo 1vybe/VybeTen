@@ -315,8 +315,43 @@ static void *ZOTContext = &ZOTContext;
     VYBVybeTableViewCell *cell;
     PFObject *lastVybe;
     
-    // FRESH vybes
-    if (freshContents && freshContents.count) {
+    if (zone.isFeatured) { // FEATURED zone
+      cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"FeaturedLocationCell"];
+      
+      cell.locationLabel.text = zone.name;
+      
+      cell.timestampLabel.text = [NSString stringWithFormat:@"%@", [VYBUtility reverseTime:zone.fromDate]];
+      PFFile *thumbnailFile = [zone featuredThumbnailFile];
+      if (thumbnailFile) {
+        cell.thumbnailImageView.file = thumbnailFile;
+        [cell.thumbnailImageView loadInBackground:^(UIImage *image, NSError *error) {
+          if (!error) {
+            if (image) {
+              UIImage *maskImage;
+              if (image.size.height > image.size.width) {
+                if ([zone.name isEqualToString:@"New City Gas"]) {
+                  maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait_old"];
+                } else {
+                  maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
+                }
+              } else {
+                if ([zone.name isEqualToString:@"New City Gas"]) {
+                  maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape_old"];
+                } else {
+                  maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
+                }
+              }
+              cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
+            } else {
+              cell.thumbnailImageView.image = [UIImage imageNamed:@"OverlayThumbnail"];
+            }
+          }
+        }];
+      }
+      
+      return cell;
+      
+    } else if (freshContents && freshContents.count) {        // FRESH zone
       cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"UnwatchedActiveLocationCell"];
       
       lastVybe = zone.freshContents.lastObject;
@@ -326,12 +361,8 @@ static void *ZOTContext = &ZOTContext;
       cell.timestampLabel.text = [NSString stringWithFormat:@"%@ - %@", vybeCntText, [VYBUtility reverseTime:timestampDate]];
     }
     else {
-      if (zone.isFeatured) {
-        cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"FeaturedLocationCell"];
-        lastVybe = zone.mostRecentVybe;
-      } else {
-        cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ActiveLocationCell"];
-      }
+      cell = (VYBVybeTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ActiveLocationCell"];
+
       lastVybe = zone.mostRecentVybe;
       NSDate *timestampDate = zone.mostRecentActiveVybeTimestamp;
       
@@ -346,17 +377,9 @@ static void *ZOTContext = &ZOTContext;
         if (image) {
           UIImage *maskImage;
           if (image.size.height > image.size.width) {
-            if ([zone.name isEqualToString:@"New City Gas"]) {
-              maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait_old"];
-            } else {
-              maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
-            }
+            maskImage = [UIImage imageNamed:@"thumbnail_mask_portrait"];
           } else {
-            if ([zone.name isEqualToString:@"New City Gas"]) {
-              maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape_old"];
-            } else {
-              maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
-            }
+            maskImage = [UIImage imageNamed:@"thumbnail_mask_landscape"];
           }
           cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
         } else {
@@ -461,11 +484,11 @@ static void *ZOTContext = &ZOTContext;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
     playerVC.delegate = self;
-    if (zone.isFeatured) {
-      [playerVC playFeaturedVybes:zone.featuredVybes];
-    } else {
-      [playerVC playFreshVybesFromZone:zone.zoneID];
-    }
+//    if (zone.isFeatured) {
+//      [playerVC playFeaturedVybes:zone.featuredVybes];
+//    } else {
+//      [playerVC playFreshVybesFromZone:zone.zoneID];
+//    }
   }
   // My Locations
   else {

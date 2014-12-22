@@ -104,54 +104,36 @@ private let _zoneStoreSharedInstance = ZoneStore()
 
   private func fetchFeaturedZones() {
     let featuredChannels = ConfigManager.sharedInstance.featuredChannels()
-
-    var query = PFQuery(className: kVYBVybeClassKey)
-    query.includeKey(kVYBVybeUserKey)
-    query.limit = 1000
-    query.orderByDescending(kVYBVybeTimestampKey)
-    query.whereKey(kVYBVybeZoneIDKey, containedIn: featuredChannels)
-
-    query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-      if error == nil {
-        if let vybes = result as? [PFObject] {
-          self.createFeaturedZonesFrom(vybes)
-        }
-      }
-    })
-
-  }
-  
-  private func createFeaturedZonesFrom(vybes: [PFObject]) {
-    for aVybe in vybes {
-      self.putFeaturedVybeIntoZone(aVybe)
-    }
-  }
-  
-  private func putFeaturedVybeIntoZone(vybe: PFObject) {
-    if let zone = self.featuredZoneForVybe(vybe) {
-      zone.addFeaturedVybe(vybe)
-    } else {
-      let zone = self.createZoneFromVybe(vybe)
-      zone.isFeatured = true
-      zone.mostRecentVybe = vybe
-      
-      zone.addFeaturedVybe(vybe)
-      self.addFeaturedZone(zone)
-    }
-  }
-  
-  private func featuredZoneForVybe(vybe: PFObject) -> Zone? {
-    var zoneID: String = "777"
-    if let znID = vybe[kVYBVybeZoneIDKey] as? String {
-      zoneID = znID
-    }
-    for zone in _featuredZones {
-      if zone.zoneID == zoneID {
-        return zone
-      }
-    }
     
-    return nil
+//    PFCloud.callFunctionInBackground("get_featured_channels", withParameters: nil) { (result: AnyObject!, error: NSError!) -> Void in
+//      if error == nil {
+//        if let channels = result as? [AnyObject] {
+//          for channel in channels {
+//            if let chnl = channel as? [String : AnyObject] {
+//              self.createFeaturedZone(chnl)
+//            }
+//          }
+//        }
+//      }
+//    }
+  }
+  
+  private func createFeaturedZone(channel: [String : AnyObject]) {
+    if let name = channel["name"] as? String {
+      if let zoneID = channel["zoneID"] as? String {
+        var zone = Zone(name: name, zoneID: zoneID)
+        zone.isFeatured = true
+        if let timestamp = channel["timestamp"] as? NSDate {
+          zone.fromDate = timestamp
+          println("featured zone time set")
+        }
+        if let thumbnail = channel["thumbnail"] as? PFFile {
+          zone.featuredThumbnail = thumbnail
+          println("featured zone thumbnail set")
+        }
+        self.addFeaturedZone(zone)
+      }
+    }
   }
   
   private func addFeaturedZone(zone: Zone) {

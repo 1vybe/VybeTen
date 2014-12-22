@@ -425,6 +425,18 @@
   return [dFormatterLocalized stringFromDate:aDate];
 }
 
++ (NSDate *)dateFromDateString:(NSString *)dateString {
+  static NSDateFormatter *stringToDateFormatter = nil;
+  if (!stringToDateFormatter) {
+    stringToDateFormatter = [[NSDateFormatter alloc] init];
+    NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+    [stringToDateFormatter setTimeZone:timeZone];
+    [stringToDateFormatter setDateFormat:@"yyyy-MM-dd HH:mm"];
+  }
+  
+  return [stringToDateFormatter dateFromString:dateString];
+}
+
 + (NSString *)reverseTime:(NSDate *)aDate {
   double timePassed = [[NSDate date] timeIntervalSinceDate:aDate];
   NSString *unit;
