@@ -430,11 +430,11 @@ Parse.Cloud.define('getFeaturedChannels', function (request, response) {
       featured[2] = new Date(featured[2]);
 
       var query = new Parse.Query('Vybe');
-      query.equalTo('zoneID', featuredZoneID);
-      query.ascending('timestamp');
-      query.greaterThanOrEqualTo('timestamp', featuredTimestampStart);  // Ignore past vybes
-      query.lessThan('timestamp', featuredTimestampEnd);
-      promises.push(query.first())
+      query.equalTo('zoneID', featuredZoneID)
+        .descending('timestamp')
+        .greaterThanOrEqualTo('timestamp', featuredTimestampStart)  // Ignore past vybes
+        .lessThan('timestamp', featuredTimestampEnd);
+      promises.push(query.first());
     });
 
     return Parse.Promise.when(promises);
