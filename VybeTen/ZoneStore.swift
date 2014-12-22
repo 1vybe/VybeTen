@@ -104,30 +104,35 @@ private let _zoneStoreSharedInstance = ZoneStore()
 
   private func fetchFeaturedZones() {
 //    let featuredChannels = ConfigManager.sharedInstance.featuredChannels()
-    
-//    PFCloud.callFunctionInBackground("get_featured_channels", withParameters: nil) { (result: AnyObject!, error: NSError!) -> Void in
-//      if error == nil {
-//        if let channels = result as? [AnyObject] {
-//          for channel in channels {
-//            if let chnl = channel as? [String : AnyObject] {
-//              self.createFeaturedZone(chnl)
-//            }
-//          }
-//        }
-//      }
-//    }
+    let params = [:]
+    PFCloud.callFunctionInBackground("getFeaturedChannels", withParameters: params) { (result: AnyObject!, error: NSError!) -> Void in
+      if error == nil {
+        if let channels = result as? [AnyObject] {
+          for channel in channels {
+            if let chnl = channel as? [AnyObject] {
+              self.createFeaturedZone(chnl)
+            }
+          }
+        }
+      }
+    }
   }
   
-  private func createFeaturedZone(channel: [String : AnyObject]) {
-    if let name = channel["name"] as? String {
-      if let zoneID = channel["zoneID"] as? String {
+  private func createFeaturedZone(channel: [AnyObject]) {
+    if channel.count != 4 {
+      println("invalid channel object")
+      return
+    }
+    
+    if let name = channel[0] as? String {
+      if let zoneID = channel[1] as? String {
         var zone = Zone(name: name, zoneID: zoneID)
         zone.isFeatured = true
-        if let timestamp = channel["timestamp"] as? NSDate {
+        if let timestamp = channel[2] as? NSDate {
           zone.fromDate = timestamp
           println("featured zone time set")
         }
-        if let thumbnail = channel["thumbnail"] as? PFFile {
+        if let thumbnail = channel[3] as? PFFile {
           zone.featuredThumbnail = thumbnail
           println("featured zone thumbnail set")
         }
