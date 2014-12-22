@@ -412,7 +412,7 @@ static void *ZOTContext = &ZOTContext;
       
       NSString *localID = aVybe[@"uniqueId"];
       if (localID && localID.length) {
-        cell.thumbnailImageView.image = [UIImage imageNamed:@"RefreshThumbnail"];
+        cell.thumbnailImageView.image = [UIImage imageNamed:@"Gray_Refresh"];
       }
       else {
         cell.thumbnailImageView.file = aVybe[kVYBVybeThumbnailKey];
@@ -484,11 +484,11 @@ static void *ZOTContext = &ZOTContext;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     VYBPlayerViewController *playerVC = [[VYBPlayerViewController alloc] init];
     playerVC.delegate = self;
-//    if (zone.isFeatured) {
-//      [playerVC playFeaturedVybes:zone.featuredVybes];
-//    } else {
-//      [playerVC playFreshVybesFromZone:zone.zoneID];
-//    }
+    if (zone.isFeatured) {
+      [playerVC playFeaturedZone:zone];
+    } else {
+      [playerVC playFreshVybesFromZone:zone.zoneID];
+    }
   }
   // My Locations
   else {

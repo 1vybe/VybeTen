@@ -55,23 +55,23 @@ class ConfigManager: NSObject {
     }
   }
   
-  func featuredZoneID() -> String? {
-    if let zoneID = self.config?["featuredZoneID"] as? String {
-      return zoneID
-    }
-    
-    // New City Gas
-    return "4f722440e4b0995f2face125"
-  }
-  
-  func featuredChannels() -> [AnyObject] {
-    var channels = [AnyObject]()
-    if let list = self.config?["featuredChannels"] as? [AnyObject]{
-      channels = list
-    }
-    
-    return channels
-  }
+//  func featuredZoneID() -> String? {
+//    if let zoneID = self.config?["featuredZoneID"] as? String {
+//      return zoneID
+//    }
+//    
+//    // New City Gas
+//    return "4f722440e4b0995f2face125"
+//  }
+//  
+//  func featuredChannels() -> [AnyObject] {
+//    var channels = [AnyObject]()
+//    if let list = self.config?["featuredChannels"] as? [AnyObject]{
+//      channels = list
+//    }
+//    
+//    return channels
+//  }
   
   func currentUserExcludedFromAnalytics() -> Bool {
     let currConfig = PFConfig.currentConfig()

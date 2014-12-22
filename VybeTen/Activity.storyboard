@@ -261,7 +261,7 @@
                                             <color key="textColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="GreenLight_SavedVybed" translatesAutoresizingMaskIntoConstraints="NO" id="FuC-hU-gxC">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="GrayLight_SavedVybed" translatesAutoresizingMaskIntoConstraints="NO" id="FuC-hU-gxC">
                                             <rect key="frame" x="324" y="38" width="10" height="10"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="10" id="Vhs-oS-xo4"/>
@@ -482,7 +482,7 @@
     <resources>
         <image name="BumpSmall(orange)" width="18" height="9"/>
         <image name="FeaturedStar" width="13" height="13"/>
-        <image name="GreenLight_SavedVybed" width="10" height="10"/>
+        <image name="GrayLight_SavedVybed" width="10" height="10"/>
         <image name="ListBar" width="375" height="85"/>
         <image name="MAPTxt" width="23" height="8"/>
         <image name="MapTitleView" width="196" height="28"/>

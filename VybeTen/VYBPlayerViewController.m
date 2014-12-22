@@ -288,11 +288,23 @@
 }
 
 
-- (void)playFeaturedVybes:(NSArray *)vybes {
-  _zoneVybes = vybes;
-  _zoneCurrIdx = 0;
-  [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
-    [self.delegate playerViewController:self didFinishSetup:success];
+- (void)playFeaturedZone:(Zone *)zone {
+  PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+  [query whereKey:kVYBVybeZoneIDKey equalTo:zone.zoneID];
+  [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:zone.fromDate];
+  [query includeKey:kVYBVybeUserKey];
+  [query orderByAscending:kVYBVybeTimestampKey];
+  
+  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    if (!error) {
+      _zoneVybes = objects;
+      _zoneCurrIdx = 0;
+      [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
+        [self.delegate playerViewController:self didFinishSetup:success];
+      }];
+    } else {
+      [self.delegate playerViewController:self didFinishSetup:NO];
+    }
   }];
 }
 

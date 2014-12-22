@@ -103,7 +103,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
   // MARK: - Featured zones
 
   private func fetchFeaturedZones() {
-    let featuredChannels = ConfigManager.sharedInstance.featuredChannels()
+//    let featuredChannels = ConfigManager.sharedInstance.featuredChannels()
     
 //    PFCloud.callFunctionInBackground("get_featured_channels", withParameters: nil) { (result: AnyObject!, error: NSError!) -> Void in
 //      if error == nil {
