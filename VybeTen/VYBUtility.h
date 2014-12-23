@@ -24,7 +24,7 @@
 
 + (void)fetchActiveZones:(void (^)(NSArray *zones, NSError *error))completionBlock;
 //+ (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
-+ (BOOL)saveThumbnailImageForVybe:(VYBVybe *)mVybe;
++ (void)saveThumbnailImageForVybe:(VYBVybe *)mVybe;
 + (NSString *)timeStringForPlayer:(NSDate *)aDate;
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate;
 + (NSString *)reverseTime:(NSDate *)aDate;

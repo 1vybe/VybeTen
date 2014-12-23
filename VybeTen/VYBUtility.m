@@ -325,28 +325,27 @@
 
 #pragma mark Thumbnail
 
-+ (BOOL)saveThumbnailImageForVybe:(VYBVybe *)mVybe {
++ (void)saveThumbnailImageForVybe:(VYBVybe *)mVybe {
   NSURL *url = [[NSURL alloc] initFileURLWithPath:[mVybe videoFilePath]] ;
   // Generating and saving a thumbnail for the captured vybe
   AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
   AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
   // To transform the snapshot to be in the orientation the video was taken with
   [generate setAppliesPreferredTrackTransform:YES];
-  NSError *err = NULL;
-  CMTime time = CMTimeMake(1, 60);
-  CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
-  if (err) {
-    NSLog(@"Error getting a frame for thumbnail");
-  }
-  UIImage *tempImg = [[UIImage alloc] initWithCGImage:imgRef];
-  NSData *thumbData = UIImageJPEGRepresentation(tempImg, 0.3);
-  NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[mVybe thumbnailFilePath]];
-  BOOL success = [thumbData writeToURL:thumbURL options:NSDataWritingAtomic error:&err];
-  if (!success)
-    NSLog(@"Error saving thumbnail image: %@", err);
-  else
-    NSLog(@"[utility] thumbnail successfully saved");
-  return success;
+
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    NSError *err = NULL;
+    CMTime time = CMTimeMake(2, 60);
+    CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
+    if (err) {
+      NSLog(@"Error getting a frame for thumbnail");
+    }
+    UIImage *tempImg = [[UIImage alloc] initWithCGImage:imgRef];
+    NSData *thumbData = UIImageJPEGRepresentation(tempImg, 0.3);
+    NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[mVybe thumbnailFilePath]];
+    
+    [thumbData writeToURL:thumbURL options:NSDataWritingAtomic error:&err];
+  });
 }
 
 

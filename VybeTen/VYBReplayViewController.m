@@ -12,7 +12,8 @@
 #import "VYBPlayerView.h"
 #import "MBProgressHUD.h"
 #import "VYBUtility.h"
-#import "VYBMyVybeStore.h"
+//#import "VYBMyVybeStore.h"
+
 #import "VYBNavigationController.h"
 #import "AVAsset+VideoOrientation.h"
 
@@ -43,8 +44,6 @@
   self.player = nil;
   self.playerView = nil;
   currentAsset = nil;
-  
-  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBMyVybeStoreLocationFetchedNotification object:nil];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -226,7 +225,7 @@
   }
 #endif
   
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     NSError *error;
     
     NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:_videoPath];
@@ -234,7 +233,6 @@
     
     outputURL = [[NSURL alloc] initFileURLWithPath:_thumbnailPath];
     [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&error];
-
   });
   [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait];
   [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];

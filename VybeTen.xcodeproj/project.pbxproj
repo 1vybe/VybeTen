@@ -74,6 +74,7 @@
 		60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */; };
 		740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */; };
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
+		74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */; };
 		74551C811A3E91FA00D348BB /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74551C801A3E91FA00D348BB /* ConfigManager.swift */; };
 		746FDAC91A42C2EA0021360C /* UserPrompts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 746FDAC81A42C2EA0021360C /* UserPrompts.storyboard */; };
 		746FDACB1A42C36A0021360C /* UserPromptsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */; };
@@ -207,6 +208,7 @@
 		60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybeStore.m; sourceTree = "<group>"; };
 		740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
+		74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyVybeStore.swift; sourceTree = "<group>"; };
 		74551C801A3E91FA00D348BB /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
 		746FDAC81A42C2EA0021360C /* UserPrompts.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UserPrompts.storyboard; sourceTree = "<group>"; };
 		746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPromptsViewController.swift; sourceTree = "<group>"; };
@@ -490,8 +492,8 @@
 		604B627B18B495BB00D3EF19 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				02D255E01992A4DE0053B89F /* MapKit.framework */,
 				9D4D61F35BF543039A00CFD0 /* libPods.a */,
+				02D255E01992A4DE0053B89F /* MapKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -520,6 +522,7 @@
 				025EDB2418F65E45008B0CB2 /* VYBAnimator.m */,
 				02512D071A0BEDA800155068 /* ZoneStore.swift */,
 				029729711A02A1EC0050406D /* ZoneFinder.swift */,
+				74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */,
 			);
 			path = VybeTen;
 			sourceTree = "<group>";
@@ -759,6 +762,7 @@
 				746FDACB1A42C36A0021360C /* UserPromptsViewController.swift in Sources */,
 				025CC90F19D5229200A1208C /* UIImage+maskImage.m in Sources */,
 				029729721A02A1EC0050406D /* ZoneFinder.swift in Sources */,
+				74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */,
 				02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */,
 				020BDABA19FFFF7500B02824 /* VYBAciveButton.m in Sources */,
 				027DE0EF19E7484200F5F4C0 /* VYBCaptureRecorder.m in Sources */,

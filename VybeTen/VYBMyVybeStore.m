@@ -23,7 +23,6 @@
 }
 @property (nonatomic) int currentUploadPercent;
 
-
 @end
 
 @implementation VYBMyVybeStore {
@@ -86,34 +85,24 @@
   [self setCurrentUploadStatus:CurrentUploadStatusUploading];
   
   VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe];
-  
+  PFObject *vybe = [vybeToUpload parseObject];
+
   NSData *video = [NSData dataWithContentsOfFile:[vybeToUpload videoFilePath]];
   PFFile *videoFile = [PFFile fileWithData:video];
+  [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
   
-  [videoFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-    if (!error) {
-      PFObject *vybe = [vybeToUpload parseObject];
-      [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-      
-      NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToUpload thumbnailFilePath]];
-      if (thumbnail) {
-        PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
-        [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
-        [thumbnailFile saveInBackground];
-      }
-      
-      [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-          [self didUploadVybe:vybeToUpload];
-        } else {
-          [self uploadingFailedWith:vybeToUpload];
-        }
-      }];
+  NSData *thumbnail = [NSData dataWithContentsOfFile:[vybeToUpload thumbnailFilePath]];
+  if (thumbnail) {
+    PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
+    [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
+  }
+  
+  [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    if (succeeded) {
+      [self didUploadVybe:vybeToUpload];
     } else {
       [self uploadingFailedWith:vybeToUpload];
     }
-  } progressBlock:^(int percentDone) {
-    [self setCurrentUploadPercent:percentDone];
   }];
   
   // Update user lastVybeLocation and lastVybeTime field.
