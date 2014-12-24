@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="8ve-Lk-hsU">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -18,19 +16,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OrangeLogo" translatesAutoresizingMaskIntoConstraints="NO" id="njz-cM-NHi">
-                                <rect key="frame" x="141" y="163" width="93" height="93"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="93" id="g45-4C-uEV"/>
-                                    <constraint firstAttribute="height" constant="93" id="hoY-kD-74W"/>
-                                </constraints>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Launch_BG" translatesAutoresizingMaskIntoConstraints="NO" id="Bpm-kP-tfF" userLabel="background">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Launch_Logo" translatesAutoresizingMaskIntoConstraints="NO" id="Kb5-VE-mrU">
+                                <rect key="frame" x="134" y="246" width="106" height="52"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="njz-cM-NHi" secondAttribute="centerX" id="4Vw-8d-RO8"/>
-                            <constraint firstItem="njz-cM-NHi" firstAttribute="top" secondItem="mzZ-i8-9A4" secondAttribute="topMargin" constant="163" id="nNi-vR-8oS"/>
+                            <constraint firstItem="Kb5-VE-mrU" firstAttribute="top" relation="greaterThanOrEqual" secondItem="RhE-bA-7Gt" secondAttribute="bottom" constant="100" id="2g1-rr-sza"/>
+                            <constraint firstItem="Bpm-kP-tfF" firstAttribute="leading" secondItem="mzZ-i8-9A4" secondAttribute="leading" id="4b0-vq-84t"/>
+                            <constraint firstItem="YEP-kg-esm" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Kb5-VE-mrU" secondAttribute="bottom" constant="337" id="FcZ-m6-WAr"/>
+                            <constraint firstItem="Kb5-VE-mrU" firstAttribute="top" secondItem="RhE-bA-7Gt" secondAttribute="bottom" constant="226" id="Ix3-IF-l40"/>
+                            <constraint firstItem="YEP-kg-esm" firstAttribute="top" secondItem="Bpm-kP-tfF" secondAttribute="bottom" id="Zwu-mQ-n5i"/>
+                            <constraint firstAttribute="trailing" secondItem="Bpm-kP-tfF" secondAttribute="trailing" id="dkO-1Q-LWF"/>
+                            <constraint firstItem="Bpm-kP-tfF" firstAttribute="top" secondItem="mzZ-i8-9A4" secondAttribute="top" id="nfg-Cb-gT1"/>
+                            <constraint firstItem="Kb5-VE-mrU" firstAttribute="top" relation="greaterThanOrEqual" secondItem="RhE-bA-7Gt" secondAttribute="bottom" constant="160" id="qa7-3S-hdr"/>
+                            <constraint firstAttribute="centerX" secondItem="Kb5-VE-mrU" secondAttribute="centerX" priority="999" id="xMm-jW-98j"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="2g1-rr-sza"/>
+                                <exclude reference="qa7-3S-hdr"/>
+                            </mask>
+                        </variation>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>
@@ -41,6 +51,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="OrangeLogo" width="93" height="93"/>
+        <image name="Launch_BG" width="375" height="667"/>
+        <image name="Launch_Logo" width="106" height="52"/>
     </resources>
 </document>
