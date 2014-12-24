@@ -55,7 +55,6 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
 
-    
     if segmentedControl.selectedSegmentIndex == 0 { // My Vybes
       VYBCache.sharedCache().refreshBumpsForMeInBackground({ (success: Bool) -> Void in
         if success {
@@ -175,11 +174,32 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     let activityObj = activities[indexPath.row]
     if let vybe = activityObj[kVYBActivityVybeKey] as? PFObject {
-      var playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
-      playerVC.delegate = self
-      playerVC.playOnce(vybe)
-      
-      self.addWatchedActivity(activityObj)
+      if segmentedControl.selectedSegmentIndex == 0 { // My Vybes
+        var playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
+        playerVC.delegate = self
+        playerVC.playOnce(vybe)
+        
+        self.addWatchedActivity(activityObj)
+      } else {
+        var vybes = [PFObject]()
+        for activity in activities {
+          if let vybe = activity[kVYBActivityVybeKey] as? PFObject {
+            vybe[kVYBVybeUserKey] = activity[kVYBActivityToUserKey]
+            vybes += [vybe]
+          }
+        }
+        
+        vybes.sort({ (vybe1: PFObject, vybe2: PFObject) -> Bool in
+          let firstTimestamp = vybe1[kVYBVybeTimestampKey] as NSDate
+          let comparisonResult = firstTimestamp.compare(vybe2[kVYBVybeTimestampKey] as NSDate)
+          
+          return comparisonResult == NSComparisonResult.OrderedAscending
+        })
+        
+        var playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
+        playerVC.delegate = self
+        playerVC.playStream(vybes, from: vybe)
+      }
     }
   }
   

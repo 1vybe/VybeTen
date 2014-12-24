@@ -17,6 +17,7 @@
 #import "VYBCache.h"
 #import "VYBConstants.h"
 #import "VYBActiveButton.h"
+
 #import "NSArray+PFObject.h"
 
 #import "VybeTen-Swift.h"
@@ -263,13 +264,28 @@
                                   else {
                                     [self.delegate playerViewController:self didFinishSetup:NO];
                                   }
-                                  
                                 }
                                 else {
                                   [self.delegate playerViewController:self didFinishSetup:NO];
                                 }
                               }];
 }
+
+- (void)playStream:(NSArray *)vybes from:(PFObject *)vybe {
+  _zoneVybes = [[NSArray alloc] init];
+  
+  NSInteger index = [vybes indexOfObject:vybe];
+  for (NSInteger i = index; i < vybes.count; i++) {
+    _zoneVybes = [_zoneVybes arrayByAddingObject:vybes[i]];
+  }
+  
+  _zoneCurrIdx = 0;
+  [self prepareVideoInBackgroundFor:_zoneVybes[0] withCompletion:^(BOOL success) {
+    [self.delegate playerViewController:self didFinishSetup:success];
+  }];
+
+}
+
 
 - (void)playOnce:(PFObject *)vybe {
   PFUser *user = vybe[kVYBVybeUserKey];
