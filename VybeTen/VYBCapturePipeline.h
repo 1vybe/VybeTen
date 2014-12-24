@@ -26,7 +26,7 @@
 @protocol VYBCapturePipelineDelegate <NSObject>
 @required
 // Session
-- (void)capturePipeline:(VYBCapturePipeline *)pipeline sessionPreviewReadyForDisplay:(AVCaptureSession *)session;
+//- (void)capturePipeline:(VYBCapturePipeline *)pipeline sessionPreviewReadyForDisplay:(AVCaptureSession *)session;
 - (void)capturePipeline:(VYBCapturePipeline *)pipeline didStopWithError:(NSError *)error;
 
 // Recording

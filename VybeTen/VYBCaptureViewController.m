@@ -16,7 +16,6 @@
 #import "VYBReplayViewController.h"
 #import "VYBCaptureButton.h"
 #import "VYBActiveButton.h"
-#import "VYBCameraView.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
 #import "VYBMyVybeStore.h"
@@ -30,7 +29,6 @@
 @property (nonatomic, weak) IBOutlet UIButton *flipButton;
 @property (nonatomic, weak) IBOutlet UIButton *flashButton;
 @property (nonatomic, weak) IBOutlet UIButton *activityButton;
-@property (nonatomic, weak) IBOutlet VYBCameraView *cameraView;
 @property (nonatomic, weak) IBOutlet UIButton *recordButton;
 //@property (nonatomic, weak) IBOutlet CircleProgressView *uploadProgressView;
 

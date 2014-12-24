@@ -9,7 +9,11 @@
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
 #import "GAITrackedViewController.h"
+#import "VYBCameraView.h"
 
 @protocol VYBCapturePipelineDelegate;
 @interface VYBCaptureViewController : UIViewController
+
+@property (nonatomic, weak) IBOutlet VYBCameraView *cameraView;
+
 @end

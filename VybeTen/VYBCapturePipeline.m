@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-
+#import "VYBCaptureViewController.h"
 #import "VYBCapturePipeline.h"
 #import "VYBCaptureRecorder.h"
 #import "VYBUtility.h"
@@ -176,8 +176,9 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
   
   [self videoPipelineWillStartRunning];
   
-  dispatch_async(_delegateCallbackQueue, ^{
-    [_delegate capturePipeline:self sessionPreviewReadyForDisplay:_session];
+  VYBCameraView *cameraView = [(VYBCaptureViewController *)_delegate cameraView];
+  dispatch_async(_sessionQueue, ^{
+    [cameraView setSession:_session];
   });
 }
 
