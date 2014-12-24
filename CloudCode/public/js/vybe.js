@@ -7,11 +7,8 @@ $(function() {
                    "ElJrtZZx480g2CrqVdJ7B6YPKRUBgIYGRzY5fMOa");
 
 
-  var player = $('.video-container video').get(0);
-  var preloader = $('.invisible.preload video').get(0);
-
-
   var Vybe = Parse.Object.extend("Vybe");
+
 
   var Playlist = Parse.Collection.extend({
     model: Vybe,
@@ -19,11 +16,17 @@ $(function() {
     initialize: function() {
       this.index = 0;
 
-      this.query = new Parse.Query('Vybe')
-        .descending('timestamp')
-        .equalTo('zoneName', "New City Gas");
+      this.setLocation('New City Gas');
+    },
 
-      this.fetch();
+    setLocation: function(location) {
+      this.location = location;
+
+      this.query = new Parse.Query('Vybe')
+        .descending('timestamp');
+
+      if (location)
+        this.query.equalTo('zoneName', this.location);
     },
 
     currentVybe: function() {
@@ -52,28 +55,74 @@ $(function() {
   })
 
 
-  var playlist = new Playlist();
+  var player = $('.video-container video').get(0);
+  var preloader = $('.invisible.preload video').get(0);
 
-  playlist.on('reset', function(playlist) {
-    playVideo();
+  var PlayerView = Parse.View.extend({
+    el: $('.video-container video').get(0),
+
+    initialize: function() {
+      this.player = $('.video-container video').get(0);
+      this.preloader = $('.invisible.preload video').get(0);
+
+      this.playlist = new Playlist;
+
+      _.bindAll(this, 'render', 'playNext');
+      this.playlist.bind('reset', this.playNext);
+      this.playlist.fetch();
+    },
+    events: {
+      'ended': 'playNext',
+    },
+    render: function() {
+
+    },
+    playNext: function() {
+      this.playlist.next();
+
+      var currentVybe = this.playlist.currentVybe();
+      var nextVybe = this.playlist.nextVybe();
+
+      this.player.src = currentVybe.get('video').url();
+      this.player.poster = currentVybe.get('thumbnail').url();
+
+      this.preloader.src = nextVybe.get('video').url();
+
+      this.player.play();
+      return this;
+    }
   });
 
-  player.addEventListener('ended', function () {
-    playlist.next();
+  var AppRouter = Parse.Router.extend({
 
-    playVideo();
+    initialize: function() {
+      this.player = new PlayerView;
+    },
+
+    routes: {
+      "*path": "changeLocation"
+    },
+
+    changeLocation: function(zone) {
+      var location = 'New City Gas';
+
+      switch(zone) {
+        case 'stereo':
+          location = 'Stereo Night Club';
+          break;
+        case 'regency':
+          location = 'Le Regency';
+          break;
+        case 'all':
+          location = '';
+          break;
+      }
+
+      this.player.playlist.setLocation(location);
+      this.player.playlist.fetch();
+    }
   });
 
-  var playVideo = function() {
-    var currentVybe = playlist.currentVybe();
-    var nextVybe = playlist.nextVybe();
-
-    player.src = currentVybe.get('video').url();
-    player.poster = currentVybe.get('thumbnail').url();
-
-    preloader.src = nextVybe.get('video').url();
-
-    player.play();
-  };
-
+  new AppRouter;
+  Parse.history.start();
 });
