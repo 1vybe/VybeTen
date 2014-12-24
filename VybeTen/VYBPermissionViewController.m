@@ -197,6 +197,18 @@ typedef NS_ENUM(NSInteger, VYBPermissionStage) {
                                                            otherButtonTitles:nil];
             [mediaAlertView show];
         }
+    } else {
+      [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsVideoAccessPermissionGrantedKey forKey:kVYBUserDefaultsVideoAccessPermissionKey];
+      
+      _currentStage = VYBPermissionStageVideoGranted;
+      // change the image view accordingly
+      dispatch_async(dispatch_get_main_queue(), ^{
+        self.promptView.alpha = 0.0f;
+        [self.promptView setImage:[UIImage imageNamed:@"Permission_Location"]];
+        [UIView animateWithDuration:1.0 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+          self.promptView.alpha = 1.0f;
+        } completion:nil];
+      });
     }
 }
 

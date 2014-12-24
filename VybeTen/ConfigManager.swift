@@ -80,7 +80,7 @@ class ConfigManager: NSObject {
       founders = array
     }
     else {
-      founders = ["jart", "W7", "mo", "Boodi", "jinsu", "solomon"]
+      founders = ["jart", "W7", "mo", "Boodi", "solomon"]
     }
     for username in founders {
       if let currUser = PFUser.currentUser() {

@@ -107,8 +107,7 @@
   
   // Update user lastVybeLocation and lastVybeTime field.
   [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
-  [[PFUser currentUser] saveInBackground];
-  
+  [[PFUser currentUser] saveEventually];
 }
 
 
@@ -248,33 +247,14 @@
   
   PFFile *videoFile = [PFFile fileWithData:video];
   [vybe setObject:videoFile forKey:kVYBVybeVideoKey];
-  BOOL success = [videoFile save];
   if (thumbnail) {
     PFFile *thumbnailFile = [PFFile fileWithData:thumbnail];
     [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
-    success = [thumbnailFile save];
   }
   
-  if ( ! success )
-    return NO;
+  BOOL success = [vybe save];
   
-  success = [vybe save];
-  
-  if ( ! success )
-    return NO;
-  
-  /*
-   // Only update current user's lastVybedTime and lastVybeLocation if this vybe is fresher
-   NSDate *currUserLastVybedTime = [[PFUser currentUser] objectForKey:kVYBUserLastVybedTimeKey];
-   if (currUserLastVybedTime &&
-   ([currUserLastVybedTime timeIntervalSinceDate:vybe[kVYBVybeTimestampKey]] < 0)) {
-   [[PFUser currentUser] setObject:[NSDate date] forKey:kVYBUserLastVybedTimeKey];
-   success = [[PFUser currentUser] save];
-   
-   return success;
-   }
-   */
-  return YES;
+  return success;
 }
 
 

@@ -77,21 +77,6 @@ static void *XYZContext = &XYZContext;
   [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadStatus" context:XYZContext];
 }
 
-- (id)initWithPageIndex:(NSInteger)pageIndex {
-  self = [super init];
-  if (self) {
-    if (pageIndex != VYBCapturePageIndex)
-      return nil;
-    
-    _pageIndex = pageIndex;
-  }
-  return self;
-}
-
-- (NSInteger)pageIndex {
-  return _pageIndex;
-}
-
 - (void)viewDidLoad
 {
   _captureOrientation = AVCaptureVideoOrientationPortrait;

@@ -3,6 +3,8 @@
 //
 #import <Parse/Parse.h>
 #import <Parse/PFObject+Subclass.h>
+#import <Parse/PFAnalytics.h>
+#import <ParseCrashReporting/ParseCrashReporting.h>
 #import <ParseUI/ParseUI.h>
 
 #import <MBProgressHUD/MBProgressHUD.h>

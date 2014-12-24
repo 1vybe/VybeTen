@@ -66,24 +66,7 @@
 //  [hockeyManager startManager];
 //  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
   
-  //NOTE: Change this part when releasing to TESTFLIGHT
-  // Parse Initialization
-  [ParseCrashReporting enable];
-  [Parse setApplicationId:PARSE_APPLICATION_ID_DEV
-                clientKey:PARSE_CLIENT_KEY_DEV];
-
-  BOOL preBackgroundPush = ![application respondsToSelector:@selector(backgroundRefreshStatus)];
-  BOOL oldPushHandlerOnly = ![self respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)];
-  BOOL noPushPayload = ![launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-  if (preBackgroundPush || oldPushHandlerOnly || noPushPayload) {
-// We want to exclude debugging from analytics.
-#ifdef DEBUG
-#else
-    if (![[ConfigManager sharedInstance] currentUserExcludedFromAnalytics]) {
-      [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-    }
-#endif
-  }
+  [[WelcomeManager sharedInstance] setLaunchOptions:launchOptions];
   
   // Register defaults for NSUserDefaults
   NSURL *prefsFileURL = [[NSBundle mainBundle] URLForResource:@"DefaultPreferences" withExtension:@"plist"];
@@ -93,9 +76,9 @@
   // Register for remote notification
   [self checkNotificationPermissionAndRegister:application];
 
-#ifdef DEBUG
+//#ifdef DEBUG
   // We want to exclude debugging from analytics.
-#else
+//#else
   // Optional: automatically send uncaught exceptions to Google Analytics.
   [GAI sharedInstance].trackUncaughtExceptions = YES;
   // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
@@ -108,20 +91,7 @@
                                                          action:@"App Start"
                                                           label:nil
                                                           value:nil] set:@"start" forKey:kGAISessionControl] build]];
-#endif
-
-  // Clearing Push-noti Badge number
-  PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-  if (currentInstallation.badge != 0) {
-    currentInstallation.badge = 0;
-    //[currentInstallation saveEventually];
-  }
-
-  // Access Control
-  PFACL *defaultACL = [PFACL ACL];
-  // Enable public read access by default, with any newly created PFObjects belonging to the current user
-  [defaultACL setPublicReadAccess:YES];
-  [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+//#endif
   
   self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
   
@@ -196,10 +166,7 @@
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-  PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-  
-  [currentInstallation setDeviceTokenFromData:deviceToken];
-  [currentInstallation saveEventually];
+  [[WelcomeManager sharedInstance] updateCurrentInstallationWithDeviceToken:deviceToken];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {

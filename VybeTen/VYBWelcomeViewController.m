@@ -17,22 +17,32 @@
 
 #pragma mark - Lifecycle
 
+- (void)dealloc {
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateParseLocalDatastoreReadyNotification object:nil];
+}
+
 - (void)loadView {
   UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
   [backgroundImageView setImage:[UIImage imageNamed:@"Default.png"]];
   self.view = backgroundImageView;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-  [super viewDidAppear:animated];
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
   
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(welcomeUser) name:VYBAppDelegateParseLocalDatastoreReadyNotification object:nil];
+  
+  // Parse Initialization
+  [[WelcomeManager sharedInstance] setUpParseEnvironment];
+}
+
+- (void)welcomeUser {
   // If not logged in, present login view controller
   if (![PFUser currentUser]) {
     [(VYBAppDelegate*)[[UIApplication sharedApplication] delegate] presentFirstPage];
     return;
   } else {
     [(VYBAppDelegate*)[[UIApplication sharedApplication] delegate] proceedToMainInterface];
-    
     // Refresh current user with server side data -- checks if user is still valid and so on
     [[PFUser currentUser] fetchInBackgroundWithTarget:self selector:@selector(refreshCurrentUserCallbackWithResult:error:)];
   }

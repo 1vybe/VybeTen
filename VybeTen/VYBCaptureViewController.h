@@ -12,5 +12,4 @@
 
 @protocol VYBCapturePipelineDelegate;
 @interface VYBCaptureViewController : UIViewController
-- (id)initWithPageIndex:(NSInteger)pageIndex;
 @end

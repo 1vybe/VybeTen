@@ -8,13 +8,13 @@ PODS:
   - HockeySDK (3.6.2)
   - MBProgressHUD (0.9)
   - MotionOrientation@PTEz (1.1.0)
-  - Parse (1.6.0):
+  - Parse (1.6.1):
     - Bolts (~> 1.1.3)
-  - ParseCrashReporting (1.6.0):
-    - Parse (~> 1.6.0)
-  - ParseFacebookUtils (1.6.0):
+  - ParseCrashReporting (1.6.1):
+    - Parse (~> 1.6.1)
+  - ParseFacebookUtils (1.6.1):
     - Facebook-iOS-SDK (~> 3.20)
-    - Parse (~> 1.6.0)
+    - Parse (~> 1.6.1)
   - ParseUI (1.0.2):
     - Parse (~> 1.5)
     - ParseFacebookUtils (~> 1.5)
@@ -24,7 +24,7 @@ DEPENDENCIES:
   - HockeySDK (~> 3.5)
   - MBProgressHUD (~> 0.8)
   - MotionOrientation@PTEz (~> 1.1.0)
-  - Parse (~> 1.6.0)
+  - Parse (~> 1.6.1)
   - ParseCrashReporting (~> 1.6.0)
   - ParseUI (~> 1.0.2)
 
@@ -35,9 +35,9 @@ SPEC CHECKSUMS:
   HockeySDK: bfd1f5ac75938b07499c4ac12932244b72a2e70b
   MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
   MotionOrientation@PTEz: ec58ced639faa14d30e63db9ef5cba8ded38b3b5
-  Parse: f15dfacd941ee8084a5decbef486da8b223c2810
-  ParseCrashReporting: b74cdad4d32e3d8dc78f7e862b89eec9a12f4648
-  ParseFacebookUtils: 8d33da72678c4c03a3b94332179dc04548bbd268
+  Parse: b0ec7666167e212edb6fc94f60ba170248bd1869
+  ParseCrashReporting: 28fc412d554828f3e892e9e99817e3a9a348e751
+  ParseFacebookUtils: 7659dcda0fa59f67234ab7ba5a82a9b05073c59a
   ParseUI: 0eed358b238dcd66949ebc22513eba603e110087
 
 COCOAPODS: 0.35.0

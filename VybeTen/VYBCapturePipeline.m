@@ -469,10 +469,11 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
     if ([captureDevice isLowLightBoostSupported]) {
       [captureDevice setAutomaticallyEnablesLowLightBoostWhenAvailable:YES];
     }
-     [captureDevice unlockForConfiguration];
+    [captureDevice unlockForConfiguration];
   } else {
     NSLog(@"Low light boost configuration failed: %@", error);
   }
+  
   return captureDevice;
 }
 

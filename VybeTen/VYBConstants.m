@@ -13,6 +13,7 @@
 NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification = @"com.vybe.app.AppDelegate.applicationDidReceiveRemoteNotification";
 NSString *const VYBAppDelegateApplicationDidBecomeActiveNotification               = @"com.vybe.app.AppDelegate.applicationDidBecomeActive";
 NSString *const VYBAppDelegateApplicationDidEnterBackgourndNotification = @"com.vybe.app.AppDelegate.applicationDidEnterBackground";
+NSString *const VYBAppDelegateParseLocalDatastoreReadyNotification = @"com.vybe.app.appDelegate.parseLocalDatastoreReady";
 NSString *const VYBFreshVybeFeedFetchedFromRemoteNotification = @"com.vybe.app.utility.freshFeedFetched";
 NSString *const VYBUtilityVybesLoadedNotification = @"com.vybe.app.utility.vybesLoaded";
 NSString *const VYBUtilityActivityCountUpdatedNotification = @"com.vybe.app.utility.activityCountUpdated";

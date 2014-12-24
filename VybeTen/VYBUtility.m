@@ -92,6 +92,7 @@
         }
       }
     }
+    NSLog(@"Cleared");
   });
 }
 
@@ -111,7 +112,7 @@
   [queryExistingLikes whereKey:kVYBActivityVybeKey equalTo:vybe];
   [queryExistingLikes whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
   [queryExistingLikes whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
-  [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
+//  [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
   [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
     if (!error) {
       for (PFObject *activity in activities) {
@@ -185,7 +186,7 @@
   [queryExistingLikes whereKey:kVYBActivityVybeKey equalTo:vybe];
   [queryExistingLikes whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
   [queryExistingLikes whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
-  [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
+//  [queryExistingLikes setCachePolicy:kPFCachePolicyNetworkOnly];
   [queryExistingLikes findObjectsInBackgroundWithBlock:^(NSArray *activities, NSError *error) {
     if (!error) {
       for (PFObject *activity in activities) {
@@ -275,7 +276,7 @@
   [queryComments whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeComment];
   
   PFQuery *query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:queryLikes,queryComments,nil]];
-  [query setCachePolicy:cachePolicy];
+//  [query setCachePolicy:cachePolicy];
   [query includeKey:kVYBActivityFromUserKey];
   [query includeKey:kVYBActivityVybeKey];
   
