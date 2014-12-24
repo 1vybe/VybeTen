@@ -603,7 +603,7 @@
 
 - (void)menuModeChanged {
   self.firstOverlay.hidden = !menuMode;
-  self.bumpCountGhost.hidden = !menuMode;
+//  self.bumpCountGhost.hidden = !menuMode;
   PFObject *currVybe = _zoneVybes[_zoneCurrIdx];
   if (currVybe) {
     [self updateBumpCountFor:currVybe];
@@ -674,36 +674,30 @@
   if (!currVybe)
     return;
   
+  [self updateBumpCountFor:currVybe];
+
   if (self.bmpButton.selected) {
     [VYBUtility unlikeVybeInBackground:currVybe block:nil];
   } else {
     [VYBUtility likeVybeInBackground:currVybe block:nil];
+    [UIView animateWithDuration:0.7 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+      self.bumpCountGhost.hidden = NO;
+    } completion:^(BOOL finished) {
+//      self.bumpCountGhost.hidden = YES;
+    }];
   }
   
-  [self updateBumpCountFor:currVybe];
   self.bmpButton.selected = !self.bmpButton.selected;
 }
 
 - (void)updateBumpCountFor:(PFObject *)aVybe {
-  
   NSNumber *counter = [[VYBCache sharedCache] likeCountForVybe:aVybe];
   if (counter && [counter intValue]) {
-    if (self.firstOverlay.hidden) {
-      self.bumpCountLabel.text = [NSString stringWithFormat:@"%@", counter];
-    }
-    else {
-      self.bumpCountLabel.text = [NSString stringWithFormat:@"%@", counter];
-      self.bumpCountGhost.text = ([counter intValue] > 1) ? @"Bumps" : @"Bump";
-    }
+    self.bumpCountLabel.text = [NSString stringWithFormat:@"%@", counter];
+    self.bumpCountGhost.text = ([counter intValue] > 1) ? @"Bumps" : @"Bump";
   }
   else {
-    if (self.firstOverlay.hidden) {
-      self.bumpCountLabel.text = @"";
-    }
-    else {
-      self.bumpCountGhost.text = @"";
-      self.bumpCountLabel.text = @"";
-    }
+    self.bumpCountLabel.text = @"";
   }
 }
 
