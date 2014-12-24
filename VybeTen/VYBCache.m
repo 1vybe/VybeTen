@@ -180,7 +180,7 @@
   return [self.cache objectForKey:key];
 }
 
-- (void)refreshBumpsForMeInBackground {
+- (void)refreshBumpsForMeInBackground:(void (^)(BOOL success))completionBlock {
   PFQuery *bumpQuery = [PFQuery queryWithClassName:kVYBActivityClassKey];
   [bumpQuery orderByDescending:@"createdAt"];
   [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
@@ -200,10 +200,61 @@
         // Also we want to update attributes for current user
         [self addBumpForCurrentUser:activity];
       }
-      // Send notification to Activity screen
-      [[NSNotificationCenter defaultCenter] postNotificationName:VYBCacheRefreshedBumpActivitiesForCurrentUser object:nil];
+      if (completionBlock) {
+        completionBlock(YES);
+      }
+    } else {
+      if (completionBlock) {
+        completionBlock(NO);
+      }
     }
   }];
+}
+
+- (void)refreshMyBumpsInBackground:(void (^)(BOOL success))completionBlock {
+  // Update my bumps
+  PFQuery *bumpQuery = [PFQuery queryWithClassName:kVYBActivityClassKey];
+  [bumpQuery orderByDescending:@"createdAt"];
+  [bumpQuery includeKey:kVYBActivityVybeKey];
+  [bumpQuery includeKey:kVYBActivityToUserKey];
+  [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
+  [bumpQuery whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
+
+  NSDate *lastRefresh = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsActivityLastRefreshKey];
+  // We want to filter out by last refresh AFTER all activities are fetched once first
+  if (lastRefresh && [self bumpActivitiesForUser:[PFUser currentUser]].count) {
+    [bumpQuery whereKey:@"createdAt" greaterThan:lastRefresh];
+  }
+  
+  [bumpQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    if (!error) {
+      for (PFObject *activity in objects) {
+        [[VYBCache sharedCache] setAttributesForVybe:activity[kVYBActivityVybeKey] likers:@[[PFUser currentUser]] commenters:nil likedByCurrentUser:YES];
+        
+        [self addMyBump:activity];
+      }
+      if (completionBlock) {
+        completionBlock(YES);
+      }
+    } else {
+      completionBlock(NO);
+    }
+  }];
+}
+
+- (void)addMyBump:(PFObject *)activity {
+  NSMutableDictionary *myAttributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:[PFUser currentUser]]];
+  NSArray *myBumps = [myAttributes objectForKey:kVYBUserAttributesMyBumpsKey];
+  if (myBumps) {
+    if (![myBumps containsPFObject:activity]) {
+      myBumps = [myBumps arrayByAddingObject:activity];
+    }
+  } else {
+    myBumps = [NSArray arrayWithObject:activity];
+  }
+  [myAttributes setObject:myBumps forKey:kVYBUserAttributesMyBumpsKey];
+  
+  [self setAttributes:myAttributes forUser:[PFUser currentUser]];
 }
 
 - (void)addBumpForCurrentUser:(PFObject *)activity {
@@ -251,6 +302,14 @@
   return bumpActivities;
 }
 
+- (NSArray *)myBumpActivities {
+  NSDictionary *attributes = [self attributesForUser:[PFUser currentUser]];
+  NSArray *myActivities = [attributes objectForKey:kVYBUserAttributesMyBumpsKey];
+  
+  return myActivities;
+}
+
+
 - (NSInteger)newBumpActivityCountForCurrentUser {
   NSInteger count = 0;
   
@@ -287,6 +346,13 @@
   }
   
   return [NSNumber numberWithInt:0];
+}
+
+- (NSArray *)vybesLikedByMe {
+  NSDictionary *myAttributes = [self attributesForUser:[PFUser currentUser]];
+  NSArray *myActivities = [myAttributes objectForKey:kVYBUserAttributesMyBumpsKey];
+  
+  return myActivities;
 }
 
 - (BOOL)vybeLikedByMe:(PFObject *)vybe {

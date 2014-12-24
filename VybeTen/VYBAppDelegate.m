@@ -69,8 +69,8 @@
   [[WelcomeManager sharedInstance] setLaunchOptions:launchOptions];
   
   // Register defaults for NSUserDefaults
-  NSURL *prefsFileURL = [[NSBundle mainBundle] URLForResource:@"DefaultPreferences" withExtension:@"plist"];
-  NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfURL:prefsFileURL];
+  NSURL *preferencesFileURL = [[NSBundle mainBundle] URLForResource:@"DefaultPreferences" withExtension:@"plist"];
+  NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfURL:preferencesFileURL];
   [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
   
   // Register for remote notification

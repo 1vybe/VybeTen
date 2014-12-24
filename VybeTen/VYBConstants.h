@@ -210,7 +210,7 @@ extern NSString *const kVYBUserAttributesTribeCountKey;
 extern NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey;
 extern NSString *const kVYBUserAttributesBlockedUsersKey;
 extern NSString *const kVYBUserAttributesBumpsForMeKey;
-extern NSString *const kVYBUserAttributesBumpsFromMeKey;
+extern NSString *const kVYBUserAttributesMyBumpsKey;
 
 
 #pragma mark - Cached Tribe Attributes

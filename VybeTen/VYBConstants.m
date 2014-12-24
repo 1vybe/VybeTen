@@ -175,7 +175,7 @@ NSString *const kVYBUserAttributesTribeCountKey                 = @"tribeCount";
 NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey    = @"isFollowedByCurrentUser";
 NSString *const kVYBUserAttributesBlockedUsersKey               = @"blockedUsers";
 NSString *const kVYBUserAttributesBumpsForMeKey                 = @"bumpsForMe";
-NSString *const kVYBUserAttributesBumpsFromMeKey                = @"bumpsFromMe";
+NSString *const kVYBUserAttributesMyBumpsKey                    = @"myBumps";
 
 #pragma mark - Cached Tribe Attributes
 // keys

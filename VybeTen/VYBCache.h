@@ -37,9 +37,11 @@
 - (void)setNearbyCount:(NSNumber *)count forVybe:(PFObject *)vybe;
 - (NSDictionary *)attributesForVybe:(PFObject *)vybe;
 
-- (void)refreshBumpsForMeInBackground;
+- (void)refreshBumpsForMeInBackground:(void (^)(BOOL success))block;
+- (void)refreshMyBumpsInBackground:(void (^)(BOOL success))block;
 - (NSNumber *)likeCountForVybe:(PFObject *)vybe;
 - (NSArray *)likersForVybe:(PFObject *)vybe;
+- (NSArray *)myBumpActivities;
 - (BOOL)vybeLikedByMe:(PFObject *)vybe;
 
 - (BOOL)vybeFlaggedByMe:(PFObject *)vybe;

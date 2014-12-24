@@ -9,17 +9,16 @@
 import UIKit
 
 class NotificationTableViewController: UITableViewController, VYBPlayerViewControllerDelegate {
+  @IBOutlet weak var segmentedControl: UISegmentedControl!
+  
   var activities = [PFObject]()
   var watchedItems = [PFObject]()
   
   deinit {
-    NSNotificationCenter.defaultCenter().removeObserver(self, name: VYBCacheRefreshedBumpActivitiesForCurrentUser, object: nil)
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: "refreshActivityTable", name: VYBCacheRefreshedBumpActivitiesForCurrentUser, object: nil)
     
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = false
@@ -35,19 +34,66 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
     
-    VYBCache.sharedCache().refreshBumpsForMeInBackground()
+    let segmentedControlTextAttributes = NSMutableDictionary()
+    if let font = UIFont(name: "Avenir Next", size: 10.0) {
+      let mainColor = UIColor(red: 247.0/255.0, green: 109.0/255.0, blue: 60.0/255.0, alpha: 1.0)
+      segmentedControl.tintColor = mainColor
+      segmentedControlTextAttributes.setObject(font, forKey: NSFontAttributeName)
+      segmentedControl.setTitleTextAttributes(segmentedControlTextAttributes, forState: UIControlState.Normal)
+      segmentedControl.setTitleTextAttributes(segmentedControlTextAttributes, forState: UIControlState.Selected)
+    }
+    
+    segmentedControl.addTarget(self, action: "segmentedControlChanged:", forControlEvents: .ValueChanged)
+    
+    VYBCache.sharedCache().refreshBumpsForMeInBackground { (success: Bool) -> Void in
+      if success {
+        self.reloadActivitiesForMe()
+      }
+    }
   }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
 
-    VYBCache.sharedCache().refreshBumpsForMeInBackground()
+    
+    if segmentedControl.selectedSegmentIndex == 0 { // My Vybes
+      VYBCache.sharedCache().refreshBumpsForMeInBackground({ (success: Bool) -> Void in
+        if success {
+          self.reloadActivitiesForMe()
+        }
+      })
+    } else { // My Bumps
+      VYBCache.sharedCache().refreshMyBumpsInBackground({ (success: Bool) -> Void in
+        self.reloadMyActivities()
+      })
+    }
   }
   
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
+  func segmentedControlChanged(segControl: UISegmentedControl) {
+    let selectedIdx = segControl.selectedSegmentIndex
+    if segmentedControl.selectedSegmentIndex == 0 { // My Vybes
+      segmentedControl.enabled = false
+      VYBCache.sharedCache().refreshBumpsForMeInBackground({ (success: Bool) -> Void in
+        if success {
+          self.reloadActivitiesForMe()
+        }
+        dispatch_async(dispatch_get_main_queue()) {
+          self.segmentedControl.enabled = true
+        }
+      })
+    } else { // My Bumps
+      segmentedControl.enabled = false
+      VYBCache.sharedCache().refreshMyBumpsInBackground({ (success: Bool) -> Void in
+        if success {
+          self.reloadMyActivities()
+        }
+        dispatch_async(dispatch_get_main_queue()) {
+          self.segmentedControl.enabled = true
+        }
+      })
+    }
   }
+
   
   // MARK: - Table view data source
   
@@ -61,26 +107,45 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell: UITableViewCell
-  
+    var username: String = "Someone"
+    var timeString: String = "Earth, "
+    
     let activityObj = activities[indexPath.row]
-    if self.isUnwatchedActivity(activityObj) {
-      cell = tableView.dequeueReusableCellWithIdentifier("NewBumpForMeCell", forIndexPath: indexPath) as UITableViewCell
+    
+    if segmentedControl.selectedSegmentIndex == 0 { // My Vybes
+      if self.isUnwatchedActivity(activityObj) {
+        cell = tableView.dequeueReusableCellWithIdentifier("NewBumpForMeCell", forIndexPath: indexPath) as UITableViewCell
+      } else {
+        cell = tableView.dequeueReusableCellWithIdentifier("BumpForMeCell", forIndexPath: indexPath) as UITableViewCell
+      }
+      
+      if let fromUser = activityObj[kVYBActivityFromUserKey] as? PFObject {
+        username = fromUser[kVYBUserUsernameKey] as String
+      }
+      
+      timeString = VYBUtility.reverseTime(activityObj.createdAt)
     } else {
-      cell = tableView.dequeueReusableCellWithIdentifier("BumpForMeCell", forIndexPath: indexPath) as UITableViewCell
+      cell = tableView.dequeueReusableCellWithIdentifier("MyBumpCell", forIndexPath: indexPath) as UITableViewCell
+      
+      if let toUser = activityObj[kVYBActivityToUserKey] as? PFObject {
+        username = toUser[kVYBUserUsernameKey] as String
+      }
+      
+      if let vybeObj = activityObj[kVYBActivityVybeKey] as? PFObject {
+        if let zoneName = vybeObj[kVYBVybeZoneNameKey] as? String {
+          timeString = "\(zoneName), "
+        }
+        if let timestamp = vybeObj[kVYBVybeTimestampKey] as? NSDate {
+          timeString += VYBUtility.timeStringForPlayer(timestamp)
+        }
+      }
     }
     
-    var fromUsername = "Someone"
-    if let fromUser = activityObj[kVYBActivityFromUserKey] as? PFObject {
-      fromUsername = fromUser[kVYBUserUsernameKey] as String
-    }
     var usernameLabel = cell.viewWithTag(70) as UILabel
-    usernameLabel.text = fromUsername
+    usernameLabel.text = username
     
-    
-    let timeString = VYBUtility.reverseTime(activityObj.createdAt)
     var timeLabel = cell.viewWithTag(71) as UILabel
     timeLabel.text = timeString
-
     
     if let vybe = activityObj[kVYBActivityVybeKey] as? PFObject {
       var thumbnailView = cell.viewWithTag(72) as PFImageView
@@ -149,16 +214,14 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   
   // MARK: - VYBCacheRefreshedBumpActivities Notification
   
-  func refreshActivityTable() {
+  func reloadActivitiesForMe() {
     activities = []
-    if let user = PFUser.currentUser() {
-      if let allActivities = VYBCache.sharedCache().bumpActivitiesForUser(user) as? [PFObject] {
-        // we do NOT want to include bumps from ourself
-        for activity in allActivities {
-          if let fromUser = activity[kVYBActivityFromUserKey] as? PFObject {
-            if fromUser.objectId != user.objectId {
-              activities += [activity]
-            }
+    if let newObjs = VYBCache.sharedCache().bumpActivitiesForUser(PFUser.currentUser()) as? [PFObject] {
+      // we do NOT want to include vybes from ourself
+      for activity in newObjs {
+        if let fromUser = activity[kVYBActivityFromUserKey] as? PFObject {
+          if fromUser.objectId != PFUser.currentUser() .objectId {
+            activities += [activity]
           }
         }
       }
@@ -170,6 +233,19 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
     }
     
     self.tableView.reloadData()
+  }
+  
+  func reloadMyActivities() {
+    if let newObjs =  VYBCache.sharedCache().myBumpActivities() as? [PFObject] {
+      activities = newObjs
+      
+      activities.sort { (activity1: PFObject, activity2: PFObject) -> Bool in
+        let comparisonResult = activity1.createdAt.compare(activity2.createdAt)
+        return comparisonResult == NSComparisonResult.OrderedDescending
+      }
+      
+      self.tableView.reloadData()
+    }
   }
   
   // MARK: - Helper Functions
@@ -202,7 +278,11 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   override func supportedInterfaceOrientations() -> Int {
     return Int(UIInterfaceOrientationMask.Portrait.rawValue)
   }
-  
+
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
   /*
   // Override to support conditional editing of the table view.
   override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

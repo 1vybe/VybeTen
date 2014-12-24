@@ -114,7 +114,7 @@ static void *ZOTContext = &ZOTContext;
   }
   
   // Update Activity count
-  [[VYBCache sharedCache] refreshBumpsForMeInBackground];
+  [[VYBCache sharedCache] refreshBumpsForMeInBackground:nil];
   
   [self loadObjects];
 }
@@ -226,7 +226,7 @@ static void *ZOTContext = &ZOTContext;
   [super objectsDidLoad:error];
   
   // Update Activity count
-  [[VYBCache sharedCache] refreshBumpsForMeInBackground];
+  [[VYBCache sharedCache] refreshBumpsForMeInBackground:nil];
   
   [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
     if (success) {
