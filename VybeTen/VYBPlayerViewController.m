@@ -448,6 +448,8 @@
 }
 
 - (void)syncUIElementsFor:(PFObject *)aVybe {
+  self.bumpCountGhost.hidden = YES;
+
   // Display location and time
   NSString *zoneName = aVybe[kVYBVybeZoneNameKey];
   if (!zoneName) {
@@ -603,7 +605,6 @@
 
 - (void)menuModeChanged {
   self.firstOverlay.hidden = !menuMode;
-//  self.bumpCountGhost.hidden = !menuMode;
   PFObject *currVybe = _zoneVybes[_zoneCurrIdx];
   if (currVybe) {
     [self updateBumpCountFor:currVybe];
@@ -674,18 +675,18 @@
   if (!currVybe)
     return;
   
-  [self updateBumpCountFor:currVybe];
-
   if (self.bmpButton.selected) {
+    self.bumpCountGhost.hidden = YES;
     [VYBUtility unlikeVybeInBackground:currVybe block:nil];
   } else {
     [VYBUtility likeVybeInBackground:currVybe block:nil];
-    [UIView animateWithDuration:0.7 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+    
+    [UIView animateWithDuration:0.6 delay:0.2 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
       self.bumpCountGhost.hidden = NO;
-    } completion:^(BOOL finished) {
-//      self.bumpCountGhost.hidden = YES;
-    }];
+    } completion:nil];
   }
+  
+  [self updateBumpCountFor:currVybe];
   
   self.bmpButton.selected = !self.bmpButton.selected;
 }
