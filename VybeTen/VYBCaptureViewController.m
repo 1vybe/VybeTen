@@ -32,7 +32,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *activityButton;
 @property (nonatomic, weak) IBOutlet VYBCameraView *cameraView;
 @property (nonatomic, weak) IBOutlet UIButton *recordButton;
-@property (nonatomic, weak) IBOutlet CircleProgressView *uploadProgressView;
+//@property (nonatomic, weak) IBOutlet CircleProgressView *uploadProgressView;
 
 - (IBAction)activityButtonPressed:(id)sender;
 - (IBAction)flipButtonPressed:(id)sender;
@@ -57,6 +57,8 @@ static void *XYZContext = &XYZContext;
   
   AVCaptureVideoOrientation _captureOrientation;
   
+  dispatch_queue_t motion_orientation_queue;
+  
   UIBackgroundTaskIdentifier _backgroundRecordingID;
 }
 
@@ -73,8 +75,8 @@ static void *XYZContext = &XYZContext;
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBUtilityActivityCountUpdatedNotification object:nil];
   
-  [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadPercent" context:XYZContext];
-  [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadStatus" context:XYZContext];
+//  [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadPercent" context:XYZContext];
+//  [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadStatus" context:XYZContext];
 }
 
 - (void)viewDidLoad
@@ -92,7 +94,8 @@ static void *XYZContext = &XYZContext;
   [self activityCountChanged];
   
   // Device orientation detection
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+  motion_orientation_queue = dispatch_queue_create("com.vybe.app.capture.motion.orientation.queue", NULL);
+  dispatch_async(motion_orientation_queue, ^{
     [MotionOrientation initialize];
   });
   
@@ -103,10 +106,10 @@ static void *XYZContext = &XYZContext;
   
   [super viewDidLoad];
   
-  self.uploadProgressView.hidden = YES;
+//  self.uploadProgressView.hidden = YES;
   
-  [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadPercent" options:NSKeyValueObservingOptionNew context:XYZContext];
-  [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadStatus" options:NSKeyValueObservingOptionNew context:XYZContext];
+//  [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadPercent" options:NSKeyValueObservingOptionNew context:XYZContext];
+//  [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadStatus" options:NSKeyValueObservingOptionNew context:XYZContext];
   
 //  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusOnTouchArea:)];
 //  [self.view addGestureRecognizer:tapGesture];
@@ -133,10 +136,12 @@ static void *XYZContext = &XYZContext;
 #endif
   [self resetRotationOfElements];
   
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(deviceRotated:)
-                                               name:MotionOrientationChangedNotification
-                                             object:nil];
+  dispatch_async(motion_orientation_queue, ^{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(deviceRotated:)
+                                                 name:MotionOrientationChangedNotification
+                                               object:nil];
+  });
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -377,46 +382,46 @@ static void *XYZContext = &XYZContext;
 }
 
 #pragma mark - Vybe Upload Progress
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-  if (context == XYZContext) {
-    if ([keyPath isEqualToString:@"currentUploadPercent"]) {
-      dispatch_async(dispatch_get_main_queue(), ^{
-        [self.uploadProgressView setProgress:[[change objectForKey:NSKeyValueChangeNewKey] intValue]/100.0];
-      });
-      return;
-    }
-    if ([keyPath isEqualToString:@"currentUploadStatus"]) {
-      NSInteger status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
-      if (status == CurrentUploadStatusUploading) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-          self.activityButton.hidden = YES;
-          self.uploadProgressView.hidden = NO;
-          [self.uploadProgressView setProgress:0.0];
-        });
-        return;
-      }
-      if (status == CurrentUploadStatusSuccess) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-          self.uploadProgressView.hidden = YES;
-          self.activityButton.hidden = NO;
-          [self.activityButton setSelected:NO];
-        });
-        return;
-      }
-      if (status == CurrentUploadStatusFailed) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-          self.uploadProgressView.hidden = YES;
-          self.activityButton.hidden = NO;
-          [self.activityButton setSelected:YES];
-        });
-        return;
-      }
-    }
-  }
-  
-  [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-}
+//
+//- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+//  if (context == XYZContext) {
+//    if ([keyPath isEqualToString:@"currentUploadPercent"]) {
+//      dispatch_async(dispatch_get_main_queue(), ^{
+//        [self.uploadProgressView setProgress:[[change objectForKey:NSKeyValueChangeNewKey] intValue]/100.0];
+//      });
+//      return;
+//    }
+//    if ([keyPath isEqualToString:@"currentUploadStatus"]) {
+//      NSInteger status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+//      if (status == CurrentUploadStatusUploading) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//          self.activityButton.hidden = YES;
+//          self.uploadProgressView.hidden = NO;
+//          [self.uploadProgressView setProgress:0.0];
+//        });
+//        return;
+//      }
+//      if (status == CurrentUploadStatusSuccess) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//          self.uploadProgressView.hidden = YES;
+//          self.activityButton.hidden = NO;
+//          [self.activityButton setSelected:NO];
+//        });
+//        return;
+//      }
+//      if (status == CurrentUploadStatusFailed) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//          self.uploadProgressView.hidden = YES;
+//          self.activityButton.hidden = NO;
+//          [self.activityButton setSelected:YES];
+//        });
+//        return;
+//      }
+//    }
+//  }
+//  
+//  [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+//}
 
 #pragma mark - Tap to focus
 
