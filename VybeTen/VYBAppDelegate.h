@@ -11,7 +11,7 @@
 #import "VYBPageViewController.h"
 
 @class VYBPlayerViewController;
-@interface VYBAppDelegate : UIResponder <UIApplicationDelegate, PFLogInViewControllerDelegate>
+@interface VYBAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

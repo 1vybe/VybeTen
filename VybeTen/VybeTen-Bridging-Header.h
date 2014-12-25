@@ -15,6 +15,7 @@
 #import <GoogleAnalytics-iOS-SDK/GAITracker.h>
 
 #import "VYBActivityTableViewController.h"
+#import "VYBAppDelegate.h"
 #import "VYBNavigationController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"

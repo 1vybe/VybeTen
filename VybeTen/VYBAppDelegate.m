@@ -14,6 +14,7 @@
 #import <GAIFields.h>
 //NOTE: Take out this part when releasing to TESTFLIGHT
 //#import <HockeySDK/HockeySDK.h>
+//#import <ParseUI/ParsePFLogInViewControllerDelegateUI.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
@@ -28,7 +29,7 @@
 
 #import "VybeTen-Swift.h"
 
-@interface VYBAppDelegate ()
+@interface VYBAppDelegate () <PFLogInViewControllerDelegate>
 
 @property (nonatomic, strong) Reachability *hostReach;
 @property (nonatomic, strong) Reachability *internetReach;

@@ -50,7 +50,6 @@ static void *ZOTContext = &ZOTContext;
 #pragma mark - Lifecycle
 
 - (void)dealloc {
-  [[VYBMyVybeStore sharedStore] removeObserver:self forKeyPath:@"currentUploadStatus" context:ZOTContext];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheRefreshedBumpActivitiesForCurrentUser object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBSwipeContainerControllerWillMoveToActivityScreenNotification object:nil];
@@ -80,9 +79,6 @@ static void *ZOTContext = &ZOTContext;
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToTop:) name:VYBSwipeContainerControllerWillMoveToActivityScreenNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateNotificationCount) name:VYBCacheRefreshedBumpActivitiesForCurrentUser object:nil];
   
-  // current video uploading progress is funnelled using KVO.
-  [[VYBMyVybeStore sharedStore] addObserver:self forKeyPath:@"currentUploadStatus" options:NSKeyValueObservingOptionNew context:ZOTContext];
-  
   self.usernameLabel.text = [PFUser currentUser].username;
   
   // Remove empty cells.
@@ -103,15 +99,6 @@ static void *ZOTContext = &ZOTContext;
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
-  
-  // Your vybe upload status
-  if ([[VYBMyVybeStore sharedStore] currentUploadStatus] == CurrentUploadStatusUploading) {
-    [uploadStatusButton setTitle:@"UPLOADING" forState:UIControlStateNormal];
-    uploadStatusButton.hidden = NO;
-  }
-  else {
-    uploadStatusButton.hidden = YES;
-  }
   
   // Update Activity count
   [[VYBCache sharedCache] refreshBumpsForMeInBackground:nil];
@@ -640,41 +627,6 @@ static void *ZOTContext = &ZOTContext;
   self.myLocations = newArr;
   
   [self.tableView reloadData];
-}
-
-#pragma mark - Current Upload Progress KVO
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-  if (context == ZOTContext) {
-    if ([keyPath isEqualToString:@"currentUploadStatus"]) {
-      NSInteger status = [[change objectForKey:NSKeyValueChangeNewKey] intValue];
-      switch (status) {
-        case CurrentUploadStatusUploading: {
-          dispatch_async(dispatch_get_main_queue(), ^{
-            [uploadStatusButton setTitle:@"UPLOADING" forState:UIControlStateNormal];
-            uploadStatusButton.hidden = NO;
-          });
-          return;
-        }
-        case CurrentUploadStatusSuccess: {
-          dispatch_async(dispatch_get_main_queue(), ^{
-            [uploadStatusButton setTitle:@"SUCCESS!" forState:UIControlStateNormal];
-            [UIView animateWithDuration:0.3 delay:1.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-              uploadStatusButton.hidden = YES;
-            } completion:^(BOOL finished) {
-              [self loadObjects];
-            }];
-            
-          });
-          return;
-        }
-        case CurrentUploadStatusFailed:
-          [self uploadFailDetected];
-          return;
-      }
-    }
-  }
-  
-  [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (IBAction)uploadStatusButtonPressed:(id)sender {

@@ -48,7 +48,6 @@ class WelcomeManager: NSObject {
       //    // Refresh current user with server side data -- checks if user is still valid and so on
       //    [[PFUser currentUser] fetchInBackgroundWithTarget:self selector:@selector(refreshCurrentUserCallbackWithResult:error:)];
       
-      
       if self._launchOptions != nil && self._launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil {
         return
       } else {
@@ -56,6 +55,19 @@ class WelcomeManager: NSObject {
           PFAnalytics.trackAppOpenedWithLaunchOptionsInBackground(self._launchOptions, block: nil)
         }
       }
+      
+      if let vybeAppDelegate = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
+        if PFUser.currentUser() == nil {
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            vybeAppDelegate.presentFirstPage()
+          })
+        } else {
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            vybeAppDelegate.proceedToMainInterface()
+          })
+        }
+      }
+
 
       dispatch_async(dispatch_get_main_queue(), { () -> Void in
         NSNotificationCenter.defaultCenter().postNotificationName(VYBAppDelegateParseLocalDatastoreReadyNotification, object: nil)
