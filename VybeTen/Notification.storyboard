@@ -75,7 +75,7 @@
                                                 <constraint firstAttribute="height" constant="1" id="qLl-zH-U69"/>
                                             </constraints>
                                         </view>
-                                        <imageView userInteractionEnabled="NO" tag="72" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OverlayThumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="d9J-j5-OI7" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" tag="72" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="d9J-j5-OI7" customClass="PFImageView">
                                             <rect key="frame" x="530" y="18" width="49" height="49"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="d9J-j5-OI7" secondAttribute="height" multiplier="1:1" id="MHz-e5-uiK"/>
@@ -125,7 +125,7 @@
                                                 <constraint firstAttribute="height" constant="1" id="YzK-Hg-lno"/>
                                             </constraints>
                                         </view>
-                                        <imageView userInteractionEnabled="NO" tag="72" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OverlayThumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="7KU-gO-c82" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" tag="72" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="7KU-gO-c82" customClass="PFImageView">
                                             <rect key="frame" x="530" y="18" width="49" height="49"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="49" id="aq4-qo-x1X"/>
@@ -181,7 +181,7 @@
                                                 <constraint firstAttribute="height" constant="1" id="Fax-Fu-Lcc"/>
                                             </constraints>
                                         </view>
-                                        <imageView userInteractionEnabled="NO" tag="72" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OverlayThumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="e4p-mx-bZd" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" tag="72" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="e4p-mx-bZd" customClass="PFImageView">
                                             <rect key="frame" x="530" y="18" width="49" height="49"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="e4p-mx-bZd" secondAttribute="height" multiplier="1:1" id="41M-nb-FNa"/>
@@ -236,7 +236,7 @@
     </scenes>
     <resources>
         <image name="Close3BarButton" width="18" height="18"/>
-        <image name="OverlayThumbnail" width="50" height="50"/>
+        <image name="Placeholder" width="51" height="51"/>
         <image name="UnwatchedBar" width="10" height="85"/>
     </resources>
 </document>

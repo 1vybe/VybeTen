@@ -82,7 +82,7 @@
                                             <color key="textColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OverlayThumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="BIQ-hL-LVg" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="BIQ-hL-LVg" customClass="PFImageView">
                                             <rect key="frame" x="305" y="18" width="49" height="49"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="BIQ-hL-LVg" secondAttribute="height" multiplier="1:1" id="b2v-dK-oSt"/>
@@ -147,7 +147,7 @@
                                             <color key="textColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OverlayThumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="zb7-Iu-HMo" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="zb7-Iu-HMo" customClass="PFImageView">
                                             <rect key="frame" x="305" y="18" width="49" height="49"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="zb7-Iu-HMo" secondAttribute="height" multiplier="1:1" id="Jfb-RF-Saf"/>
@@ -204,7 +204,7 @@
                                             <color key="textColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OverlayThumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="pOX-BH-tyD" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="pOX-BH-tyD" customClass="PFImageView">
                                             <rect key="frame" x="305" y="18" width="49" height="49"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="pOX-BH-tyD" secondAttribute="height" multiplier="1:1" id="HfU-MD-5yw"/>
@@ -305,7 +305,7 @@
                                             <color key="textColor" red="0.5725490196078431" green="0.5725490196078431" blue="0.5725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OverlayThumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="Yyl-cu-X6Q" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="Yyl-cu-X6Q" customClass="PFImageView">
                                             <rect key="frame" x="305" y="10" width="49" height="49"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="Yyl-cu-X6Q" secondAttribute="height" multiplier="1:1" id="Eua-ad-pOB"/>
@@ -486,7 +486,7 @@
         <image name="MAPTxt" width="23" height="8"/>
         <image name="MapTitleView" width="196" height="28"/>
         <image name="NewMap" width="34" height="35"/>
-        <image name="OverlayThumbnail" width="50" height="50"/>
+        <image name="Placeholder" width="51" height="51"/>
         <image name="Player_Close_Button" width="40" height="40"/>
         <image name="Settings" width="21" height="21"/>
         <image name="UnwatchedBar" width="10" height="85"/>

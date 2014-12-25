@@ -343,7 +343,7 @@ static void *ZOTContext = &ZOTContext;
               }
               cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
             } else {
-              cell.thumbnailImageView.image = [UIImage imageNamed:@"OverlayThumbnail"];
+              cell.thumbnailImageView.image = [UIImage imageNamed:@"Placeholder"];
             }
           }
         }];
@@ -383,7 +383,7 @@ static void *ZOTContext = &ZOTContext;
           }
           cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
         } else {
-          cell.thumbnailImageView.image = [UIImage imageNamed:@"OverlayThumbnail"];
+          cell.thumbnailImageView.image = [UIImage imageNamed:@"Placeholder"];
         }
       }
     }];
@@ -427,7 +427,7 @@ static void *ZOTContext = &ZOTContext;
               }
               cell.thumbnailImageView.image = [VYBUtility maskImage:image withMask:maskImage];
             } else {
-              cell.thumbnailImageView.image = [UIImage imageNamed:@"OverlayThumbnail"];
+              cell.thumbnailImageView.image = [UIImage imageNamed:@"Placeholder"];
             }
           }
         }];
