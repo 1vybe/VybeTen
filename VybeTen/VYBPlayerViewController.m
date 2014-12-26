@@ -722,6 +722,7 @@
   if (self.optionsButton.selected) {
     self.optionsOverlay.hidden = YES;
     self.interactionOverlay.hidden = NO;
+    [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(overlayTimerExpired:) userInfo:nil repeats:NO];
   }
   else {
     self.optionsOverlay.hidden = NO;
