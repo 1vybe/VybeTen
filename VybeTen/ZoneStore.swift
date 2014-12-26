@@ -335,6 +335,24 @@ private let _zoneStoreSharedInstance = ZoneStore()
     }
   }
   
+  func allFreshVybes() -> [PFObject] {
+    var allContents: [PFObject] = []
+    for zone in _activeZones {
+      if let contents = self.mergeFreshContentsAndMyContentsInZone(zone.zoneID) {
+        allContents += contents
+      }
+    }
+    
+    allContents.sort { (vybe1: PFObject, vybe2: PFObject) -> Bool in
+      let firstTime = vybe1[kVYBVybeTimestampKey] as NSDate
+      let secondTime = vybe2[kVYBVybeTimestampKey] as NSDate
+      let comparisonResult = firstTime.compare(secondTime)
+      return comparisonResult == NSComparisonResult.OrderedAscending
+    }
+    
+    return allContents
+  }
+  
   func freshVybesFromZone(zoneID: String) -> [PFObject]? {
     var contents: [PFObject]? = self.mergeFreshContentsAndMyContentsInZone(zoneID)
 

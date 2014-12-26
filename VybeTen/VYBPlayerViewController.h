@@ -15,7 +15,7 @@
 
 
 //TODO: Called should call this method inside the completion block when it is calling presentViewController:
-
+- (void)playAllFresh;
 - (void)playOnce:(PFObject *)vybe;
 - (void)playStream:(NSArray *)vybes from:(PFObject *)vybe;
 - (void)playFeaturedZone:(Zone *)zone;

@@ -286,6 +286,27 @@
 
 }
 
+- (void)playAllFresh {
+  [[ZoneStore sharedInstance] refreshFreshVybesInBackground:^(BOOL success) {
+    if (success) {
+      NSArray *allContents = [NSArray arrayWithArray:[[ZoneStore sharedInstance] allFreshVybes]];
+      if (allContents.count > 0) {
+        _zoneVybes = allContents;
+        _zoneCurrIdx = 0;
+        _isFreshStream = YES;
+        [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
+          [self.delegate playerViewController:self didFinishSetup:success];
+        }];
+      }
+      else {
+        [self.delegate playerViewController:self didFinishSetup:NO];
+      }
+    }
+    else {
+      [self.delegate playerViewController:self didFinishSetup:NO];
+    }
+  }];
+}
 
 - (void)playOnce:(PFObject *)vybe {
   PFUser *user = vybe[kVYBVybeUserKey];

@@ -25,7 +25,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *countLabel;
 @property (weak, nonatomic) UIButton *uploadStatusButton;
-@property (weak, nonatomic) UIButton *notificationButton;
+@property (strong, nonatomic) UIView *bottomBarMenu;
 
 @property (nonatomic) NSArray *activeLocations;
 @property (nonatomic) NSArray *myLocations;
@@ -35,15 +35,13 @@
 
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender;
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender;
-- (IBAction)uploadStatusButtonPressed:(id)sender;
-- (IBAction)notificationButtonPressed:(id)sender;
 
 @end
 
 @implementation VYBActivityTableViewController {
   NSInteger _selectedMyLocationIndex;
 }
-@synthesize uploadStatusButton, notificationButton;
+@synthesize uploadStatusButton, bottomBarMenu;
 
 static void *ZOTContext = &ZOTContext;
 
@@ -91,10 +89,14 @@ static void *ZOTContext = &ZOTContext;
   [self.view addSubview:uploadStatusButton];
   uploadStatusButton.hidden = YES;
   
-  notificationButton = (UIButton *)[[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:self options:nil] lastObject];
-  [notificationButton setFrame:CGRectMake(0, 0, self.view.bounds.size.width, notificationButton.bounds.size.height)];
-  [self.view addSubview:notificationButton];
+  bottomBarMenu = (UIView *)[[[NSBundle mainBundle] loadNibNamed:@"BottomBarMenu" owner:self options:nil] lastObject];
+  [bottomBarMenu setFrame:CGRectMake(0, 0, self.view.bounds.size.width, bottomBarMenu.bounds.size.height)];
+  [self.view addSubview:bottomBarMenu];
   
+  UIButton *playAllButton = (UIButton *)[bottomBarMenu viewWithTag:3];
+  [playAllButton addTarget:self action:@selector(playAllButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+  UIButton *bumpsButton = (UIButton *)[bottomBarMenu viewWithTag:7];
+  [bumpsButton addTarget:self action:@selector(bumpsButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -655,25 +657,25 @@ static void *ZOTContext = &ZOTContext;
   CGRect frame = uploadStatusButton.frame;
   frame.origin.y = scrollView.contentOffset.y + self.tableView.frame.size.height - uploadStatusButton.frame.size.height;
   uploadStatusButton.frame = frame;
-  notificationButton.frame = frame;
+  bottomBarMenu.frame = frame;
   
   if (!uploadStatusButton.hidden) {
     [self.view bringSubviewToFront:uploadStatusButton];
   }
-  if (!notificationButton.hidden) {
-    [self.view bringSubviewToFront:notificationButton];
+  if (!bottomBarMenu.hidden) {
+    [self.view bringSubviewToFront:bottomBarMenu];
   }
   // Hide Notification Bar when scroll up and show when down
   CGPoint velocity = [[scrollView panGestureRecognizer] velocityInView:self.view];
   if (velocity.y < 0) {
-    if (!notificationButton.hidden) {
-      notificationButton.hidden = YES;
-      [notificationButton setNeedsDisplay];
+    if (!bottomBarMenu.hidden) {
+      bottomBarMenu.hidden = YES;
+      [bottomBarMenu setNeedsDisplay];
     }
   } else if (velocity.y > 0) {
-    if (notificationButton.hidden) {
-      notificationButton.hidden = NO;
-      [notificationButton setNeedsDisplay];
+    if (bottomBarMenu.hidden) {
+      bottomBarMenu.hidden = NO;
+      [bottomBarMenu setNeedsDisplay];
     }
   }
 }
@@ -695,20 +697,27 @@ static void *ZOTContext = &ZOTContext;
   }
 }
 
-#pragma mark - Notification Bar
+#pragma mark - Bottom Menu Bar
 
-- (IBAction)notificationButtonPressed:(id)sender {
+- (void)playAllButtonPressed:(id)sender {
+  VYBPlayerViewController *playerViewController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+  playerViewController.delegate = self;
+  [playerViewController playAllFresh];
+}
+
+- (void)bumpsButtonPressed:(id)sender {
   NotificationTableViewController *notificationTable = (NotificationTableViewController *)[[UIStoryboard storyboardWithName:@"Notification" bundle:nil] instantiateInitialViewController];
   [self.navigationController pushViewController:notificationTable animated:YES];
 }
 
 - (void)updateNotificationCount {
   NSInteger count = [[VYBCache sharedCache] newBumpActivityCountForCurrentUser];
+  UIButton *bumpsButton = (UIButton *)[bottomBarMenu viewWithTag:7];
   
   if (count > 0) {
-    [self.notificationButton setTitle:[NSString stringWithFormat:@"%ld", (long)count] forState:UIControlStateNormal];
+    [bumpsButton setTitle:[NSString stringWithFormat:@"%ld", (long)count] forState:UIControlStateNormal];
   } else {
-    [self.notificationButton setTitle:@"B U M P   A C T I V I T Y" forState:UIControlStateNormal];
+    [bumpsButton setTitle:@"BUMPS" forState:UIControlStateNormal];
   }
   
 }

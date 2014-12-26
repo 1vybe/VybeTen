@@ -78,7 +78,7 @@ class WelcomeManager: NSObject {
     })
   }
   
-  func fetchCurrentUserDataWithResult(userObj: PFObject, error: NSError!) {
+  func fetchCurrentUserDataWithResult(userObj: PFObject!, error: NSError!) {
     if error != nil {
       if error.code == kPFErrorObjectNotFound {
         if let vybeAppDel = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
@@ -87,6 +87,7 @@ class WelcomeManager: NSObject {
         return
       }
     } else {
+      // NOTE: - a break point here causes a crash
       // Update config file from cloud
       ConfigManager.sharedInstance.fetchIfNeeded()
       
