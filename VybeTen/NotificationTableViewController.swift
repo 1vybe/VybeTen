@@ -232,8 +232,6 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
     return false
   }
   
-  // MARK: - VYBCacheRefreshedBumpActivities Notification
-  
   func reloadActivitiesForMe() {
     activities = []
     if let newObjs = VYBCache.sharedCache().bumpActivitiesForUser(PFUser.currentUser()) as? [PFObject] {

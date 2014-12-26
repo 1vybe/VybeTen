@@ -219,12 +219,6 @@
   [bumpQuery includeKey:kVYBActivityToUserKey];
   [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
   [bumpQuery whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
-
-  NSDate *lastRefresh = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsActivityLastRefreshKey];
-  // We want to filter out by last refresh AFTER all activities are fetched once first
-  if (lastRefresh && [self bumpActivitiesForUser:[PFUser currentUser]].count) {
-    [bumpQuery whereKey:@"createdAt" greaterThan:lastRefresh];
-  }
   
   [bumpQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     if (!error) {

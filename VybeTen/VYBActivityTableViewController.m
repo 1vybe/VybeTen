@@ -103,7 +103,11 @@ static void *ZOTContext = &ZOTContext;
   [super viewWillAppear:animated];
   
   // Update Activity count
-  [[VYBCache sharedCache] refreshBumpsForMeInBackground:nil];
+  [[VYBCache sharedCache] refreshBumpsForMeInBackground:^(BOOL success) {
+    if (success) {
+      [self updateBumpForMeCount];
+    }
+  }];
   
   [self updatePlayAllButton];
   [self loadObjects];
@@ -216,7 +220,11 @@ static void *ZOTContext = &ZOTContext;
   [super objectsDidLoad:error];
   
   // Update Activity count
-  [[VYBCache sharedCache] refreshBumpsForMeInBackground:nil];
+  [[VYBCache sharedCache] refreshBumpsForMeInBackground:^(BOOL success) {
+    if (success) {
+      [self updateBumpForMeCount];
+    }
+  }];
   
   [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
     if (success) {
@@ -714,7 +722,7 @@ static void *ZOTContext = &ZOTContext;
   [self.navigationController pushViewController:notificationTable animated:YES];
 }
 
-- (void)updateNotificationCount {
+- (void)updateBumpForMeCount {
   NSInteger count = [[VYBCache sharedCache] newBumpActivityCountForCurrentUser];
   UIButton *bumpsButton = (UIButton *)[bottomBarMenu viewWithTag:7];
   
