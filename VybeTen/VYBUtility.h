@@ -23,7 +23,6 @@
 + (PFQuery *)queryForActivitiesOnVybe:(PFObject *)vybe cachePolicy:(PFCachePolicy)cachePolicy;
 
 + (void)fetchActiveZones:(void (^)(NSArray *zones, NSError *error))completionBlock;
-//+ (void)saveThumbnailImageForVybeWithFilePath:(NSString *)filePath;
 + (void)saveThumbnailImageForVybe:(VYBVybe *)mVybe;
 + (NSString *)timeStringForPlayer:(NSDate *)aDate;
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate;

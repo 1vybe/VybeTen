@@ -290,19 +290,36 @@
   [[ZoneStore sharedInstance] refreshFreshVybesInBackground:^(BOOL success) {
     if (success) {
       NSArray *allContents = [NSArray arrayWithArray:[[ZoneStore sharedInstance] allFreshVybes]];
-      if (allContents.count > 0) {
-        _zoneVybes = allContents;
-        _zoneCurrIdx = 0;
-        _isFreshStream = YES;
-        [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
-          [self.delegate playerViewController:self didFinishSetup:success];
-        }];
-      }
-      else {
-        [self.delegate playerViewController:self didFinishSetup:NO];
-      }
+      _zoneVybes = allContents;
+      _zoneCurrIdx = 0;
+      _isFreshStream = YES;
+      [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
+        [self.delegate playerViewController:self didFinishSetup:success];
+      }];
     }
     else {
+      [self.delegate playerViewController:self didFinishSetup:NO];
+    }
+  }];
+}
+
+- (void)playAllActiveVybes {
+  NSDate *someTimeAgo = [NSDate dateWithTimeIntervalSinceNow:-60*60*24]; // 24 hour
+  PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+  [query setLimit:1000];
+  [query setCachePolicy:kPFCachePolicyCacheElseNetwork];
+  [query includeKey:kVYBVybeUserKey];
+  [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
+  [query orderByAscending:kVYBVybeTimestampKey];
+  // NOTE: - Blocked users, flagged iterms are not filter
+  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    if (!error) {
+      _zoneVybes = objects;
+      _zoneCurrIdx = 0;
+      [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
+        [self.delegate playerViewController:self didFinishSetup:success];
+      }];
+    } else {
       [self.delegate playerViewController:self didFinishSetup:NO];
     }
   }];

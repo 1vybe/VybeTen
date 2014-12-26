@@ -13,7 +13,7 @@
 #import <GAITracker.h>
 #import <GAIFields.h>
 //NOTE: Take out this part when releasing to TESTFLIGHT
-//#import <HockeySDK/HockeySDK.h>
+#import <HockeySDK/HockeySDK.h>
 //#import <ParseUI/ParsePFLogInViewControllerDelegateUI.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import "VYBAppDelegate.h"
@@ -60,12 +60,12 @@
   
   //NOTE: Take out this part when releasing to TESTFLIGHT
   /* HockeyApp Initilization */
-//  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
-//  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
-//  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
-//  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
-//  [hockeyManager startManager];
-//  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
+  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
+  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
+  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
+  [hockeyManager startManager];
+  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
   
   [[WelcomeManager sharedInstance] setLaunchOptions:launchOptions];
   
@@ -77,9 +77,9 @@
   // Register for remote notification
   [self checkNotificationPermissionAndRegister:application];
 
-//#ifdef DEBUG
+#ifdef DEBUG
   // We want to exclude debugging from analytics.
-//#else
+#else
   // Optional: automatically send uncaught exceptions to Google Analytics.
   [GAI sharedInstance].trackUncaughtExceptions = YES;
   // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
@@ -92,7 +92,7 @@
                                                          action:@"App Start"
                                                           label:nil
                                                           value:nil] set:@"start" forKey:kGAISessionControl] build]];
-//#endif
+#endif
   
   self.welcomeViewController = [[VYBWelcomeViewController alloc] init];
   

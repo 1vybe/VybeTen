@@ -10,18 +10,21 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z9s-8Y-aCA">
-                    <rect key="frame" x="0.0" y="0.0" width="300" height="44"/>
-                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="13"/>
-                    <state key="normal" title="PLAY ALL" backgroundImage="PlayAll-btn">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                </button>
                 <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="coU-3T-hd2">
                     <rect key="frame" x="300" y="0.0" width="300" height="44"/>
-                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="13"/>
+                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="11"/>
                     <state key="normal" title="BUMPS" backgroundImage="Bumps-Btn">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z9s-8Y-aCA">
+                    <rect key="frame" x="0.0" y="0.0" width="300" height="44"/>
+                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="11"/>
+                    <state key="normal" title="PLAY LAST 24 HOUR" backgroundImage="PlayAll">
+                        <color key="titleColor" red="1" green="0.29803921570000003" blue="0.27450980390000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <state key="selected" title="PLAY ALL UNWATCHED" backgroundImage="PlayAll-btn">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
@@ -43,6 +46,7 @@
     </objects>
     <resources>
         <image name="Bumps-Btn" width="187" height="43"/>
+        <image name="PlayAll" width="187" height="45"/>
         <image name="PlayAll-btn" width="187" height="43"/>
     </resources>
 </document>

@@ -333,7 +333,10 @@
 #pragma mark Thumbnail
 
 + (void)saveThumbnailImageForVybe:(VYBVybe *)mVybe {
-  NSURL *url = [[NSURL alloc] initFileURLWithPath:[mVybe videoFilePath]] ;
+  NSString *videoPath = [mVybe videoFilePath];
+  NSString *thumbnailPath = [mVybe thumbnailFilePath];
+  
+  NSURL *url = [[NSURL alloc] initFileURLWithPath:videoPath] ;
   // Generating and saving a thumbnail for the captured vybe
   AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
   AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
@@ -342,14 +345,14 @@
 
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     NSError *err = NULL;
-    CMTime time = CMTimeMake(2, 60);
+    CMTime time = CMTimeMake(1, 60);
     CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
     if (err) {
       NSLog(@"Error getting a frame for thumbnail");
     }
     UIImage *tempImg = [[UIImage alloc] initWithCGImage:imgRef];
     NSData *thumbData = UIImageJPEGRepresentation(tempImg, 0.3);
-    NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:[mVybe thumbnailFilePath]];
+    NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:thumbnailPath];
     
     [thumbData writeToURL:thumbURL options:NSDataWritingAtomic error:&err];
   });

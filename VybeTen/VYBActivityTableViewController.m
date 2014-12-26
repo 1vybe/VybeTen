@@ -105,6 +105,7 @@ static void *ZOTContext = &ZOTContext;
   // Update Activity count
   [[VYBCache sharedCache] refreshBumpsForMeInBackground:nil];
   
+  [self updatePlayAllButton];
   [self loadObjects];
 }
 
@@ -227,14 +228,11 @@ static void *ZOTContext = &ZOTContext;
       
       self.countLabel.text = [NSString stringWithFormat:@"%@ - %@", locationCntText, vybeCntText];
       
-      [self addSavedVybesToTable];
-      
-      [self.tableView reloadData];
+
     }
-    else {
-      [self addSavedVybesToTable];
-      [self.tableView reloadData];
-    }
+    [self addSavedVybesToTable];
+    [self updatePlayAllButton];
+    [self.tableView reloadData];
   }];
 }
 
@@ -702,7 +700,13 @@ static void *ZOTContext = &ZOTContext;
 - (void)playAllButtonPressed:(id)sender {
   VYBPlayerViewController *playerViewController = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
   playerViewController.delegate = self;
-  [playerViewController playAllFresh];
+  
+  UIButton *playAllButton = (UIButton *)[bottomBarMenu viewWithTag:3];
+  if (playAllButton.selected) {
+    [playerViewController playAllFresh];
+  } else {
+    [playerViewController playAllActiveVybes];
+  }
 }
 
 - (void)bumpsButtonPressed:(id)sender {
@@ -719,7 +723,12 @@ static void *ZOTContext = &ZOTContext;
   } else {
     [bumpsButton setTitle:@"BUMPS" forState:UIControlStateNormal];
   }
-  
+}
+
+- (void)updatePlayAllButton {
+  NSInteger freshCount = [[[ZoneStore sharedInstance] allFreshVybes] count];
+  UIButton *playAllButton = (UIButton *)[bottomBarMenu viewWithTag:3];
+  playAllButton.selected = (freshCount > 0);
 }
 
 #pragma mark - UIActionSheetDelegate

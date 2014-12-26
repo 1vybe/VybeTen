@@ -30,7 +30,7 @@ class WelcomeManager: NSObject {
       
       ParseCrashReporting.enable()
       
-      Parse.setApplicationId(PARSE_APPLICATION_ID, clientKey: PARSE_CLIENT_KEY)
+      Parse.setApplicationId(PARSE_APPLICATION_ID_DEV, clientKey: PARSE_CLIENT_KEY_DEV)
       
       // Clearing Push-noti Badge number
       var currentInstallation = PFInstallation.currentInstallation()
@@ -116,7 +116,6 @@ class WelcomeManager: NSObject {
       
       // Update My Bumps
       VYBCache.sharedCache().refreshMyBumpsInBackground(nil)
-      
     }
   }
   
