@@ -113,6 +113,9 @@ $(function() {
         case 'regency':
           location = 'Le Regency';
           break;
+        case 'mmelee':
+          location = 'Mme Lee';
+          break;
         case 'all':
           location = '';
           break;
