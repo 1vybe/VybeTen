@@ -2,7 +2,7 @@ require('cloud/tribe');
 
 var _ = require('underscore');
 var Vybe = Parse.Object.extend('Vybe');
-
+var Activity = Parse.Object.extend('Activity')
 
 // Validate Vybes have a valid owner in the "user" pointer.
 Parse.Cloud.beforeSave('Vybe', function (request, response) {
@@ -59,9 +59,15 @@ Parse.Cloud.afterDelete('Vybe', function (request) {
 
   var deletedVybe = request.object;
 
-  // Query for all users
-  var query = new Parse.Query(Parse.User);
+  // Delete all activities that have a reference to the deleted vybe
+  var activityQuery = new Parse.Query('Activity')
+  activityQuery.equalTo('vybe', deletedVybe)
+  activityQuery.each(function(activity) {
+    return activity.destroy();
+  });
 
+  // Delete from all users feed
+  var query = new Parse.Query(Parse.User);
   query.each(function(user) {
       var username = user.get('username');
       var feed = user.relation('feed');

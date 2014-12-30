@@ -182,18 +182,16 @@
 
 - (void)refreshBumpsForMeInBackground:(void (^)(BOOL success))completionBlock {
   PFQuery *bumpQuery = [PFQuery queryWithClassName:kVYBActivityClassKey];
+  [bumpQuery setCachePolicy:kPFCachePolicyNetworkElseCache];
   [bumpQuery orderByDescending:@"createdAt"];
   [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
   [bumpQuery whereKey:kVYBActivityToUserKey equalTo:[PFUser currentUser]];
-  NSDate *lastRefresh = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsActivityLastRefreshKey];
-  // We want to filter out by last refresh AFTER all activities are fetched once first
-  if (lastRefresh && [self bumpActivitiesForUser:[PFUser currentUser]].count) {
-    [bumpQuery whereKey:@"createdAt" greaterThan:lastRefresh];
-  }
   [bumpQuery includeKey:kVYBActivityVybeKey];
   [bumpQuery includeKey:kVYBActivityFromUserKey];
   [bumpQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     if (!error) {
+      [self clearBumpsForMe];
+      
       for (PFObject *activity in objects) {
         // Updating attributes for vybe
         [self addBump:activity[kVYBActivityVybeKey] fromUser:activity[kVYBActivityFromUserKey]];
@@ -214,6 +212,7 @@
 - (void)refreshMyBumpsInBackground:(void (^)(BOOL success))completionBlock {
   // Update my bumps
   PFQuery *bumpQuery = [PFQuery queryWithClassName:kVYBActivityClassKey];
+  [bumpQuery setCachePolicy:kPFCachePolicyNetworkElseCache];
   [bumpQuery orderByDescending:@"createdAt"];
   [bumpQuery includeKey:kVYBActivityVybeKey];
   [bumpQuery includeKey:kVYBActivityToUserKey];
@@ -222,6 +221,9 @@
   
   [bumpQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     if (!error) {
+      // NOTE: - Clearing and re-downloading here is very inefficient but needed for now to filter out activities on a deleted vybe.
+      [self clearMyBumpActivities];
+      
       for (PFObject *activity in objects) {
         [[VYBCache sharedCache] setAttributesForVybe:activity[kVYBActivityVybeKey] likers:@[[PFUser currentUser]] commenters:nil likedByCurrentUser:YES];
         
@@ -234,6 +236,22 @@
       completionBlock(NO);
     }
   }];
+}
+
+- (void)clearMyBumpActivities {
+  NSMutableDictionary *myAttributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:[PFUser currentUser]]];
+  NSArray *empty = [[NSArray alloc] init];
+  [myAttributes setObject:empty forKey:kVYBUserAttributesMyBumpsKey];
+  
+  [self setAttributes:myAttributes forUser:[PFUser currentUser]];
+}
+
+- (void)clearBumpsForMe {
+  NSMutableDictionary *myAttributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:[PFUser currentUser]]];
+  NSArray *empty = [[NSArray alloc] init];
+  [myAttributes setObject:empty forKey:kVYBUserAttributesBumpsForMeKey];
+  
+  [self setAttributes:myAttributes forUser:[PFUser currentUser]];
 }
 
 - (void)addMyBump:(PFObject *)activity {
