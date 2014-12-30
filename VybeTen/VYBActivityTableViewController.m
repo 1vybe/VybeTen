@@ -48,7 +48,6 @@ static void *ZOTContext = &ZOTContext;
 #pragma mark - Lifecycle
 
 - (void)dealloc {
-  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBCacheRefreshedBumpActivitiesForCurrentUser object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBSwipeContainerControllerWillMoveToActivityScreenNotification object:nil];
 }
@@ -75,7 +74,6 @@ static void *ZOTContext = &ZOTContext;
   
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToTop:) name:UIApplicationWillEnterForegroundNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToTop:) name:VYBSwipeContainerControllerWillMoveToActivityScreenNotification object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateNotificationCount) name:VYBCacheRefreshedBumpActivitiesForCurrentUser object:nil];
   
   self.usernameLabel.text = [PFUser currentUser].username;
   
