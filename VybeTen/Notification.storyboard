@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="xqI-yj-r1i">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
@@ -94,6 +95,7 @@
                                         <constraint firstItem="d9J-j5-OI7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="eFb-r0-Ph0" secondAttribute="trailing" constant="10" id="Q1O-SW-U5o"/>
                                         <constraint firstItem="d9J-j5-OI7" firstAttribute="top" secondItem="93f-Zg-kjd" secondAttribute="top" constant="18" id="S4T-xF-aGd"/>
                                         <constraint firstItem="Fkc-29-Wns" firstAttribute="leading" secondItem="93f-Zg-kjd" secondAttribute="leading" constant="20" id="cUf-Vy-Aj3"/>
+                                        <constraint firstItem="d9J-j5-OI7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fkc-29-Wns" secondAttribute="trailing" constant="20" id="ffW-1P-0nI"/>
                                         <constraint firstAttribute="trailing" secondItem="0sF-X2-yf6" secondAttribute="trailing" id="igF-DN-gdm"/>
                                         <constraint firstItem="0sF-X2-yf6" firstAttribute="leading" secondItem="93f-Zg-kjd" secondAttribute="leading" id="p1Y-M0-hLF"/>
                                         <constraint firstItem="eFb-r0-Ph0" firstAttribute="leading" secondItem="6Za-jE-jHo" secondAttribute="trailing" constant="5" id="ssI-I7-EgZ"/>
@@ -140,11 +142,13 @@
                                         <constraint firstAttribute="trailing" secondItem="7KU-gO-c82" secondAttribute="trailing" constant="21" id="M7G-mw-eb6"/>
                                         <constraint firstAttribute="bottom" secondItem="7KU-gO-c82" secondAttribute="bottom" constant="18" id="S37-X9-vR8"/>
                                         <constraint firstItem="g3j-Y3-PLh" firstAttribute="leading" secondItem="2Ss-k2-oHg" secondAttribute="leading" constant="20" id="Sfq-dT-IxA"/>
+                                        <constraint firstItem="7KU-gO-c82" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="dfo-Ty-ka5" secondAttribute="trailing" constant="10" id="ZbZ-vB-lkQ"/>
                                         <constraint firstAttribute="bottom" secondItem="g3j-Y3-PLh" secondAttribute="bottom" constant="20" id="b3s-fh-3UP"/>
                                         <constraint firstAttribute="trailing" secondItem="C5t-FJ-kJQ" secondAttribute="trailing" id="c3J-8m-Ouw"/>
                                         <constraint firstItem="dfo-Ty-ka5" firstAttribute="leading" secondItem="2Ss-k2-oHg" secondAttribute="leading" constant="20" id="csa-1C-5Z1"/>
                                         <constraint firstItem="C5t-FJ-kJQ" firstAttribute="leading" secondItem="2Ss-k2-oHg" secondAttribute="leading" id="jPD-sa-v6o"/>
                                         <constraint firstItem="7KU-gO-c82" firstAttribute="top" secondItem="2Ss-k2-oHg" secondAttribute="top" constant="18" id="olI-0o-f0U"/>
+                                        <constraint firstItem="7KU-gO-c82" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="g3j-Y3-PLh" secondAttribute="trailing" constant="20" id="r0a-FU-cG3"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -200,6 +204,7 @@
                                         <constraint firstAttribute="bottom" secondItem="toi-Hx-9oi" secondAttribute="bottom" constant="20" id="PA1-ej-wkT"/>
                                         <constraint firstAttribute="trailing" secondItem="dl6-Jv-tw5" secondAttribute="trailing" id="TGt-fh-0V6"/>
                                         <constraint firstItem="dCn-8o-gNb" firstAttribute="leading" secondItem="o7b-UK-9ra" secondAttribute="leading" constant="20" id="XLQ-WP-FCy"/>
+                                        <constraint firstItem="e4p-mx-bZd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="toi-Hx-9oi" secondAttribute="trailing" constant="20" id="YG7-KM-Aab"/>
                                         <constraint firstAttribute="trailing" secondItem="e4p-mx-bZd" secondAttribute="trailing" constant="21" id="Zhm-Mi-Kxe"/>
                                         <constraint firstItem="rva-QZ-d1L" firstAttribute="leading" secondItem="o7b-UK-9ra" secondAttribute="leading" id="gwf-Fj-Upv"/>
                                         <constraint firstAttribute="bottom" secondItem="rva-QZ-d1L" secondAttribute="bottom" id="nAx-2u-wMU"/>
