@@ -55,23 +55,34 @@ class ConfigManager: NSObject {
     }
   }
   
-//  func featuredZoneID() -> String? {
-//    if let zoneID = self.config?["featuredZoneID"] as? String {
-//      return zoneID
-//    }
-//    
-//    // New City Gas
-//    return "4f722440e4b0995f2face125"
-//  }
-//  
-//  func featuredChannels() -> [AnyObject] {
-//    var channels = [AnyObject]()
-//    if let list = self.config?["featuredChannels"] as? [AnyObject]{
-//      channels = list
-//    }
-//    
-//    return channels
-//  }
+  func customZones() -> [Zone]? {
+    var customZones: [Zone]?
+    if let configObj = self.config?["customZones"] as? [String: AnyObject] {
+      if let listObj = configObj["customZones"] as? [AnyObject] {
+        for zObj in listObj {
+          if let zName = zObj["name"] as? String {
+            if let zID = zObj["id"] as? String {
+              var zone = Zone(name: zName, zoneID: zID)
+              if let lat = zObj["latitude"] as? NSNumber {
+                if let lng = zObj["longitude"] as? NSNumber {
+                  let zCoord = CLLocationCoordinate2D(latitude: lat.doubleValue, longitude: lng.doubleValue)
+                  zone.coordinate = zCoord
+                }
+              }
+              
+              if customZones == nil {
+                customZones = [zone]
+              } else {
+                customZones = customZones! + [zone]
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    return customZones
+  }
   
   func currentUserExcludedFromAnalytics() -> Bool {
     let currConfig = PFConfig.currentConfig()

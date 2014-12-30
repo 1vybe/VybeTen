@@ -115,18 +115,11 @@
 - (IBAction)selectZoneButtonPressed:(id)sender {
   [self.zoneButton setEnabled:NO];
   [[ZoneFinder sharedInstance] findZoneNearLocationInBackground:^(BOOL success) {
-    if (success) {
-      NSArray *suggestions = [[ZoneFinder sharedInstance] suggestions];
+      NSArray *suggestions = [[ZoneFinder sharedInstance] suggestedZones];
       if (suggestions && suggestions.count > 0) {
         [self displayCurrentPlaceSuggestions:suggestions];
       }
-      else {
-        [self.zoneButton setEnabled:YES];
-      }
-    }
-    else {
       [self.zoneButton setEnabled:YES];
-    }
   }];
 }
 
