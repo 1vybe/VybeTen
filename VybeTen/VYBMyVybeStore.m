@@ -149,7 +149,7 @@
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"capture_video" label:@"saved" value:nil] build]];
   }
 #endif
-  _currVybe = nil;
+//  _currVybe = nil;
 }
 
 - (void)saveVybe:(VYBVybe *)vybeToSave {
