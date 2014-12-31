@@ -8,6 +8,7 @@
     <script src="js/underscore.js"></script>
     <script src="http://www.parsecdn.com/js/parse-1.3.3.min.js"></script>
     <script src="js/vybe.js"></script>
+    <script src="http://momentjs.com/downloads/moment.min.js"></script>
     <style>
       body {
         background-color: black;
@@ -17,9 +18,25 @@
         width: 100%;
         height: 100%;
         position: absolute;
+        z-index: 0;
       }
 
-      .invisible {
+      @font-face {
+          font-family: 'Avenir Regular';
+          src: url('fonts/AvenirLTStd-Medium.otf');
+      }
+
+      .overlay {
+        position: absolute;
+        font-size: large;
+        color: white;
+        bottom: 0;
+        line-height: 1.2;
+        font-family: 'Avenir Regular';
+        z-index: 1;
+      }
+
+      .preloader {
         position: absolute!important;
         top: -10000px!important;
         left: -10000px!important;
@@ -35,16 +52,11 @@
   <body>
 
     <a href="http://www.myvybe.co/">Sign up to try the beta</a>
-    <div id="liveplayer">
-      <div class="video-container">
-        <video preload="auto" src="" poster=""></video>
-      </div>
-      <div class='invisible preload'>
-        <video preload="auto" src=""></video>
-      </div>
+    <div class="liveplayer">
+      <video class="player" preload="auto" src="" poster=""></video>
+      <div class="overlay"></div>
+      <video class="preloader" preload="auto" src=""></video>
     </div>
-
-
   </body>
 
 </html>

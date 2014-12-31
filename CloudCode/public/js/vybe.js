@@ -15,18 +15,17 @@ $(function() {
 
     initialize: function() {
       this.index = 0;
-
-      this.setLocation('New City Gas');
     },
 
-    setLocation: function(location) {
+    setChannel: function(location, time) {
       this.location = location;
+      this.time = time;
 
       this.query = new Parse.Query('Vybe')
         .descending('timestamp');
 
-      if (location)
-        this.query.equalTo('zoneName', this.location);
+      if (location) this.query.equalTo('zoneName', this.location);
+      if (time) this.query.greaterThanOrEqualTo('timestamp', new Date(this.time));
     },
 
     currentVybe: function() {
@@ -55,33 +54,46 @@ $(function() {
   })
 
 
-  var player = $('.video-container video').get(0);
-  var preloader = $('.invisible.preload video').get(0);
-
   var PlayerView = Parse.View.extend({
-    el: $('.video-container video').get(0),
+
+    el: $('.player').get(0),
 
     initialize: function() {
-      this.player = $('.video-container video').get(0);
-      this.preloader = $('.invisible.preload video').get(0);
+      _.bindAll(this, 'render', 'playNext');
+
+      this.player = $('.player').get(0);
+
+      this.overlay = $('.overlay');
+
+      this.preloader = $('.preloader').get(0);
 
       this.playlist = new Playlist;
+      this.playlist.bind('reset', this.render);
 
-      _.bindAll(this, 'render', 'playNext');
-      this.playlist.bind('reset', this.playNext);
-      this.playlist.fetch();
+      state.on("change", this.changeChannel, this);
     },
+
     events: {
       'ended': 'playNext',
     },
-    render: function() {
 
+    changeChannel: function() {
+      var location = state.get('location');
+      var time = state.get('time');
+
+      this.playlist.setChannel(location, time);
+      this.playlist.fetch();
     },
-    playNext: function() {
-      this.playlist.next();
 
+    render: function() {
       var currentVybe = this.playlist.currentVybe();
       var nextVybe = this.playlist.nextVybe();
+
+      var zoneName = currentVybe.get('zoneName');
+      var timestamp = currentVybe.get('timestamp');
+      var formattedTimestamp = moment(timestamp).format('MMM DD h:mm a');
+
+      this.overlay.html(zoneName + '<br>' + formattedTimestamp);
 
       this.player.src = currentVybe.get('video').url();
       this.player.poster = currentVybe.get('thumbnail').url();
@@ -89,43 +101,59 @@ $(function() {
       this.preloader.src = nextVybe.get('video').url();
 
       this.player.play();
-      return this;
+    },
+
+    playNext: function() {
+      this.playlist.next();
+
+      this.render();
     }
   });
+
 
   var AppRouter = Parse.Router.extend({
 
-    initialize: function() {
-      this.player = new PlayerView;
-    },
-
     routes: {
-      "*path": "changeLocation"
+      "all": "all",
+      "stereo": "stereo",
+      "regency": "regency",
+      "mmelee": "mmelee",
+      "*path": "newyears",
     },
 
-    changeLocation: function(zone) {
-      var location = 'New City Gas';
+    all: function() {
+      state.set({ location: '' });
+    },
 
-      switch(zone) {
-        case 'stereo':
-          location = 'Stereo Night Club';
-          break;
-        case 'regency':
-          location = 'Le Regency';
-          break;
-        case 'mmelee':
-          location = 'Mme Lee';
-          break;
-        case 'all':
-          location = '';
-          break;
-      }
+    stereo: function() {
+      state.set({ location: 'Stereo Night Club' });
+    },
 
-      this.player.playlist.setLocation(location);
-      this.player.playlist.fetch();
+    regency: function() {
+      state.set({ location: 'Le Regency' });
+    },
+
+    mmelee: function() {
+      state.set({ location: 'Mme Lee' });
+    },
+
+    newyears: function() {
+      state.set({ location: '', time: '2014-12-31T10:00:00.000Z' });
+    },
+
+    default: function() {
+      state.set({ location: 'New City Gas' });
     }
+
   });
 
+  var AppState = Parse.Object.extend('AppState');
+
+
+  var state = new AppState;
+
   new AppRouter;
+  new PlayerView;
+
   Parse.history.start();
 });
