@@ -22,7 +22,8 @@ $(function() {
       this.time = time;
 
       this.query = new Parse.Query('Vybe')
-        .descending('timestamp');
+        .descending('timestamp')
+        .limit(1000);
 
       if (location) this.query.equalTo('zoneName', this.location);
       if (time) this.query.greaterThanOrEqualTo('timestamp', new Date(this.time));
