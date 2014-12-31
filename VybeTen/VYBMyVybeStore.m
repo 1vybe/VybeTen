@@ -22,6 +22,7 @@
   dispatch_queue_t _oldUploadQueue;
 }
 @property (nonatomic) int currentUploadPercent;
+@property (nonatomic) UIBackgroundTaskIdentifier vybeUploadTaskIdentifier;
 
 @end
 
@@ -97,12 +98,17 @@
     [vybe setObject:thumbnailFile forKey:kVYBVybeThumbnailKey];
   }
   
+  self.vybeUploadTaskIdentifier = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+    [[UIApplication sharedApplication] endBackgroundTask:self.vybeUploadTaskIdentifier];
+  }];
+  
   [vybe saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
     if (succeeded) {
       [self didUploadVybe:vybeToUpload];
     } else {
       [self uploadingFailedWith:vybeToUpload];
     }
+    [[UIApplication sharedApplication] endBackgroundTask:self.vybeUploadTaskIdentifier];
   }];
   
   // Update user lastVybeLocation and lastVybeTime field.
