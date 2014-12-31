@@ -48,6 +48,13 @@ $(function() {
       };
     },
 
+    prev: function() {
+      this.index -= 1;
+      if (this.index < 0) {
+        this.index = this.length - 1;
+      };
+    },
+
     comparator: function(vybe) {
       return vybe.get('timestamp');
     }
@@ -59,7 +66,7 @@ $(function() {
     el: $('.player').get(0),
 
     initialize: function() {
-      _.bindAll(this, 'render', 'playNext');
+      _.bindAll(this, 'render', 'playNext', 'playPrev', 'logKey');
 
       this.player = $('.player').get(0);
 
@@ -71,6 +78,8 @@ $(function() {
       this.playlist.bind('reset', this.render);
 
       state.on("change", this.changeChannel, this);
+
+      $('body').keydown(this.logKey);
     },
 
     events: {
@@ -90,7 +99,9 @@ $(function() {
       var nextVybe = this.playlist.nextVybe();
 
       var zoneName = currentVybe.get('zoneName');
+      if (!zoneName) zoneName = 'Earth';
       var timestamp = currentVybe.get('timestamp');
+
       var formattedTimestamp = moment(timestamp).format('MMM DD h:mm a');
 
       this.overlay.html(zoneName + '<br>' + formattedTimestamp);
@@ -107,6 +118,22 @@ $(function() {
       this.playlist.next();
 
       this.render();
+    },
+
+    playPrev: function() {
+      this.playlist.prev();
+
+      this.render();
+    },
+
+    logKey: function(e) {
+      if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+        switch (e.keyCode) {
+          case 39: this.playNext(); break;
+          case 37: this.playPrev(); break;
+        }
+      }
     }
   });
 
