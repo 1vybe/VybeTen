@@ -51,8 +51,6 @@
   if (self) {
     _videoPath = [[[VYBMyVybeStore sharedStore] currVybe] videoFilePath];
     _thumbnailPath = [[[VYBMyVybeStore sharedStore] currVybe] thumbnailFilePath];
-    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:_videoPath];
-    currentAsset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
   }
   return self;
 }
@@ -71,6 +69,9 @@
     [self.zoneButton setBackgroundImage:nil forState:UIControlStateNormal];
   }
   
+  NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:_videoPath];
+  currentAsset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
+  
   NSNumber *value;
   switch (currentAsset.videoOrientation) {
     case AVCaptureVideoOrientationPortrait:
@@ -87,8 +88,10 @@
       //      [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeLeft];
       break;
   }
-  // NOTE: - It's uncertain why setting currentDevice's orientation and statusBar's to the same does not produce the same outcome. 
-  [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+  // NOTE: - It's uncertain why setting currentDevice's orientation and statusBar's to the same does not produce the same outcome.
+  if (value) {
+    [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+  }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
