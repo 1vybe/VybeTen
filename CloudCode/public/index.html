@@ -30,10 +30,13 @@
         position: absolute;
         font-size: large;
         color: white;
-        bottom: 0;
-        line-height: 1.2;
         font-family: 'Avenir Regular';
         z-index: 1;
+      }
+
+      .info {
+        bottom: 0;
+        line-height: 1.2;
       }
 
       .preloader {
@@ -51,10 +54,14 @@
 
   <body>
 
-    <a href="http://www.myvybe.co/">Sign up to try the beta</a>
     <div class="liveplayer">
       <video class="player" preload="auto" src="" poster=""></video>
-      <div class="overlay"></div>
+      <div class="overlay info"></div>
+      <div class="overlay logo">
+        <a href="http://www.myvybe.co/">
+          <img src="images/logo.png">
+        </a>
+      </div>
       <video class="preloader" preload="auto" src=""></video>
     </div>
   </body>

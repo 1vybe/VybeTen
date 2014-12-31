@@ -71,7 +71,7 @@ $(function() {
 
       this.player = $('.player').get(0);
 
-      this.overlay = $('.overlay');
+      this.overlay = $('.overlay.info');
 
       this.preloader = $('.preloader').get(0);
 
