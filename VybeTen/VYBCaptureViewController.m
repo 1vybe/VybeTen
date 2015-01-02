@@ -76,8 +76,6 @@ static void *XYZContext = &XYZContext;
 
 - (void)viewDidLoad
 {
-  _captureOrientation = AVCaptureVideoOrientationPortrait;
-  
   // Subscribing to Notifications
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
@@ -94,12 +92,16 @@ static void *XYZContext = &XYZContext;
     [MotionOrientation initialize];
   });
   
-  [(AVCaptureVideoPreviewLayer *)[self.cameraView layer] setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+  _captureOrientation = AVCaptureVideoOrientationPortrait;
   
   capturePipeline = [[VYBCapturePipeline alloc] init];
   [capturePipeline setDelegate:self callbackQueue:dispatch_get_main_queue()];
   
   [super viewDidLoad];
+  
+  // Tap to focus and expose
+  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusOnTouchArea:)];
+  [self.view addGestureRecognizer:tapGesture];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -188,11 +190,6 @@ static void *XYZContext = &XYZContext;
 }
 
 #pragma mark - VYBCapturePipelineDelegate
-
-- (void)capturePipeline:(VYBCapturePipeline *)pipeline sessionPreviewReadyForDisplay:(AVCaptureSession *)session {
-  [self.cameraView setSession:session];
-  
-}
 
 - (void)capturePipeline:(VYBCapturePipeline *)pipeline didStopWithError:(NSError *)error {
   
@@ -375,9 +372,11 @@ static void *XYZContext = &XYZContext;
     return;
   }
   CGPoint touchPt = [gesture locationInView:self.view];
+  NSLog(@"tapped in %@", NSStringFromCGPoint(touchPt));
   CGPoint scaledPt = [(AVCaptureVideoPreviewLayer *)self.cameraView.layer captureDevicePointOfInterestForPoint:touchPt];
   
-  [self.capturePipeline setFocusPoint:scaledPt];
+  [capturePipeline setFocusPoint:scaledPt];
+  [capturePipeline setExposurePoint:scaledPt];
 }
 
 #pragma mark - ()

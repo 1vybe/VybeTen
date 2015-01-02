@@ -93,13 +93,12 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
       return;
   
   _session = [[AVCaptureSession alloc] init];
-  //TODO: for old devices like iphone4 sesison preset should be lower
-  [_session setSessionPreset:AVCaptureSessionPreset1280x720];
 
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionNotificationReceived:) name:nil object:_session];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForegroundNotificationReceived:) name:UIApplicationWillEnterForegroundNotification object:[UIApplication sharedApplication]];
   
   NSError *error = nil;
+  // NOTE: -
   [[AVAudioSession sharedInstance] setMode:AVAudioSessionModeVideoRecording error:&error];
   [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
   
@@ -146,7 +145,7 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
     _sessionRunning = NO;
     
     [self stopRecording];
-    
+
     [_session stopRunning];
     
     [self sessionDidStopRunning];
@@ -179,6 +178,12 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
   VYBCameraView *cameraView = [(VYBCaptureViewController *)_delegate cameraView];
   dispatch_async(_sessionQueue, ^{
     [cameraView setSession:_session];
+    
+    AVCaptureVideoPreviewLayer *layer = (AVCaptureVideoPreviewLayer *)[cameraView layer];
+    [layer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    if ( [[layer connection] isVideoOrientationSupported] ) {
+      [[layer connection] setVideoOrientation:AVCaptureVideoOrientationPortrait];
+    }
   });
 }
 
@@ -401,12 +406,31 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
     if (error) {
       NSLog(@"Tap to Focus Error: %@", error);
     } else {
-      if ([videoDevice isFocusPointOfInterestSupported]) {
+      if ([videoDevice isFocusPointOfInterestSupported] && [videoDevice isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
         [videoDevice setFocusPointOfInterest:point];
+        [videoDevice setFocusMode:AVCaptureFocusModeAutoFocus];
         NSLog(@"focus set to %@", NSStringFromCGPoint(point));
       }
       if ([videoDevice isExposurePointOfInterestSupported]) {
         [videoDevice setExposurePointOfInterest:point];
+        NSLog(@"exposure set to %@", NSStringFromCGPoint(point));
+      }
+      [videoDevice unlockForConfiguration];
+    }
+  });
+}
+
+- (void)setExposurePoint:(CGPoint)point {
+  dispatch_async(_sessionQueue, ^{
+    AVCaptureDevice *videoDevice = [_videoDeviceInput device];
+    NSError *error;
+    [videoDevice lockForConfiguration:&error];
+    if (error) {
+      NSLog(@"Tap to Exposure Error: %@", error);
+    } else {
+      if ([videoDevice isExposurePointOfInterestSupported] && [videoDevice isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
+        [videoDevice setExposurePointOfInterest:point];
+        [videoDevice setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
         NSLog(@"exposure set to %@", NSStringFromCGPoint(point));
       }
       [videoDevice unlockForConfiguration];

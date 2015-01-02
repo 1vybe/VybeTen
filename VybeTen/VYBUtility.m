@@ -96,7 +96,9 @@
         }
       }
     }
-    NSLog(@"Cleared");
+    if (temp.count) {
+      NSLog(@"Cleared - %lu", temp.count);
+    }
   });
 }
 

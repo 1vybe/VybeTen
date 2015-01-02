@@ -19,6 +19,8 @@
 - (void)stopRecording;
 
 - (void)setFocusPoint:(CGPoint)point;
+- (void)setExposurePoint:(CGPoint)point;
+
 - (void)flipCameraWithCompletion:(void (^)())completionBlock;
 @property (nonatomic, getter=isFlashOn) BOOL flashOn;
 @end
@@ -26,7 +28,6 @@
 @protocol VYBCapturePipelineDelegate <NSObject>
 @required
 // Session
-//- (void)capturePipeline:(VYBCapturePipeline *)pipeline sessionPreviewReadyForDisplay:(AVCaptureSession *)session;
 - (void)capturePipeline:(VYBCapturePipeline *)pipeline didStopWithError:(NSError *)error;
 
 // Recording
