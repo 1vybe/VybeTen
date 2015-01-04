@@ -93,6 +93,9 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
       return;
   
   _session = [[AVCaptureSession alloc] init];
+  if ( [_session canSetSessionPreset:AVCaptureSessionPreset1280x720] ) {
+    [_session setSessionPreset:AVCaptureSessionPreset1280x720];
+  }
 
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionNotificationReceived:) name:nil object:_session];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForegroundNotificationReceived:) name:UIApplicationWillEnterForegroundNotification object:[UIApplication sharedApplication]];
