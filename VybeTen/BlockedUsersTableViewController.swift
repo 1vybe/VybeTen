@@ -133,7 +133,7 @@ class BlockedUsersTableViewController: UITableViewController {
     let count = blockedUsers.count
     if count > 0 {
       var index = 0
-      for idx in 0...count {
+      for idx in 0...count - 1 {
         if blockedUsers[idx].objectId == user.objectId {
           index = idx
           break
