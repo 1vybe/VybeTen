@@ -18,6 +18,7 @@
 - (void)playAllFresh;
 - (void)playAllActiveVybes;
 - (void)playOnce:(PFObject *)vybe;
+- (void)playStream:(NSArray *)vybes;
 - (void)playStream:(NSArray *)vybes from:(PFObject *)vybe;
 - (void)playFeaturedZone:(Zone *)zone;
 - (void)playZoneVybesFromVybe:(PFObject *)aVybe;        // User clicked on one of his individual vybe

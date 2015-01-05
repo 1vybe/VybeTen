@@ -129,9 +129,8 @@ import MapKit
   
   
   func refreshZoneAnnoation() {
-    if let zonesOnScreen = ZoneStore.sharedInstance.activeZones() {
-      self.updateZoneAnnoations(zonesOnScreen)
-    }
+    let zonesOnScreen = ZoneStore.sharedInstance.allZones()
+    self.updateZoneAnnoations(zonesOnScreen)
   }
   
   func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
@@ -174,10 +173,27 @@ import MapKit
   func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
     let zone = view.annotation as SimpleAnnotation
     
-    let playerVC = VYBPlayerViewController()
+    var playerVC = VYBPlayerViewController()
     playerVC.delegate = self
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-    playerVC.playFreshVybesFromZone(zone.zoneID)
+    if zone.isActive {
+      playerVC.playFreshVybesFromZone(zone.zoneID)
+    } else {
+      var query = PFQuery(className: kVYBVybeClassKey)
+      query.whereKey(kVYBVybeZoneIDKey, equalTo: zone.zoneID)
+      let startTime = ConfigManager.sharedInstance.startTimeForMap()
+      query.whereKey(kVYBVybeTimestampKey, greaterThanOrEqualTo: startTime)
+      query.orderByAscending(kVYBVybeTimestampKey)
+      query.includeKey(kVYBVybeUserKey)
+
+      query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+        if error == nil {
+          playerVC.playStream(result)
+        } else {
+          MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
+        }
+      })
+    }
   }
   
   override func didReceiveMemoryWarning() {
@@ -209,6 +225,7 @@ import MapKit
     var title: String
     var zoneID: String
     var unwatched: Bool
+    var isActive: Bool = false
     var isCurrentLocation = false
     
     init(coordinate coord: CLLocationCoordinate2D) {
@@ -222,6 +239,7 @@ import MapKit
       coordinate = zone.coordinate
       title = zone.name
       zoneID = zone.zoneID
+      isActive = zone.isActive
       unwatched = Bool(zone.freshContents.count)
     }
   }

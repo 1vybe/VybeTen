@@ -271,6 +271,17 @@
                               }];
 }
 
+
+- (void)playStream:(NSArray *)vybes {
+  _zoneVybes = vybes;
+  _zoneCurrIdx = 0;
+  
+  [self prepareVideoInBackgroundFor:_zoneVybes[0] withCompletion:^(BOOL success) {
+    [self.delegate playerViewController:self didFinishSetup:success];
+  }];
+  
+}
+
 - (void)playStream:(NSArray *)vybes from:(PFObject *)vybe {
   _zoneVybes = [[NSArray alloc] init];
   
