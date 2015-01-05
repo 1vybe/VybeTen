@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -15,6 +16,7 @@
                 <outlet property="cameraView" destination="pxE-bC-V0j" id="oRf-N0-aNf"/>
                 <outlet property="flashButton" destination="jPK-KL-Kst" id="f78-1p-p9v"/>
                 <outlet property="flipButton" destination="7vo-Gu-Tx0" id="H0U-It-ehr"/>
+                <outlet property="focusTarget" destination="DFf-gO-4yf" id="Pzw-JR-jNK"/>
                 <outlet property="recordButton" destination="iEb-4Z-c7N" id="6xj-4L-I8S"/>
                 <outlet property="view" destination="iN0-l3-epB" id="ms6-DC-4sx"/>
             </connections>
@@ -85,6 +87,9 @@
                         <action selector="flipButtonPressed:" destination="-1" eventType="touchUpInside" id="ql3-4B-Gaq"/>
                     </connections>
                 </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="FocusTarget" translatesAutoresizingMaskIntoConstraints="NO" id="DFf-gO-4yf" userLabel="focusTarget">
+                    <rect key="frame" x="0.0" y="0.0" width="71" height="71"/>
+                </imageView>
             </subviews>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="jPK-KL-Kst" secondAttribute="bottom" constant="15" id="0vY-vj-zsY"/>
@@ -109,6 +114,7 @@
         <image name="ACTIVITY_save2" width="30" height="31"/>
         <image name="CaptureOFF_4" width="85" height="85"/>
         <image name="CaptureON_2" width="85" height="85"/>
+        <image name="FocusTarget" width="71" height="71"/>
         <image name="capture_activity_button" width="35" height="35"/>
         <image name="capture_flash_off" width="40" height="40"/>
         <image name="capture_flash_on" width="40" height="40"/>

@@ -30,6 +30,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *flashButton;
 @property (nonatomic, weak) IBOutlet UIButton *activityButton;
 @property (nonatomic, weak) IBOutlet UIButton *recordButton;
+@property (nonatomic, weak) IBOutlet UIImageView *focusTarget;
 //@property (nonatomic, weak) IBOutlet CircleProgressView *uploadProgressView;
 
 - (IBAction)activityButtonPressed:(id)sender;
@@ -102,6 +103,7 @@ static void *XYZContext = &XYZContext;
   // Tap to focus and expose
   UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusOnTouchArea:)];
   [self.view addGestureRecognizer:tapGesture];
+  self.focusTarget.alpha = 0;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -372,9 +374,14 @@ static void *XYZContext = &XYZContext;
     return;
   }
   CGPoint touchPt = [gesture locationInView:self.view];
-  NSLog(@"tapped in %@", NSStringFromCGPoint(touchPt));
-  CGPoint scaledPt = [(AVCaptureVideoPreviewLayer *)self.cameraView.layer captureDevicePointOfInterestForPoint:touchPt];
+  self.focusTarget.center = touchPt;
+  self.focusTarget.alpha = 1.0;
   
+  [UIView animateWithDuration:0.8 delay:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    self.focusTarget.alpha = 0.0;
+  } completion:nil];
+  
+  CGPoint scaledPt = [(AVCaptureVideoPreviewLayer *)self.cameraView.layer captureDevicePointOfInterestForPoint:touchPt];
   [capturePipeline setFocusPoint:scaledPt];
   [capturePipeline setExposurePoint:scaledPt];
 }
