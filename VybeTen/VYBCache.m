@@ -184,10 +184,14 @@
   PFQuery *bumpQuery = [PFQuery queryWithClassName:kVYBActivityClassKey];
   [bumpQuery setCachePolicy:kPFCachePolicyNetworkElseCache];
   [bumpQuery orderByDescending:@"createdAt"];
-  [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
-  [bumpQuery whereKey:kVYBActivityToUserKey equalTo:[PFUser currentUser]];
   [bumpQuery includeKey:kVYBActivityVybeKey];
   [bumpQuery includeKey:kVYBActivityFromUserKey];
+  [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
+  [bumpQuery whereKey:kVYBActivityToUserKey equalTo:[PFUser currentUser]];
+  // Only activities within the last 7 days
+  NSDate *aWeekAgo = [NSDate dateWithTimeIntervalSinceNow:-1 * 60 * 60 * 24 * 3];
+  [bumpQuery whereKey:@"createdAt" greaterThanOrEqualTo:aWeekAgo];
+  
   [bumpQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     if (!error) {
       [self clearBumpsForMe];
@@ -218,6 +222,9 @@
   [bumpQuery includeKey:kVYBActivityToUserKey];
   [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
   [bumpQuery whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
+  // Only activities within the last 7 days
+  NSDate *aWeekAgo = [NSDate dateWithTimeIntervalSinceNow:-1 * 60 * 60 * 24 * 3];
+  [bumpQuery whereKey:@"createdAt" greaterThanOrEqualTo:aWeekAgo];
   
   [bumpQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     if (!error) {
