@@ -12,17 +12,60 @@ private let _zoneStoreSharedInstance = ZoneStore()
 
 @objc class ZoneStore: NSObject {
   private var _featuredZones = [Zone]()
-  private var _activeZones = [Zone]()
+  private var _mapZones = [Zone]()
+  private var _activeZones = [Zone]() // NOTE: - Currently it contains all zones
   private var _unlockedZones = [Zone]() // unlocked zones group my vybes
   
   class var sharedInstance: ZoneStore {
     return _zoneStoreSharedInstance
   }
   
-  func fetchActiveVybes(completionHandler: ((success: Bool) -> Void)) {
-    // First clear cache
-    //_activeZones = [Zone]()
+  func getAllZones(completionHandler: ((success: Bool) -> Void)) {
+    let startTime = ConfigManager.sharedInstance.startTimeForMap()
     
+    var query = PFQuery(className: kVYBVybeClassKey)
+    query.whereKey(kVYBVybeTimestampKey, greaterThanOrEqualTo: startTime)
+    query.cachePolicy = kPFCachePolicyCacheElseNetwork
+    query.limit = 1000
+    query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
+      if error == nil {
+        let vybes = result as [PFObject]
+        self.createZonesForMap(vybes)
+        
+        completionHandler(success: true)
+      } else {
+        completionHandler(success: false)
+      }
+    }
+  }
+  
+  func createZonesForMap(vybes: [PFObject]) {
+    for aVybe in vybes {
+      if self.activeZoneForVybe(aVybe) == nil {
+        if self.mapZoneForVybe(aVybe) == nil {
+          let zone = self.createZoneFromVybe(aVybe)
+          _mapZones += [zone]
+        }
+      }
+    }
+  }
+  
+  private func mapZoneForVybe(vybe: PFObject) -> Zone? {
+    var zoneID = "777"
+    if let zID = vybe[kVYBVybeZoneIDKey] as? String {
+      zoneID = zID
+    }
+    
+    for aZone in _mapZones {
+      if aZone.zoneID == zoneID {
+        return aZone
+      }
+    }
+    
+    return nil
+  }
+  
+  func fetchActiveVybes(completionHandler: ((success: Bool) -> Void)) {
     // Fetch ACTIVE zones
     let params = [:]
     PFCloud.callFunctionInBackground("get_active_vybes", withParameters:params) { (result: AnyObject!, error: NSError!) -> Void in
@@ -223,6 +266,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
         // Vybe comes from a new zone. Create a new zone
     else {
       let zone = self.createZoneFromVybe(aVybe)
+      zone.isActive = true
       zone.addActiveVybe(aVybe)
       self.addActiveZone(zone)
     }
@@ -300,8 +344,19 @@ private let _zoneStoreSharedInstance = ZoneStore()
     return _activeZones
   }
   
+  func allZones() -> [Zone] {
+    return _mapZones + _activeZones
+  }
+  
   func activeAndFeaturedZones() -> [Zone]! {
-    return _featuredZones + _activeZones
+    // NOTE: - here active zones are filtered by activeTTL (currently set to 24 hour)
+    var result: [Zone] = _featuredZones
+    for aZone in _activeZones {
+      if aZone.isActive {
+        result += [aZone]
+      }
+    }
+    return result
   }
   
   func activeUnlockedZones() -> [Zone]! {

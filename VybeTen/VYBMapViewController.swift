@@ -47,10 +47,10 @@ import MapKit
     self.setUpMapRegion()
     
     MBProgressHUD.showHUDAddedTo(self.mapView, animated: true)
-    ZoneStore.sharedInstance.fetchActiveVybes { (success) -> Void in
-      if let zonesOnScreen = ZoneStore.sharedInstance.activeZones() {
-        self.updateZoneAnnoations(zonesOnScreen)
-      }
+    ZoneStore.sharedInstance.getAllZones { (success) -> Void in
+      let zonesOnScreen = ZoneStore.sharedInstance.allZones()
+      self.updateZoneAnnoations(zonesOnScreen)
+      
       MBProgressHUD.hideAllHUDsForView(self.mapView, animated: true)
     }
   }

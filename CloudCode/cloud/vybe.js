@@ -290,7 +290,6 @@ Parse.Cloud.define('get_active_vybes', function (request, response) {
         response.error('[get_active_vybes] failed getting blockedUsers for user ' + currUser.get('username'));
       }
     });
-
 });
 
 

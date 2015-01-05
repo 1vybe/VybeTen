@@ -119,4 +119,11 @@ class ConfigManager: NSObject {
       return aWeekAgo
     }
   }
+  
+  func activeTTL() -> NSTimeInterval? {
+    if let ttl = PFConfig.currentConfig().objectForKey("activeTTL") as? Double {
+      return ttl
+    }
+    return nil
+  }
 }

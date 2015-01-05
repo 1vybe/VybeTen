@@ -19,9 +19,11 @@ import MapKit
   var fromDate: NSDate?
   var featuredThumbnail: PFFile?
   
-  // ACTIVE zone
+  // TRENDING
   var isTrending: Bool = false
   
+  // ACTIVE
+  var isActive: Bool = false
   var activeUsers = [String: Int]()
   var mostRecentVybe: PFObject?
   var mostRecentActiveVybeTimestamp: NSDate? {
