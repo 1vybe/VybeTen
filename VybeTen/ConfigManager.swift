@@ -109,4 +109,14 @@ class ConfigManager: NSObject {
     
     return false
   }
+  
+  func startTimeForMap() -> NSDate {
+    if let timestamp = PFConfig.currentConfig().objectForKey("startTimeForMap") as? NSDate {
+      return timestamp
+    } else {
+      // By default everything within the past week
+      let aWeekAgo = NSDate(timeIntervalSinceNow: -1 * 60 * 60 * 24 * 7)
+      return aWeekAgo
+    }
+  }
 }
