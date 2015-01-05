@@ -61,9 +61,7 @@
 @property (nonatomic) AVPlayer *currPlayer;
 @property (nonatomic) AVPlayerItem *currItem;
 
-
-- (void)playAsset:(AVAsset *)asset;
-
+@property (nonatomic, strong) NSDate *lastTimePlayingAsset;
 @end
 
 @interface DownloadQueue : NSObject
@@ -240,7 +238,6 @@
 }
 
 - (void)playZoneVybesFromVybe:(PFObject *)aVybe {
-  
   NSString *zoneID;
   if (aVybe[kVYBVybeZoneIDKey] == nil) {
     zoneID = @"";
@@ -271,7 +268,6 @@
                               }];
 }
 
-
 - (void)playStream:(NSArray *)vybes {
   _zoneVybes = vybes;
   _zoneCurrIdx = 0;
@@ -279,7 +275,6 @@
   [self prepareVideoInBackgroundFor:_zoneVybes[0] withCompletion:^(BOOL success) {
     [self.delegate playerViewController:self didFinishSetup:success];
   }];
-  
 }
 
 - (void)playStream:(NSArray *)vybes from:(PFObject *)vybe {
@@ -294,7 +289,6 @@
   [self prepareVideoInBackgroundFor:_zoneVybes[0] withCompletion:^(BOOL success) {
     [self.delegate playerViewController:self didFinishSetup:success];
   }];
-
 }
 
 - (void)playAllFresh {
@@ -564,7 +558,7 @@
   
   [self.currPlayer play];
   self.pauseButton.selected = NO;
-
+  self.lastTimePlayingAsset = [NSDate date];
 }
 
 - (IBAction)goNextButtonPressed:(id)sender {
@@ -597,7 +591,15 @@
 
 
 - (IBAction)goPrevButtonPressed:(id)sender {
-  [self playPrevItem];
+  if (self.lastTimePlayingAsset && [self.lastTimePlayingAsset timeIntervalSinceNow] > -2.0) {
+    [self playPrevItem];
+  } else {
+    [self playCurrentItemAgain];
+  }
+}
+
+- (void)playCurrentItemAgain {
+  [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
 }
 
 - (void)playPrevItem {
