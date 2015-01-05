@@ -162,7 +162,7 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
               thumbnailView.image = VYBUtility.maskImage(image, withMask: maskImage)
             }
           } else {
-            thumbnailView.image = UIImage(named: "OverlayThumbnail")
+            thumbnailView.image = UIImage(named: "Placeholder")
           }
         })
       }
