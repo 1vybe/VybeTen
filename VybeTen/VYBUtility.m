@@ -84,6 +84,7 @@
     NSFileManager* fm = [NSFileManager defaultManager];
     NSURL *path = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
     NSArray* temp = [fm contentsOfDirectoryAtPath:NSTemporaryDirectory() error:NULL];
+    int count = 0;
     for (NSString *file in temp) {
       NSURL *filePath = [path URLByAppendingPathComponent:file];
       NSError *error;
@@ -93,11 +94,12 @@
         // Delete all files created more than 3 days ago
         if ([date timeIntervalSinceNow] < -60 * 60 * 24 * 3 ) {
           [fm removeItemAtPath:[filePath path] error:&error];
+          count++;
         }
       }
     }
-    if (temp.count) {
-      NSLog(@"Cleared - %lu", temp.count);
+    if (count) {
+      NSLog(@"Cleared - %d", count);
     }
   });
 }

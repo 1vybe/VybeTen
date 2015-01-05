@@ -29,7 +29,6 @@
 
 @property (nonatomic) NSArray *activeLocations;
 @property (nonatomic) NSArray *myLocations;
-@property (nonatomic) NSArray *savedVybes;
 
 //@property (nonatomic) SimpleInteractionManager *swipeInteractionManager;
 
@@ -61,7 +60,6 @@ static void *ZOTContext = &ZOTContext;
     self.objectsPerPage = 500;
     self.activeLocations = [NSArray array];
     self.myLocations = [NSArray array];
-    self.savedVybes = [NSArray array];
     
     _selectedMyLocationIndex = -1;
   }
@@ -575,13 +573,22 @@ static void *ZOTContext = &ZOTContext;
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
   if (editingStyle == UITableViewCellEditingStyleDelete) {
     PFObject *obj = [self vybeCellForIndexPath:indexPath];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[ZoneStore sharedInstance] deleteMyVybeInBackground:obj completionHandler:^(BOOL success) {
-      if (success) {
-        [self didDeleteMyVybe];
-      }
-      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    }];
+    
+    // NOTE: - Saved vybes only need to be deleted locally
+    NSString *localID = obj[@"uniqueId"];
+    if (localID && localID.length) {
+      [[VYBMyVybeStore sharedStore] deleteSavedVybe:obj];
+      [[ZoneStore sharedInstance] deleteSavedVybeLocally:obj];
+      [self didDeleteMyVybe];
+    } else {
+      [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+      [[ZoneStore sharedInstance] deleteMyVybeInBackground:obj completionHandler:^(BOOL success) {
+        if (success) {
+          [self didDeleteMyVybe];
+        }
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+      }];
+    }
   }
 }
 

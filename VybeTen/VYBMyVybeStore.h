@@ -18,6 +18,7 @@
 - (void)uploadCurrentVybe;
 
 - (NSArray *)savedVybes;
+- (void)deleteSavedVybe:(PFObject *)savedObj;
 
 
 //- (void)addVybe:(VYBMyVybe *)aVybe;

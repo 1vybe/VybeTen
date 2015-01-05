@@ -281,6 +281,24 @@
   return _currVybe;
 }
 
+- (void)deleteSavedVybe:(PFObject *)savedObj {
+  int idx = 0;
+  for (int i = 0; i < _vybesToUpload.count; i++) {
+    VYBVybe *vybeObj = _vybesToUpload[i];
+    NSString *localUniqueId = [vybeObj uniqueFileName];
+    if ( [localUniqueId isEqualToString:savedObj[@"uniqueId"]] ) {
+      idx = i;
+      [self clearLocalCacheForVybe:vybeObj];
+      break;
+    }
+  }
+  
+  [_vybesToUpload removeObjectAtIndex:idx];
+  [self saveChanges];
+  
+  
+}
+
 - (NSArray *)savedVybes {
   return [NSArray arrayWithArray:_vybesToUpload];
 }

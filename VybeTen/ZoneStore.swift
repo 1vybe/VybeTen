@@ -130,11 +130,9 @@ private let _zoneStoreSharedInstance = ZoneStore()
         zone.isFeatured = true
         if let timestamp = channel[2] as? NSDate {
           zone.fromDate = timestamp
-          println("featured zone time set")
         }
         if let thumbnail = channel[3] as? PFFile {
           zone.featuredThumbnail = thumbnail
-          println("featured zone thumbnail set")
         }
         self.addFeaturedZone(zone)
       }
@@ -443,35 +441,62 @@ private let _zoneStoreSharedInstance = ZoneStore()
     vybe.deleteInBackgroundWithBlock { (success: Bool, error: NSError!) -> Void in
       if error == nil {
         if success {
-          if let zone = self.unlockedZoneForVybe(vybe) {
-            var idx_remove: Int?
-            for index in 0...zone.myVybes.count {
-              if zone.myVybes[index].objectId == vybe.objectId {
-                idx_remove = index
-                break
-              }
-            }
-            
-            if idx_remove != nil {
-              zone.myVybes.removeAtIndex(idx_remove!)
-            }
-            
-            // Remove this unlocked zone from Activity screen because it has no vybe
-            if zone.myVybes.count == 0 {
-              var newUnlocked = [Zone]()
-              for zoneObj in self._unlockedZones {
-                if zoneObj.zoneID != zone.zoneID {
-                  newUnlocked += [zoneObj]
-                }
-              }
-              self._unlockedZones = newUnlocked
-            }
-          }
+          self.deleteSavedVybeLocally(vybe)
         }
         completionHandler(success: success)
       }
       else {
         completionHandler(success: false)
+      }
+    }
+  }
+  
+  func deleteSavedVybeLocally(vybe: PFObject) {
+    if let zone = self.unlockedZoneForVybe(vybe) {
+      
+      if zone.myVybes.count > 0 {
+        var indexOne: Int = 0
+        for index in 0...zone.myVybes.count - 1 {
+          let obj = zone.myVybes[index]
+          if let localId = obj["uniqueId"] as? String {
+            if let anotherLocalId = vybe["uniqueId"] as? String {
+              if localId == anotherLocalId {
+                indexOne = index
+                break
+              }
+            }
+          } else {
+            if obj.objectId == vybe.objectId {
+              indexOne = index
+              break
+            }
+          }
+        }
+        zone.myVybes.removeAtIndex(indexOne)
+      }
+      
+      if zone.savedVybes.count > 0 {
+        var indexTwo: Int = 0
+        for index in 0...zone.savedVybes.count - 1 {
+          if let localUniqueId = vybe["uniqueId"] as? String {
+            if zone.savedVybes[index].uniqueFileName == localUniqueId {
+              indexTwo = index
+              break
+            }
+          }
+        }
+        zone.savedVybes.removeAtIndex(indexTwo)
+      }
+      
+      // Remove this unlocked zone from Activity screen because it has no vybe
+      if zone.myVybes.count == 0 {
+        var newUnlocked = [Zone]()
+        for zoneObj in self._unlockedZones {
+          if zoneObj.zoneID != zone.zoneID {
+            newUnlocked += [zoneObj]
+          }
+        }
+        self._unlockedZones = newUnlocked
       }
     }
   }
