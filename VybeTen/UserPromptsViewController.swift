@@ -44,7 +44,8 @@ class UserPromptsViewController: UIViewController {
       self.promptView.setNeedsDisplay()
     } else {
       NSUserDefaults.standardUserDefaults().setObject(NSNumber(bool: true), forKey: kVYBUserDefaultsUserPromptsSeenKey)
-      self.navigationController?.popViewControllerAnimated(true)
+    
+      self.navigationController?.popViewControllerAnimated(false)
     }
   }
   
