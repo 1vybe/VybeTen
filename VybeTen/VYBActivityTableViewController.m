@@ -54,10 +54,6 @@ static void *ZOTContext = &ZOTContext;
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if (self) {
-    self.parseClassName = kVYBVybeClassKey;
-    self.paginationEnabled = NO;
-    self.pullToRefreshEnabled = YES;
-    self.objectsPerPage = 500;
     self.activeLocations = [NSArray array];
     self.myLocations = [NSArray array];
     
@@ -69,6 +65,10 @@ static void *ZOTContext = &ZOTContext;
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
+  UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+  [refreshControl addTarget:self action:@selector(reloadObjects) forControlEvents:UIControlEventValueChanged];
+  self.refreshControl = refreshControl;
   
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToTop:) name:UIApplicationWillEnterForegroundNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToTop:) name:VYBSwipeContainerControllerWillMoveToActivityScreenNotification object:nil];
@@ -106,7 +106,7 @@ static void *ZOTContext = &ZOTContext;
   }];
   
   [self updatePlayAllButton];
-  [self loadObjects];
+  [self reloadObjects];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -153,7 +153,6 @@ static void *ZOTContext = &ZOTContext;
 #pragma mark - Private
 
 - (void)getPermissionIfNeeded {
-  
   // iOS8
   if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
     // Check notification permission settings
@@ -203,18 +202,17 @@ static void *ZOTContext = &ZOTContext;
 #pragma mark - PFQueryTableView
 
 - (PFQuery *)queryForTable {
-  PFQuery *query = [PFQuery queryWithClassName:self.parseClassName];
+  PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
   [query whereKey:kVYBVybeUserKey equalTo:[PFUser currentUser]];
   [query includeKey:kVYBVybeUserKey];
   [query orderByDescending:kVYBVybeZoneNameKey];
   [query addDescendingOrder:kVYBVybeTimestampKey];
   [query setLimit:1000];
+  
   return query;
 }
 
-- (void)objectsDidLoad:(NSError *)error {
-  [super objectsDidLoad:error];
-  
+- (void)reloadObjects{
   // Update Activity count
   [[VYBCache sharedCache] refreshBumpsForMeInBackground:^(BOOL success) {
     if (success) {
@@ -222,23 +220,39 @@ static void *ZOTContext = &ZOTContext;
     }
   }];
   
-  [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
-    if (success) {
-      self.activeLocations = [[ZoneStore sharedInstance] activeAndFeaturedZones];
-      self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
+  PFQuery *query = [self queryForTable];
+  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    if (!error) {
+      [[ZoneStore sharedInstance] didFetchUnlockedVybes:objects completionHandler:^(BOOL success) {
+        if (success) {
+          self.activeLocations = [[ZoneStore sharedInstance] activeAndFeaturedZones];
+          self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
+          
+          NSString *locationCntText = (self.myLocations.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.myLocations.count] : [NSString stringWithFormat:@"%d Location", (int)self.myLocations.count];
+          NSString *vybeCntText = (objects.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)objects.count] : [NSString stringWithFormat:@"%d Vybe", (int)objects.count];
+          
+          self.countLabel.text = [NSString stringWithFormat:@"%@ - %@", locationCntText, vybeCntText];
+        }
+        
+        [self addSavedVybesToTable];
+        [self updatePlayAllButton];
+        [self.tableView reloadData];
+        
+        if (self.refreshControl.refreshing) {
+          [self.refreshControl endRefreshing];
+        }
+      }];
+    } else {
+      [self addSavedVybesToTable];
+      [self updatePlayAllButton];
+      [self.tableView reloadData];
       
-      NSString *locationCntText = (self.myLocations.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.myLocations.count] : [NSString stringWithFormat:@"%d Location", (int)self.myLocations.count];
-      NSString *vybeCntText = (self.objects.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)self.objects.count] : [NSString stringWithFormat:@"%d Vybe", (int)self.objects.count];
-      
-      self.countLabel.text = [NSString stringWithFormat:@"%@ - %@", locationCntText, vybeCntText];
-      
-
+      if (self.refreshControl.refreshing) {
+        [self.refreshControl endRefreshing];
+      }
     }
-    [self addSavedVybesToTable];
-    [self updatePlayAllButton];
-    [self.tableView reloadData];
   }];
-}
+ }
 
 #pragma mark UITableViewDelegate
 
@@ -750,12 +764,10 @@ static void *ZOTContext = &ZOTContext;
 {
   if (buttonIndex == 0) {
       [(VYBAppDelegate *)[UIApplication sharedApplication].delegate logOut];
-  }
-  else if (buttonIndex == 1) {
+  } else if (buttonIndex == 1) {
     BlockedUsersTableViewController *blockedUsersTable = [[UIStoryboard storyboardWithName:@"UnblockUser"bundle:nil] instantiateInitialViewController];
     [self.navigationController pushViewController:blockedUsersTable animated:NO];
-  }
-  else {
+  } else {
     
   }
 }

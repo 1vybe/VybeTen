@@ -26,11 +26,11 @@ class WelcomeManager: NSObject {
   
   func setUpParseEnvironment() {
     dispatch_async(parse_setup_queue, { () -> Void in
-//      Parse.enableLocalDatastore()
+      Parse.enableLocalDatastore()
       
       ParseCrashReporting.enable()
       
-      Parse.setApplicationId(PARSE_APPLICATION_ID_DEV, clientKey: PARSE_CLIENT_KEY_DEV)
+      Parse.setApplicationId(PARSE_APPLICATION_ID, clientKey: PARSE_CLIENT_KEY)
       
       // Clearing Push-noti Badge number
       var currentInstallation = PFInstallation.currentInstallation()

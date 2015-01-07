@@ -312,7 +312,7 @@
   NSDate *someTimeAgo = [NSDate dateWithTimeIntervalSinceNow:-60*60*24]; // 24 hour
   PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
   [query setLimit:1000];
-  [query setCachePolicy:kPFCachePolicyCacheElseNetwork];
+//  [query setCachePolicy:kPFCachePolicyCacheElseNetwork];
   [query includeKey:kVYBVybeUserKey];
   [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
   [query orderByAscending:kVYBVybeTimestampKey];

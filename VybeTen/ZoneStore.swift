@@ -26,7 +26,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
     var query = PFQuery(className: kVYBVybeClassKey)
     query.whereKey(kVYBVybeTimestampKey, greaterThanOrEqualTo: startTime)
     query.orderByAscending(kVYBVybeTimestampKey)
-    query.cachePolicy = kPFCachePolicyCacheElseNetwork
+//    query.cachePolicy = kPFCachePolicyCacheElseNetwork
     query.limit = 1000
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if error == nil {
