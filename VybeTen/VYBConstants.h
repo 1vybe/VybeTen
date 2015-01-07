@@ -134,6 +134,8 @@ extern NSString *const kVYBVybeZoneNameKey;
 extern NSString *const kVYBVybeZoneIDKey;
 extern NSString *const kVYBVybeZoneLatitudeKey;
 extern NSString *const kVYBVybeZoneLongitudeKey;
+extern NSString *const kVYBVybeHashTagsKey;
+
 /*
 extern NSString *const kVYBVybeTribeKey;
 extern NSString *const kVYBVybeCountryCodeKey;
@@ -151,6 +153,13 @@ extern NSString *const kVYBVybeAttributesCommentCountKey;
 extern NSString *const kVYBVybeAttributesCommentersKey;
 extern NSString *const kVYBVybeAttributesNearbyCountKey;
 
+#pragma mark - PFObject HashTag Class
+extern NSString *const kVYBHashTagClassKey;
+
+extern NSString *const kVYBHashTagNameKey;
+extern NSString *const kVYBHAshTagDisplayNameKey;
+extern NSString *const kVYBHashTagVybesKey;
+//extern NSString *const kVYBHashTagZoneKey;
 
 #pragma mark - PFObject Region Class
 // class key

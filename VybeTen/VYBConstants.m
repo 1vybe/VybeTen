@@ -93,24 +93,25 @@ NSString *const kVYBVybeZoneNameKey                             = @"zoneName";
 NSString *const kVYBVybeZoneIDKey                               = @"zoneID";
 NSString *const kVYBVybeZoneLatitudeKey                         = @"zoneLatitude";
 NSString *const kVYBVybeZoneLongitudeKey                        = @"zoneLongitude";
+NSString *const kVYBVybeHashTagsKey                             = @"hashTags";
 
-
-/*
- NSString *const kVYBVybeCountryCodeKey                          = @"countryCode";
- NSString *const kVYBVybeStateNameKey                            = @"stateName";
- NSString *const kVYBVybeCityNameKey                             = @"cityName";
-*/
-
-#pragma mark - Cached Photo Attributes
+#pragma mark - Cached Vybe Attributes
 // keys
-NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey = @"isLikedByCurrentUser";
-NSString *const kVYBVybeAttributesIsFlaggedByCurrentUserKey = @"isFlaggedByCurrentUser";
-NSString *const kVYBVybeAttributesLikeCountKey            = @"likeCount";
-NSString *const kVYBVybeAttributesLikersKey               = @"likers";
-NSString *const kVYBVybeAttributesCommentCountKey         = @"commentCount";
-NSString *const kVYBVybeAttributesCommentersKey           = @"commenters";
-NSString *const kVYBVybeAttributesNearbyCountKey         = @"nearbyCount";
+NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey         = @"isLikedByCurrentUser";
+NSString *const kVYBVybeAttributesIsFlaggedByCurrentUserKey       = @"isFlaggedByCurrentUser";
+NSString *const kVYBVybeAttributesLikeCountKey                    = @"likeCount";
+NSString *const kVYBVybeAttributesLikersKey                       = @"likers";
+NSString *const kVYBVybeAttributesCommentCountKey                 = @"commentCount";
+NSString *const kVYBVybeAttributesCommentersKey                   = @"commenters";
+NSString *const kVYBVybeAttributesNearbyCountKey                  = @"nearbyCount";
 
+#pragma mark - PFObject HashTag Class
+NSString *const kVYBHashTagClassKey                               = @"HashTag";
+
+NSString *const kVYBHashTagNameKey                                = @"name";
+NSString *const kVYBHashTagVybesKey                               = @"vybes";
+NSString *const kVYBHAshTagDisplayNameKey                         = @"displayName";
+//NSString *const kVYBHashTagZoneKey                                = @"zone";
 
 #pragma mark - PFObject Region Class
 // class key

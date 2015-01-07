@@ -21,6 +21,7 @@
 
 @property (nonatomic, weak) IBOutlet UIButton *rejectButton;
 @property (nonatomic, weak) IBOutlet UIView *overlayView;
+@property (nonatomic, weak) IBOutlet UIImageView *bottomBarImageView;
 @property (nonatomic, weak) IBOutlet UIButton *zoneButton;
 @property (nonatomic, weak) IBOutlet VYBPlayerView *playerView;
 
@@ -31,6 +32,7 @@
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *currItem;
 
+@property (nonatomic) SimpleTextField *captionTextField;
 @end
 
 @implementation VYBReplayViewController {
@@ -38,6 +40,8 @@
   NSString *_thumbnailPath;
   NSArray *_suggestions;
   AVURLAsset *currentAsset;
+  
+  BOOL _isEditingCaption;
 }
 
 - (void)dealloc {
@@ -92,6 +96,17 @@
   if (value) {
     [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
   }
+  
+  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addCaption:)];
+  [self.view addGestureRecognizer:tapGesture];
+  _isEditingCaption = NO;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
+  
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -107,6 +122,10 @@
   [super viewWillDisappear:animated];
   [self.player pause];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+  
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+
 }
 
 - (void)playerItemDidReachEnd {
@@ -232,6 +251,81 @@
   });
   [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait];
   [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+}
+
+- (void)addCaption:(UIGestureRecognizer *)recognizer {
+  if (_isEditingCaption) {
+    [self.captionTextField removeFromSuperview];
+    self.captionTextField = nil;
+    
+    [self.view endEditing:YES];
+  } else {
+    if (self.captionTextField.superview) {        // We only allow one hash tag for now
+      [self.captionTextField removeFromSuperview];
+    }
+    
+    self.captionTextField = [[SimpleTextField alloc] initWithFrame:CGRectMake(0.0, -30.0, self.view.bounds.size.width, 30.0)];
+    [self.captionTextField setDelegate:self];
+    
+    [self.overlayView addSubview:self.captionTextField];
+    [self.captionTextField becomeFirstResponder];
+  }
+}
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+  if (_isEditingCaption) {
+    return;
+  }
+  
+  NSDictionary *userInfo = [notification userInfo];
+  CGSize keyboardSize = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+  
+  CGRect newFrame = self.captionTextField.frame;
+  newFrame.origin.y = self.view.bounds.size.height - (keyboardSize.height + 30.0);
+  
+  [UIView beginAnimations:nil context:NULL];
+  [UIView setAnimationBeginsFromCurrentState:YES];
+  [UIView setAnimationDelay:0.1f];
+  [UIView setAnimationDuration:0.4f];
+  [self.captionTextField setFrame:newFrame];
+  [UIView commitAnimations];
+  
+  _isEditingCaption = YES;
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+  _isEditingCaption = NO;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+  if (self.captionTextField.text && self.captionTextField.text.length > 3) {
+    [[MyVybeStore sharedInstance] addHashTagForCurrentVybe:self.captionTextField.text];
+    
+    [self.captionTextField resignFirstResponder];
+    
+    CGRect newFrame = self.captionTextField.frame;
+    newFrame.origin.y = self.view.bounds.size.height - self.bottomBarImageView.bounds.size.height;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDelay:0.2f];
+    [UIView setAnimationDuration:0.2f];
+    [self.captionTextField setFrame:newFrame];
+    [UIView commitAnimations];
+    
+    return YES;
+  }
+  
+  return NO;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+  if ( [string isEqualToString:@" "] ) {
+    self.captionTextField.text = [self.captionTextField.text stringByAppendingString:@" #"];
+    return NO;
+  }
+  
+  return YES;
 }
 
 

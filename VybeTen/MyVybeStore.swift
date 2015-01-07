@@ -22,6 +22,15 @@ class MyVybeStore: NSObject {
     super.init()
   }
   
+  func addHashTagForCurrentVybe(tagText: String) {
+    let array = tagText.componentsSeparatedByString(" ")
+    for aTag in array {
+      if let tagName = aTag.componentsSeparatedByString("#").first {
+        
+      }
+    }
+  }
+  
   func myVybesArchivePath() -> String? {
     let array = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
     if let documentPath = array.first as? NSString {
