@@ -111,6 +111,19 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zab-iQ-jKU" userLabel="usernameButton">
+                            <rect key="frame" x="0.0" y="560" width="120" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="120" id="Mxr-Cr-rXg"/>
+                                <constraint firstAttribute="height" constant="40" id="Zvn-kp-9OK"/>
+                            </constraints>
+                            <state key="normal">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="usernameButtonPressed:" destination="-1" eventType="touchUpInside" id="tNp-UA-g6u"/>
+                            </connections>
+                        </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dec 28 12:28 PM" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPQ-0i-rrO" userLabel="timeLabel">
                             <rect key="frame" x="275" y="576" width="85" height="16"/>
                             <constraints>
@@ -296,6 +309,7 @@
                         <constraint firstAttribute="bottom" secondItem="KPb-Hj-SQM" secondAttribute="bottom" constant="12" id="BYo-tn-Kcu"/>
                         <constraint firstAttribute="bottom" secondItem="cDB-yi-w6C" secondAttribute="bottom" constant="10" id="DGg-VY-bJh"/>
                         <constraint firstItem="4CG-I4-bLA" firstAttribute="leading" secondItem="iVA-XT-CA4" secondAttribute="leading" id="DOW-N4-JAR"/>
+                        <constraint firstAttribute="bottom" secondItem="Zab-iQ-jKU" secondAttribute="bottom" id="GoD-Sb-cqN"/>
                         <constraint firstItem="4ff-7a-zVQ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="MgN-MG-gJ8"/>
                         <constraint firstItem="Mmg-dv-gdx" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="22" id="Nu1-Aw-cd6"/>
                         <constraint firstAttribute="trailing" secondItem="Pb2-69-N8y" secondAttribute="trailing" constant="15" id="Nzc-wT-5Gr"/>
@@ -308,6 +322,7 @@
                         <constraint firstItem="afv-fB-hBX" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="TVn-FP-yaC"/>
                         <constraint firstAttribute="centerX" secondItem="2xr-fh-a0w" secondAttribute="centerX" id="Uh5-9t-mur"/>
                         <constraint firstAttribute="centerY" secondItem="Pb2-69-N8y" secondAttribute="centerY" id="UkD-L9-WdT"/>
+                        <constraint firstItem="Zab-iQ-jKU" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="VEk-GY-ckF"/>
                         <constraint firstAttribute="centerX" secondItem="Mmg-dv-gdx" secondAttribute="centerX" id="dEC-ys-KiA"/>
                         <constraint firstAttribute="trailing" secondItem="UPQ-0i-rrO" secondAttribute="trailing" constant="15" id="dOg-jb-lEI"/>
                         <constraint firstItem="A15-cj-BXL" firstAttribute="trailing" secondItem="KPb-Hj-SQM" secondAttribute="trailing" constant="2" id="drU-aW-VJl"/>

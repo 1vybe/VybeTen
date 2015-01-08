@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-//TODO: Manage a pool to asynchronously download vybes using a queue
 #import "VYBPlayerViewController.h"
 #import <MotionOrientation@PTEz/MotionOrientation.h>
 #import <MBProgressHUD/MBProgressHUD.h>
@@ -48,20 +47,21 @@
 @property (nonatomic, weak) IBOutlet UIButton *thirdHashtag;
 @property (nonatomic) NSArray *hashtagButtons;
 
+- (IBAction)dismissButtonPressed;
+
 - (IBAction)goNextButtonPressed:(id)sender;
 - (IBAction)goPrevButtonPressed:(id)sender;
-- (IBAction)dismissButtonPressed;
-- (IBAction)optionsButtonPressed:(id)sender;
-
-- (IBAction)flagOverlayButtonPressed;
-- (IBAction)blockOverlayButtonPressed;
 
 - (IBAction)bmpButtonPressed:(id)sender;
+- (IBAction)usernameButtonPressed:(id)sender;
 
 - (IBAction)firstHashTagClicked:(id)sender;
 - (IBAction)secondHashTagClicked:(id)sender;
 - (IBAction)thirdHashTagClicked:(id)sender;
 
+- (IBAction)optionsButtonPressed:(id)sender;
+- (IBAction)flagOverlayButtonPressed;
+- (IBAction)blockOverlayButtonPressed;
 
 @property (nonatomic, weak) VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayer *currPlayer;
@@ -717,7 +717,7 @@
         if (!error) {
           VYBPlayerViewController *sPlayerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
           sPlayerVC.delegate = self;
-          [sPlayerVC playStream:[[objects reverseObjectEnumerator] allObjects]]; // b/c objects are ordered by descending
+          [sPlayerVC playStream:[[objects reverseObjectEnumerator] allObjects]]; // returned objects are ordered by descending
         } else {
           // Jump failed
         }
@@ -727,6 +727,24 @@
       // Jump failed
       [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }
+  }];
+}
+
+- (IBAction)usernameButtonPressed:(UIButton *)sender {
+  PFObject *currObj = _zoneVybes[_zoneCurrIdx];
+  PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+  [query whereKey:kVYBVybeUserKey equalTo:currObj[kVYBVybeUserKey]];
+  [query orderByDescending:kVYBVybeTimestampKey];
+  [query setLimit:12];
+  
+  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    if (!error) {
+      VYBPlayerViewController *sPlayerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+      sPlayerVC.delegate = self;
+      [sPlayerVC playStream:[[objects reverseObjectEnumerator] allObjects]]; // returned objects are ordered by descending
+    }
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
   }];
 }
 
@@ -772,6 +790,8 @@
       break;
   }
 }
+
+#pragma mark - Map
 
 - (void)presentMapViewController {
   PFObject *vybeObj = _zoneVybes[_zoneCurrIdx];
@@ -932,15 +952,6 @@
   }
 }
 
-#pragma mark - VYBAppDelegateNotification
-
-
-- (void)remoteNotificationReceived:(id)sender {
-  
-}
-
-
-#pragma mark - Map
 
 
 
