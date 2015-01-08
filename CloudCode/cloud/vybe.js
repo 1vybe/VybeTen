@@ -3,7 +3,7 @@ require('cloud/tribe');
 var _ = require('underscore');
 var Vybe = Parse.Object.extend('Vybe');
 var Activity = Parse.Object.extend('Activity')
-var HashTag = Parse.Object.extend('HashTag');
+var Hashtag = Parse.Object.extend('Hashtag');
 
 // Validate Vybes have a valid owner in the "user" pointer.
 Parse.Cloud.beforeSave('Vybe', function (request, response) {
@@ -39,10 +39,10 @@ Parse.Cloud.afterSave('Vybe', function (request) {
 
 
   console.log('lets update hashtags!!');
-  // Update the right HashTag object's relation('vybes')
-  var hashTags = request.object.get('hashTags');
-  _.each(hashTags, function (tagName) {    
-    var tagQuery = new Parse.Query('HashTag');
+  // Update the right Hashtag object's relation('vybes')
+  var hashtags = request.object.get('hashtags');
+  _.each(hashtags, function (tagName) {    
+    var tagQuery = new Parse.Query('Hashtag');
     tagQuery.equalTo('name_lowercase', tagName.toLowerCase());
     tagQuery.first().then(function (tag) {
       if (tag) {
@@ -51,7 +51,7 @@ Parse.Cloud.afterSave('Vybe', function (request) {
 
         tag.save();
       } else {
-        var newTag = new HashTag;
+        var newTag = new Hashtag;
         newTag.set('name', tagName);
         newTag.set('name_lowercase', tagName.toLowerCase());
         
