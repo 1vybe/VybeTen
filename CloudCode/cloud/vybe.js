@@ -3,6 +3,7 @@ require('cloud/tribe');
 var _ = require('underscore');
 var Vybe = Parse.Object.extend('Vybe');
 var Activity = Parse.Object.extend('Activity')
+var HashTag = Parse.Object.extend('HashTag');
 
 // Validate Vybes have a valid owner in the "user" pointer.
 Parse.Cloud.beforeSave('Vybe', function (request, response) {
@@ -23,31 +24,43 @@ Parse.Cloud.afterSave('Vybe', function (request) {
     return;
   }
 
-  if (request.object.get('isPublic')) {
-    // Set User's mostRecentVybe to this vybe
-    var currentUser = request.user;
-    currentUser.set('mostRecentVybe', request.object);
-    currentUser.save().then(
-      function(result) {
-        console.log('user most recent vybe updated');
-      },
-      function(error) {
-        console.log('user most recent vybe NOT updated');
-      }
-    );
-  }
-
   // Insert this new vybe to each user's freshFeed
   Parse.Cloud.useMasterKey();
   var query = new Parse.Query(Parse.User);
   query.notEqualTo('username', request.user.get('username'));
   query.each(function(user) {
-    console.log('feeding to ' + user.get('username'));
+    // console.log('feeding to ' + user.get('username'));
 
     var feed = user.relation('feed');
     feed.add(request.object);
     user.save();
-    console.log('successfully fed to ' + user.get('username'));
+    // console.log('successfully fed to ' + user.get('username'));
+  });
+
+
+  console.log('lets update hashtags!!');
+  // Update the right HashTag object's relation('vybes')
+  var hashTags = request.object.get('hashTags');
+  _.each(hashTags, function (tagName) {    
+    var tagQuery = new Parse.Query('HashTag');
+    tagQuery.equalTo('name_lowercase', tagName.toLowerCase());
+    tagQuery.first().then(function (tag) {
+      if (tag) {
+        var vybes = tag.relation('vybes');
+        vybes.add(request.object);
+
+        tag.save();
+      } else {
+        var newTag = new HashTag;
+        newTag.set('name', tagName);
+        newTag.set('name_lowercase', tagName.toLowerCase());
+        
+        var relation = newTag.relation('vybes');
+        relation.add(request.object);
+
+        newTag.save();
+      }
+    });
   });
 
 });
