@@ -25,7 +25,6 @@
 @interface VYBPlayerViewController ()
 @property (nonatomic, weak) IBOutlet UIButton *bmpButton;
 @property (nonatomic, weak) IBOutlet UILabel *bumpCountLabel;
-@property (nonatomic, weak) IBOutlet UILabel *bumpCountGhost;
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *firstOverlay;
@@ -35,20 +34,22 @@
 @property (nonatomic, weak) IBOutlet UIButton *dismissButton;
 @property (nonatomic, weak) IBOutlet UIButton *optionsButton;
 
-@property (nonatomic, weak) IBOutlet UIView *interactionOverlay;
 @property (nonatomic, weak) IBOutlet UIButton *goPrevButton;
 @property (nonatomic, weak) IBOutlet UIButton *goNextButton;
 @property (nonatomic, weak) IBOutlet UIButton *nextAerialButton;
 @property (nonatomic, weak) IBOutlet UIButton *prevAerialButton;
-@property (nonatomic, weak) IBOutlet UIButton *pauseButton;
 
 @property (nonatomic, weak) IBOutlet UIView *optionsOverlay;
 @property (nonatomic, weak) IBOutlet UIButton *flagOverlayButton;
 @property (nonatomic, weak) IBOutlet UIButton *blockOverlayButton;
 
+@property (nonatomic, weak) IBOutlet UILabel *firstHashtag;
+@property (nonatomic, weak) IBOutlet UILabel *secondHashtag;
+@property (nonatomic, weak) IBOutlet UILabel *thirdHashtag;
+@property (nonatomic) NSArray *hashtagLabels;
+
 - (IBAction)goNextButtonPressed:(id)sender;
 - (IBAction)goPrevButtonPressed:(id)sender;
-- (IBAction)pauseButtonPressed:(id)sender;
 - (IBAction)dismissButtonPressed;
 - (IBAction)optionsButtonPressed:(id)sender;
 
@@ -155,7 +156,7 @@
   [self.view insertSubview:playerView atIndex:0];
   
   // Add gestures on screen
-  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce:)];
+  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pauseButtonPressed:)];
   tapGesture.numberOfTapsRequired = 1;
   [self.view addGestureRecognizer:tapGesture];
   
@@ -165,8 +166,11 @@
   [[UIApplication sharedApplication].keyWindow addGestureRecognizer:longPressRecognizer];
   
   self.optionsOverlay.hidden = YES;
-  self.firstOverlay.hidden = YES;
-  self.bumpCountGhost.hidden = YES;
+
+  self.firstHashtag.hidden = YES;
+  self.secondHashtag.hidden = YES;
+  self.thirdHashtag.hidden = YES;
+  self.hashtagLabels = @[self.firstHashtag, self.secondHashtag, self.thirdHashtag];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -191,7 +195,6 @@
   
   if (self.currPlayer && self.currItem) {
     [self.currPlayer play];
-    self.pauseButton.selected = NO;
   }
 #ifdef DEBUG
 #else
@@ -507,14 +510,26 @@
 }
 
 - (void)syncUIElementsFor:(PFObject *)aVybe {
-  self.bumpCountGhost.hidden = YES;
-
   // Display location and time
   NSString *zoneName = aVybe[kVYBVybeZoneNameKey];
   if (!zoneName) {
     zoneName = @"Earth";
   }
   [self.locationLabel setText:zoneName];
+  
+  // Display hashtags
+  NSArray *hashtags = aVybe[kVYBVybeHashtagsKey];
+  if (hashtags) {
+    for (UILabel *label in self.hashtagLabels) {
+      label.hidden = YES;
+    }
+    for (int i = 0; i < hashtags.count; i++) {
+      NSString *tagText = [NSString stringWithFormat:@"#%@", hashtags[i]];
+      UILabel *label = (UILabel *)self.hashtagLabels[i];
+      label.text = tagText;
+      label.hidden = NO;
+    }
+  }
   
   NSString *timeString = [[NSString alloc] init];
   timeString = [VYBUtility timeStringForPlayer:aVybe[kVYBVybeTimestampKey]];
@@ -532,7 +547,6 @@
     if (!self.optionsOverlay.hidden) {
       self.optionsButton.selected = NO;
       self.optionsOverlay.hidden = YES;
-      self.interactionOverlay.hidden = NO;
     }
     self.optionsButton.hidden = YES;
   } else {
@@ -557,7 +571,6 @@
   }
   
   [self.currPlayer play];
-  self.pauseButton.selected = NO;
   self.lastTimePlayingAsset = [NSDate date];
 }
 
@@ -629,52 +642,12 @@
   [self playNextItem];
 }
 
-- (IBAction)pauseButtonPressed:(id)sender {
+- (void)pauseButtonPressed:(id)sender {
   if (self.currPlayer.rate == 0.0) {
-    self.pauseButton.selected = NO;
     [self.currPlayer play];
   }
   else {
-    self.pauseButton.selected = YES;
     [self.currPlayer pause];
-  }
-}
-
-- (void)tapOnce:(UIGestureRecognizer *)recognizer {
-  
-  CGPoint location = [recognizer locationInView:self.view];
-  if (CGRectContainsPoint(self.goNextButton.frame, location) ||
-      CGRectContainsPoint(self.goPrevButton.frame, location)) {
-    return;
-  }
-  
-  if (self.optionsOverlay.hidden) {
-    menuMode = !menuMode;
-    [self menuModeChanged];
-    if (menuMode) {
-      self.goPrevButton.hidden = (_zoneCurrIdx == 0);
-      self.goNextButton.hidden = (_zoneCurrIdx == _zoneVybes.count - 1);
-      [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(overlayTimerExpired:) userInfo:nil repeats:NO];
-    }
-  }
-}
-
-- (void)overlayTimerExpired:(NSTimer *)timer {
-  if (self.optionsOverlay.hidden) {
-    menuMode = NO;
-    [self menuModeChanged];
-  }
-  
-  
-  [timer invalidate];
-}
-
-
-- (void)menuModeChanged {
-  self.firstOverlay.hidden = !menuMode;
-  PFObject *currVybe = _zoneVybes[_zoneCurrIdx];
-  if (currVybe) {
-    [self updateBumpCountFor:currVybe];
   }
 }
 
@@ -743,13 +716,11 @@
     return;
   
   if (self.bmpButton.selected) {
-    self.bumpCountGhost.hidden = YES;
     [VYBUtility unlikeVybeInBackground:currVybe block:nil];
   } else {
     [VYBUtility likeVybeInBackground:currVybe block:nil];
     
     [UIView animateWithDuration:0.6 delay:0.2 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-      self.bumpCountGhost.hidden = NO;
     } completion:nil];
   }
   
@@ -762,7 +733,6 @@
   NSNumber *counter = [[VYBCache sharedCache] likeCountForVybe:aVybe];
   if (counter && [counter intValue]) {
     self.bumpCountLabel.text = [NSString stringWithFormat:@"%@", counter];
-    self.bumpCountGhost.text = ([counter intValue] > 1) ? @"Bumps" : @"Bump";
   }
   else {
     self.bumpCountLabel.text = @"";
@@ -772,12 +742,9 @@
 - (IBAction)optionsButtonPressed:(id)sender {
   if (self.optionsButton.selected) {
     self.optionsOverlay.hidden = YES;
-    self.interactionOverlay.hidden = NO;
-    [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(overlayTimerExpired:) userInfo:nil repeats:NO];
   }
   else {
     self.optionsOverlay.hidden = NO;
-    self.interactionOverlay.hidden = YES;
   }
   self.optionsButton.selected = !self.optionsButton.selected;
 }
@@ -818,12 +785,10 @@
       self.flagOverlayButton.selected = YES;
       
       [self.currPlayer play];
-      self.pauseButton.selected = NO;
       _userPausedFromOptions = NO;
     }];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
       [self.currPlayer play];
-      self.pauseButton.selected = NO;
       _userPausedFromOptions = NO;
     }];
     [alertController addAction:blockAction];
@@ -865,12 +830,10 @@
         [[VYBCache sharedCache] addBlockedUser:aUser forUser:[PFUser currentUser]];
         
         [self.currPlayer play];
-        self.pauseButton.selected = NO;
         _userPausedFromOptions = NO;
       }];
       UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
         [self.currPlayer play];
-        self.pauseButton.selected = NO;
         _userPausedFromOptions = NO;
       }];
       [alertController addAction:blockAction];
