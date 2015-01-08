@@ -333,9 +333,26 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+  const char * _char = [string cStringUsingEncoding:NSUTF8StringEncoding];
+  int isBackSpace = strcmp(_char, "\b");
+  
+  if (isBackSpace == -8) {
+    return YES;
+  }
+  
+  NSArray *tags = [textField.text componentsSeparatedByString:@"#"];
+  NSString *currentTag = tags.lastObject;
+  
+  
   if ( [string isEqualToString:@" "] ) {
     self.captionTextField.text = [self.captionTextField.text stringByAppendingString:@" #"];
+    
     return NO;
+  } else {
+    // each tag is limited to max 12 characters.
+    if (currentTag.length >= 12) {
+      return NO;
+    }
   }
   
   return YES;
