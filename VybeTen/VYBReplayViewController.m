@@ -340,6 +340,13 @@
     return YES;
   }
   
+  NSArray *forbiddenChars = @[@"!", @"@", @"#", @"$", @"%", @"^", @"&", @"*", @":", @";", @"'", @"\"", @"(", @")", @"<", @">", @"/", @","];
+  for (NSString *forbidden in forbiddenChars) {
+    if ( [forbidden isEqualToString:string] ) {
+      return NO;
+    }
+  }
+  
   NSArray *tags = [textField.text componentsSeparatedByString:@"#"];
   NSString *currentTag = tags.lastObject;
   
