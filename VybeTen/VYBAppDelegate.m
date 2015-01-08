@@ -13,7 +13,7 @@
 #import <GAITracker.h>
 #import <GAIFields.h>
 //NOTE: Take out this part when releasing to TESTFLIGHT
-//#import <HockeySDK/HockeySDK.h>
+#import <HockeySDK/HockeySDK.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
@@ -58,12 +58,12 @@
   
   //NOTE: Take out this part when releasing to TESTFLIGHT
   /* HockeyApp Initilization */
-//  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
-//  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
-//  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
-//  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
-//  [hockeyManager startManager];
-//  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
+  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
+  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
+  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
+  [hockeyManager startManager];
+  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
   
   [[WelcomeManager sharedInstance] setLaunchOptions:launchOptions];
   
