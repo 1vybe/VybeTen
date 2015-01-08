@@ -350,9 +350,11 @@
   NSArray *tags = [textField.text componentsSeparatedByString:@"#"];
   NSString *currentTag = tags.lastObject;
   
-  
   if ( [string isEqualToString:@" "] ) {
-    self.captionTextField.text = [self.captionTextField.text stringByAppendingString:@" #"];
+    // Currently only THREE hash tags can be tagged to a vybe.
+    if (tags.count < 4) { // tags first object is ""
+      self.captionTextField.text = [self.captionTextField.text stringByAppendingString:@" #"];
+    }
     
     return NO;
   } else {
