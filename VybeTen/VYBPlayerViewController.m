@@ -122,8 +122,6 @@
   
   BOOL _isFreshStream;
   
-  BOOL _userPausedFromOptions;
-    
   UILongPressGestureRecognizer *longPressRecognizer;
   
   DownloadQueue *downloadQueue;
@@ -156,8 +154,7 @@
   [self.view insertSubview:playerView atIndex:0];
   
   // Add gestures on screen
-  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pauseButtonPressed:)];
-  tapGesture.numberOfTapsRequired = 1;
+  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce:)];
   [self.view addGestureRecognizer:tapGesture];
   
   longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
@@ -566,10 +563,6 @@
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
   [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
   
-  if (_userPausedFromOptions) {
-    return;
-  }
-  
   [self.currPlayer play];
   self.lastTimePlayingAsset = [NSDate date];
 }
@@ -642,7 +635,12 @@
   [self playNextItem];
 }
 
-- (void)pauseButtonPressed:(id)sender {
+- (void)tapOnce:(id)sender {
+  // You can't pause/resume when you are in options menu
+  if ( ! self.optionsOverlay.hidden) {
+    return;
+  }
+  
   if (self.currPlayer.rate == 0.0) {
     [self.currPlayer play];
   }
@@ -742,9 +740,25 @@
 - (IBAction)optionsButtonPressed:(id)sender {
   if (self.optionsButton.selected) {
     self.optionsOverlay.hidden = YES;
+    self.goNextButton.hidden = NO;
+    self.goPrevButton.hidden = NO;
+    self.dismissButton.hidden = NO;
+    self.bmpButton.hidden = NO;
+    self.bumpCountLabel.hidden = NO;
+    self.timeLabel.hidden = NO;
+    
+    [self.currPlayer play];
   }
   else {
     self.optionsOverlay.hidden = NO;
+    self.goNextButton.hidden = YES;
+    self.goPrevButton.hidden = YES;
+    self.dismissButton.hidden = YES;
+    self.bmpButton.hidden = YES;
+    self.bumpCountLabel.hidden = YES;
+    self.timeLabel.hidden = YES;
+    
+    [self.currPlayer pause];
   }
   self.optionsButton.selected = !self.optionsButton.selected;
 }
@@ -783,19 +797,11 @@
       
       [[VYBCache sharedCache] setAttributesForVybe:currObj flaggedByCurrentUser:YES];
       self.flagOverlayButton.selected = YES;
-      
-      [self.currPlayer play];
-      _userPausedFromOptions = NO;
     }];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-      [self.currPlayer play];
-      _userPausedFromOptions = NO;
-    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
     [alertController addAction:blockAction];
     [alertController addAction:cancelAction];
     
-    [self.currPlayer pause];
-    _userPausedFromOptions = YES;
     [self presentViewController:alertController animated:YES completion:nil];
   }
 }
@@ -828,19 +834,11 @@
         [blacklist addObject:aUser];
         [[PFUser currentUser] saveInBackground];
         [[VYBCache sharedCache] addBlockedUser:aUser forUser:[PFUser currentUser]];
-        
-        [self.currPlayer play];
-        _userPausedFromOptions = NO;
       }];
-      UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        [self.currPlayer play];
-        _userPausedFromOptions = NO;
-      }];
+      UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
       [alertController addAction:blockAction];
       [alertController addAction:cancelAction];
-      
-      [self.currPlayer pause];
-      _userPausedFromOptions = YES;
+
       [self presentViewController:alertController animated:YES completion:nil];
     }
   }
