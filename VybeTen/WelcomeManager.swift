@@ -115,7 +115,7 @@ class WelcomeManager: NSObject {
       })
       
       // Pin HashTag objects
-      var tagQuery = PFQuery(className: kVYBHashTagClassKey)
+      var tagQuery = PFQuery(className: kVYBHashtagClassKey)
       tagQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
         if error == nil {
           PFObject.pinAllInBackground(result, block: nil)

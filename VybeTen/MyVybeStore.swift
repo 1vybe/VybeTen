@@ -30,7 +30,7 @@ class MyVybeStore: NSObject {
     
     super.init()
 
-    var localQuery = PFQuery(className: kVYBHashTagClassKey)
+    var localQuery = PFQuery(className: kVYBHashtagClassKey)
     localQuery.fromLocalDatastore()
     localQuery.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if error == nil {
@@ -99,7 +99,7 @@ class MyVybeStore: NSObject {
       }
      
       if currHashTags != nil {
-        vybeParseObj.setObject(currHashTags, forKey: kVYBVybeHashTagsKey)
+        vybeParseObj.setObject(currHashTags, forKey: kVYBVybeHashtagsKey)
       }
       
       currentVybeUploadTask = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in

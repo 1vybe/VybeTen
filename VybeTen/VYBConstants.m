@@ -92,7 +92,7 @@ NSString *const kVYBVybeZoneNameKey                             = @"zoneName";
 NSString *const kVYBVybeZoneIDKey                               = @"zoneID";
 NSString *const kVYBVybeZoneLatitudeKey                         = @"zoneLatitude";
 NSString *const kVYBVybeZoneLongitudeKey                        = @"zoneLongitude";
-NSString *const kVYBVybeHashTagsKey                             = @"hashTags";
+NSString *const kVYBVybeHashtagsKey                             = @"hashtags";
 
 #pragma mark - Cached Vybe Attributes
 // keys
@@ -104,11 +104,11 @@ NSString *const kVYBVybeAttributesCommentCountKey                 = @"commentCou
 NSString *const kVYBVybeAttributesCommentersKey                   = @"commenters";
 NSString *const kVYBVybeAttributesNearbyCountKey                  = @"nearbyCount";
 
-#pragma mark - PFObject HashTag Class
-NSString *const kVYBHashTagClassKey                               = @"HashTag";
+#pragma mark - PFObject Hashtag Class
+NSString *const kVYBHashtagClassKey                               = @"Hashtag";
 
-NSString *const kVYBHashTagNameKey                                = @"name";
-NSString *const kVYBHashTagVybesKey                               = @"vybes";
+NSString *const kVYBHashtagNameKey                                = @"name";
+NSString *const kVYBHashtagVybesKey                               = @"vybes";
 //NSString *const kVYBHashTagZoneKey                                = @"zone";
 
 #pragma mark - PFObject Region Class
