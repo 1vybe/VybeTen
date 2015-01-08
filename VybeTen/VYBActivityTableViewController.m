@@ -18,8 +18,6 @@
 
 #import "VYBPlayerViewController.h"
 
-#import "VYBMyVybeStore.h"
-
 @interface VYBActivityTableViewController () <UIAlertViewDelegate, VYBPlayerViewControllerDelegate, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
@@ -502,11 +500,11 @@ static void *ZOTContext = &ZOTContext;
     if (aVybe) {
       NSString *localID = aVybe[@"uniqueId"];
       if (localID && localID.length) {
-        if ([[VYBMyVybeStore sharedStore] currentUploadStatus] == CurrentUploadStatusUploading) {
+        if ( [[MyVybeStore sharedInstance] isUploadingSavedVybes] ) {
           [VYBUtility showToastWithImage:nil title:@"Upload in progress already :)"];
         }
         else {
-          [self uploadStatusButtonPressed:nil];
+          [[MyVybeStore sharedInstance] startUploadingSavedVybes];
         }
       }
       else {
@@ -591,7 +589,7 @@ static void *ZOTContext = &ZOTContext;
     // NOTE: - Saved vybes only need to be deleted locally
     NSString *localID = obj[@"uniqueId"];
     if (localID && localID.length) {
-      [[VYBMyVybeStore sharedStore] deleteSavedVybe:obj];
+      [[MyVybeStore sharedInstance] deleteSavedVybe:obj];
       [[ZoneStore sharedInstance] deleteSavedVybeLocally:obj];
       [self didDeleteMyVybe];
     } else {
@@ -657,7 +655,7 @@ static void *ZOTContext = &ZOTContext;
 }
 
 - (IBAction)uploadStatusButtonPressed:(id)sender {
-  [[VYBMyVybeStore sharedStore] startUploadingSavedVybes];
+  [[MyVybeStore sharedInstance] startUploadingSavedVybes];
 }
 
 - (void)uploadFailDetected {

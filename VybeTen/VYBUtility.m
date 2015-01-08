@@ -11,7 +11,6 @@
 #import "VYBUtility.h"
 
 #import "VYBCache.h"
-#import "VYBMyVybeStore.h"
 
 #import "AVAsset+VideoOrientation.h"
 #import "UIImage+FixOrientation.h"

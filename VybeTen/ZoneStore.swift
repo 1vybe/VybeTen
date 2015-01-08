@@ -475,7 +475,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
   }
   
   func addSavedVybesToUnlockedZones() {
-    if let savedVybes = VYBMyVybeStore.sharedStore().savedVybes() as? [VYBVybe] {
+    if let savedVybes = MyVybeStore.sharedInstance.savedVybes {
       for aVybe in savedVybes {
         if let zone = self.unlockedZoneForVybe(aVybe) {
           zone.addSavedVybe(aVybe)

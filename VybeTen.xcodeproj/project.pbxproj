@@ -21,7 +21,6 @@
 		0237C13719EEF44A00AC6F81 /* DefaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0237C13619EEF44A00AC6F81 /* DefaultPreferences.plist */; };
 		023E538D191F142000C3CF78 /* VYBCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 023E538C191F142000C3CF78 /* VYBCache.m */; };
 		023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 023F0FCD19AA6BFA0055D3B7 /* UIImage+FixOrientation.m */; };
-		024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 024520C7192FDB5F007B56A1 /* VYBMyVybe.m */; };
 		02512D081A0BEDA800155068 /* ZoneStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02512D071A0BEDA800155068 /* ZoneStore.swift */; };
 		025169AD18FAF955007F34B0 /* VYBLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 025169AC18FAF955007F34B0 /* VYBLabel.m */; };
 		025408E119BA0FD7009C7C71 /* NSArray+PFObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 025408E019BA0FD7009C7C71 /* NSArray+PFObject.m */; };
@@ -132,8 +131,6 @@
 		023E538C191F142000C3CF78 /* VYBCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCache.m; sourceTree = "<group>"; };
 		023F0FCC19AA6BFA0055D3B7 /* UIImage+FixOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FixOrientation.h"; sourceTree = "<group>"; };
 		023F0FCD19AA6BFA0055D3B7 /* UIImage+FixOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FixOrientation.m"; sourceTree = "<group>"; };
-		024520C6192FDB5F007B56A1 /* VYBMyVybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyVybe.h; sourceTree = "<group>"; };
-		024520C7192FDB5F007B56A1 /* VYBMyVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybe.m; sourceTree = "<group>"; };
 		02512D071A0BEDA800155068 /* ZoneStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoneStore.swift; sourceTree = "<group>"; };
 		025169AB18FAF955007F34B0 /* VYBLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBLabel.h; sourceTree = "<group>"; };
 		025169AC18FAF955007F34B0 /* VYBLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBLabel.m; sourceTree = "<group>"; };
@@ -367,8 +364,6 @@
 		027D924618EA85E800537822 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				024520C6192FDB5F007B56A1 /* VYBMyVybe.h */,
-				024520C7192FDB5F007B56A1 /* VYBMyVybe.m */,
 				02F36B2D1986F62800B7D842 /* VYBUser.h */,
 				02F36B2E1986F62800B7D842 /* VYBUser.m */,
 				026216B919EA43DE00EC6544 /* VybeTen-Bridging-Header.h */,
@@ -788,7 +783,6 @@
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				025408E419BA10E5009C7C71 /* NSMutableArray+PFObject.m in Sources */,
 				020BDABD1A008C7500B02824 /* VYBPortalButton.m in Sources */,
-				024520C8192FDB5F007B56A1 /* VYBMyVybe.m in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
 				88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */,

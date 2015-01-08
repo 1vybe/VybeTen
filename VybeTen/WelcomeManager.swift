@@ -30,7 +30,7 @@ class WelcomeManager: NSObject {
       
       ParseCrashReporting.enable()
       
-      Parse.setApplicationId(PARSE_APPLICATION_ID, clientKey: PARSE_CLIENT_KEY)
+      Parse.setApplicationId(PARSE_APPLICATION_ID_DEV, clientKey: PARSE_CLIENT_KEY_DEV)
       
       // Clearing Push-noti Badge number
       var currentInstallation = PFInstallation.currentInstallation()
@@ -111,6 +111,14 @@ class WelcomeManager: NSObject {
       blockQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
         if error == nil {
           VYBCache.sharedCache().setBlockedUsers(result, forUser: PFUser.currentUser())
+        }
+      })
+      
+      // Pin HashTag objects
+      var tagQuery = PFQuery(className: kVYBHashTagClassKey)
+      tagQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+        if error == nil {
+          PFObject.pinAllInBackground(result, block: nil)
         }
       })
       

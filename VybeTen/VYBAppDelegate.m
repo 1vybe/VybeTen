@@ -21,7 +21,6 @@
 #import "VYBPermissionViewController.h"
 #import "VYBActivityTableViewController.h"
 #import "VYBWelcomeViewController.h"
-#import "VYBMyVybeStore.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
 #import "Reachability.h"

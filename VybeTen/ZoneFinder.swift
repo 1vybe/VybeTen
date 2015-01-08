@@ -101,7 +101,7 @@ private let _sharedInstance = ZoneFinder()
     
     let currLocation = locations.last as CLLocation
     
-    if let currVybe = VYBMyVybeStore.sharedStore().currVybe() {
+    if let currVybe = MyVybeStore.sharedInstance.currVybe {
       currVybe.locationCL = currLocation
     }
     

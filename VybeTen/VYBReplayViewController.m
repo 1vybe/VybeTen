@@ -12,7 +12,6 @@
 #import "VYBPlayerView.h"
 #import "MBProgressHUD.h"
 #import "VYBUtility.h"
-//#import "VYBMyVybeStore.h"
 
 #import "VYBNavigationController.h"
 #import "AVAsset+VideoOrientation.h"
@@ -53,8 +52,8 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
   if (self) {
-    _videoPath = [[[VYBMyVybeStore sharedStore] currVybe] videoFilePath];
-    _thumbnailPath = [[[VYBMyVybeStore sharedStore] currVybe] thumbnailFilePath];
+    _videoPath = [[[MyVybeStore sharedInstance] currVybe] videoFilePath];
+    _thumbnailPath = [[[MyVybeStore sharedInstance] currVybe] thumbnailFilePath];
   }
   return self;
 }
@@ -66,9 +65,9 @@
   self.player = [[AVPlayer alloc] init];
   [self.playerView setPlayer:self.player];
   
-  Zone *lastZone = [[VYBMyVybeStore sharedStore] currZone];
+  Zone *lastZone = [[MyVybeStore sharedInstance] currZone];
   if (lastZone && [[ZoneFinder sharedInstance] suggestionsContainZone:lastZone]) {
-    [[VYBMyVybeStore sharedStore] setCurrZone:lastZone];
+    [[MyVybeStore sharedInstance] setCurrZone:lastZone];
     [self.zoneButton setTitle:lastZone.name forState:UIControlStateNormal];
     [self.zoneButton setBackgroundImage:nil forState:UIControlStateNormal];
   }
@@ -154,7 +153,7 @@
     UIAlertController *checkInController = [UIAlertController alertControllerWithTitle:@"Check In" message:@"Where are you vybing? :)" preferredStyle:UIAlertControllerStyleActionSheet];
     
     UIAlertAction *noTagAction = [UIAlertAction actionWithTitle:@"No Check In" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-      [[VYBMyVybeStore sharedStore] setCurrZone:nil];
+      [[MyVybeStore sharedInstance] setCurrZone:nil];
       [self.zoneButton setEnabled:YES];
       [self.zoneButton setTitle:@"Check-in location" forState:UIControlStateNormal];
       [self.zoneButton setBackgroundImage:[UIImage imageNamed:@"Checkin-btn"] forState:UIControlStateNormal];
@@ -163,7 +162,7 @@
     
     for (Zone *aZone in suggestions) {
       UIAlertAction *action = [UIAlertAction actionWithTitle:aZone.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        [[VYBMyVybeStore sharedStore] setCurrZone:aZone];
+        [[MyVybeStore sharedInstance] setCurrZone:aZone];
         [self.zoneButton setTitle:aZone.name forState:UIControlStateNormal];
         [self.zoneButton setBackgroundImage:nil forState:UIControlStateNormal];
         [self.zoneButton setEnabled:YES];
@@ -171,7 +170,7 @@
       [checkInController addAction:action];
     }
     if (checkInController.actions.count > 0) {
-      Zone *currZone = [[VYBMyVybeStore sharedStore] currZone];
+      Zone *currZone = [[MyVybeStore sharedInstance] currZone];
       if (currZone) {
         [checkInController setMessage:[NSString stringWithFormat:@"Your are in %@", currZone.name]];
       }
@@ -216,14 +215,14 @@
     Zone *zone = suggestions[buttonIndex];
     [self.zoneButton setTitle:zone.name forState:UIControlStateNormal];
     [self.zoneButton setBackgroundImage:nil forState:UIControlStateNormal];
-    [[VYBMyVybeStore sharedStore] setCurrZone:zone];
+    [[MyVybeStore sharedInstance] setCurrZone:zone];
   }
   [self.zoneButton setEnabled:YES];
 }
 
 
 - (IBAction)acceptButtonPressed:(id)sender {
-  [[VYBMyVybeStore sharedStore] uploadCurrentVybe];
+  [[MyVybeStore sharedInstance] uploadCurrentVybe];
   [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait];
   [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
@@ -260,7 +259,8 @@
     
     [self.view endEditing:YES];
   } else {
-    if (self.captionTextField.superview) {        // We only allow one hash tag for now
+    if (self.captionTextField.superview) {
+      [[MyVybeStore sharedInstance] clearCurrHashTags];
       [self.captionTextField removeFromSuperview];
     }
     
@@ -312,6 +312,19 @@
     [UIView setAnimationDuration:0.2f];
     [self.captionTextField setFrame:newFrame];
     [UIView commitAnimations];
+    
+    
+    // MyVybeStore.addHashTagForCurrentVybe() filters hash tags
+    NSArray *filtered = [[MyVybeStore sharedInstance] currHashTags];
+    NSString *filteredHashTagsText = @"";
+    for (NSString *tagName in filtered) {
+      filteredHashTagsText = [filteredHashTagsText stringByAppendingString:@"#"];
+      filteredHashTagsText = [filteredHashTagsText stringByAppendingString:tagName];
+      if (![tagName isEqual:filtered.lastObject]) {
+        filteredHashTagsText = [filteredHashTagsText stringByAppendingString:@" "];
+      }
+    }
+    self.captionTextField.text = filteredHashTagsText;
     
     return YES;
   }

@@ -18,7 +18,6 @@
 #import "VYBActiveButton.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
-#import "VYBMyVybeStore.h"
 
 #import "VybeTen-Swift.h"
 
@@ -31,14 +30,12 @@
 @property (nonatomic, weak) IBOutlet UIButton *activityButton;
 @property (nonatomic, weak) IBOutlet UIButton *recordButton;
 @property (nonatomic, weak) IBOutlet UIImageView *focusTarget;
-//@property (nonatomic, weak) IBOutlet CircleProgressView *uploadProgressView;
 
 - (IBAction)activityButtonPressed:(id)sender;
 - (IBAction)flipButtonPressed:(id)sender;
 - (IBAction)flashButtonPressed:(id)sender;
 - (IBAction)recordButtonPressed:(id)sender;
 
-//@property (nonatomic) VYBMyVybe *currVybe;
 @property (nonatomic) VYBCapturePipeline *capturePipeline;
 
 @end
@@ -149,7 +146,7 @@ static void *XYZContext = &XYZContext;
     if ( [[UIDevice currentDevice] isMultitaskingSupported] )
       _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
     
-    [[VYBMyVybeStore sharedStore] prepareNewVybe];
+    [[MyVybeStore sharedInstance] prepareNewVybe];
     
     [[ZoneFinder sharedInstance] findZoneFromCurrentLocationInBackground];
     
@@ -184,11 +181,14 @@ static void *XYZContext = &XYZContext;
   [[UIApplication sharedApplication] endBackgroundTask:_backgroundRecordingID];
   _backgroundRecordingID = UIBackgroundTaskInvalid;
   
-  VYBVybe *currVybe = [[VYBMyVybeStore sharedStore] currVybe];
-  [VYBUtility saveThumbnailImageForVybe:currVybe];
-  
-  VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] initWithNibName:@"VYBReplayViewController" bundle:nil];
-  [self presentViewController:replayVC animated:NO completion:nil];
+  VYBVybe *currVybe = [[MyVybeStore sharedInstance] currVybe];
+  if (currVybe) {
+    [VYBUtility saveThumbnailImageForVybe:currVybe];
+    
+    VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] initWithNibName:@"VYBReplayViewController" bundle:nil];
+    [self presentViewController:replayVC animated:NO completion:nil];
+  }
+
 }
 
 #pragma mark - VYBCapturePipelineDelegate

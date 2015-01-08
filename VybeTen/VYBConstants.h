@@ -71,8 +71,6 @@ extern NSString *const VYBUtilityVybesLoadedNotification;
 extern NSString *const VYBUtilityActivityCountUpdatedNotification;
 extern NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification;
 
-extern NSString *const VYBMyVybeStoreLocationFetchedNotification;
-
 extern NSString *const VYBSwipeContainerControllerWillMoveToActivityScreenNotification;
 
 
@@ -157,7 +155,6 @@ extern NSString *const kVYBVybeAttributesNearbyCountKey;
 extern NSString *const kVYBHashTagClassKey;
 
 extern NSString *const kVYBHashTagNameKey;
-extern NSString *const kVYBHAshTagDisplayNameKey;
 extern NSString *const kVYBHashTagVybesKey;
 //extern NSString *const kVYBHashTagZoneKey;
 

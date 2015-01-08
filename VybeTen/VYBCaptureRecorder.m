@@ -8,8 +8,9 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "VYBCaptureRecorder.h"
-#import "VYBMyVybeStore.h"
 #import "VYBUtility.h"
+
+#import "VybeTen-Swift.h"
 
 typedef NS_ENUM (NSInteger,VYBRecorderStatus) {
     VYBRecorderStatusIdle = 0,
@@ -68,7 +69,7 @@ typedef NS_ENUM (NSInteger,VYBRecorderStatus) {
     // writer setup queue
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         NSError *error = nil;
-        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[[[VYBMyVybeStore sharedStore] currVybe] videoFilePath]];
+        NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[[[MyVybeStore sharedInstance] currVybe] videoFilePath]];
         _assetWriter = [[AVAssetWriter alloc] initWithURL:outputURL fileType:AVFileTypeMPEG4 error:&error];
         NSParameterAssert(_assetWriter);
         

@@ -19,7 +19,6 @@ NSString *const VYBUtilityVybesLoadedNotification = @"com.vybe.app.utility.vybes
 NSString *const VYBUtilityActivityCountUpdatedNotification = @"com.vybe.app.utility.activityCountUpdated";
 NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification     = @"com.vybe.app.utility.userLikedUnlikedVybeCallbackFinished";
 NSString *const VYBCacheFreshVybeCountChangedNotification       = @"com.vybe.app.cache.freshVybeCountChanged";
-NSString *const VYBMyVybeStoreLocationFetchedNotification       = @"com.vybe.app.myvybestore.locationFetched";
 NSString *const VYBSwipeContainerControllerWillMoveToActivityScreenNotification = @"com.vybe.app.swipeContainerController.willMoveToActivityScreen";
 NSString *const VYBCacheRefreshedBumpActivitiesForCurrentUser = @"com.vybe.app.cache.refreshedBumpActivitiesForCurrentUser";
 
@@ -110,7 +109,6 @@ NSString *const kVYBHashTagClassKey                               = @"HashTag";
 
 NSString *const kVYBHashTagNameKey                                = @"name";
 NSString *const kVYBHashTagVybesKey                               = @"vybes";
-NSString *const kVYBHAshTagDisplayNameKey                         = @"displayName";
 //NSString *const kVYBHashTagZoneKey                                = @"zone";
 
 #pragma mark - PFObject Region Class
