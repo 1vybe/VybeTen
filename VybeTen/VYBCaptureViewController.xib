@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -41,8 +40,18 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <state key="selected" image="ACTIVITY_save2"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KMG-Zj-4bK" userLabel="activityAerial">
+                    <rect key="frame" x="420" y="0.0" width="60" height="60"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="CJf-kP-EOC"/>
+                        <constraint firstAttribute="width" constant="60" id="iff-dO-yBh"/>
+                    </constraints>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
                     <connections>
-                        <action selector="activityButtonPressed:" destination="-1" eventType="touchUpInside" id="Q7F-jd-feC"/>
+                        <action selector="activityButtonPressed:" destination="-1" eventType="touchUpInside" id="Epo-b6-FeS"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jPK-KL-Kst" userLabel="flashButton">
@@ -55,8 +64,18 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <state key="selected" image="capture_flash_on"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RCW-bB-hzg" userLabel="flashAerial">
+                    <rect key="frame" x="420" y="420" width="60" height="60"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="Gwi-IS-eaQ"/>
+                        <constraint firstAttribute="width" constant="60" id="HXg-JW-Kxk"/>
+                    </constraints>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
                     <connections>
-                        <action selector="flashButtonPressed:" destination="-1" eventType="touchUpInside" id="uRm-bw-HO3"/>
+                        <action selector="flashButtonPressed:" destination="-1" eventType="touchUpInside" id="6PE-YW-5kL"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iEb-4Z-c7N" userLabel="recordButton">
@@ -83,8 +102,18 @@
                     <state key="normal" image="capture_flip">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pbx-tR-l3x" userLabel="flipAerial">
+                    <rect key="frame" x="0.0" y="420" width="60" height="60"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="ASJ-rf-a6b"/>
+                        <constraint firstAttribute="width" constant="60" id="wxB-X7-QTc"/>
+                    </constraints>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
                     <connections>
-                        <action selector="flipButtonPressed:" destination="-1" eventType="touchUpInside" id="ql3-4B-Gaq"/>
+                        <action selector="flipButtonPressed:" destination="-1" eventType="touchUpInside" id="tw1-mL-Pz1"/>
                     </connections>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="FocusTarget" translatesAutoresizingMaskIntoConstraints="NO" id="DFf-gO-4yf" userLabel="focusTarget">
@@ -94,15 +123,21 @@
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="jPK-KL-Kst" secondAttribute="bottom" constant="15" id="0vY-vj-zsY"/>
                 <constraint firstItem="rNG-mo-RpY" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="1c6-8l-wbS"/>
+                <constraint firstAttribute="bottom" secondItem="Pbx-tR-l3x" secondAttribute="bottom" id="3OC-vJ-orN"/>
                 <constraint firstAttribute="bottom" secondItem="7vo-Gu-Tx0" secondAttribute="bottom" constant="15" id="4sY-AC-3Cp"/>
                 <constraint firstItem="7vo-Gu-Tx0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="8yM-kf-bpg"/>
                 <constraint firstAttribute="centerX" secondItem="iEb-4Z-c7N" secondAttribute="centerX" id="BpA-Sz-xjK"/>
                 <constraint firstAttribute="bottom" secondItem="pxE-bC-V0j" secondAttribute="bottom" id="IRP-AY-55g"/>
                 <constraint firstAttribute="trailing" secondItem="pxE-bC-V0j" secondAttribute="trailing" id="LUG-Zv-uvJ"/>
                 <constraint firstAttribute="trailing" secondItem="jPK-KL-Kst" secondAttribute="trailing" constant="15" id="NZ2-vd-iqU"/>
+                <constraint firstAttribute="trailing" secondItem="RCW-bB-hzg" secondAttribute="trailing" id="O5g-36-IPg"/>
                 <constraint firstItem="pxE-bC-V0j" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Om9-lP-1hV"/>
+                <constraint firstItem="KMG-Zj-4bK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="T76-wK-Obd"/>
                 <constraint firstItem="pxE-bC-V0j" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Td5-M7-CfT"/>
+                <constraint firstAttribute="trailing" secondItem="KMG-Zj-4bK" secondAttribute="trailing" id="X3F-EQ-EmA"/>
                 <constraint firstAttribute="bottom" secondItem="iEb-4Z-c7N" secondAttribute="bottom" constant="20" id="eCK-HP-ib5"/>
+                <constraint firstAttribute="bottom" secondItem="RCW-bB-hzg" secondAttribute="bottom" id="jfG-Jy-TK3"/>
+                <constraint firstItem="Pbx-tR-l3x" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="rKg-gl-GTr"/>
                 <constraint firstAttribute="trailing" secondItem="rNG-mo-RpY" secondAttribute="trailing" constant="15" id="s24-0h-PF9"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
