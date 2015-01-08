@@ -22,7 +22,7 @@
 
 #import "VybeTen-Swift.h"
 
-@interface VYBPlayerViewController ()
+@interface VYBPlayerViewController () <VYBPlayerViewControllerDelegate>
 @property (nonatomic, weak) IBOutlet UIButton *bmpButton;
 @property (nonatomic, weak) IBOutlet UILabel *bumpCountLabel;
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
@@ -43,10 +43,10 @@
 @property (nonatomic, weak) IBOutlet UIButton *flagOverlayButton;
 @property (nonatomic, weak) IBOutlet UIButton *blockOverlayButton;
 
-@property (nonatomic, weak) IBOutlet UILabel *firstHashtag;
-@property (nonatomic, weak) IBOutlet UILabel *secondHashtag;
-@property (nonatomic, weak) IBOutlet UILabel *thirdHashtag;
-@property (nonatomic) NSArray *hashtagLabels;
+@property (nonatomic, weak) IBOutlet UIButton *firstHashtag;
+@property (nonatomic, weak) IBOutlet UIButton *secondHashtag;
+@property (nonatomic, weak) IBOutlet UIButton *thirdHashtag;
+@property (nonatomic) NSArray *hashtagButtons;
 
 - (IBAction)goNextButtonPressed:(id)sender;
 - (IBAction)goPrevButtonPressed:(id)sender;
@@ -57,6 +57,11 @@
 - (IBAction)blockOverlayButtonPressed;
 
 - (IBAction)bmpButtonPressed:(id)sender;
+
+- (IBAction)firstHashTagClicked:(id)sender;
+- (IBAction)secondHashTagClicked:(id)sender;
+- (IBAction)thirdHashTagClicked:(id)sender;
+
 
 @property (nonatomic, weak) VYBPlayerView *currPlayerView;
 @property (nonatomic) AVPlayer *currPlayer;
@@ -167,7 +172,7 @@
   self.firstHashtag.hidden = YES;
   self.secondHashtag.hidden = YES;
   self.thirdHashtag.hidden = YES;
-  self.hashtagLabels = @[self.firstHashtag, self.secondHashtag, self.thirdHashtag];
+  self.hashtagButtons = @[self.firstHashtag, self.secondHashtag, self.thirdHashtag];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -517,14 +522,14 @@
   // Display hashtags
   NSArray *hashtags = aVybe[kVYBVybeHashtagsKey];
   if (hashtags) {
-    for (UILabel *label in self.hashtagLabels) {
-      label.hidden = YES;
+    for (UIButton *tagButton in self.hashtagButtons) {
+      tagButton.hidden = YES;
     }
     for (int i = 0; i < hashtags.count; i++) {
       NSString *tagText = [NSString stringWithFormat:@"#%@", hashtags[i]];
-      UILabel *label = (UILabel *)self.hashtagLabels[i];
-      label.text = tagText;
-      label.hidden = NO;
+      UIButton *tagButton = (UIButton *)self.hashtagButtons[i];
+      [tagButton setTitle:tagText forState:UIControlStateNormal];
+      tagButton.hidden = NO;
     }
   }
   
@@ -649,6 +654,61 @@
   }
 }
 
+- (IBAction)firstHashTagClicked:(id)sender {
+  NSString *hashtag = [(UIButton *)self.hashtagButtons[0] titleLabel].text;
+  [self jumpToStreamFor:hashtag];
+}
+
+- (IBAction)secondHashTagClicked:(id)sender {
+  NSString *hashtag = [(UIButton *)self.hashtagButtons[1] titleLabel].text;
+  [self jumpToStreamFor:hashtag];
+}
+
+- (IBAction)thirdHashTagClicked:(id)sender {
+  NSString *hashtag = [(UIButton *)self.hashtagButtons[2] titleLabel].text;
+  [self jumpToStreamFor:hashtag];
+}
+
+- (void)jumpToStreamFor:(NSString *)hashtag {
+  [self.currPlayer pause];
+  
+  NSString *tagName = [hashtag substringFromIndex:1].lowercaseString;
+  
+  PFQuery *query = [PFQuery queryWithClassName:kVYBHashtagClassKey];
+  [query whereKey:kVYBHashtagLowercaseKey equalTo:tagName];
+
+  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+  [query getFirstObjectInBackgroundWithBlock:^(PFObject *tagObject, NSError *error) {
+    if (!error) {
+      PFRelation *vybes = tagObject[kVYBHashtagVybesKey];
+      PFQuery *sQuery = vybes.query;
+      [sQuery includeKey:kVYBVybeUserKey];
+      [sQuery orderByDescending:kVYBVybeTimestampKey];
+      [sQuery setLimit:12];
+      [sQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+          VYBPlayerViewController *sPlayerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+          sPlayerVC.delegate = self;
+          [sPlayerVC playStream:[[objects reverseObjectEnumerator] allObjects]]; // b/c objects are ordered by descending
+        } else {
+          // Jump failed
+        }
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+      }];
+    } else {
+      // Jump failed
+      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }
+  }];
+}
+
+- (void)playerViewController:(VYBPlayerViewController *)playerVC didFinishSetup:(BOOL)ready {
+  if (ready) {
+    [self presentViewController:playerVC animated:YES completion:nil];
+  }
+}
+
+
 /**
  * User Interactions
  **/
@@ -681,8 +741,6 @@
     default:
       break;
   }
-
-
 }
 
 - (void)presentMapViewController {
@@ -830,7 +888,7 @@
       UIAlertAction *blockAction = [UIAlertAction actionWithTitle:@"Block" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         self.blockOverlayButton.selected = YES;
         
-        PFRelation *blacklist = [[PFUser currentUser] relationForKey:kVYBUserBlockedUsersKey];
+      PFRelation *blacklist = [[PFUser currentUser] relationForKey:kVYBUserBlockedUsersKey];
         [blacklist addObject:aUser];
         [[PFUser currentUser] saveInBackground];
         [[VYBCache sharedCache] addBlockedUser:aUser forUser:[PFUser currentUser]];

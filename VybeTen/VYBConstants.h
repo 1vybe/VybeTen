@@ -156,6 +156,7 @@ extern NSString *const kVYBHashtagClassKey;
 
 extern NSString *const kVYBHashtagNameKey;
 extern NSString *const kVYBHashtagVybesKey;
+extern NSString *const kVYBHashtagLowercaseKey;
 //extern NSString *const kVYBHashTagZoneKey;
 
 #pragma mark - PFObject Region Class

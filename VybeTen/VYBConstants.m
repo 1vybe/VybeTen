@@ -109,6 +109,7 @@ NSString *const kVYBHashtagClassKey                               = @"Hashtag";
 
 NSString *const kVYBHashtagNameKey                                = @"name";
 NSString *const kVYBHashtagVybesKey                               = @"vybes";
+NSString *const kVYBHashtagLowercaseKey                           = @"name_lowercase";
 //NSString *const kVYBHashTagZoneKey                                = @"zone";
 
 #pragma mark - PFObject Region Class
