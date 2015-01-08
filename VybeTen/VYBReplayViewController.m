@@ -337,7 +337,11 @@
   int isBackSpace = strcmp(_char, "\b");
   
   if (isBackSpace == -8) {
-    return YES;
+    if ( [textField.text isEqualToString:@"#"] ) {
+      return NO;
+    } else {
+      return YES;
+    }
   }
   
   NSArray *forbiddenChars = @[@"!", @"@", @"#", @"$", @"%", @"^", @"&", @"*", @":", @";", @"'", @"\"", @"(", @")", @"<", @">", @"/", @","];
