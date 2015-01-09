@@ -168,6 +168,8 @@
   [[UIApplication sharedApplication].keyWindow addGestureRecognizer:longPressRecognizer];
   
   self.optionsOverlay.hidden = YES;
+  self.goNextButton.hidden = YES;
+  self.goPrevButton.hidden = YES;
 
   self.firstHashtag.hidden = YES;
   self.secondHashtag.hidden = YES;
@@ -505,7 +507,6 @@
   return YES;
 }
 
-
 - (void)didReceiveMemoryWarning
 {
   [super didReceiveMemoryWarning];
@@ -574,6 +575,20 @@
 
 - (IBAction)goNextButtonPressed:(id)sender {
   [self playNextItem];
+  
+  [UIView animateWithDuration:0.7 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+    self.goNextButton.alpha = 0.0;
+    self.goPrevButton.alpha = 0.0;
+  } completion:^(BOOL finished) {
+    if (finished) {
+      self.goNextButton.alpha = 1.0;
+      self.goPrevButton.alpha = 1.0;
+      
+      self.goNextButton.hidden = YES;
+      self.goPrevButton.hidden = YES;
+    }
+  }];
+
 }
 
 - (void)playNextItem {
@@ -606,6 +621,21 @@
     [self playPrevItem];
   } else {
     [self playCurrentItemAgain];
+  }
+  
+  if (!self.goPrevButton.hidden) {
+    [UIView animateWithDuration:0.7 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+      self.goNextButton.alpha = 0.0;
+      self.goPrevButton.alpha = 0.0;
+    } completion:^(BOOL finished) {
+      if (finished) {
+        self.goNextButton.alpha = 1.0;
+        self.goPrevButton.alpha = 1.0;
+    
+        self.goNextButton.hidden = YES;
+        self.goPrevButton.hidden = YES;
+      }
+    }];
   }
 }
 
@@ -648,9 +678,15 @@
   
   if (self.currPlayer.rate == 0.0) {
     [self.currPlayer play];
+    
+    self.goPrevButton.hidden = YES;
+    self.goNextButton.hidden = YES;
   }
   else {
     [self.currPlayer pause];
+    
+    self.goPrevButton.hidden = NO;
+    self.goNextButton.hidden = NO;
   }
 }
 
@@ -798,8 +834,7 @@
 - (IBAction)optionsButtonPressed:(id)sender {
   if (self.optionsButton.selected) {
     self.optionsOverlay.hidden = YES;
-    self.goNextButton.hidden = NO;
-    self.goPrevButton.hidden = NO;
+    
     self.dismissButton.hidden = NO;
     self.bmpButton.hidden = NO;
     self.bumpCountLabel.hidden = NO;
@@ -809,6 +844,7 @@
   }
   else {
     self.optionsOverlay.hidden = NO;
+    
     self.goNextButton.hidden = YES;
     self.goPrevButton.hidden = YES;
     self.dismissButton.hidden = YES;
