@@ -149,6 +149,7 @@ $(function() {
       "stereo": "stereo",
       "regency": "regency",
       "mmelee": "mmelee",
+      "ncg": "ncg",
       "13percent": "thirteenPercent",
       "*path": "newyears",
     },
@@ -171,6 +172,10 @@ $(function() {
 
     newyears: function() {
       state.set({ location: '', time: '2014-12-31T10:00:00.000Z' });
+    },
+
+    ncg: function() {
+      state.set({ location: 'New City Gas' });
     },
 
     thirteenPercent: function() {
