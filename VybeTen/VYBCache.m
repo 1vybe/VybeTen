@@ -425,17 +425,6 @@
   return [NSNumber numberWithInt:0];
 }
 
-- (NSNumber *)tribeCountForUser:(PFUser *)user {
-  NSDictionary *attributes = [self attributesForUser:user];
-  if (attributes) {
-    NSNumber *cnt = [attributes objectForKey:kVYBUserAttributesTribeCountKey];
-    if (cnt) {
-      return cnt;
-    }
-  }
-  return [NSNumber numberWithInt:0];
-}
-
 - (BOOL)followStatusForUser:(PFUser *)user {
   NSDictionary *attributes = [self attributesForUser:user];
   if (attributes) {
@@ -451,38 +440,15 @@
   return nil;
 }
 
-- (PFObject *)syncTribeForUser:(PFUser *)user {
-  NSDictionary *attributes = [self attributesForUser:user];
-  if (attributes) {
-    PFObject *tribe = [attributes objectForKey:kVYBUserAttributesSyncTribeKey];
-    if (tribe) {
-      return tribe;
-    }
-  }
-  return nil;
-}
-
 - (void)setVybeCount:(NSNumber *)count user:(PFUser *)user {
   NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
   [attributes setObject:count forKey:kVYBUserAttributesVybeCountKey];
   [self setAttributes:attributes forUser:user];
 }
 
-- (void)setTribeCount:(NSNumber *)count user:(PFUser *)user {
-  NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
-  [attributes setObject:count forKey:kVYBUserAttributesTribeCountKey];
-  [self setAttributes:attributes forUser:user];
-}
-
 - (void)setFollowStatus:(BOOL)following user:(PFUser *)user {
   NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
   [attributes setObject:[NSNumber numberWithBool:following] forKey:kVYBUserAttributesIsFollowedByCurrentUserKey];
-  [self setAttributes:attributes forUser:user];
-}
-
-- (void)setSyncTribe:(PFObject *)tribe user:(PFUser *)user {
-  NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self attributesForUser:user]];
-  [attributes setObject:tribe forKey:kVYBUserAttributesSyncTribeKey];
   [self setAttributes:attributes forUser:user];
 }
 

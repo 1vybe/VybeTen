@@ -54,7 +54,6 @@ NSString *const kVYBUserLastVybedZoneKey                        = @"lastVybedZon
 NSString *const kVYBUserLastVybedTimeKey                        = @"lastVybedTime";
 NSString *const kVYBUserFreshFeedKey                            = @"freshFeed";
 NSString *const kVYBUserLastRefreshedKey                        = @"lastRefreshed";
-NSString *const kVYBUserTribeKey                                = @"tribe";
 NSString *const kVYBUserBlockedUsersKey                         = @"blockedUsers";
 NSString *const kVYBUserTermsAgreedKey                          = @"termsAgreed";
 NSString *const kVYBUserPromptsSeenKey                          = @"userPromptsSeen";
@@ -80,7 +79,6 @@ NSString *const kVYBVybeClassKey                                = @"Vybe";
 // field keys
 NSString *const kVYBVybeVideoKey                                = @"video";
 NSString *const kVYBVybeThumbnailKey                            = @"thumbnail";
-NSString *const kVYBVybeTribeKey                                = @"tribe";
 NSString *const kVYBVybeUserKey                                 = @"user";
 NSString *const kVYBVybeTimestampKey                            = @"timestamp";
 NSString *const kVYBVybeGeotag                                  = @"location";
@@ -112,42 +110,6 @@ NSString *const kVYBHashtagVybesKey                               = @"vybes";
 NSString *const kVYBHashtagLowercaseKey                           = @"name_lowercase";
 //NSString *const kVYBHashTagZoneKey                                = @"zone";
 
-#pragma mark - PFObject Region Class
-// class key
-NSString *const kVYBRegionClassKey                                = @"Region";
-
-// field keys
-NSString *const kVYBRegionNameKey                                 = @"name";
-NSString *const kVYBRegionTypeKey                                 = @"type";
-NSString *const kVYBRegionCodeKey                                 = @"code";
-NSString *const kVYBRegionThumbnailKey                            = @"thumbnail";
-NSString *const kVYBRegionUnlockCountKey                          = @"unlockCount";
-
-NSString *const kVYBRegionTypeCountryKey                          = @"country";
-NSString *const kVYBRegionTypeStateKey                            = @"state";
-NSString *const kVYBRegionTypeCityKey                             = @"city";
-
-
-#pragma mark - PFObject Tribe Class
-// class key
-NSString *const kVYBTribeClassKey                               = @"Tribe";
-
-// field keys
-NSString *const kVYBTribeNameKey                                = @"name";
-NSString *const kVYBTribeCreatorKey                             = @"creator";
-NSString *const kVYBTribeTypeKey                                = @"type";
-//TODO: CLOUD CODE for incrementing vybeCount key when a new PFOject(Vybe) is saved
-NSString *const kVYBTribeVybeCountKey                           = @"vybeCount";
-//TODO: CLOUD CODE for incrementing membersCount key when a new PFObject(Tribe) is saved with members or member are added later
-NSString *const kVYBTribeMembersCountKey                        = @"membersCount";
-NSString *const kVYBTribeMembersKey                             = @"members";
-NSString *const kVYBTribeNewestVybeKey                          = @"newestVybe";
-
-// type values
-NSString *const kVYBTribeTypePrivate                            = @"private";
-NSString *const kVYBTribeTypePublic                             = @"public";
-
-
 #pragma mark - PFObject Activity Class
 // Class key
 NSString *const kVYBActivityClassKey                            = @"Activity";
@@ -169,22 +131,11 @@ NSString *const kVYBActivityTypeComment                         = @"comment";
 
 #pragma mark - Cached User Attributes
 // keys
-NSString *const kVYBUserAttributesSyncTribeKey                  = @"syncTribe";
 NSString *const kVYBUserAttributesVybeCountKey                  = @"vybeCount";
-NSString *const kVYBUserAttributesTribeCountKey                 = @"tribeCount";
 NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey    = @"isFollowedByCurrentUser";
 NSString *const kVYBUserAttributesBlockedUsersKey               = @"blockedUsers";
 NSString *const kVYBUserAttributesBumpsForMeKey                 = @"bumpsForMe";
 NSString *const kVYBUserAttributesMyBumpsKey                    = @"myBumps";
-
-#pragma mark - Cached Tribe Attributes
-// keys
-NSString *const kVYBTribeAttributesLastWatchedVybeKey           = @"lastWatchedVybe";
-NSString *const kVYBTribeAttributesVybeCountKey                 = @"vybeCount";
-NSString *const kVYBTribeAttributesMemberCountKey               = @"memberCount";
-NSString *const kVYBTribeAttributesMembersKey                   = @"members";
-NSString *const kVYBUserAttributesTribesKey                     = @"tribes";
-
 
 #pragma mark - Installation Class
 // Field keys
@@ -200,7 +151,6 @@ NSString *const kAPNSSoundKey                                   = @"sound";
 NSString *const kVYBPushPayloadPayloadTypeKey                   = @"p";
 NSString *const kVYBPushPayloadPayloadTypeActivityKey           = @"a";
 NSString *const kVYBPushPayloadPayloadTypeVyveKey               = @"v";
-NSString *const kVYBPushPayloadPayloadTypeTribeKey              = @"t";
 
 NSString *const kVYBPushPayloadActivityTypeKey                  = @"t";
 NSString *const kVYBPushPayloadActivityFollowKey                = @"f";

@@ -197,7 +197,6 @@ import MapKit
     freshContents = newFreshContents
   }
   
-  //NOTE: Not being used right now
   func addWatchedContent(vybe: PFObject) {
     for aVybe in watchedContents {
       if aVybe.objectId == vybe.objectId {

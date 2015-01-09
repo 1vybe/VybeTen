@@ -417,7 +417,7 @@
   static NSDateFormatter *simpleDateFormatterLocalized = nil;
   if (!simpleDateFormatterLocalized) {
     simpleDateFormatterLocalized = [[NSDateFormatter alloc] init];
-    // TODO: Localize timezone
+
     NSTimeZone *timeZone = [NSTimeZone localTimeZone];
     [simpleDateFormatterLocalized setTimeZone:timeZone];
     [simpleDateFormatterLocalized setDateFormat:@"MMM dd h:mm a"];
@@ -429,7 +429,7 @@
   static NSDateFormatter *dFormatterLocalized = nil;
   if (!dFormatterLocalized) {
     dFormatterLocalized = [[NSDateFormatter alloc] init];
-    // TODO: Localize timezone
+
     NSTimeZone *timeZone = [NSTimeZone localTimeZone];
     [dFormatterLocalized setTimeZone:timeZone];
     [dFormatterLocalized setDateFormat:@"MMM dd, yyyy HH:mm"];

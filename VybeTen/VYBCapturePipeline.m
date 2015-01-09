@@ -101,7 +101,6 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForegroundNotificationReceived:) name:UIApplicationWillEnterForegroundNotification object:[UIApplication sharedApplication]];
   
   NSError *error = nil;
-  // NOTE: -
   [[AVAudioSession sharedInstance] setMode:AVAudioSessionModeVideoRecording error:&error];
   [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
   

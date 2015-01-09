@@ -586,7 +586,7 @@ static void *ZOTContext = &ZOTContext;
   if (editingStyle == UITableViewCellEditingStyleDelete) {
     PFObject *obj = [self vybeCellForIndexPath:indexPath];
     
-    // NOTE: - Saved vybes only need to be deleted locally
+    // Saved vybes only need to be deleted locally
     NSString *localID = obj[@"uniqueId"];
     if (localID && localID.length) {
       [[MyVybeStore sharedInstance] deleteSavedVybe:obj];

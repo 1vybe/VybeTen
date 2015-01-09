@@ -110,9 +110,6 @@ extern NSString *const kVYBUserBlockedUsersKey;
 extern NSString *const kVYBUserTermsAgreedKey;
 extern NSString *const kVYBUserPromptsSeenKey;
 extern NSString *const kVYBUserFlagsKey;
-extern NSString *const kVYBUserTribeKey;
-
-
 
 #pragma mark - PFObject Vybe Class
 // class key
@@ -134,13 +131,6 @@ extern NSString *const kVYBVybeZoneLatitudeKey;
 extern NSString *const kVYBVybeZoneLongitudeKey;
 extern NSString *const kVYBVybeHashtagsKey;
 
-/*
-extern NSString *const kVYBVybeTribeKey;
-extern NSString *const kVYBVybeCountryCodeKey;
-extern NSString *const kVYBVybeStateNameKey;
-extern NSString *const kVYBVybeCityNameKey;
-*/
-
 #pragma mark - Cached Vybe Attributes
 // keys
 extern NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey;
@@ -158,39 +148,6 @@ extern NSString *const kVYBHashtagNameKey;
 extern NSString *const kVYBHashtagVybesKey;
 extern NSString *const kVYBHashtagLowercaseKey;
 //extern NSString *const kVYBHashTagZoneKey;
-
-#pragma mark - PFObject Region Class
-// class key
-extern NSString *const kVYBRegionClassKey;
-
-// field keys
-extern NSString *const kVYBRegionNameKey;
-extern NSString *const kVYBRegionTypeKey;
-extern NSString *const kVYBRegionCodeKey;
-extern NSString *const kVYBRegionThumbnailKey;
-extern NSString *const kVYBRegionUnlockCountKey;
-
-extern NSString *const kVYBRegionTypeCountryKey;
-extern NSString *const kVYBRegionTypeStateKey;
-extern NSString *const kVYBRegionTypeCityKey;
-
-#pragma mark - PFObject Tribe Class
-// class key
-extern NSString *const kVYBTribeClassKey;
-
-// field keys
-extern NSString *const kVYBTribeNameKey;
-extern NSString *const kVYBTribeCreatorKey;
-extern NSString *const kVYBTribeTypeKey;
-extern NSString *const kVYBTribeVybeCountKey;
-extern NSString *const kVYBTribeMembersCountKey;
-extern NSString *const kVYBTribeMembersKey;
-extern NSString *const kVYBTribeNewestVybeKey;
-
-// type values
-extern NSString *const kVYBTribeTypePrivate;
-extern NSString *const kVYBTribeTypePublic;
-
 
 #pragma mark - PFObject Activity Class
 // Class key
@@ -211,22 +168,11 @@ extern NSString *const kVYBActivityTypeComment;
 
 #pragma mark - Cached User Attributes
 // keys
-extern NSString *const kVYBUserAttributesSyncTribeKey;
 extern NSString *const kVYBUserAttributesVybeCountKey;
-extern NSString *const kVYBUserAttributesTribeCountKey;
 extern NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey;
 extern NSString *const kVYBUserAttributesBlockedUsersKey;
 extern NSString *const kVYBUserAttributesBumpsForMeKey;
 extern NSString *const kVYBUserAttributesMyBumpsKey;
-
-
-#pragma mark - Cached Tribe Attributes
-// keys
-extern NSString *const kVYBTribeAttributesLastWatchedVybeKey;
-extern NSString *const kVYBTribeAttributesVybeCountKey;
-extern NSString *const kVYBTribeAttributesMemberCountKey;
-extern NSString *const kVYBTribeAttributesMembersKey;
-extern NSString *const kVYBUserAttributesTribesKey;
 
 
 #pragma mark - Installation Class
@@ -243,7 +189,6 @@ extern NSString *const kAPNSSoundKey;
 extern NSString *const kVYBPushPayloadPayloadTypeKey;
 extern NSString *const kVYBPushPayloadPayloadTypeActivityKey;
 extern NSString *const kVYBPushPayloadPayloadTypeVyveKey;
-extern NSString *const kVYBPushPayloadPayloadTypeTribeKey;
 
 extern NSString *const kVYBPushPayloadActivityTypeKey;
 extern NSString *const kVYBPushPayloadActivityFollowKey;

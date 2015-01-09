@@ -321,7 +321,7 @@
   [query includeKey:kVYBVybeUserKey];
   [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
   [query orderByAscending:kVYBVybeTimestampKey];
-  // NOTE: - Blocked users, flagged iterms are not filter
+  // NOTE: - Blocked users, flagged iterms are not filtered
   [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     if (!error) {
       _zoneVybes = objects;
