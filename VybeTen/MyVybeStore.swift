@@ -81,7 +81,7 @@ class MyVybeStore: NSObject {
       var vybeParseObj = vybe.parseObject()
       
       if let video = NSData(contentsOfFile:vybe.videoFilePath()) {
-        let videoFile = PFFile(data: video)
+        let videoFile = PFFile(data: video, contentType:"video/mp4")
         vybeParseObj.setObject(videoFile, forKey: kVYBVybeVideoKey)
       }
       
