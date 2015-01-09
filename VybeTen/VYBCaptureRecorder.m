@@ -76,7 +76,8 @@ typedef NS_ENUM (NSInteger,VYBRecorderStatus) {
         // Add video input
         NSDictionary *videoCompressionProps = [NSDictionary dictionaryWithObjectsAndKeys:
                                                [NSNumber numberWithDouble:700.0*1024.0], AVVideoAverageBitRateKey,
-                                               nil ];
+                                               AVVideoProfileLevelH264Baseline41, AVVideoProfileLevelKey,
+                                               nil];
         NSNumber *width = [NSNumber numberWithInt:270];
         NSNumber *height = [NSNumber numberWithInt:480];
         NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:
