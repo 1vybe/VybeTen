@@ -149,6 +149,7 @@ $(function() {
       "stereo": "stereo",
       "regency": "regency",
       "mmelee": "mmelee",
+      "13percent": "thirteenPercent",
       "*path": "newyears",
     },
 
@@ -170,6 +171,13 @@ $(function() {
 
     newyears: function() {
       state.set({ location: '', time: '2014-12-31T10:00:00.000Z' });
+    },
+
+    thirteenPercent: function() {
+      state.set({
+        location: 'Le Salon Daomé',
+        time: '2015-01-09T04:00:00.000Z'
+      });
     },
 
     default: function() {
