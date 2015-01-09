@@ -35,12 +35,12 @@
                             </constraints>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VEJ-4U-kAQ" userLabel="reject">
-                            <rect key="frame" x="15" y="15" width="40" height="40"/>
+                            <rect key="frame" x="15" y="15" width="32" height="32"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="40" id="P6l-MS-65l"/>
-                                <constraint firstAttribute="width" constant="40" id="VZF-g2-Fmg"/>
+                                <constraint firstAttribute="height" constant="32" id="P6l-MS-65l"/>
+                                <constraint firstAttribute="width" constant="32" id="VZF-g2-Fmg"/>
                             </constraints>
-                            <state key="normal" image="Player_Close_Button">
+                            <state key="normal" image="Close_Button">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
                         </button>
@@ -152,7 +152,7 @@
     </objects>
     <resources>
         <image name="Checkin-btn" width="228" height="37"/>
-        <image name="Player_Close_Button" width="40" height="40"/>
+        <image name="Close_Button" width="40" height="40"/>
         <image name="player_bottom_overlay" width="375" height="133"/>
         <image name="replay_arrow" width="15" height="22"/>
     </resources>

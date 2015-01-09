@@ -282,7 +282,7 @@
                             <state key="normal" image="Player_More">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
-                            <state key="selected" image="Player_Close_Button"/>
+                            <state key="selected" image="Close_Button"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k1N-db-0lb" userLabel="optionsAerial">
                             <rect key="frame" x="315" y="0.0" width="60" height="60"/>
@@ -358,8 +358,8 @@
         </view>
     </objects>
     <resources>
+        <image name="Close_Button" width="40" height="40"/>
         <image name="Player_BlackFade_More" width="375" height="667"/>
-        <image name="Player_Close_Button" width="40" height="40"/>
         <image name="Player_Dismiss_Button" width="40" height="40"/>
         <image name="Player_FlagVybe-BtnON" width="174" height="53"/>
         <image name="Player_FlagVybe-btn" width="174" height="53"/>

@@ -402,7 +402,7 @@
                                     <constraint firstAttribute="width" constant="28" id="aOn-n1-TOg"/>
                                     <constraint firstAttribute="height" constant="28" id="tYV-Fo-9NV"/>
                                 </constraints>
-                                <state key="normal" image="Player_Close_Button">
+                                <state key="normal" image="Close_Button">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
@@ -459,6 +459,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Close_Button" width="40" height="40"/>
         <image name="FeaturedStar" width="13" height="13"/>
         <image name="GrayLight_SavedVybed" width="10" height="10"/>
         <image name="ListBar" width="375" height="85"/>
@@ -466,7 +467,6 @@
         <image name="MapTitleView" width="196" height="28"/>
         <image name="NewMap" width="34" height="35"/>
         <image name="Placeholder" width="51" height="51"/>
-        <image name="Player_Close_Button" width="40" height="40"/>
         <image name="Settings" width="21" height="21"/>
         <image name="UnwatchedBar" width="10" height="85"/>
         <image name="VYBE_Nav" width="109" height="18"/>
