@@ -99,6 +99,9 @@ $(function() {
       var currentVybe = this.playlist.currentVybe();
       var nextVybe = this.playlist.nextVybe();
 
+      // Don't do anything if there are no vybes
+      if (currentVybe === undefined) return;
+
       var zoneName = currentVybe.get('zoneName');
       if (!zoneName) zoneName = 'Earth';
       var timestamp = currentVybe.get('timestamp');
