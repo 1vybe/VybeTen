@@ -61,7 +61,6 @@ typedef enum {
 extern NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification;
 extern NSString *const VYBAppDelegateApplicationDidBecomeActiveNotification;
 extern NSString *const VYBAppDelegateApplicationDidEnterBackgourndNotification;
-extern NSString *const VYBAppDelegateParseLocalDatastoreReadyNotification;
 
 extern NSString *const VYBFreshVybeFeedFetchedFromRemoteNotification;
 extern NSString *const VYBCacheFreshVybeCountChangedNotification;

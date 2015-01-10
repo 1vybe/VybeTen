@@ -26,7 +26,7 @@ class WelcomeManager: NSObject {
   
   func setUpParseEnvironment() {
     dispatch_async(parse_setup_queue, { () -> Void in
-      Parse.enableLocalDatastore()
+//      Parse.enableLocalDatastore()
       
       ParseCrashReporting.enable()
       
@@ -111,14 +111,6 @@ class WelcomeManager: NSObject {
       blockQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
         if error == nil {
           VYBCache.sharedCache().setBlockedUsers(result, forUser: PFUser.currentUser())
-        }
-      })
-      
-      // Pin HashTag objects
-      var tagQuery = PFQuery(className: kVYBHashtagClassKey)
-      tagQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-        if error == nil {
-          PFObject.pinAllInBackground(result, block: nil)
         }
       })
       

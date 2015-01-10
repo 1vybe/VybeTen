@@ -29,14 +29,6 @@ class MyVybeStore: NSObject {
     _isUploadingSavedVybes = false
     
     super.init()
-
-    var localQuery = PFQuery(className: kVYBHashtagClassKey)
-    localQuery.fromLocalDatastore()
-    localQuery.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
-      if error == nil {
-        self.availableHashTags = result as? [PFObject]
-      }
-    }
   }
   
   func prepareNewVybe() {

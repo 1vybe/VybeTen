@@ -182,7 +182,7 @@
 
 - (void)refreshBumpsForMeInBackground:(void (^)(BOOL success))completionBlock {
   PFQuery *bumpQuery = [PFQuery queryWithClassName:kVYBActivityClassKey];
-//  [bumpQuery setCachePolicy:kPFCachePolicyNetworkElseCache];
+  [bumpQuery setCachePolicy:kPFCachePolicyNetworkElseCache];
   [bumpQuery orderByDescending:@"createdAt"];
   [bumpQuery includeKey:kVYBActivityVybeKey];
   [bumpQuery includeKey:kVYBActivityFromUserKey];
@@ -216,7 +216,7 @@
 - (void)refreshMyBumpsInBackground:(void (^)(BOOL success))completionBlock {
   // Update my bumps
   PFQuery *bumpQuery = [PFQuery queryWithClassName:kVYBActivityClassKey];
-//  [bumpQuery setCachePolicy:kPFCachePolicyNetworkElseCache];
+  [bumpQuery setCachePolicy:kPFCachePolicyNetworkElseCache];
   [bumpQuery orderByDescending:@"createdAt"];
   [bumpQuery includeKey:kVYBActivityVybeKey];
   [bumpQuery includeKey:kVYBActivityToUserKey];
