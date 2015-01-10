@@ -132,7 +132,7 @@
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-  [self.swipeContainerController moveToCaptureScreen];
+  [self.swipeContainerController moveToCaptureScreenWithAnimation:NO];
 
   [[ConfigManager sharedInstance] fetchIfNeeded];
 }
@@ -198,7 +198,9 @@
       [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
     }
 #endif
-    [self.swipeContainerController moveToActivityScreen];
+    if (self.swipeContainerController && self.swipeContainerController.viewControllers.count) {
+      [self.swipeContainerController moveToActivityScreenWithAnimation:NO];
+    }
   }
   
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
@@ -247,10 +249,6 @@
 }
 
 #pragma mark -
-
-- (void)presentFirstPage {
-  [self presentFirstPageViewControllerAnimated:YES];
-}
 
 - (void)proceedToMainInterface {
   [self.mainNavController popToRootViewControllerAnimated:NO];

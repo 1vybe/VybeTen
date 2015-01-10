@@ -137,7 +137,7 @@
 
 - (IBAction)captureButtonPressed:(UIBarButtonItem *)sender {
   SwipeContainerController *swipeContainer = (SwipeContainerController *)self.parentViewController.parentViewController;
-  [swipeContainer moveToCaptureScreen];
+  [swipeContainer moveToCaptureScreenWithAnimation:YES];
 }
 
 - (IBAction)settingsButtonPressed:(UIBarButtonItem *)sender {

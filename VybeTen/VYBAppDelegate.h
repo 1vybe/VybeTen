@@ -22,7 +22,7 @@
 
 - (BOOL)isParseReachable;
 
-- (void)presentFirstPage;
+- (void)presentFirstPageViewControllerAnimated:(BOOL)animated;
 - (void)proceedToMainInterface;
 - (void)logOut;
 @end

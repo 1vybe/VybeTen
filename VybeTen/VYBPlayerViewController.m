@@ -137,9 +137,7 @@
 @synthesize currPlayerView = _currPlayerView;
 @synthesize currItem = _currItem;
 
-- (void)dealloc {
-  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
-  
+- (void)dealloc {  
   [[UIApplication sharedApplication].keyWindow removeGestureRecognizer:longPressRecognizer];
 }
 

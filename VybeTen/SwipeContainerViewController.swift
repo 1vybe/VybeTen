@@ -65,19 +65,15 @@ import UIKit
     super.viewDidLoad()
     
     selectedViewController = viewControllers.first
-    self.transitionToViewController(selectedViewController!, interactive: false)
+    self.transitionToViewController(selectedViewController!, interactive: false, animation: false)
   }
   
-  func setSelectedViewController(viewController: UIViewController) {
-    self.transitionToViewController(viewController, interactive: true)
+  func moveToCaptureScreen(animation animate: Bool) {
+    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
   }
   
-  func moveToCaptureScreen() {
-    self.transitionToViewController(viewControllers[0], interactive: false)
-  }
-  
-  func moveToActivityScreen() {
-    self.transitionToViewController(viewControllers[1], interactive: false)
+  func moveToActivityScreen(animation animate: Bool) {
+    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
   }
   
   private func previousViewController() -> UIViewController? {
@@ -106,7 +102,7 @@ import UIKit
     return nil
   }
   
-  func transitionToViewController(toViewController: UIViewController, interactive: Bool) {
+  func transitionToViewController(toViewController: UIViewController, interactive: Bool, animation: Bool) {
     if !self.isViewLoaded() {
       return
     }
@@ -134,7 +130,7 @@ import UIKit
 
     var animator = SwipeAnimator()
     var transitionContext = SwipeTransitionContext(fromViewController: fromViewController, toController: toViewController, swipeToleft: (toViewController == viewControllers[1]))
-    transitionContext.animated = true
+    transitionContext.animated = animation
     swipeInteractor.animator = animator
 
     transitionContext.completionClosure = { (completed: Bool) -> Void in
@@ -167,11 +163,11 @@ import UIKit
       let leftToRight = velocity > 0
       if leftToRight {
         if let toViewController = self.previousViewController() {
-          self.setSelectedViewController(toViewController)
+          self.transitionToViewController(toViewController, interactive: true, animation: true)
         }
       } else {
         if let toViewController = self.nextViewController() {
-          self.setSelectedViewController(toViewController)
+          self.transitionToViewController(toViewController, interactive: true, animation: true)
         }
       }
     case .Changed:

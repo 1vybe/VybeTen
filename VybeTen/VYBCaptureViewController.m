@@ -66,7 +66,6 @@ static void *XYZContext = &XYZContext;
 - (void)dealloc {
   [capturePipeline stopRunning];
   
-  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBUtilityActivityCountUpdatedNotification object:nil];
@@ -75,7 +74,6 @@ static void *XYZContext = &XYZContext;
 - (void)viewDidLoad
 {
   // Subscribing to Notifications
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteNotificationReceived:) name:VYBAppDelegateApplicationDidReceiveRemoteNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroundNotificationReceived:) name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityCountChanged) name:VYBUtilityActivityCountUpdatedNotification object:nil];
@@ -349,9 +347,6 @@ static void *XYZContext = &XYZContext;
 
 #pragma mark - NSNotifications
 
-- (void)remoteNotificationReceived:(id)sender {
-}
-
 - (void)applicationDidBecomeActiveNotificationReceived:(id)sender {
   // Refresh fetch of feed and activity count when app is brought to foreground
   //[VYBUtility getNewActivityCountWithCompletion:nil];
@@ -397,7 +392,7 @@ static void *XYZContext = &XYZContext;
 
 - (IBAction)activityButtonPressed:(id)sender {
   SwipeContainerController *swipeContainer = (SwipeContainerController *)self.parentViewController;
-  [swipeContainer moveToActivityScreen];
+  [swipeContainer moveToActivityScreenWithAnimation:YES];
 }
 
 - (void)didReceiveMemoryWarning

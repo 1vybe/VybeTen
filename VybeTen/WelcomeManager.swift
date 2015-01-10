@@ -30,7 +30,7 @@ class WelcomeManager: NSObject {
       
       ParseCrashReporting.enable()
       
-      Parse.setApplicationId(PARSE_APPLICATION_ID, clientKey: PARSE_CLIENT_KEY)
+      Parse.setApplicationId(PARSE_APPLICATION_ID_DEV, clientKey: PARSE_CLIENT_KEY_DEV)
       
       // Clearing Push-noti Badge number
       var currentInstallation = PFInstallation.currentInstallation()
@@ -56,7 +56,7 @@ class WelcomeManager: NSObject {
       if PFUser.currentUser() == nil {
         if let vybeAppDelegate = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
           dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            vybeAppDelegate.presentFirstPage()
+            vybeAppDelegate.presentFirstPageViewControllerAnimated(true)
           })
         }
       } else {
