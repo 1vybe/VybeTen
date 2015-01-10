@@ -717,8 +717,12 @@
 }
 
 - (void)bumpsButtonPressed:(id)sender {
+  [self goToNotificationScreenAnimated:YES];
+}
+
+- (void)goToNotificationScreenAnimated:(BOOL)animated {
   NotificationTableViewController *notificationTable = (NotificationTableViewController *)[[UIStoryboard storyboardWithName:@"Notification" bundle:nil] instantiateInitialViewController];
-  [self.navigationController pushViewController:notificationTable animated:YES];
+  [self.navigationController pushViewController:notificationTable animated:animated];
 }
 
 - (void)updateBumpForMeCount {

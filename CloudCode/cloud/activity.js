@@ -95,7 +95,7 @@ var alertPayload = function(request) {
       p: 'a', // Payload Type: Activity
       t: 'l', // Activity Type: Like
       fu: request.object.get('fromUser').id, // From User
-      pid: request.object.id // Vybe Id
+      pid: request.object.id // Activity Id
     };
   } else if (request.object.get("type") === "follow") {
     return {

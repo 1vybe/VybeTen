@@ -61,6 +61,7 @@ typedef enum {
 extern NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification;
 extern NSString *const VYBAppDelegateApplicationDidBecomeActiveNotification;
 extern NSString *const VYBAppDelegateApplicationDidEnterBackgourndNotification;
+extern NSString *const VYBAppDelegateHandlePushPlayActivityNotification;
 
 extern NSString *const VYBFreshVybeFeedFetchedFromRemoteNotification;
 extern NSString *const VYBCacheFreshVybeCountChangedNotification;
@@ -190,13 +191,13 @@ extern NSString *const kVYBPushPayloadPayloadTypeActivityKey;
 extern NSString *const kVYBPushPayloadPayloadTypeVyveKey;
 
 extern NSString *const kVYBPushPayloadActivityTypeKey;
-extern NSString *const kVYBPushPayloadActivityFollowKey;
-extern NSString *const kPAPPushPayloadActivityLikeKey;
+extern NSString *const kVYBPushPayloadActivityTypeFollowKey;
+extern NSString *const kVYBPushPayloadActivityTypeLikeKey;
 
 extern NSString *const kVYBPushPayloadActivityFromUserObjectIdKey;
 extern NSString *const kVYBPushPayloadActivityToUserObjectIdKey;
 
-extern NSString *const kVYBPushPayloadVybeIDKey;
+extern NSString *const kVYBPushPayloadActivityIDKey;
 extern NSString *const kVYBPushPayloadVybeUserKey;
 
 

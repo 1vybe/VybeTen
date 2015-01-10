@@ -132,7 +132,7 @@
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-  [self.swipeContainerController moveToCaptureScreenWithAnimation:NO];
+//  [self.swipeContainerController moveToCaptureScreenWithAnimation:NO];
 
   [[ConfigManager sharedInstance] fetchIfNeeded];
 }
@@ -198,9 +198,8 @@
       [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
     }
 #endif
-    if (self.swipeContainerController && self.swipeContainerController.viewControllers.count) {
-      [self.swipeContainerController moveToActivityScreenWithAnimation:NO];
-    }
+    
+    [self handlePush:userInfo];
   }
   
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
@@ -212,7 +211,19 @@
 
 
 - (void)handlePush:(NSDictionary *)payload {
-  
+  if (self.swipeContainerController && self.swipeContainerController.viewControllers.count) {
+    [self.swipeContainerController moveToActivityScreenWithAnimation:NO];
+    
+    NSString *pushType = payload[kVYBPushPayloadPayloadTypeKey];
+    if ([pushType isEqualToString:kVYBPushPayloadPayloadTypeActivityKey]) {
+      [self.swipeContainerController goToNotificationScreen];
+      
+      NSString *activityType = payload[kVYBPushPayloadActivityTypeKey];
+      if ([activityType isEqualToString:kVYBPushPayloadActivityTypeLikeKey]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateHandlePushPlayActivityNotification object:nil userInfo:payload];
+      }
+    }
+  }
 }
 
 #pragma mark - AppDelegate
@@ -251,7 +262,9 @@
 #pragma mark -
 
 - (void)proceedToMainInterface {
-  [self.mainNavController popToRootViewControllerAnimated:NO];
+  if (self.mainNavController.viewControllers.count > 1) {
+    [self.mainNavController popToRootViewControllerAnimated:NO];
+  }
 
   [self setUpViewControllers];
 }

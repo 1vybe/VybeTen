@@ -13,6 +13,10 @@
 NSString *const VYBAppDelegateApplicationDidReceiveRemoteNotification = @"com.vybe.app.AppDelegate.applicationDidReceiveRemoteNotification";
 NSString *const VYBAppDelegateApplicationDidBecomeActiveNotification               = @"com.vybe.app.AppDelegate.applicationDidBecomeActive";
 NSString *const VYBAppDelegateApplicationDidEnterBackgourndNotification = @"com.vybe.app.AppDelegate.applicationDidEnterBackground";
+NSString *const VYBAppDelegateHandlePushPlayActivityNotification =
+    @"com.vybe.app.AppDelegate.handlePush.playActivity";
+
+
 NSString *const VYBFreshVybeFeedFetchedFromRemoteNotification = @"com.vybe.app.utility.freshFeedFetched";
 NSString *const VYBUtilityVybesLoadedNotification = @"com.vybe.app.utility.vybesLoaded";
 NSString *const VYBUtilityActivityCountUpdatedNotification = @"com.vybe.app.utility.activityCountUpdated";
@@ -148,15 +152,16 @@ NSString *const kAPNSBadgeKey                                   = @"badge";
 NSString *const kAPNSSoundKey                                   = @"sound";
 
 NSString *const kVYBPushPayloadPayloadTypeKey                   = @"p";
-NSString *const kVYBPushPayloadPayloadTypeActivityKey           = @"a";
 NSString *const kVYBPushPayloadPayloadTypeVyveKey               = @"v";
 
+NSString *const kVYBPushPayloadPayloadTypeActivityKey           = @"a";
 NSString *const kVYBPushPayloadActivityTypeKey                  = @"t";
-NSString *const kVYBPushPayloadActivityFollowKey                = @"f";
-NSString *const kPAPPushPayloadActivityLikeKey                  = @"l";
-
+NSString *const kVYBPushPayloadActivityTypeFollowKey            = @"f";
+NSString *const kVYBPushPayloadActivityTypeLikeKey              = @"l";
 NSString *const kVYBPushPayloadActivityFromUserObjectIdKey      = @"fu";
+NSString *const kVYBPushPayloadActivityIDKey                    = @"pid";
 NSString *const kVYBPushPayloadActivityToUserObjectIdKey        = @"tu";
 
-NSString *const kVYBPushPayloadVybeIDKey                        = @"vid";
-NSString *const kVYBPushPayloadVybeUserKey                      = @"vu";
+
+
+

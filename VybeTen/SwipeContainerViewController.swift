@@ -49,7 +49,6 @@ import UIKit
     
     self.view = rootView
     
-
     let screenEdgePanGesture_Right = UIScreenEdgePanGestureRecognizer(target: self, action: "handleScreenEdgePanGesture:")
     screenEdgePanGesture_Right.edges = UIRectEdge.Right
     screenEdgePanGesture_Right.delegate = self
@@ -73,7 +72,18 @@ import UIKit
   }
   
   func moveToActivityScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
+    if self.selectedViewController != nil {
+      self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
+    }
+  }
+  
+  func goToNotificationScreen() {
+    if let nav = viewControllers[1] as? VYBNavigationController {
+      nav.popToRootViewControllerAnimated(false)
+      if let activity = nav.topViewController as? VYBActivityTableViewController {
+        activity.goToNotificationScreenAnimated(false)
+      }
+    }
   }
   
   private func previousViewController() -> UIViewController? {

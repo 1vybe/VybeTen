@@ -22,15 +22,21 @@
 
 - (void)loadView {
   UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-  [backgroundImageView setImage:[UIImage imageNamed:@"Default.png"]];
+  [backgroundImageView setBackgroundColor:[UIColor orangeColor]];
   self.view = backgroundImageView;
+}
+
+- (void)viewDidLoad {
+  [super viewDidLoad];
+  
+  // Parse Initialization
+  [[WelcomeManager sharedInstance] setUpParseEnvironment];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
-  
-  // Parse Initialization
-  [[WelcomeManager sharedInstance] setUpParseEnvironment];
+
+  [[WelcomeManager sharedInstance] checkLogInStatus];
 }
 
 #pragma mark - Private

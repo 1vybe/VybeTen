@@ -232,8 +232,6 @@
           
           [[VYBCache sharedCache] setAttributesForVybe:vybe likers:likers commenters:commenters likedByCurrentUser:isLikedByCurrentUser];
         }
-        
-        //                [[NSNotificationCenter defaultCenter] postNotificationName:PAPUtilityUserLikedUnlikedPhotoCallbackFinishedNotification object:vybe userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:PAPPhotoDetailsViewControllerUserLikedUnlikedPhotoNotificationUserInfoLikedKey]];
       }];
       
     } else {

@@ -52,7 +52,11 @@ class WelcomeManager: NSObject {
           PFAnalytics.trackAppOpenedWithLaunchOptionsInBackground(self._launchOptions, block: nil)
         }
       }
-      
+    })
+  }
+  
+  func checkLogInStatus() {
+    dispatch_async(parse_setup_queue, { () -> Void in
       if PFUser.currentUser() == nil {
         if let vybeAppDelegate = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
           dispatch_async(dispatch_get_main_queue(), { () -> Void in
