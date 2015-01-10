@@ -40,8 +40,6 @@
 }
 @synthesize uploadStatusButton, bottomBarMenu;
 
-static void *ZOTContext = &ZOTContext;
-
 #pragma mark - Lifecycle
 
 - (void)dealloc {
@@ -56,6 +54,8 @@ static void *ZOTContext = &ZOTContext;
     self.myLocations = [NSArray array];
     
     _selectedMyLocationIndex = -1;
+    
+    self.paginationEnabled = NO;
   }
   
   return self;
@@ -64,9 +64,6 @@ static void *ZOTContext = &ZOTContext;
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-  [refreshControl addTarget:self action:@selector(reloadObjects) forControlEvents:UIControlEventValueChanged];
-  self.refreshControl = refreshControl;
   
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToTop:) name:UIApplicationWillEnterForegroundNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToTop:) name:VYBSwipeContainerControllerWillMoveToActivityScreenNotification object:nil];
@@ -104,7 +101,7 @@ static void *ZOTContext = &ZOTContext;
   }];
   
   [self updatePlayAllButton];
-  [self reloadObjects];
+  [self.tableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -203,14 +200,16 @@ static void *ZOTContext = &ZOTContext;
   PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
   [query whereKey:kVYBVybeUserKey equalTo:[PFUser currentUser]];
   [query includeKey:kVYBVybeUserKey];
-  [query orderByDescending:kVYBVybeZoneNameKey];
-  [query addDescendingOrder:kVYBVybeTimestampKey];
+  [query orderByDescending:kVYBVybeTimestampKey];
+//  [query setCachePolicy:kPFCachePolicyCacheThenNetwork];
   [query setLimit:1000];
   
   return query;
 }
 
-- (void)reloadObjects{
+- (void)objectsDidLoad:(NSError *)error {
+  [super objectsDidLoad:error];
+  
   // Update Activity count
   [[VYBCache sharedCache] refreshBumpsForMeInBackground:^(BOOL success) {
     if (success) {
@@ -218,39 +217,22 @@ static void *ZOTContext = &ZOTContext;
     }
   }];
   
-  PFQuery *query = [self queryForTable];
-  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    if (!error) {
-      [[ZoneStore sharedInstance] didFetchUnlockedVybes:objects completionHandler:^(BOOL success) {
-        if (success) {
-          self.activeLocations = [[ZoneStore sharedInstance] activeAndFeaturedZones];
-          self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
-          
-          NSString *locationCntText = (self.myLocations.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.myLocations.count] : [NSString stringWithFormat:@"%d Location", (int)self.myLocations.count];
-          NSString *vybeCntText = (objects.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)objects.count] : [NSString stringWithFormat:@"%d Vybe", (int)objects.count];
-          
-          self.countLabel.text = [NSString stringWithFormat:@"%@ - %@", locationCntText, vybeCntText];
-        }
-        
-        [self addSavedVybesToTable];
-        [self updatePlayAllButton];
-        [self.tableView reloadData];
-        
-        if (self.refreshControl.refreshing) {
-          [self.refreshControl endRefreshing];
-        }
-      }];
-    } else {
-      [self addSavedVybesToTable];
-      [self updatePlayAllButton];
-      [self.tableView reloadData];
+  [[ZoneStore sharedInstance] didFetchUnlockedVybes:self.objects completionHandler:^(BOOL success) {
+    if (success) {
+      self.activeLocations = [[ZoneStore sharedInstance] activeAndFeaturedZones];
+      self.myLocations = [[ZoneStore sharedInstance] unlockedZones];
       
-      if (self.refreshControl.refreshing) {
-        [self.refreshControl endRefreshing];
-      }
+      NSString *locationCntText = (self.myLocations.count > 1) ? [NSString stringWithFormat:@"%d Locations", (int)self.myLocations.count] : [NSString stringWithFormat:@"%d Location", (int)self.myLocations.count];
+      NSString *vybeCntText = (self.objects.count > 1) ? [NSString stringWithFormat:@"%d Vybes", (int)self.objects.count] : [NSString stringWithFormat:@"%d Vybe", (int)self.objects.count];
+      
+      self.countLabel.text = [NSString stringWithFormat:@"%@ - %@", locationCntText, vybeCntText];
     }
+    
+    [self addSavedVybesToTable];
+    [self updatePlayAllButton];
+    [self.tableView reloadData];
   }];
- }
+}
 
 #pragma mark UITableViewDelegate
 

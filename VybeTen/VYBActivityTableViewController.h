@@ -11,7 +11,7 @@
 
 @class PFQueryTableViewController;
 IB_DESIGNABLE
-@interface VYBActivityTableViewController : UITableViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface VYBActivityTableViewController : PFQueryTableViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 - (void)scrollToTop:(id)sender;
 
 @end
