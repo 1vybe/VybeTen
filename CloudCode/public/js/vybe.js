@@ -151,6 +151,7 @@ $(function() {
       "mmelee": "mmelee",
       "ncg": "ncg",
       "13percent": "thirteenPercent",
+      "bpm": "bpm",
       "*path": "newyears",
     },
 
@@ -183,6 +184,10 @@ $(function() {
         location: 'Le Salon Daomé',
         time: '2015-01-09T04:00:00.000Z'
       });
+    },
+
+    bpm: function() {
+      state.set({ location: 'BPM' });
     },
 
     default: function() {
