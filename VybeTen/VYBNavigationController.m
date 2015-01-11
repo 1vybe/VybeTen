@@ -10,26 +10,19 @@
 
 @implementation VYBNavigationController
 
-+ (VYBNavigationController *)navigationControllerForPageIndex:(NSInteger)pageIndex withRootViewController:(UIViewController *)rootViewController {
-  if (pageIndex >= 0 && pageIndex < 3) {
-    return [[self alloc] initWithPageIndex:pageIndex withRootViewController:rootViewController];
-  }
-  return nil;
-}
-
-- (id)initWithPageIndex:(NSInteger)pageIndex withRootViewController:(UIViewController *)rootViewController {
-  self = [super initWithRootViewController:rootViewController];
-  if (self) {
-    _pageIndex = pageIndex;
-  }
-  
-  return self;
-}
-
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
   // To remove a navigation bar's back button text
   //self.navigationBar.topItem.title = @"";
   [super pushViewController:viewController animated:animated];
+}
+
+- (void)pushViewController:(UIViewController *)viewController
+                  animated:(BOOL)animated
+                completion:(void (^)(void))completion {
+  [CATransaction begin];
+  [CATransaction setCompletionBlock:completion];
+  [self pushViewController:viewController animated:animated];
+  [CATransaction commit];
 }
 
 - (BOOL)prefersStatusBarHidden {

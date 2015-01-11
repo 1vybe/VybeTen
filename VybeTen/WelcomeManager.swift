@@ -11,17 +11,21 @@ import UIKit
 private let _sharedInstance = WelcomeManager()
 
 class WelcomeManager: NSObject {
-  private var _launchOptions: [NSObject : AnyObject]!
+  private var _launchOptions: [NSObject : AnyObject]?
   private let parse_setup_queue = dispatch_queue_create("com.vybe.app.welcomeManager.parse.setup.queue", DISPATCH_QUEUE_SERIAL)
   
   class var sharedInstance : WelcomeManager {
     return _sharedInstance
   }
   
-  func setLaunchOptions(dictObj: NSDictionary?) {
-    if let options = dictObj as? [NSObject : AnyObject] {
-      _launchOptions = options
+  func setLaunchOptions(dictObj: NSDictionary!) {
+    if dictObj != nil {
+      _launchOptions = dictObj as [NSObject : AnyObject]
     }
+  }
+  
+  func launchOptions() -> [NSObject : AnyObject]? {
+    return _launchOptions
   }
   
   func setUpParseEnvironment() {
@@ -45,7 +49,7 @@ class WelcomeManager: NSObject {
       defaultACL.setPublicReadAccess(true)
       PFACL.setDefaultACL(defaultACL, withAccessForCurrentUser: true)
       
-      if self._launchOptions != nil && self._launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil {
+      if self._launchOptions != nil && self._launchOptions?[UIApplicationLaunchOptionsRemoteNotificationKey] != nil {
         return
       } else {
         if !ConfigManager.sharedInstance.currentUserExcludedFromAnalytics() {

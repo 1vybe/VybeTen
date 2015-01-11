@@ -102,9 +102,6 @@
   self.window.backgroundColor = [UIColor blackColor];
   [self.window makeKeyAndVisible];
   
-  // Handle push if the app is launched from notification
-  [self handlePush:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
-  
   return YES;
 }
 
@@ -116,6 +113,8 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+  [self.swipeContainerController moveToCaptureScreenWithAnimation:NO];
+
   [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
 }
 
@@ -209,18 +208,20 @@
   completionHandler(UIBackgroundFetchResultNoData);
 }
 
-
 - (void)handlePush:(NSDictionary *)payload {
   if (self.swipeContainerController && self.swipeContainerController.viewControllers.count) {
     [self.swipeContainerController moveToActivityScreenWithAnimation:NO];
     
     NSString *pushType = payload[kVYBPushPayloadPayloadTypeKey];
     if ([pushType isEqualToString:kVYBPushPayloadPayloadTypeActivityKey]) {
-      [self.swipeContainerController goToNotificationScreen];
-      
       NSString *activityType = payload[kVYBPushPayloadActivityTypeKey];
+      
       if ([activityType isEqualToString:kVYBPushPayloadActivityTypeLikeKey]) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateHandlePushPlayActivityNotification object:nil userInfo:payload];
+        [self.swipeContainerController goToNotificationScreen:^{
+          [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateHandlePushPlayActivityNotification object:nil userInfo:payload];
+        }];
+      } else {
+        [self.swipeContainerController goToNotificationScreen:nil];
       }
     }
   }

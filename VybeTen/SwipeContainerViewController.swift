@@ -77,11 +77,11 @@ import UIKit
     }
   }
   
-  func goToNotificationScreen() {
+  func goToNotificationScreen(completionBlock: (Void -> Void)!) {
     if let nav = viewControllers[1] as? VYBNavigationController {
       nav.popToRootViewControllerAnimated(false)
       if let activity = nav.topViewController as? VYBActivityTableViewController {
-        activity.goToNotificationScreenAnimated(false)
+        activity.goToNotificationScreenWithCompletion(completionBlock)
       }
     }
   }

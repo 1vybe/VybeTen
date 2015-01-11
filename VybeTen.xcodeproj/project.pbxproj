@@ -510,8 +510,8 @@
 			children = (
 				604B628E18B495BB00D3EF19 /* Images.xcassets */,
 				604B628B18B495BB00D3EF19 /* VYBAppDelegate.h */,
-				74BF89B61A4A033E00E92FB4 /* WelcomeManager.swift */,
 				604B628C18B495BB00D3EF19 /* VYBAppDelegate.m */,
+				74BF89B61A4A033E00E92FB4 /* WelcomeManager.swift */,
 				025DE65918CB16E30054F739 /* VYBConstants.h */,
 				025DE65A18CB16E30054F739 /* VYBConstants.m */,
 				023E538B191F142000C3CF78 /* VYBCache.h */,

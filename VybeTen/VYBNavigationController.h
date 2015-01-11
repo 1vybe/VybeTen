@@ -13,6 +13,7 @@
 
 @property (nonatomic, assign) IBInspectable NSInteger pageIndex;
 
-+ (VYBNavigationController *)navigationControllerForPageIndex:(NSInteger)pageIndex withRootViewController:(UIViewController *)rootViewController;
-
+- (void)pushViewController:(UIViewController *)viewController
+                  animated:(BOOL)animated
+                completion:(void (^)(void))completion;
 @end

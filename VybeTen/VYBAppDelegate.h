@@ -24,5 +24,7 @@
 
 - (void)presentFirstPageViewControllerAnimated:(BOOL)animated;
 - (void)proceedToMainInterface;
+- (void)handlePush:(NSDictionary *)payload;
+
 - (void)logOut;
 @end

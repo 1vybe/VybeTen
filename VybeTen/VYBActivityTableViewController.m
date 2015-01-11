@@ -725,6 +725,15 @@
   [self.navigationController pushViewController:notificationTable animated:animated];
 }
 
+- (void)goToNotificationScreenWithCompletion:(void (^)(void))completionBlock {
+  NotificationTableViewController *notificationTable = (NotificationTableViewController *)[[UIStoryboard storyboardWithName:@"Notification" bundle:nil] instantiateInitialViewController];
+  if (completionBlock) {
+    [(VYBNavigationController *)self.navigationController pushViewController:notificationTable animated:NO completion:completionBlock];
+  } else {
+    [self.navigationController pushViewController:notificationTable animated:NO];
+  }
+}
+
 - (void)updateBumpForMeCount {
   NSInteger count = [[VYBCache sharedCache] newBumpActivityCountForCurrentUser];
   UIButton *bumpsButton = (UIButton *)[bottomBarMenu viewWithTag:7];

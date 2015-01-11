@@ -13,6 +13,6 @@
 IB_DESIGNABLE
 @interface VYBActivityTableViewController : PFQueryTableViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 - (void)scrollToTop:(id)sender;
-- (void)goToNotificationScreenAnimated:(BOOL)animated;
+- (void)goToNotificationScreenWithCompletion:(void (^)(void))completionBlock;
 
 @end

@@ -15,6 +15,7 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   var watchedItems = [PFObject]()
   
   deinit {
+    NSNotificationCenter.defaultCenter().removeObserver(self, name: VYBAppDelegateHandlePushPlayActivityNotification, object: nil)
   }
   
   required init(coder aDecoder: NSCoder) {
@@ -273,14 +274,14 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   }
   
   // MARK: - Play Activity (from remote notification)
-  func playActivity(userInfo: [String : AnyObject]) {
-    if let objId = userInfo[kVYBPushPayloadActivityIDKey] as? String {
+  func playActivity(notificaton: NSNotification) {
+    if let objId = notificaton.userInfo?[kVYBPushPayloadActivityIDKey] as? String {
       var query = PFQuery(className: kVYBActivityClassKey)
       query.whereKey("objectId", equalTo: objId)
       query.includeKey(kVYBActivityVybeKey)
       query.includeKey(kVYBActivityFromUserKey)
       query.getFirstObjectInBackgroundWithBlock({ (activityObj: PFObject!, error: NSError!) -> Void in
-        if error != nil {
+        if error == nil {
           if let vybe = activityObj[kVYBActivityVybeKey] as? PFObject {
             if let user = activityObj[kVYBActivityFromUserKey] as? PFObject {
               vybe[kVYBVybeUserKey] = user
@@ -288,6 +289,8 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
               var playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
               playerVC.delegate = self
               playerVC.playOnce(vybe)
+              
+              self.addWatchedActivity(activityObj)
             }
           }
         }
