@@ -55,10 +55,6 @@
 - (IBAction)bmpButtonPressed:(id)sender;
 - (IBAction)usernameButtonPressed:(id)sender;
 
-- (IBAction)firstHashTagClicked:(id)sender;
-- (IBAction)secondHashTagClicked:(id)sender;
-- (IBAction)thirdHashTagClicked:(id)sender;
-
 - (IBAction)optionsButtonPressed:(id)sender;
 - (IBAction)flagOverlayButtonPressed;
 - (IBAction)blockOverlayButtonPressed;
@@ -680,57 +676,6 @@
     self.goPrevButton.hidden = NO;
     self.goNextButton.hidden = NO;
   }
-}
-
-- (IBAction)firstHashTagClicked:(id)sender {
-  NSString *hashtag = [(UIButton *)self.hashtagButtons[0] titleLabel].text;
-  [self jumpToStreamFor:hashtag];
-}
-
-- (IBAction)secondHashTagClicked:(id)sender {
-  NSString *hashtag = [(UIButton *)self.hashtagButtons[1] titleLabel].text;
-  [self jumpToStreamFor:hashtag];
-}
-
-- (IBAction)thirdHashTagClicked:(id)sender {
-  NSString *hashtag = [(UIButton *)self.hashtagButtons[2] titleLabel].text;
-  [self jumpToStreamFor:hashtag];
-}
-
-- (void)jumpToStreamFor:(NSString *)hashtag {
-  [self.currPlayer pause];
-  
-  self.goPrevButton.hidden = NO;
-  self.goNextButton.hidden = NO;
-  
-  NSString *tagName = [hashtag substringFromIndex:1].lowercaseString;
-  
-  PFQuery *query = [PFQuery queryWithClassName:kVYBHashtagClassKey];
-  [query whereKey:kVYBHashtagLowercaseKey equalTo:tagName];
-
-  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-  [query getFirstObjectInBackgroundWithBlock:^(PFObject *tagObject, NSError *error) {
-    if (!error) {
-      PFRelation *vybes = tagObject[kVYBHashtagVybesKey];
-      PFQuery *sQuery = vybes.query;
-      [sQuery includeKey:kVYBVybeUserKey];
-      [sQuery orderByDescending:kVYBVybeTimestampKey];
-      [sQuery setLimit:12];
-      [sQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-          VYBPlayerViewController *sPlayerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-          sPlayerVC.delegate = self;
-          [sPlayerVC playStream:[[objects reverseObjectEnumerator] allObjects]]; // returned objects are ordered by descending
-        } else {
-          // Jump failed
-        }
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-      }];
-    } else {
-      // Jump failed
-      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    }
-  }];
 }
 
 - (IBAction)usernameButtonPressed:(UIButton *)sender {
