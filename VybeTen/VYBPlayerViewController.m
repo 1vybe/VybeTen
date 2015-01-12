@@ -758,8 +758,8 @@
 }
 
 - (void)longPressDetected:(UIGestureRecognizer *)recognizer {
-  CGPoint location = [recognizer locationInView:recognizer.view];
-  CGRect locationAerial = CGRectMake(0, self.view.bounds.size.height - 50, 100, 50);
+  CGPoint location = [recognizer locationInView:recognizer.view]; 
+  CGRect locationAerial = CGRectMake((self.view.bounds.size.width - 100) / 2, 0, 100, 50);
   BOOL isInLocationAerial = CGRectContainsPoint(locationAerial, location);
 
   switch (recognizer.state) {
