@@ -700,6 +700,9 @@
 - (void)jumpToStreamFor:(NSString *)hashtag {
   [self.currPlayer pause];
   
+  self.goPrevButton.hidden = NO;
+  self.goNextButton.hidden = NO;
+  
   NSString *tagName = [hashtag substringFromIndex:1].lowercaseString;
   
   PFQuery *query = [PFQuery queryWithClassName:kVYBHashtagClassKey];
@@ -731,10 +734,16 @@
 }
 
 - (IBAction)usernameButtonPressed:(UIButton *)sender {
+  [self.currPlayer pause];
+  
+  self.goPrevButton.hidden = NO;
+  self.goNextButton.hidden = NO;
+  
   PFObject *currObj = _zoneVybes[_zoneCurrIdx];
   PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
   [query whereKey:kVYBVybeUserKey equalTo:currObj[kVYBVybeUserKey]];
   [query orderByDescending:kVYBVybeTimestampKey];
+  [query includeKey:kVYBVybeUserKey];
   [query setLimit:12];
   
   [MBProgressHUD showHUDAddedTo:self.view animated:YES];
