@@ -679,27 +679,27 @@
 }
 
 - (IBAction)usernameButtonPressed:(UIButton *)sender {
-  [self.currPlayer pause];
-  
-  self.goPrevButton.hidden = NO;
-  self.goNextButton.hidden = NO;
-  
-  PFObject *currObj = _zoneVybes[_zoneCurrIdx];
-  PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-  [query whereKey:kVYBVybeUserKey equalTo:currObj[kVYBVybeUserKey]];
-  [query orderByDescending:kVYBVybeTimestampKey];
-  [query includeKey:kVYBVybeUserKey];
-  [query setLimit:12];
-  
-  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    if (!error) {
-      VYBPlayerViewController *sPlayerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-      sPlayerVC.delegate = self;
-      [sPlayerVC playStream:[[objects reverseObjectEnumerator] allObjects]]; // returned objects are ordered by descending
-    }
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-  }];
+//  [self.currPlayer pause];
+//  
+//  self.goPrevButton.hidden = NO;
+//  self.goNextButton.hidden = NO;
+//  
+//  PFObject *currObj = _zoneVybes[_zoneCurrIdx];
+//  PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+//  [query whereKey:kVYBVybeUserKey equalTo:currObj[kVYBVybeUserKey]];
+//  [query orderByDescending:kVYBVybeTimestampKey];
+//  [query includeKey:kVYBVybeUserKey];
+//  [query setLimit:12];
+//  
+//  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//    if (!error) {
+//      VYBPlayerViewController *sPlayerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
+//      sPlayerVC.delegate = self;
+//      [sPlayerVC playStream:[[objects reverseObjectEnumerator] allObjects]]; // returned objects are ordered by descending
+//    }
+//    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+//  }];
 }
 
 - (void)playerViewController:(VYBPlayerViewController *)playerVC didFinishSetup:(BOOL)ready {
