@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
@@ -75,9 +74,9 @@
                             </state>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uAt-Cu-ztK" userLabel="acceptButton">
-                            <rect key="frame" x="450" y="467" width="150" height="133"/>
+                            <rect key="frame" x="450" y="540" width="150" height="60"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="133" id="9vD-Cj-Mrh"/>
+                                <constraint firstAttribute="height" constant="60" id="9vD-Cj-Mrh"/>
                                 <constraint firstAttribute="width" constant="150" id="qsj-Ry-4Z8"/>
                             </constraints>
                             <state key="normal">
@@ -100,7 +99,7 @@
                                 <action selector="rejectButtonPressed:" destination="-1" eventType="touchUpInside" id="X2S-F5-YIz"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tZs-fJ-heF" userLabel="selectZoneButton">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tZs-fJ-heF" userLabel="checkInButton">
                             <rect key="frame" x="20" y="548" width="228" height="37"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="tZs-fJ-heF" secondAttribute="height" multiplier="228:37" id="uUl-ak-fw7"/>
@@ -113,8 +112,18 @@
                                 <action selector="selectZoneButtonPressed:" destination="-1" eventType="touchUpInside" id="Blg-UO-NBc"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h84-Wg-Haa" userLabel="checkInAerial">
+                            <rect key="frame" x="20" y="537" width="228" height="60"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="60" id="urB-qR-7Cw"/>
+                            </constraints>
+                            <state key="normal">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
                     </subviews>
                     <constraints>
+                        <constraint firstItem="h84-Wg-Haa" firstAttribute="centerY" secondItem="tZs-fJ-heF" secondAttribute="centerY" id="4Yk-ZD-nUR"/>
                         <constraint firstItem="tZs-fJ-heF" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="Btz-0l-kyo"/>
                         <constraint firstItem="LSX-gu-Q3c" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="H8r-pi-Nru"/>
                         <constraint firstAttribute="bottom" secondItem="49M-dx-2eM" secondAttribute="bottom" constant="20" id="JLq-bV-T7J"/>
@@ -125,6 +134,8 @@
                         <constraint firstItem="VEJ-4U-kAQ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="aWK-Md-Z7s"/>
                         <constraint firstItem="w5U-9M-d51" firstAttribute="leading" secondItem="V0J-cK-ZUM" secondAttribute="trailing" id="cHt-Hm-ax3"/>
                         <constraint firstAttribute="bottom" secondItem="w5U-9M-d51" secondAttribute="bottom" constant="20" id="dmY-E0-cgm"/>
+                        <constraint firstItem="h84-Wg-Haa" firstAttribute="centerX" secondItem="tZs-fJ-heF" secondAttribute="centerX" id="gKY-RV-RUT"/>
+                        <constraint firstItem="h84-Wg-Haa" firstAttribute="width" secondItem="tZs-fJ-heF" secondAttribute="width" id="iM0-WM-CXr"/>
                         <constraint firstItem="V0J-cK-ZUM" firstAttribute="leading" secondItem="49M-dx-2eM" secondAttribute="trailing" id="k3n-xU-Roi"/>
                         <constraint firstItem="VEJ-4U-kAQ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="oTh-f2-J6U"/>
                         <constraint firstItem="AiM-47-sjF" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="rNe-RZ-7vJ"/>
