@@ -24,6 +24,9 @@
 - (void)playZoneVybesFromVybe:(PFObject *)aVybe;        // User clicked on one of his individual vybe
 - (void)playFreshVybesFromZone:(NSString *)zoneID;      // User clicked on one of active zones
 //- (void)playActiveVybesFromZone:(NSString *)zoneID;     // User clicked on one of active zones but there is no fresh content
+
+- (void)playCurrentItem;
+
 @end
 @protocol VYBPlayerViewControllerDelegate <NSObject>
 @required

@@ -178,16 +178,14 @@
 - (void)viewWillDisappear:(BOOL)animated {
   [super viewWillDisappear:animated];
   
-  [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
+//  [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
   [self.currPlayer pause];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
   
-  if ( _zoneVybes ) {
-    [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
-  }
+//  [self playCurrentItem];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -195,9 +193,9 @@
   
   [self setNeedsStatusBarAppearanceUpdate];
   
-  if (self.currPlayer && self.currItem) {
-    [self.currPlayer play];
-  }
+//  if (self.currPlayer && self.currItem) {
+//    [self.currPlayer play];
+//  }
 #ifdef DEBUG
 #else
   id tracker = [[GAI sharedInstance] defaultTracker];
@@ -296,6 +294,12 @@
   }];
 }
 
+- (void)playCurrentItem {
+  if (_zoneVybes) {
+    [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+  }
+}
+
 - (void)playAllFresh {
   [[ZoneStore sharedInstance] refreshFreshVybesInBackground:^(BOOL success) {
     if (success) {
@@ -323,7 +327,7 @@
   [query orderByAscending:kVYBVybeTimestampKey];
   // NOTE: - Blocked users, flagged iterms are not filtered
   [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    if (!error) {
+    if (!error && objects.count) {
       _zoneVybes = objects;
       _zoneCurrIdx = 0;
       [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
@@ -398,18 +402,12 @@
   NSString *functionName = @"get_active_zone_vybes";
   
   [PFCloud callFunctionInBackground:functionName withParameters:@{@"zoneID": zoneID} block:^(NSArray *objects, NSError *error) {
-    if (!error) {
-      if (objects.count > 0) {
-        _zoneVybes = objects;
-        _zoneCurrIdx = 0;
-        [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
-          [self.delegate playerViewController:self didFinishSetup:success];
-        }];
-      }
-      else {
-        //TODO: No vybe within past week.
-        [self.delegate playerViewController:self didFinishSetup:NO];
-      }
+    if (!error && objects.count) {
+      _zoneVybes = objects;
+      _zoneCurrIdx = 0;
+      [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
+        [self.delegate playerViewController:self didFinishSetup:success];
+      }];
     }
     else {
       [self.delegate playerViewController:self didFinishSetup:NO];
@@ -518,12 +516,12 @@
   }
   [self.locationLabel setText:zoneName];
   
-  // Display hashtags
+  // Hashtags
+  for (UIButton *tagButton in self.hashtagButtons) {
+    tagButton.hidden = YES;
+  }
   NSArray *hashtags = aVybe[kVYBVybeHashtagsKey];
   if (hashtags) {
-    for (UIButton *tagButton in self.hashtagButtons) {
-      tagButton.hidden = YES;
-    }
     for (int i = 0; i < hashtags.count; i++) {
       NSString *tagText = [NSString stringWithFormat:@"#%@", hashtags[i]];
       UIButton *tagButton = (UIButton *)self.hashtagButtons[i];
@@ -609,7 +607,7 @@
     //[self.currPlayer pause];
     
     _zoneCurrIdx = _zoneCurrIdx + 1;
-    [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+    [self playCurrentItem];
   }
 }
 
@@ -618,7 +616,7 @@
   if (self.lastTimePlayingAsset && [self.lastTimePlayingAsset timeIntervalSinceNow] > -2.0) {
     [self playPrevItem];
   } else {
-    [self playCurrentItemAgain];
+    [self playCurrentItem];
   }
   
   if (!self.goPrevButton.hidden) {
@@ -635,10 +633,6 @@
       }
     }];
   }
-}
-
-- (void)playCurrentItemAgain {
-  [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
 }
 
 - (void)playPrevItem {
@@ -659,7 +653,7 @@
   }
   else {
     _zoneCurrIdx = _zoneCurrIdx - 1;
-    [self playStream:_zoneVybes atIndex:_zoneCurrIdx];
+    [self playCurrentItem];
   }
 }
 
@@ -738,7 +732,9 @@
 
 - (void)playerViewController:(VYBPlayerViewController *)playerVC didFinishSetup:(BOOL)ready {
   if (ready) {
-    [self presentViewController:playerVC animated:YES completion:nil];
+    [self presentViewController:playerVC animated:YES completion:^{
+      [playerVC playCurrentItem];
+    }];
   }
 }
 
@@ -758,7 +754,7 @@
 }
 
 - (void)longPressDetected:(UIGestureRecognizer *)recognizer {
-  CGPoint location = [recognizer locationInView:recognizer.view]; 
+  CGPoint location = [recognizer locationInView:recognizer.view];
   CGRect locationAerial = CGRectMake((self.view.bounds.size.width - 100) / 2, 0, 100, 50);
   BOOL isInLocationAerial = CGRectContainsPoint(locationAerial, location);
 

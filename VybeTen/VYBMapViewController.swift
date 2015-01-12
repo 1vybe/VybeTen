@@ -216,7 +216,9 @@ import MapKit
   func playerViewController(playerVC: VYBPlayerViewController!, didFinishSetup ready: Bool) {
     MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
     if ready {
-      self.presentViewController(playerVC, animated: true, completion: nil)
+      self.presentViewController(playerVC, animated: true, completion: { () -> Void in
+        playerVC.playCurrentItem()
+      })
     }
   }
   

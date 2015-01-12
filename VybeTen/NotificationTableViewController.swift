@@ -224,7 +224,9 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
   
   func playerViewController(playerVC: VYBPlayerViewController!, didFinishSetup ready: Bool) {
     if ready {
-      self.presentViewController(playerVC, animated: true, completion: nil)
+      self.presentViewController(playerVC, animated: true) { () -> Void in
+        playerVC.playCurrentItem()
+      }
     }
   }
   

@@ -698,7 +698,9 @@
   [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
   
   if (ready) {
-    [self presentViewController:playerVC animated:YES completion:nil];
+    [self presentViewController:playerVC animated:YES completion:^{
+      [playerVC playCurrentItem];
+    }];
   }
 }
 
