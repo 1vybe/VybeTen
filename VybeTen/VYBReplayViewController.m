@@ -21,11 +21,11 @@
 @property (nonatomic, weak) IBOutlet UIButton *rejectButton;
 @property (nonatomic, weak) IBOutlet UIView *overlayView;
 @property (nonatomic, weak) IBOutlet UIImageView *bottomBarImageView;
-@property (nonatomic, weak) IBOutlet UIButton *zoneButton;
+@property (nonatomic, weak) IBOutlet UIButton *checkInButton;
 @property (nonatomic, weak) IBOutlet VYBPlayerView *playerView;
 
 - (IBAction)rejectButtonPressed:(id)sender;
-- (IBAction)selectZoneButtonPressed:(id)sender;
+- (IBAction)checkInButtonPressed:(id)sender;
 - (IBAction)acceptButtonPressed:(id)sender;
 
 @property (nonatomic) AVPlayer *player;
@@ -66,10 +66,10 @@
   [self.playerView setPlayer:self.player];
   
   Zone *lastZone = [[MyVybeStore sharedInstance] currZone];
-  if (lastZone && [[ZoneFinder sharedInstance] suggestionsContainZone:lastZone]) {
+  if (lastZone && [[SpotFinder sharedInstance] suggestionsContainSpot:lastZone]) {
     [[MyVybeStore sharedInstance] setCurrZone:lastZone];
-    [self.zoneButton setTitle:lastZone.name forState:UIControlStateNormal];
-    [self.zoneButton setBackgroundImage:nil forState:UIControlStateNormal];
+    [self.checkInButton setTitle:lastZone.name forState:UIControlStateNormal];
+    [self.checkInButton setBackgroundImage:nil forState:UIControlStateNormal];
   }
   
   NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:_videoPath];
@@ -119,6 +119,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
   [super viewWillDisappear:animated];
+  
   [self.player pause];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
   
@@ -133,93 +134,33 @@
 }
 
 #pragma mark - Zone
-- (IBAction)selectZoneButtonPressed:(id)sender {
-  [self.zoneButton setEnabled:NO];
-  [[ZoneFinder sharedInstance] findZoneNearLocationInBackground:^(BOOL success) {
-      NSArray *suggestions = [[ZoneFinder sharedInstance] suggestedZones];
-      if (suggestions && suggestions.count > 0) {
-        [self displayCurrentPlaceSuggestions:suggestions];
-      }
-      [self.zoneButton setEnabled:YES];
-  }];
-}
-
-- (void)displayCurrentPlaceSuggestions:(NSArray *)suggestions {
-  CLLocationManager *tmp = [[CLLocationManager alloc] init];
-  BOOL isLatestOS = [tmp respondsToSelector:@selector(requestAlwaysAuthorization)];
+- (IBAction)checkInButtonPressed:(id)sender {
+  [self.checkInButton setEnabled:NO];
+  self.overlayView.hidden = YES;
   
-  // iOS 8
-  if (isLatestOS) {
-    UIAlertController *checkInController = [UIAlertController alertControllerWithTitle:@"Check In" message:@"Where are you vybing? :)" preferredStyle:UIAlertControllerStyleActionSheet];
-    
-    UIAlertAction *noTagAction = [UIAlertAction actionWithTitle:@"No Check In" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-      [[MyVybeStore sharedInstance] setCurrZone:nil];
-      [self.zoneButton setEnabled:YES];
-      [self.zoneButton setTitle:@"Check-in location" forState:UIControlStateNormal];
-      [self.zoneButton setBackgroundImage:[UIImage imageNamed:@"Checkin-btn"] forState:UIControlStateNormal];
-    }];
-    [checkInController addAction:noTagAction];
-    
-    for (Zone *aZone in suggestions) {
-      UIAlertAction *action = [UIAlertAction actionWithTitle:aZone.name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        [[MyVybeStore sharedInstance] setCurrZone:aZone];
-        [self.zoneButton setTitle:aZone.name forState:UIControlStateNormal];
-        [self.zoneButton setBackgroundImage:nil forState:UIControlStateNormal];
-        [self.zoneButton setEnabled:YES];
-      }];
-      [checkInController addAction:action];
-    }
-    if (checkInController.actions.count > 0) {
-      Zone *currZone = [[MyVybeStore sharedInstance] currZone];
-      if (currZone) {
-        [checkInController setMessage:[NSString stringWithFormat:@"Your are in %@", currZone.name]];
-      }
-    }
-    
-    UIAlertAction *action = [UIAlertAction actionWithTitle:@"Go Back" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-      [self.zoneButton setEnabled:YES];
-    }];
-    [checkInController addAction:action];
-    
-//    [checkInController setModalPresentationStyle:UIModalPresentationPopover];
-    [self presentViewController:checkInController animated:YES completion:nil];
+  // NOTE: - Before ios8 prsentingVC's modalPresentationStyle needed to be set.
+//  self.modalPresentationStyle = UIModalPresentationCurrentContext;
+
+  CheckInViewController *checkInTable = [[CheckInViewController alloc] initWithNibName:@"CheckInViewController" bundle:nil];
+  [checkInTable setModalPresentationStyle:UIModalPresentationOverCurrentContext];
   
-    
-//    UIPopoverPresentationController *popOverController = [checkInController popoverPresentationController];
-//    popOverController.sourceView = self.zoneLabel;
-//    popOverController.sourceRect = CGRectMake(0, 0, 0, 0);
-//    [self presentViewController:checkInController animated:YES completion:nil];
-  }
-  else {
-    UIActionSheet *actionsheet = [[UIActionSheet alloc] initWithTitle:@"Where are you vybing?" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
-    for (Zone *aZone in suggestions) {
-      [actionsheet addButtonWithTitle:aZone.name];
-    }
-    [actionsheet addButtonWithTitle:@"Go Back"];
-    actionsheet.cancelButtonIndex = suggestions.count;
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [actionsheet showInView:[UIApplication sharedApplication].keyWindow];
-    });
-  }
+  [self presentViewController:checkInTable animated:YES completion:nil];
 }
 
-#pragma mark - UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-  NSArray *suggestions = [[ZoneFinder sharedInstance] suggestions];
-  // cancel button
-  if (buttonIndex == suggestions.count) {
-    
+- (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion {
+  [super dismissViewControllerAnimated:flag completion:completion];
+  
+  if (self.overlayView.hidden) {
+    self.overlayView.hidden = NO;
   }
-  else {
-    Zone *zone = suggestions[buttonIndex];
-    [self.zoneButton setTitle:zone.name forState:UIControlStateNormal];
-    [self.zoneButton setBackgroundImage:nil forState:UIControlStateNormal];
-    [[MyVybeStore sharedInstance] setCurrZone:zone];
+  
+  Zone *selected = [[MyVybeStore sharedInstance] currZone];
+  if (selected) {
+    [self.checkInButton setTitle:selected.name forState:UIControlStateNormal];
+    [self.checkInButton setBackgroundImage:nil forState:UIControlStateNormal];
   }
-  [self.zoneButton setEnabled:YES];
+  [self.checkInButton setEnabled:YES];
 }
-
 
 - (IBAction)acceptButtonPressed:(id)sender {
   [[MyVybeStore sharedInstance] uploadCurrentVybe];

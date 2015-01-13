@@ -1,5 +1,5 @@
 //
-//  ZoneFinder.swift
+//  SpotFinder.swift
 //  VybeTen
 //
 //  Created by jinsuk on 10/30/14.
@@ -8,9 +8,9 @@
 
 import UIKit
 
-private let _sharedInstance = ZoneFinder()
+private let _sharedInstance = SpotFinder()
 
-@objc class ZoneFinder: NSObject, CLLocationManagerDelegate  {
+@objc class SpotFinder: NSObject, CLLocationManagerDelegate  {
   var locationManager: CLLocationManager!
   var locFetchCompletionClosure = { (success: Bool) -> () in }
   
@@ -22,9 +22,9 @@ private let _sharedInstance = ZoneFinder()
   var searchURL = ""
   var session: NSURLSession!
   
-  var suggestions: [Zone]!
+  var suggestions: [Zone]?
   
-  class var sharedInstance: ZoneFinder {
+  class var sharedInstance: SpotFinder {
     return _sharedInstance;
   }
   
@@ -40,7 +40,7 @@ private let _sharedInstance = ZoneFinder()
     session = NSURLSession(configuration: configuration)
   }
   
-  func findZoneNearLocationInBackground(completionHandler: ((success: Bool) -> Void)) {
+  func findNearbySpotsInBackground(completionHandler: ((success: Bool) -> Void)) {
     self.setUpSessionWithFourSquare()
     
     locFetchCompletionClosure = completionHandler
@@ -55,23 +55,25 @@ private let _sharedInstance = ZoneFinder()
     }
   }
   
-  func findZoneFromCurrentLocationInBackground() {
+  func findSpotFromCurrentLocationInBackground() {
     locFetchCompletionClosure = { _ in }
     
-    self.findZoneNearLocationInBackground(locFetchCompletionClosure)
+    self.findNearbySpotsInBackground(locFetchCompletionClosure)
   }
   
-  func suggestionsContainZone(zone: Zone) -> Bool {
-    for aZone in suggestions {
-      if aZone.zoneID == zone.zoneID {
-        return true
+  func suggestionsContainSpot(zone: Zone) -> Bool {
+    if suggestions != nil {
+      for aZone in suggestions! {
+        if aZone.zoneID == zone.zoneID {
+          return true
+        }
       }
     }
-    
+
     return false
   }
   
-  private func generateZonesFromData(data: NSData!) -> [Zone]? {
+  private func generateSpotsFromData(data: NSData!) -> [Zone]? {
     var zones = [Zone]()
     var jsonError: NSError?
     var jsonObj = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &jsonError) as [String: AnyObject]
@@ -87,9 +89,13 @@ private let _sharedInstance = ZoneFinder()
     return nil
   }
   
-  func suggestedZones() -> [Zone] {
+  func suggestedSpots() -> [Zone]? {
     if let customZones = ConfigManager.sharedInstance.customZones() {
-      suggestions = customZones + suggestions
+      if suggestions == nil {
+        suggestions = customZones
+      } else {
+        suggestions = customZones + suggestions!
+      }
     }
     
     return suggestions
@@ -113,13 +119,14 @@ private let _sharedInstance = ZoneFinder()
         let statusCode = (response as NSHTTPURLResponse).statusCode
         
         if statusCode == 200 {
-          if let zones = self.generateZonesFromData(data) {
+          if let zones = self.generateSpotsFromData(data) {
             self.suggestions = zones
             self.locFetchCompletionClosure(true)
           }
           else {
-            self.locFetchCompletionClosure(false)
           }
+        } else {
+          self.locFetchCompletionClosure(false)
         }
       }
       else {

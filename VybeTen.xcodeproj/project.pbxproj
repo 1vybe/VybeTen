@@ -39,7 +39,7 @@
 		0288603E19E4A02A007876AE /* VYBCapturePipeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 0288603D19E4A02A007876AE /* VYBCapturePipeline.m */; };
 		028D930C1A16C271002B7642 /* ActivitySectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 028D930B1A16C271002B7642 /* ActivitySectionView.xib */; };
 		0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0293877C1969C1D200F41A12 /* VYBCaptureButton.m */; };
-		029729721A02A1EC0050406D /* ZoneFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029729711A02A1EC0050406D /* ZoneFinder.swift */; };
+		029729721A02A1EC0050406D /* SpotFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029729711A02A1EC0050406D /* SpotFinder.swift */; };
 		02A45CEF1A1E664E00425F9C /* PizzaProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A45CEE1A1E664E00425F9C /* PizzaProgressView.swift */; };
 		02A45CF31A1E821300425F9C /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A45CF21A1E821300425F9C /* CircleProgressView.swift */; };
 		02A45CF51A1EC61800425F9C /* UploadProgressBottomBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A45CF41A1EC61800425F9C /* UploadProgressBottomBar.xib */; };
@@ -75,10 +75,13 @@
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
 		74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */; };
 		74349A271A4945EB006BA83C /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 74349A261A4945EB006BA83C /* libsqlite3.dylib */; };
+		7441011E1A645A3E00D2F874 /* CheckInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7441011D1A645A3E00D2F874 /* CheckInViewController.swift */; };
+		744101201A64739B00D2F874 /* CheckInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7441011F1A64739B00D2F874 /* CheckInViewController.xib */; };
 		74551C811A3E91FA00D348BB /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74551C801A3E91FA00D348BB /* ConfigManager.swift */; };
 		746FDAC91A42C2EA0021360C /* UserPrompts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 746FDAC81A42C2EA0021360C /* UserPrompts.storyboard */; };
 		746FDACB1A42C36A0021360C /* UserPromptsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */; };
 		74861E201A4D0057004E8ADE /* BottomBarMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 74861E1F1A4D0057004E8ADE /* BottomBarMenu.xib */; };
+		749256E81A64966000E04F31 /* SpotTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 749256E71A64966000E04F31 /* SpotTableCell.xib */; };
 		74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */; };
 		74A0FA571A36A8B50065059E /* UnblockUser.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74A0FA561A36A8B50065059E /* UnblockUser.storyboard */; };
 		74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */; };
@@ -165,7 +168,7 @@
 		028D930B1A16C271002B7642 /* ActivitySectionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivitySectionView.xib; sourceTree = "<group>"; };
 		0293877B1969C1D200F41A12 /* VYBCaptureButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCaptureButton.h; sourceTree = "<group>"; };
 		0293877C1969C1D200F41A12 /* VYBCaptureButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBCaptureButton.m; sourceTree = "<group>"; };
-		029729711A02A1EC0050406D /* ZoneFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoneFinder.swift; sourceTree = "<group>"; };
+		029729711A02A1EC0050406D /* SpotFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotFinder.swift; sourceTree = "<group>"; };
 		02A45CEE1A1E664E00425F9C /* PizzaProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PizzaProgressView.swift; sourceTree = "<group>"; };
 		02A45CF21A1E821300425F9C /* CircleProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
 		02A45CF41A1EC61800425F9C /* UploadProgressBottomBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UploadProgressBottomBar.xib; sourceTree = "<group>"; };
@@ -211,10 +214,13 @@
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
 		74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyVybeStore.swift; sourceTree = "<group>"; };
 		74349A261A4945EB006BA83C /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		7441011D1A645A3E00D2F874 /* CheckInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckInViewController.swift; sourceTree = "<group>"; };
+		7441011F1A64739B00D2F874 /* CheckInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckInViewController.xib; sourceTree = "<group>"; };
 		74551C801A3E91FA00D348BB /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
 		746FDAC81A42C2EA0021360C /* UserPrompts.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UserPrompts.storyboard; sourceTree = "<group>"; };
 		746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPromptsViewController.swift; sourceTree = "<group>"; };
 		74861E1F1A4D0057004E8ADE /* BottomBarMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomBarMenu.xib; sourceTree = "<group>"; };
+		749256E71A64966000E04F31 /* SpotTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SpotTableCell.xib; sourceTree = "<group>"; };
 		74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
 		74A0FA561A36A8B50065059E /* UnblockUser.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UnblockUser.storyboard; sourceTree = "<group>"; };
 		74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -323,6 +329,9 @@
 				0288603D19E4A02A007876AE /* VYBCapturePipeline.m */,
 				027DE0ED19E7484200F5F4C0 /* VYBCaptureRecorder.h */,
 				027DE0EE19E7484200F5F4C0 /* VYBCaptureRecorder.m */,
+				7441011D1A645A3E00D2F874 /* CheckInViewController.swift */,
+				7441011F1A64739B00D2F874 /* CheckInViewController.xib */,
+				749256E71A64966000E04F31 /* SpotTableCell.xib */,
 			);
 			name = Capture;
 			sourceTree = "<group>";
@@ -529,7 +538,7 @@
 				025EDB2318F65E45008B0CB2 /* VYBAnimator.h */,
 				025EDB2418F65E45008B0CB2 /* VYBAnimator.m */,
 				02512D071A0BEDA800155068 /* ZoneStore.swift */,
-				029729711A02A1EC0050406D /* ZoneFinder.swift */,
+				029729711A02A1EC0050406D /* SpotFinder.swift */,
 				74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */,
 			);
 			path = VybeTen;
@@ -693,11 +702,13 @@
 				74861E201A4D0057004E8ADE /* BottomBarMenu.xib in Resources */,
 				740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
+				749256E81A64966000E04F31 /* SpotTableCell.xib in Resources */,
 				02D11D0918DF62AC0018DA97 /* Montreal-Heavy.otf in Resources */,
 				02D11D0E18DF62AC0018DA97 /* Montreal-MediumIta.otf in Resources */,
 				02D11D0818DF62AC0018DA97 /* Montreal-DemiBoldIta.otf in Resources */,
 				0207236519F1991800817A02 /* VYBPermissionViewController.xib in Resources */,
 				02D11D0618DF62AC0018DA97 /* Montreal-BoldIta.otf in Resources */,
+				744101201A64739B00D2F874 /* CheckInViewController.xib in Resources */,
 				888F1FE719B2740B00546643 /* ProximaNovaSoft-Bold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -771,7 +782,7 @@
 				74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */,
 				746FDACB1A42C36A0021360C /* UserPromptsViewController.swift in Sources */,
 				025CC90F19D5229200A1208C /* UIImage+maskImage.m in Sources */,
-				029729721A02A1EC0050406D /* ZoneFinder.swift in Sources */,
+				029729721A02A1EC0050406D /* SpotFinder.swift in Sources */,
 				74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */,
 				02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */,
 				020BDABA19FFFF7500B02824 /* VYBAciveButton.m in Sources */,
@@ -779,6 +790,7 @@
 				74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
 				74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */,
+				7441011E1A645A3E00D2F874 /* CheckInViewController.swift in Sources */,
 				02A45CEF1A1E664E00425F9C /* PizzaProgressView.swift in Sources */,
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				025408E419BA10E5009C7C71 /* NSMutableArray+PFObject.m in Sources */,

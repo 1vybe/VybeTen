@@ -22,7 +22,7 @@
 
 - (void)loadView {
   UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-  [backgroundImageView setBackgroundColor:[UIColor orangeColor]];
+  [backgroundImageView setBackgroundColor:[UIColor blackColor]];
   self.view = backgroundImageView;
 }
 

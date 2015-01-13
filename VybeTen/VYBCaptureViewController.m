@@ -146,7 +146,7 @@ static void *XYZContext = &XYZContext;
     
     [[MyVybeStore sharedInstance] prepareNewVybe];
     
-    [[ZoneFinder sharedInstance] findZoneFromCurrentLocationInBackground];
+    [[SpotFinder sharedInstance] findSpotFromCurrentLocationInBackground];
     
     [recordButton setEnabled:NO];
     
