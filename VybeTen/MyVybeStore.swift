@@ -40,7 +40,7 @@ class MyVybeStore: NSObject {
     
     currHashTags = nil
     
-    currZone = nil
+//    currZone = nil
   }
   
   func addHashTagForCurrentVybe(tagText: String) {

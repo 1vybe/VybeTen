@@ -124,6 +124,7 @@ private let _sharedInstance = SpotFinder()
             self.locFetchCompletionClosure(true)
           }
           else {
+            self.locFetchCompletionClosure(false)
           }
         } else {
           self.locFetchCompletionClosure(false)
