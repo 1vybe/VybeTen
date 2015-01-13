@@ -82,6 +82,8 @@
 		746FDACB1A42C36A0021360C /* UserPromptsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */; };
 		74861E201A4D0057004E8ADE /* BottomBarMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 74861E1F1A4D0057004E8ADE /* BottomBarMenu.xib */; };
 		749256E81A64966000E04F31 /* SpotTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 749256E71A64966000E04F31 /* SpotTableCell.xib */; };
+		749256F01A64CCEA00E04F31 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749256EF1A64CCEA00E04F31 /* ProfileViewController.swift */; };
+		749256F21A64CCFC00E04F31 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 749256F11A64CCFC00E04F31 /* Profile.storyboard */; };
 		74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */; };
 		74A0FA571A36A8B50065059E /* UnblockUser.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74A0FA561A36A8B50065059E /* UnblockUser.storyboard */; };
 		74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */; };
@@ -221,6 +223,8 @@
 		746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPromptsViewController.swift; sourceTree = "<group>"; };
 		74861E1F1A4D0057004E8ADE /* BottomBarMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomBarMenu.xib; sourceTree = "<group>"; };
 		749256E71A64966000E04F31 /* SpotTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SpotTableCell.xib; sourceTree = "<group>"; };
+		749256EF1A64CCEA00E04F31 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		749256F11A64CCFC00E04F31 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
 		74A0FA561A36A8B50065059E /* UnblockUser.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UnblockUser.storyboard; sourceTree = "<group>"; };
 		74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -355,6 +359,7 @@
 				74E570EE1A41D430005072E1 /* Notification.storyboard */,
 				746FDAC81A42C2EA0021360C /* UserPrompts.storyboard */,
 				746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */,
+				749256F11A64CCFC00E04F31 /* Profile.storyboard */,
 			);
 			name = Stories;
 			sourceTree = "<group>";
@@ -431,6 +436,7 @@
 				74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */,
 				74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */,
 				74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */,
+				749256EF1A64CCEA00E04F31 /* ProfileViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -703,6 +709,7 @@
 				740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
 				749256E81A64966000E04F31 /* SpotTableCell.xib in Resources */,
+				749256F21A64CCFC00E04F31 /* Profile.storyboard in Resources */,
 				02D11D0918DF62AC0018DA97 /* Montreal-Heavy.otf in Resources */,
 				02D11D0E18DF62AC0018DA97 /* Montreal-MediumIta.otf in Resources */,
 				02D11D0818DF62AC0018DA97 /* Montreal-DemiBoldIta.otf in Resources */,
@@ -778,6 +785,7 @@
 				74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */,
 				02CEE2AD1970A46A00AC361F /* VYBTimerView.m in Sources */,
 				0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */,
+				749256F01A64CCEA00E04F31 /* ProfileViewController.swift in Sources */,
 				02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */,
 				74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */,
 				746FDACB1A42C36A0021360C /* UserPromptsViewController.swift in Sources */,
