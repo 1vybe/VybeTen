@@ -17,16 +17,19 @@
 #import "AVAsset+VideoOrientation.h"
 
 @interface VYBReplayViewController () <UITextFieldDelegate, UIActionSheetDelegate>
+@property (nonatomic, weak) IBOutlet VYBPlayerView *playerView;
 
-@property (nonatomic, weak) IBOutlet UIButton *rejectButton;
 @property (nonatomic, weak) IBOutlet UIView *overlayView;
 @property (nonatomic, weak) IBOutlet UIImageView *bottomBarImageView;
-@property (nonatomic, weak) IBOutlet UIButton *checkInButton;
-@property (nonatomic, weak) IBOutlet VYBPlayerView *playerView;
+@property (nonatomic, weak) IBOutlet UIButton *rejectButton;
+
+@property (nonatomic, weak) IBOutlet UILabel *checkInLabel;
+@property (nonatomic, weak) IBOutlet UIButton *checkAerial;
 
 - (IBAction)rejectButtonPressed:(id)sender;
 - (IBAction)checkInButtonPressed:(id)sender;
 - (IBAction)acceptButtonPressed:(id)sender;
+- (IBAction)hashtagButtonPressed:(id)sender;
 
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *currItem;
@@ -68,8 +71,7 @@
   Zone *lastZone = [[MyVybeStore sharedInstance] currZone];
   if (lastZone && [[SpotFinder sharedInstance] suggestionsContainSpot:lastZone]) {
     [[MyVybeStore sharedInstance] setCurrZone:lastZone];
-    [self.checkInButton setTitle:lastZone.name forState:UIControlStateNormal];
-    [self.checkInButton setBackgroundImage:nil forState:UIControlStateNormal];
+    [self.checkInLabel setText:lastZone.name];
   }
   
   NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:_videoPath];
@@ -96,7 +98,7 @@
     [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
   }
   
-  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addCaption:)];
+  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissHashtag)];
   [self.view addGestureRecognizer:tapGesture];
   _isEditingCaption = NO;
 }
@@ -135,7 +137,7 @@
 
 #pragma mark - Zone
 - (IBAction)checkInButtonPressed:(id)sender {
-  [self.checkInButton setEnabled:NO];
+  [self.checkAerial setEnabled:NO];
   self.overlayView.hidden = YES;
   
   // NOTE: - Before ios8 prsentingVC's modalPresentationStyle needed to be set.
@@ -156,10 +158,9 @@
   
   Zone *selected = [[MyVybeStore sharedInstance] currZone];
   if (selected) {
-    [self.checkInButton setTitle:selected.name forState:UIControlStateNormal];
-    [self.checkInButton setBackgroundImage:nil forState:UIControlStateNormal];
+    [self.checkInLabel setText:selected.name];
   }
-  [self.checkInButton setEnabled:YES];
+  [self.checkAerial setEnabled:YES];
 }
 
 - (IBAction)acceptButtonPressed:(id)sender {
@@ -193,7 +194,16 @@
   [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
-- (void)addCaption:(UIGestureRecognizer *)recognizer {
+- (void)dismissHashtag {
+  if (_isEditingCaption) {
+    [self.captionTextField removeFromSuperview];
+    self.captionTextField = nil;
+    
+    [self.view endEditing:YES];
+  }
+}
+
+- (IBAction)hashtagButtonPressed:(id)sender {
   if (_isEditingCaption) {
     [self.captionTextField removeFromSuperview];
     self.captionTextField = nil;
