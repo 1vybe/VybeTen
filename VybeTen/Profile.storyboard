@@ -8,7 +8,7 @@
         <!--MY VYBES-->
         <scene sceneID="AR8-4A-CeT">
             <objects>
-                <tableViewController id="5vM-Ef-xhM" sceneMemberID="viewController">
+                <tableViewController id="5vM-Ef-xhM" customClass="ProfileViewController" customModule="VybeTen" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="1" sectionFooterHeight="1" id="9Ho-F9-doB">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -20,7 +20,7 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YXm-1x-b6L" userLabel="Summary">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="77"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4t3-lD-vfz" userLabel="profileImage">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4t3-lD-vfz" userLabel="profileImage" customClass="PFImageView">
                                             <rect key="frame" x="25" y="12" width="56" height="56"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="4t3-lD-vfz" secondAttribute="height" multiplier="1:1" id="AwB-Ra-rh7"/>
@@ -28,26 +28,45 @@
                                                 <constraint firstAttribute="height" constant="56" id="hRM-x2-jm6"/>
                                             </constraints>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JKU-Gb-yKR" userLabel="username">
-                                            <rect key="frame" x="97" y="21" width="51" height="24"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JKU-Gb-yKR" userLabel="username">
+                                            <rect key="frame" x="97" y="21" width="92" height="24"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="214" id="wjy-WD-oJj"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
                                             <color key="textColor" red="0.2901960784" green="0.2901960784" blue="0.2901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6nd-5f-Jmh" userLabel="activitySummary">
-                                            <rect key="frame" x="97" y="55" width="32" height="16"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 Vybes - 3 Spots - 5 Favorites" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6nd-5f-Jmh" userLabel="activitySummary">
+                                            <rect key="frame" x="97" y="55" width="179" height="16"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="260" id="InD-7h-vHE"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Italic" family="Helvetica Neue" pointSize="13"/>
                                             <color key="textColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jfv-GF-up3" userLabel="profileButton">
+                                            <rect key="frame" x="25" y="12" width="56" height="56"/>
+                                            <state key="normal">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="profileButtonPressed:" destination="5vM-Ef-xhM" eventType="touchUpInside" id="N6t-Hq-EWM"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
+                                        <constraint firstItem="4t3-lD-vfz" firstAttribute="trailing" secondItem="jfv-GF-up3" secondAttribute="trailing" id="2be-B0-SUT"/>
                                         <constraint firstItem="4t3-lD-vfz" firstAttribute="top" secondItem="YXm-1x-b6L" secondAttribute="top" constant="12" id="54y-cw-7qP"/>
                                         <constraint firstItem="JKU-Gb-yKR" firstAttribute="top" secondItem="YXm-1x-b6L" secondAttribute="top" constant="21" id="5lI-fu-BWS"/>
                                         <constraint firstItem="6nd-5f-Jmh" firstAttribute="top" secondItem="JKU-Gb-yKR" secondAttribute="bottom" constant="10" id="Chb-3d-saF"/>
+                                        <constraint firstItem="4t3-lD-vfz" firstAttribute="leading" secondItem="jfv-GF-up3" secondAttribute="leading" id="Jw6-Sn-cdw"/>
                                         <constraint firstItem="6nd-5f-Jmh" firstAttribute="leading" secondItem="4t3-lD-vfz" secondAttribute="trailing" constant="16" id="Pcs-VV-hEi"/>
+                                        <constraint firstItem="4t3-lD-vfz" firstAttribute="bottom" secondItem="jfv-GF-up3" secondAttribute="bottom" id="ayN-Qw-Ffh"/>
                                         <constraint firstAttribute="height" constant="77" id="bhP-h5-Xh6"/>
+                                        <constraint firstItem="4t3-lD-vfz" firstAttribute="top" secondItem="jfv-GF-up3" secondAttribute="top" id="eT0-TJ-rER"/>
                                         <constraint firstItem="4t3-lD-vfz" firstAttribute="leading" secondItem="YXm-1x-b6L" secondAttribute="leading" constant="25" id="xT8-Fh-LSa"/>
                                         <constraint firstItem="JKU-Gb-yKR" firstAttribute="leading" secondItem="4t3-lD-vfz" secondAttribute="trailing" constant="16" id="zII-Vx-HN6"/>
                                     </constraints>
@@ -70,17 +89,30 @@
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bul-Un-bIW" userLabel="ActivityButton">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="40"/>
+                                            <state key="normal">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="activityButtonPressed:" destination="5vM-Ef-xhM" eventType="touchUpInside" id="41u-iC-f5n"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstItem="pp5-mc-vAW" firstAttribute="top" secondItem="vwR-14-cUn" secondAttribute="top" constant="11" id="3PT-Aj-gRm"/>
+                                        <constraint firstItem="bul-Un-bIW" firstAttribute="top" secondItem="vwR-14-cUn" secondAttribute="top" id="8Qu-20-Vyh"/>
                                         <constraint firstItem="uWS-HV-btD" firstAttribute="top" secondItem="vwR-14-cUn" secondAttribute="top" id="Jjq-mb-R7Q"/>
                                         <constraint firstItem="uWS-HV-btD" firstAttribute="leading" secondItem="vwR-14-cUn" secondAttribute="leading" id="UIQ-lV-Ma5"/>
                                         <constraint firstAttribute="centerX" secondItem="XJG-Ut-1ZJ" secondAttribute="centerX" id="Z2U-Oz-21m"/>
+                                        <constraint firstAttribute="bottom" secondItem="bul-Un-bIW" secondAttribute="bottom" id="cMk-Cj-Wei"/>
                                         <constraint firstAttribute="trailing" secondItem="pp5-mc-vAW" secondAttribute="trailing" constant="18" id="fze-oO-o3d"/>
                                         <constraint firstAttribute="bottom" secondItem="uWS-HV-btD" secondAttribute="bottom" id="hHg-ea-mcn"/>
+                                        <constraint firstItem="bul-Un-bIW" firstAttribute="leading" secondItem="vwR-14-cUn" secondAttribute="leading" id="hZe-rk-H8Z"/>
                                         <constraint firstAttribute="trailing" secondItem="uWS-HV-btD" secondAttribute="trailing" id="kd1-Lh-sWf"/>
                                         <constraint firstAttribute="height" constant="40" id="ljp-X6-ShN"/>
+                                        <constraint firstAttribute="trailing" secondItem="bul-Un-bIW" secondAttribute="trailing" id="nqN-8f-dpv"/>
                                         <constraint firstAttribute="centerY" secondItem="XJG-Ut-1ZJ" secondAttribute="centerY" id="znw-aY-miO"/>
                                     </constraints>
                                 </view>
@@ -192,6 +224,14 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="activityButton" destination="bul-Un-bIW" id="S5C-Zv-OgP"/>
+                        <outlet property="activityCountLabel" destination="pp5-mc-vAW" id="McI-Kv-qmV"/>
+                        <outlet property="activitySummary" destination="6nd-5f-Jmh" id="DQQ-1z-fiW"/>
+                        <outlet property="profileButton" destination="jfv-GF-up3" id="UsI-zY-e6r"/>
+                        <outlet property="profilePicView" destination="4t3-lD-vfz" id="cFk-fw-ksG"/>
+                        <outlet property="username" destination="JKU-Gb-yKR" id="LT8-3l-DMg"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9ZC-p3-qIy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
