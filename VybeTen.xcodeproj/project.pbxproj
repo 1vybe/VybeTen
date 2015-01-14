@@ -84,6 +84,8 @@
 		749256E81A64966000E04F31 /* SpotTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 749256E71A64966000E04F31 /* SpotTableCell.xib */; };
 		749256F01A64CCEA00E04F31 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749256EF1A64CCEA00E04F31 /* ProfileViewController.swift */; };
 		749256F21A64CCFC00E04F31 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 749256F11A64CCFC00E04F31 /* Profile.storyboard */; };
+		749256F51A65C82C00E04F31 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749256F31A65C82C00E04F31 /* PostTableViewCell.swift */; };
+		749256F61A65C82C00E04F31 /* PostTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 749256F41A65C82C00E04F31 /* PostTableViewCell.xib */; };
 		74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */; };
 		74A0FA571A36A8B50065059E /* UnblockUser.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74A0FA561A36A8B50065059E /* UnblockUser.storyboard */; };
 		74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */; };
@@ -225,6 +227,8 @@
 		749256E71A64966000E04F31 /* SpotTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SpotTableCell.xib; sourceTree = "<group>"; };
 		749256EF1A64CCEA00E04F31 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		749256F11A64CCFC00E04F31 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
+		749256F31A65C82C00E04F31 /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
+		749256F41A65C82C00E04F31 /* PostTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostTableViewCell.xib; sourceTree = "<group>"; };
 		74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
 		74A0FA561A36A8B50065059E /* UnblockUser.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UnblockUser.storyboard; sourceTree = "<group>"; };
 		74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -418,6 +422,8 @@
 				02A45CF41A1EC61800425F9C /* UploadProgressBottomBar.xib */,
 				74861E1F1A4D0057004E8ADE /* BottomBarMenu.xib */,
 				74D203ED1A5C918F00DBF3B7 /* SimpleTextField.swift */,
+				749256F31A65C82C00E04F31 /* PostTableViewCell.swift */,
+				749256F41A65C82C00E04F31 /* PostTableViewCell.xib */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -709,6 +715,7 @@
 				740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
 				749256E81A64966000E04F31 /* SpotTableCell.xib in Resources */,
+				749256F61A65C82C00E04F31 /* PostTableViewCell.xib in Resources */,
 				749256F21A64CCFC00E04F31 /* Profile.storyboard in Resources */,
 				02D11D0918DF62AC0018DA97 /* Montreal-Heavy.otf in Resources */,
 				02D11D0E18DF62AC0018DA97 /* Montreal-MediumIta.otf in Resources */,
@@ -808,6 +815,7 @@
 				88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */,
 				88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */,
 				021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */,
+				749256F51A65C82C00E04F31 /* PostTableViewCell.swift in Sources */,
 				88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
 				023E538D191F142000C3CF78 /* VYBCache.m in Sources */,
