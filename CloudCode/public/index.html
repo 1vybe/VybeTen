@@ -1,69 +1,55 @@
 <!DOCTYPE html>
+
 <html>
 
   <head>
     <meta charset="utf-8">
-    <title>Vybe</title>
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-    <script src="js/underscore.js"></script>
-    <script src="http://www.parsecdn.com/js/parse-1.3.3.min.js"></script>
-    <script src="js/vybe.js"></script>
-    <script src="http://momentjs.com/downloads/moment.min.js"></script>
-    <style>
-      body {
-        background-color: black;
-      }
-
-      video {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        z-index: 0;
-      }
-
-      @font-face {
-          font-family: 'Avenir Regular';
-          src: url('fonts/AvenirLTStd-Medium.otf');
-      }
-
-      .overlay {
-        position: absolute;
-        font-size: large;
-        color: white;
-        font-family: 'Avenir Regular';
-        z-index: 1;
-      }
-
-      .info {
-        bottom: 0;
-        line-height: 1.2;
-      }
-
-      .preloader {
-        position: absolute!important;
-        top: -10000px!important;
-        left: -10000px!important;
-      }
-
-      a {
-        font-size: x-large;
-        color: white;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>VYBE - The Pulse Of Montreal</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/font.css">
   </head>
 
   <body>
 
-    <div class="liveplayer">
-      <video class="player" preload="auto" src="" poster=""></video>
-      <div class="overlay info"></div>
-      <div class="overlay logo">
-        <a href="http://www.myvybe.co/">
-          <img src="images/logo.png">
+    <div class="wrapper">
+
+      <div class="logo"><img src="images/title.png" alt="VYBE" title="VYBE" class="img-responsive"/></div>
+      <div class="phone-img pull-left">
+        <a href="/player">
+          <img src="images/phone.png" class="img-responsive" />
         </a>
       </div>
-      <video class="preloader" preload="auto" src=""></video>
+
+      <div class="left-wrapper pull-left">
+
+        <div class="slogan1">The Pulse Of Your City</div>
+        <div class="tagline">See the best events in Montreal,<br>as they happen.</div>
+
+        <!-- Subscribe Form -->
+        <div class="phone-img-tablet">
+          <a href="/player">
+            <img src="images/phone.png" class="img-responsive" />
+          </a>
+        </div>
+
+        <div class="subscribe-form">
+
+          <div class="slogan3">Signup to our betalist and know when we go live</div>
+
+          <form action="http://myvybe.us9.list-manage.com/subscribe/post?u=a1129881a712d3f0e8a3b18e1&amp;id=de7ee08db5" method="post" target="_blank" novalidate>
+            <input type="text" name="EMAIL" placeholder="Your email here" class="pull-left"/>
+            <button type="submit" class="pull-left">Get Early Access</button>
+          </form>
+
+        </div>
+
+
+      </div>
+
     </div>
+
   </body>
 
 </html>

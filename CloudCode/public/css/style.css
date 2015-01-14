@@ -1,0 +1,449 @@
+
+html,
+body
+{
+    background: url('../images/background.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+       -moz-background-size: cover;
+         -o-background-size: cover;
+            background-size: cover;
+}
+
+body
+{
+    height: 100%;
+
+    background: none;
+}
+
+.wrapper
+{
+    width: auto;
+    margin: 0 30px;
+}
+
+.logo
+{
+    width: 260px;
+    height: auto;
+    margin: 50px auto;
+}
+
+.phone-img
+{
+    display: none;
+
+    width: 265px;
+    height: 537px;
+    margin-left: 12.1527%;
+}
+
+.phone-img-tablet
+{
+    display: block;
+    float: none;
+
+    width: 180px;
+    height: 364px;
+    margin: 30px auto;
+}
+
+.img-responsive
+{
+    width: 100%;
+    height: auto;
+}
+
+.left-wrapper
+{
+    width: auto;
+    margin: 0 30px;
+}
+
+.pull-left
+{
+    float: none;
+}
+
+.pull-right
+{
+    float: none;
+}
+
+.text-center
+{
+    text-align: center;
+}
+
+
+.slogan1
+{
+    font-family: 'JosefinSans Light', Helvetica, Arial;
+    font-size: 36px;
+
+    width: auto;
+    margin-top: 20px;
+    margin-bottom: 33px;
+
+    text-align: center;
+    text-transform: uppercase;
+
+    color: #fff;
+}
+.slogan2
+{
+    width: 660px;
+}
+.slogan3
+{
+    font-family: 'Avenir Next UltraLight', Helvetica, Arial;
+    font-size: 20px;
+    font-weight: lighter;
+
+    width: 260px;
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.tagline
+{
+    font-family: 'Avenir Next UltraLight', Helvetica, Arial;
+    font-size: 24px;
+    font-weight: lighter;
+
+    width: auto;
+    margin-bottom: 50px;
+
+    text-align: center;
+
+    color: #fff;
+}
+
+
+.subscribe-form
+{
+    font-family: 'Avenir Regular', Helvetica, Arial;
+    font-size: 34px;
+    font-weight: lighter;
+
+    float: none;
+
+    width: auto;
+    margin-top: 55px;
+    margin-bottom: 20px;
+    margin-left: 0;
+
+    color: #fff;
+}
+
+.subscribe-form input[type='text']
+{
+    font-size: 16px;
+    line-height: 60px;
+
+    width: 184px;
+    height: 60px;
+    padding: 0 30px;
+
+    color: #c0c0c0;
+    border: 0;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.subscribe-form button
+{
+    font-family: 'Avenir Bold', Helvetica, Arial;
+    font-size: 20px;
+    font-weight: bold;
+
+    float: none;
+
+    width: 244px;
+    margin-top: 20px;
+    margin-left: 0;
+    padding: 8px 25px;
+
+    text-align: center;
+    text-transform: uppercase;
+
+    color: #fff;
+    border: 0;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    background: #ff6935; /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjkzNSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZjNjM2IiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background:    -moz-linear-gradient(top,  #ff6935 0%, #ff3c3b 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff6935), color-stop(100%,#ff3c3b)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ff6935 0%,#ff3c3b 100%); /* Chrome10+,Safari5.1+ */
+    background:      -o-linear-gradient(top,  #ff6935 0%,#ff3c3b 100%); /* Opera 11.10+ */
+    background:     -ms-linear-gradient(top,  #ff6935 0%,#ff3c3b 100%); /* IE10+ */
+    background:         linear-gradient(to bottom,  #ff6935 0%,#ff3c3b 100%); /* W3C */
+
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff6935', endColorstr='#ff3c3b',GradientType=0 ); /* IE6-8 */
+}
+
+
+@media(min-width:490px)
+{
+    .slogan1
+    {
+        font-size: 70px;
+    }
+
+    .tagline
+    {
+        font-size: 34px;
+    }
+
+    .subscribe-form input[type='text']
+    {
+        width: 51.85185185185185%;
+    }
+}
+
+
+@media(min-width:682px)
+{
+    .subscribe-form button
+    {
+        float: right;
+
+        width: 29.62962962962963%;
+        margin-top: -8px;
+        margin-left: 6.701940035273369%;
+    }
+}
+
+
+/* Min width 768px and max width 1366px */
+
+@media(min-width:768px)
+{
+    .wrapper
+    {
+        width: 667px;
+        margin: 0 auto;
+    }
+
+    .logo
+    {
+        height: 74px;
+        margin: 50px auto;
+    }
+
+    .phone-img
+    {
+        display: none;
+
+        width: 265px;
+        height: 537px;
+        margin-left: 12.1527%;
+    }
+
+    .phone-img-tablet
+    {
+        display: block;
+        float: left;
+
+        width: 180px;
+        height: 364px;
+    }
+
+    .img-responsive
+    {
+        width: 100%;
+        height: auto;
+    }
+
+    .left-wrapper
+    {
+        width: auto;
+        margin: 0 30px;
+    }
+
+    .pull-left
+    {
+        float: none;
+    }
+
+    .pull-right
+    {
+        float: none;
+    }
+
+    .text-center
+    {
+        text-align: center;
+    }
+
+    .slogan1
+    {
+        font-family: 'JosefinSans Light', Helvetica, Arial;
+        font-size: 70px;
+
+        width: auto;
+        margin-top: 20px;
+        margin-bottom: 33px;
+
+        text-align: center;
+        text-transform: uppercase;
+
+        color: #fff;
+    }
+
+    .slogan2
+    {
+        width: 660px;
+    }
+
+    .slogan3
+    {
+        font-family: 'Avenir Next UltraLight', Helvetica, Arial;
+        font-size: 24px;
+        font-weight: lighter;
+
+        width: auto;
+        margin-top: 50px;
+        margin-bottom: 18px;
+    }
+
+    .tagline
+    {
+        font-family: 'Avenir Next UltraLight', Helvetica, Arial;
+        font-size: 40px;
+        font-weight: lighter;
+
+        width: auto;
+        margin-bottom: 50px;
+
+        text-align: center;
+
+        color: #fff;
+    }
+
+    .subscribe-form
+    {
+        font-family: 'Avenir Regular', Helvetica, Arial;
+        font-size: 34px;
+        font-weight: lighter;
+
+        float: left;
+
+        width: 286px;
+        margin-top: 55px;
+        margin-left: 66px;
+
+        color: #fff;
+    }
+
+    .subscribe-form input[type='text']
+    {
+        font-size: 16px;
+        line-height: 50px;
+
+        width: 226px;
+        height: 50px;
+        padding: 0 30px;
+
+        color: #c0c0c0;
+        border: 0;
+        border-radius: 10px;
+        background: #fff;
+    }
+
+    .subscribe-form button
+    {
+        font-family: 'Avenir Bold', Helvetica, Arial;
+        font-size: 20px;
+        font-weight: bold;
+
+        width: 100%;
+        margin-top: 20px;
+        margin-left: 0;
+        padding: 8px 25px;
+
+        text-align: center;
+        text-transform: uppercase;
+    }
+}
+
+
+@media(min-width:1200px)
+{
+
+    .wrapper
+    {
+        width: 1170px;
+    }
+
+    .logo
+    {
+        margin: 44px 0 44px 155px;
+    }
+
+    .phone-img
+    {
+        display: block;
+    }
+
+    .phone-img-tablet
+    {
+        display: none;
+    }
+
+    .left-wrapper
+    {
+        width: 56.83760683760684%;
+        margin-right: 0;
+        margin-left: 6.41025641025641%;
+    }
+
+    .pull-left
+    {
+        float: left;
+    }
+
+    .pull-right
+    {
+        float: right;
+    }
+
+    .slogan1
+    {
+        text-align: left;
+    }
+
+    .tagline
+    {
+        font-size: 36px;
+        font-weight: lighter;
+
+        width: 555px;
+
+        text-align: left;
+    }
+
+    .subscribe-form
+    {
+        float: none;
+
+        width: auto;
+        margin-left: 0;
+    }
+
+    .subscribe-form input[type='text']
+    {
+        width: 290px;
+    }
+
+    .subscribe-form button
+    {
+        float: left;
+
+        width: 162px;
+        margin-top: -8px;
+        margin-left: 50px;
+	}
+}
