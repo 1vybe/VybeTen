@@ -210,7 +210,7 @@
 
 - (void)handlePush:(NSDictionary *)payload {
   if (self.swipeContainerController && self.swipeContainerController.viewControllers.count) {
-    [self.swipeContainerController moveToActivityScreenWithAnimation:NO];
+    [self.swipeContainerController moveToHomeScreenWithAnimation:NO];
     
     NSString *pushType = payload[kVYBPushPayloadPayloadTypeKey];
     if ([pushType isEqualToString:kVYBPushPayloadPayloadTypeActivityKey]) {

@@ -27,11 +27,13 @@
 
 @property (nonatomic, weak) IBOutlet UIButton *flipButton;
 @property (nonatomic, weak) IBOutlet UIButton *flashButton;
-@property (nonatomic, weak) IBOutlet UIButton *activityButton;
+@property (nonatomic, weak) IBOutlet UIButton *homeButton;
+@property (nonatomic, weak) IBOutlet UIButton *profileButton;
 @property (nonatomic, weak) IBOutlet UIButton *recordButton;
 @property (nonatomic, weak) IBOutlet UIImageView *focusTarget;
 
-- (IBAction)activityButtonPressed:(id)sender;
+- (IBAction)homeButtonPressed:(id)sender;
+- (IBAction)profileButtonPressed:(id)sender;
 - (IBAction)flipButtonPressed:(id)sender;
 - (IBAction)flashButtonPressed:(id)sender;
 - (IBAction)recordButtonPressed:(id)sender;
@@ -223,7 +225,8 @@ static void *XYZContext = &XYZContext;
   
   [[self flipButton] setEnabled:NO];
   [[self flashButton] setEnabled:NO];
-  [[self activityButton] setEnabled:NO];
+  [[self homeButton] setEnabled:NO];
+  [[self profileButton] setEnabled:NO];
   
   [capturePipeline flipCameraWithCompletion:^(AVCaptureDevicePosition cameraPosition){
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -232,7 +235,8 @@ static void *XYZContext = &XYZContext;
       [[self flipButton] setEnabled:YES];
       [[self flashButton] setEnabled:YES];
       [[self flashButton] setHidden:_isFrontCamera];
-      [[self activityButton] setEnabled:YES];
+      [[self homeButton] setEnabled:YES];
+      [[self profileButton] setEnabled:YES];
     });
   }];
 }
@@ -301,11 +305,7 @@ static void *XYZContext = &XYZContext;
   CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
   dispatch_async(dispatch_get_main_queue(), ^{
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-      [self.flipButton setTransform:transform];
-      [self.flashButton setTransform:transform];
-      [self.activityButton setTransform:transform];
       [recordButton setTransform:transform];
-
     } completion:nil];
   });
 }
@@ -333,9 +333,6 @@ static void *XYZContext = &XYZContext;
       break;
   }
   CGAffineTransform transform = CGAffineTransformMakeRotation(rotation);
-  [self.flipButton setTransform:transform];
-  [self.flashButton setTransform:transform];
-  [self.activityButton setTransform:transform];
   [recordButton setTransform:transform];
 }
 
@@ -385,14 +382,20 @@ static void *XYZContext = &XYZContext;
 
 
 - (void)syncUIWithRecordingStatus {
-  self.activityButton.hidden = _isRecording;
+  self.homeButton.hidden = _isRecording;
+  self.profileButton.hidden = _isRecording;
   flipButton.hidden = _isRecording;
   flashButton.hidden = _isRecording || _isFrontCamera;
 }
 
-- (IBAction)activityButtonPressed:(id)sender {
+- (IBAction)homeButtonPressed:(id)sender {
   SwipeContainerController *swipeContainer = (SwipeContainerController *)self.parentViewController;
-  [swipeContainer moveToActivityScreenWithAnimation:YES];
+  [swipeContainer moveToHomeScreenWithAnimation:YES];
+}
+
+- (IBAction)profileButtonPressed:(id)sender {
+  SwipeContainerController *swipeContainer = (SwipeContainerController *)self.parentViewController;
+  [swipeContainer moveToProfileScreenWithAnimation:YES];
 }
 
 - (void)didReceiveMemoryWarning

@@ -76,7 +76,7 @@ import UIKit
     self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
   }
   
-  func moveToActivityScreen(animation animate: Bool) {
+  func moveToHomeScreen(animation animate: Bool) {
     if self.selectedViewController != nil {
       self.transitionToViewController(viewControllers[2], interactive: false, animation:animate)
     }
