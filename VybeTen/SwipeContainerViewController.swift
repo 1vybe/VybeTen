@@ -67,13 +67,18 @@ import UIKit
     self.transitionToViewController(selectedViewController!, interactive: false, animation: false)
   }
   
-  func moveToCaptureScreen(animation animate: Bool) {
+  func moveToProfileScreen(animation animate: Bool) {
     self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
+  }
+
+  
+  func moveToCaptureScreen(animation animate: Bool) {
+    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
   }
   
   func moveToActivityScreen(animation animate: Bool) {
     if self.selectedViewController != nil {
-      self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
+      self.transitionToViewController(viewControllers[2], interactive: false, animation:animate)
     }
   }
   
@@ -130,6 +135,7 @@ import UIKit
       return
     }
     
+    assert(selectedViewController != nil, "SwipeContainerViewController crashing. condition failed.")
     let fromViewController = selectedViewController!
     fromViewController.willMoveToParentViewController(nil)
 
@@ -139,7 +145,7 @@ import UIKit
     }
 
     var animator = SwipeAnimator()
-    var transitionContext = SwipeTransitionContext(fromViewController: fromViewController, toController: toViewController, swipeToleft: (toViewController == viewControllers[1]))
+    var transitionContext = SwipeTransitionContext(fromViewController: fromViewController, toController: toViewController, swipeToleft: (self.indexOfViewController(toViewController) > self.indexOfViewController(fromViewController) ))
     transitionContext.animated = animation
     swipeInteractor.animator = animator
 
@@ -209,6 +215,19 @@ import UIKit
     default:
       return
     }
+  }
+  
+  private func indexOfViewController(vc: UIViewController) -> Int {
+    var idx: Int = 0
+
+    for i in 0...viewControllers.count - 1 {
+      if viewControllers[i] == vc {
+        idx = i
+        break
+      }
+    }
+    
+    return idx
   }
   
   override func shouldAutorotate() -> Bool {

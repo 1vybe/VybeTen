@@ -271,11 +271,15 @@
 }
 
 - (void)setUpViewControllers {
+  ProfileViewController *profileVC = [[UIStoryboard storyboardWithName:@"Profile" bundle:nil] instantiateInitialViewController];
+  VYBNavigationController *profileNav = [[VYBNavigationController alloc] initWithRootViewController:profileVC];
+  
+  VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
+
   VYBActivityTableViewController *activityVC = [[UIStoryboard storyboardWithName:@"Activity" bundle:nil] instantiateInitialViewController];
   VYBNavigationController *activityNav = [[VYBNavigationController alloc] initWithRootViewController:activityVC];
-  VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
   
-  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[captureVC, activityNav]];
+  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[profileNav, captureVC, activityNav]];
   
   [self.mainNavController pushViewController:self.swipeContainerController animated:NO];
   

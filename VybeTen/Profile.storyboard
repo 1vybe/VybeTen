@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="5vM-Ef-xhM">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -165,76 +165,15 @@
                             </constraints>
                         </view>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="127" id="mgI-3O-2CD" userLabel="VybeCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="127" id="mgI-3O-2CD" userLabel="PostCell" customClass="PostTableViewCell" customModule="VybeTen" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mgI-3O-2CD" id="XCl-cy-JyD">
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="N9q-kb-pAf" userLabel="profileImage">
-                                            <rect key="frame" x="25" y="11" width="37" height="37"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" secondItem="N9q-kb-pAf" secondAttribute="height" multiplier="1:1" id="ezW-Uy-Bsb"/>
-                                                <constraint firstAttribute="width" constant="37" id="ksD-8N-zwM"/>
-                                                <constraint firstAttribute="height" constant="37" id="usP-5T-jLc"/>
-                                            </constraints>
-                                        </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ekI-nX-g8V" userLabel="username">
-                                            <rect key="frame" x="72" y="11" width="39" height="18"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="15"/>
-                                            <color key="textColor" red="0.29019607843137257" green="0.29019607843137257" blue="0.29019607843137257" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ycs-uO-ucL" userLabel="location">
-                                            <rect key="frame" x="72" y="32" width="33" height="16"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="13"/>
-                                            <color key="textColor" red="0.29019607843137252" green="0.56470588235294117" blue="0.88627450980392153" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bFf-8r-N9K" userLabel="thumbnail">
-                                            <rect key="frame" x="521" y="31" width="64" height="64"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" secondItem="bFf-8r-N9K" secondAttribute="height" multiplier="1:1" id="r3x-BF-Omh"/>
-                                            </constraints>
-                                        </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k7F-E3-icA" userLabel="hashtags">
-                                            <rect key="frame" x="25" y="61" width="35" height="17"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                            <color key="textColor" red="0.2901960784" green="0.2901960784" blue="0.2901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Okf-wn-Uba" userLabel="time">
-                                            <rect key="frame" x="25" y="98" width="42" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="Okf-wn-Uba" secondAttribute="bottom" constant="7" id="4sI-WN-IFI"/>
-                                        <constraint firstAttribute="centerY" secondItem="bFf-8r-N9K" secondAttribute="centerY" id="9JQ-vB-UQ4"/>
-                                        <constraint firstItem="ekI-nX-g8V" firstAttribute="leading" secondItem="N9q-kb-pAf" secondAttribute="trailing" constant="10" id="9uO-L3-HbS"/>
-                                        <constraint firstItem="N9q-kb-pAf" firstAttribute="top" secondItem="ekI-nX-g8V" secondAttribute="top" id="CoQ-v9-Wbj"/>
-                                        <constraint firstItem="ycs-uO-ucL" firstAttribute="leading" secondItem="N9q-kb-pAf" secondAttribute="trailing" constant="10" id="MjB-EI-L6k"/>
-                                        <constraint firstItem="Okf-wn-Uba" firstAttribute="leading" secondItem="XCl-cy-JyD" secondAttribute="leading" constant="25" id="TX2-CJ-84R"/>
-                                        <constraint firstItem="k7F-E3-icA" firstAttribute="top" secondItem="N9q-kb-pAf" secondAttribute="bottom" constant="13" id="W2m-pV-dQd"/>
-                                        <constraint firstItem="N9q-kb-pAf" firstAttribute="top" secondItem="XCl-cy-JyD" secondAttribute="top" constant="11" id="Xw7-fg-lgc"/>
-                                        <constraint firstItem="N9q-kb-pAf" firstAttribute="bottom" secondItem="ycs-uO-ucL" secondAttribute="bottom" id="dFG-Qa-7ec"/>
-                                        <constraint firstItem="bFf-8r-N9K" firstAttribute="top" secondItem="XCl-cy-JyD" secondAttribute="top" constant="31" id="jTU-Nx-qGv"/>
-                                        <constraint firstItem="N9q-kb-pAf" firstAttribute="leading" secondItem="XCl-cy-JyD" secondAttribute="leading" constant="25" id="kZ3-sH-ZJk"/>
-                                        <constraint firstItem="k7F-E3-icA" firstAttribute="leading" secondItem="XCl-cy-JyD" secondAttribute="leading" constant="25" id="q2P-FF-WLD"/>
-                                        <constraint firstAttribute="trailing" secondItem="bFf-8r-N9K" secondAttribute="trailing" constant="15" id="sDE-AW-jgW"/>
-                                    </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="60" id="rNY-k2-BNP" userLabel="LocationCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rNY-k2-BNP" id="jid-hs-RIB">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProfilePostTableCell" rowHeight="60" id="tMo-R8-Q6A" userLabel="LocationCell" customClass="PostTableViewCell" customModule="VybeTen" customModuleProvider="target">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tMo-R8-Q6A" id="Dk5-nX-FZe">
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>

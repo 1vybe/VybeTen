@@ -7,29 +7,7 @@
 //
 
 import UIKit
-@IBDesignable
 class PostTableViewCell: UITableViewCell {
-  required init(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-        
-    self.buildHiearchy()
-  }
-  
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    
-    self.buildHiearchy()
-  }
-  
-  override func prepareForInterfaceBuilder() {
-    self.buildHiearchy()
-  }
-  
-  func buildHiearchy() {
-//    if let view = NSBundle.mainBundle().loadNibNamed("PostTableViewCell", owner: self, options: nil).first as? UIView {
-////      self.contentView.addSubview(view)
-//    }
-  }
   
   override func awakeFromNib() {
     super.awakeFromNib()
