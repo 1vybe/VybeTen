@@ -69,6 +69,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
   func fetchActiveVybes(completionHandler: ((success: Bool) -> Void)) {
     // Fetch ACTIVE zones
     let params = [:]
+    // TODO: - cloud function get_active_vybes() should use config activeTTL
     PFCloud.callFunctionInBackground("get_active_vybes", withParameters:params) { (result: AnyObject!, error: NSError!) -> Void in
       if error == nil {
         if let vybeObjects = result as? [PFObject] {
@@ -350,7 +351,6 @@ private let _zoneStoreSharedInstance = ZoneStore()
   }
   
   func activeAndFeaturedZones() -> [Zone]! {
-    // NOTE: - here active zones are filtered by activeTTL (currently set to 24 hour)
     var result: [Zone] = _featuredZones
     for aZone in _activeZones {
       if aZone.isActive {

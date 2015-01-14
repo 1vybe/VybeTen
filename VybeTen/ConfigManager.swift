@@ -120,10 +120,10 @@ class ConfigManager: NSObject {
     }
   }
   
-  func activeTTL() -> NSTimeInterval? {
-    if let ttl = PFConfig.currentConfig().objectForKey("activeTTL") as? Double {
+  func notificationTTL() -> NSTimeInterval {
+    if let ttl = PFConfig.currentConfig().objectForKey("notificationTTL") as? Double {
       return ttl
     }
-    return nil
+    return 0
   }
 }

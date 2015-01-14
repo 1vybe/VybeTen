@@ -10,6 +10,8 @@
 #import "NSArray+PFObject.h"
 #import "NSMutableArray+PFObject.h"
 
+#import "VybeTen-Swift.h"
+
 @interface VYBCache()
 @property (nonatomic, strong) NSCache *cache;
 - (void)setAttributes:(NSDictionary *)attributes forVybe:(PFObject *)vybe;
@@ -188,9 +190,11 @@
   [bumpQuery includeKey:kVYBActivityFromUserKey];
   [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
   [bumpQuery whereKey:kVYBActivityToUserKey equalTo:[PFUser currentUser]];
-  // Only activities within the last 7 days
-  NSDate *aWeekAgo = [NSDate dateWithTimeIntervalSinceNow:-1 * 60 * 60 * 24 * 3];
-  [bumpQuery whereKey:@"createdAt" greaterThanOrEqualTo:aWeekAgo];
+  NSTimeInterval notificationTTL = [[ConfigManager sharedInstance] notificationTTL];
+  if (notificationTTL) {
+    NSDate *someTimeAgo = [NSDate dateWithTimeIntervalSinceNow:notificationTTL];
+    [bumpQuery whereKey:@"createdAt" greaterThanOrEqualTo:someTimeAgo];
+  }
   
   [bumpQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     if (!error) {
@@ -222,9 +226,11 @@
   [bumpQuery includeKey:kVYBActivityToUserKey];
   [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
   [bumpQuery whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
-  // Only activities within the last 7 days
-  NSDate *aWeekAgo = [NSDate dateWithTimeIntervalSinceNow:-1 * 60 * 60 * 24 * 3];
-  [bumpQuery whereKey:@"createdAt" greaterThanOrEqualTo:aWeekAgo];
+  NSTimeInterval notificationTTL = [[ConfigManager sharedInstance] notificationTTL];
+  if (notificationTTL) {
+    NSDate *someTimeAgo = [NSDate dateWithTimeIntervalSinceNow:notificationTTL];
+    [bumpQuery whereKey:@"createdAt" greaterThanOrEqualTo:someTimeAgo];
+  }
   
   [bumpQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     if (!error) {
