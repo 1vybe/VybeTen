@@ -63,7 +63,7 @@ import UIKit
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    selectedViewController = viewControllers.first
+    selectedViewController = viewControllers[1]
     self.transitionToViewController(selectedViewController!, interactive: false, animation: false)
   }
   

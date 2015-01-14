@@ -22,6 +22,7 @@ class ProfileViewController: UITableViewController, UIImagePickerControllerDeleg
   }
   
   @IBAction func profileButtonPressed(sender: AnyObject) {
+    // TODO: - Make the following version check mechanism GLOBAL
     let comparisonResult: NSComparisonResult = UIDevice.currentDevice().systemVersion.compare("8.0.0", options: NSStringCompareOptions.NumericSearch)
     if comparisonResult == .OrderedSame || comparisonResult == .OrderedDescending {
       // ios 8
@@ -85,6 +86,9 @@ class ProfileViewController: UITableViewController, UIImagePickerControllerDeleg
   }
   
   func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
+    //VYBUtility.uploadProfileImage()
+    self.dismissViewControllerAnimated(true, completion: nil)
+    
     let imgData = UIImagePNGRepresentation(image)
     let imgFile = PFFile(data: imgData, contentType: "image/png")
     PFUser.currentUser().setObject(imgFile, forKey: kVYBUserProfilePicMediumKey)
@@ -98,14 +102,21 @@ class ProfileViewController: UITableViewController, UIImagePickerControllerDeleg
         self.showPopUpWindow(message: "Network unavailable. :(")
       }
     }
-
-    //VYBUtility.uploadProfileImage()
-    self.dismissViewControllerAnimated(true, completion: nil)
   }
   
   // TODO: - This method should available across all viewcontrollers. Make a generic viewcontroller.
   func showPopUpWindow(message msg: String) {
-    
+    let comparisonResult: NSComparisonResult = UIDevice.currentDevice().systemVersion.compare("8.0.0", options: NSStringCompareOptions.NumericSearch)
+    if comparisonResult == .OrderedSame || comparisonResult == .OrderedDescending { // iOS 8
+      let popUp = UIAlertController(title: "", message: msg, preferredStyle: UIAlertControllerStyle.Alert)
+      let okAction = UIAlertAction(title: "OK", style: .Default, handler: { (action: UIAlertAction!) -> Void in
+        self.dismissViewControllerAnimated(true, completion: nil)
+      })
+      popUp.addAction(okAction)
+      self.presentViewController(popUp, animated: true, completion: nil)
+    } else { // iOS 7 and below
+      
+    }
   }
   
   func imagePickerControllerDidCancel(picker: UIImagePickerController) {
@@ -123,7 +134,7 @@ class ProfileViewController: UITableViewController, UIImagePickerControllerDeleg
       profilePicView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
         if image != nil {
           if let maskImage = UIImage(named: "Profile_Mask") {
-            self.profilePicView.image = VYBUtility.maskImage(maskImage, withMask: maskImage)
+            self.profilePicView.image = VYBUtility.maskImage(image, withMask: maskImage)
           }
         } else {
           // TODO: - Placeholder image for profile pic
