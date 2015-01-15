@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProfileViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITableViewDataSource, UITableViewDelegate {
   @IBOutlet weak var profilePicView: PFImageView!
   @IBOutlet weak var profileButton: UIButton!
   @IBOutlet weak var username: UILabel!
@@ -17,9 +17,7 @@ class ProfileViewController: UITableViewController, UIImagePickerControllerDeleg
   @IBOutlet weak var activityCountLabel: UILabel!
   @IBOutlet weak var activityButton: UIButton!
   
-  @IBAction func activityButtonPressed(sender: AnyObject) {
-    
-  }
+  @IBOutlet weak var tableView: UITableView!
   
   @IBAction func profileButtonPressed(sender: AnyObject) {
     // TODO: - Make the following version check mechanism GLOBAL
@@ -127,6 +125,8 @@ class ProfileViewController: UITableViewController, UIImagePickerControllerDeleg
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    // TODO: - Put navigation bar appearance settings
+    
     let currUser = PFUser.currentUser()
     
     if let profileThumbnail = currUser[kVYBUserProfilePicMediumKey] as? PFFile {
@@ -146,7 +146,25 @@ class ProfileViewController: UITableViewController, UIImagePickerControllerDeleg
       username.text = name
     }
     
+    let postCell = UINib(nibName: "PostTableViewCell", bundle: NSBundle.mainBundle())
+    self.tableView.registerNib(postCell, forCellReuseIdentifier: "PostTableCellIdentifier")
+    
     // Do any additional setup after loading the view.
+  }
+  
+  // MARK: - TableViewDataSource
+  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    var cell = tableView.dequeueReusableCellWithIdentifier("PostTableCellIdentifier", forIndexPath: indexPath) as PostTableViewCell
+    
+    return cell
+  }
+  
+  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    return 1
+  }
+  
+  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return 0
   }
   
   override func didReceiveMemoryWarning() {

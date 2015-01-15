@@ -271,8 +271,7 @@
 }
 
 - (void)setUpViewControllers {
-  ProfileViewController *profileVC = [[UIStoryboard storyboardWithName:@"Profile" bundle:nil] instantiateInitialViewController];
-  VYBNavigationController *profileNav = [[VYBNavigationController alloc] initWithRootViewController:profileVC];
+  VYBNavigationController *profileNav = (VYBNavigationController *)[[UIStoryboard storyboardWithName:@"Profile" bundle:nil] instantiateInitialViewController];
   
   VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
 

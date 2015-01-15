@@ -52,10 +52,7 @@ class PizzaProgressView: UIView {
     
     let circlePath = UIBezierPath(ovalInRect: rect)
     UIColor.grayColor().setFill()
-    circlePath.fill()
-    
-    
-    
+    circlePath.fill()    
   }
   
   
