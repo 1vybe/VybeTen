@@ -432,9 +432,10 @@ Parse.Cloud.define('getFeaturedChannels', function (request, response) {
   Parse.Config.get().then(function(config) {
     var featuredEvents = config.get("featuredEvents");
     var featuredChannels = config.get("featuredChannels");
-    var featuredTimestamps = config.get("featuredTimestamps");
+    var featuredStartTimestamps = config.get("featuredStartTimestamps");
+    var featuredEndTimestamps = config.get("featuredEndTimestamps");
 
-    featured = _.zip(featuredEvents, featuredChannels, featuredTimestamps);
+    featured = _.zip(featuredEvents, featuredChannels, featuredStartTimestamps, featuredEndTimestamps);
     console.log('Featured: ' + featured);
 
     var promises = [];
@@ -443,8 +444,7 @@ Parse.Cloud.define('getFeaturedChannels', function (request, response) {
       var featuredEvent = featured[0];
       var featuredZoneID =  featured[1];
       var featuredTimestampStart = new Date(featured[2]);
-      var featuredTimestampEnd = new Date(featured[2]);
-      featuredTimestampEnd.setHours(featuredTimestampEnd.getHours() + 24);
+      var featuredTimestampEnd = new Date(featured[3]);
       featured[2] = new Date(featured[2]);
 
       var query = new Parse.Query('Vybe');
@@ -458,6 +458,7 @@ Parse.Cloud.define('getFeaturedChannels', function (request, response) {
     return Parse.Promise.when(promises);
   }).then(function() {
     _.each(arguments, function(vybe, index) {
+      featured[index].pop();
       featured[index].push(vybe.get('thumbnail'));
     });
     response.success(featured);
