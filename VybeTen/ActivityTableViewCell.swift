@@ -1,60 +1,38 @@
 //
-//  PostTableViewCell.swift
+//  ActivityTableViewCell.swift
 //  VybeTen
 //
-//  Created by Jinsu Kim on 1/13/15.
+//  Created by Jinsu Kim on 1/15/15.
 //  Copyright (c) 2015 Vybe. All rights reserved.
 //
 
 import UIKit
-class PostTableViewCell: UITableViewCell {
-  
+
+class ActivityTableViewCell: UITableViewCell {
   @IBOutlet weak var userProfileImageView: PFImageView!
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var descriptionLabel: UILabel!
   @IBOutlet weak var hashtagLabel: UILabel!
   @IBOutlet weak var timeLabel: UILabel!
   @IBOutlet weak var vybeThumbnailImageView: PFImageView!
-  @IBOutlet weak var countLabel: UILabel!
-  
-  override func awakeFromNib() {
-    super.awakeFromNib()
-
-    if let customView = NSBundle.mainBundle().loadNibNamed("PostTableViewCell", owner: self, options: nil).first as? UIView {
-      customView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
-      customView.setTranslatesAutoresizingMaskIntoConstraints(false)
-      self.contentView.addSubview(customView)
-      
-      self.contentView.addConstraint(NSLayoutConstraint(item: customView, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: NSLayoutAttribute.Width, multiplier: 1, constant: 0))
-      self.contentView.addConstraint(NSLayoutConstraint(item: customView, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: NSLayoutAttribute.Height, multiplier: 1, constant: 0))
-      self.contentView.addConstraint(NSLayoutConstraint(item: customView, attribute: NSLayoutAttribute.Left, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: NSLayoutAttribute.Left, multiplier: 1, constant: 0))
-      self.contentView.addConstraint(NSLayoutConstraint(item: customView, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: NSLayoutAttribute.Top, multiplier: 1, constant: 0))
-    }
-  }
-  
-  override func setSelected(selected: Bool, animated: Bool) {
-    super.setSelected(selected, animated: animated)
-    
-    // Configure the view for the selected state
-  }
   
   func setVybe(vybeObj: PFObject) {
     if let hashtags = vybeObj[kVYBVybeHashtagsKey] as? NSArray {
-      var tagString = "#"
-      for obj in hashtags {
-        if let last = hashtags.lastObject as? String {
-          if let tag = obj as? String {
-            if tag != last {
-              tagString += "\(tag) #"
-            } else {
-              tagString += tag
+      if hashtags.count > 0 {
+        var tagString = "#"
+        for obj in hashtags {
+          if let last = hashtags.lastObject as? String {
+            if let tag = obj as? String {
+              if tag != last {
+                tagString += "\(tag) #"
+              } else {
+                tagString += tag
+              }
             }
           }
         }
+        hashtagLabel.text = tagString
       }
-      hashtagLabel.text = tagString
-    } else {
-      hashtagLabel.text = ""
     }
     
     if let vybeThumbnailFile = vybeObj[kVYBVybeThumbnailKey] as? PFFile {
@@ -77,7 +55,7 @@ class PostTableViewCell: UITableViewCell {
     }
   }
   
-  func setFromUser(user: PFObject) {
+  func setUser(user: PFObject) {
     // TODO: - Use ProfilePicSmall instead
     if let profilePicFile = user[kVYBUserProfilePicMediumKey] as? PFFile {
       userProfileImageView.file = profilePicFile
@@ -98,4 +76,5 @@ class PostTableViewCell: UITableViewCell {
       usernameLabel.text = username
     }
   }
+  
 }

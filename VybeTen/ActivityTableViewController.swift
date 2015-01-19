@@ -31,9 +31,6 @@ class ActivityTableViewController: UITableViewController {
         self.reloadActivitiesForMe()
       }
     }
-    
-    self.tableView.estimatedRowHeight = 127.0
-//    self.tableView.rowHeight = UITableViewAutomaticDimension
   }
   
   private func reloadActivitiesForMe() {
@@ -63,7 +60,7 @@ class ActivityTableViewController: UITableViewController {
     // Dispose of any resources that can be recreated.
   }
   
-  // MARK: - Table view data source
+  // MARK: - TableView data source
   
   override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
     return 1
@@ -74,17 +71,39 @@ class ActivityTableViewController: UITableViewController {
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("ActivityPostTableCellIdentifier", forIndexPath: indexPath) as PostTableViewCell
-    
+
     let activity = activities[indexPath.row]
+    
+    return self.cellThatFitsActivity(activity, indexPath: indexPath)
+  }
+  
+  private func cellThatFitsActivity(activity: PFObject, indexPath: NSIndexPath) -> ActivityTableViewCell {
+    var cell: ActivityTableViewCell
+    if self.activityHasTag(activity) {
+      cell = self.tableView.dequeueReusableCellWithIdentifier("ActivityPostTableCellIdentifier", forIndexPath: indexPath) as ActivityTableViewCell
+    } else {
+      cell = self.tableView.dequeueReusableCellWithIdentifier("ActivityPostTableCellNoTagIdentifier", forIndexPath: indexPath) as ActivityTableViewCell
+    }
+    
     if let vybe = activity[kVYBActivityVybeKey] as? PFObject {
       cell.setVybe(vybe)
     }
-    if let user = activity[kVYBActivityFromUserKey] as? PFObject {
-      cell.setFromUser(user)
-    }
-    cell.setNeedsDisplay()
     
+    if let user = activity[kVYBActivityFromUserKey] as? PFObject {
+      cell.setUser(user)
+    }
+   
     return cell
+  }
+  
+  private func activityHasTag(activity: PFObject) -> Bool {
+    if let vybe = activity[kVYBActivityVybeKey] as? PFObject {
+      if let tags = vybe[kVYBVybeHashtagsKey] as? NSArray {
+        if tags.count > 0 {
+          return true
+        }
+      }
+    }
+    return false
   }
 }

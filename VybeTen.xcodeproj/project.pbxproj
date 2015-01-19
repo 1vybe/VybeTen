@@ -89,6 +89,7 @@
 		749256F61A65C82C00E04F31 /* PostTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 749256F41A65C82C00E04F31 /* PostTableViewCell.xib */; };
 		74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */; };
 		74A0FA571A36A8B50065059E /* UnblockUser.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74A0FA561A36A8B50065059E /* UnblockUser.storyboard */; };
+		74B6CEB61A688D4F001F869D /* ActivityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74B6CEB51A688D4F001F869D /* ActivityTableViewCell.swift */; };
 		74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */; };
 		74BF89B71A4A033E00E92FB4 /* WelcomeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BF89B61A4A033E00E92FB4 /* WelcomeManager.swift */; };
 		74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */; };
@@ -233,6 +234,7 @@
 		749256F41A65C82C00E04F31 /* PostTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostTableViewCell.xib; sourceTree = "<group>"; };
 		74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
 		74A0FA561A36A8B50065059E /* UnblockUser.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UnblockUser.storyboard; sourceTree = "<group>"; };
+		74B6CEB51A688D4F001F869D /* ActivityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityTableViewCell.swift; sourceTree = "<group>"; };
 		74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		74BF89B61A4A033E00E92FB4 /* WelcomeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeManager.swift; sourceTree = "<group>"; };
 		74C5D9721A22F8B40006695B /* NSMutableArray+VYBVybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+VYBVybe.h"; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 				02A45CF41A1EC61800425F9C /* UploadProgressBottomBar.xib */,
 				74861E1F1A4D0057004E8ADE /* BottomBarMenu.xib */,
 				74D203ED1A5C918F00DBF3B7 /* SimpleTextField.swift */,
+				74B6CEB51A688D4F001F869D /* ActivityTableViewCell.swift */,
 				749256F31A65C82C00E04F31 /* PostTableViewCell.swift */,
 				749256F41A65C82C00E04F31 /* PostTableViewCell.xib */,
 			);
@@ -795,6 +798,7 @@
 				74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */,
 				02CEE2AD1970A46A00AC361F /* VYBTimerView.m in Sources */,
 				0293877D1969C1D200F41A12 /* VYBCaptureButton.m in Sources */,
+				74B6CEB61A688D4F001F869D /* ActivityTableViewCell.swift in Sources */,
 				749256F01A64CCEA00E04F31 /* ProfileViewController.swift in Sources */,
 				02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */,
 				74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */,
