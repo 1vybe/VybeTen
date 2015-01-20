@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ActivityTableViewCell: UITableViewCell {
+class ActivityTableViewCell: PFTableViewCell {
   @IBOutlet weak var userProfileImageView: PFImageView!
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var descriptionLabel: UILabel!

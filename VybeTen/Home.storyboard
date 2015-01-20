@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Qq0-sz-dIb">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6724" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Qq0-sz-dIb">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6711"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
@@ -158,9 +157,6 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2Qm-Fc-2GD" id="sCW-yQ-gXH">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="VybeCell_BIG" translatesAutoresizingMaskIntoConstraints="NO" id="xAl-jk-N6U">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="128"/>
-                                        </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Just now" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z3s-XT-qUJ" userLabel="time">
                                             <rect key="frame" x="25" y="108" width="44" height="13"/>
                                             <constraints>
@@ -216,13 +212,11 @@
                                         <constraint firstItem="IvW-tG-ATK" firstAttribute="width" secondItem="IvW-tG-ATK" secondAttribute="height" multiplier="1:1" id="2XE-ig-n8U"/>
                                         <constraint firstItem="Mxe-cw-wzz" firstAttribute="leading" secondItem="IvW-tG-ATK" secondAttribute="leading" id="AJS-3X-nB0"/>
                                         <constraint firstItem="Z3s-XT-qUJ" firstAttribute="leading" secondItem="IvW-tG-ATK" secondAttribute="leading" id="Cpd-h8-QxW"/>
-                                        <constraint firstAttribute="bottom" secondItem="xAl-jk-N6U" secondAttribute="bottom" id="Ipx-Me-9lt"/>
                                         <constraint firstItem="IvW-tG-ATK" firstAttribute="leading" secondItem="sCW-yQ-gXH" secondAttribute="leading" constant="25" id="Oej-OX-Mtt"/>
                                         <constraint firstAttribute="trailing" secondItem="Bwi-3v-0KW" secondAttribute="trailing" constant="15" id="QDC-xb-Rhd"/>
                                         <constraint firstItem="Z3s-XT-qUJ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="IvW-tG-ATK" secondAttribute="bottom" constant="14" id="QL2-JL-6cf"/>
                                         <constraint firstItem="nSK-0Q-1ZD" firstAttribute="top" secondItem="J9G-lh-O8j" secondAttribute="bottom" constant="5" id="RIk-tZ-jYR"/>
                                         <constraint firstItem="Bwi-3v-0KW" firstAttribute="width" secondItem="Bwi-3v-0KW" secondAttribute="height" multiplier="1:1" id="aNJ-5g-9qA"/>
-                                        <constraint firstAttribute="trailing" secondItem="xAl-jk-N6U" secondAttribute="trailing" id="aq3-YX-umu"/>
                                         <constraint firstAttribute="bottom" secondItem="Z3s-XT-qUJ" secondAttribute="bottom" constant="7" id="eKt-48-8Jz"/>
                                         <constraint firstItem="J9G-lh-O8j" firstAttribute="leading" secondItem="IvW-tG-ATK" secondAttribute="trailing" constant="10" id="h1K-d3-MFV"/>
                                         <constraint firstItem="Mxe-cw-wzz" firstAttribute="top" secondItem="IvW-tG-ATK" secondAttribute="bottom" constant="13" id="oNv-kY-SUp"/>
@@ -231,8 +225,6 @@
                                         <constraint firstItem="Z3s-XT-qUJ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Mxe-cw-wzz" secondAttribute="bottom" priority="750" constant="10" id="ozu-Lq-sfO"/>
                                         <constraint firstItem="IvW-tG-ATK" firstAttribute="top" secondItem="sCW-yQ-gXH" secondAttribute="top" constant="12" id="pmM-Ug-Hh2"/>
                                         <constraint firstItem="nSK-0Q-1ZD" firstAttribute="leading" secondItem="IvW-tG-ATK" secondAttribute="trailing" constant="10" id="pyT-sB-3cL"/>
-                                        <constraint firstItem="xAl-jk-N6U" firstAttribute="top" secondItem="sCW-yQ-gXH" secondAttribute="top" id="sVL-BM-oWM"/>
-                                        <constraint firstItem="xAl-jk-N6U" firstAttribute="leading" secondItem="sCW-yQ-gXH" secondAttribute="leading" id="xPh-8h-sXF"/>
                                         <constraint firstItem="J9G-lh-O8j" firstAttribute="top" secondItem="IvW-tG-ATK" secondAttribute="top" id="yXT-pe-6Ga"/>
                                         <constraint firstItem="cPC-OM-bl9" firstAttribute="centerY" secondItem="nSK-0Q-1ZD" secondAttribute="centerY" id="yoO-f5-bil"/>
                                     </constraints>
@@ -246,7 +238,81 @@
                                     <outlet property="vybeThumbnailImageView" destination="Bwi-3v-0KW" id="jPG-n1-309"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActivityPostTableCellNoTagIdentifier" rowHeight="83" id="aEJ-Pl-545" customClass="ActivityTableViewCell" customModule="VybeTen" customModuleProvider="target">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="aEJ-Pl-545" id="D19-Ma-K16">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Just now" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ITI-9w-OFb" userLabel="time">
+                                            <rect key="frame" x="25" y="63" width="44" height="13"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="13" id="7hW-Kg-sCo"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-LightItalic" family="Helvetica Neue" pointSize="11"/>
+                                            <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PersonAvartar" translatesAutoresizingMaskIntoConstraints="NO" id="gIi-8n-BbW" userLabel="profileImage" customClass="PFImageView">
+                                            <rect key="frame" x="25" y="12" width="37" height="37"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="37" id="bYI-zn-tEp"/>
+                                                <constraint firstAttribute="height" constant="37" id="v9C-B6-j1V"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lV9-Zk-78o" userLabel="username">
+                                            <rect key="frame" x="72" y="12" width="69" height="18"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="174" id="4OD-N9-Nta"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="15"/>
+                                            <color key="textColor" red="0.2901960784" green="0.2901960784" blue="0.2901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ActivityCell_SmallStar" translatesAutoresizingMaskIntoConstraints="NO" id="WwH-Gv-V3j" userLabel="star">
+                                            <rect key="frame" x="72" y="35" width="12" height="12"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favorited your vybe" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="16B-nF-GES" userLabel="descriptionLabel">
+                                            <rect key="frame" x="90" y="33" width="119" height="16"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="13"/>
+                                            <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="sN9-mw-R4f" userLabel="thumbnail" customClass="PFImageView">
+                                            <rect key="frame" x="530" y="14" width="55" height="55"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="55" id="5oj-N6-kBO"/>
+                                                <constraint firstAttribute="height" constant="55" id="9os-Vc-znO"/>
+                                            </constraints>
+                                        </imageView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="lV9-Zk-78o" firstAttribute="top" secondItem="gIi-8n-BbW" secondAttribute="top" id="1bo-Nr-RCO"/>
+                                        <constraint firstAttribute="trailing" secondItem="sN9-mw-R4f" secondAttribute="trailing" constant="15" id="4CB-jA-HK1"/>
+                                        <constraint firstItem="gIi-8n-BbW" firstAttribute="top" secondItem="D19-Ma-K16" secondAttribute="top" constant="12" id="Dj7-2O-8f8"/>
+                                        <constraint firstItem="gIi-8n-BbW" firstAttribute="width" secondItem="gIi-8n-BbW" secondAttribute="height" multiplier="1:1" id="Jd2-AD-J1m"/>
+                                        <constraint firstItem="WwH-Gv-V3j" firstAttribute="top" secondItem="lV9-Zk-78o" secondAttribute="bottom" constant="5" id="OCs-3g-Okn"/>
+                                        <constraint firstItem="16B-nF-GES" firstAttribute="leading" secondItem="WwH-Gv-V3j" secondAttribute="trailing" constant="6" id="Pha-4B-B2c"/>
+                                        <constraint firstItem="ITI-9w-OFb" firstAttribute="top" secondItem="gIi-8n-BbW" secondAttribute="bottom" constant="14" id="R4h-gR-dWh"/>
+                                        <constraint firstAttribute="centerY" secondItem="sN9-mw-R4f" secondAttribute="centerY" id="SRO-cR-GeK"/>
+                                        <constraint firstItem="lV9-Zk-78o" firstAttribute="leading" secondItem="gIi-8n-BbW" secondAttribute="trailing" constant="10" id="UjZ-oe-79e"/>
+                                        <constraint firstAttribute="bottom" secondItem="ITI-9w-OFb" secondAttribute="bottom" constant="7" id="hTa-WK-g9V"/>
+                                        <constraint firstItem="WwH-Gv-V3j" firstAttribute="leading" secondItem="gIi-8n-BbW" secondAttribute="trailing" constant="10" id="ipg-aU-ZrP"/>
+                                        <constraint firstItem="16B-nF-GES" firstAttribute="centerY" secondItem="WwH-Gv-V3j" secondAttribute="centerY" id="qO9-72-eYp"/>
+                                        <constraint firstItem="ITI-9w-OFb" firstAttribute="leading" secondItem="gIi-8n-BbW" secondAttribute="leading" id="w7M-0H-hpH"/>
+                                        <constraint firstItem="gIi-8n-BbW" firstAttribute="leading" secondItem="D19-Ma-K16" secondAttribute="leading" constant="25" id="y5H-Bw-OXC"/>
+                                        <constraint firstItem="sN9-mw-R4f" firstAttribute="width" secondItem="sN9-mw-R4f" secondAttribute="height" multiplier="1:1" id="zht-U4-rVA"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="descriptionLabel" destination="16B-nF-GES" id="uEq-Fz-OK6"/>
+                                    <outlet property="timeLabel" destination="ITI-9w-OFb" id="eBe-LJ-dag"/>
+                                    <outlet property="userProfileImageView" destination="gIi-8n-BbW" id="pBt-5A-sp6"/>
+                                    <outlet property="usernameLabel" destination="lV9-Zk-78o" id="FMM-mp-W90"/>
+                                    <outlet property="vybeThumbnailImageView" destination="sN9-mw-R4f" id="zMm-8n-1pj"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
+                        <sections/>
                         <connections>
                             <outlet property="dataSource" destination="rbJ-C8-ds2" id="8ro-Hy-EE7"/>
                             <outlet property="delegate" destination="rbJ-C8-ds2" id="xQN-xh-AFp"/>
@@ -515,7 +581,6 @@
         <image name="Profile_ActivityBar" width="375" height="40"/>
         <image name="Profile_ToggleSeparator" width="1" height="29"/>
         <image name="Settings" width="21" height="21"/>
-        <image name="VybeCell_BIG" width="375" height="128"/>
         <image name="VybeLogo_Nav" width="33" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
