@@ -9,17 +9,10 @@
 import UIKit
 
 class ActivityTableViewController: PFQueryTableViewController {
-  required init(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-    
-    parseClassName = kVYBActivityClassKey
-    pullToRefreshEnabled = true
-    paginationEnabled = true
-  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+        
     let textAttributes = NSMutableDictionary()
     if let font = UIFont(name: "HelveticaNeue-Medium", size: 18.0) {
       let textColor = UIColor(red: 92.0/255.0, green: 140.0/255.0, blue: 242.0/255.0, alpha: 1.0)
@@ -27,10 +20,15 @@ class ActivityTableViewController: PFQueryTableViewController {
       textAttributes.setObject(textColor, forKey: NSForegroundColorAttributeName)
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
+    
+    self.tableView.estimatedRowHeight = 128.0
+    self.tableView.rowHeight = UITableViewAutomaticDimension
+    self.paginationEnabled = false
   }
   
+  
   override func queryForTable() -> PFQuery! {
-    var query = PFQuery(className: kVYBActivityClassKey)
+    var query: PFQuery! = PFQuery(className: kVYBActivityClassKey)
     query.orderByDescending("createdAt")
     query.includeKey(kVYBActivityVybeKey)
     query.includeKey(kVYBActivityFromUserKey)
@@ -56,11 +54,17 @@ class ActivityTableViewController: PFQueryTableViewController {
     return 1
   }
   
+  // MARK: - PFQueryTableViewController
+  
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell =  self.tableView.dequeueReusableCellWithIdentifier("ActivityPostTableCellIdentifier", forIndexPath: indexPath) as ActivityTableViewCell
+    var cell: ActivityTableViewCell
+    let activity = objects[indexPath.row] as PFObject
     
-    let activity = self.objects[indexPath.row] as PFObject
-    cell.hashtagLabel.hidden = !self.activityHasTag(activity)
+    if self.activityHasTag(activity) {
+     cell = self.tableView.dequeueReusableCellWithIdentifier("ActivityPostTableCellIdentifier") as ActivityTableViewCell
+    } else {
+      cell = self.tableView.dequeueReusableCellWithIdentifier("ActivityPostTableCellNoTagIdentifier") as ActivityTableViewCell
+    }
     
     if let vybe = activity[kVYBActivityVybeKey] as? PFObject {
       cell.setVybe(vybe)
@@ -71,15 +75,6 @@ class ActivityTableViewController: PFQueryTableViewController {
     }
     
     return cell
-  }
-
-  override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-    let activity = objects[indexPath.row] as PFObject
-    if self.activityHasTag(activity) {
-      return 128.0
-    } else {
-      return 83.0
-    }
   }
   
   private func activityHasTag(activity: PFObject) -> Bool {
