@@ -33,7 +33,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="G4T-zh-LYr" kind="custom" identifier="HomeTabSegue" id="QYd-WD-FVZ"/>
+                                            <segue destination="G4T-zh-LYr" kind="custom" identifier="HomeTabSegue" customClass="SimpleTabBarSegue" customModule="VybeTen" customModuleProvider="target" id="QYd-WD-FVZ"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H9T-Gl-3by" userLabel="Discover">
@@ -123,14 +123,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9LX-E8-mK9">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9LX-E8-mK9" id="cEk-HF-W5O">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="G4T-zh-LYr" id="54j-dH-nd8"/>
                             <outlet property="delegate" destination="G4T-zh-LYr" id="bTi-QY-dp0"/>
@@ -161,7 +153,7 @@
                         <color key="separatorColor" red="0.36078431370000003" green="0.54901960780000003" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" placeholderIntrinsicWidth="600" placeholderIntrinsicHeight="127" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActivityPostTableCellIdentifier" rowHeight="128" id="2Qm-Fc-2GD" customClass="ActivityTableViewCell" customModule="VybeTen" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActivityPostTableCellIdentifier" rowHeight="128" id="2Qm-Fc-2GD" customClass="ActivityTableViewCell" customModule="VybeTen" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2Qm-Fc-2GD" id="sCW-yQ-gXH">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -178,7 +170,7 @@
                                             <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#tag" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mxe-cw-wzz" userLabel="hashtags">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#tag" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mxe-cw-wzz" userLabel="hashtags">
                                             <rect key="frame" x="25" y="62" width="28" height="17"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" relation="lessThanOrEqual" constant="213" id="M0O-Al-cBu"/>
@@ -527,6 +519,6 @@
         <image name="VybeLogo_Nav" width="33" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ZkZ-qG-bEG"/>
+        <segue reference="qOq-Ze-qdz"/>
     </inferredMetricsTieBreakers>
 </document>

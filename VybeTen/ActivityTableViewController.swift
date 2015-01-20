@@ -8,9 +8,15 @@
 
 import UIKit
 
-class ActivityTableViewController: UITableViewController {
-  var activities = [PFObject]()
+class ActivityTableViewController: PFQueryTableViewController {
+  required init(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
     
+    parseClassName = kVYBActivityClassKey
+    pullToRefreshEnabled = true
+    paginationEnabled = true
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -21,34 +27,22 @@ class ActivityTableViewController: UITableViewController {
       textAttributes.setObject(textColor, forKey: NSForegroundColorAttributeName)
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
-    
-    VYBCache.sharedCache().refreshBumpsForMeInBackground { (success: Bool) -> Void in
-      if success {
-        self.reloadActivitiesForMe()
-      }
-    }
   }
   
-  private func reloadActivitiesForMe() {
-    activities = []
-    if let newObjs = VYBCache.sharedCache().bumpActivitiesForUser(PFUser.currentUser()) as? [PFObject] {
-      // we do NOT want to include vybes from ourself
-      for activity in newObjs {
-        if let fromUser = activity[kVYBActivityFromUserKey] as? PFObject {
-          if fromUser.objectId != PFUser.currentUser().objectId {
-            activities += [activity]
-          }
-        }
-      }
+  override func queryForTable() -> PFQuery! {
+    var query = PFQuery(className: kVYBActivityClassKey)
+    query.orderByDescending("createdAt")
+    query.includeKey(kVYBActivityVybeKey)
+    query.includeKey(kVYBActivityFromUserKey)
+    query.whereKey(kVYBActivityTypeKey, equalTo: kVYBActivityTypeLike)
+    query.whereKey(kVYBActivityToUserKey, equalTo: PFUser.currentUser())
+    query.whereKey(kVYBActivityFromUserKey, notEqualTo: PFUser.currentUser())
+    let notificationTTL = ConfigManager.sharedInstance.notificationTTL()
+    if notificationTTL < 0 {
+      let sometimeBefore = NSDate(timeIntervalSinceNow: notificationTTL)
+      query.whereKey("createdAt", greaterThanOrEqualTo: sometimeBefore)
     }
-    
-    activities.sort { (activity1: PFObject, activity2: PFObject) -> Bool in
-      let comparisonResult = activity1.createdAt.compare(activity2.createdAt)
-      return comparisonResult == NSComparisonResult.OrderedDescending
-    }
-    
-    println("reloading \(activities.count) objects")
-    self.tableView.reloadData()
+    return query
   }
   
   override func didReceiveMemoryWarning() {
@@ -62,14 +56,10 @@ class ActivityTableViewController: UITableViewController {
     return 1
   }
   
-  override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return activities.count
-  }
-  
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell =  self.tableView.dequeueReusableCellWithIdentifier("ActivityPostTableCellIdentifier", forIndexPath: indexPath) as ActivityTableViewCell
     
-    let activity = activities[indexPath.row]
+    let activity = self.objects[indexPath.row] as PFObject
     cell.hashtagLabel.hidden = !self.activityHasTag(activity)
     
     if let vybe = activity[kVYBActivityVybeKey] as? PFObject {
@@ -82,9 +72,9 @@ class ActivityTableViewController: UITableViewController {
     
     return cell
   }
-  
+
   override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-    let activity = activities[indexPath.row]
+    let activity = objects[indexPath.row] as PFObject
     if self.activityHasTag(activity) {
       return 128.0
     } else {
@@ -104,7 +94,4 @@ class ActivityTableViewController: UITableViewController {
     return false
   }
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    println("[activity] segue: \(segue)")
-  }
 }
