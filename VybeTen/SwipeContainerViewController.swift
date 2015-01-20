@@ -63,24 +63,19 @@ import UIKit
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    selectedViewController = viewControllers[1]
+    selectedViewController = viewControllers[0]
     self.transitionToViewController(selectedViewController!, interactive: false, animation: false)
   }
   
-  func moveToProfileScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
+  func moveToMainScreen(animation animate: Bool) {
+    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
   }
 
   
   func moveToCaptureScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
+    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
   }
   
-  func moveToHomeScreen(animation animate: Bool) {
-    if self.selectedViewController != nil {
-      self.transitionToViewController(viewControllers[2], interactive: false, animation:animate)
-    }
-  }
   
   func goToNotificationScreen(completionBlock: (Void -> Void)!) {
     if let nav = viewControllers[1] as? VYBNavigationController {

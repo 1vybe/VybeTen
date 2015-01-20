@@ -10,17 +10,13 @@ import UIKit
 
 class ActivityTableViewController: UITableViewController {
   var activities = [PFObject]()
-  
-  @IBAction func closeButtonPressed() {
-    self.navigationController?.popViewControllerAnimated(true)
-  }
     
   override func viewDidLoad() {
     super.viewDidLoad()
     
     let textAttributes = NSMutableDictionary()
-    if let font = UIFont(name: "HelveticaNeueu Medium", size: 18.0) {
-      let textColor = UIColor(red: 92.0/255.0, green: 140.0/255.0, blue: 40.0/255.0, alpha: 1.0)
+    if let font = UIFont(name: "HelveticaNeue-Medium", size: 18.0) {
+      let textColor = UIColor(red: 92.0/255.0, green: 140.0/255.0, blue: 242.0/255.0, alpha: 1.0)
       textAttributes.setObject(font, forKey: NSFontAttributeName)
       textAttributes.setObject(textColor, forKey: NSForegroundColorAttributeName)
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
@@ -39,7 +35,7 @@ class ActivityTableViewController: UITableViewController {
       // we do NOT want to include vybes from ourself
       for activity in newObjs {
         if let fromUser = activity[kVYBActivityFromUserKey] as? PFObject {
-          if fromUser.objectId != PFUser.currentUser() .objectId {
+          if fromUser.objectId != PFUser.currentUser().objectId {
             activities += [activity]
           }
         }
@@ -71,19 +67,10 @@ class ActivityTableViewController: UITableViewController {
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-
-    let activity = activities[indexPath.row]
+    var cell =  self.tableView.dequeueReusableCellWithIdentifier("ActivityPostTableCellIdentifier", forIndexPath: indexPath) as ActivityTableViewCell
     
-    return self.cellThatFitsActivity(activity, indexPath: indexPath)
-  }
-  
-  private func cellThatFitsActivity(activity: PFObject, indexPath: NSIndexPath) -> ActivityTableViewCell {
-    var cell: ActivityTableViewCell
-    if self.activityHasTag(activity) {
-      cell = self.tableView.dequeueReusableCellWithIdentifier("ActivityPostTableCellIdentifier", forIndexPath: indexPath) as ActivityTableViewCell
-    } else {
-      cell = self.tableView.dequeueReusableCellWithIdentifier("ActivityPostTableCellNoTagIdentifier", forIndexPath: indexPath) as ActivityTableViewCell
-    }
+    let activity = activities[indexPath.row]
+    cell.hashtagLabel.hidden = !self.activityHasTag(activity)
     
     if let vybe = activity[kVYBActivityVybeKey] as? PFObject {
       cell.setVybe(vybe)
@@ -92,18 +79,32 @@ class ActivityTableViewController: UITableViewController {
     if let user = activity[kVYBActivityFromUserKey] as? PFObject {
       cell.setUser(user)
     }
-   
+    
     return cell
+  }
+  
+  override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    let activity = activities[indexPath.row]
+    if self.activityHasTag(activity) {
+      return 128.0
+    } else {
+      return 83.0
+    }
   }
   
   private func activityHasTag(activity: PFObject) -> Bool {
     if let vybe = activity[kVYBActivityVybeKey] as? PFObject {
-      if let tags = vybe[kVYBVybeHashtagsKey] as? NSArray {
+      if let tags = vybe[kVYBVybeHashtagsKey] as? [AnyObject] {
         if tags.count > 0 {
+          // NOTE: - breakpoint here causes a crash in debugger
           return true
         }
       }
     }
     return false
+  }
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    println("[activity] segue: \(segue)")
   }
 }

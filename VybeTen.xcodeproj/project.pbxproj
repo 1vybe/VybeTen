@@ -75,6 +75,9 @@
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
 		74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */; };
 		74349A271A4945EB006BA83C /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 74349A261A4945EB006BA83C /* libsqlite3.dylib */; };
+		7435F5F61A6DB4120075E60C /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7435F5F51A6DB4120075E60C /* Home.storyboard */; };
+		7435F5F81A6DBAC70075E60C /* SimpleTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7435F5F71A6DBAC70075E60C /* SimpleTabBarController.swift */; };
+		7435F5FA1A6DC9B70075E60C /* SimpleTabBarSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7435F5F91A6DC9B70075E60C /* SimpleTabBarSegue.swift */; };
 		7441011E1A645A3E00D2F874 /* CheckInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7441011D1A645A3E00D2F874 /* CheckInViewController.swift */; };
 		744101201A64739B00D2F874 /* CheckInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7441011F1A64739B00D2F874 /* CheckInViewController.xib */; };
 		74551C811A3E91FA00D348BB /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74551C801A3E91FA00D348BB /* ConfigManager.swift */; };
@@ -84,7 +87,6 @@
 		74861E201A4D0057004E8ADE /* BottomBarMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 74861E1F1A4D0057004E8ADE /* BottomBarMenu.xib */; };
 		749256E81A64966000E04F31 /* SpotTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 749256E71A64966000E04F31 /* SpotTableCell.xib */; };
 		749256F01A64CCEA00E04F31 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749256EF1A64CCEA00E04F31 /* ProfileViewController.swift */; };
-		749256F21A64CCFC00E04F31 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 749256F11A64CCFC00E04F31 /* Profile.storyboard */; };
 		749256F51A65C82C00E04F31 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749256F31A65C82C00E04F31 /* PostTableViewCell.swift */; };
 		749256F61A65C82C00E04F31 /* PostTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 749256F41A65C82C00E04F31 /* PostTableViewCell.xib */; };
 		74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */; };
@@ -220,6 +222,9 @@
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
 		74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyVybeStore.swift; sourceTree = "<group>"; };
 		74349A261A4945EB006BA83C /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		7435F5F51A6DB4120075E60C /* Home.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
+		7435F5F71A6DBAC70075E60C /* SimpleTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleTabBarController.swift; sourceTree = "<group>"; };
+		7435F5F91A6DC9B70075E60C /* SimpleTabBarSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleTabBarSegue.swift; sourceTree = "<group>"; };
 		7441011D1A645A3E00D2F874 /* CheckInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckInViewController.swift; sourceTree = "<group>"; };
 		7441011F1A64739B00D2F874 /* CheckInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckInViewController.xib; sourceTree = "<group>"; };
 		74551C801A3E91FA00D348BB /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
@@ -229,7 +234,6 @@
 		74861E1F1A4D0057004E8ADE /* BottomBarMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomBarMenu.xib; sourceTree = "<group>"; };
 		749256E71A64966000E04F31 /* SpotTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SpotTableCell.xib; sourceTree = "<group>"; };
 		749256EF1A64CCEA00E04F31 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
-		749256F11A64CCFC00E04F31 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		749256F31A65C82C00E04F31 /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		749256F41A65C82C00E04F31 /* PostTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostTableViewCell.xib; sourceTree = "<group>"; };
 		74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
@@ -367,7 +371,8 @@
 				74E570EE1A41D430005072E1 /* Notification.storyboard */,
 				746FDAC81A42C2EA0021360C /* UserPrompts.storyboard */,
 				746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */,
-				749256F11A64CCFC00E04F31 /* Profile.storyboard */,
+				7435F5F51A6DB4120075E60C /* Home.storyboard */,
+				7435F5F91A6DC9B70075E60C /* SimpleTabBarSegue.swift */,
 			);
 			name = Stories;
 			sourceTree = "<group>";
@@ -379,6 +384,7 @@
 				0276D13B19590CDF007292B0 /* VYBPageViewController.m */,
 				0226CBAB194A0339005270D3 /* VYBNavigationController.h */,
 				0226CBAC194A0339005270D3 /* VYBNavigationController.m */,
+				7435F5F71A6DBAC70075E60C /* SimpleTabBarController.swift */,
 			);
 			name = Container;
 			sourceTree = "<group>";
@@ -707,6 +713,7 @@
 				74A0FA571A36A8B50065059E /* UnblockUser.storyboard in Resources */,
 				022AC50319AD9757008A9C64 /* VYBCaptureViewController.xib in Resources */,
 				028D930C1A16C271002B7642 /* ActivitySectionView.xib in Resources */,
+				7435F5F61A6DB4120075E60C /* Home.storyboard in Resources */,
 				02D11D0C18DF62AC0018DA97 /* Montreal-LightIta.otf in Resources */,
 				02D11D1018DF62AC0018DA97 /* Montreal-RegularIta.otf in Resources */,
 				02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */,
@@ -722,7 +729,6 @@
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,
 				749256E81A64966000E04F31 /* SpotTableCell.xib in Resources */,
 				749256F61A65C82C00E04F31 /* PostTableViewCell.xib in Resources */,
-				749256F21A64CCFC00E04F31 /* Profile.storyboard in Resources */,
 				02D11D0918DF62AC0018DA97 /* Montreal-Heavy.otf in Resources */,
 				02D11D0E18DF62AC0018DA97 /* Montreal-MediumIta.otf in Resources */,
 				02D11D0818DF62AC0018DA97 /* Montreal-DemiBoldIta.otf in Resources */,
@@ -805,6 +811,7 @@
 				746FDACB1A42C36A0021360C /* UserPromptsViewController.swift in Sources */,
 				74781FC91A66F1AA0076FB3C /* ActivityTableViewController.swift in Sources */,
 				025CC90F19D5229200A1208C /* UIImage+maskImage.m in Sources */,
+				7435F5FA1A6DC9B70075E60C /* SimpleTabBarSegue.swift in Sources */,
 				029729721A02A1EC0050406D /* SpotFinder.swift in Sources */,
 				74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */,
 				02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */,
@@ -843,6 +850,7 @@
 				0262054419A67B3600E994F9 /* UINavigationController+Autorotate.m in Sources */,
 				74551C811A3E91FA00D348BB /* ConfigManager.swift in Sources */,
 				0288603E19E4A02A007876AE /* VYBCapturePipeline.m in Sources */,
+				7435F5F81A6DBAC70075E60C /* SimpleTabBarController.swift in Sources */,
 				74D203EE1A5C918F00DBF3B7 /* SimpleTextField.swift in Sources */,
 				0222946D19FF2CE200A2AD62 /* VYBPizzaLayer.m in Sources */,
 				026216BE19EA470600EC6544 /* VYBVybe.m in Sources */,

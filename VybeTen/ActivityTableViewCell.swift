@@ -52,6 +52,8 @@ class ActivityTableViewCell: UITableViewCell {
           self.vybeThumbnailImageView.image = UIImage(named: "Placeholder")
         }
       })
+    } else {
+      self.vybeThumbnailImageView.image = UIImage(named: "Placeholder")
     }
   }
   
@@ -60,7 +62,7 @@ class ActivityTableViewCell: UITableViewCell {
     if let profilePicFile = user[kVYBUserProfilePicMediumKey] as? PFFile {
       userProfileImageView.file = profilePicFile
       userProfileImageView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
-        if error != nil {
+        if error == nil {
           if image != nil {
             let maskImage = UIImage(named: "Profile_Mask")
             self.userProfileImageView.image = VYBUtility.maskImage(image, withMask: maskImage)
@@ -70,6 +72,8 @@ class ActivityTableViewCell: UITableViewCell {
           self.userProfileImageView.image = UIImage(named: "PersonAvartar")
         }
       })
+    } else {
+      self.userProfileImageView.image = UIImage(named: "PersonAvartar")
     }
     
     if let username = user[kVYBUserUsernameKey] as? String {

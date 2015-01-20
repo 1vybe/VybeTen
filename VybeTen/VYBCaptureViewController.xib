@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="ProximaNovaSoft-Regular.otf">
-            <string>ProximaNovaSoft-Regular</string>
             <string>ProximaNovaSoft-Regular</string>
         </mutableArray>
     </customFonts>
@@ -17,7 +17,6 @@
                 <outlet property="flipButton" destination="7vo-Gu-Tx0" id="H0U-It-ehr"/>
                 <outlet property="focusTarget" destination="DFf-gO-4yf" id="Pzw-JR-jNK"/>
                 <outlet property="homeButton" destination="rNG-mo-RpY" id="GKd-Qz-b3U"/>
-                <outlet property="profileButton" destination="Buj-R0-94l" id="Jx5-gu-wK9"/>
                 <outlet property="recordButton" destination="iEb-4Z-c7N" id="6xj-4L-I8S"/>
                 <outlet property="view" destination="iN0-l3-epB" id="ms6-DC-4sx"/>
             </connections>
@@ -42,17 +41,6 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Buj-R0-94l" userLabel="profileButton">
-                    <rect key="frame" x="15" y="15" width="35" height="35"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="35" id="MEo-4n-9VW"/>
-                        <constraint firstAttribute="width" constant="35" id="np1-EX-gra"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="13"/>
-                    <state key="normal" image="Capture_LeftArrow">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KMG-Zj-4bK" userLabel="homeAerial">
                     <rect key="frame" x="420" y="0.0" width="60" height="60"/>
                     <constraints>
@@ -64,19 +52,6 @@
                     </state>
                     <connections>
                         <action selector="homeButtonPressed:" destination="-1" eventType="touchUpInside" id="oFp-2j-slQ"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nlx-Hg-a6Y" userLabel="profileAerial">
-                    <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="60" id="IBB-yE-fC4"/>
-                        <constraint firstAttribute="width" constant="60" id="el5-eg-65w"/>
-                    </constraints>
-                    <state key="normal">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="profileButtonPressed:" destination="-1" eventType="touchUpInside" id="Blt-xk-d9V"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jPK-KL-Kst" userLabel="flashButton">
@@ -149,7 +124,6 @@
                 <constraint firstAttribute="bottom" secondItem="jPK-KL-Kst" secondAttribute="bottom" constant="15" id="0vY-vj-zsY"/>
                 <constraint firstItem="rNG-mo-RpY" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="1c6-8l-wbS"/>
                 <constraint firstAttribute="bottom" secondItem="Pbx-tR-l3x" secondAttribute="bottom" id="3OC-vJ-orN"/>
-                <constraint firstItem="Buj-R0-94l" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="3T5-7m-9bC"/>
                 <constraint firstAttribute="bottom" secondItem="7vo-Gu-Tx0" secondAttribute="bottom" constant="15" id="4sY-AC-3Cp"/>
                 <constraint firstItem="7vo-Gu-Tx0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="8yM-kf-bpg"/>
                 <constraint firstAttribute="centerX" secondItem="iEb-4Z-c7N" secondAttribute="centerX" id="BpA-Sz-xjK"/>
@@ -161,13 +135,10 @@
                 <constraint firstItem="KMG-Zj-4bK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="T76-wK-Obd"/>
                 <constraint firstItem="pxE-bC-V0j" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Td5-M7-CfT"/>
                 <constraint firstAttribute="trailing" secondItem="KMG-Zj-4bK" secondAttribute="trailing" id="X3F-EQ-EmA"/>
-                <constraint firstItem="Buj-R0-94l" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="ani-ff-ANh"/>
                 <constraint firstAttribute="bottom" secondItem="iEb-4Z-c7N" secondAttribute="bottom" constant="20" id="eCK-HP-ib5"/>
                 <constraint firstAttribute="bottom" secondItem="RCW-bB-hzg" secondAttribute="bottom" id="jfG-Jy-TK3"/>
                 <constraint firstItem="Pbx-tR-l3x" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="rKg-gl-GTr"/>
                 <constraint firstAttribute="trailing" secondItem="rNG-mo-RpY" secondAttribute="trailing" constant="15" id="s24-0h-PF9"/>
-                <constraint firstItem="nlx-Hg-a6Y" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="t6t-hT-AMV"/>
-                <constraint firstItem="nlx-Hg-a6Y" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="y6D-u2-yNO"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -177,7 +148,6 @@
     <resources>
         <image name="CaptureOFF_4" width="85" height="85"/>
         <image name="CaptureON_2" width="85" height="85"/>
-        <image name="Capture_LeftArrow" width="30" height="31"/>
         <image name="Capture_RightArrow" width="30" height="31"/>
         <image name="FocusTarget" width="71" height="71"/>
         <image name="capture_flash_off" width="40" height="40"/>
