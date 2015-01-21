@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ActivityTableViewController: PFQueryTableViewController {
+class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewControllerDelegate {
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -89,4 +89,24 @@ class ActivityTableViewController: PFQueryTableViewController {
     return false
   }
   
+  override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+ 
+    let activityObj = objects[indexPath.row] as PFObject
+    if let vybeObj = activityObj[kVYBActivityVybeKey] as? PFObject {
+      if let userObj = vybeObj[kVYBVybeUserKey] as? PFObject {
+        vybeObj[kVYBVybeUserKey] = userObj
+        let playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
+        playerVC.delegate = self
+        playerVC.playOnce(vybeObj)
+      }
+    }
+  }
+  
+  func playerViewController(playerVC: VYBPlayerViewController!, didFinishSetup ready: Bool) {
+    if ready {
+      self.presentViewController(playerVC, animated: true) {
+        playerVC.playCurrentItem()
+      }
+    }
+  }
 }
