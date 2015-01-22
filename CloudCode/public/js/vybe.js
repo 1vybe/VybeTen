@@ -23,7 +23,8 @@ $(function() {
 
       this.query = new Parse.Query('Vybe')
         .descending('timestamp')
-        .limit(1000);
+        .limit(1000)
+        .include('user');
 
       if (location) this.query.equalTo('zoneName', this.location);
       if (time) this.query.greaterThanOrEqualTo('timestamp', new Date(this.time));
@@ -102,19 +103,21 @@ $(function() {
       // Don't do anything if there are no vybes
       if (currentVybe === undefined) return;
 
+      var user = currentVybe.get('user');
+      var username = user.get('username');
+
       var zoneName = currentVybe.get('zoneName');
       if (!zoneName) zoneName = 'Earth';
-      var timestamp = currentVybe.get('timestamp');
 
+      var timestamp = currentVybe.get('timestamp');
       var formattedTimestamp = moment(timestamp).format('MMM DD h:mm a');
 
-      this.overlay.html(zoneName + '<br>' + formattedTimestamp);
-
-      this.player.src = currentVybe.get('video').url();
-      this.player.poster = currentVybe.get('thumbnail').url();
+      this.overlay.html([username, zoneName, formattedTimestamp].join('<br>'));
 
       this.preloader.src = nextVybe.get('video').url();
 
+      this.player.src = currentVybe.get('video').url();
+      this.player.poster = currentVybe.get('thumbnail').url();
       this.player.play();
     },
 
