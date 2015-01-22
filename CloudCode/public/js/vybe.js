@@ -18,16 +18,18 @@ $(function() {
     },
 
     setChannel: function(location, time) {
-      this.location = location;
-      this.time = time;
-
       this.query = new Parse.Query('Vybe')
         .descending('timestamp')
         .limit(1000)
         .include('user');
 
-      if (location) this.query.equalTo('zoneName', this.location);
-      if (time) this.query.greaterThanOrEqualTo('timestamp', new Date(this.time));
+      this.location = location;
+      this.time = time;
+
+      if (this.location)
+        this.query.equalTo('zoneName', this.location);
+      if (this.time)
+        this.query.greaterThanOrEqualTo('timestamp', new Date(this.time));
     },
 
     currentVybe: function() {
@@ -72,7 +74,7 @@ $(function() {
 
       this.player = $('.player').get(0);
 
-      this.overlay = $('.overlay.info');
+      this.info = $('.info');
 
       this.preloader = $('.preloader').get(0);
 
@@ -112,7 +114,7 @@ $(function() {
       var timestamp = currentVybe.get('timestamp');
       var formattedTimestamp = moment(timestamp).format('MMM DD h:mm a');
 
-      this.overlay.html([username, zoneName, formattedTimestamp].join('<br>'));
+      this.info.html([username, zoneName, formattedTimestamp].join('<br>'));
 
       this.preloader.src = nextVybe.get('video').url();
 
@@ -133,12 +135,21 @@ $(function() {
       this.render();
     },
 
+    pause: function() {
+      if (!this.player.paused) {
+        this.player.pause();
+      } else {
+        this.player.play();
+      }
+    },
+
     logKey: function(e) {
       if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
         e.preventDefault();
         switch (e.keyCode) {
-          case 39: this.playNext(); break;
-          case 37: this.playPrev(); break;
+          case 39: this.playNext(); break;  // Left arrow
+          case 37: this.playPrev(); break;  // Right arrow
+          case 32: this.pause(); break;     // Space
         }
       }
     }
