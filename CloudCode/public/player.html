@@ -11,58 +11,68 @@
     <script src="js/vybe.js"></script>
     <script src="http://momentjs.com/downloads/moment.min.js"></script>
     <style>
-      body {
-        background-color: black;
-      }
-
-      video {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        z-index: 0;
-      }
-
       @font-face {
         font-family: 'Avenir Regular';
         src: url('fonts/AvenirLTStd-Medium.otf');
       }
 
-      .overlay {
+      body {
         position: absolute;
-        font-size: large;
-        color: white;
-        font-family: 'Avenir Regular';
+        width: 100%;
+        height: 100%;
+        background-color: black;
+      }
+
+      #home {
+        position: absolute;
+        top: 15px;
+        left: 15px;
         z-index: 1;
       }
 
-      .info {
-        bottom: 0;
-        line-height: 1.2;
+      #liveplayer {
+        position: relative;
+        width: 100%;
+        height: 100%;
       }
 
-      .preloader {
+      #liveplayer .player {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+      }
+
+      #liveplayer .preloader {
         position: absolute!important;
         top: -10000px!important;
         left: -10000px!important;
       }
 
-      a {
-        font-size: x-large;
+      #liveplayer .overlay {
+        position: absolute;
+        font-size: large;
         color: white;
+        font-family: 'Avenir Regular';
+        line-height: 1.2;
+        z-index: 1;
+      }
+
+      #liveplayer .info {
+        bottom: 15px;
+        left: 15px;
       }
     </style>
   </head>
 
   <body>
+    <div id="home">
+      <a href="/"><img src="images/logo.png"></a>
+    </div>
 
-    <div class="liveplayer">
+    <div id="liveplayer">
       <video class="player" preload="auto" src="" poster=""></video>
       <div class="overlay info"></div>
-      <div class="overlay logo">
-        <a href="/">
-          <img src="images/logo.png">
-        </a>
-      </div>
       <video class="preloader" preload="auto" src=""></video>
     </div>
   </body>
