@@ -7,7 +7,7 @@ Parse.Cloud.beforeSave(Parse.User, function(request, response) {
     var errorMsg = validateUsername(username);
     if (errorMsg !== "") {
       response.error(errorMsg);
-    } else {  
+    } else {
       var query = new Parse.Query(Parse.User);
       query.equalTo("username_lowercase", username.toLowerCase());
       query.first({
@@ -34,12 +34,11 @@ Parse.Cloud.beforeSave(Parse.User, function(request, response) {
 
 function validateUsername(username) {
   if (username.length < 2 || username.length > 13) {
-    return "A username should be between 3 - 13 characters with no space.";
+    return "A username should be between 3 - 13 characters.";
   }
-  
-  var arr = username.split(" ");
-  if (arr.length != 1) {
-    return "A username should be between 3 - 13 characters with no space.";
+
+  if (!/^\w+$/.test(username)) {
+    return "A username should only include alphanumeric characters and underscore.";
   }
 
   return "";
