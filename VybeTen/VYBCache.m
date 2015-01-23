@@ -217,14 +217,13 @@
   }];
 }
 
-- (void)refreshMyBumpsInBackground:(void (^)(BOOL success))completionBlock {
+- (void)refreshMyActivitiesInBackground:(void (^)(BOOL success))completionBlock {
   // Update my bumps
   PFQuery *bumpQuery = [PFQuery queryWithClassName:kVYBActivityClassKey];
   [bumpQuery setCachePolicy:kPFCachePolicyNetworkElseCache];
   [bumpQuery orderByDescending:@"createdAt"];
   [bumpQuery includeKey:kVYBActivityVybeKey];
   [bumpQuery includeKey:kVYBActivityToUserKey];
-  [bumpQuery whereKey:kVYBActivityTypeKey equalTo:kVYBActivityTypeLike];
   [bumpQuery whereKey:kVYBActivityFromUserKey equalTo:[PFUser currentUser]];
   NSTimeInterval notificationTTL = [[ConfigManager sharedInstance] notificationTTL];
   if (notificationTTL) {
@@ -238,9 +237,13 @@
       [self clearMyBumpActivities];
       
       for (PFObject *activity in objects) {
-        [[VYBCache sharedCache] setAttributesForVybe:activity[kVYBActivityVybeKey] likers:@[[PFUser currentUser]] commenters:nil likedByCurrentUser:YES];
-        
-        [self addMyBump:activity];
+        if ( [activity[kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeLike] ) {
+          [self setAttributesForVybe:activity[kVYBActivityVybeKey] likers:@[[PFUser currentUser]] commenters:nil likedByCurrentUser:YES];
+          
+          [self addMyBump:activity];
+        } else if ( [activity[kVYBActivityTypeKey] isEqualToString:kVYBActivityTypeFollow] ) {
+          [self setFollowStatus:true user:activity[kVYBActivityToUserKey]];
+        }
       }
       if (completionBlock) {
         completionBlock(YES);

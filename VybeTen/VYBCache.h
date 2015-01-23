@@ -34,7 +34,7 @@
 - (NSDictionary *)attributesForVybe:(PFObject *)vybe;
 
 - (void)refreshBumpsForMeInBackground:(void (^)(BOOL success))block;
-- (void)refreshMyBumpsInBackground:(void (^)(BOOL success))block;
+- (void)refreshMyActivitiesInBackground:(void (^)(BOOL success))block;
 - (NSNumber *)likeCountForVybe:(PFObject *)vybe;
 - (NSArray *)likersForVybe:(PFObject *)vybe;
 - (NSArray *)myBumpActivities;

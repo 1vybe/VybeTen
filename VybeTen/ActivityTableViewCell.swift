@@ -15,8 +15,31 @@ class ActivityTableViewCell: PFTableViewCell {
   @IBOutlet weak var hashtagLabel: UILabel!
   @IBOutlet weak var timeLabel: UILabel!
   @IBOutlet weak var vybeThumbnailImageView: PFImageView!
+  @IBOutlet weak var followButton: UIButton!
   
-  func setVybe(vybeObj: PFObject) {
+  func setActivity(activityObj: AnyObject) {
+    if let vybe = activityObj[kVYBActivityVybeKey] as? PFObject {
+      self.setVybe(vybe)
+    }
+    
+    if let user = activityObj[kVYBActivityFromUserKey] as? PFObject {
+      self.setUser(user)
+      
+      if let type = activityObj[kVYBActivityTypeKey] as? String {
+        if type == kVYBActivityTypeFollow {
+          self.followButton.selected = VYBCache.sharedCache().followStatusForUser(user as PFUser)
+          self.followButton.tag = self.tag
+        }
+      }
+    }
+    
+    if let timestamp = activityObj.createdAt {
+      let reverseShortHandTimeString = VYBUtility.reverseTimeShorthand(timestamp)
+      self.timeLabel.text = reverseShortHandTimeString
+    }
+  }
+  
+  private func setVybe(vybeObj: AnyObject) {
     if let hashtags = vybeObj[kVYBVybeHashtagsKey] as? NSArray {
       if hashtags.count > 0 {
         var tagString = "#"
@@ -57,7 +80,7 @@ class ActivityTableViewCell: PFTableViewCell {
     }
   }
   
-  func setUser(user: PFObject) {
+  private func setUser(user: AnyObject) {
     // TODO: - Use ProfilePicSmall instead
     if let profilePicFile = user[kVYBUserProfilePicMediumKey] as? PFFile {
       userProfileImageView.file = profilePicFile

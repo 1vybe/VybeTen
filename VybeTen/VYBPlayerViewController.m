@@ -685,8 +685,9 @@
 //  self.goNextButton.hidden = NO;
 //  
 //  PFObject *currObj = _zoneVybes[_zoneCurrIdx];
+//  [ActionUtility followUser:currObj[kVYBVybeUserKey]];
+
 //  PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-//  [query whereKey:kVYBVybeUserKey equalTo:currObj[kVYBVybeUserKey]];
 //  [query orderByDescending:kVYBVybeTimestampKey];
 //  [query includeKey:kVYBVybeUserKey];
 //  [query setLimit:12];

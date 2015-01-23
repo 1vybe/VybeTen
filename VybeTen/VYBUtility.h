@@ -27,6 +27,7 @@
 + (NSString *)timeStringForPlayer:(NSDate *)aDate;
 + (NSString *)localizedDateStringFrom:(NSDate *)aDate;
 + (NSString *)reverseTime:(NSDate *)aDate;
++ (NSString *)reverseTimeShorthand:(NSDate *)aDate;
 + (NSDate *)dateFromDateString:(NSString *)dateString;
 + (void)reverseGeoCode:(PFGeoPoint *)aLocation withCompletion:(void (^)(NSArray *placemarks, NSError *error))completionBlock;
 + (NSString *)convertPlacemarkToLocation:(CLPlacemark *)placemark;

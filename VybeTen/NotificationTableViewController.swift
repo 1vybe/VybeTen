@@ -69,7 +69,7 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
         }
       })
     } else { // My Bumps
-      VYBCache.sharedCache().refreshMyBumpsInBackground({ (success: Bool) -> Void in
+      VYBCache.sharedCache().refreshMyActivitiesInBackground({ (success: Bool) -> Void in
         self.reloadMyActivities()
       })
     }
@@ -89,7 +89,7 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
       })
     } else { // My Bumps
       segmentedControl.enabled = false
-      VYBCache.sharedCache().refreshMyBumpsInBackground({ (success: Bool) -> Void in
+      VYBCache.sharedCache().refreshMyActivitiesInBackground({ (success: Bool) -> Void in
         if success {
           self.reloadMyActivities()
         }
