@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Vybe. All rights reserved.
 //
 
+// NOTE: - if an argument is PFObject, breakpoint anywhere in this file causes a crash
+
 import UIKit
 
 class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewControllerDelegate {
@@ -36,6 +38,23 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
     self.tableView.estimatedRowHeight = 128.0
     self.tableView.rowHeight = UITableViewAutomaticDimension
     self.paginationEnabled = false
+  }
+  
+  // MARK: - PFQueryTableViewController
+  override func objectsWillLoad() {
+    super.objectsWillLoad()
+    
+    VYBCache.sharedCache().refreshMyActivitiesInBackground { (success: Bool) -> Void in
+      if success {
+        self.tableView.reloadData()
+      }
+    }
+  }
+  
+  override func objectsDidLoad(error: NSError!) {
+    super.objectsDidLoad(error)
+
+    println("ActivitiTable will load \(objects.count) objects")
   }
   
   override func queryForTable() -> PFQuery! {
@@ -72,11 +91,7 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
     let type = activity[kVYBActivityTypeKey] as String
     
     if type == kVYBActivityTypeLike {
-      if self.activityHasTag(activity) {
-        cell = self.tableView.dequeueReusableCellWithIdentifier("FavoriteActivityCellIdentifier") as ActivityTableViewCell
-      } else {
-        cell = self.tableView.dequeueReusableCellWithIdentifier("FavoriteActivityCellNoTagIdentifier") as ActivityTableViewCell
-      }
+      cell = self.tableView.dequeueReusableCellWithIdentifier("FavoriteActivityCellIdentifier") as ActivityTableViewCell
     } else {
       cell = self.tableView.dequeueReusableCellWithIdentifier("FollowActivityCellIdentifier") as ActivityTableViewCell
     }
@@ -87,21 +102,9 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
     return cell
   }
   
-  // NOTE: - if an argument is PFObject, breakpoint anywhere in this file causes a crash
-  private func activityHasTag(activity: AnyObject) -> Bool {
-    if let tags = activity.objectForKey!(kVYBActivityVybeKey)?.objectForKey!(kVYBVybeHashtagsKey) as? [AnyObject] {
-      if tags.count > 0 {
-        return true
-      }
-    }
-
-    return false
-  }
-
+  
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
- 
-    let activityObj = objects[indexPath.row] as PFObject
-    if let vybeObj = activityObj[kVYBActivityVybeKey] as? PFObject {
+    if let vybeObj = objects[indexPath.row].objectForKey?(kVYBActivityVybeKey) as? PFObject {
       if let userObj = vybeObj[kVYBVybeUserKey] as? PFObject {
         vybeObj[kVYBVybeUserKey] = userObj
         let playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)

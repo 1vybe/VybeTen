@@ -9,14 +9,17 @@
 import UIKit
 
 class ActivityTableViewCell: PFTableViewCell {
+  @IBOutlet weak var timeLabel: UILabel!
   @IBOutlet weak var userProfileImageView: PFImageView!
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var descriptionLabel: UILabel!
-  @IBOutlet weak var hashtagLabel: UILabel!
-  @IBOutlet weak var timeLabel: UILabel!
-  @IBOutlet weak var vybeThumbnailImageView: PFImageView!
-  @IBOutlet weak var followButton: UIButton!
   
+  @IBOutlet weak var vybeThumbnailImageView: PFImageView!
+  @IBOutlet weak var hashtagLabel: UILabel!
+  @IBOutlet weak var favCountLabel: UILabel!
+  
+  @IBOutlet weak var followButton: UIButton!
+
   func setActivity(activityObj: AnyObject) {
     if let vybe = activityObj[kVYBActivityVybeKey] as? PFObject {
       self.setVybe(vybe)
@@ -40,6 +43,9 @@ class ActivityTableViewCell: PFTableViewCell {
   }
   
   private func setVybe(vybeObj: AnyObject) {
+    // Update hashtags label
+    hashtagLabel.text = ""
+    
     if let hashtags = vybeObj[kVYBVybeHashtagsKey] as? NSArray {
       if hashtags.count > 0 {
         var tagString = "#"
@@ -57,6 +63,10 @@ class ActivityTableViewCell: PFTableViewCell {
         hashtagLabel.text = tagString
       }
     }
+    
+    // Update favorite counter label
+    let count = VYBCache.sharedCache().likeCountForVybe(vybeObj as PFObject)
+    favCountLabel.text = "\(count)"
     
     if let vybeThumbnailFile = vybeObj[kVYBVybeThumbnailKey] as? PFFile {
       vybeThumbnailImageView.file = vybeThumbnailFile
@@ -87,7 +97,7 @@ class ActivityTableViewCell: PFTableViewCell {
       userProfileImageView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
         if error == nil {
           if image != nil {
-            let maskImage = UIImage(named: "Profile_Mask")
+            let maskImage = UIImage(named: "ProfilePic_Mask")
             self.userProfileImageView.image = VYBUtility.maskImage(image, withMask: maskImage)
           }
         } else {
