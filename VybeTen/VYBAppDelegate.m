@@ -19,7 +19,6 @@
 #import "VYBCaptureViewController.h"
 #import "VYBPlayerViewController.h"
 #import "VYBPermissionViewController.h"
-#import "VYBActivityTableViewController.h"
 #import "VYBWelcomeViewController.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"

@@ -9,6 +9,11 @@
 import UIKit
 
 class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewControllerDelegate {
+//  var objects = [PFObject]()
+  
+//  required init(coder aDecoder: NSCoder) {
+//    super.init(coder: aDecoder)
+//  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -28,7 +33,7 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
   
   
   override func queryForTable() -> PFQuery! {
-    var query: PFQuery! = PFQuery(className: kVYBActivityClassKey)
+    var query = PFQuery(className: kVYBActivityClassKey)
     query.orderByDescending("createdAt")
     query.includeKey(kVYBActivityVybeKey)
     query.includeKey(kVYBActivityFromUserKey)
@@ -47,13 +52,13 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
-  
+
   // MARK: - TableView data source
   
   override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
     return 1
   }
-  
+
   // MARK: - PFQueryTableViewController
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -77,18 +82,17 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
     return cell
   }
   
-  private func activityHasTag(activity: PFObject) -> Bool {
-    if let vybe = activity[kVYBActivityVybeKey] as? PFObject {
-      if let tags = vybe[kVYBVybeHashtagsKey] as? [AnyObject] {
-        if tags.count > 0 {
-          // NOTE: - breakpoint here causes a crash in debugger
-          return true
-        }
+  // NOTE: - if an argument is PFObject, breakpoint anywhere in this file causes a crash
+  private func activityHasTag(activity: AnyObject) -> Bool {
+    if let tags = activity.objectForKey!(kVYBActivityVybeKey)?.objectForKey!(kVYBVybeHashtagsKey) as? [AnyObject] {
+      if tags.count > 0 {
+        return true
       }
     }
+
     return false
   }
-  
+
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
  
     let activityObj = objects[indexPath.row] as PFObject
@@ -96,7 +100,7 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
       if let userObj = vybeObj[kVYBVybeUserKey] as? PFObject {
         vybeObj[kVYBVybeUserKey] = userObj
         let playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
-        playerVC.delegate = self
+//        playerVC.delegate = self
         playerVC.playOnce(vybeObj)
       }
     }

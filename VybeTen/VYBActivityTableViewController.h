@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <ParseUI/ParseUI.h>
 
 @class PFQueryTableViewController;
 IB_DESIGNABLE
