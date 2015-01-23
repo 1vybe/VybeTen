@@ -9,13 +9,10 @@
 import UIKit
 
 class SimpleTabBarController: UIViewController {
-  var mainNavigationController: VYBNavigationController?
+  @IBOutlet weak var tabBar: UIView!
+  @IBOutlet weak var containerView: UIView!
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    // Do any additional setup after loading the view.
-  }
+  var mainNavigationController: VYBNavigationController?
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()

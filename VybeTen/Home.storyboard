@@ -24,61 +24,97 @@
                                 </connections>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jif-b5-DIf" userLabel="TabBar">
-                                <rect key="frame" x="0.0" y="540" width="600" height="60"/>
+                                <rect key="frame" x="0.0" y="558" width="600" height="42"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="czQ-CJ-pyR" userLabel="Home">
-                                        <rect key="frame" x="0.0" y="0.0" width="150" height="60"/>
-                                        <state key="normal" title="Home">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TabBar" translatesAutoresizingMaskIntoConstraints="NO" id="Xv7-hQ-UjI">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="42"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="czQ-CJ-pyR" userLabel="Home">
+                                        <rect key="frame" x="0.0" y="0.0" width="150" height="42"/>
+                                        <state key="normal" image="HomeIcon">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <state key="selected" image="HomeSELECTED"/>
                                         <connections>
                                             <segue destination="G4T-zh-LYr" kind="custom" identifier="HomeTabSegue" customClass="SimpleTabBarSegue" customModule="VybeTen" customModuleProvider="target" id="QYd-WD-FVZ"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H9T-Gl-3by" userLabel="Discover">
-                                        <rect key="frame" x="150" y="0.0" width="150" height="60"/>
-                                        <state key="normal" title="Discover">
+                                    <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H9T-Gl-3by" userLabel="Discover">
+                                        <rect key="frame" x="150" y="0.0" width="150" height="42"/>
+                                        <state key="normal" image="DiscoverIcon">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wWE-6H-Us6" userLabel="Profile">
-                                        <rect key="frame" x="450" y="0.0" width="150" height="60"/>
-                                        <state key="normal" title="Profile">
+                                    <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wWE-6H-Us6" userLabel="Profile">
+                                        <rect key="frame" x="450" y="0.0" width="150" height="42"/>
+                                        <state key="normal" image="ProfileIcon">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <state key="selected" image="ProfileSELECTED"/>
                                         <connections>
                                             <segue destination="KHl-Wj-peN" kind="custom" identifier="ProfileTabSegue" customClass="SimpleTabBarSegue" customModule="VybeTen" customModuleProvider="target" id="fNf-Wa-DMa"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g4i-5a-R8B" userLabel="Activity">
-                                        <rect key="frame" x="300" y="0.0" width="150" height="60"/>
-                                        <state key="normal" title="Activity">
+                                    <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g4i-5a-R8B" userLabel="Activity">
+                                        <rect key="frame" x="300" y="0.0" width="150" height="42"/>
+                                        <state key="normal" image="ActivityIcon">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <state key="selected" image="ActivitySELECTED"/>
                                         <connections>
                                             <segue destination="rbJ-C8-ds2" kind="custom" identifier="ActivityTabSegue" customClass="SimpleTabBarSegue" customModule="VybeTen" customModuleProvider="target" id="qOq-Ze-qdz"/>
                                         </connections>
                                     </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="EG9-Kb-Sr1">
+                                        <rect key="frame" x="150" y="0.0" width="1" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="1" id="GiU-a2-6Vk"/>
+                                        </constraints>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="o8N-33-fwM">
+                                        <rect key="frame" x="299" y="0.0" width="1" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="1" id="3Mh-LV-mQW"/>
+                                        </constraints>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5iS-NY-Igy">
+                                        <rect key="frame" x="450" y="0.0" width="1" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="1" id="CrL-P8-VAD"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Xv7-hQ-UjI" secondAttribute="trailing" id="1ge-LP-ESl"/>
                                     <constraint firstItem="wWE-6H-Us6" firstAttribute="leading" secondItem="g4i-5a-R8B" secondAttribute="trailing" id="355-rp-qzt"/>
                                     <constraint firstAttribute="bottom" secondItem="g4i-5a-R8B" secondAttribute="bottom" id="3dD-qU-lVt"/>
+                                    <constraint firstItem="o8N-33-fwM" firstAttribute="top" secondItem="Jif-b5-DIf" secondAttribute="top" id="58v-Pk-9a3"/>
+                                    <constraint firstItem="5iS-NY-Igy" firstAttribute="leading" secondItem="g4i-5a-R8B" secondAttribute="trailing" id="5fn-Mp-5x5"/>
+                                    <constraint firstItem="g4i-5a-R8B" firstAttribute="leading" secondItem="o8N-33-fwM" secondAttribute="trailing" id="8XM-G0-KdO"/>
                                     <constraint firstItem="g4i-5a-R8B" firstAttribute="leading" secondItem="H9T-Gl-3by" secondAttribute="trailing" id="ABS-QZ-kR5"/>
                                     <constraint firstAttribute="trailing" secondItem="wWE-6H-Us6" secondAttribute="trailing" id="AE0-oC-HoY"/>
+                                    <constraint firstItem="5iS-NY-Igy" firstAttribute="top" secondItem="Jif-b5-DIf" secondAttribute="top" id="BTZ-I5-hkZ"/>
                                     <constraint firstAttribute="bottom" secondItem="czQ-CJ-pyR" secondAttribute="bottom" id="BUG-gp-itm"/>
                                     <constraint firstItem="wWE-6H-Us6" firstAttribute="top" secondItem="Jif-b5-DIf" secondAttribute="top" id="D9P-Uo-3Qp"/>
+                                    <constraint firstItem="EG9-Kb-Sr1" firstAttribute="leading" secondItem="czQ-CJ-pyR" secondAttribute="trailing" id="HSk-OM-sm5"/>
                                     <constraint firstAttribute="bottom" secondItem="H9T-Gl-3by" secondAttribute="bottom" id="Mav-m4-5pM"/>
                                     <constraint firstItem="g4i-5a-R8B" firstAttribute="width" secondItem="H9T-Gl-3by" secondAttribute="width" id="TuZ-JU-A08"/>
+                                    <constraint firstAttribute="bottom" secondItem="5iS-NY-Igy" secondAttribute="bottom" id="VSP-rZ-wt6"/>
+                                    <constraint firstItem="EG9-Kb-Sr1" firstAttribute="top" secondItem="Jif-b5-DIf" secondAttribute="top" id="ZVW-II-D8Y"/>
+                                    <constraint firstAttribute="bottom" secondItem="o8N-33-fwM" secondAttribute="bottom" id="avh-vn-f6v"/>
                                     <constraint firstItem="czQ-CJ-pyR" firstAttribute="leading" secondItem="Jif-b5-DIf" secondAttribute="leading" id="cms-uq-osl"/>
-                                    <constraint firstAttribute="height" constant="60" id="dpc-N1-86d"/>
+                                    <constraint firstAttribute="height" constant="42" id="dpc-N1-86d"/>
                                     <constraint firstAttribute="bottom" secondItem="wWE-6H-Us6" secondAttribute="bottom" id="eSQ-0c-maR"/>
                                     <constraint firstItem="H9T-Gl-3by" firstAttribute="leading" secondItem="czQ-CJ-pyR" secondAttribute="trailing" id="gzH-v9-46e"/>
                                     <constraint firstItem="g4i-5a-R8B" firstAttribute="width" secondItem="czQ-CJ-pyR" secondAttribute="width" id="hPE-2S-fc6"/>
                                     <constraint firstItem="czQ-CJ-pyR" firstAttribute="top" secondItem="Jif-b5-DIf" secondAttribute="top" id="jEb-yg-peW"/>
+                                    <constraint firstItem="Xv7-hQ-UjI" firstAttribute="top" secondItem="Jif-b5-DIf" secondAttribute="top" id="lBs-AO-KjL"/>
                                     <constraint firstItem="g4i-5a-R8B" firstAttribute="top" secondItem="Jif-b5-DIf" secondAttribute="top" id="nMq-3E-o8T"/>
+                                    <constraint firstAttribute="bottom" secondItem="Xv7-hQ-UjI" secondAttribute="bottom" id="rJg-FY-Qoh"/>
                                     <constraint firstItem="g4i-5a-R8B" firstAttribute="width" secondItem="wWE-6H-Us6" secondAttribute="width" id="uZk-Ce-Jte"/>
+                                    <constraint firstItem="Xv7-hQ-UjI" firstAttribute="leading" secondItem="Jif-b5-DIf" secondAttribute="leading" id="ueC-g5-RIE"/>
                                     <constraint firstItem="H9T-Gl-3by" firstAttribute="top" secondItem="Jif-b5-DIf" secondAttribute="top" id="vks-VO-FDR"/>
+                                    <constraint firstAttribute="bottom" secondItem="EG9-Kb-Sr1" secondAttribute="bottom" id="xVB-bZ-8bi"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -93,6 +129,10 @@
                             <constraint firstAttribute="trailing" secondItem="Jif-b5-DIf" secondAttribute="trailing" id="g2T-3o-w1B"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="containerView" destination="64a-1T-2xf" id="Vnu-7e-ZGB"/>
+                        <outlet property="tabBar" destination="Jif-b5-DIf" id="Rg6-kD-NCV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pKO-aS-Lx2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -576,11 +616,19 @@
     </scenes>
     <resources>
         <image name="ActivityCell_SmallStar" width="12" height="12"/>
+        <image name="ActivityIcon" width="20" height="20"/>
+        <image name="ActivitySELECTED" width="20" height="20"/>
+        <image name="DiscoverIcon" width="20" height="20"/>
+        <image name="HomeIcon" width="23" height="20"/>
+        <image name="HomeSELECTED" width="23" height="20"/>
         <image name="PersonAvartar" width="100" height="100"/>
         <image name="Placeholder" width="51" height="51"/>
+        <image name="ProfileIcon" width="17" height="20"/>
+        <image name="ProfileSELECTED" width="17" height="20"/>
         <image name="Profile_ActivityBar" width="375" height="40"/>
         <image name="Profile_ToggleSeparator" width="1" height="29"/>
         <image name="Settings" width="21" height="21"/>
+        <image name="TabBar" width="375" height="42"/>
         <image name="VybeLogo_Nav" width="33" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
