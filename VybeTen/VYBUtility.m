@@ -506,14 +506,14 @@
     unit = @"w";
   } else if (timePassed < 3600 * 24 * 7 * 4 * 12) {
     i = timePassed / 3600 / 24 / 7 / 4;
-    unit = @"month";
+    unit = @"m";
   } else {
     i = timePassed / 3600 / 24 / 7 / 4 / 12;
     unit = @"yr";
   }
   
   if (i > 1) {
-    if ([unit isEqualToString:@"hr"] || [unit isEqualToString:@"month"]) {
+    if ([unit isEqualToString:@"hr"]) {
       unit = [unit stringByAppendingString:@"s"];
     }
   }
