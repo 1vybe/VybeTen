@@ -122,8 +122,11 @@ class WelcomeManager: NSObject {
         }
       })
       
-      // Update My Bumps
+      // Retrive my activities
       VYBCache.sharedCache().refreshMyActivitiesInBackground(nil)
+      
+      // Retrive activities for me
+      VYBCache.sharedCache().refreshBumpsForMeInBackground(nil)
     }
   }
   

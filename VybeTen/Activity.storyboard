@@ -466,7 +466,7 @@
         <image name="MapTitleView" width="196" height="28"/>
         <image name="NewMap" width="34" height="35"/>
         <image name="Placeholder" width="51" height="51"/>
-        <image name="Settings" width="21" height="21"/>
+        <image name="Settings" width="20" height="20"/>
         <image name="UnwatchedBar" width="10" height="85"/>
         <image name="VYBE_Nav" width="109" height="18"/>
         <image name="VybeLogo_Nav" width="33" height="16"/>
