@@ -5,30 +5,19 @@
 }
 
 @font-face {
-    font-family: 'Avenir Next UltraLight';
-    src: url('../fonts/AvenirNext-UltraLight.ttf');
-}
-
-@font-face {
-    font-family: 'Avenir Light';
-    src: url('../fonts/AvenirLTStd-Light.otf');
-}
-
-@font-face {
-    font-family: 'Avenir Normal';
-    src: url('../fonts/AvenirLTStd-Roman.otf');
-}
-
-@font-face {
     font-family: 'Avenir Bold';
     src: url('../fonts/AvenirLTStd-Heavy.otf');
+}
+
+@font-face {
+    font-family: 'Avenir Next UltraLight';
+    src: url('../fonts/AvenirNext-UltraLight.ttf');
 }
 
 @font-face {
     font-family: 'JosefinSans Light';
     src: url('../fonts/JosefinSans-Light.ttf');
 }
-
 
 @font-face {
     font-family: 'JosefinSans UltraLight';
