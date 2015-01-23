@@ -19,6 +19,12 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
   
   @IBOutlet weak var tableView: UITableView!
   
+  @IBAction func logout(sender: AnyObject) {
+    if let appdel = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
+      appdel.logOut()
+    }
+  }
+  
   @IBAction func profileButtonPressed(sender: AnyObject) {
     // TODO: - Make the following version check mechanism GLOBAL
     let comparisonResult: NSComparisonResult = UIDevice.currentDevice().systemVersion.compare("8.0.0", options: NSStringCompareOptions.NumericSearch)

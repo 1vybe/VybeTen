@@ -484,6 +484,44 @@
   return theTime;
 }
 
+
++ (NSString *)reverseTimeShorthand:(NSDate *)aDate {
+  double timePassed = [[NSDate date] timeIntervalSinceDate:aDate];
+  NSString *unit;
+  int i;
+  if (timePassed < 60) {
+    i = timePassed / 1;
+    unit = @"sec";
+  } else if (timePassed < 60 * 60) {
+    i = timePassed / 60;
+    unit = @"min";
+  } else if (timePassed < 3600 * 24.0) {
+    i = timePassed / 3600;
+    unit = @"hr";
+  } else if (timePassed < 3600 * 24 * 7) {
+    i = timePassed/ 3600 / 24;
+    unit = @"d";
+  } else if (timePassed < 3600 * 24 * 7 * 4) {
+    i = timePassed / 3600 / 24 / 7;
+    unit = @"w";
+  } else if (timePassed < 3600 * 24 * 7 * 4 * 12) {
+    i = timePassed / 3600 / 24 / 7 / 4;
+    unit = @"month";
+  } else {
+    i = timePassed / 3600 / 24 / 7 / 4 / 12;
+    unit = @"yr";
+  }
+  
+  if (i > 1) {
+    if ([unit isEqualToString:@"hr"] || [unit isEqualToString:@"month"]) {
+      unit = [unit stringByAppendingString:@"s"];
+    }
+  }
+  NSString *theTime = [NSString stringWithFormat:@"%d %@", i, unit];
+  
+  return theTime;
+}
+
 + (void)showToastWithImage:(UIImage *)aIamge title:(NSString *)title {
   dispatch_async(dispatch_get_main_queue(), ^{
     MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[[UIApplication sharedApplication] delegate].window];

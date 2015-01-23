@@ -9,18 +9,25 @@
 import UIKit
 
 class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewControllerDelegate {
-//  var objects = [PFObject]()
-  
-//  required init(coder aDecoder: NSCoder) {
-//    super.init(coder: aDecoder)
-//  }
+  @IBAction func followButtonPressed(sender: AnyObject) {
+    if let followButton = sender as? UIButton {
+      if let user = objects[followButton.tag].objectForKey?(kVYBActivityFromUserKey) as? PFUser {
+        if followButton.selected {
+          ActionUtility.unfollowUser(user)
+        } else {
+          ActionUtility.followUser(user)
+        }
+      }
+      followButton.selected = !followButton.selected
+    }
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
         
     let textAttributes = NSMutableDictionary()
-    if let font = UIFont(name: "HelveticaNeue-Medium", size: 18.0) {
-      let textColor = UIColor(red: 92.0/255.0, green: 140.0/255.0, blue: 242.0/255.0, alpha: 1.0)
+    if let font = UIFont(name: "Helvetica Neue", size: 15.0) {
+      let textColor = UIColor(red: 255.0/255.0, green: 102.0/255.0, blue: 53.0/255.0, alpha: 1.0)
       textAttributes.setObject(font, forKey: NSFontAttributeName)
       textAttributes.setObject(textColor, forKey: NSForegroundColorAttributeName)
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
@@ -31,13 +38,11 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
     self.paginationEnabled = false
   }
   
-  
   override func queryForTable() -> PFQuery! {
     var query = PFQuery(className: kVYBActivityClassKey)
     query.orderByDescending("createdAt")
     query.includeKey(kVYBActivityVybeKey)
     query.includeKey(kVYBActivityFromUserKey)
-    query.whereKey(kVYBActivityTypeKey, equalTo: kVYBActivityTypeLike)
     query.whereKey(kVYBActivityToUserKey, equalTo: PFUser.currentUser())
     query.whereKey(kVYBActivityFromUserKey, notEqualTo: PFUser.currentUser())
     let notificationTTL = ConfigManager.sharedInstance.notificationTTL()
@@ -64,20 +69,20 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell: ActivityTableViewCell
     let activity = objects[indexPath.row] as PFObject
+    let type = activity[kVYBActivityTypeKey] as String
     
-    if self.activityHasTag(activity) {
-     cell = self.tableView.dequeueReusableCellWithIdentifier("ActivityPostTableCellIdentifier") as ActivityTableViewCell
+    if type == kVYBActivityTypeLike {
+      if self.activityHasTag(activity) {
+        cell = self.tableView.dequeueReusableCellWithIdentifier("FavoriteActivityCellIdentifier") as ActivityTableViewCell
+      } else {
+        cell = self.tableView.dequeueReusableCellWithIdentifier("FavoriteActivityCellNoTagIdentifier") as ActivityTableViewCell
+      }
     } else {
-      cell = self.tableView.dequeueReusableCellWithIdentifier("ActivityPostTableCellNoTagIdentifier") as ActivityTableViewCell
+      cell = self.tableView.dequeueReusableCellWithIdentifier("FollowActivityCellIdentifier") as ActivityTableViewCell
     }
     
-    if let vybe = activity[kVYBActivityVybeKey] as? PFObject {
-      cell.setVybe(vybe)
-    }
-    
-    if let user = activity[kVYBActivityFromUserKey] as? PFObject {
-      cell.setUser(user)
-    }
+    cell.tag = indexPath.row
+    cell.setActivity(activity)
     
     return cell
   }
@@ -100,7 +105,7 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
       if let userObj = vybeObj[kVYBVybeUserKey] as? PFObject {
         vybeObj[kVYBVybeUserKey] = userObj
         let playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
-//        playerVC.delegate = self
+        playerVC.delegate = self
         playerVC.playOnce(vybeObj)
       }
     }
