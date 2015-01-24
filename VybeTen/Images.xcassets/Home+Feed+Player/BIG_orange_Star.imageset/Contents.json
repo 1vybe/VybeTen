@@ -7,11 +7,12 @@
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "AudioMUTE@2x.png"
+      "filename" : "BIG_orange_Star@2x.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x"
+      "scale" : "3x",
+      "filename" : "BIG_orange_Star@3x.png"
     }
   ],
   "info" : {
