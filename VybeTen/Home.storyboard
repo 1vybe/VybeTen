@@ -23,7 +23,7 @@
                                     <segue destination="oCy-qV-C0R" kind="embed" identifier="TabBarEmbedSegue" id="ydT-3g-na2"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jif-b5-DIf" userLabel="TabBar">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jif-b5-DIf" userLabel="TabBar" customClass="SimpleTabBarView" customModule="VybeTen" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="558" width="600" height="42"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TabBar" translatesAutoresizingMaskIntoConstraints="NO" id="Xv7-hQ-UjI">
@@ -36,7 +36,7 @@
                                         </state>
                                         <state key="selected" image="HomeSELECTED"/>
                                         <connections>
-                                            <segue destination="G4T-zh-LYr" kind="custom" identifier="HomeTabSegue" customClass="SimpleTabBarSegue" customModule="VybeTen" customModuleProvider="target" id="QYd-WD-FVZ"/>
+                                            <segue destination="zVb-v7-k4y" kind="custom" identifier="HomeTabSegue" customClass="SimpleTabBarSegue" customModule="VybeTen" customModuleProvider="target" id="YIf-Jz-Mjp"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H9T-Gl-3by" userLabel="Discover">
@@ -116,6 +116,12 @@
                                     <constraint firstItem="H9T-Gl-3by" firstAttribute="top" secondItem="Jif-b5-DIf" secondAttribute="top" id="vks-VO-FDR"/>
                                     <constraint firstAttribute="bottom" secondItem="EG9-Kb-Sr1" secondAttribute="bottom" id="xVB-bZ-8bi"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="activityButton" destination="g4i-5a-R8B" id="Vlh-ou-eJK"/>
+                                    <outlet property="discoverButton" destination="H9T-Gl-3by" id="V5P-0d-gPX"/>
+                                    <outlet property="homeButton" destination="czQ-CJ-pyR" id="fuE-Pn-ieH"/>
+                                    <outlet property="profileButton" destination="wWE-6H-Us6" id="FJo-UQ-Inc"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -153,39 +159,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="rbJ-C8-ds2" kind="relationship" relationship="rootViewController" id="ZkZ-qG-bEG"/>
+                        <segue destination="zVb-v7-k4y" kind="relationship" relationship="rootViewController" id="4a0-nZ-d2l"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="osp-Us-E13" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="732" y="116"/>
-        </scene>
-        <!--HOME-->
-        <scene sceneID="oHO-ym-rvM">
-            <objects>
-                <tableViewController title="HOME" id="G4T-zh-LYr" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="caO-1R-O5a">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="G4T-zh-LYr" id="54j-dH-nd8"/>
-                            <outlet property="delegate" destination="G4T-zh-LYr" id="bTi-QY-dp0"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="H O M E" id="VE0-RB-lUe">
-                        <barButtonItem key="leftBarButtonItem" image="VybeLogo_Nav" id="fDs-Fp-RHK" userLabel="capture">
-                            <color key="tintColor" red="1" green="0.25882352939999997" blue="0.2274509804" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Plus" id="bIk-YM-3Ew">
-                            <color key="tintColor" red="1" green="0.25882352939999997" blue="0.2274509804" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        </barButtonItem>
-                    </navigationItem>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="uoW-9S-Awv" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-250" y="875"/>
         </scene>
         <!--ACTIVITY-->
         <scene sceneID="erh-K0-9hh">
@@ -659,10 +638,105 @@
             </objects>
             <point key="canvasLocation" x="1069" y="865"/>
         </scene>
+        <!--HOME-->
+        <scene sceneID="yWA-wd-Mtg">
+            <objects>
+                <viewController title="HOME" id="zVb-v7-k4y" customClass="HomeViewController" customModule="VybeTen" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="u1p-Xn-wuL"/>
+                        <viewControllerLayoutGuide type="bottom" id="r4e-9u-gOO"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="qbb-UW-3M7">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="eDM-SY-UKu">
+                                <rect key="frame" x="0.0" y="48" width="600" height="401"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Ctl-vX-kXj">
+                                    <size key="itemSize" width="300" height="300"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="VybeCardCell" id="5jN-YX-wqt" customClass="VybeCardCell" customModule="VybeTen" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CARD" translatesAutoresizingMaskIntoConstraints="NO" id="ANB-tS-rUZ" userLabel="cardBG">
+                                                    <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6u4-P8-lgI" userLabel="thumbnail" customClass="PFImageView">
+                                                    <rect key="frame" x="0.0" y="0.0" width="300" height="238"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="6u4-P8-lgI" secondAttribute="bottom" constant="62" id="0oA-Xv-7mk"/>
+                                            <constraint firstItem="6u4-P8-lgI" firstAttribute="top" secondItem="5jN-YX-wqt" secondAttribute="top" id="9vC-zm-83F"/>
+                                            <constraint firstItem="ANB-tS-rUZ" firstAttribute="leading" secondItem="5jN-YX-wqt" secondAttribute="leading" id="HAc-Hz-9Kz"/>
+                                            <constraint firstAttribute="bottom" secondItem="ANB-tS-rUZ" secondAttribute="bottom" id="HPH-gl-enT"/>
+                                            <constraint firstAttribute="trailing" secondItem="6u4-P8-lgI" secondAttribute="trailing" id="J7w-pr-ydm"/>
+                                            <constraint firstAttribute="trailing" secondItem="ANB-tS-rUZ" secondAttribute="trailing" id="aIZ-ns-jaZ"/>
+                                            <constraint firstItem="ANB-tS-rUZ" firstAttribute="top" secondItem="5jN-YX-wqt" secondAttribute="top" id="qtR-6o-68u"/>
+                                            <constraint firstItem="6u4-P8-lgI" firstAttribute="leading" secondItem="5jN-YX-wqt" secondAttribute="leading" id="yin-Lv-zu5"/>
+                                        </constraints>
+                                        <size key="customSize" width="300" height="300"/>
+                                        <connections>
+                                            <outlet property="thumbnailImageView" destination="6u4-P8-lgI" id="H1x-lz-Tqw"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="zVb-v7-k4y" id="3Vx-na-lkK"/>
+                                    <outlet property="delegate" destination="zVb-v7-k4y" id="hDW-DX-9vK"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="r4e-9u-gOO" firstAttribute="top" secondItem="eDM-SY-UKu" secondAttribute="bottom" constant="65" id="FL6-1t-T8m"/>
+                            <constraint firstItem="eDM-SY-UKu" firstAttribute="leading" secondItem="qbb-UW-3M7" secondAttribute="leading" id="Qrs-bi-nvO"/>
+                            <constraint firstItem="eDM-SY-UKu" firstAttribute="top" secondItem="u1p-Xn-wuL" secondAttribute="bottom" constant="4" id="SyO-gQ-wHl"/>
+                            <constraint firstAttribute="trailing" secondItem="eDM-SY-UKu" secondAttribute="trailing" id="aPp-sh-YX3"/>
+                        </constraints>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="QfK-dL-HjS">
+                        <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" image="VybeLogo_Nav" id="X0g-4O-3g0" userLabel="capture">
+                            <color key="tintColor" red="1" green="0.25882352939999997" blue="0.2274509804" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </barButtonItem>
+                        <view key="titleView" contentMode="scaleToFill" id="gJq-gh-DlY">
+                            <rect key="frame" x="180" y="6" width="240" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="VYBE_Nav" translatesAutoresizingMaskIntoConstraints="NO" id="gps-B7-DT4">
+                                    <rect key="frame" x="65" y="8" width="109" height="18"/>
+                                </imageView>
+                            </subviews>
+                        </view>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="collectionView" destination="eDM-SY-UKu" id="9vO-ub-7Vh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pqz-wm-fmb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-222" y="865"/>
+        </scene>
     </scenes>
     <resources>
         <image name="ActivityGREY" width="20" height="20"/>
         <image name="ActivitySELECTED" width="20" height="20"/>
+        <image name="CARD" width="716" height="961"/>
         <image name="DiscoverGREY" width="20" height="20"/>
         <image name="FollowUser" width="47" height="47"/>
         <image name="FollowingUser" width="40" height="40"/>
@@ -679,9 +753,10 @@
         <image name="Settings" width="20" height="20"/>
         <image name="TabBar" width="375" height="42"/>
         <image name="UserCell" width="375" height="85"/>
+        <image name="VYBE_Nav" width="109" height="18"/>
         <image name="VybeLogo_Nav" width="33" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="qOq-Ze-qdz"/>
+        <segue reference="YIf-Jz-Mjp"/>
     </inferredMetricsTieBreakers>
 </document>
