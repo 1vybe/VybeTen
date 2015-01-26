@@ -8,6 +8,8 @@
 
 import UIKit
 
-class VybeCardCell: UICollectionViewCell {
-    
+class VybeCardCell: UITableViewCell {
+  @IBOutlet weak var thumbnailImageView: PFImageView!
+  
+  
 }

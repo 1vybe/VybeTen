@@ -15,8 +15,6 @@ class ActivityTableViewCell: PFTableViewCell {
   @IBOutlet weak var descriptionLabel: UILabel!
   
   @IBOutlet weak var vybeThumbnailImageView: PFImageView!
-  @IBOutlet weak var hashtagLabel: UILabel!
-  @IBOutlet weak var favCountLabel: UILabel!
   
   @IBOutlet weak var followButton: UIButton!
 
@@ -38,13 +36,12 @@ class ActivityTableViewCell: PFTableViewCell {
     
     if let timestamp = activityObj.createdAt {
       let reverseShortHandTimeString = VYBUtility.reverseTimeShorthand(timestamp)
-      self.timeLabel.text = reverseShortHandTimeString
+//      self.timeLabel.text = reverseShortHandTimeString
     }
   }
   
   private func setVybe(vybeObj: AnyObject) {
     // Update hashtags label
-    hashtagLabel.text = ""
     
     if let hashtags = vybeObj[kVYBVybeHashtagsKey] as? NSArray {
       if hashtags.count > 0 {
@@ -60,13 +57,9 @@ class ActivityTableViewCell: PFTableViewCell {
             }
           }
         }
-        hashtagLabel.text = tagString
+        descriptionLabel.text = tagString
       }
     }
-    
-    // Update favorite counter label
-    let count = VYBCache.sharedCache().likeCountForVybe(vybeObj as PFObject)
-    favCountLabel.text = "\(count)"
     
     if let vybeThumbnailFile = vybeObj[kVYBVybeThumbnailKey] as? PFFile {
       vybeThumbnailImageView.file = vybeThumbnailFile
@@ -110,7 +103,7 @@ class ActivityTableViewCell: PFTableViewCell {
     }
     
     if let username = user[kVYBUserUsernameKey] as? String {
-      usernameLabel.text = username
+//      usernameLabel.text = username
     }
   }
   

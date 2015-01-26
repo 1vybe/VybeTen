@@ -8,28 +8,61 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
+class HomeViewController: UITableViewController {
+  var tableObjects = [PFObject]()
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    let params = [:]
+    PFCloud.callFunctionInBackground("get_fresh_vybes", withParameters: params) { (result: AnyObject!, error: NSError!) -> Void in
+      if error == nil {
+        if let list = result as? [AnyObject] {
+          self.tableObjects = list.reverse() as [PFObject]
+          self.tableView.reloadData()
+        }
+      }
     }
+    // Do any additional setup after loading the view.
+  }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+  
+  override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return tableObjects.count
+  }
+  
+  override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    if let fullHeight = UIApplication.sharedApplication().keyWindow?.bounds.height {
+      return fullHeight
+    }
+    return 0
+  }
+  
+  override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    var cell = tableView.dequeueReusableCellWithIdentifier("VybeCardCell", forIndexPath: indexPath) as VybeCardCell
+    
+    cell.contentView.frame = cell.bounds;
+    cell.contentView.autoresizingMask = .FlexibleWidth | .FlexibleHeight;
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    if let vybeThumbnailFile = tableObjects[indexPath.row].objectForKey(kVYBVybeThumbnailKey) as? PFFile {
+      cell.thumbnailImageView.file = vybeThumbnailFile
+      cell.thumbnailImageView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
+        if image != nil {
+          if image.size.height > image.size.width {
+            cell.thumbnailImageView.image = image;
+          } else {
+            let rotatedImg = UIImage(CGImage: image.CGImage, scale: 1.0, orientation: UIImageOrientation.Right)
+            cell.thumbnailImageView.image = rotatedImg
+          }
+        }
+      })
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    return cell
+  }
+  
 }
