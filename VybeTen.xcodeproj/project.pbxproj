@@ -82,10 +82,13 @@
 		7441011E1A645A3E00D2F874 /* CheckInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7441011D1A645A3E00D2F874 /* CheckInViewController.swift */; };
 		744101201A64739B00D2F874 /* CheckInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7441011F1A64739B00D2F874 /* CheckInViewController.xib */; };
 		74551C811A3E91FA00D348BB /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74551C801A3E91FA00D348BB /* ConfigManager.swift */; };
+		7464831C1A73063500FA4C9F /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7464831B1A73063500FA4C9F /* HomeViewController.swift */; };
+		7464831E1A731A0A00FA4C9F /* VybeCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7464831D1A731A0A00FA4C9F /* VybeCardCell.swift */; };
 		746FDAC91A42C2EA0021360C /* UserPrompts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 746FDAC81A42C2EA0021360C /* UserPrompts.storyboard */; };
 		746FDACB1A42C36A0021360C /* UserPromptsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */; };
 		74781FC91A66F1AA0076FB3C /* ActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74781FC81A66F1AA0076FB3C /* ActivityTableViewController.swift */; };
 		74861E201A4D0057004E8ADE /* BottomBarMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 74861E1F1A4D0057004E8ADE /* BottomBarMenu.xib */; };
+		748C78FA1A772F89000200C4 /* UIStoryboard+Vybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 748C78F91A772F89000200C4 /* UIStoryboard+Vybe.m */; };
 		749256E81A64966000E04F31 /* SpotTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 749256E71A64966000E04F31 /* SpotTableCell.xib */; };
 		749256F01A64CCEA00E04F31 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749256EF1A64CCEA00E04F31 /* ProfileViewController.swift */; };
 		749256F51A65C82C00E04F31 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749256F31A65C82C00E04F31 /* PostTableViewCell.swift */; };
@@ -230,10 +233,15 @@
 		7441011D1A645A3E00D2F874 /* CheckInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckInViewController.swift; sourceTree = "<group>"; };
 		7441011F1A64739B00D2F874 /* CheckInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckInViewController.xib; sourceTree = "<group>"; };
 		74551C801A3E91FA00D348BB /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
+		7464831B1A73063500FA4C9F /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		7464831D1A731A0A00FA4C9F /* VybeCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VybeCardCell.swift; sourceTree = "<group>"; };
+		746483201A76FB1A00FA4C9F /* Vibration.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Vibration.playground; sourceTree = "<group>"; };
 		746FDAC81A42C2EA0021360C /* UserPrompts.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UserPrompts.storyboard; sourceTree = "<group>"; };
 		746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPromptsViewController.swift; sourceTree = "<group>"; };
 		74781FC81A66F1AA0076FB3C /* ActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityTableViewController.swift; sourceTree = "<group>"; };
 		74861E1F1A4D0057004E8ADE /* BottomBarMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomBarMenu.xib; sourceTree = "<group>"; };
+		748C78F81A772F89000200C4 /* UIStoryboard+Vybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIStoryboard+Vybe.h"; sourceTree = "<group>"; };
+		748C78F91A772F89000200C4 /* UIStoryboard+Vybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIStoryboard+Vybe.m"; sourceTree = "<group>"; };
 		749256E71A64966000E04F31 /* SpotTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SpotTableCell.xib; sourceTree = "<group>"; };
 		749256EF1A64CCEA00E04F31 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		749256F31A65C82C00E04F31 /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
@@ -314,6 +322,8 @@
 				025408E019BA0FD7009C7C71 /* NSArray+PFObject.m */,
 				025408E219BA10E5009C7C71 /* NSMutableArray+PFObject.h */,
 				025408E319BA10E5009C7C71 /* NSMutableArray+PFObject.m */,
+				748C78F81A772F89000200C4 /* UIStoryboard+Vybe.h */,
+				748C78F91A772F89000200C4 /* UIStoryboard+Vybe.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -455,6 +465,8 @@
 				74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */,
 				74781FC81A66F1AA0076FB3C /* ActivityTableViewController.swift */,
 				74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */,
+				7464831B1A73063500FA4C9F /* HomeViewController.swift */,
+				7464831D1A731A0A00FA4C9F /* VybeCardCell.swift */,
 				74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */,
 				749256EF1A64CCEA00E04F31 /* ProfileViewController.swift */,
 			);
@@ -567,6 +579,7 @@
 				02512D071A0BEDA800155068 /* ZoneStore.swift */,
 				029729711A02A1EC0050406D /* SpotFinder.swift */,
 				74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */,
+				746483201A76FB1A00FA4C9F /* Vibration.playground */,
 			);
 			path = VybeTen;
 			sourceTree = "<group>";
@@ -824,6 +837,7 @@
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
 				74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */,
 				7441011E1A645A3E00D2F874 /* CheckInViewController.swift in Sources */,
+				7464831C1A73063500FA4C9F /* HomeViewController.swift in Sources */,
 				02A45CEF1A1E664E00425F9C /* PizzaProgressView.swift in Sources */,
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				025408E419BA10E5009C7C71 /* NSMutableArray+PFObject.m in Sources */,
@@ -857,11 +871,13 @@
 				7435F5F81A6DBAC70075E60C /* SimpleTabBarController.swift in Sources */,
 				74D203EE1A5C918F00DBF3B7 /* SimpleTextField.swift in Sources */,
 				0222946D19FF2CE200A2AD62 /* VYBPizzaLayer.m in Sources */,
+				7464831E1A731A0A00FA4C9F /* VybeCardCell.swift in Sources */,
 				026216BE19EA470600EC6544 /* VYBVybe.m in Sources */,
 				020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */,
 				02512D081A0BEDA800155068 /* ZoneStore.swift in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
 				025CC90C19D51AF400A1208C /* UINavigationBar+fixedSize.m in Sources */,
+				748C78FA1A772F89000200C4 /* UIStoryboard+Vybe.m in Sources */,
 				0276D13C19590CDF007292B0 /* VYBPageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
