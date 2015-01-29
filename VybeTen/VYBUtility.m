@@ -19,7 +19,7 @@
 #import "NSMutableArray+PFObject.h"
 #import "NSArray+PFObject.h"
 
-#import "VybeTen-Swift.h"
+#import "Vybe-Swift.h"
 
 @implementation VYBUtility
 

@@ -24,7 +24,7 @@
 #import "VYBUtility.h"
 #import "Reachability.h"
 
-#import "VybeTen-Swift.h"
+#import "Vybe-Swift.h"
 
 @interface VYBAppDelegate () <PFLogInViewControllerDelegate>
 

@@ -11,7 +11,7 @@
 #import "VYBUtility.h"
 #import "VYBCache.h"
 
-#import "VybeTen-Swift.h"
+#import "Vybe-Swift.h"
 
 @implementation VYBWelcomeViewController
 

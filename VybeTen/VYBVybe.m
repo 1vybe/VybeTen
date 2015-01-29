@@ -7,7 +7,7 @@
 //
 
 #import "VYBVybe.h"
-#import "VybeTen-Swift.h"
+#import "Vybe-Swift.h"
 
 @interface VYBVybe ()
 @property (nonatomic) NSMutableDictionary *parseObjectDictionary;

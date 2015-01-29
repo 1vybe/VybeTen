@@ -10,7 +10,7 @@
 #import "NSArray+PFObject.h"
 #import "NSMutableArray+PFObject.h"
 
-#import "VybeTen-Swift.h"
+#import "Vybe-Swift.h"
 
 @interface VYBCache()
 @property (nonatomic, strong) NSCache *cache;

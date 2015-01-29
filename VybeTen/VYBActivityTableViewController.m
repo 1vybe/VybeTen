@@ -5,7 +5,7 @@
 //  Created by Mohammed Tangestani on 8/28/14.
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
-#import "VybeTen-Swift.h"
+#import "Vybe-Swift.h"
 
 #import "VYBActivityTableViewController.h"
 #import "VYBVybeTableViewCell.h"
