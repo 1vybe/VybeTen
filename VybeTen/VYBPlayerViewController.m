@@ -19,7 +19,7 @@
 
 #import "NSArray+PFObject.h"
 
-#import "VybeTen-Swift.h"
+#import "Vybe-Swift.h"
 
 @interface VYBPlayerViewController () <VYBPlayerViewControllerDelegate>
 @property (nonatomic, weak) IBOutlet UIButton *bmpButton;

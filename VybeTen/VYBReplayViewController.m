@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import "VybeTen-Swift.h"
+#import "Vybe-Swift.h"
 
 #import "VYBReplayViewController.h"
 #import "VYBPlayerView.h"
