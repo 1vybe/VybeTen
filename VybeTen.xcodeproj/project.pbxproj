@@ -74,6 +74,7 @@
 		740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */; };
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
 		74172D001A720FCF00142EC1 /* ActionUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74172CFF1A720FCF00142EC1 /* ActionUtility.swift */; };
+		742C45401A7AF75F0062617E /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 742C453F1A7AF75F0062617E /* AudioManager.swift */; };
 		74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */; };
 		74349A271A4945EB006BA83C /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 74349A261A4945EB006BA83C /* libsqlite3.dylib */; };
 		7435F5F61A6DB4120075E60C /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7435F5F51A6DB4120075E60C /* Home.storyboard */; };
@@ -225,6 +226,7 @@
 		740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
 		74172CFF1A720FCF00142EC1 /* ActionUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionUtility.swift; sourceTree = "<group>"; };
+		742C453F1A7AF75F0062617E /* AudioManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyVybeStore.swift; sourceTree = "<group>"; };
 		74349A261A4945EB006BA83C /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		7435F5F51A6DB4120075E60C /* Home.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
@@ -564,6 +566,7 @@
 				023E538B191F142000C3CF78 /* VYBCache.h */,
 				023E538C191F142000C3CF78 /* VYBCache.m */,
 				0275087A19252D5C00B070EE /* VYBUtility.h */,
+				742C453F1A7AF75F0062617E /* AudioManager.swift */,
 				0275087B19252D5C00B070EE /* VYBUtility.m */,
 				74172CFF1A720FCF00142EC1 /* ActionUtility.swift */,
 				74551C801A3E91FA00D348BB /* ConfigManager.swift */,
@@ -850,6 +853,7 @@
 				021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */,
 				749256F51A65C82C00E04F31 /* PostTableViewCell.swift in Sources */,
 				88F72A141914C721007C7370 /* AnimatedTransitioning.m in Sources */,
+				742C45401A7AF75F0062617E /* AudioManager.swift in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
 				023E538D191F142000C3CF78 /* VYBCache.m in Sources */,
 				8887DA0E19F50774007BCC53 /* VYBVybeTableViewCell.m in Sources */,

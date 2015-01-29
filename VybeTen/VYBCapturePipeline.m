@@ -79,12 +79,21 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
 }
 
 - (void)startRunning {
+  [self startRunningWithCompletion:nil];
+}
+
+- (void)startRunningWithCompletion:(void (^)())completionBlock {
   dispatch_async(_sessionQueue, ^{
     
     [self setUpSession];
     
     [_session startRunning];
+    
     _sessionRunning = YES;
+    
+    if (completionBlock) {
+      completionBlock();
+    }
   });
 }
 
@@ -96,29 +105,30 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
   if ( [_session canSetSessionPreset:AVCaptureSessionPreset1280x720] ) {
     [_session setSessionPreset:AVCaptureSessionPreset1280x720];
   }
-
+  
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionNotificationReceived:) name:nil object:_session];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForegroundNotificationReceived:) name:UIApplicationWillEnterForegroundNotification object:[UIApplication sharedApplication]];
   
-  NSError *error = nil;
-  [[AVAudioSession sharedInstance] setMode:AVAudioSessionModeVideoRecording error:&error];
-  [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
-  
-  // Adding audio device input to session
-  AVCaptureDevice *audioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-  AVCaptureDeviceInput *audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:&error];
-  if ([_session canAddInput:audioDeviceInput]) {
-    [_session addInput:audioDeviceInput];
+  NSError *error;
+  BOOL otherPlaying = [[AVAudioSession sharedInstance] isOtherAudioPlaying];
+  if (!otherPlaying) {
+    // Adding audio device input to session
+    AVCaptureDevice *audioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+    AVCaptureDeviceInput *audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:&error];
+    if ([_session canAddInput:audioDeviceInput]) {
+      [_session addInput:audioDeviceInput];
+    }
+    // Adding audio output to session
+    AVCaptureAudioDataOutput *audioDataOutput = [[AVCaptureAudioDataOutput alloc] init];
+    
+    dispatch_queue_t audioOutputQueue = dispatch_queue_create("vybe audio data output queue", DISPATCH_QUEUE_SERIAL);
+    [audioDataOutput setSampleBufferDelegate:self queue:audioOutputQueue];
+    if ([_session canAddOutput:audioDataOutput]) {
+      [_session addOutput:audioDataOutput];
+    }
+    _audioConnection = [audioDataOutput connectionWithMediaType:AVMediaTypeAudio];
   }
-  // Adding audio output to session
-  AVCaptureAudioDataOutput *audioDataOutput = [[AVCaptureAudioDataOutput alloc] init];
-  
-  dispatch_queue_t audioOutputQueue = dispatch_queue_create("vybe audio data output queue", DISPATCH_QUEUE_SERIAL);
-  [audioDataOutput setSampleBufferDelegate:self queue:audioOutputQueue];
-  if ([_session canAddOutput:audioDataOutput]) {
-    [_session addOutput:audioDataOutput];
-  }
-  _audioConnection = [audioDataOutput connectionWithMediaType:AVMediaTypeAudio];
+ 
   
   // Adding video device input to session
   AVCaptureDevice *videoDevice = [VYBCapturePipeline deviceWithMediaType:AVMediaTypeVideo preferringPosition:AVCaptureDevicePositionBack];
@@ -140,6 +150,11 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
   [_videoConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
 
   return;
+}
+
+- (void)resetSessionWithCompletion:(void (^)())completionBlock {
+  [self stopRunning];
+  [self startRunningWithCompletion:completionBlock];
 }
 
 - (void)stopRunning {
