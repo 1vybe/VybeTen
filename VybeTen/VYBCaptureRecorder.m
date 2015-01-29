@@ -10,7 +10,7 @@
 #import "VYBCaptureRecorder.h"
 #import "VYBUtility.h"
 
-#import "VybeTen-Swift.h"
+#import "Vybe-Swift.h"
 
 typedef NS_ENUM (NSInteger,VYBRecorderStatus) {
     VYBRecorderStatusIdle = 0,

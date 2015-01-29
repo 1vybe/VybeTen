@@ -19,7 +19,7 @@
 #import "VYBCache.h"
 #import "VYBUtility.h"
 
-#import "VybeTen-Swift.h"
+#import "Vybe-Swift.h"
 
 @interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
   NSInteger _pageIndex;
@@ -69,6 +69,7 @@ static void *XYZContext = &XYZContext;
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBUtilityActivityCountUpdatedNotification object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionInterruptionNotification object:nil];
 }
 
 - (void)viewDidLoad
@@ -77,7 +78,6 @@ static void *XYZContext = &XYZContext;
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroundNotificationReceived:) name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityCountChanged) name:VYBUtilityActivityCountUpdatedNotification object:nil];
-  
   
   // In case capture screen is loaded AFTER initial loading from appdelegate is done already
   [self activityCountChanged];
@@ -92,6 +92,13 @@ static void *XYZContext = &XYZContext;
   
   capturePipeline = [[VYBCapturePipeline alloc] init];
   [capturePipeline setDelegate:self callbackQueue:dispatch_get_main_queue()];
+  
+  // Audio session setting
+  NSError *error;
+  AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+  [audioSession setCategory:AVAudioSessionCategoryPlayback error:&error];
+  
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioSessionInterrupted:) name:AVAudioSessionInterruptionNotification object:nil];
   
   [super viewDidLoad];
   
@@ -133,7 +140,6 @@ static void *XYZContext = &XYZContext;
 - (void)viewDidDisappear:(BOOL)animated {
   [super viewDidDisappear:animated];
   
-  
   [[NSNotificationCenter defaultCenter] removeObserver:self name:MotionOrientationChangedNotification object:nil];
 }
 
@@ -145,12 +151,12 @@ static void *XYZContext = &XYZContext;
       _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
     
     [[MyVybeStore sharedInstance] prepareNewVybe];
-    
     [[SpotFinder sharedInstance] findSpotFromCurrentLocationInBackground];
     
     [recordButton setEnabled:NO];
-    
     [recordButton setSelected:YES];
+    
+    [[AudioManager sharedInstance] activateCategoryPlayAndRecording];
     
     [capturePipeline setRecordingOrientation:_captureOrientation];
     [capturePipeline startRecording];
@@ -167,12 +173,13 @@ static void *XYZContext = &XYZContext;
 
 - (void)recordingStopped {
   _isRecording = NO;
-  
   [self syncUIWithRecordingStatus];
+  
+  [[AudioManager sharedInstance] activateCategoryPlaybackOnly];
+  
   [recordButton setEnabled:YES];
   [recordButton setSelected:NO];
   [recordButton setTitle:@"" forState:UIControlStateNormal];
-  
   
   [UIApplication sharedApplication].idleTimerDisabled = NO;
   
@@ -349,6 +356,26 @@ static void *XYZContext = &XYZContext;
   // stop recording
   
   // clear out all
+}
+
+- (void)audioSessionInterrupted:(NSNotification *)notification {
+  NSDictionary *userInfo = [notification userInfo];
+  if (userInfo) {
+    AVAudioSessionInterruptionType type = (AVAudioSessionInterruptionType)userInfo[AVAudioSessionInterruptionTypeKey];
+    switch (type) {
+      case AVAudioSessionInterruptionTypeBegan:
+        [capturePipeline resetSessionWithCompletion:^{
+          [[AudioManager sharedInstance] activateCategoryPlaybackOnly];
+        }];
+        break;
+      case AVAudioSessionInterruptionTypeEnded:
+      default:
+        [capturePipeline resetSessionWithCompletion:^{
+          [[AudioManager sharedInstance] activateCategoryPlayAndRecording];
+        }];
+        break;
+    }
+  }
 }
 
 - (void)activityCountChanged {

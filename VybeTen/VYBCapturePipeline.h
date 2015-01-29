@@ -13,6 +13,7 @@
 @interface VYBCapturePipeline : NSObject
 @property (nonatomic) AVCaptureVideoOrientation recordingOrientation;
 - (void)setDelegate:(id<VYBCapturePipelineDelegate>)delegate callbackQueue:(dispatch_queue_t)callbackQ;
+- (void)resetSessionWithCompletion:(void (^)())completionBlock;
 - (void)startRunning;
 - (void)stopRunning;
 - (void)startRecording;
