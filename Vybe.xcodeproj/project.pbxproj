@@ -71,6 +71,13 @@
 		6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */; };
 		607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 607CA69918C5C80C0060B420 /* VYBPlayerView.m */; };
 		60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */; };
+		7401D5181A7B37CB003EEB12 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7401D5171A7B37CB003EEB12 /* InterfaceController.swift */; };
+		7401D51A1A7B37CB003EEB12 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7401D5191A7B37CB003EEB12 /* NotificationController.swift */; };
+		7401D51C1A7B37CB003EEB12 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7401D51B1A7B37CB003EEB12 /* Images.xcassets */; };
+		7401D5201A7B37CB003EEB12 /* Vybe WatchKit App.app in Resources */ = {isa = PBXBuildFile; fileRef = 7401D51F1A7B37CB003EEB12 /* Vybe WatchKit App.app */; };
+		7401D5281A7B37CB003EEB12 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7401D5261A7B37CB003EEB12 /* Interface.storyboard */; };
+		7401D52A1A7B37CB003EEB12 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7401D5291A7B37CB003EEB12 /* Images.xcassets */; };
+		7401D52D1A7B37CB003EEB12 /* Vybe WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7401D5121A7B37CB003EEB12 /* Vybe WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */; };
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
 		74172D001A720FCF00142EC1 /* ActionUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74172CFF1A720FCF00142EC1 /* ActionUtility.swift */; };
@@ -121,6 +128,37 @@
 		88F72A151914C721007C7370 /* TransitionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 88F72A131914C721007C7370 /* TransitionDelegate.m */; };
 		88FF430519AFFCEB00D18872 /* VYBActivityTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88FF430419AFFCEB00D18872 /* VYBActivityTableViewController.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7401D5211A7B37CB003EEB12 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 604B627118B495BB00D3EF19 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7401D51E1A7B37CB003EEB12;
+			remoteInfo = "Vybe WatchKit App";
+		};
+		7401D52B1A7B37CB003EEB12 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 604B627118B495BB00D3EF19 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7401D5111A7B37CB003EEB12;
+			remoteInfo = "Vybe WatchKit Extension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7401D5341A7B37CB003EEB12 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7401D52D1A7B37CB003EEB12 /* Vybe WatchKit Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0207236419F1991800817A02 /* VYBPermissionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBPermissionViewController.xib; sourceTree = "<group>"; };
@@ -223,6 +261,16 @@
 		607CA69918C5C80C0060B420 /* VYBPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPlayerView.m; sourceTree = "<group>"; };
 		60F1BBB718BAAFA900070EEC /* VYBMyVybeStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyVybeStore.h; sourceTree = "<group>"; };
 		60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybeStore.m; sourceTree = "<group>"; };
+		7401D5121A7B37CB003EEB12 /* Vybe WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Vybe WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7401D5151A7B37CB003EEB12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7401D5161A7B37CB003EEB12 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		7401D5171A7B37CB003EEB12 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		7401D5191A7B37CB003EEB12 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		7401D51B1A7B37CB003EEB12 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7401D51F1A7B37CB003EEB12 /* Vybe WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Vybe WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7401D5251A7B37CB003EEB12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7401D5271A7B37CB003EEB12 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		7401D5291A7B37CB003EEB12 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
 		74172CFF1A720FCF00142EC1 /* ActionUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionUtility.swift; sourceTree = "<group>"; };
@@ -294,6 +342,13 @@
 				74349A271A4945EB006BA83C /* libsqlite3.dylib in Frameworks */,
 				02D255E11992A4DE0053B89F /* MapKit.framework in Frameworks */,
 				876FD1CBA2104ACB85FFFB93 /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7401D50F1A7B37CB003EEB12 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -529,6 +584,8 @@
 			children = (
 				88828D9D19344AFE005CB06C /* External */,
 				604B628218B495BB00D3EF19 /* VybeTen */,
+				7401D5131A7B37CB003EEB12 /* Vybe WatchKit Extension */,
+				7401D5231A7B37CB003EEB12 /* Vybe WatchKit App */,
 				604B627B18B495BB00D3EF19 /* Frameworks */,
 				604B627A18B495BB00D3EF19 /* Products */,
 				F9A00C6EC7F947E33BEA339F /* Pods */,
@@ -539,6 +596,8 @@
 			isa = PBXGroup;
 			children = (
 				604B627918B495BB00D3EF19 /* Vybe.app */,
+				7401D5121A7B37CB003EEB12 /* Vybe WatchKit Extension.appex */,
+				7401D51F1A7B37CB003EEB12 /* Vybe WatchKit App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -593,6 +652,44 @@
 				88C734991A2707DD00B718D3 /* Vybe-Prefix.pch */,
 				604B628518B495BB00D3EF19 /* InfoPlist.strings */,
 				604B628818B495BB00D3EF19 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7401D5131A7B37CB003EEB12 /* Vybe WatchKit Extension */ = {
+			isa = PBXGroup;
+			children = (
+				7401D5171A7B37CB003EEB12 /* InterfaceController.swift */,
+				7401D5191A7B37CB003EEB12 /* NotificationController.swift */,
+				7401D51B1A7B37CB003EEB12 /* Images.xcassets */,
+				7401D5141A7B37CB003EEB12 /* Supporting Files */,
+			);
+			path = "Vybe WatchKit Extension";
+			sourceTree = "<group>";
+		};
+		7401D5141A7B37CB003EEB12 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7401D5151A7B37CB003EEB12 /* Info.plist */,
+				7401D5161A7B37CB003EEB12 /* PushNotificationPayload.apns */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7401D5231A7B37CB003EEB12 /* Vybe WatchKit App */ = {
+			isa = PBXGroup;
+			children = (
+				7401D5261A7B37CB003EEB12 /* Interface.storyboard */,
+				7401D5291A7B37CB003EEB12 /* Images.xcassets */,
+				7401D5241A7B37CB003EEB12 /* Supporting Files */,
+			);
+			path = "Vybe WatchKit App";
+			sourceTree = "<group>";
+		};
+		7401D5241A7B37CB003EEB12 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7401D5251A7B37CB003EEB12 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -657,15 +754,50 @@
 				604B627718B495BB00D3EF19 /* Resources */,
 				9406D95B266A48ABBD29323A /* Copy Pods Resources */,
 				74F9E6131A3A31D5001AB15B /* ShellScript */,
+				7401D5341A7B37CB003EEB12 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				7401D52C1A7B37CB003EEB12 /* PBXTargetDependency */,
 			);
 			name = Vybe;
 			productName = VybeTen;
 			productReference = 604B627918B495BB00D3EF19 /* Vybe.app */;
 			productType = "com.apple.product-type.application";
+		};
+		7401D5111A7B37CB003EEB12 /* Vybe WatchKit Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7401D5331A7B37CB003EEB12 /* Build configuration list for PBXNativeTarget "Vybe WatchKit Extension" */;
+			buildPhases = (
+				7401D50E1A7B37CB003EEB12 /* Sources */,
+				7401D50F1A7B37CB003EEB12 /* Frameworks */,
+				7401D5101A7B37CB003EEB12 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7401D5221A7B37CB003EEB12 /* PBXTargetDependency */,
+			);
+			name = "Vybe WatchKit Extension";
+			productName = "Vybe WatchKit Extension";
+			productReference = 7401D5121A7B37CB003EEB12 /* Vybe WatchKit Extension.appex */;
+			productType = "com.apple.product-type.watchkit-extension";
+		};
+		7401D51E1A7B37CB003EEB12 /* Vybe WatchKit App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7401D5321A7B37CB003EEB12 /* Build configuration list for PBXNativeTarget "Vybe WatchKit App" */;
+			buildPhases = (
+				7401D51D1A7B37CB003EEB12 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Vybe WatchKit App";
+			productName = "Vybe WatchKit App";
+			productReference = 7401D51F1A7B37CB003EEB12 /* Vybe WatchKit App.app */;
+			productType = "com.apple.product-type.application.watchapp";
 		};
 /* End PBXNativeTarget section */
 
@@ -691,6 +823,13 @@
 							};
 						};
 					};
+					7401D5111A7B37CB003EEB12 = {
+						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = KV65D55DL4;
+					};
+					7401D51E1A7B37CB003EEB12 = {
+						CreatedOnToolsVersion = 6.2;
+					};
 				};
 			};
 			buildConfigurationList = 604B627418B495BB00D3EF19 /* Build configuration list for PBXProject "Vybe" */;
@@ -699,6 +838,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 604B627018B495BB00D3EF19;
 			productRefGroup = 604B627A18B495BB00D3EF19 /* Products */;
@@ -706,6 +846,8 @@
 			projectRoot = "";
 			targets = (
 				604B627818B495BB00D3EF19 /* Vybe */,
+				7401D5111A7B37CB003EEB12 /* Vybe WatchKit Extension */,
+				7401D51E1A7B37CB003EEB12 /* Vybe WatchKit App */,
 			);
 		};
 /* End PBXProject section */
@@ -753,6 +895,24 @@
 				02D11D0618DF62AC0018DA97 /* Montreal-BoldIta.otf in Resources */,
 				744101201A64739B00D2F874 /* CheckInViewController.xib in Resources */,
 				888F1FE719B2740B00546643 /* ProximaNovaSoft-Bold.otf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7401D5101A7B37CB003EEB12 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7401D5201A7B37CB003EEB12 /* Vybe WatchKit App.app in Resources */,
+				7401D51C1A7B37CB003EEB12 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7401D51D1A7B37CB003EEB12 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7401D5281A7B37CB003EEB12 /* Interface.storyboard in Resources */,
+				7401D52A1A7B37CB003EEB12 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -884,7 +1044,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7401D50E1A7B37CB003EEB12 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7401D51A1A7B37CB003EEB12 /* NotificationController.swift in Sources */,
+				7401D5181A7B37CB003EEB12 /* InterfaceController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7401D5221A7B37CB003EEB12 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7401D51E1A7B37CB003EEB12 /* Vybe WatchKit App */;
+			targetProxy = 7401D5211A7B37CB003EEB12 /* PBXContainerItemProxy */;
+		};
+		7401D52C1A7B37CB003EEB12 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7401D5111A7B37CB003EEB12 /* Vybe WatchKit Extension */;
+			targetProxy = 7401D52B1A7B37CB003EEB12 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		604B628518B495BB00D3EF19 /* InfoPlist.strings */ = {
@@ -893,6 +1075,14 @@
 				604B628618B495BB00D3EF19 /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		7401D5261A7B37CB003EEB12 /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7401D5271A7B37CB003EEB12 /* Base */,
+			);
+			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -975,6 +1165,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/Vybe-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1006,6 +1197,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VybeTen/Vybe-Prefix.pch";
 				INFOPLIST_FILE = "VybeTen/Vybe-Info.plist";
@@ -1014,6 +1206,85 @@
 				PRODUCT_NAME = Vybe;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "VybeTen/VybeTen-Bridging-Header.h";
+			};
+			name = Release;
+		};
+		7401D52E1A7B37CB003EEB12 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Vybe WatchKit Extension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7401D52F1A7B37CB003EEB12 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				INFOPLIST_FILE = "Vybe WatchKit Extension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		7401D5301A7B37CB003EEB12 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IBSC_MODULE = Vybe_WatchKit_Extension;
+				INFOPLIST_FILE = "Vybe WatchKit App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
+			};
+			name = Debug;
+		};
+		7401D5311A7B37CB003EEB12 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				IBSC_MODULE = Vybe_WatchKit_Extension;
+				INFOPLIST_FILE = "Vybe WatchKit App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
 			};
 			name = Release;
 		};
@@ -1037,6 +1308,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		7401D5321A7B37CB003EEB12 /* Build configuration list for PBXNativeTarget "Vybe WatchKit App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7401D5301A7B37CB003EEB12 /* Debug */,
+				7401D5311A7B37CB003EEB12 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		7401D5331A7B37CB003EEB12 /* Build configuration list for PBXNativeTarget "Vybe WatchKit Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7401D52E1A7B37CB003EEB12 /* Debug */,
+				7401D52F1A7B37CB003EEB12 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
