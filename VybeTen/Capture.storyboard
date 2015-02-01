@@ -149,7 +149,7 @@
         <!--Preview-->
         <scene sceneID="4ri-G3-kuG">
             <objects>
-                <viewController title="Preview" id="bEz-f4-14y" customClass="VYBReplayViewController" sceneMemberID="viewController">
+                <viewController title="Preview" id="bEz-f4-14y" customClass="PreviewViewController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hNu-aA-AIW"/>
                         <viewControllerLayoutGuide type="bottom" id="60s-ki-f0W"/>
@@ -291,6 +291,10 @@
                             <constraint firstItem="dRX-YS-Qns" firstAttribute="top" secondItem="uo4-mb-8rx" secondAttribute="top" id="gLK-aA-wg4"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="overlayView" destination="t5w-aK-2V5" id="oal-TN-Ma1"/>
+                        <outlet property="playerView" destination="dRX-YS-Qns" id="AOH-0K-Hko"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qs3-V5-aSd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

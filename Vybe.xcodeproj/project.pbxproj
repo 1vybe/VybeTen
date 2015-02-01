@@ -16,7 +16,6 @@
 		0221A0081A02FB1600C5C60E /* Zone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0221A0071A02FB1600C5C60E /* Zone.swift */; };
 		0222946D19FF2CE200A2AD62 /* VYBPizzaLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0222946C19FF2CE200A2AD62 /* VYBPizzaLayer.m */; };
 		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
-		022AC50319AD9757008A9C64 /* VYBCaptureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 022AC50219AD9757008A9C64 /* VYBCaptureViewController.xib */; };
 		022F4A671A0126DE00C20526 /* VYBMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022F4A651A0126DE00C20526 /* VYBMapViewController.swift */; };
 		0237C13719EEF44A00AC6F81 /* DefaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0237C13619EEF44A00AC6F81 /* DefaultPreferences.plist */; };
 		023E538D191F142000C3CF78 /* VYBCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 023E538C191F142000C3CF78 /* VYBCache.m */; };
@@ -60,7 +59,6 @@
 		02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */; };
 		02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */; };
 		02D255E11992A4DE0053B89F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02D255E01992A4DE0053B89F /* MapKit.framework */; };
-		02E943B219C916C50057E8EE /* VYBReplayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E943B119C916C50057E8EE /* VYBReplayViewController.xib */; };
 		02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F36B2E1986F62800B7D842 /* VYBUser.m */; };
 		02F5B1F119D32594008C42C3 /* VYBDynamicSizeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F5B1F019D32594008C42C3 /* VYBDynamicSizeView.m */; };
 		02F80C46196F600300FB2A48 /* AvenirLTStd-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02F80C45196F600300FB2A48 /* AvenirLTStd-Book.otf */; };
@@ -181,7 +179,6 @@
 		0222946C19FF2CE200A2AD62 /* VYBPizzaLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBPizzaLayer.m; sourceTree = "<group>"; };
 		0226CBAB194A0339005270D3 /* VYBNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBNavigationController.h; sourceTree = "<group>"; };
 		0226CBAC194A0339005270D3 /* VYBNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBNavigationController.m; sourceTree = "<group>"; };
-		022AC50219AD9757008A9C64 /* VYBCaptureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBCaptureViewController.xib; sourceTree = "<group>"; };
 		022F4A651A0126DE00C20526 /* VYBMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VYBMapViewController.swift; sourceTree = "<group>"; };
 		0237C13619EEF44A00AC6F81 /* DefaultPreferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultPreferences.plist; sourceTree = "<group>"; };
 		023E538B191F142000C3CF78 /* VYBCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBCache.h; sourceTree = "<group>"; };
@@ -245,7 +242,6 @@
 		02D11D0318DF62AC0018DA97 /* Montreal-Xlight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Xlight.otf"; sourceTree = "<group>"; };
 		02D11D0418DF62AC0018DA97 /* Montreal-XlightIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-XlightIta.otf"; sourceTree = "<group>"; };
 		02D255E01992A4DE0053B89F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		02E943B119C916C50057E8EE /* VYBReplayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VYBReplayViewController.xib; sourceTree = "<group>"; };
 		02F36B2D1986F62800B7D842 /* VYBUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBUser.h; sourceTree = "<group>"; };
 		02F36B2E1986F62800B7D842 /* VYBUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBUser.m; sourceTree = "<group>"; };
 		02F5B1EF19D32594008C42C3 /* VYBDynamicSizeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBDynamicSizeView.h; sourceTree = "<group>"; };
@@ -411,10 +407,8 @@
 			children = (
 				6061246B18B7862F00B0A14E /* VYBCaptureViewController.h */,
 				6061246C18B7862F00B0A14E /* VYBCaptureViewController.m */,
-				022AC50219AD9757008A9C64 /* VYBCaptureViewController.xib */,
 				02CEE2AE1970C2F900AC361F /* VYBReplayViewController.h */,
 				02CEE2AF1970C2F900AC361F /* VYBReplayViewController.m */,
-				02E943B119C916C50057E8EE /* VYBReplayViewController.xib */,
 				0288603C19E4A02A007876AE /* VYBCapturePipeline.h */,
 				0288603D19E4A02A007876AE /* VYBCapturePipeline.m */,
 				027DE0ED19E7484200F5F4C0 /* VYBCaptureRecorder.h */,
@@ -880,7 +874,6 @@
 				02D11D1218DF62AC0018DA97 /* Montreal-XlightIta.otf in Resources */,
 				02D11D0D18DF62AC0018DA97 /* Montreal-Medium.otf in Resources */,
 				74A0FA571A36A8B50065059E /* UnblockUser.storyboard in Resources */,
-				022AC50319AD9757008A9C64 /* VYBCaptureViewController.xib in Resources */,
 				028D930C1A16C271002B7642 /* ActivitySectionView.xib in Resources */,
 				7435F5F61A6DB4120075E60C /* Home.storyboard in Resources */,
 				02D11D0C18DF62AC0018DA97 /* Montreal-LightIta.otf in Resources */,
@@ -893,7 +886,6 @@
 				74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */,
 				74E570EF1A41D430005072E1 /* Notification.storyboard in Resources */,
 				888F1FE919B2740B00546643 /* ProximaNovaSoft-Semibold.otf in Resources */,
-				02E943B219C916C50057E8EE /* VYBReplayViewController.xib in Resources */,
 				74861E201A4D0057004E8ADE /* BottomBarMenu.xib in Resources */,
 				740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */,
 				604B628F18B495BB00D3EF19 /* Images.xcassets in Resources */,

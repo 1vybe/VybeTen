@@ -17,9 +17,12 @@
 #import "VYBActivityTableViewController.h"
 #import "VYBAppDelegate.h"
 #import "VYBNavigationController.h"
+#import "VYBPlayerView.h"
 #import "VYBPlayerViewController.h"
 #import "VYBCaptureViewController.h"
 #import "VYBConstants.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
 #import "VYBVybe.h"
+
+#import "AVAsset+VideoOrientation.h"
