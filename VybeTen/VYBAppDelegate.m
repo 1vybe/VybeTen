@@ -270,8 +270,8 @@
 }
 
 - (void)setUpViewControllers {
-  VYBCaptureViewController *captureVC = [[VYBCaptureViewController alloc] initWithNibName:@"VYBCaptureViewController" bundle:nil];
-  SimpleTabBarController *mainTabBarController = [[UIStoryboard storyboardWithName:@"Home" bundle:nil] instantiateInitialViewController];
+  VYBCaptureViewController *captureVC = (VYBCaptureViewController *)[[UIStoryboard storyboardWithName:@"Capture" bundle:nil] instantiateInitialViewController];
+  SimpleTabBarController *mainTabBarController = (SimpleTabBarController *)[[UIStoryboard storyboardWithName:@"Home" bundle:nil] instantiateInitialViewController];
 
   self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[captureVC, mainTabBarController]];
   

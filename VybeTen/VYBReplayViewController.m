@@ -5,9 +5,6 @@
 //  Created by jinsuk on 7/11/14.
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
-
-#import "Vybe-Swift.h"
-
 #import "VYBReplayViewController.h"
 #import "VYBPlayerView.h"
 #import "MBProgressHUD.h"
@@ -15,6 +12,8 @@
 
 #import "VYBNavigationController.h"
 #import "AVAsset+VideoOrientation.h"
+
+#import "Vybe-Swift.h"
 
 @interface VYBReplayViewController () <UITextFieldDelegate, UIActionSheetDelegate>
 @property (nonatomic, weak) IBOutlet VYBPlayerView *playerView;
@@ -52,8 +51,8 @@
   currentAsset = nil;
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-  self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+  self = [super initWithCoder:aDecoder];
   if (self) {
     _videoPath = [[[MyVybeStore sharedInstance] currVybe] videoFilePath];
     _thumbnailPath = [[[MyVybeStore sharedInstance] currVybe] thumbnailFilePath];

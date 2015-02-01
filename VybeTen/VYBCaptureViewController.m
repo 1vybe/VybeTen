@@ -190,8 +190,7 @@ static void *XYZContext = &XYZContext;
   if (currVybe) {
     [VYBUtility saveThumbnailImageForVybe:currVybe];
     
-    VYBReplayViewController *replayVC = [[VYBReplayViewController alloc] initWithNibName:@"VYBReplayViewController" bundle:nil];
-    [self presentViewController:replayVC animated:NO completion:nil];
+    [self performSegueWithIdentifier:@"PresentPreviewSegue" sender:self];
   }
 
 }
