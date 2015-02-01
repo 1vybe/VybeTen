@@ -78,6 +78,7 @@
 		7401D5281A7B37CB003EEB12 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7401D5261A7B37CB003EEB12 /* Interface.storyboard */; };
 		7401D52A1A7B37CB003EEB12 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7401D5291A7B37CB003EEB12 /* Images.xcassets */; };
 		7401D52D1A7B37CB003EEB12 /* Vybe WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7401D5121A7B37CB003EEB12 /* Vybe WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7401D5361A7C64E3003EEB12 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7401D5351A7C64E3003EEB12 /* Profile.storyboard */; };
 		740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */; };
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
 		74172D001A720FCF00142EC1 /* ActionUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74172CFF1A720FCF00142EC1 /* ActionUtility.swift */; };
@@ -112,6 +113,8 @@
 		74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */; };
 		74E570EF1A41D430005072E1 /* Notification.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74E570EE1A41D430005072E1 /* Notification.storyboard */; };
 		74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */; };
+		74F095571A7D5F2300B3B116 /* Capture.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74F095561A7D5F2300B3B116 /* Capture.storyboard */; };
+		74F095591A7D691E00B3B116 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F095581A7D691E00B3B116 /* PreviewViewController.swift */; };
 		876FD1CBA2104ACB85FFFB93 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D4D61F35BF543039A00CFD0 /* libPods.a */; };
 		88063E6819F22F1E00C90A2D /* Activity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88063E6719F22F1E00C90A2D /* Activity.storyboard */; };
 		88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */; };
@@ -202,7 +205,7 @@
 		025EDB2418F65E45008B0CB2 /* VYBAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBAnimator.m; sourceTree = "<group>"; };
 		0262054219A67B3600E994F9 /* UINavigationController+Autorotate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+Autorotate.h"; sourceTree = "<group>"; };
 		0262054319A67B3600E994F9 /* UINavigationController+Autorotate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Autorotate.m"; sourceTree = "<group>"; };
-		026216B919EA43DE00EC6544 /* VybeTen-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VybeTen-Bridging-Header.h"; sourceTree = "<group>"; };
+		026216B919EA43DE00EC6544 /* Vybe-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Vybe-Bridging-Header.h"; sourceTree = "<group>"; };
 		026216BC19EA470600EC6544 /* VYBVybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBVybe.h; sourceTree = "<group>"; };
 		026216BD19EA470600EC6544 /* VYBVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBVybe.m; sourceTree = "<group>"; };
 		0266802519F15CB000030836 /* VYBPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBPlayerViewController.h; sourceTree = "<group>"; };
@@ -271,6 +274,7 @@
 		7401D5251A7B37CB003EEB12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7401D5271A7B37CB003EEB12 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		7401D5291A7B37CB003EEB12 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7401D5351A7C64E3003EEB12 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
 		74172CFF1A720FCF00142EC1 /* ActionUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionUtility.swift; sourceTree = "<group>"; };
@@ -307,6 +311,8 @@
 		74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeContainerViewController.swift; sourceTree = "<group>"; };
 		74E570EE1A41D430005072E1 /* Notification.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Notification.storyboard; sourceTree = "<group>"; };
 		74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTableViewController.swift; sourceTree = "<group>"; };
+		74F095561A7D5F2300B3B116 /* Capture.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Capture.storyboard; sourceTree = "<group>"; };
+		74F095581A7D691E00B3B116 /* PreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		88063E6719F22F1E00C90A2D /* Activity.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Activity.storyboard; sourceTree = "<group>"; };
 		88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBWelcomeViewController.h; sourceTree = "<group>"; };
 		88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBWelcomeViewController.m; sourceTree = "<group>"; };
@@ -441,6 +447,8 @@
 				746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */,
 				7435F5F51A6DB4120075E60C /* Home.storyboard */,
 				7435F5F91A6DC9B70075E60C /* SimpleTabBarSegue.swift */,
+				7401D5351A7C64E3003EEB12 /* Profile.storyboard */,
+				74F095561A7D5F2300B3B116 /* Capture.storyboard */,
 			);
 			name = Stories;
 			sourceTree = "<group>";
@@ -462,7 +470,7 @@
 			children = (
 				02F36B2D1986F62800B7D842 /* VYBUser.h */,
 				02F36B2E1986F62800B7D842 /* VYBUser.m */,
-				026216B919EA43DE00EC6544 /* VybeTen-Bridging-Header.h */,
+				026216B919EA43DE00EC6544 /* Vybe-Bridging-Header.h */,
 				026216BC19EA470600EC6544 /* VYBVybe.h */,
 				026216BD19EA470600EC6544 /* VYBVybe.m */,
 				0221A0071A02FB1600C5C60E /* Zone.swift */,
@@ -525,6 +533,7 @@
 				7464831D1A731A0A00FA4C9F /* VybeCardCell.swift */,
 				74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */,
 				749256EF1A64CCEA00E04F31 /* ProfileViewController.swift */,
+				74F095581A7D691E00B3B116 /* PreviewViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -862,6 +871,7 @@
 				02A45CF51A1EC61800425F9C /* UploadProgressBottomBar.xib in Resources */,
 				02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */,
 				02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */,
+				74F095571A7D5F2300B3B116 /* Capture.storyboard in Resources */,
 				02F80C46196F600300FB2A48 /* AvenirLTStd-Book.otf in Resources */,
 				02D11D0A18DF62AC0018DA97 /* Montreal-HeavyIta.otf in Resources */,
 				746FDAC91A42C2EA0021360C /* UserPrompts.storyboard in Resources */,
@@ -875,6 +885,7 @@
 				7435F5F61A6DB4120075E60C /* Home.storyboard in Resources */,
 				02D11D0C18DF62AC0018DA97 /* Montreal-LightIta.otf in Resources */,
 				02D11D1018DF62AC0018DA97 /* Montreal-RegularIta.otf in Resources */,
+				7401D5361A7C64E3003EEB12 /* Profile.storyboard in Resources */,
 				02D11D1118DF62AC0018DA97 /* Montreal-Xlight.otf in Resources */,
 				0237C13719EEF44A00AC6F81 /* DefaultPreferences.plist in Resources */,
 				02D11D0F18DF62AC0018DA97 /* Montreal-Regular.otf in Resources */,
@@ -992,6 +1003,7 @@
 				029729721A02A1EC0050406D /* SpotFinder.swift in Sources */,
 				74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */,
 				02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */,
+				74F095591A7D691E00B3B116 /* PreviewViewController.swift in Sources */,
 				020BDABA19FFFF7500B02824 /* VYBAciveButton.m in Sources */,
 				027DE0EF19E7484200F5F4C0 /* VYBCaptureRecorder.m in Sources */,
 				74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */,
@@ -1183,7 +1195,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Vybe;
 				PROVISIONING_PROFILE = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "VybeTen/VybeTen-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "VybeTen/Vybe-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1205,7 +1217,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Vybe;
 				PROVISIONING_PROFILE = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "VybeTen/VybeTen-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "VybeTen/Vybe-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -1316,6 +1328,7 @@
 				7401D5311A7B37CB003EEB12 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7401D5331A7B37CB003EEB12 /* Build configuration list for PBXNativeTarget "Vybe WatchKit Extension" */ = {
 			isa = XCConfigurationList;
@@ -1324,6 +1337,7 @@
 				7401D52F1A7B37CB003EEB12 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

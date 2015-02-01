@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6724" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Qq0-sz-dIb">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6724" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Qq0-sz-dIb">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6711"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -8,7 +8,7 @@
         <!--Simple Tab Bar Controller-->
         <scene sceneID="EaL-ze-QAM">
             <objects>
-                <viewController id="Qq0-sz-dIb" customClass="SimpleTabBarController" customModule="VybeTen" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Qq0-sz-dIb" customClass="SimpleTabBarController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="4Gj-x0-6TF"/>
                         <viewControllerLayoutGuide type="bottom" id="nhR-3A-7tl"/>
@@ -23,7 +23,7 @@
                                     <segue destination="oCy-qV-C0R" kind="embed" identifier="TabBarEmbedSegue" id="ydT-3g-na2"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jif-b5-DIf" userLabel="TabBar" customClass="SimpleTabBarView" customModule="VybeTen" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jif-b5-DIf" userLabel="TabBar" customClass="SimpleTabBarView" customModule="Vybe" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="558" width="600" height="42"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TabBar" translatesAutoresizingMaskIntoConstraints="NO" id="Xv7-hQ-UjI">
@@ -36,7 +36,7 @@
                                         </state>
                                         <state key="selected" image="HomeSELECTED"/>
                                         <connections>
-                                            <segue destination="1Fy-Br-Y75" kind="custom" identifier="HomeTabSegue" customClass="SimpleTabBarSegue" customModule="VybeTen" customModuleProvider="target" id="u7g-zX-U2f"/>
+                                            <segue destination="1Fy-Br-Y75" kind="custom" identifier="HomeTabSegue" customClass="SimpleTabBarSegue" customModule="Vybe" customModuleProvider="target" id="u7g-zX-U2f"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H9T-Gl-3by" userLabel="Discover">
@@ -52,7 +52,7 @@
                                         </state>
                                         <state key="selected" image="ProfileSELECTED"/>
                                         <connections>
-                                            <segue destination="KHl-Wj-peN" kind="custom" identifier="ProfileTabSegue" customClass="SimpleTabBarSegue" customModule="VybeTen" customModuleProvider="target" id="fNf-Wa-DMa"/>
+                                            <segue destination="KHl-Wj-peN" kind="custom" identifier="ProfileTabSegue" customClass="SimpleTabBarSegue" customModule="Vybe" customModuleProvider="target" id="fNf-Wa-DMa"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g4i-5a-R8B" userLabel="Activity">
@@ -62,7 +62,7 @@
                                         </state>
                                         <state key="selected" image="ActivitySELECTED"/>
                                         <connections>
-                                            <segue destination="rbJ-C8-ds2" kind="custom" identifier="ActivityTabSegue" customClass="SimpleTabBarSegue" customModule="VybeTen" customModuleProvider="target" id="qOq-Ze-qdz"/>
+                                            <segue destination="rbJ-C8-ds2" kind="custom" identifier="ActivityTabSegue" customClass="SimpleTabBarSegue" customModule="Vybe" customModuleProvider="target" id="qOq-Ze-qdz"/>
                                         </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="EG9-Kb-Sr1">
@@ -169,7 +169,7 @@
         <!--ACTIVITY-->
         <scene sceneID="erh-K0-9hh">
             <objects>
-                <tableViewController title="ACTIVITY" id="rbJ-C8-ds2" customClass="ActivityTableViewController" customModule="VybeTen" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="ACTIVITY" id="rbJ-C8-ds2" customClass="ActivityTableViewController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="127" sectionHeaderHeight="22" sectionFooterHeight="22" id="VFr-TJ-nnP">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -177,7 +177,7 @@
                         <color key="separatorColor" red="0.36078431370000003" green="0.54901960780000003" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FavoriteActivityCellIdentifier" rowHeight="63" id="CN7-ad-NNM" customClass="ActivityTableViewCell" customModule="VybeTen" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FavoriteActivityCellIdentifier" rowHeight="63" id="CN7-ad-NNM" customClass="ActivityTableViewCell" customModule="Vybe" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CN7-ad-NNM" id="K5i-tD-xhP">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -232,7 +232,7 @@
                                     <outlet property="vybeThumbnailImageView" destination="ROA-M4-iiq" id="Wg4-4b-t49"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FollowActivityCellIdentifier" rowHeight="86" id="wpw-8c-sqr" customClass="ActivityTableViewCell" customModule="VybeTen" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FollowActivityCellIdentifier" rowHeight="86" id="wpw-8c-sqr" customClass="ActivityTableViewCell" customModule="Vybe" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wpw-8c-sqr" id="jyk-yN-4yI">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -338,7 +338,7 @@
         <!--PROFILE-->
         <scene sceneID="sEr-wV-f2v">
             <objects>
-                <viewController title="PROFILE" id="KHl-Wj-peN" customClass="ProfileViewController" customModule="VybeTen" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="PROFILE" id="KHl-Wj-peN" customClass="ProfileViewController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="p8q-Wh-Wef"/>
                         <viewControllerLayoutGuide type="bottom" id="Gte-v6-ztV"/>
@@ -582,13 +582,13 @@
         <!--Home View Controller-->
         <scene sceneID="kLT-rh-Qfw">
             <objects>
-                <tableViewController id="1Fy-Br-Y75" customClass="HomeViewController" customModule="VybeTen" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="1Fy-Br-Y75" customClass="HomeViewController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="W83-bl-G3r">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="VybeCardCell" id="MeA-kV-5tH" customClass="VybeCardCell" customModule="VybeTen" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="VybeCardCell" id="MeA-kV-5tH" customClass="VybeCardCell" customModule="Vybe" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="MeA-kV-5tH" id="W3x-o1-vMz">
                                     <autoresizingMask key="autoresizingMask"/>
