@@ -63,17 +63,18 @@ import UIKit
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    selectedViewController = viewControllers[0]
+    // NOTE: - Start with Capture screen
+    selectedViewController = viewControllers[1]
     self.transitionToViewController(selectedViewController!, interactive: false, animation: false)
   }
   
-  func moveToMainScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
+  func moveToProfileScreen(animation animate: Bool) {
+    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
   }
 
   
   func moveToCaptureScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
+    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
   }
   
   

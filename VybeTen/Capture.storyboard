@@ -111,6 +111,12 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="FocusTarget" translatesAutoresizingMaskIntoConstraints="NO" id="9U9-QL-4mJ" userLabel="focusTarget">
                                 <rect key="frame" x="0.0" y="0.0" width="71" height="71"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0xk-iY-xsz" userLabel="profileButton">
+                                <rect key="frame" x="12" y="15" width="46" height="30"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="Kf7-QY-UJ4" secondAttribute="bottom" id="0n0-rg-Yhv"/>
@@ -127,8 +133,10 @@
                             <constraint firstAttribute="bottom" secondItem="giu-7r-23x" secondAttribute="bottom" id="gxE-50-Kbi"/>
                             <constraint firstItem="crN-zb-JCR" firstAttribute="leading" secondItem="qGs-Oq-BNc" secondAttribute="leading" constant="15" id="kWe-K9-hin"/>
                             <constraint firstItem="Kf7-QY-UJ4" firstAttribute="top" secondItem="qGs-Oq-BNc" secondAttribute="top" id="mJa-0d-Xmt"/>
+                            <constraint firstItem="0xk-iY-xsz" firstAttribute="top" secondItem="qGs-Oq-BNc" secondAttribute="top" constant="15" id="n2A-oP-nYE"/>
                             <constraint firstAttribute="trailing" secondItem="giu-7r-23x" secondAttribute="trailing" id="n7w-2v-bH0"/>
                             <constraint firstAttribute="bottom" secondItem="lDT-z3-VQ2" secondAttribute="bottom" constant="15" id="rEa-7t-KEr"/>
+                            <constraint firstItem="0xk-iY-xsz" firstAttribute="leading" secondItem="qGs-Oq-BNc" secondAttribute="leading" constant="12" id="xUt-5G-3Uy"/>
                             <constraint firstAttribute="bottom" secondItem="W36-pV-hkE" secondAttribute="bottom" id="y8z-b4-z7h"/>
                             <constraint firstAttribute="bottom" secondItem="crN-zb-JCR" secondAttribute="bottom" constant="15" id="zvg-US-gQs"/>
                         </constraints>
@@ -207,7 +215,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="rejectButtonPressed:" destination="bEz-f4-14y" eventType="touchUpInside" id="bdw-N8-t88"/>
+                                            <action selector="cancelButtonPressed:" destination="bEz-f4-14y" eventType="touchUpInside" id="eKi-u9-8gJ"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wYK-KT-6KE" userLabel="checkIn">
@@ -299,6 +307,50 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qs3-V5-aSd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1164" y="312"/>
+        </scene>
+        <!--CheckIn-->
+        <scene sceneID="0zg-TX-eat">
+            <objects>
+                <tableViewController title="CheckIn" id="54l-lW-bIu" customClass="CheckInViewController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="0UI-mS-unK">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CheckInSpotCellIdentifier" id="YHi-XL-PWw">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YHi-XL-PWw" id="Hmg-BV-rjW">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="54l-lW-bIu" id="vaF-6p-7JD"/>
+                            <outlet property="delegate" destination="54l-lW-bIu" id="7ZH-76-lUc"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SVu-dL-EMT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1164" y="1000"/>
+        </scene>
+        <!--Tagging-->
+        <scene sceneID="xbb-Di-yG5">
+            <objects>
+                <viewController title="Tagging" id="hFM-Gt-KXH" customClass="TaggingViewController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="3bH-6x-y9p"/>
+                        <viewControllerLayoutGuide type="bottom" id="tM8-Bt-1ra"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fx7-S5-pAX">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WSr-Va-cy3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1819" y="310"/>
         </scene>
     </scenes>
     <resources>

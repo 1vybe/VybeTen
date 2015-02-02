@@ -8,8 +8,7 @@
 
 import UIKit
 
-class CheckInViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-  @IBOutlet var tableView: UITableView!
+class CheckInViewController: UITableViewController {
   var spots = [Zone]()
   
   @IBAction func backButtonPressed(sender: AnyObject) {
@@ -18,9 +17,6 @@ class CheckInViewController: UIViewController, UITableViewDelegate, UITableViewD
   
   override func viewDidLoad() {
     super.viewDidLoad()
-
-    let nib = UINib(nibName: "SpotTableCell", bundle: NSBundle.mainBundle())
-    self.tableView.registerNib(nib, forCellReuseIdentifier: "CheckInSpotCellIdentifier")
     
     SpotFinder.sharedInstance.findNearbySpotsInBackground { (success: Bool) -> Void in
       if success {
@@ -41,18 +37,17 @@ class CheckInViewController: UIViewController, UITableViewDelegate, UITableViewD
   
   // MARK: - Table view data source
   
-  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+  override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
     return 1
   }
   
-  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return spots.count
   }
   
   
-  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+  override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell = tableView.dequeueReusableCellWithIdentifier("CheckInSpotCellIdentifier") as UITableViewCell
-    cell.backgroundColor = UIColor.clearColor()
     
     let spot = spots[indexPath.row]
     if let spotNameLabel = cell.viewWithTag(77) as? UILabel {
@@ -63,7 +58,7 @@ class CheckInViewController: UIViewController, UITableViewDelegate, UITableViewD
     return cell
   }
   
-  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+  override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     let spot = spots[indexPath.row]
     MyVybeStore.sharedInstance.currZone = spot
     
