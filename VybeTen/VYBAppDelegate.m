@@ -209,7 +209,7 @@
 
 - (void)handlePush:(NSDictionary *)payload {
   if (self.swipeContainerController && self.swipeContainerController.viewControllers.count) {
-    [self.swipeContainerController moveToMainScreenWithAnimation:NO];
+    [self.swipeContainerController moveToProfileScreenWithAnimation:NO];
     
     NSString *pushType = payload[kVYBPushPayloadPayloadTypeKey];
     if ([pushType isEqualToString:kVYBPushPayloadPayloadTypeActivityKey]) {
@@ -271,9 +271,9 @@
 
 - (void)setUpViewControllers {
   VYBCaptureViewController *captureVC = (VYBCaptureViewController *)[[UIStoryboard storyboardWithName:@"Capture" bundle:nil] instantiateInitialViewController];
-  SimpleTabBarController *mainTabBarController = (SimpleTabBarController *)[[UIStoryboard storyboardWithName:@"Home" bundle:nil] instantiateInitialViewController];
+  ProfileViewController *profileVC = (ProfileViewController *)[[UIStoryboard storyboardWithName:@"Profile" bundle:nil] instantiateInitialViewController];
 
-  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[captureVC, mainTabBarController]];
+  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[profileVC, captureVC]];
   
   [self.mainNavController pushViewController:self.swipeContainerController animated:NO];
   

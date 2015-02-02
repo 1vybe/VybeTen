@@ -113,6 +113,7 @@
 		74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */; };
 		74F095571A7D5F2300B3B116 /* Capture.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74F095561A7D5F2300B3B116 /* Capture.storyboard */; };
 		74F095591A7D691E00B3B116 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F095581A7D691E00B3B116 /* PreviewViewController.swift */; };
+		74F0955D1A80234400B3B116 /* TaggingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F0955C1A80234400B3B116 /* TaggingViewController.swift */; };
 		876FD1CBA2104ACB85FFFB93 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D4D61F35BF543039A00CFD0 /* libPods.a */; };
 		88063E6819F22F1E00C90A2D /* Activity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88063E6719F22F1E00C90A2D /* Activity.storyboard */; };
 		88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */; };
@@ -309,6 +310,7 @@
 		74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTableViewController.swift; sourceTree = "<group>"; };
 		74F095561A7D5F2300B3B116 /* Capture.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Capture.storyboard; sourceTree = "<group>"; };
 		74F095581A7D691E00B3B116 /* PreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
+		74F0955C1A80234400B3B116 /* TaggingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaggingViewController.swift; sourceTree = "<group>"; };
 		88063E6719F22F1E00C90A2D /* Activity.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Activity.storyboard; sourceTree = "<group>"; };
 		88366AAB19F10CB60093B148 /* VYBWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBWelcomeViewController.h; sourceTree = "<group>"; };
 		88366AAC19F10CB60093B148 /* VYBWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBWelcomeViewController.m; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 				7441011D1A645A3E00D2F874 /* CheckInViewController.swift */,
 				7441011F1A64739B00D2F874 /* CheckInViewController.xib */,
 				749256E71A64966000E04F31 /* SpotTableCell.xib */,
+				74F0955C1A80234400B3B116 /* TaggingViewController.swift */,
 			);
 			name = Capture;
 			sourceTree = "<group>";
@@ -1036,6 +1039,7 @@
 				0288603E19E4A02A007876AE /* VYBCapturePipeline.m in Sources */,
 				7435F5F81A6DBAC70075E60C /* SimpleTabBarController.swift in Sources */,
 				74D203EE1A5C918F00DBF3B7 /* SimpleTextField.swift in Sources */,
+				74F0955D1A80234400B3B116 /* TaggingViewController.swift in Sources */,
 				0222946D19FF2CE200A2AD62 /* VYBPizzaLayer.m in Sources */,
 				7464831E1A731A0A00FA4C9F /* VybeCardCell.swift in Sources */,
 				026216BE19EA470600EC6544 /* VYBVybe.m in Sources */,

@@ -27,11 +27,11 @@
 
 @property (nonatomic, weak) IBOutlet UIButton *flipButton;
 @property (nonatomic, weak) IBOutlet UIButton *flashButton;
-@property (nonatomic, weak) IBOutlet UIButton *homeButton;
+@property (nonatomic, weak) IBOutlet UIButton *profileButton;
 @property (nonatomic, weak) IBOutlet UIButton *recordButton;
 @property (nonatomic, weak) IBOutlet UIImageView *focusTarget;
 
-- (IBAction)homeButtonPressed:(id)sender;
+- (IBAction)profileButtonPressed:(id)sender;
 - (IBAction)flipButtonPressed:(id)sender;
 - (IBAction)flashButtonPressed:(id)sender;
 - (IBAction)recordButtonPressed:(id)sender;
@@ -229,7 +229,7 @@ static void *XYZContext = &XYZContext;
   
   [[self flipButton] setEnabled:NO];
   [[self flashButton] setEnabled:NO];
-  [[self homeButton] setEnabled:NO];
+  [[self profileButton] setEnabled:NO];
   
   [capturePipeline flipCameraWithCompletion:^(AVCaptureDevicePosition cameraPosition){
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -238,7 +238,7 @@ static void *XYZContext = &XYZContext;
       [[self flipButton] setEnabled:YES];
       [[self flashButton] setEnabled:YES];
       [[self flashButton] setHidden:_isFrontCamera];
-      [[self homeButton] setEnabled:YES];
+      [[self profileButton] setEnabled:YES];
     });
   }];
 }
@@ -404,14 +404,14 @@ static void *XYZContext = &XYZContext;
 
 
 - (void)syncUIWithRecordingStatus {
-  self.homeButton.hidden = _isRecording;
+  self.profileButton.hidden = _isRecording;
   flipButton.hidden = _isRecording;
   flashButton.hidden = _isRecording || _isFrontCamera;
 }
 
-- (IBAction)homeButtonPressed:(id)sender {
+- (IBAction)profileButtonPressed:(id)sender {
   SwipeContainerController *swipeContainer = (SwipeContainerController *)self.parentViewController;
-  [swipeContainer moveToMainScreenWithAnimation:YES];
+  [swipeContainer moveToProfileScreenWithAnimation:YES];
 }
 
 - (void)didReceiveMemoryWarning

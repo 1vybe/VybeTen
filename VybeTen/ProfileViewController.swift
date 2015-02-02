@@ -25,6 +25,11 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
   }
   
+  @IBAction func activityButtonPressed(sender: AnyObject) {
+    let activityVC = UserAgreementViewController(nibName: "UserAgreementViewController", bundle: nil)
+    self.navigationController?.pushViewController(activityVC, animated: true)
+  }
+  
   @IBAction func profileButtonPressed(sender: AnyObject) {
     // TODO: - Make the following version check mechanism GLOBAL
     let comparisonResult: NSComparisonResult = UIDevice.currentDevice().systemVersion.compare("8.0.0", options: NSStringCompareOptions.NumericSearch)
