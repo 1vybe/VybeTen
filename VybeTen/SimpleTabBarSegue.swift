@@ -15,5 +15,27 @@ class SimpleTabBarSegue: UIStoryboardSegue {
         sourceViewController.presentTabbedViewController(destViewController)
       }
     }
+    
+    if let profileViewController = self.sourceViewController as? ProfileViewController {
+      if self.identifier == "ListViewSegue" {
+        if !profileViewController.listViewButton.selected {
+          if let listVC = self.destinationViewController as? ProfileListViewController {
+            profileViewController.naviContainer?.setViewControllers([listVC], animated: true)
+            
+            profileViewController.listViewButton.selected = true
+            profileViewController.collectionViewButton.selected = false
+          }
+        }
+      } else if self.identifier == "CollectionViewSegue" {
+        if !profileViewController.collectionViewButton.selected {
+          if let collectionVC = self.destinationViewController as? ProfileCollectionViewController {
+            profileViewController.naviContainer?.setViewControllers([collectionVC], animated: true)
+  
+            profileViewController.listViewButton.selected = false
+            profileViewController.collectionViewButton.selected = true
+          }
+        }
+      }
+    }
   }
 }

@@ -71,7 +71,7 @@ import UIKit
   func moveToProfileScreen(animation animate: Bool) {
     self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
   }
-
+  
   
   func moveToCaptureScreen(animation animate: Bool) {
     self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)

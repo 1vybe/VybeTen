@@ -14,8 +14,6 @@
 #import "VYBCapturePipeline.h"
 #import "VYBCaptureViewController.h"
 #import "VYBReplayViewController.h"
-#import "VYBCaptureButton.h"
-#import "VYBActiveButton.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
 

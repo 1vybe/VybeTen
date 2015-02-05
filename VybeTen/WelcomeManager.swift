@@ -105,7 +105,7 @@ class WelcomeManager: NSObject {
       // Update myFlags cache
       let myFlags = PFUser.currentUser().relationForKey(kVYBUserFlagsKey)
       var flagQuery = myFlags.query()
-      flagQuery .findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+      flagQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
         if error == nil {
           for vybeObj in result as [PFObject] {
             VYBCache.sharedCache().setAttributesForVybe(vybeObj, flaggedByCurrentUser: true)
@@ -121,12 +121,6 @@ class WelcomeManager: NSObject {
           VYBCache.sharedCache().setBlockedUsers(result, forUser: PFUser.currentUser())
         }
       })
-      
-      // Retrive my activities
-      VYBCache.sharedCache().refreshMyActivitiesInBackground(nil)
-      
-      // Retrive activities for me
-      VYBCache.sharedCache().refreshBumpsForMeInBackground(nil)
     }
   }
   

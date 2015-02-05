@@ -15,7 +15,6 @@
 #import "VYBUtility.h"
 #import "VYBCache.h"
 #import "VYBConstants.h"
-#import "VYBActiveButton.h"
 
 #import "NSArray+PFObject.h"
 

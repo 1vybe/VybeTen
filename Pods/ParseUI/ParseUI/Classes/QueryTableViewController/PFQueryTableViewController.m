@@ -1,13 +1,13 @@
 /*
- *  Copyright (c) 2014, Facebook, Inc. All rights reserved.
+ *  Copyright (c) 2014, Parse, LLC. All rights reserved.
  *
  *  You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
  *  copy, modify, and distribute this software in source code or binary form for use
- *  in connection with the web services and APIs provided by Facebook.
+ *  in connection with the web services and APIs provided by Parse.
  *
- *  As with any software that integrates with the Facebook platform, your use of
- *  this software is subject to the Facebook Developer Principles and Policies
- *  [http://developers.facebook.com/policy/]. This copyright notice shall be
+ *  As with any software that integrates with the Parse platform, your use of
+ *  this software is subject to the Parse Terms of Service
+ *  [https://www.parse.com/about/terms]. This copyright notice shall be
  *  included in all copies or substantial portions of the software.
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -21,7 +21,7 @@
 
 #import "PFQueryTableViewController.h"
 
-#import <Parse/PFQuery.h>
+#import <Parse/Parse.h>
 
 #import "PFActivityIndicatorTableViewCell.h"
 #import "PFImageView.h"
@@ -158,7 +158,7 @@
 
     // If no objects are loaded in memory, we look to the cache first to fill the table
     // and then subsequently do a query against the network.
-    if ([self.objects count] == 0) {
+    if ([self.objects count] == 0 && ![Parse isLocalDatastoreEnabled]) {
         query.cachePolicy = kPFCachePolicyCacheThenNetwork;
     }
 
@@ -192,7 +192,9 @@
     PFQuery *query = [self queryForTable];
     [self _alterQuery:query forLoadingPage:page];
     [query findObjectsInBackgroundWithBlock:^(NSArray *foundObjects, NSError *error) {
-        if (query.cachePolicy != kPFCachePolicyCacheOnly && error.code == kPFErrorCacheMiss) {
+        if (![Parse isLocalDatastoreEnabled] &&
+            query.cachePolicy != kPFCachePolicyCacheOnly &&
+            error.code == kPFErrorCacheMiss) {
             // no-op on cache miss
             return;
         }
