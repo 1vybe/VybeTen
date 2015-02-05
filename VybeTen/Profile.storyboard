@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6724" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="nnA-LO-3jh">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6711"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--PROFILE-->
@@ -64,7 +65,7 @@
                                             <color key="titleColor" red="1" green="0.40000000000000002" blue="0.20784313730000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <segue destination="i1i-Ok-UhZ" kind="custom" identifier="CollectionViewSegue" customClass="SimpleTabBarSegue" customModule="Vybe" customModuleProvider="target" id="3Lp-jy-fyE"/>
+                                            <segue destination="W31-VV-fcC" kind="custom" identifier="CollectionViewSegue" customClass="SimpleTabBarSegue" customModule="Vybe" customModuleProvider="target" id="0Vr-Df-LI1"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -145,49 +146,34 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pwe-DS-HXW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1875" y="1013"/>
+            <point key="canvasLocation" x="1873" y="1013"/>
         </scene>
-        <!--Profile List View Controller-->
+        <!--List-->
         <scene sceneID="iGI-oT-Njb">
             <objects>
-                <tableViewController id="Wbg-fg-7OS" customClass="ProfileListViewController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="1" sectionFooterHeight="1" id="7YI-JQ-bCZ">
+                <tableViewController title="List" id="Wbg-fg-7OS" customClass="ProfileListViewController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="100" sectionFooterHeight="1" id="7YI-JQ-bCZ">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EmptyListCell" rowHeight="100" id="qgx-d3-Y6Z">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qgx-d3-Y6Z" id="JKg-xt-pAl">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tUj-25-JnP">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
-                                            <color key="backgroundColor" red="1" green="0.40000000000000002" blue="0.20784313730000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="100" id="DT0-j0-iIm"/>
-                                            </constraints>
-                                        </view>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="tUj-25-JnP" firstAttribute="leading" secondItem="JKg-xt-pAl" secondAttribute="leading" id="1rw-Vv-h1y"/>
-                                        <constraint firstAttribute="bottom" secondItem="tUj-25-JnP" secondAttribute="bottom" id="Ocu-SD-6Vk"/>
-                                        <constraint firstAttribute="trailing" secondItem="tUj-25-JnP" secondAttribute="trailing" id="Zbe-kG-Itx"/>
-                                        <constraint firstItem="tUj-25-JnP" firstAttribute="top" secondItem="JKg-xt-pAl" secondAttribute="top" id="frF-5u-rBy"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ListVybeCardCell" rowHeight="340" id="zbW-4j-e7y" customClass="VybeCardCell" customModule="Vybe" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zbW-4j-e7y" id="dbU-gw-wVP">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="g6n-X4-cXD" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="g6n-X4-cXD" customClass="PFImageView">
                                             <rect key="frame" x="150" y="20" width="300" height="300"/>
                                             <constraints>
+                                                <constraint firstAttribute="width" secondItem="g6n-X4-cXD" secondAttribute="height" multiplier="1:1" id="NSa-hz-2Rf"/>
                                                 <constraint firstAttribute="width" constant="300" id="NXB-xw-5yL"/>
                                                 <constraint firstAttribute="height" constant="300" id="vRB-u1-bWN"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="NSa-hz-2Rf"/>
+                                                </mask>
+                                            </variation>
                                         </imageView>
                                     </subviews>
                                     <constraints>
@@ -211,41 +197,56 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sCQ-Wi-RBJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="745" y="1760"/>
+            <point key="canvasLocation" x="687" y="1814"/>
         </scene>
-        <!--Profile Collection View Controller-->
-        <scene sceneID="Ubg-Zc-eXT">
+        <!--Collection-->
+        <scene sceneID="IQv-oq-jYh">
             <objects>
-                <collectionViewController id="i1i-Ok-UhZ" customClass="ProfileCollectionViewController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="cng-GY-z9I">
+                <collectionViewController title="Collection" id="W31-VV-fcC" customClass="ProfileCollectionViewController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="aIT-Zd-8wJ">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="xOb-wN-N89">
-                            <size key="itemSize" width="50" height="50"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="5" id="GbC-4C-qcd">
+                            <size key="itemSize" width="90" height="96"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="100" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gvK-vI-2fx">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="VybeCollectionCellIdentifier" id="lCE-Tm-nYy">
                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="90" height="96"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" tag="235" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1h2-2C-wrv" customClass="PFImageView">
+                                            <rect key="frame" x="0.0" y="0.0" width="90" height="96"/>
+                                        </imageView>
+                                    </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <constraints>
+                                    <constraint firstItem="1h2-2C-wrv" firstAttribute="top" secondItem="lCE-Tm-nYy" secondAttribute="top" id="CMN-aw-g6C"/>
+                                    <constraint firstItem="1h2-2C-wrv" firstAttribute="leading" secondItem="lCE-Tm-nYy" secondAttribute="leading" id="Qfw-T6-pbO"/>
+                                    <constraint firstAttribute="trailing" secondItem="1h2-2C-wrv" secondAttribute="trailing" id="Vei-lC-zUT"/>
+                                    <constraint firstAttribute="bottom" secondItem="1h2-2C-wrv" secondAttribute="bottom" id="wDk-It-TUO"/>
+                                </constraints>
                             </collectionViewCell>
                         </cells>
                         <connections>
-                            <outlet property="dataSource" destination="i1i-Ok-UhZ" id="8Uf-nT-IAK"/>
-                            <outlet property="delegate" destination="i1i-Ok-UhZ" id="ShI-bC-4yv"/>
+                            <outlet property="dataSource" destination="W31-VV-fcC" id="Z9d-qq-mei"/>
+                            <outlet property="delegate" destination="W31-VV-fcC" id="CZy-km-p3Z"/>
                         </connections>
                     </collectionView>
+                    <connections>
+                        <outlet property="collectionView" destination="aIT-Zd-8wJ" id="kjn-li-FO6"/>
+                    </connections>
                 </collectionViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="374-mI-QjU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pwQ-BT-Xmp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1414" y="1814"/>
+            <point key="canvasLocation" x="1341" y="1803"/>
         </scene>
     </scenes>
     <resources>
