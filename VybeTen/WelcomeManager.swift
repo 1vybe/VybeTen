@@ -40,7 +40,7 @@ class WelcomeManager: NSObject {
       var currentInstallation = PFInstallation.currentInstallation()
       if currentInstallation.badge != 0 {
         currentInstallation.badge = 0
-        currentInstallation.saveEventually()
+        currentInstallation.saveEventually(nil)
       }
       
       // Access Control
@@ -82,7 +82,7 @@ class WelcomeManager: NSObject {
     dispatch_async(parse_setup_queue, { () -> Void in
       var currentInstallation = PFInstallation.currentInstallation()
       currentInstallation.setDeviceTokenFromData(deviceToken)
-      currentInstallation.saveEventually()
+      currentInstallation.saveEventually(nil)
     })
   }
   

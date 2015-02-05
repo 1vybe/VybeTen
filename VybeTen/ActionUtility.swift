@@ -25,8 +25,8 @@ class ActionUtility: NSObject {
     query.whereKey(kVYBActivityToUserKey, equalTo:user)
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if error == nil {
-        for activity in result {
-          activity.deleteEventually!()
+        for activity in result as [PFObject] {
+          activity.deleteInBackgroundWithBlock(nil)
         }
       }
     }
@@ -40,7 +40,7 @@ class ActionUtility: NSObject {
     followACL.setPublicReadAccess(true)
     followACL.setWriteAccess(true, forUser: user)
     
-    followActivity.saveEventually()
+    followActivity.saveEventually(nil)
     
     VYBCache.sharedCache().setFollowStatus(true, user: user)
   }
@@ -53,8 +53,8 @@ class ActionUtility: NSObject {
     query.whereKey(kVYBActivityToUserKey, equalTo:user)
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if error == nil {
-        for activity in result {
-          activity.deleteEventually!()
+        for activity in result as [PFObject] {
+          activity.deleteInBackgroundWithBlock(nil)
         }
       }
     }

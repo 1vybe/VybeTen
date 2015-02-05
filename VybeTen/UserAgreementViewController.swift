@@ -27,7 +27,7 @@ class UserAgreementViewController: UIViewController {
   @IBAction func acceptButtonPressed() {
     let agreed = NSNumber(bool: true)
     PFUser.currentUser().setObject(agreed, forKey: kVYBUserTermsAgreedKey)
-    PFUser.currentUser().saveEventually()
+    PFUser.currentUser().saveEventually(nil)
     self.navigationController?.popViewControllerAnimated(false)
   }
   
