@@ -1,13 +1,13 @@
 /*
- *  Copyright (c) 2014, Facebook, Inc. All rights reserved.
+ *  Copyright (c) 2014, Parse, LLC. All rights reserved.
  *
  *  You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
  *  copy, modify, and distribute this software in source code or binary form for use
- *  in connection with the web services and APIs provided by Facebook.
+ *  in connection with the web services and APIs provided by Parse.
  *
- *  As with any software that integrates with the Facebook platform, your use of
- *  this software is subject to the Facebook Developer Principles and Policies
- *  [http://developers.facebook.com/policy/]. This copyright notice shall be
+ *  As with any software that integrates with the Parse platform, your use of
+ *  this software is subject to the Parse Terms of Service
+ *  [https://www.parse.com/about/terms]. This copyright notice shall be
  *  included in all copies or substantial portions of the software.
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -61,7 +61,7 @@ static NSString *const PFSignUpViewDefaultLogoImageName = @"parse_logo.png";
     _usernameField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _usernameField.returnKeyType = UIReturnKeyNext;
     [self addSubview:_usernameField];
-    [self _updateUsernameFieldPlaceholder];
+    [self _updateUsernameFieldStyle];
 
     _passwordField = [[PFTextField alloc] initWithFrame:CGRectZero
                                          separatorStyle:PFTextFieldSeparatorStyleBottom];
@@ -171,7 +171,7 @@ static NSString *const PFSignUpViewDefaultLogoImageName = @"parse_logo.png";
         currentY = CGRectGetMaxY(frame);
     }
 
-    if (_emailField) {
+    if (_emailField && !_emailAsUsername) {
         CGRect frame = PFRectMakeWithSizeCenteredInRect([_emailField sizeThatFits:contentSize], contentRect);
         frame.origin.y = currentY;
         _emailField.frame = frame;
@@ -226,7 +226,7 @@ static NSString *const PFSignUpViewDefaultLogoImageName = @"parse_logo.png";
         CGSize fieldSize = [_passwordField sizeThatFits:boundingSize];
         size.height += fieldSize.height;
     }
-    if (_emailField) {
+    if (_emailField && !_emailAsUsername) {
         CGSize fieldSize = [_emailField sizeThatFits:boundingSize];
         size.height += fieldSize.height;
     }
@@ -293,22 +293,26 @@ static NSString *const PFSignUpViewDefaultLogoImageName = @"parse_logo.png";
             }
             [self setNeedsLayout];
         }
-        [self _updateUsernameFieldPlaceholder];
+        [self _updateUsernameFieldStyle];
     }
 }
 
 #pragma mark -
 #pragma mark Private
 
-- (void)_updateUsernameFieldPlaceholder {
-    NSString *placeholder;
+- (void)_updateUsernameFieldStyle {
+    UIKeyboardType keyboardType = UIKeyboardTypeDefault;
+    NSString *placeholder = nil;
     if (!_emailAsUsername) {
         placeholder = NSLocalizedString(@"Username", @"Username");
+        keyboardType = UIKeyboardTypeDefault;
     } else {
         placeholder = NSLocalizedString(@"Email", @"Email");
+        keyboardType = UIKeyboardTypeEmailAddress;
     }
 
     _usernameField.placeholder = placeholder;
+    _usernameField.keyboardType = keyboardType;
 }
 
 @end

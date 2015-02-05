@@ -1,13 +1,13 @@
 /*
- *  Copyright (c) 2014, Facebook, Inc. All rights reserved.
+ *  Copyright (c) 2014, Parse, LLC. All rights reserved.
  *
  *  You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
  *  copy, modify, and distribute this software in source code or binary form for use
- *  in connection with the web services and APIs provided by Facebook.
+ *  in connection with the web services and APIs provided by Parse.
  *
- *  As with any software that integrates with the Facebook platform, your use of
- *  this software is subject to the Facebook Developer Principles and Policies
- *  [http://developers.facebook.com/policy/]. This copyright notice shall be
+ *  As with any software that integrates with the Parse platform, your use of
+ *  this software is subject to the Parse Terms of Service
+ *  [https://www.parse.com/about/terms]. This copyright notice shall be
  *  included in all copies or substantial portions of the software.
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -33,17 +33,6 @@
 static NSString *const PFLogInViewDefaultLogoImageName = @"parse_logo.png";
 static NSString *const PFLogInViewDefaultFacebookButtonImageName = @"facebook_icon.png";
 static NSString *const PFLogInViewDefaultTwitterButtonImageName = @"twitter_icon.png";
-
-
-@interface PFLogInView ()
-
-@property (nonatomic, strong, readwrite) PFActionButton *facebookButton;
-@property (nonatomic, strong, readwrite) PFActionButton *twitterButton;
-
-@property (nonatomic, strong, readwrite) UITextField *usernameField;
-@property (nonatomic, strong, readwrite) UITextField *passwordField;
-
-@end
 
 @implementation PFLogInView
 
@@ -117,7 +106,7 @@ static NSString *const PFLogInViewDefaultTwitterButtonImageName = @"twitter_icon
         _usernameField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         _usernameField.returnKeyType = UIReturnKeyNext;
         [self addSubview:_usernameField];
-        [self _updateUsernameFieldPlaceholder];
+        [self _updateUsernameFieldStyle];
 
         _passwordField = [[PFTextField alloc] initWithFrame:CGRectZero
                                              separatorStyle:PFTextFieldSeparatorStyleBottom];
@@ -393,7 +382,8 @@ static NSString *const PFLogInViewDefaultTwitterButtonImageName = @"twitter_icon
 - (void)setEmailAsUsername:(BOOL)otherEmailAsUsername {
     if (_emailAsUsername != otherEmailAsUsername) {
         _emailAsUsername = otherEmailAsUsername;
-        [self _updateUsernameFieldPlaceholder];
+
+        [self _updateUsernameFieldStyle];
     }
 }
 
@@ -421,15 +411,19 @@ static NSString *const PFLogInViewDefaultTwitterButtonImageName = @"twitter_icon
     }
 }
 
-- (void)_updateUsernameFieldPlaceholder {
-    NSString *usernamePlaceholder;
+- (void)_updateUsernameFieldStyle {
+    UIKeyboardType keyboardType = UIKeyboardTypeDefault;
+    NSString *usernamePlaceholder = nil;
     if (!_emailAsUsername) {
+        keyboardType = UIKeyboardTypeDefault;
         usernamePlaceholder = NSLocalizedString(@"Username", @"Username");
     } else {
+        keyboardType = UIKeyboardTypeEmailAddress;
         usernamePlaceholder = NSLocalizedString(@"Email", @"Email");
     }
 
     _usernameField.placeholder = usernamePlaceholder;
+    _usernameField.keyboardType = keyboardType;
 }
 
 @end

@@ -1,13 +1,13 @@
 /*
- *  Copyright (c) 2014, Facebook, Inc. All rights reserved.
+ *  Copyright (c) 2014, Parse, LLC. All rights reserved.
  *
  *  You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
  *  copy, modify, and distribute this software in source code or binary form for use
- *  in connection with the web services and APIs provided by Facebook.
+ *  in connection with the web services and APIs provided by Parse.
  *
- *  As with any software that integrates with the Facebook platform, your use of
- *  this software is subject to the Facebook Developer Principles and Policies
- *  [http://developers.facebook.com/policy/]. This copyright notice shall be
+ *  As with any software that integrates with the Parse platform, your use of
+ *  this software is subject to the Parse Terms of Service
+ *  [https://www.parse.com/about/terms]. This copyright notice shall be
  *  included in all copies or substantial portions of the software.
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -26,6 +26,7 @@
 
 #import "PFAlertView.h"
 #import "PFPrimaryButton.h"
+#import "PFTextField.h"
 
 NSString *const PFSignUpSuccessNotification = @"com.parse.ui.signup.success";
 NSString *const PFSignUpFailureNotification = @"com.parse.ui.signup.failure";
@@ -340,14 +341,14 @@ static NSString *const PFSignUpViewControllerDelegateInfoAdditionalKey = @"addit
                                         @"Password missing error message in PFSignUpViewController");
             responder = _signUpView.passwordField;
         } else if (errorCode == kPFErrorUsernameTaken) {
-            NSString *format = NSLocalizedString(@"The username '%@' is taken. Please try choosing another username.",
+            NSString *format = NSLocalizedString(@"The username '%@' is taken. Please try choosing a different username.",
                                                  @"Username taken error format in PFSignUpViewController");
             message = [NSString stringWithFormat:format, _signUpView.usernameField.text];
             responder = _signUpView.usernameField;
         } else if (error.code == kPFErrorUserEmailTaken) {
-            NSString *format = NSLocalizedString(@"The email '%@' is taken. Please try using another email.",
+            NSString *format = NSLocalizedString(@"The email '%@' is taken. Please try using a different email.",
                                                  @"Email is taken error format in PFSignUpViewController.");
-            UITextField *textField = self.emailAsUsername ? _signUpView.usernameField : _signUpView.usernameField;
+            UITextField *textField = self.emailAsUsername ? _signUpView.usernameField : _signUpView.emailField;
 
             message = [NSString stringWithFormat:format, textField.text];
             responder = textField;

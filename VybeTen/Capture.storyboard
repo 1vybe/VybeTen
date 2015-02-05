@@ -116,6 +116,9 @@
                                 <state key="normal" title="Button">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="profileButtonPressed:" destination="rgS-Qd-smr" eventType="touchUpInside" id="KJv-3K-IcN"/>
+                                </connections>
                             </button>
                         </subviews>
                         <constraints>
@@ -190,8 +193,8 @@
                                         </state>
                                         <variation key="default">
                                             <mask key="constraints">
-                                                <exclude reference="eIQ-fy-L9n"/>
                                                 <exclude reference="AQW-Vi-fGV"/>
+                                                <exclude reference="eIQ-fy-L9n"/>
                                             </mask>
                                         </variation>
                                     </button>
