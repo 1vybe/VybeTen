@@ -100,6 +100,7 @@
 		74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */; };
 		74D203EE1A5C918F00DBF3B7 /* SimpleTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D203ED1A5C918F00DBF3B7 /* SimpleTextField.swift */; };
 		74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */; };
+		74E33E3E1A86ACF000CCAB36 /* ProfileSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E33E3D1A86ACF000CCAB36 /* ProfileSummaryView.swift */; };
 		74E570EF1A41D430005072E1 /* Notification.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74E570EE1A41D430005072E1 /* Notification.storyboard */; };
 		74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */; };
 		74F095571A7D5F2300B3B116 /* Capture.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74F095561A7D5F2300B3B116 /* Capture.storyboard */; };
@@ -278,6 +279,7 @@
 		74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleInteractionManager.swift; sourceTree = "<group>"; };
 		74D203ED1A5C918F00DBF3B7 /* SimpleTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleTextField.swift; sourceTree = "<group>"; };
 		74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeContainerViewController.swift; sourceTree = "<group>"; };
+		74E33E3D1A86ACF000CCAB36 /* ProfileSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSummaryView.swift; sourceTree = "<group>"; };
 		74E570EE1A41D430005072E1 /* Notification.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Notification.storyboard; sourceTree = "<group>"; };
 		74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTableViewController.swift; sourceTree = "<group>"; };
 		74F095561A7D5F2300B3B116 /* Capture.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Capture.storyboard; sourceTree = "<group>"; };
@@ -411,6 +413,7 @@
 				749256EF1A64CCEA00E04F31 /* ProfileViewController.swift */,
 				74C4EA4D1A81417200124C9D /* ProfileCollectionViewController.swift */,
 				74C4EA4B1A81412E00124C9D /* ProfileListViewController.swift */,
+				74E33E3D1A86ACF000CCAB36 /* ProfileSummaryView.swift */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -980,6 +983,7 @@
 				7464831E1A731A0A00FA4C9F /* VybeCardCell.swift in Sources */,
 				026216BE19EA470600EC6544 /* VYBVybe.m in Sources */,
 				020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */,
+				74E33E3E1A86ACF000CCAB36 /* ProfileSummaryView.swift in Sources */,
 				02512D081A0BEDA800155068 /* ZoneStore.swift in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
 				025CC90C19D51AF400A1208C /* UINavigationBar+fixedSize.m in Sources */,

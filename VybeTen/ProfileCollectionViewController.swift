@@ -9,7 +9,10 @@
 import UIKit
 
 class ProfileCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+  weak var mainProfileViewController: ProfileViewController?
   var collectionObjects: [AnyObject]
+  
+  var summaryView: ProfileSummaryView?
   
   deinit {
     println("Profile Collection Deinit")
@@ -25,7 +28,7 @@ class ProfileCollectionViewController: UICollectionViewController, UICollectionV
     super.viewDidLoad()
     
     println("My Vybes Collection viewDidLoad")
-
+    
     // Do any additional setup after loading the view.
     let query = PFQuery(className: kVYBVybeClassKey)
     query.whereKey(kVYBVybeUserKey, equalTo: PFUser.currentUser())
@@ -38,6 +41,7 @@ class ProfileCollectionViewController: UICollectionViewController, UICollectionV
         self.collectionView?.reloadData()
       }
     }
+    
   }
   
   override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -77,6 +81,20 @@ class ProfileCollectionViewController: UICollectionViewController, UICollectionV
     }
     
     return cell
+  }
+  
+  override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
+    let sectionHeader = collectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader, withReuseIdentifier: "ProfileCollectionSummaryHeaderIdentifier", forIndexPath: indexPath) as UICollectionReusableView
+    if let summary = sectionHeader.viewWithTag(235) as? ProfileSummaryView {
+      summary.delegate = mainProfileViewController
+      summary.collectionViewButton.selected = true
+      if let username = PFUser.currentUser().objectForKey(kVYBUserUsernameKey) as? String {
+        summary.usernameLabel.text = username
+      }
+      summaryView = summary
+    }
+    
+    return sectionHeader
   }
   
   override func didReceiveMemoryWarning() {

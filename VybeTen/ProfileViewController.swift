@@ -8,52 +8,34 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-  @IBOutlet weak var username: UILabel!
-  @IBOutlet weak var listViewButton: UIButton!
-  @IBOutlet weak var collectionViewButton: UIButton!
-  
+protocol ProfileSummaryViewDelegate {
+  func showListView()
+  func showCollectionView()
+}
+
+class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProfileSummaryViewDelegate {  
   var naviContainer: UINavigationController?
-  
-  var profilePicView: PFImageView?
-  
-  @IBAction func logout(sender: AnyObject) {
-    if let appdel = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
-      appdel.logOut()
-    }
-  }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
-        
-    // TODO: - Put navigation bar appearance settings
-    
-    let currUser = PFUser.currentUser()
-    
-    if let profileThumbnail = currUser[kVYBUserProfilePicMediumKey] as? PFFile {
-      profilePicView?.file = profileThumbnail
-      profilePicView?.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
-        if image != nil {
-          if let maskImage = UIImage(named: "Profile_Mask") {
-            self.profilePicView?.image = VYBUtility.maskImage(image, withMask: maskImage)
-          }
-        } else {
-          // TODO: - Placeholder image for profile pic
-        }
-      })
-    }
-    
-    if let name = currUser[kVYBUserUsernameKey] as? String {
-      username.text = name
-    }
-    
-    listViewButton.selected = true
   }
 
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if segue.identifier == "ProfileEmbedSegue" {
       naviContainer = segue.destinationViewController as? UINavigationController
+      if let listVC = naviContainer?.topViewController as? ProfileListViewController {
+        listVC.mainProfileViewController = self
+      }
     }
+  }
+  
+  // MARK: - ProfileSummaryViewDelegate
+  func showListView() {
+    self.performSegueWithIdentifier("ListViewSegue", sender: nil)
+  }
+  
+  func showCollectionView() {
+    self.performSegueWithIdentifier("CollectionViewSegue", sender: nil)
   }
   
   // MARK: - Update user profile picture
@@ -133,7 +115,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
       if success {
         self.showPopUpWindow(message: "Profile picture changed. :)")
         if let maskImage = UIImage(named: "Profile_Mask") {
-          self.profilePicView?.image = VYBUtility.maskImage(image, withMask: maskImage)
+//          self.profilePicView?.image = VYBUtility.maskImage(image, withMask: maskImage)
         }
       } else {
         self.showPopUpWindow(message: "Network unavailable. :(")
