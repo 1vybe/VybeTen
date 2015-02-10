@@ -67,16 +67,26 @@ $(function() {
 
   var PlayerView = Parse.View.extend({
 
-    el: $('.player').get(0),
+    el: '#liveplayer',
 
     initialize: function() {
+      var self = this;
+
       _.bindAll(this, 'render', 'playNext', 'playPrev', 'logKey');
 
-      this.player = $('.player').get(0);
+      this.$el.html(_.template($("#liveplayer-template").html()));
 
-      this.info = $('.info');
+      // video element does not propogate events up the DOM
+      var video = $(self.el).find("video.player");
+      video.on('ended', function(e){
+          $(self.el).trigger('playerEnded');
+      });
 
-      this.preloader = $('.preloader').get(0);
+      this.player = this.$('.player').get(0);
+
+      this.info = this.$('.info');
+
+      this.preloader = this.$('.preloader').get(0);
 
       this.playlist = new Playlist;
       this.playlist.bind('reset', this.render);
@@ -87,7 +97,7 @@ $(function() {
     },
 
     events: {
-      'ended': 'playNext',
+      'playerEnded': 'playNext',
     },
 
     changeChannel: function() {

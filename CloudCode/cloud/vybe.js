@@ -1,4 +1,3 @@
-require('cloud/tribe');
 
 var _ = require('underscore');
 var Vybe = Parse.Object.extend('Vybe');
@@ -41,7 +40,7 @@ Parse.Cloud.afterSave('Vybe', function (request) {
   console.log('lets update hashtags!!');
   // Update the right Hashtag object's relation('vybes')
   var hashtags = request.object.get('hashtags');
-  _.each(hashtags, function (tagName) {    
+  _.each(hashtags, function (tagName) {
     var tagQuery = new Parse.Query('Hashtag');
     tagQuery.equalTo('name_lowercase', tagName.toLowerCase());
     tagQuery.first().then(function (tag) {
@@ -54,7 +53,7 @@ Parse.Cloud.afterSave('Vybe', function (request) {
         var newTag = new Hashtag;
         newTag.set('name', tagName);
         newTag.set('name_lowercase', tagName.toLowerCase());
-        
+
         var relation = newTag.relation('vybes');
         relation.add(request.object);
 

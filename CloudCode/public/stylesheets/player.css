@@ -1,0 +1,47 @@
+
+body {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+}
+
+#home {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 1;
+}
+
+#liveplayer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#liveplayer .player {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+#liveplayer .preloader {
+  position: absolute!important;
+  top: -10000px!important;
+  left: -10000px!important;
+}
+
+#liveplayer .overlay {
+  position: absolute;
+  font-size: large;
+  color: white;
+  font-family: 'Avenir Regular';
+  line-height: 1.2;
+  z-index: 1;
+}
+
+#liveplayer .info {
+  bottom: 15px;
+  left: 15px;
+}

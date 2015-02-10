@@ -1,25 +1,25 @@
 
 @font-face {
     font-family: 'Avenir Regular';
-    src: url('../fonts/AvenirLTStd-Medium.otf');
+    src: url('../fonts/Avenir-Medium.woff');
 }
 
 @font-face {
     font-family: 'Avenir Bold';
-    src: url('../fonts/AvenirLTStd-Heavy.otf');
+    src: url('../fonts/Avenir-Heavy.woff');
 }
 
 @font-face {
     font-family: 'Avenir Next UltraLight';
-    src: url('../fonts/AvenirNext-UltraLight.ttf');
+    src: url('../fonts/AvenirNext-UltraLight.woff');
 }
 
 @font-face {
     font-family: 'JosefinSans Light';
-    src: url('../fonts/JosefinSans-Light.ttf');
+    src: url('../fonts/JosefinSans-Light.woff');
 }
 
 @font-face {
     font-family: 'JosefinSans UltraLight';
-    src: url('../fonts/JosefinSans-Thin.ttf');
+    src: url('../fonts/JosefinSans-Thin.woff');
 }
