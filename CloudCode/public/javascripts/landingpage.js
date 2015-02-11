@@ -64,9 +64,15 @@ $(function() {
           return newSignup.save();
         }
       }).then(function(newSignup) {
+        var message;
         if (newSignup) {
           console.log(newSignup.get('email') + " has signed up.");
+          message = "Thanks for signing up! We'll get in touch soon."
+        } else {
+          message = "You're already on the list for early access."
         }
+        this.$("div.slogan3").text(message);
+        this.$("#signup-email").val("");
       }, function(error) {
         console.log("Error signing up for beta: " + error);
       });
