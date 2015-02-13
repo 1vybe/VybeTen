@@ -28,7 +28,7 @@ $(function() {
       e.preventDefault();
 
       var self = this;
-      var email = this.$("#signup-email").val();
+      var email = this.$("#signup-email").val().toLowerCase();
 
       if (email === "") {
         console.log("An email must be provided");
