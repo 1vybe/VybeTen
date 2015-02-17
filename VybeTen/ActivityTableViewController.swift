@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Vybe. All rights reserved.
 //
 
-// NOTE: - if an argument is PFObject, breakpoint anywhere in this file causes a crash
+// NOTE: - if a function's argument is PFObject, debugger crashes
 
 import UIKit
 
@@ -27,11 +27,11 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
   override func viewDidLoad() {
     super.viewDidLoad()
         
-    let textAttributes = NSMutableDictionary()
+    var textAttributes = [NSObject : AnyObject]()
     if let font = UIFont(name: "Helvetica Neue", size: 15.0) {
       let textColor = UIColor(red: 255.0/255.0, green: 102.0/255.0, blue: 53.0/255.0, alpha: 1.0)
-      textAttributes.setObject(font, forKey: NSFontAttributeName)
-      textAttributes.setObject(textColor, forKey: NSForegroundColorAttributeName)
+      textAttributes[NSFontAttributeName] = font
+      textAttributes[NSForegroundColorAttributeName] = textColor
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
     
@@ -87,13 +87,13 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     var cell: ActivityTableViewCell
-    let activity = objects[indexPath.row] as PFObject
-    let type = activity[kVYBActivityTypeKey] as String
+    let activity = objects[indexPath.row] as! PFObject
+    let type = activity[kVYBActivityTypeKey] as! String
     
     if type == kVYBActivityTypeLike {
-      cell = self.tableView.dequeueReusableCellWithIdentifier("FavoriteActivityCellIdentifier") as ActivityTableViewCell
+      cell = self.tableView.dequeueReusableCellWithIdentifier("FavoriteActivityCellIdentifier") as! ActivityTableViewCell
     } else {
-      cell = self.tableView.dequeueReusableCellWithIdentifier("FollowActivityCellIdentifier") as ActivityTableViewCell
+      cell = self.tableView.dequeueReusableCellWithIdentifier("FollowActivityCellIdentifier") as! ActivityTableViewCell
     }
     
     cell.tag = indexPath.row

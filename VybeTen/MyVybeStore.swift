@@ -15,8 +15,7 @@ class MyVybeStore: NSObject {
   var currVybe: VYBVybe?
   var currentVybeUploadTask: UIBackgroundTaskIdentifier?
   
-  var currHashTags: [String]?
-  var availableHashTags: [PFObject]?
+  var currTribe: PFObject?
   
   var savedVybes: [VYBVybe]?
   var _isUploadingSavedVybes: Bool
@@ -38,37 +37,6 @@ class MyVybeStore: NSObject {
     
     currVybe = VYBVybe(parseObject:nVybe)
     
-    currHashTags = nil
-    
-//    currZone = nil
-  }
-  
-  func addHashTagForCurrentVybe(tagText: String) {
-    let array = tagText.componentsSeparatedByString(" ")
-    for aTag in array {
-      if let tagName = aTag.componentsSeparatedByString("#").last {
-        if countElements(tagName) > 0 {
-          self.addToCurrHashTags(tagName)
-        }
-      }
-    }
-  }
-  
-  func clearCurrHashTags() {
-    currHashTags = nil
-  }
-  
-  private func addToCurrHashTags(tagName: String) {
-    if currHashTags == nil {
-      currHashTags = [tagName]
-    } else {
-      for aTag in currHashTags! {
-        if aTag.lowercaseString == tagName.lowercaseString {
-          return
-        }
-      }
-      currHashTags! += [tagName]
-    }
   }
   
   func uploadCurrentVybe() {
@@ -88,10 +56,6 @@ class MyVybeStore: NSObject {
       if let image = NSData(contentsOfFile: vybe.thumbnailFilePath()) {
         let thumbnailFile = PFFile(data: image)
         vybeParseObj.setObject(thumbnailFile, forKey: kVYBVybeThumbnailKey)
-      }
-     
-      if currHashTags != nil {
-        vybeParseObj.setObject(currHashTags, forKey: kVYBVybeHashtagsKey)
       }
       
       currentVybeUploadTask = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in

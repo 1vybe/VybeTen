@@ -8,34 +8,38 @@
 
 import UIKit
 
-protocol ProfileSummaryViewDelegate {
-  func showListView()
-  func showCollectionView()
-}
-
-class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProfileSummaryViewDelegate {  
-  var naviContainer: UINavigationController?
-
+class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+  @IBOutlet weak var containerView: UIView!
+  @IBOutlet weak var summaryView: ProfileSummaryView!
+  
+  var containerViewController: UIViewController?
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-  }
-
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if segue.identifier == "ProfileEmbedSegue" {
-      naviContainer = segue.destinationViewController as? UINavigationController
-      if let listVC = naviContainer?.topViewController as? ProfileListViewController {
-        listVC.mainProfileViewController = self
-      }
+    
+    if let username = PFUser.currentUser().objectForKey(kVYBUserUsernameKey) as? String {
+      summaryView.usernameLabel.text = username
     }
-  }
-  
-  // MARK: - ProfileSummaryViewDelegate
-  func showListView() {
+    
     self.performSegueWithIdentifier("ListViewSegue", sender: nil)
   }
   
-  func showCollectionView() {
-    self.performSegueWithIdentifier("CollectionViewSegue", sender: nil)
+  @IBAction func settingsButtonPressed(sender: AnyObject) {
+    let alertController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+    let unblockAction = UIAlertAction(title: "Show Blocked Users", style: UIAlertActionStyle.Default, handler: nil)
+    let logOutAction = UIAlertAction(title: "Log Out", style: .Destructive) { (action: UIAlertAction!) -> Void in
+      if let appDelegate = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
+        appDelegate.logOut()
+      }
+    }
+    
+    let goBackAction = UIAlertAction(title: "Go Back", style: .Cancel, handler: nil)
+    
+    alertController.addAction(unblockAction)
+    alertController.addAction(logOutAction)
+    alertController.addAction(goBackAction)
+    
+    self.presentViewController(alertController, animated: true, completion: nil)
   }
   
   // MARK: - Update user profile picture
@@ -104,7 +108,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
   }
   
-  func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
+  func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
     //VYBUtility.uploadProfileImage()
     self.dismissViewControllerAnimated(true, completion: nil)
     

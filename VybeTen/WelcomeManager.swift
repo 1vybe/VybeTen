@@ -30,7 +30,7 @@ class WelcomeManager: NSObject {
   
   func setUpParseEnvironment() {
     dispatch_async(parse_setup_queue, { () -> Void in
-//      Parse.enableLocalDatastore()
+      Parse.enableLocalDatastore()
       
       ParseCrashReporting.enable()
       
@@ -102,12 +102,20 @@ class WelcomeManager: NSObject {
       // Update Google Analytics
       self.updateGoogleAnalytics()
       
+      // Update all tribe list
+      let tribeQuery = PFQuery(className: kVYBTribeClassKey)
+      tribeQuery.findObjectsInBackgroundWithBlock({ (objects: [AnyObject]!, error: NSError!) -> Void in
+        if objects != nil {
+          PFObject.pinAllInBackground(objects, block:nil)
+        }
+      })
+      
       // Update myFlags cache
       let myFlags = PFUser.currentUser().relationForKey(kVYBUserFlagsKey)
       var flagQuery = myFlags.query()
       flagQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
         if error == nil {
-          for vybeObj in result as [PFObject] {
+          for vybeObj in result as! [PFObject] {
             VYBCache.sharedCache().setAttributesForVybe(vybeObj, flaggedByCurrentUser: true)
           }
         }
@@ -129,7 +137,7 @@ class WelcomeManager: NSObject {
 #else
     if let tracker = GAI.sharedInstance().defaultTracker {
       tracker.set("&uid", value: PFUser.currentUser().username)
-      tracker.send(GAIDictionaryBuilder.createEventWithCategory("UX", action: "User Logged In", label: nil, value: nil).build())
+      tracker.send(GAIDictionaryBuilder.createEventWithCategory("UX", action: "User Logged In", label: nil, value: nil).build() as [NSObject : AnyObject])
       
       if ConfigManager.sharedInstance.currentUserExcludedFromAnalytics() {
         let tribeName = "Founders"

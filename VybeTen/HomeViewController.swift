@@ -15,10 +15,10 @@ class HomeViewController: UITableViewController {
     super.viewDidLoad()
 
     let params = [:]
-    PFCloud.callFunctionInBackground("get_fresh_vybes", withParameters: params) { (result: AnyObject!, error: NSError!) -> Void in
+    PFCloud.callFunctionInBackground("get_fresh_vybes", withParameters: params as! [NSObject : AnyObject]) { (result: AnyObject!, error: NSError!) -> Void in
       if error == nil {
         if let list = result as? [AnyObject] {
-          self.tableObjects = list.reverse() as [PFObject]
+          self.tableObjects = list.reverse() as! [PFObject]
           self.tableView.reloadData()
         }
       }
@@ -43,7 +43,7 @@ class HomeViewController: UITableViewController {
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell = tableView.dequeueReusableCellWithIdentifier("VybeCardCell", forIndexPath: indexPath) as VybeCardCell
+    var cell = tableView.dequeueReusableCellWithIdentifier("VybeCardCell", forIndexPath: indexPath) as! VybeCardCell
     
     cell.contentView.frame = cell.bounds;
     cell.contentView.autoresizingMask = .FlexibleWidth | .FlexibleHeight;

@@ -12,7 +12,7 @@ import UIKit
 class ActionUtility: NSObject {
   
   class func followUser(userObj: AnyObject) {
-    let user = userObj as PFUser
+    let user = userObj as! PFUser
     if user.objectId == PFUser.currentUser().objectId {
       println("ERRORROR")
       return
@@ -25,7 +25,7 @@ class ActionUtility: NSObject {
     query.whereKey(kVYBActivityToUserKey, equalTo:user)
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if error == nil {
-        for activity in result as [PFObject] {
+        for activity in result as! [PFObject] {
           activity.deleteInBackgroundWithBlock(nil)
         }
       }
@@ -53,12 +53,12 @@ class ActionUtility: NSObject {
     query.whereKey(kVYBActivityToUserKey, equalTo:user)
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if error == nil {
-        for activity in result as [PFObject] {
+        for activity in result as! [PFObject] {
           activity.deleteInBackgroundWithBlock(nil)
         }
       }
     }
     
-    VYBCache.sharedCache().setFollowStatus(false, user: user as PFUser)
+    VYBCache.sharedCache().setFollowStatus(false, user: user as! PFUser)
   }
 }

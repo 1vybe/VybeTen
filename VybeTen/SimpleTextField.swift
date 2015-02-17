@@ -20,11 +20,11 @@ class SimpleTextField: UITextField {
     self.backgroundColor = UIColor(white: 0.0, alpha: 0.5)
     self.returnKeyType = .Done
     
-    let simpleAttributes = NSMutableDictionary()
+    var simpleAttributes = [NSObject : AnyObject]()
     if let font = UIFont(name: "Avenir Next", size: 17.0) {
       let textColor = UIColor(white: 1.0, alpha: 1.0)
-      simpleAttributes.setObject(font, forKey: NSFontAttributeName)
-      simpleAttributes.setObject(textColor, forKey: NSForegroundColorAttributeName)
+      simpleAttributes[NSFontAttributeName] = font
+      simpleAttributes[NSForegroundColorAttributeName] = textColor
     }
     var attributedText = NSAttributedString(string: "#", attributes: simpleAttributes)
     self.attributedText = attributedText

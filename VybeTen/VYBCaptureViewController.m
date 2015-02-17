@@ -13,23 +13,26 @@
 #import <MotionOrientation@PTEz/MotionOrientation.h>
 #import "VYBCapturePipeline.h"
 #import "VYBCaptureViewController.h"
-#import "VYBReplayViewController.h"
 #import "VYBCache.h"
 #import "VYBUtility.h"
 
 #import "Vybe-Swift.h"
 
-@interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
+@interface VYBCaptureViewController () <VYBCapturePipelineDelegate, SelectTribeDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
   NSInteger _pageIndex;
 }
-
+@property (nonatomic, weak) IBOutlet UIView *overlayView;
 @property (nonatomic, weak) IBOutlet UIButton *flipButton;
 @property (nonatomic, weak) IBOutlet UIButton *flashButton;
-@property (nonatomic, weak) IBOutlet UIButton *profileButton;
 @property (nonatomic, weak) IBOutlet UIButton *recordButton;
+
+@property (nonatomic, weak) IBOutlet UIButton *homeButton;
+@property (nonatomic, weak) IBOutlet UIButton *chooseTribeButton;
+@property (nonatomic, weak) IBOutlet UILabel *tribeLabel;
+
 @property (nonatomic, weak) IBOutlet UIImageView *focusTarget;
 
-- (IBAction)profileButtonPressed:(id)sender;
+- (IBAction)homeButtonPressed:(id)sender;
 - (IBAction)flipButtonPressed:(id)sender;
 - (IBAction)flashButtonPressed:(id)sender;
 - (IBAction)recordButtonPressed:(id)sender;
@@ -99,6 +102,11 @@ static void *XYZContext = &XYZContext;
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioSessionInterrupted:) name:AVAudioSessionInterruptionNotification object:nil];
   
   [super viewDidLoad];
+  
+  PFObject *currTribe = [[MyVybeStore sharedInstance] currTribe];
+  if (currTribe) {
+    self.tribeLabel.text = currTribe[kVYBTribeNameKey];
+  }
   
   // Tap to focus and expose
   UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusOnTouchArea:)];
@@ -188,7 +196,7 @@ static void *XYZContext = &XYZContext;
   if (currVybe) {
     [VYBUtility saveThumbnailImageForVybe:currVybe];
     
-    [self performSegueWithIdentifier:@"PresentPreviewSegue" sender:self];
+    [self performSegueWithIdentifier:@"PreviewSegue" sender:self];
   }
 
 }
@@ -225,9 +233,10 @@ static void *XYZContext = &XYZContext;
 
 - (IBAction)flipButtonPressed:(id)sender {
   
-  [[self flipButton] setEnabled:NO];
-  [[self flashButton] setEnabled:NO];
-  [[self profileButton] setEnabled:NO];
+  [self.flipButton setEnabled:NO];
+  [self.flashButton setEnabled:NO];
+  [self.homeButton setEnabled:NO];
+  [self.chooseTribeButton setEnabled:NO];
   
   [capturePipeline flipCameraWithCompletion:^(AVCaptureDevicePosition cameraPosition){
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -236,7 +245,8 @@ static void *XYZContext = &XYZContext;
       [[self flipButton] setEnabled:YES];
       [[self flashButton] setEnabled:YES];
       [[self flashButton] setHidden:_isFrontCamera];
-      [[self profileButton] setEnabled:YES];
+      [self.homeButton setEnabled:YES];
+      [self.chooseTribeButton setEnabled:YES];
     });
   }];
 }
@@ -398,16 +408,44 @@ static void *XYZContext = &XYZContext;
   [capturePipeline setExposurePoint:scaledPt];
 }
 
+#pragma mark - SelectTribeDelegate
+
+- (void)didSelectTribe:(__nonnull PFObject *)tribe {
+  [self dismissViewControllerAnimated:YES completion:^{
+    if ( tribe[kVYBTribeNameKey] ) {
+      self.tribeLabel.text = tribe[kVYBTribeNameKey];
+    }
+    self.overlayView.hidden = NO;
+  }];
+}
+
+- (void)dismissSelectTribeViewContrller:(__nonnull SelectTribeViewController *)vc {
+  [self dismissViewControllerAnimated:YES completion:^{
+    self.overlayView.hidden = NO;
+  }];
+}
+
 #pragma mark - ()
 
-
 - (void)syncUIWithRecordingStatus {
-  self.profileButton.hidden = _isRecording;
+  self.homeButton.hidden = _isRecording;
+  self.tribeLabel.hidden = _isRecording;
+  self.chooseTribeButton.hidden = _isRecording;
+  
   flipButton.hidden = _isRecording;
   flashButton.hidden = _isRecording || _isFrontCamera;
 }
 
-- (IBAction)profileButtonPressed:(id)sender {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+  if ( [segue.identifier isEqualToString:@"SelectTribeSegue"] ) {
+    SelectTribeViewController *selectTribe = (SelectTribeViewController *)segue.destinationViewController;
+    selectTribe.delegate = self;
+    
+    self.overlayView.hidden = YES;
+  }
+}
+
+- (IBAction)homeButtonPressed:(id)sender {
   SwipeContainerController *swipeContainer = (SwipeContainerController *)self.parentViewController;
   [swipeContainer moveToProfileScreenWithAnimation:YES];
 }

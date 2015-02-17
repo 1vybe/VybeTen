@@ -62,19 +62,6 @@ NSString *const kVYBUserTermsAgreedKey                          = @"termsAgreed"
 NSString *const kVYBUserPromptsSeenKey                          = @"userPromptsSeen";
 NSString *const kVYBUserFlagsKey                                = @"flags";
 
-
-
-/*
-NSString *const kVYBUserDisplayNameKey                          = @"displayName";
-NSString *const kVYBUserFacebookIDKey                           = @"facebookId";
-NSString *const kVYBUserPhotoIDKey                              = @"photoId";
-
-NSString *const kVYBUserFacebookFriendsKey                      = @"facebookFriends";
-NSString *const kVYBUserAlreadyAutoFollowedFacebookFriendsKey   = @"userAlreadyAutoFollowedFacebookFriends";
-NSString *const kVYBUserLastVybedTime                           = @"lastVybedTime";
-NSString *const kVYBUserMostRecentVybeKey                       = @"mostRecentVybe";
-*/
-
 #pragma mark - PFObject Vybe Class
 // class key
 NSString *const kVYBVybeClassKey                                = @"Vybe";
@@ -95,15 +82,17 @@ NSString *const kVYBVybeZoneLatitudeKey                         = @"zoneLatitude
 NSString *const kVYBVybeZoneLongitudeKey                        = @"zoneLongitude";
 NSString *const kVYBVybeHashtagsKey                             = @"hashtags";
 
-#pragma mark - Cached Vybe Attributes
-// keys
-NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey         = @"isLikedByCurrentUser";
-NSString *const kVYBVybeAttributesIsFlaggedByCurrentUserKey       = @"isFlaggedByCurrentUser";
-NSString *const kVYBVybeAttributesLikeCountKey                    = @"likeCount";
-NSString *const kVYBVybeAttributesLikersKey                       = @"likers";
-NSString *const kVYBVybeAttributesCommentCountKey                 = @"commentCount";
-NSString *const kVYBVybeAttributesCommentersKey                   = @"commenters";
-NSString *const kVYBVybeAttributesNearbyCountKey                  = @"nearbyCount";
+#pragma mark - PFObject Tribe Class
+// class key
+NSString *const kVYBTribeClassKey                               = @"Tribe";
+
+// field keys
+NSString *const kVYBTribeNameKey                                = @"name";
+NSString *const kVYBTribePhotoKey                               = @"photo";
+NSString *const kVYBTribeCoordinatorKey                         = @"coordinator";
+NSString *const kVYBTribeDescriptionKey                         = @"description";
+NSString *const kVYBTribeGeoTagKey                              = @"geoTag";
+NSString *const kVYBTribeTypeKey                                = @"type";
 
 #pragma mark - PFObject Hashtag Class
 NSString *const kVYBHashtagClassKey                               = @"Hashtag";
@@ -131,7 +120,6 @@ NSString *const kVYBActivityTypeFollow                          = @"follow";
 NSString *const kVYBActivityTypeLike                            = @"like";
 NSString *const kVYBActivityTypeComment                         = @"comment";
 
-
 #pragma mark - Cached User Attributes
 // keys
 NSString *const kVYBUserAttributesVybeCountKey                  = @"vybeCount";
@@ -139,6 +127,17 @@ NSString *const kVYBUserAttributesIsFollowedByCurrentUserKey    = @"isFollowedBy
 NSString *const kVYBUserAttributesBlockedUsersKey               = @"blockedUsers";
 NSString *const kVYBUserAttributesBumpsForMeKey                 = @"bumpsForMe";
 NSString *const kVYBUserAttributesMyBumpsKey                    = @"myBumps";
+
+#pragma mark - Cached Vybe Attributes
+// keys
+NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey         = @"isLikedByCurrentUser";
+NSString *const kVYBVybeAttributesIsFlaggedByCurrentUserKey       = @"isFlaggedByCurrentUser";
+NSString *const kVYBVybeAttributesLikeCountKey                    = @"likeCount";
+NSString *const kVYBVybeAttributesLikersKey                       = @"likers";
+NSString *const kVYBVybeAttributesCommentCountKey                 = @"commentCount";
+NSString *const kVYBVybeAttributesCommentersKey                   = @"commenters";
+NSString *const kVYBVybeAttributesNearbyCountKey                  = @"nearbyCount";
+
 
 #pragma mark - Installation Class
 // Field keys

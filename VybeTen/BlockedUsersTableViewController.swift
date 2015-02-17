@@ -22,11 +22,11 @@ class BlockedUsersTableViewController: UITableViewController {
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = false
     
-    let textAttributes = NSMutableDictionary()
+    var textAttributes = [NSObject : AnyObject]()
     if let font = UIFont(name: "Avenir Next", size: 14.0) {
       let textColor = UIColor(red: 247.0/255.0, green: 76.0/255.0, blue: 70.0/255.0, alpha: 1.0)
-      textAttributes.setObject(font, forKey: NSFontAttributeName)
-      textAttributes.setObject(textColor, forKey: NSForegroundColorAttributeName)
+      textAttributes[NSFontAttributeName] = font
+      textAttributes[NSForegroundColorAttributeName] = textColor
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
     
@@ -38,7 +38,7 @@ class BlockedUsersTableViewController: UITableViewController {
       if error == nil {
         VYBCache.sharedCache().setBlockedUsers(result, forUser: PFUser.currentUser())
         if result.count > 0 {
-          self.blockedUsers = result as [PFUser]
+          self.blockedUsers = result as! [PFUser]
           self.tableView.reloadData()
         }
       }
@@ -66,7 +66,7 @@ class BlockedUsersTableViewController: UITableViewController {
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("BlockedUserTableCell", forIndexPath: indexPath) as UITableViewCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("BlockedUserTableCell", forIndexPath: indexPath) as! UITableViewCell
     
     if let aUser = blockedUsers[indexPath.row] as? PFUser {
       if let username = aUser[kVYBUserUsernameKey] as? String {

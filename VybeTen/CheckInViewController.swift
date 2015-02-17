@@ -47,7 +47,7 @@ class CheckInViewController: UITableViewController {
   
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell = tableView.dequeueReusableCellWithIdentifier("CheckInSpotCellIdentifier") as UITableViewCell
+    var cell = tableView.dequeueReusableCellWithIdentifier("CheckInSpotCellIdentifier") as! UITableViewCell
     
     let spot = spots[indexPath.row]
     if let spotNameLabel = cell.viewWithTag(77) as? UILabel {
