@@ -28,7 +28,7 @@ class ActivityTableViewCell: PFTableViewCell {
       
       if let type = activityObj[kVYBActivityTypeKey] as? String {
         if type == kVYBActivityTypeFollow {
-          self.followButton.selected = VYBCache.sharedCache().followStatusForUser(user as PFUser)
+          self.followButton.selected = VYBCache.sharedCache().followStatusForUser(user as! PFUser)
           self.followButton.tag = self.tag
         }
       }

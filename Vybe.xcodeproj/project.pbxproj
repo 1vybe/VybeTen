@@ -34,7 +34,6 @@
 		029729721A02A1EC0050406D /* SpotFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029729711A02A1EC0050406D /* SpotFinder.swift */; };
 		02A45CEF1A1E664E00425F9C /* PizzaProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A45CEE1A1E664E00425F9C /* PizzaProgressView.swift */; };
 		02A45CF31A1E821300425F9C /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A45CF21A1E821300425F9C /* CircleProgressView.swift */; };
-		02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02CEE2AF1970C2F900AC361F /* VYBReplayViewController.m */; };
 		02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */; };
 		02D11D0618DF62AC0018DA97 /* Montreal-BoldIta.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */; };
 		02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02D11CF918DF62AC0018DA97 /* Montreal-DemiBold.otf */; };
@@ -76,6 +75,7 @@
 		7435F5F61A6DB4120075E60C /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7435F5F51A6DB4120075E60C /* Home.storyboard */; };
 		7435F5F81A6DBAC70075E60C /* SimpleTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7435F5F71A6DBAC70075E60C /* SimpleTabBarController.swift */; };
 		7435F5FA1A6DC9B70075E60C /* SimpleTabBarSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7435F5F91A6DC9B70075E60C /* SimpleTabBarSegue.swift */; };
+		743727ED1A93CDCD00CF7C4B /* SelectTribeTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743727EC1A93CDCD00CF7C4B /* SelectTribeTableCell.swift */; };
 		7441011E1A645A3E00D2F874 /* CheckInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7441011D1A645A3E00D2F874 /* CheckInViewController.swift */; };
 		744101201A64739B00D2F874 /* CheckInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7441011F1A64739B00D2F874 /* CheckInViewController.xib */; };
 		74551C811A3E91FA00D348BB /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74551C801A3E91FA00D348BB /* ConfigManager.swift */; };
@@ -91,12 +91,15 @@
 		749256F61A65C82C00E04F31 /* PostTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 749256F41A65C82C00E04F31 /* PostTableViewCell.xib */; };
 		74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */; };
 		74A0FA571A36A8B50065059E /* UnblockUser.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74A0FA561A36A8B50065059E /* UnblockUser.storyboard */; };
+		74A1F9F81A9114E7001D6F15 /* CreateTribeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A1F9F71A9114E7001D6F15 /* CreateTribeViewController.swift */; };
+		74A1F9FF1A929F11001D6F15 /* NSString+TribeName.m in Sources */ = {isa = PBXBuildFile; fileRef = 74A1F9FE1A929F11001D6F15 /* NSString+TribeName.m */; };
 		74B6CEB61A688D4F001F869D /* ActivityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74B6CEB51A688D4F001F869D /* ActivityTableViewCell.swift */; };
 		74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */; };
 		74BF89B71A4A033E00E92FB4 /* WelcomeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BF89B61A4A033E00E92FB4 /* WelcomeManager.swift */; };
 		74C4EA4C1A81412E00124C9D /* ProfileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C4EA4B1A81412E00124C9D /* ProfileListViewController.swift */; };
 		74C4EA4E1A81417200124C9D /* ProfileCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C4EA4D1A81417200124C9D /* ProfileCollectionViewController.swift */; };
 		74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */; };
+		74CD7E2D1A8C4A1B009778CC /* SelectTribeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74CD7E2C1A8C4A1A009778CC /* SelectTribeViewController.swift */; };
 		74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */; };
 		74D203EE1A5C918F00DBF3B7 /* SimpleTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D203ED1A5C918F00DBF3B7 /* SimpleTextField.swift */; };
 		74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */; };
@@ -200,8 +203,6 @@
 		029729711A02A1EC0050406D /* SpotFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotFinder.swift; sourceTree = "<group>"; };
 		02A45CEE1A1E664E00425F9C /* PizzaProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PizzaProgressView.swift; sourceTree = "<group>"; };
 		02A45CF21A1E821300425F9C /* CircleProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
-		02CEE2AE1970C2F900AC361F /* VYBReplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBReplayViewController.h; sourceTree = "<group>"; };
-		02CEE2AF1970C2F900AC361F /* VYBReplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBReplayViewController.m; sourceTree = "<group>"; };
 		02D11CF718DF62AC0018DA97 /* Montreal-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-Bold.otf"; sourceTree = "<group>"; };
 		02D11CF818DF62AC0018DA97 /* Montreal-BoldIta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-BoldIta.otf"; sourceTree = "<group>"; };
 		02D11CF918DF62AC0018DA97 /* Montreal-DemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montreal-DemiBold.otf"; sourceTree = "<group>"; };
@@ -253,6 +254,7 @@
 		7435F5F51A6DB4120075E60C /* Home.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		7435F5F71A6DBAC70075E60C /* SimpleTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleTabBarController.swift; sourceTree = "<group>"; };
 		7435F5F91A6DC9B70075E60C /* SimpleTabBarSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleTabBarSegue.swift; sourceTree = "<group>"; };
+		743727EC1A93CDCD00CF7C4B /* SelectTribeTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectTribeTableCell.swift; sourceTree = "<group>"; };
 		7441011D1A645A3E00D2F874 /* CheckInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckInViewController.swift; sourceTree = "<group>"; };
 		7441011F1A64739B00D2F874 /* CheckInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckInViewController.xib; sourceTree = "<group>"; };
 		74551C801A3E91FA00D348BB /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
@@ -269,6 +271,9 @@
 		749256F41A65C82C00E04F31 /* PostTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostTableViewCell.xib; sourceTree = "<group>"; };
 		74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
 		74A0FA561A36A8B50065059E /* UnblockUser.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UnblockUser.storyboard; sourceTree = "<group>"; };
+		74A1F9F71A9114E7001D6F15 /* CreateTribeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTribeViewController.swift; sourceTree = "<group>"; };
+		74A1F9FD1A929F11001D6F15 /* NSString+TribeName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+TribeName.h"; sourceTree = "<group>"; };
+		74A1F9FE1A929F11001D6F15 /* NSString+TribeName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TribeName.m"; sourceTree = "<group>"; };
 		74B6CEB51A688D4F001F869D /* ActivityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityTableViewCell.swift; sourceTree = "<group>"; };
 		74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		74BF89B61A4A033E00E92FB4 /* WelcomeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeManager.swift; sourceTree = "<group>"; };
@@ -276,6 +281,7 @@
 		74C4EA4D1A81417200124C9D /* ProfileCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileCollectionViewController.swift; sourceTree = "<group>"; };
 		74C5D9721A22F8B40006695B /* NSMutableArray+VYBVybe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+VYBVybe.h"; sourceTree = "<group>"; };
 		74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+VYBVybe.m"; sourceTree = "<group>"; };
+		74CD7E2C1A8C4A1A009778CC /* SelectTribeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectTribeViewController.swift; sourceTree = "<group>"; };
 		74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleInteractionManager.swift; sourceTree = "<group>"; };
 		74D203ED1A5C918F00DBF3B7 /* SimpleTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleTextField.swift; sourceTree = "<group>"; };
 		74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeContainerViewController.swift; sourceTree = "<group>"; };
@@ -340,6 +346,8 @@
 				025CC90E19D5229200A1208C /* UIImage+maskImage.m */,
 				8861F0CE19A81C8C000249DB /* NSString+Username.h */,
 				8861F0CF19A81C8C000249DB /* NSString+Username.m */,
+				74A1F9FD1A929F11001D6F15 /* NSString+TribeName.h */,
+				74A1F9FE1A929F11001D6F15 /* NSString+TribeName.m */,
 				8861F0D119A81E08000249DB /* NSString+Email.h */,
 				8861F0D219A81E08000249DB /* NSString+Email.m */,
 				74C5D9721A22F8B40006695B /* NSMutableArray+VYBVybe.h */,
@@ -385,12 +393,13 @@
 				027DE0ED19E7484200F5F4C0 /* VYBCaptureRecorder.h */,
 				027DE0EE19E7484200F5F4C0 /* VYBCaptureRecorder.m */,
 				74F095581A7D691E00B3B116 /* PreviewViewController.swift */,
+				74CD7E2C1A8C4A1A009778CC /* SelectTribeViewController.swift */,
 				7441011D1A645A3E00D2F874 /* CheckInViewController.swift */,
 				7441011F1A64739B00D2F874 /* CheckInViewController.xib */,
 				749256E71A64966000E04F31 /* SpotTableCell.xib */,
 				74F0955C1A80234400B3B116 /* TaggingViewController.swift */,
-				02CEE2AE1970C2F900AC361F /* VYBReplayViewController.h */,
-				02CEE2AF1970C2F900AC361F /* VYBReplayViewController.m */,
+				74A1F9F71A9114E7001D6F15 /* CreateTribeViewController.swift */,
+				743727EC1A93CDCD00CF7C4B /* SelectTribeTableCell.swift */,
 			);
 			name = Capture;
 			sourceTree = "<group>";
@@ -932,6 +941,7 @@
 				8861F0D019A81C8C000249DB /* NSString+Username.m in Sources */,
 				74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */,
 				74B6CEB61A688D4F001F869D /* ActivityTableViewCell.swift in Sources */,
+				74A1F9FF1A929F11001D6F15 /* NSString+TribeName.m in Sources */,
 				749256F01A64CCEA00E04F31 /* ProfileViewController.swift in Sources */,
 				02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */,
 				74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */,
@@ -942,7 +952,6 @@
 				7435F5FA1A6DC9B70075E60C /* SimpleTabBarSegue.swift in Sources */,
 				029729721A02A1EC0050406D /* SpotFinder.swift in Sources */,
 				74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */,
-				02CEE2B01970C2F900AC361F /* VYBReplayViewController.m in Sources */,
 				74F095591A7D691E00B3B116 /* PreviewViewController.swift in Sources */,
 				027DE0EF19E7484200F5F4C0 /* VYBCaptureRecorder.m in Sources */,
 				74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */,
@@ -963,6 +972,7 @@
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
 				023E538D191F142000C3CF78 /* VYBCache.m in Sources */,
 				8887DA0E19F50774007BCC53 /* VYBVybeTableViewCell.m in Sources */,
+				74CD7E2D1A8C4A1B009778CC /* SelectTribeViewController.swift in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
 				023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */,
@@ -982,6 +992,8 @@
 				0222946D19FF2CE200A2AD62 /* VYBPizzaLayer.m in Sources */,
 				7464831E1A731A0A00FA4C9F /* VybeCardCell.swift in Sources */,
 				026216BE19EA470600EC6544 /* VYBVybe.m in Sources */,
+				743727ED1A93CDCD00CF7C4B /* SelectTribeTableCell.swift in Sources */,
+				74A1F9F81A9114E7001D6F15 /* CreateTribeViewController.swift in Sources */,
 				020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */,
 				74E33E3E1A86ACF000CCAB36 /* ProfileSummaryView.swift in Sources */,
 				02512D081A0BEDA800155068 /* ZoneStore.swift in Sources */,

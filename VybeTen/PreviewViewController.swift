@@ -8,42 +8,34 @@
 
 import UIKit
 
-class PreviewViewController: UIViewController {
+class PreviewViewController: UIViewController, SelectTribeDelegate {
   @IBOutlet weak var playerView: VYBPlayerView!
-  
   @IBOutlet weak var overlayView: UIView!
-  @IBOutlet weak var bottomBarImageView: UIImageView!
-  @IBOutlet weak var cancelButton: UIButton!
-  @IBOutlet weak var doneButton: UIButton!
-  @IBOutlet weak var tagButton: UIButton!
+  @IBOutlet weak var tribeLabel: UILabel!
   
   var player: AVPlayer?
   var currItem: AVPlayerItem?
   let videoPath: String?
   let thumbnailPath: String?
   
+  deinit {
+    println("PreviewVC deinit")
+  }
   
   required init(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-    
     videoPath = MyVybeStore.sharedInstance.currVybe?.videoFilePath()
     thumbnailPath = MyVybeStore.sharedInstance.currVybe?.thumbnailFilePath()
-  }
-  
-  @IBAction func cancelButtonPressed(sender: AnyObject) {
-    
-  }
-  
-  @IBAction func doneButtonPressed(sender: AnyObject) {
-    
-  }
-  
-  @IBAction func tagButtonPressed(sender: AnyObject) {
-    
+
+    super.init(coder: aDecoder)
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    if let currTribe = MyVybeStore.sharedInstance.currTribe,
+      let tribeName = currTribe.objectForKey(kVYBTribeNameKey) as? String {
+        tribeLabel.text = tribeName
+    }
     
     player = AVPlayer()
     playerView.player = player
@@ -72,6 +64,20 @@ class PreviewViewController: UIViewController {
     // Do any additional setup after loading the view.
   }
   
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == "SelectTribeSegue" {
+      if let selectTribeVC = segue.destinationViewController as? SelectTribeViewController {
+        selectTribeVC.delegate = self
+      }
+      self.overlayView.hidden = true
+    }
+  }
+  
+  // NOTE: - Unwind does not work when previewVC using show action segue (e.g. push)
+  @IBAction func dismissButtonPressed(sender: AnyObject) {
+    self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+  }
+  
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
     
@@ -91,6 +97,27 @@ class PreviewViewController: UIViewController {
   func currItemDidReachEnd() {
     currItem?.seekToTime(kCMTimeZero)
     player?.play()
+  }
+  
+  // MARK: - SelectTribeDelegate
+  
+  func dismissSelectTribeViewContrller(vc: SelectTribeViewController) {
+    self.dismissViewControllerAnimated(true, completion: { () -> Void in
+      self.overlayView.hidden = false
+    })
+  }
+  
+  func didSelectTribe(tribe: AnyObject) {
+    self.dismissViewControllerAnimated(true, completion: { () -> Void in
+      if let tribeName = tribe.objectForKey(kVYBTribeNameKey) as? String {
+        self.tribeLabel.text = tribeName
+      }
+      self.overlayView.hidden = false
+    })
+  }
+  
+  override func prefersStatusBarHidden() -> Bool {
+    return true
   }
   
   override func didReceiveMemoryWarning() {

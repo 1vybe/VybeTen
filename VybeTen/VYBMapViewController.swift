@@ -30,14 +30,14 @@ import MapKit
       mapView = MKMapView(frame: self.view.frame)
       self.view.addSubview(mapView)
       
-      if let coordinate = targetCoordinate? {
+      if targetCoordinate != nil {
         mapView.delegate = self
         let span = MKCoordinateSpanMake(0.05, 0.05)
-        let region = MKCoordinateRegionMake(coordinate, span)
+        let region = MKCoordinateRegionMake(targetCoordinate!, span)
         self.mapView.setRegion(region, animated: true)
         
         // this is current location annoation
-        let currLocAnnotation = SimpleAnnotation(coordinate: coordinate)
+        let currLocAnnotation = SimpleAnnotation(coordinate: targetCoordinate!)
         
         self.mapView.addAnnotation(currLocAnnotation)
       }
@@ -71,7 +71,9 @@ import MapKit
 #else
     if let tracker = GAI.sharedInstance().defaultTracker {
       tracker.set(kGAIScreenName, value: "Map Screen")
-      tracker.send(GAIDictionaryBuilder.createScreenView().build())
+      let dictionary : [NSObject : AnyObject]!
+      dictionary = GAIDictionaryBuilder.createScreenView().build() as [NSObject : AnyObject]
+      tracker.send(dictionary)
     }
 #endif
   }
@@ -134,7 +136,7 @@ import MapKit
   }
   
   func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
-    let simpleAnnotation = annotation as SimpleAnnotation
+    let simpleAnnotation = annotation as! SimpleAnnotation
     if simpleAnnotation.isCurrentLocation {
       let pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "currentLocatinPin")
       pin.pinColor = MKPinAnnotationColor.Green
@@ -171,7 +173,7 @@ import MapKit
   }
   
   func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
-    let zone = view.annotation as SimpleAnnotation
+    let zone = view.annotation as! SimpleAnnotation
     
     var playerVC = VYBPlayerViewController()
     playerVC.delegate = self
@@ -223,7 +225,11 @@ import MapKit
   }
   
   class SimpleAnnotation: NSObject, MKAnnotation {
-    var coordinate: CLLocationCoordinate2D
+    var coordinate: CLLocationCoordinate2D { get {
+        return zoneCoordinate
+      }
+    }
+    var zoneCoordinate: CLLocationCoordinate2D
     var title: String
     var zoneID: String
     var unwatched: Bool
@@ -231,14 +237,14 @@ import MapKit
     var isCurrentLocation = false
     
     init(coordinate coord: CLLocationCoordinate2D) {
-      coordinate = coord
+      zoneCoordinate = coord
       title = "Me"
       zoneID = ""
       unwatched = false
     }
     
     init(zone: Zone) {
-      coordinate = zone.coordinate
+      zoneCoordinate = zone.coordinate
       title = zone.name
       zoneID = zone.zoneID
       isActive = zone.isActive

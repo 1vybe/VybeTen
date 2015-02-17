@@ -9,31 +9,29 @@
 import UIKit
 
 class ProfileListViewController: PFQueryTableViewController {
-  weak var mainProfileViewController: ProfileViewController?
-  @IBOutlet weak var summaryView: ProfileSummaryView!
   
-  required init(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-    
-    paginationEnabled = false
-    pullToRefreshEnabled = true
+  deinit {
+    println("Profile List Deinit")
   }
+  
+//  required init(coder aDecoder: NSCoder) {
+//    super.init(coder: aDecoder)
+//    
+//    paginationEnabled = false
+//    pullToRefreshEnabled = true
+//  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
    
-    println("My Vybes Table viewDidLoad")
+    println("Profile List viewDidLoad")
         
     tableView.estimatedRowHeight = 300.0
     tableView.rowHeight = UITableViewAutomaticDimension
     
-    tableView.tableFooterView = UIView(frame: CGRectZero)
+    tableView.contentInset = UIEdgeInsetsMake(86.0, 0.0, 0.0, 0.0)
     
-    summaryView.delegate = mainProfileViewController
-    summaryView.listViewButton.selected = true
-    if let username = PFUser.currentUser().objectForKey(kVYBUserUsernameKey) as? String {
-      summaryView.usernameLabel.text = username
-    }
+    tableView.tableFooterView = UIView(frame: CGRectZero)
   }
   
   override func queryForTable() -> PFQuery! {
@@ -58,7 +56,7 @@ class ProfileListViewController: PFQueryTableViewController {
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {    
-    let cell = tableView.dequeueReusableCellWithIdentifier("ListVybeCardCell") as VybeCardCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("ListVybeCardCell") as! VybeCardCell
     
     if let vybeObj = objects[indexPath.row] as? PFObject {
       if let thumbnailFile = vybeObj.objectForKey(kVYBVybeThumbnailKey) as? PFFile {
@@ -79,6 +77,10 @@ class ProfileListViewController: PFQueryTableViewController {
     }
     
     return cell
+  }
+  
+  override func scrollViewDidScroll(scrollView: UIScrollView) {    
+//    println("[profileList] offset \(scrollView.contentOffset)")
   }
   
   override func didReceiveMemoryWarning() {

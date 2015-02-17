@@ -26,3 +26,4 @@
 #import "VYBVybe.h"
 
 #import "AVAsset+VideoOrientation.h"
+#import "NSString+TribeName.h"

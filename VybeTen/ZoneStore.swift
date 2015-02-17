@@ -30,7 +30,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
     query.limit = 1000
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if error == nil {
-        let vybes = result as [PFObject]
+        let vybes = result as! [PFObject]
         self.createZonesForMap(vybes)
         
         completionHandler(success: true)
@@ -68,7 +68,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
   
   func fetchActiveVybes(completionHandler: ((success: Bool) -> Void)) {
     // Fetch ACTIVE zones
-    let params = [:]
+    let params = [NSObject : AnyObject]()
     // TODO: - cloud function get_active_vybes() should use config activeTTL
     PFCloud.callFunctionInBackground("get_active_vybes", withParameters:params) { (result: AnyObject!, error: NSError!) -> Void in
       if error == nil {
@@ -150,7 +150,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
   private func fetchFeaturedZones() {
 //    let featuredChannels = ConfigManager.sharedInstance.featuredChannels()
     let params = [:]
-    PFCloud.callFunctionInBackground("getFeaturedChannels", withParameters: params) { (result: AnyObject!, error: NSError!) -> Void in
+    PFCloud.callFunctionInBackground("getFeaturedChannels", withParameters: params as! [NSObject : AnyObject]) { (result: AnyObject!, error: NSError!) -> Void in
       if error == nil {
         if let channels = result as? [AnyObject] {
           for channel in channels {
@@ -278,7 +278,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
     var zoneID = "777"
     
     if aVybe[kVYBVybeZoneIDKey] != nil {
-      zoneID = aVybe[kVYBVybeZoneIDKey] as String
+      zoneID = aVybe[kVYBVybeZoneIDKey] as! String
     }
     
     for aZone in _activeZones {
@@ -308,12 +308,12 @@ private let _zoneStoreSharedInstance = ZoneStore()
     var zone: Zone!
     
     if let zoneID = aVybe[kVYBVybeZoneIDKey] as? String {
-      let zoneName = aVybe[kVYBVybeZoneNameKey] as String
+      let zoneName = aVybe[kVYBVybeZoneNameKey] as! String
       zone = Zone(name: zoneName, zoneID: zoneID)
       var coordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
       
       if let zLat = aVybe[kVYBVybeZoneLatitudeKey] as? Double {
-        let zLng = aVybe[kVYBVybeZoneLongitudeKey] as Double
+        let zLng = aVybe[kVYBVybeZoneLongitudeKey] as! Double
         coordinate = CLLocationCoordinate2D(latitude: zLat, longitude: zLng)
       }
       else {
@@ -398,8 +398,8 @@ private let _zoneStoreSharedInstance = ZoneStore()
     }
     
     allContents.sort { (vybe1: PFObject, vybe2: PFObject) -> Bool in
-      let firstTime = vybe1[kVYBVybeTimestampKey] as NSDate
-      let secondTime = vybe2[kVYBVybeTimestampKey] as NSDate
+      let firstTime = vybe1[kVYBVybeTimestampKey] as! NSDate
+      let secondTime = vybe2[kVYBVybeTimestampKey] as! NSDate
       let comparisonResult = firstTime.compare(secondTime)
       return comparisonResult == NSComparisonResult.OrderedAscending
     }
@@ -434,8 +434,8 @@ private let _zoneStoreSharedInstance = ZoneStore()
     for myObj in myVybes {
       var idx = 0
       innerLoop: for ; idx < merged.count; {
-        let myTime = myObj[kVYBVybeTimestampKey] as NSDate
-        let freshTime = merged[idx].objectForKey(kVYBVybeTimestampKey) as NSDate
+        let myTime = myObj[kVYBVybeTimestampKey] as! NSDate
+        let freshTime = merged[idx].objectForKey(kVYBVybeTimestampKey) as! NSDate
         
         let comparison = myTime.compare(freshTime)
         if comparison == NSComparisonResult.OrderedAscending {
@@ -458,7 +458,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
     if let dVybe = aVybe as? PFObject  {
       var zoneID = "777"
       
-      if let zID = aVybe.objectForKey(kVYBVybeZoneIDKey) as String! {
+      if let zID = aVybe.objectForKey(kVYBVybeZoneIDKey) as! String! {
         zoneID = zID
       }
       
@@ -493,7 +493,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
   }
   
   func deleteMyVybeInBackground(obj: AnyObject!, completionHandler: ((success: Bool) -> Void)) {
-    let vybe = obj as PFObject
+    let vybe = obj as! PFObject
     vybe.deleteInBackgroundWithBlock { (success: Bool, error: NSError!) -> Void in
       if error == nil {
         if success {

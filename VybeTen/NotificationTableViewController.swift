@@ -33,19 +33,19 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     
-    let textAttributes = NSMutableDictionary()
+    var textAttributes = [NSObject : AnyObject]()
     if let font = UIFont(name: "Avenir Next", size: 14.0) {
       let textColor = UIColor(red: 247.0/255.0, green: 109.0/255.0, blue: 60.0/255.0, alpha: 1.0)
-      textAttributes.setObject(font, forKey: NSFontAttributeName)
-      textAttributes.setObject(textColor, forKey: NSForegroundColorAttributeName)
+      textAttributes[NSFontAttributeName] = font
+      textAttributes[NSForegroundColorAttributeName] = textColor
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
     
-    let segmentedControlTextAttributes = NSMutableDictionary()
+    var segmentedControlTextAttributes = [NSObject : AnyObject]()
     if let font = UIFont(name: "Avenir Next", size: 10.0) {
       let mainColor = UIColor(red: 247.0/255.0, green: 109.0/255.0, blue: 60.0/255.0, alpha: 1.0)
       segmentedControl.tintColor = mainColor
-      segmentedControlTextAttributes.setObject(font, forKey: NSFontAttributeName)
+      segmentedControlTextAttributes[NSFontAttributeName] = font
       segmentedControl.setTitleTextAttributes(segmentedControlTextAttributes, forState: UIControlState.Normal)
       segmentedControl.setTitleTextAttributes(segmentedControlTextAttributes, forState: UIControlState.Selected)
     }
@@ -120,21 +120,21 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
     
     if segmentedControl.selectedSegmentIndex == 0 { // My Vybes
       if self.isUnwatchedActivity(activityObj) {
-        cell = tableView.dequeueReusableCellWithIdentifier("NewBumpForMeCell", forIndexPath: indexPath) as UITableViewCell
+        cell = tableView.dequeueReusableCellWithIdentifier("NewBumpForMeCell", forIndexPath: indexPath) as! UITableViewCell
       } else {
-        cell = tableView.dequeueReusableCellWithIdentifier("BumpForMeCell", forIndexPath: indexPath) as UITableViewCell
+        cell = tableView.dequeueReusableCellWithIdentifier("BumpForMeCell", forIndexPath: indexPath) as! UITableViewCell
       }
       
       if let fromUser = activityObj[kVYBActivityFromUserKey] as? PFObject {
-        username = fromUser[kVYBUserUsernameKey] as String
+        username = fromUser[kVYBUserUsernameKey] as! String
       }
       
       timeString = VYBUtility.reverseTime(activityObj.createdAt)
     } else {
-      cell = tableView.dequeueReusableCellWithIdentifier("MyBumpCell", forIndexPath: indexPath) as UITableViewCell
+      cell = tableView.dequeueReusableCellWithIdentifier("MyBumpCell", forIndexPath: indexPath) as! UITableViewCell
       
       if let toUser = activityObj[kVYBActivityToUserKey] as? PFObject {
-        username = toUser[kVYBUserUsernameKey] as String
+        username = toUser[kVYBUserUsernameKey] as! String
       }
       
       if let vybeObj = activityObj[kVYBActivityVybeKey] as? PFObject {
@@ -147,14 +147,14 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
       }
     }
     
-    var usernameLabel = cell.viewWithTag(70) as UILabel
+    var usernameLabel = cell.viewWithTag(70) as! UILabel
     usernameLabel.text = username
     
-    var timeLabel = cell.viewWithTag(71) as UILabel
+    var timeLabel = cell.viewWithTag(71) as! UILabel
     timeLabel.text = timeString
     
     if let vybe = activityObj[kVYBActivityVybeKey] as? PFObject {
-      var thumbnailView = cell.viewWithTag(72) as PFImageView
+      var thumbnailView = cell.viewWithTag(72) as! PFImageView
       if let thumbnailFile = vybe[kVYBVybeThumbnailKey] as? PFFile {
         thumbnailView.file = thumbnailFile
         thumbnailView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
@@ -197,8 +197,8 @@ class NotificationTableViewController: UITableViewController, VYBPlayerViewContr
         }
         
         vybes.sort({ (vybe1: PFObject, vybe2: PFObject) -> Bool in
-          let firstTimestamp = vybe1[kVYBVybeTimestampKey] as NSDate
-          let comparisonResult = firstTimestamp.compare(vybe2[kVYBVybeTimestampKey] as NSDate)
+          let firstTimestamp = vybe1[kVYBVybeTimestampKey] as! NSDate
+          let comparisonResult = firstTimestamp.compare(vybe2[kVYBVybeTimestampKey] as! NSDate)
           
           return comparisonResult == NSComparisonResult.OrderedAscending
         })

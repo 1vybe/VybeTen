@@ -76,10 +76,10 @@ private let _sharedInstance = SpotFinder()
   private func generateSpotsFromData(data: NSData!) -> [Zone]? {
     var zones = [Zone]()
     var jsonError: NSError?
-    var jsonObj = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &jsonError) as [String: AnyObject]
+    var jsonObj = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &jsonError) as! [String: AnyObject]
     if jsonError == nil {
-      let response = jsonObj["response"] as [String: AnyObject]
-      let venues = response["venues"] as [NSDictionary]
+      let response = jsonObj["response"] as! [String: AnyObject]
+      let venues = response["venues"] as! [NSDictionary]
       for aVenue in venues {
         let aZone = Zone(foursquareVenue: aVenue)
         zones.append(aZone)
@@ -105,7 +105,7 @@ private let _sharedInstance = SpotFinder()
   func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
     locationManager.stopUpdatingLocation()
     
-    let currLocation = locations.last as CLLocation
+    let currLocation = locations.last as! CLLocation
     
     if let currVybe = MyVybeStore.sharedInstance.currVybe {
       currVybe.locationCL = currLocation
@@ -116,7 +116,7 @@ private let _sharedInstance = SpotFinder()
     
     var dataTask = self.session.dataTaskWithURL(NSURL(string: self.searchURL)!, completionHandler: { (data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
       if error == nil {
-        let statusCode = (response as NSHTTPURLResponse).statusCode
+        let statusCode = (response as! NSHTTPURLResponse).statusCode
         
         if statusCode == 200 {
           if let zones = self.generateSpotsFromData(data) {

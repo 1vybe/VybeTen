@@ -106,8 +106,4 @@ class CircleProgressView: UIView {
     CGContextRestoreGState(context)
   }
   
-  func setProgress(progress: Double) {
-    self.progress = progress
-  }
-  
 }

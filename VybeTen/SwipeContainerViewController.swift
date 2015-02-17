@@ -256,7 +256,7 @@ class SwipeInteractionManager: NSObject, UIViewControllerInteractiveTransitionin
   var animator: UIViewControllerAnimatedTransitioning!
   var transitionContext: SwipeTransitionContext!
   
-  var completionSpeed: CGFloat = 1
+  var completionSpeed: CGFloat! = 1
   var percentCompleted: CGFloat!
   var duration: CGFloat {
     get {
@@ -269,7 +269,7 @@ class SwipeInteractionManager: NSObject, UIViewControllerInteractiveTransitionin
   var leftToRight: Bool?
   
   func startInteractiveTransition(transitionContext: UIViewControllerContextTransitioning) {
-    self.transitionContext = transitionContext as SwipeTransitionContext
+    self.transitionContext = transitionContext as! SwipeTransitionContext
     leftToRight = !self.transitionContext.swipeToLeft
     
     transitionContext.containerView().layer.speed = 0

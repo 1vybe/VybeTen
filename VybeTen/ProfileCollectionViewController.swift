@@ -9,10 +9,7 @@
 import UIKit
 
 class ProfileCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-  weak var mainProfileViewController: ProfileViewController?
   var collectionObjects: [AnyObject]
-  
-  var summaryView: ProfileSummaryView?
   
   deinit {
     println("Profile Collection Deinit")
@@ -27,7 +24,7 @@ class ProfileCollectionViewController: UICollectionViewController, UICollectionV
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    println("My Vybes Collection viewDidLoad")
+    println("Profile Collection viewDidLoad")
     
     // Do any additional setup after loading the view.
     let query = PFQuery(className: kVYBVybeClassKey)
@@ -56,11 +53,11 @@ class ProfileCollectionViewController: UICollectionViewController, UICollectionV
       return CGSizeMake(76.0, 81.0)
     }
   }
-  
-  override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCellWithReuseIdentifier("VybeCollectionCellIdentifier", forIndexPath: indexPath) as UICollectionViewCell
     
-    let object = collectionObjects[indexPath.row] as PFObject
+  override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    let cell = collectionView.dequeueReusableCellWithReuseIdentifier("VybeCollectionCellIdentifier", forIndexPath: indexPath) as! UICollectionViewCell
+    
+    let object = collectionObjects[indexPath.row] as! PFObject
     
     if let thumbnailFile = object[kVYBVybeThumbnailKey] as? PFFile {
       if let imageView = cell.viewWithTag(235) as? PFImageView {
@@ -83,18 +80,8 @@ class ProfileCollectionViewController: UICollectionViewController, UICollectionV
     return cell
   }
   
-  override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
-    let sectionHeader = collectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader, withReuseIdentifier: "ProfileCollectionSummaryHeaderIdentifier", forIndexPath: indexPath) as UICollectionReusableView
-    if let summary = sectionHeader.viewWithTag(235) as? ProfileSummaryView {
-      summary.delegate = mainProfileViewController
-      summary.collectionViewButton.selected = true
-      if let username = PFUser.currentUser().objectForKey(kVYBUserUsernameKey) as? String {
-        summary.usernameLabel.text = username
-      }
-      summaryView = summary
-    }
-    
-    return sectionHeader
+  override func scrollViewDidScroll(scrollView: UIScrollView) {    
+//    println("[profileCollection] offset \(scrollView.contentOffset)")
   }
   
   override func didReceiveMemoryWarning() {

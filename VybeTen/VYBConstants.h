@@ -73,8 +73,6 @@ extern NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotificatio
 
 extern NSString *const VYBSwipeContainerControllerWillMoveToActivityScreenNotification;
 
-
-
 #pragma mark - NSUserDefaults
 extern NSString *const kVYBUserDefaultsCacheFacebookFriendsKey;
 extern NSString *const kVYBUserDefaultsActivityLastRefreshKey;
@@ -131,15 +129,21 @@ extern NSString *const kVYBVybeZoneLatitudeKey;
 extern NSString *const kVYBVybeZoneLongitudeKey;
 extern NSString *const kVYBVybeHashtagsKey;
 
-#pragma mark - Cached Vybe Attributes
-// keys
-extern NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey;
-extern NSString *const kVYBVybeAttributesIsFlaggedByCurrentUserKey;
-extern NSString *const kVYBVybeAttributesLikeCountKey;
-extern NSString *const kVYBVybeAttributesLikersKey;
-extern NSString *const kVYBVybeAttributesCommentCountKey;
-extern NSString *const kVYBVybeAttributesCommentersKey;
-extern NSString *const kVYBVybeAttributesNearbyCountKey;
+#pragma mark - PFObject Tribe Class
+// class key
+extern NSString *const kVYBTribeClassKey;
+
+// field keys
+extern NSString *const kVYBTribeNameKey;
+extern NSString *const kVYBTribePhotoKey;
+extern NSString *const kVYBTribeCoordinatorKey;
+extern NSString *const kVYBTribeDescriptionKey;
+extern NSString *const kVYBTribeGeoTagKey;
+extern NSString *const kVYBTribeTypeKey;
+
+// type values
+extern NSString *const kVYBTribeTypeSecretKey;
+
 
 #pragma mark - PFObject Hashtag Class
 extern NSString *const kVYBHashtagClassKey;
@@ -165,6 +169,16 @@ extern NSString *const kVYBActivityTimestampKey;
 extern NSString *const kVYBActivityTypeFollow;
 extern NSString *const kVYBActivityTypeLike;
 extern NSString *const kVYBActivityTypeComment;
+
+#pragma mark - Cached Vybe Attributes
+// keys
+extern NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey;
+extern NSString *const kVYBVybeAttributesIsFlaggedByCurrentUserKey;
+extern NSString *const kVYBVybeAttributesLikeCountKey;
+extern NSString *const kVYBVybeAttributesLikersKey;
+extern NSString *const kVYBVybeAttributesCommentCountKey;
+extern NSString *const kVYBVybeAttributesCommentersKey;
+extern NSString *const kVYBVybeAttributesNearbyCountKey;
 
 #pragma mark - Cached User Attributes
 // keys
