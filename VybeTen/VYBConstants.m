@@ -71,7 +71,9 @@ NSString *const kVYBVybeVideoKey                                = @"video";
 NSString *const kVYBVybeThumbnailKey                            = @"thumbnail";
 NSString *const kVYBVybeUserKey                                 = @"user";
 NSString *const kVYBVybeTimestampKey                            = @"timestamp";
-NSString *const kVYBVybeGeotag                                  = @"location";
+NSString *const kVYBVybeGeotagKey                               = @"location";
+NSString *const kVYBVybeTribeKey                                = @"tribe";
+
 NSString *const kVYBVybeTypePublicKey                           = @"isPublic";
 NSString *const kVYBVybeLocationStringKey                       = @"locationString";
 NSString *const kVYBVybeCountryCodeKey                          = @"countryCode";

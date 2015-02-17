@@ -756,8 +756,8 @@
     double lng = [(NSNumber *)vybeObj[kVYBVybeZoneLongitudeKey] doubleValue];
     targetLocation = CLLocationCoordinate2DMake(lat, lng);
   }
-  else if (vybeObj[kVYBVybeGeotag]) {
-    PFGeoPoint *geoPt = vybeObj[kVYBVybeGeotag];
+  else if (vybeObj[kVYBVybeGeotagKey]) {
+    PFGeoPoint *geoPt = vybeObj[kVYBVybeGeotagKey];
     targetLocation = CLLocationCoordinate2DMake(geoPt.latitude, geoPt.longitude);
   }
   

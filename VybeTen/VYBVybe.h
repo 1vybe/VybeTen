@@ -18,13 +18,17 @@
 - (PFObject *)parseObject;
 - (NSString *)videoFilePath;
 - (NSString *)thumbnailFilePath;
-- (NSString *)locationString;
-- (NSString *)tagString;
-- (NSString *)zoneID;
-- (NSString *)zoneName;
 
-- (void)setVybeZone:(Zone *)zone;
-- (void)setTag:(NSString *)tag;
-- (void)setLocationString:(NSString *)locationString;
-- (BOOL)hasLocationData;
+- (void)setTribe:(PFObject *)tribe;
+
+//- (NSString *)locationString;
+//- (NSString *)tagString;
+//- (NSString *)zoneID;
+//- (NSString *)zoneName;
+//- (void)setVybeZone:(Zone *)zone;
+//- (void)setTag:(NSString *)tag;
+//- (void)setLocationString:(NSString *)locationString;
+//- (BOOL)hasLocationData;
+
+
 @end

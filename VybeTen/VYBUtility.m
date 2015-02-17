@@ -310,7 +310,7 @@
   NSMutableArray *zones = [[NSMutableArray alloc] init];
   for (PFObject *aVybe in vybes) {
     Zone *zone = [[Zone alloc] initWithName:aVybe[kVYBVybeZoneNameKey] zoneID:aVybe[kVYBVybeZoneIDKey]];
-    PFGeoPoint *geoPoint = aVybe[kVYBVybeGeotag];
+    PFGeoPoint *geoPoint = aVybe[kVYBVybeGeotagKey];
     CLLocation *location = [[CLLocation alloc] initWithLatitude:geoPoint.latitude longitude:geoPoint.longitude];
     zone.coordinate = [location coordinate];
     if ( ! [self array:zones containsZone:zone] ) {

@@ -64,20 +64,6 @@ class PreviewViewController: UIViewController, SelectTribeDelegate {
     // Do any additional setup after loading the view.
   }
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if segue.identifier == "SelectTribeSegue" {
-      if let selectTribeVC = segue.destinationViewController as? SelectTribeViewController {
-        selectTribeVC.delegate = self
-      }
-      self.overlayView.hidden = true
-    }
-  }
-  
-  // NOTE: - Unwind does not work when previewVC using show action segue (e.g. push)
-  @IBAction func dismissButtonPressed(sender: AnyObject) {
-    self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
-  }
-  
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
     
@@ -97,6 +83,32 @@ class PreviewViewController: UIViewController, SelectTribeDelegate {
   func currItemDidReachEnd() {
     currItem?.seekToTime(kCMTimeZero)
     player?.play()
+  }
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == "SelectTribeSegue" {
+      if let selectTribeVC = segue.destinationViewController as? SelectTribeViewController {
+        selectTribeVC.delegate = self
+      }
+      self.overlayView.hidden = true
+    }
+  }
+  
+  // NOTE: - Unwind does not work when previewVC using show action segue (e.g. push)
+  @IBAction func dismissButtonPressed(sender: AnyObject) {
+    self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+  }
+  
+  @IBAction func sendButtonPressed(sender: AnyObject) {
+    if let selectedTribe = MyVybeStore.sharedInstance.currTribe {
+      MyVybeStore.sharedInstance.uploadCurrentVybe()
+      
+      self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    } else {
+      let alertVC = UIAlertController(title: "Select Tribe", message: "Choose or create a tribe you want to share your video with.", preferredStyle: UIAlertControllerStyle.Alert)
+      alertVC.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+      self.presentViewController(alertVC, animated: true, completion: nil)
+    }
   }
   
   // MARK: - SelectTribeDelegate
