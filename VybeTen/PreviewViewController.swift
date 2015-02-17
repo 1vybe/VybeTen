@@ -107,10 +107,12 @@ class PreviewViewController: UIViewController, SelectTribeDelegate {
     })
   }
   
-  func didSelectTribe(tribe: AnyObject) {
+  func didSelectTribe(tribe: AnyObject?) {
     self.dismissViewControllerAnimated(true, completion: { () -> Void in
-      if let tribeName = tribe.objectForKey(kVYBTribeNameKey) as? String {
+      if let tribeName = tribe?.objectForKey(kVYBTribeNameKey) as? String {
         self.tribeLabel.text = tribeName
+      } else {
+        self.tribeLabel.text = "Select Tribe"
       }
       self.overlayView.hidden = false
     })

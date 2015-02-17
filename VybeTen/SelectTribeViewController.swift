@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol SelectTribeDelegate {
-  func didSelectTribe(tribe: AnyObject)
+  func didSelectTribe(tribe: AnyObject?)
   func dismissSelectTribeViewContrller(vc: SelectTribeViewController)
 }
 
@@ -75,14 +75,16 @@ class SelectTribeViewController: UIViewController, UITableViewDelegate, UITableV
   }
   
   @IBAction func okButtonPressed(sender: AnyObject) {
-    if let index = selectedTribeIndex,
-      let selectedTribe = tribeObjects[index] as? PFObject {
-      MyVybeStore.sharedInstance.currTribe = selectedTribe
+    let selectedTribe: PFObject?
+    
+    if let index = selectedTribeIndex {
+      selectedTribe = tribeObjects[index] as? PFObject
     } else {
-      MyVybeStore.sharedInstance.currTribe = nil
+      selectedTribe = nil
     }
     
-    delegate?.dismissSelectTribeViewContrller(self)
+    MyVybeStore.sharedInstance.currTribe = selectedTribe
+    delegate?.didSelectTribe(selectedTribe)
   }
   
   @IBAction func tribeSelected(sender: AnyObject) {

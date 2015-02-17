@@ -410,10 +410,12 @@ static void *XYZContext = &XYZContext;
 
 #pragma mark - SelectTribeDelegate
 
-- (void)didSelectTribe:(__nonnull PFObject *)tribe {
+- (void)didSelectTribe:(__nullable id)tribe {
   [self dismissViewControllerAnimated:YES completion:^{
-    if ( tribe[kVYBTribeNameKey] ) {
+    if (tribe && tribe[kVYBTribeNameKey]) {
       self.tribeLabel.text = tribe[kVYBTribeNameKey];
+    } else {
+      self.tribeLabel.text = @"Select Tribe";
     }
     self.overlayView.hidden = NO;
   }];
