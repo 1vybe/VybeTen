@@ -93,12 +93,7 @@ class CreateTribeViewController: UIViewController, UIImagePickerControllerDelega
     
     newTribe?.setObject(imgFile, forKey:kVYBTribePhotoKey)
     
-    var maskImage: UIImage!
-    if image.size.height > image.size.width {
-      maskImage = UIImage(named: "Mask_Old_Circle_P")
-    } else {
-      maskImage = UIImage(named: "Mask_Old_Circle_L")
-    }
+    let maskImage = UIImage(named: "SquareMask")
     tribePhoto.image = VYBUtility.maskImage(image, withMask: maskImage)
   }
   

@@ -317,7 +317,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
         coordinate = CLLocationCoordinate2D(latitude: zLat, longitude: zLng)
       }
       else {
-        if let geoPoint = aVybe[kVYBVybeGeotag] as? PFGeoPoint {
+        if let geoPoint = aVybe[kVYBVybeGeotagKey] as? PFGeoPoint {
             coordinate = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
         }
       }

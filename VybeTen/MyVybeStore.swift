@@ -12,10 +12,11 @@ private let _sharedInstance = MyVybeStore()
 
 class MyVybeStore: NSObject {
   var currZone: Zone?
+  var currTribe: PFObject?
+
   var currVybe: VYBVybe?
   var currentVybeUploadTask: UIBackgroundTaskIdentifier?
   
-  var currTribe: PFObject?
   
   var savedVybes: [VYBVybe]?
   var _isUploadingSavedVybes: Bool
@@ -36,13 +37,12 @@ class MyVybeStore: NSObject {
     nVybe.setObject(NSNumber(bool: true), forKey: kVYBVybeTypePublicKey)
     
     currVybe = VYBVybe(parseObject:nVybe)
-    
   }
   
   func uploadCurrentVybe() {
     if let nVybe = currVybe {
-      if currZone != nil {
-        nVybe.setVybeZone(currZone!)
+      if currTribe != nil {
+        nVybe.setTribe(currTribe)
       }
       
       let vybe = VYBVybe(vybeObject: nVybe)
@@ -70,8 +70,6 @@ class MyVybeStore: NSObject {
         }
         UIApplication.sharedApplication().endBackgroundTask(self.currentVybeUploadTask!)
       })
-      
-      
     }
   }
   

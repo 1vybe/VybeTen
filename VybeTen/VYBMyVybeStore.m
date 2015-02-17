@@ -7,7 +7,6 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
-#import "VYBMyVybeStore.h"
 #import "VYBAppDelegate.h"
 #import "VYBVybe.h"
 #import "VYBConstants.h"
@@ -80,9 +79,6 @@
 
 
 - (void)uploadCurrentVybe {
-  if (_currZone) {
-    [_currVybe setVybeZone:_currZone];
-  }
   [self setCurrentUploadStatus:CurrentUploadStatusUploading];
   
   VYBVybe *vybeToUpload = [[VYBVybe alloc] initWithVybeObject:_currVybe];

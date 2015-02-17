@@ -103,11 +103,6 @@ static void *XYZContext = &XYZContext;
   
   [super viewDidLoad];
   
-  PFObject *currTribe = [[MyVybeStore sharedInstance] currTribe];
-  if (currTribe) {
-    self.tribeLabel.text = currTribe[kVYBTribeNameKey];
-  }
-  
   // Tap to focus and expose
   UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusOnTouchArea:)];
   [self.view addGestureRecognizer:tapGesture];
@@ -116,6 +111,11 @@ static void *XYZContext = &XYZContext;
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
+  
+  PFObject *currTribe = [[MyVybeStore sharedInstance] currTribe];
+  if (currTribe) {
+    self.tribeLabel.text = currTribe[kVYBTribeNameKey];
+  }
   
   [capturePipeline startRunning];
   

@@ -18,26 +18,6 @@
 @synthesize parseObjectDictionary;
 @synthesize locationCL;
 
-- (VYBVybe *)initWithParseObject:(PFObject *)parseObj {
-  self = [super init];
-  if (self) {
-    parseObjectDictionary = [NSMutableDictionary dictionaryWithDictionary:
-                             [parseObj dictionaryWithValuesForKeys:[parseObj allKeys]]];
-    uniqueFileName = [self generateUniqueFileName];
-  }
-  return self;
-}
-
-- (VYBVybe *)initWithVybeObject:(VYBVybe *)aVybe {
-  // raw parse object doese not include PFObjects such as user, geoPoint, and ACL because they are not NSCoding.
-  self = [self initWithParseObject:[aVybe rawParseObject]];
-  if (self) {
-    uniqueFileName = aVybe.uniqueFileName;
-    locationCL = aVybe.locationCL;
-  }
-  return self;
-}
-
 - (NSString *)generateUniqueFileName {
   //Create unique filename
   NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -61,7 +41,6 @@
   if (self) {
     [self setUniqueFileName:[aDecoder decodeObjectForKey:@"uniqueFileName"]];
     [self setLocationCL:[aDecoder decodeObjectForKey:@"location"]];
-    //[self setVybeZone:[aDecoder decodeObjectForKey:@"vybeZone"]];
     [self setParseObjectDictionary:[NSMutableDictionary dictionaryWithDictionary:
                                     [aDecoder decodeObjectForKey:@"parseObjectDictionary"]]];
   }
@@ -72,8 +51,27 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [aCoder encodeObject:self.uniqueFileName forKey:@"uniqueFileName"];
   [aCoder encodeObject:self.locationCL forKey:@"location"];
-  //[aCoder encodeObject:self.vybeZone forKey:@"vybeZone"];
   [aCoder encodeObject:self.parseObjectDictionary forKey:@"parseObjectDictionary"];
+}
+
+- (VYBVybe *)initWithParseObject:(PFObject *)parseObj {
+  self = [super init];
+  if (self) {
+    parseObjectDictionary = [NSMutableDictionary dictionaryWithDictionary:
+                             [parseObj dictionaryWithValuesForKeys:[parseObj allKeys]]];
+    uniqueFileName = [self generateUniqueFileName];
+  }
+  return self;
+}
+
+- (VYBVybe *)initWithVybeObject:(VYBVybe *)aVybe {
+  // raw parse object doese not include PFObjects such as user, geoPoint, and ACL because they are not NSCoding.
+  self = [self initWithParseObject:[aVybe rawParseObject]];
+  if (self) {
+    uniqueFileName = aVybe.uniqueFileName;
+    locationCL = aVybe.locationCL;
+  }
+  return self;
 }
 
 - (PFObject *)parseObject {
@@ -86,7 +84,7 @@
   parseObj.ACL = vybeACL;
   
   if (self.locationCL)
-    [parseObj setObject:[PFGeoPoint geoPointWithLocation:self.locationCL] forKey:kVYBVybeGeotag];
+    [parseObj setObject:[PFGeoPoint geoPointWithLocation:self.locationCL] forKey:kVYBVybeGeotagKey];
   
   return parseObj;
 }
@@ -115,43 +113,8 @@
   return [thumbnailPath stringByAppendingPathExtension:@"jpeg"];
 }
 
-- (NSString *)zoneID {
-  return [self.parseObjectDictionary objectForKey:kVYBVybeZoneIDKey];
-}
-
-- (NSString *)zoneName {
-  return [self.parseObjectDictionary objectForKey:kVYBVybeZoneNameKey];
-}
-
-- (NSString *)locationString {
-  return [self.parseObjectDictionary objectForKey:kVYBVybeLocationStringKey];
-}
-
-- (NSString *)tagString {
-  return [self.parseObjectDictionary objectForKey:kVYBVybeTagKey];
-}
-
-- (void)setVybeZone:(Zone *)zone {
-  [self.parseObjectDictionary setObject:zone.zoneID forKey:kVYBVybeZoneIDKey];
-  [self.parseObjectDictionary setObject:zone.name forKey:kVYBVybeZoneNameKey];
-  [self.parseObjectDictionary setObject:[NSNumber numberWithDouble:zone.latitude] forKey:kVYBVybeZoneLatitudeKey];
-  [self.parseObjectDictionary setObject:[NSNumber numberWithDouble:zone.longitude] forKey:kVYBVybeZoneLongitudeKey];
-}
-
-- (void)setGeoTag:(CLLocation *)location {
-  self.locationCL = location;
-}
-
-- (void)setLocationString:(NSString *)locationString {
-  [self.parseObjectDictionary setObject:locationString forKey:kVYBVybeLocationStringKey];
-}
-
-- (void)setTag:(NSString *)tag {
-  [self.parseObjectDictionary setObject:tag forKey:kVYBVybeTagKey];
-}
-
-- (BOOL)hasLocationData {
-  return [self locationString] && ([[self locationString] length] > 0);
+- (void)setTribe:(PFObject *)tribe {
+  [parseObjectDictionary setObject:tribe forKey:kVYBVybeTribeKey];
 }
 
 @end
