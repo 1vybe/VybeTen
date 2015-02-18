@@ -64,17 +64,17 @@ import UIKit
     super.viewDidLoad()
     
     // NOTE: - Start with Capture screen
-    selectedViewController = viewControllers[1]
+    selectedViewController = viewControllers[0]
     self.transitionToViewController(selectedViewController!, interactive: false, animation: false)
   }
   
-  func moveToProfileScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
+  func moveToTribeScreen(animation animate: Bool) {
+    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
   }
   
   
   func moveToCaptureScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
+    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
   }
   
   
