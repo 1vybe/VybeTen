@@ -13,7 +13,7 @@ protocol CreateTribeDelegate {
   func didCreateTribe(tribe: AnyObject)
 }
 
-class CreateTribeViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class CreateTribeViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UITextFieldDelegate {
   var newTribe: PFObject?
   var delegate: CreateTribeDelegate?
   
@@ -145,7 +145,7 @@ class CreateTribeViewController: UIViewController, UIImagePickerControllerDelega
   }
   
   private func validateTribeName(text: String!) -> Bool {
-    if count(text) < 3 {
+    if count(text) < 3 || count(text) > 20 {
       return false
     }
     
@@ -154,10 +154,35 @@ class CreateTribeViewController: UIViewController, UIImagePickerControllerDelega
     return name.isValidTribeName()
   }
   
+  // MARK: - UITextFieldDelegate
+  
+  func textFieldShouldReturn(textField: UITextField) -> Bool {
+    if textField === nameText {
+      descriptionText.becomeFirstResponder()
+    }
+    return true
+  }
+  
+  // MARK: - UITextViewDelegate
+  
+  func textViewDidBeginEditing(textView: UITextView) {
+    if textView.text == "Description" {
+      textView.text = ""
+    }
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    descriptionText.textContainerInset = UIEdgeInsetsMake(14.0, 16.0, 10.0, 16.0)
+    let attributedStr = NSAttributedString(string: "Name", attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
+    nameText.attributedPlaceholder = attributedStr
+    nameText.delegate = self
+    
+    descriptionText.textContainerInset = UIEdgeInsetsMake(14.0, 10.0, 10.0, 10.0)
+    descriptionText.delegate = self
+    
+    let tapGesture = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+    self.view.addGestureRecognizer(tapGesture)
     
     let tribeObj = PFObject(className: kVYBTribeClassKey)
     tribeObj[kVYBTribeCoordinatorKey] = PFUser.currentUser()
@@ -169,9 +194,13 @@ class CreateTribeViewController: UIViewController, UIImagePickerControllerDelega
     newTribe = tribeObj
   }
   
+  func dismissKeyboard() {
+    self.view.endEditing(true)
+  }
+  
   override func prefersStatusBarHidden() -> Bool {
     return true
-  }
+  }  
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
