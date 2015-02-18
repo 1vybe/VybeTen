@@ -21,15 +21,16 @@
 #import "Vybe-Swift.h"
 
 @interface VYBPlayerViewController () <VYBPlayerViewControllerDelegate>
-@property (nonatomic, weak) IBOutlet UIButton *bmpButton;
-@property (nonatomic, weak) IBOutlet UILabel *bumpCountLabel;
-@property (nonatomic, weak) IBOutlet UILabel *timeLabel;
 
 @property (nonatomic, weak) IBOutlet UIView *firstOverlay;
 
+@property (nonatomic, weak) IBOutlet UIImageView *topBarBG;
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
-@property (nonatomic, weak) IBOutlet UILabel *usernameLabel;
 @property (nonatomic, weak) IBOutlet UIButton *dismissButton;
+@property (nonatomic, weak) IBOutlet UIButton *addButton;
+
+@property (nonatomic, weak) IBOutlet UILabel *timeLabel;
+@property (nonatomic, weak) IBOutlet UILabel *usernameLabel;
 @property (nonatomic, weak) IBOutlet UIButton *optionsButton;
 
 @property (nonatomic, weak) IBOutlet UIButton *goPrevButton;
@@ -41,18 +42,12 @@
 @property (nonatomic, weak) IBOutlet UIButton *flagOverlayButton;
 @property (nonatomic, weak) IBOutlet UIButton *blockOverlayButton;
 
-@property (nonatomic, weak) IBOutlet UIButton *firstHashtag;
-@property (nonatomic, weak) IBOutlet UIButton *secondHashtag;
-@property (nonatomic, weak) IBOutlet UIButton *thirdHashtag;
 @property (nonatomic) NSArray *hashtagButtons;
 
 - (IBAction)dismissButtonPressed;
 
 - (IBAction)goNextButtonPressed:(id)sender;
 - (IBAction)goPrevButtonPressed:(id)sender;
-
-- (IBAction)bmpButtonPressed:(id)sender;
-- (IBAction)usernameButtonPressed:(id)sender;
 
 - (IBAction)optionsButtonPressed:(id)sender;
 - (IBAction)flagOverlayButtonPressed;
@@ -167,11 +162,6 @@
   self.optionsOverlay.hidden = YES;
   self.goNextButton.hidden = YES;
   self.goPrevButton.hidden = YES;
-
-  self.firstHashtag.hidden = YES;
-  self.secondHashtag.hidden = YES;
-  self.thirdHashtag.hidden = YES;
-  self.hashtagButtons = @[self.firstHashtag, self.secondHashtag, self.thirdHashtag];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -509,25 +499,9 @@
   }
   [self.locationLabel setText:zoneName];
   
-  // Hashtags
-  for (UIButton *tagButton in self.hashtagButtons) {
-    tagButton.hidden = YES;
-  }
-  NSArray *hashtags = aVybe[kVYBVybeHashtagsKey];
-  if (hashtags) {
-    for (int i = 0; i < hashtags.count; i++) {
-      NSString *tagText = [NSString stringWithFormat:@"#%@", hashtags[i]];
-      UIButton *tagButton = (UIButton *)self.hashtagButtons[i];
-      [tagButton setTitle:tagText forState:UIControlStateNormal];
-      tagButton.hidden = NO;
-    }
-  }
-  
   NSString *timeString = [[NSString alloc] init];
   timeString = [VYBUtility timeStringForPlayer:aVybe[kVYBVybeTimestampKey]];
   [self.timeLabel setText:timeString];
-  
-  self.bmpButton.selected = [[VYBCache sharedCache] vybeLikedByMe:aVybe];
   
   PFObject *user = aVybe[kVYBVybeUserKey];
   NSString *username = user[kVYBUserUsernameKey];
@@ -547,8 +521,6 @@
   
   self.flagOverlayButton.selected = [[VYBCache sharedCache] vybeFlaggedByMe:aVybe];
   self.blockOverlayButton.selected = NO;
-  
-  [self updateBumpCountFor:aVybe];
 }
 
 - (void)playAsset:(AVAsset *)asset {
@@ -653,7 +625,6 @@
   }
 }
 
-
 - (void)playerItemDidReachEnd {
   if (_loopCurrItem) {
     [self playCurrentItem];
@@ -682,30 +653,6 @@
   }
 }
 
-- (IBAction)usernameButtonPressed:(UIButton *)sender {
-//  [self.currPlayer pause];
-//  
-//  self.goPrevButton.hidden = NO;
-//  self.goNextButton.hidden = NO;
-//  
-//  PFObject *currObj = _zoneVybes[_zoneCurrIdx];
-//  [ActionUtility followUser:currObj[kVYBVybeUserKey]];
-
-//  PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-//  [query orderByDescending:kVYBVybeTimestampKey];
-//  [query includeKey:kVYBVybeUserKey];
-//  [query setLimit:12];
-//  
-//  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//    if (!error) {
-//      VYBPlayerViewController *sPlayerVC = [[VYBPlayerViewController alloc] initWithNibName:@"VYBPlayerViewController" bundle:nil];
-//      sPlayerVC.delegate = self;
-//      [sPlayerVC playStream:[[objects reverseObjectEnumerator] allObjects]]; // returned objects are ordered by descending
-//    }
-//    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-//  }];
-}
 
 - (void)playerViewController:(VYBPlayerViewController *)playerVC didFinishSetup:(BOOL)ready {
   if (ready) {
@@ -731,8 +678,6 @@
 }
 
 - (void)longPressDetected:(UIGestureRecognizer *)recognizer {
-  CGPoint location = [recognizer locationInView:recognizer.view];
-
   switch (recognizer.state) {
     case UIGestureRecognizerStateBegan:
         _loopCurrItem = YES;
@@ -771,42 +716,13 @@
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)bmpButtonPressed:(id)sender {
-  PFObject *currVybe = _zoneVybes[_zoneCurrIdx];
-  if (!currVybe)
-    return;
-  
-  if (self.bmpButton.selected) {
-    [VYBUtility unlikeVybeInBackground:currVybe block:nil];
-  } else {
-    [VYBUtility likeVybeInBackground:currVybe block:nil];
-    
-    [UIView animateWithDuration:0.6 delay:0.2 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-    } completion:nil];
-  }
-  
-  [self updateBumpCountFor:currVybe];
-  
-  self.bmpButton.selected = !self.bmpButton.selected;
-}
-
-- (void)updateBumpCountFor:(PFObject *)aVybe {
-  NSNumber *counter = [[VYBCache sharedCache] likeCountForVybe:aVybe];
-  if (counter && [counter intValue]) {
-    self.bumpCountLabel.text = [NSString stringWithFormat:@"%@", counter];
-  }
-  else {
-    self.bumpCountLabel.text = @"";
-  }
-}
-
 - (IBAction)optionsButtonPressed:(id)sender {
   if (self.optionsButton.selected) {
     self.optionsOverlay.hidden = YES;
     
+    self.topBarBG.hidden = NO;
     self.dismissButton.hidden = NO;
-    self.bmpButton.hidden = NO;
-    self.bumpCountLabel.hidden = NO;
+    self.addButton.hidden = NO;
     self.timeLabel.hidden = NO;
     
     [self.currPlayer play];
@@ -816,9 +732,9 @@
     
     self.goNextButton.hidden = YES;
     self.goPrevButton.hidden = YES;
+    self.topBarBG.hidden = YES;
     self.dismissButton.hidden = YES;
-    self.bmpButton.hidden = YES;
-    self.bumpCountLabel.hidden = YES;
+    self.addButton.hidden = YES;
     self.timeLabel.hidden = YES;
     
     [self.currPlayer pause];
