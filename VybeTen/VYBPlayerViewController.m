@@ -62,6 +62,8 @@
 @property (nonatomic) AVPlayer *currPlayer;
 @property (nonatomic) AVPlayerItem *currItem;
 
+@property (nonatomic) BOOL loopCurrItem;
+
 @property (nonatomic, strong) NSDate *lastTimePlayingAsset;
 @end
 
@@ -139,6 +141,8 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   
+  _loopCurrItem = NO;
+  
   downloadQueue = [[DownloadQueue alloc] init];
   
   // Set up player view
@@ -158,7 +162,7 @@
   longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
   longPressRecognizer.minimumPressDuration = 0.3;
   longPressRecognizer.delegate = self;
-  [[UIApplication sharedApplication].keyWindow addGestureRecognizer:longPressRecognizer];
+  [self.view addGestureRecognizer:longPressRecognizer];
   
   self.optionsOverlay.hidden = YES;
   self.goNextButton.hidden = YES;
@@ -651,7 +655,11 @@
 
 
 - (void)playerItemDidReachEnd {
-  [self playNextItem];
+  if (_loopCurrItem) {
+    [self playCurrentItem];
+  } else {
+    [self playNextItem];
+  }
 }
 
 - (void)tapOnce:(id)sender {
@@ -724,18 +732,14 @@
 
 - (void)longPressDetected:(UIGestureRecognizer *)recognizer {
   CGPoint location = [recognizer locationInView:recognizer.view];
-  CGRect locationAerial = CGRectMake((self.view.bounds.size.width - 100) / 2, 0, 100, 50);
-  BOOL isInLocationAerial = CGRectContainsPoint(locationAerial, location);
 
   switch (recognizer.state) {
     case UIGestureRecognizerStateBegan:
-      if (isInLocationAerial) {
-        [self presentMapViewController];
-      }
+        _loopCurrItem = YES;
       break;
     case UIGestureRecognizerStateCancelled:
     case UIGestureRecognizerStateEnded:
-      [self dismissMapViewController];
+        _loopCurrItem = NO;
       break;
     default:
       break;
