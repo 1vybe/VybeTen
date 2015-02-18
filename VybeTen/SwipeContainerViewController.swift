@@ -89,7 +89,7 @@ import UIKit
   
   private func previousViewController() -> UIViewController? {
     for i in 0...viewControllers.count - 1 {
-      if viewControllers[i] == selectedViewController {
+      if viewControllers[i] === selectedViewController {
         if i > 0 {
           return viewControllers[i - 1]
         }
@@ -102,7 +102,7 @@ import UIKit
   
   private func nextViewController() -> UIViewController? {
     for i in 0...viewControllers.count - 1 {
-      if viewControllers[i] == selectedViewController {
+      if viewControllers[i] === selectedViewController {
         if i < viewControllers.count - 1  {
           return viewControllers[i + 1]
         }

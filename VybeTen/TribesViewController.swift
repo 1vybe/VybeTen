@@ -10,7 +10,7 @@ import UIKit
 
 let reuseIdentifier = "TribeCollectionCell"
 
-class TribesViewController: UICollectionViewController, CreateTribeDelegate {
+class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYBPlayerViewControllerDelegate {
   var tribeObjects: [AnyObject]
   
   required init(coder aDecoder: NSCoder) {
@@ -32,9 +32,55 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate {
     }
   }
   
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    let feed = PFUser.currentUser().relationForKey(kVYBUserFreshFeedKey)
+    let query = feed.query()
+    query.includeKey(kVYBVybeTribeKey)
+    query.includeKey(kVYBVybeUserKey)
+
+    MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+    query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
+      if result != nil {
+        PFObject.unpinAllObjectsInBackgroundWithName("MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
+          PFObject.pinAllInBackground(result, withName: "MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
+            if success {
+              self.collectionView?.reloadData()
+            }
+            MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
+          })
+        })
+      }
+    }
+  }
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == "ShowCreateTribeSegue" {
+      if let createTribeVC = segue.destinationViewController as? CreateTribeViewController {
+        createTribeVC.delegate = self
+      }
+    }
+  }
+  
+  // MARK: - CreateTribeDelegate
+  
+  func didCreateTribe(tribe: AnyObject) {
+    MyVybeStore.sharedInstance.currTribe = tribe as? PFObject
+    
+    if let navigation = self.navigationController as? VYBNavigationController {
+      navigation.popViewControllerAnimated(true, completion: { () -> Void in
+        if let swipeContainer = navigation.parentViewController as? SwipeContainerController {
+          swipeContainer.moveToCaptureScreen(animation: true)
+        }
+      })
+    }
+  }
+  
+  func didCancelTribe() {
+    if let navigation = self.navigationController as? VYBNavigationController {
+      navigation.popViewControllerAnimated(true)
+    }
   }
   
   // MARK: UICollectionViewDataSource
@@ -76,32 +122,42 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate {
     return cell
   }
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if segue.identifier == "ShowCreateTribeSegue" {
-      if let createTribeVC = segue.destinationViewController as? CreateTribeViewController {
-        createTribeVC.delegate = self
+  override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    let tribeObj = tribeObjects[indexPath.row] as? PFObject
+    let query = PFQuery(className: kVYBVybeClassKey)
+    query.fromPinWithName("MyFreshFeed")
+    query.whereKey(kVYBVybeTribeKey, equalTo: tribeObj)
+    query.includeKey(kVYBVybeUserKey)
+    query.orderByAscending(kVYBVybeTimestampKey)
+
+    query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
+      if error == nil {
+        if let vybeObjs = result as? [PFObject] where vybeObjs.count > 0 {
+          let playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
+          playerVC.delegate = self
+          playerVC.playStream(vybeObjs)
+          
+          MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        }
       }
     }
   }
   
-  // MARK: - CreateTribeDelegate
+  // MARK: - VYBPlayerViewControllerDelegate
   
-  func didCreateTribe(tribe: AnyObject) {
-    MyVybeStore.sharedInstance.currTribe = tribe as? PFObject
-
-    if let navigation = self.navigationController as? VYBNavigationController {
-      navigation.popViewControllerAnimated(true, completion: { () -> Void in
-        if let swipeContainer = navigation.parentViewController as? SwipeContainerController {
-          swipeContainer.moveToCaptureScreen(animation: true)
-        }
+  func playerViewController(playerVC: VYBPlayerViewController!, didFinishSetup ready: Bool) {
+    MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
+    
+    if ready {
+      self.presentViewController(playerVC, animated: true, completion: { () -> Void in
+        playerVC.playCurrentItem()
       })
     }
   }
   
-  func didCancelTribe() {
-    if let navigation = self.navigationController as? VYBNavigationController {
-      navigation.popViewControllerAnimated(true)
-    }
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
   }
-  
+
 }
