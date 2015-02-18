@@ -209,7 +209,7 @@
 
 - (void)handlePush:(NSDictionary *)payload {
   if (self.swipeContainerController && self.swipeContainerController.viewControllers.count) {
-    [self.swipeContainerController moveToProfileScreenWithAnimation:NO];
+    [self.swipeContainerController moveToTribeScreenWithAnimation:NO];
     
     NSString *pushType = payload[kVYBPushPayloadPayloadTypeKey];
     if ([pushType isEqualToString:kVYBPushPayloadPayloadTypeActivityKey]) {
@@ -271,10 +271,10 @@
 
 - (void)setUpViewControllers {
   VYBCaptureViewController *captureVC = (VYBCaptureViewController *)[[UIStoryboard storyboardWithName:@"Capture" bundle:nil] instantiateInitialViewController];
-  ProfileViewController *profileVC = (ProfileViewController *)[[UIStoryboard storyboardWithName:@"Profile" bundle:nil] instantiateInitialViewController];
+  ProfileViewController *profileVC = (ProfileViewController *)[[UIStoryboard storyboardWithName:@"Tribes" bundle:nil] instantiateInitialViewController];
   VYBNavigationController *profileNav = [[VYBNavigationController alloc] initWithRootViewController:profileVC];
 
-  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[profileNav, captureVC]];
+  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[captureVC, profileNav]];
   
   [self.mainNavController pushViewController:self.swipeContainerController animated:NO];
   

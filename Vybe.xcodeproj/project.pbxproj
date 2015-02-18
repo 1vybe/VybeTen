@@ -76,6 +76,7 @@
 		7435F5F81A6DBAC70075E60C /* SimpleTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7435F5F71A6DBAC70075E60C /* SimpleTabBarController.swift */; };
 		7435F5FA1A6DC9B70075E60C /* SimpleTabBarSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7435F5F91A6DC9B70075E60C /* SimpleTabBarSegue.swift */; };
 		743727ED1A93CDCD00CF7C4B /* SelectTribeTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743727EC1A93CDCD00CF7C4B /* SelectTribeTableCell.swift */; };
+		743727EF1A93EA3A00CF7C4B /* Vybe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743727EE1A93EA3A00CF7C4B /* Vybe.swift */; };
 		7441011E1A645A3E00D2F874 /* CheckInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7441011D1A645A3E00D2F874 /* CheckInViewController.swift */; };
 		744101201A64739B00D2F874 /* CheckInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7441011F1A64739B00D2F874 /* CheckInViewController.xib */; };
 		74551C811A3E91FA00D348BB /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74551C801A3E91FA00D348BB /* ConfigManager.swift */; };
@@ -103,6 +104,8 @@
 		74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */; };
 		74D203EE1A5C918F00DBF3B7 /* SimpleTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D203ED1A5C918F00DBF3B7 /* SimpleTextField.swift */; };
 		74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */; };
+		74DF7AC01A93F4A900650B48 /* Tribes.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74DF7ABF1A93F4A900650B48 /* Tribes.storyboard */; };
+		74DF7AC21A93FA4400650B48 /* TribesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DF7AC11A93FA4400650B48 /* TribesViewController.swift */; };
 		74E33E3E1A86ACF000CCAB36 /* ProfileSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E33E3D1A86ACF000CCAB36 /* ProfileSummaryView.swift */; };
 		74E570EF1A41D430005072E1 /* Notification.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74E570EE1A41D430005072E1 /* Notification.storyboard */; };
 		74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */; };
@@ -255,6 +258,7 @@
 		7435F5F71A6DBAC70075E60C /* SimpleTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleTabBarController.swift; sourceTree = "<group>"; };
 		7435F5F91A6DC9B70075E60C /* SimpleTabBarSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleTabBarSegue.swift; sourceTree = "<group>"; };
 		743727EC1A93CDCD00CF7C4B /* SelectTribeTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectTribeTableCell.swift; sourceTree = "<group>"; };
+		743727EE1A93EA3A00CF7C4B /* Vybe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vybe.swift; sourceTree = "<group>"; };
 		7441011D1A645A3E00D2F874 /* CheckInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckInViewController.swift; sourceTree = "<group>"; };
 		7441011F1A64739B00D2F874 /* CheckInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckInViewController.xib; sourceTree = "<group>"; };
 		74551C801A3E91FA00D348BB /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
@@ -285,6 +289,8 @@
 		74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleInteractionManager.swift; sourceTree = "<group>"; };
 		74D203ED1A5C918F00DBF3B7 /* SimpleTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleTextField.swift; sourceTree = "<group>"; };
 		74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeContainerViewController.swift; sourceTree = "<group>"; };
+		74DF7ABF1A93F4A900650B48 /* Tribes.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Tribes.storyboard; sourceTree = "<group>"; };
+		74DF7AC11A93FA4400650B48 /* TribesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TribesViewController.swift; sourceTree = "<group>"; };
 		74E33E3D1A86ACF000CCAB36 /* ProfileSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSummaryView.swift; sourceTree = "<group>"; };
 		74E570EE1A41D430005072E1 /* Notification.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Notification.storyboard; sourceTree = "<group>"; };
 		74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTableViewController.swift; sourceTree = "<group>"; };
@@ -400,6 +406,7 @@
 				74F0955C1A80234400B3B116 /* TaggingViewController.swift */,
 				74A1F9F71A9114E7001D6F15 /* CreateTribeViewController.swift */,
 				743727EC1A93CDCD00CF7C4B /* SelectTribeTableCell.swift */,
+				743727EE1A93EA3A00CF7C4B /* Vybe.swift */,
 			);
 			name = Capture;
 			sourceTree = "<group>";
@@ -664,10 +671,20 @@
 			children = (
 				0254E92119BB8A78003A99DE /* Intro/ Registration */,
 				0254E92219BB8A9B003A99DE /* Capture */,
+				74DF7ABE1A93F40900650B48 /* Home */,
 				0266802419F15BAF00030836 /* Player */,
 				027C707719AEFE4F007BB8FE /* Profile */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		74DF7ABE1A93F40900650B48 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				74DF7ABF1A93F4A900650B48 /* Tribes.storyboard */,
+				74DF7AC11A93FA4400650B48 /* TribesViewController.swift */,
+			);
+			name = Home;
 			sourceTree = "<group>";
 		};
 		88828D9C19344AF3005CB06C /* Reachability */ = {
@@ -823,6 +840,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				02D11D0B18DF62AC0018DA97 /* Montreal-Light.otf in Resources */,
+				74DF7AC01A93F4A900650B48 /* Tribes.storyboard in Resources */,
 				0266802919F15CB000030836 /* VYBPlayerViewController.xib in Resources */,
 				02D11D0518DF62AC0018DA97 /* Montreal-Bold.otf in Resources */,
 				02D11D0718DF62AC0018DA97 /* Montreal-DemiBold.otf in Resources */,
@@ -968,6 +986,7 @@
 				88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */,
 				021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */,
 				749256F51A65C82C00E04F31 /* PostTableViewCell.swift in Sources */,
+				74DF7AC21A93FA4400650B48 /* TribesViewController.swift in Sources */,
 				742C45401A7AF75F0062617E /* AudioManager.swift in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
 				023E538D191F142000C3CF78 /* VYBCache.m in Sources */,
@@ -998,6 +1017,7 @@
 				74E33E3E1A86ACF000CCAB36 /* ProfileSummaryView.swift in Sources */,
 				02512D081A0BEDA800155068 /* ZoneStore.swift in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
+				743727EF1A93EA3A00CF7C4B /* Vybe.swift in Sources */,
 				025CC90C19D51AF400A1208C /* UINavigationBar+fixedSize.m in Sources */,
 				748C78FA1A772F89000200C4 /* UIStoryboard+Vybe.m in Sources */,
 				0276D13C19590CDF007292B0 /* VYBPageViewController.m in Sources */,

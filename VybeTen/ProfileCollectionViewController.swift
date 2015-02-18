@@ -48,9 +48,9 @@ class ProfileCollectionViewController: UICollectionViewController, UICollectionV
   func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
     if collectionView.bounds.size.width > 320 {
       // iPhone6
-      return CGSizeMake(90.0, 96.0)
+      return CGSizeMake(100.0, 136.0)
     } else {
-      return CGSizeMake(76.0, 81.0)
+      return CGSizeMake(84.0, 136.0)
     }
   }
     
