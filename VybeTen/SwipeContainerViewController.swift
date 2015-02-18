@@ -241,10 +241,17 @@ import UIKit
   }
   
   override func prefersStatusBarHidden() -> Bool {
-    if selectedViewController != nil {
-      return selectedViewController!.prefersStatusBarHidden()
+    if selectedViewController === viewControllers[0] {
+      // Capture Side
+      return true
+    } else {
+      // Home Side
+      return false
     }
-    return true
+//    if selectedViewController != nil {
+//      return selectedViewController!.prefersStatusBarHidden()
+//    }
+//    return true
   }
   
   func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
