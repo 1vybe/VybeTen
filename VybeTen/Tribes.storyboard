@@ -14,7 +14,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="13" minimumInteritemSpacing="15" id="Rlk-3d-8vX">
-                            <size key="itemSize" width="100" height="136"/>
+                            <size key="itemSize" width="100" height="120"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="18" minY="15" maxX="18" maxY="0.0"/>
@@ -24,10 +24,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="100" height="136"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="100" height="120"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" tag="123" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="utb-x5-M7Z" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" tag="123" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="100" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="utb-x5-M7Z" customClass="PFImageView">
                                             <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="100" id="sDf-Jm-NRw"/>
@@ -47,12 +47,6 @@
                                             <color key="textColor" red="0.29019607843137257" green="0.29019607843137257" blue="0.29019607843137257" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="358" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="13 vybers" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S4t-TU-IuJ">
-                                            <rect key="frame" x="23" y="121" width="54" height="15"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="12"/>
-                                            <color key="textColor" red="0.29019607843137252" green="0.56470588235294117" blue="0.88627450980392153" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
@@ -61,15 +55,17 @@
                                     <constraint firstItem="utb-x5-M7Z" firstAttribute="top" secondItem="X63-ND-8aS" secondAttribute="top" id="0Fn-Hu-BuA"/>
                                     <constraint firstAttribute="trailing" secondItem="utb-x5-M7Z" secondAttribute="trailing" id="1Ke-cG-fo5"/>
                                     <constraint firstItem="utb-x5-M7Z" firstAttribute="leading" secondItem="X63-ND-8aS" secondAttribute="leading" id="2a2-tT-h4O"/>
+                                    <constraint firstAttribute="bottom" secondItem="zy2-TP-XRe" secondAttribute="bottom" id="4rd-gE-mla"/>
                                     <constraint firstItem="zy2-TP-XRe" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="X63-ND-8aS" secondAttribute="leading" id="SIG-dO-leZ"/>
-                                    <constraint firstItem="S4t-TU-IuJ" firstAttribute="top" secondItem="zy2-TP-XRe" secondAttribute="bottom" constant="1" id="Vis-1s-XZl"/>
-                                    <constraint firstItem="S4t-TU-IuJ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="X63-ND-8aS" secondAttribute="leading" id="cif-F0-nKi"/>
                                     <constraint firstItem="zy2-TP-XRe" firstAttribute="top" secondItem="utb-x5-M7Z" secondAttribute="bottom" constant="5" id="dUe-Ij-ysa"/>
                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="zy2-TP-XRe" secondAttribute="trailing" id="dff-UO-og2"/>
-                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="S4t-TU-IuJ" secondAttribute="trailing" id="tM0-QI-bA5"/>
-                                    <constraint firstAttribute="centerX" secondItem="S4t-TU-IuJ" secondAttribute="centerX" id="tWi-kL-zH0"/>
                                     <constraint firstAttribute="centerX" secondItem="zy2-TP-XRe" secondAttribute="centerX" id="wW0-lF-f9I"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="4rd-gE-mla"/>
+                                    </mask>
+                                </variation>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -99,6 +95,9 @@
                         </view>
                         <barButtonItem key="rightBarButtonItem" title="Create" id="CBw-bY-i8W">
                             <color key="tintColor" red="0.59215686270000001" green="0.59215686270000001" blue="0.59215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <segue destination="825-oo-Lfr" kind="show" identifier="ShowCreateTribeSegue" id="4bC-dY-ns0"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -110,9 +109,131 @@
             </objects>
             <point key="canvasLocation" x="512" y="3"/>
         </scene>
+        <!--Create Tribe-->
+        <scene sceneID="aeE-Rx-m2N">
+            <objects>
+                <viewController title="Create Tribe" id="825-oo-Lfr" customClass="CreateTribeViewController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="d0w-hP-CHf"/>
+                        <viewControllerLayoutGuide type="bottom" id="oDq-8c-d3g"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="qGR-2I-64U">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tribe_Thumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="4ls-qZ-6D9" userLabel="TribePhoto" customClass="PFImageView">
+                                <rect key="frame" x="250" y="89" width="100" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="EaF-k7-Tgg"/>
+                                    <constraint firstAttribute="height" constant="100" id="GxA-A3-74Y"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XA0-Gz-DtU" userLabel="TribePhotoAerial">
+                                <rect key="frame" x="250" y="89" width="100" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="7Yt-fG-cbZ"/>
+                                    <constraint firstAttribute="height" constant="100" id="may-PN-gbf"/>
+                                </constraints>
+                                <state key="normal">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="tribePhotoSelected:" destination="825-oo-Lfr" eventType="touchUpInside" id="VDO-XD-wDY"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TxtField_Name" translatesAutoresizingMaskIntoConstraints="NO" id="Ywr-PU-V29" userLabel="NameBG">
+                                <rect key="frame" x="16" y="214" width="568" height="51"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="51" id="kpT-xc-8OE"/>
+                                </constraints>
+                            </imageView>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5qs-bg-jDp" userLabel="Name">
+                                <rect key="frame" x="32" y="228" width="52" height="21"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TxtField_Description" translatesAutoresizingMaskIntoConstraints="NO" id="D3L-KD-7vP" userLabel="DescBG">
+                                <rect key="frame" x="16" y="276" width="568" height="94"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="94" id="AcC-sx-Re3"/>
+                                </constraints>
+                            </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Description" translatesAutoresizingMaskIntoConstraints="NO" id="AiE-JQ-D5V" userLabel="Description">
+                                <rect key="frame" x="16" y="276" width="568" height="94"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="rz6-ao-q1D"/>
+                                </constraints>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="rz6-ao-q1D"/>
+                                    </mask>
+                                </variation>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="5qs-bg-jDp" firstAttribute="leading" secondItem="Ywr-PU-V29" secondAttribute="leading" constant="16" id="64L-HW-Zaj"/>
+                            <constraint firstItem="XA0-Gz-DtU" firstAttribute="centerX" secondItem="4ls-qZ-6D9" secondAttribute="centerX" id="7Er-nr-12W"/>
+                            <constraint firstItem="D3L-KD-7vP" firstAttribute="height" secondItem="AiE-JQ-D5V" secondAttribute="height" id="BpX-Oc-gZu"/>
+                            <constraint firstItem="Ywr-PU-V29" firstAttribute="leading" secondItem="qGR-2I-64U" secondAttribute="leading" constant="16" id="G2G-Kx-SQb"/>
+                            <constraint firstItem="Ywr-PU-V29" firstAttribute="top" secondItem="4ls-qZ-6D9" secondAttribute="bottom" constant="25" id="LE9-3N-Xk4"/>
+                            <constraint firstAttribute="centerX" secondItem="4ls-qZ-6D9" secondAttribute="centerX" id="NAj-6H-Xt6"/>
+                            <constraint firstAttribute="trailing" secondItem="Ywr-PU-V29" secondAttribute="trailing" constant="16" id="OMA-lN-pTJ"/>
+                            <constraint firstItem="D3L-KD-7vP" firstAttribute="trailing" secondItem="AiE-JQ-D5V" secondAttribute="trailing" constant="16" id="PMl-ZX-73j"/>
+                            <constraint firstItem="D3L-KD-7vP" firstAttribute="centerY" secondItem="AiE-JQ-D5V" secondAttribute="centerY" id="QxW-fD-bZb"/>
+                            <constraint firstItem="5qs-bg-jDp" firstAttribute="top" secondItem="Ywr-PU-V29" secondAttribute="top" constant="14" id="RDL-Rr-HP1"/>
+                            <constraint firstItem="D3L-KD-7vP" firstAttribute="width" secondItem="AiE-JQ-D5V" secondAttribute="width" id="VLa-wX-Y1m"/>
+                            <constraint firstItem="D3L-KD-7vP" firstAttribute="top" secondItem="Ywr-PU-V29" secondAttribute="bottom" constant="11" id="Zfs-lw-M7P"/>
+                            <constraint firstItem="D3L-KD-7vP" firstAttribute="centerX" secondItem="AiE-JQ-D5V" secondAttribute="centerX" id="aRu-2F-Qtf"/>
+                            <constraint firstItem="AiE-JQ-D5V" firstAttribute="top" secondItem="D3L-KD-7vP" secondAttribute="top" constant="14" id="ar3-eN-c59"/>
+                            <constraint firstItem="AiE-JQ-D5V" firstAttribute="leading" secondItem="D3L-KD-7vP" secondAttribute="leading" constant="16" id="gn4-f5-I42"/>
+                            <constraint firstAttribute="trailing" secondItem="D3L-KD-7vP" secondAttribute="trailing" constant="16" id="ldg-kl-92b"/>
+                            <constraint firstItem="D3L-KD-7vP" firstAttribute="leading" secondItem="qGR-2I-64U" secondAttribute="leading" constant="16" id="mFP-fA-BjA"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="5qs-bg-jDp" secondAttribute="trailing" constant="32" id="pcn-Ld-jHu"/>
+                            <constraint firstItem="XA0-Gz-DtU" firstAttribute="centerY" secondItem="4ls-qZ-6D9" secondAttribute="centerY" id="yms-vQ-rgc"/>
+                            <constraint firstItem="4ls-qZ-6D9" firstAttribute="top" secondItem="d0w-hP-CHf" secondAttribute="bottom" constant="25" id="z7Q-hR-YGF"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="ar3-eN-c59"/>
+                                <exclude reference="gn4-f5-I42"/>
+                                <exclude reference="PMl-ZX-73j"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" title="Create a tribe" id="K1A-3N-MFz">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="7TF-3J-7G6">
+                            <connections>
+                                <action selector="cancelButtonPressed:" destination="825-oo-Lfr" id="mv3-gY-gvZ"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Next" id="jP0-Mh-p3M">
+                            <connections>
+                                <action selector="nextButtonPressed:" destination="825-oo-Lfr" id="fDA-0Q-Nhh"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="descriptionText" destination="AiE-JQ-D5V" id="NRu-vn-IRu"/>
+                        <outlet property="nameText" destination="5qs-bg-jDp" id="lVj-77-c4K"/>
+                        <outlet property="tribePhoto" destination="4ls-qZ-6D9" id="yNQ-nG-kl7"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="V1o-xQ-NJy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1235" y="3"/>
+        </scene>
     </scenes>
     <resources>
         <image name="TRIBES_txtHeader" width="96" height="16"/>
+        <image name="Tribe_Thumbnail" width="100" height="100"/>
+        <image name="TxtField_Description" width="341" height="94"/>
+        <image name="TxtField_Name" width="341" height="50"/>
         <image name="V_LogoSmall" width="26" height="13"/>
     </resources>
 </document>

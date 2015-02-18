@@ -133,6 +133,10 @@ class SelectTribeViewController: UIViewController, UITableViewDelegate, UITableV
     self.delegate?.didSelectTribe(tribe)
   }
   
+  func didCancelTribe() {
+    self.dismissViewControllerAnimated(true, completion: nil)
+  }
+  
   override func prefersStatusBarHidden() -> Bool {
     return true
   }

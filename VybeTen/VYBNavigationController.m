@@ -25,6 +25,14 @@
   [CATransaction commit];
 }
 
+- (void)popViewControllerAnimated:(BOOL)animated
+                completion:(void (^)(void))completion {
+  [CATransaction begin];
+  [CATransaction setCompletionBlock:completion];
+  [self popViewControllerAnimated:animated];
+  [CATransaction commit];
+}
+
 - (BOOL)prefersStatusBarHidden {
   return [self.topViewController prefersStatusBarHidden];
 }

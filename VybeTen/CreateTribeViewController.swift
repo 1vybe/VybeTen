@@ -9,6 +9,7 @@
 import UIKit
 
 protocol CreateTribeDelegate {
+  func didCancelTribe()
   func didCreateTribe(tribe: AnyObject)
 }
 
@@ -98,7 +99,7 @@ class CreateTribeViewController: UIViewController, UIImagePickerControllerDelega
   }
   
   @IBAction func cancelButtonPressed(sender: AnyObject) {
-    self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    self.delegate?.didCancelTribe()
   }
   
   @IBAction func nextButtonPressed(sender: AnyObject) {
@@ -115,16 +116,18 @@ class CreateTribeViewController: UIViewController, UIImagePickerControllerDelega
           query.getFirstObjectInBackgroundWithBlock({ (result: PFObject!, error: NSError!) -> Void in
             if result != nil {
               result.pinInBackgroundWithBlock({ (success: Bool, error: NSError!) -> Void in
+                MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
                 if success {
                   self.delegate?.didCreateTribe(result)
                 }
               })
             } else {
+              MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
+              
               let alertVC = UIAlertController(title: "Network Unavailable", message: "Could not create your tribe at the moment.", preferredStyle: UIAlertControllerStyle.Alert)
               alertVC.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
               self.presentViewController(alertVC, animated: true, completion: nil)
             }
-            MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
           })
         } else {
           MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
@@ -154,6 +157,8 @@ class CreateTribeViewController: UIViewController, UIImagePickerControllerDelega
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    descriptionText.textContainerInset = UIEdgeInsetsMake(14.0, 16.0, 10.0, 16.0)
+    
     let tribeObj = PFObject(className: kVYBTribeClassKey)
     tribeObj[kVYBTribeCoordinatorKey] = PFUser.currentUser()
     
@@ -162,7 +167,6 @@ class CreateTribeViewController: UIViewController, UIImagePickerControllerDelega
     tribeObj.ACL = ACL
     
     newTribe = tribeObj
-    // Do any additional setup after loading the view.
   }
   
   override func prefersStatusBarHidden() -> Bool {

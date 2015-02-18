@@ -70,6 +70,7 @@
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
 		74172D001A720FCF00142EC1 /* ActionUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74172CFF1A720FCF00142EC1 /* ActionUtility.swift */; };
 		742C45401A7AF75F0062617E /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 742C453F1A7AF75F0062617E /* AudioManager.swift */; };
+		7430F71E1A94F5D8009D5D26 /* SimpleDismissActionSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7430F71D1A94F5D8009D5D26 /* SimpleDismissActionSegue.swift */; };
 		74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */; };
 		74349A271A4945EB006BA83C /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 74349A261A4945EB006BA83C /* libsqlite3.dylib */; };
 		7435F5F61A6DB4120075E60C /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7435F5F51A6DB4120075E60C /* Home.storyboard */; };
@@ -252,6 +253,7 @@
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
 		74172CFF1A720FCF00142EC1 /* ActionUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionUtility.swift; sourceTree = "<group>"; };
 		742C453F1A7AF75F0062617E /* AudioManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		7430F71D1A94F5D8009D5D26 /* SimpleDismissActionSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleDismissActionSegue.swift; sourceTree = "<group>"; };
 		74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyVybeStore.swift; sourceTree = "<group>"; };
 		74349A261A4945EB006BA83C /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		7435F5F51A6DB4120075E60C /* Home.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
@@ -683,6 +685,7 @@
 			children = (
 				74DF7ABF1A93F4A900650B48 /* Tribes.storyboard */,
 				74DF7AC11A93FA4400650B48 /* TribesViewController.swift */,
+				7430F71D1A94F5D8009D5D26 /* SimpleDismissActionSegue.swift */,
 			);
 			name = Home;
 			sourceTree = "<group>";
@@ -962,6 +965,7 @@
 				74A1F9FF1A929F11001D6F15 /* NSString+TribeName.m in Sources */,
 				749256F01A64CCEA00E04F31 /* ProfileViewController.swift in Sources */,
 				02F36B2F1986F62800B7D842 /* VYBUser.m in Sources */,
+				7430F71E1A94F5D8009D5D26 /* SimpleDismissActionSegue.swift in Sources */,
 				74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */,
 				746FDACB1A42C36A0021360C /* UserPromptsViewController.swift in Sources */,
 				74781FC91A66F1AA0076FB3C /* ActivityTableViewController.swift in Sources */,

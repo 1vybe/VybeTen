@@ -10,7 +10,7 @@ import UIKit
 
 let reuseIdentifier = "TribeCollectionCell"
 
-class TribesViewController: UICollectionViewController {
+class TribesViewController: UICollectionViewController, CreateTribeDelegate {
   var tribeObjects: [AnyObject]
   
   required init(coder aDecoder: NSCoder) {
@@ -46,9 +46,9 @@ class TribesViewController: UICollectionViewController {
   func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
     if collectionView.bounds.size.width > 320 {
       // iPhone6
-      return CGSizeMake(100.0, 136.0)
+      return CGSizeMake(100.0, 120.0)
     } else {
-      return CGSizeMake(84.0, 120.0)
+      return CGSizeMake(84.0, 104.0)
     }
   }
   
@@ -59,10 +59,6 @@ class TribesViewController: UICollectionViewController {
     
     if let nameLabel = cell.viewWithTag(235) as? UILabel {
       nameLabel.text = tribeObj.objectForKey(kVYBTribeNameKey) as? String
-    }
-    
-    if let userCountLabel = cell.viewWithTag(358) as? UILabel {
-//      userCountLabel.text = 
     }
     
     if let tribeImageView = cell.viewWithTag(123) as? PFImageView {
@@ -78,6 +74,34 @@ class TribesViewController: UICollectionViewController {
     }
     
     return cell
+  }
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == "ShowCreateTribeSegue" {
+      if let createTribeVC = segue.destinationViewController as? CreateTribeViewController {
+        createTribeVC.delegate = self
+      }
+    }
+  }
+  
+  // MARK: - CreateTribeDelegate
+  
+  func didCreateTribe(tribe: AnyObject) {
+    MyVybeStore.sharedInstance.currTribe = tribe as? PFObject
+
+    if let navigation = self.navigationController as? VYBNavigationController {
+      navigation.popViewControllerAnimated(true, completion: { () -> Void in
+        if let swipeContainer = navigation.parentViewController as? SwipeContainerController {
+          swipeContainer.moveToCaptureScreen(animation: true)
+        }
+      })
+    }
+  }
+  
+  func didCancelTribe() {
+    if let navigation = self.navigationController as? VYBNavigationController {
+      navigation.popViewControllerAnimated(true)
+    }
   }
   
 }
