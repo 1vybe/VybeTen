@@ -214,24 +214,22 @@
   
   [downloadQueue insert:vybe];
   
-  [VYBUtility updateBumpCountInBackground:vybe withBlock:^(BOOL success) {
-    PFFile *vid = [vybe objectForKey:kVYBVybeVideoKey];
-    [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-      if (!error) {
-        [data writeToURL:cacheURL atomically:YES];
-        
-        [self playVybe:vybe];
-        if (completionBlock) {
-          completionBlock(YES);
-        }
+  PFFile *vid = [vybe objectForKey:kVYBVybeVideoKey];
+  [vid getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+    if (!error) {
+      [data writeToURL:cacheURL atomically:YES];
+      
+      [self playVybe:vybe];
+      if (completionBlock) {
+        completionBlock(YES);
       }
-      else {
-        if (completionBlock) {
-          completionBlock(NO);
-        }
+    }
+    else {
+      if (completionBlock) {
+        completionBlock(NO);
       }
-      [downloadQueue remove:vybe];
-    }];
+    }
+    [downloadQueue remove:vybe];
   }];
 }
 
