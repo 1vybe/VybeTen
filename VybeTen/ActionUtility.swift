@@ -11,6 +11,20 @@ import UIKit
 
 class ActionUtility: NSObject {
   
+  class func removeFromMyFeed(watched: AnyObject) {
+    let watchedObj = watched as! PFObject
+    
+    let myFeed = PFUser.currentUser().relationForKey(kVYBUserFreshFeedKey)
+    myFeed.removeObject(watchedObj)
+    PFUser.currentUser().saveEventually(nil)
+    
+    watchedObj.unpinInBackgroundWithName("MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
+      if success {
+        
+      }
+    })
+  }
+  
   class func followUser(userObj: AnyObject) {
     let user = userObj as! PFUser
     if user.objectId == PFUser.currentUser().objectId {
