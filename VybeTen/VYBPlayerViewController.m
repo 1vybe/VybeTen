@@ -455,10 +455,6 @@
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
     [self playAsset:asset];
     
-    if (_isFreshStream) {
-      [[ZoneStore sharedInstance] removeWatchedFromFreshFeed:vybe];
-    }
-    
     if (_zoneCurrIdx + 1 < _zoneVybes.count) {
       PFObject *nextItem = _zoneVybes[_zoneCurrIdx + 1];
       [self prepareVideoInBackgroundFor:nextItem withCompletion:^(BOOL success) {
@@ -585,6 +581,9 @@
   [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
   
   if (_zoneVybes) {
+    PFObject *currItem = _zoneVybes[_zoneCurrIdx];
+    [ActionUtility removeFromMyFeed:currItem];
+    
     [self playNextZoneVideo];
   }
 }
@@ -606,26 +605,26 @@
 
 
 - (IBAction)goPrevButtonPressed:(id)sender {
-  if (self.lastTimePlayingAsset && [self.lastTimePlayingAsset timeIntervalSinceNow] > -2.0) {
-    [self playPrevItem];
-  } else {
-    [self playCurrentItem];
-  }
-  
-  if (!self.goPrevButton.hidden) {
-    [UIView animateWithDuration:0.7 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-      self.goNextButton.alpha = 0.0;
-      self.goPrevButton.alpha = 0.0;
-    } completion:^(BOOL finished) {
-      if (finished) {
-        self.goNextButton.alpha = 1.0;
-        self.goPrevButton.alpha = 1.0;
-    
-        self.goNextButton.hidden = YES;
-        self.goPrevButton.hidden = YES;
-      }
-    }];
-  }
+//  if (self.lastTimePlayingAsset && [self.lastTimePlayingAsset timeIntervalSinceNow] > -2.0) {
+//    [self playPrevItem];
+//  } else {
+//    [self playCurrentItem];
+//  }
+//  
+//  if (!self.goPrevButton.hidden) {
+//    [UIView animateWithDuration:0.7 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+//      self.goNextButton.alpha = 0.0;
+//      self.goPrevButton.alpha = 0.0;
+//    } completion:^(BOOL finished) {
+//      if (finished) {
+//        self.goNextButton.alpha = 1.0;
+//        self.goPrevButton.alpha = 1.0;
+//    
+//        self.goNextButton.hidden = YES;
+//        self.goPrevButton.hidden = YES;
+//      }
+//    }];
+//  }
 }
 
 - (void)playPrevItem {
