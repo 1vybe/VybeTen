@@ -241,7 +241,10 @@ import UIKit
   }
   
   override func prefersStatusBarHidden() -> Bool {
-    if selectedViewController === viewControllers[0] {
+    if selectedViewController == nil {
+      return true
+    }
+    else if selectedViewController === viewControllers[0] {
       // Capture Side
       return true
     } else {

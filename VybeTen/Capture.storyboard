@@ -186,7 +186,6 @@
                         <subviews>
                             <view contentMode="scaleToFill" placeholderIntrinsicWidth="0.0" placeholderIntrinsicHeight="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="dRX-YS-Qns" userLabel="PlayerView" customClass="VYBPlayerView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t5w-aK-2V5" userLabel="OverlayView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
@@ -273,7 +272,6 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="t5w-aK-2V5" secondAttribute="trailing" id="2B3-py-bOf"/>
                             <constraint firstItem="t5w-aK-2V5" firstAttribute="leading" secondItem="uo4-mb-8rx" secondAttribute="leading" id="4Cu-r6-Dyt"/>
@@ -585,8 +583,8 @@
                                     <constraint firstAttribute="height" constant="51" id="5mY-h9-Kp8"/>
                                 </constraints>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e1p-sg-wm3" userLabel="Name">
-                                <rect key="frame" x="32" y="228" width="52" height="21"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e1p-sg-wm3" userLabel="Name">
+                                <rect key="frame" x="32" y="228" width="536" height="21"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -634,6 +632,7 @@
                             <constraint firstItem="5BM-AG-5vw" firstAttribute="top" secondItem="pQR-iI-zSm" secondAttribute="bottom" constant="11" id="q9f-dd-guq"/>
                             <constraint firstAttribute="trailing" secondItem="pQR-iI-zSm" secondAttribute="trailing" constant="16" id="qA9-xU-hF4"/>
                             <constraint firstItem="e1p-sg-wm3" firstAttribute="top" secondItem="pQR-iI-zSm" secondAttribute="top" constant="14" id="tXV-NC-2ML"/>
+                            <constraint firstAttribute="trailing" secondItem="e1p-sg-wm3" secondAttribute="trailing" constant="32" id="x9c-FM-GO4"/>
                             <constraint firstItem="vjB-Wn-YtN" firstAttribute="leading" secondItem="TCH-ck-YIT" secondAttribute="leading" id="yQM-S3-4oC"/>
                             <constraint firstItem="vjB-Wn-YtN" firstAttribute="top" secondItem="TCH-ck-YIT" secondAttribute="top" id="zeB-gf-SRk"/>
                         </constraints>
@@ -683,6 +682,6 @@
         <image name="player_bottom_overlay" width="375" height="133"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="P1a-3M-Ykl"/>
+        <segue reference="nzE-FD-KVJ"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -9,7 +9,7 @@
         <scene sceneID="C9p-rM-kOc">
             <objects>
                 <collectionViewController title="Tribes" id="sl6-fu-P9x" customClass="TribesViewController" customModule="Vybe" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="0lr-12-39A">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="0lr-12-39A">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -148,7 +148,7 @@
                                 </constraints>
                             </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5qs-bg-jDp" userLabel="Name">
-                                <rect key="frame" x="32" y="228" width="52" height="21"/>
+                                <rect key="frame" x="32" y="228" width="536" height="21"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -193,7 +193,7 @@
                             <constraint firstItem="AiE-JQ-D5V" firstAttribute="leading" secondItem="D3L-KD-7vP" secondAttribute="leading" constant="16" id="gn4-f5-I42"/>
                             <constraint firstAttribute="trailing" secondItem="D3L-KD-7vP" secondAttribute="trailing" constant="16" id="ldg-kl-92b"/>
                             <constraint firstItem="D3L-KD-7vP" firstAttribute="leading" secondItem="qGR-2I-64U" secondAttribute="leading" constant="16" id="mFP-fA-BjA"/>
-                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="5qs-bg-jDp" secondAttribute="trailing" constant="32" id="pcn-Ld-jHu"/>
+                            <constraint firstAttribute="trailing" secondItem="5qs-bg-jDp" secondAttribute="trailing" constant="32" id="pcn-Ld-jHu"/>
                             <constraint firstItem="XA0-Gz-DtU" firstAttribute="centerY" secondItem="4ls-qZ-6D9" secondAttribute="centerY" id="yms-vQ-rgc"/>
                             <constraint firstItem="4ls-qZ-6D9" firstAttribute="top" secondItem="d0w-hP-CHf" secondAttribute="bottom" constant="25" id="z7Q-hR-YGF"/>
                         </constraints>
