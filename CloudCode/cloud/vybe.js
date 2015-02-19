@@ -27,7 +27,6 @@ Parse.Cloud.afterSave('Vybe', function (request) {
   // Insert this new vybe to each user's freshFeed
   Parse.Cloud.useMasterKey();
   var query = new Parse.Query(Parse.User);
-  query.notEqualTo('username', request.user.get('username'));
   query.each(function(user) {
     // console.log('feeding to ' + user.get('username'));
 
