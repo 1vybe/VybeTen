@@ -21,6 +21,16 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     super.init(coder: aDecoder)
   }
   
+  @IBAction func moveToCapture() {
+    if let navigation = self.navigationController as? VYBNavigationController {
+      navigation.popViewControllerAnimated(true, completion: { () -> Void in
+        if let swipeContainer = navigation.parentViewController as? SwipeContainerController {
+          swipeContainer.moveToCaptureScreen(animation: true)
+        }
+      })
+    }
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     

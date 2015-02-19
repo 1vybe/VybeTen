@@ -22,6 +22,7 @@
 
 @interface VYBPlayerViewController () <VYBPlayerViewControllerDelegate>
 
+@property (nonatomic, weak) IBOutlet UIImageView *loopImageView;
 @property (nonatomic, weak) IBOutlet UIView *firstOverlay;
 
 @property (nonatomic, weak) IBOutlet UIImageView *topBarBG;
@@ -137,6 +138,7 @@
   [super viewDidLoad];
   
   _loopCurrItem = NO;
+  self.loopImageView.hidden = YES;
   
   downloadQueue = [[DownloadQueue alloc] init];
   
@@ -158,6 +160,10 @@
   longPressRecognizer.minimumPressDuration = 0.3;
   longPressRecognizer.delegate = self;
   [self.view addGestureRecognizer:longPressRecognizer];
+  
+  UISwipeGestureRecognizer *swipeUpGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeUpDetected:)];
+  swipeUpGesture.direction = UISwipeGestureRecognizerDirectionUp;
+  [self.view addGestureRecognizer:swipeUpGesture];
   
   self.firstOverlay.hidden = YES;
   self.optionsOverlay.hidden = YES;
@@ -670,14 +676,23 @@
 - (void)longPressDetected:(UIGestureRecognizer *)recognizer {
   switch (recognizer.state) {
     case UIGestureRecognizerStateBegan:
+      self.loopImageView.hidden = NO;
         _loopCurrItem = YES;
       break;
     case UIGestureRecognizerStateCancelled:
     case UIGestureRecognizerStateEnded:
+      self.loopImageView.hidden = YES;
         _loopCurrItem = NO;
       break;
     default:
       break;
+  }
+}
+
+- (void)swipeUpDetected:(UIGestureRecognizer *)recognizer {
+  PFObject *currObj = _zoneVybes[_zoneCurrIdx];
+  if (currObj) {
+    
   }
 }
 
