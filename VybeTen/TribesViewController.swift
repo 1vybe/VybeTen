@@ -13,6 +13,8 @@ let reuseIdentifier = "TribeCollectionCell"
 class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYBPlayerViewControllerDelegate {
   var tribeObjects: [AnyObject]
   
+  var refreshControl: UIRefreshControl?
+  
   required init(coder aDecoder: NSCoder) {
     tribeObjects = []
 
@@ -22,25 +24,37 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let query = PFQuery(className: kVYBTribeClassKey)
-    query.fromLocalDatastore()
-    query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
-      if result != nil {
-        self.tribeObjects = result
-        self.collectionView?.reloadData()
-      }
-    }
+    let control = UIRefreshControl()
+    control.addTarget(self, action: "refreshControlPulled", forControlEvents: UIControlEvents.ValueChanged)
+    collectionView?.addSubview(control)
+    collectionView?.alwaysBounceVertical = true
+    
+    refreshControl = control
   }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
     
+    // Update all tribe list
+    let tribeQuery = PFQuery(className: kVYBTribeClassKey)
+    tribeQuery.findObjectsInBackgroundWithBlock({ (objects: [AnyObject]!, error: NSError!) -> Void in
+      if objects != nil {
+        self.tribeObjects = objects
+        self.collectionView?.reloadData()
+      }
+    })
+  }
+  
+  func refreshControlPulled() {
+    self.reloadMyFeed()
+  }
+  
+  private func reloadMyFeed() {
     let feed = PFUser.currentUser().relationForKey(kVYBUserFreshFeedKey)
     let query = feed.query()
     query.includeKey(kVYBVybeTribeKey)
     query.includeKey(kVYBVybeUserKey)
-
-    MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+    
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if result != nil {
         PFObject.unpinAllObjectsInBackgroundWithName("MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
@@ -48,7 +62,7 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
             if success {
               self.collectionView?.reloadData()
             }
-            MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
+            self.refreshControl?.endRefreshing()
           })
         })
       }
