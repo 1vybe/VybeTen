@@ -31,6 +31,7 @@
 @protocol VYBPlayerViewControllerDelegate <NSObject>
 @required
 - (void)playerViewController:(VYBPlayerViewController *)playerVC didFinishSetup:(BOOL)ready;
-
+@optional
+- (void)dismissPlayerViewController:(VYBPlayerViewController *)playerVC completion:(void (^)())completionHandler;
 @end
 

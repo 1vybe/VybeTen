@@ -23,12 +23,11 @@
 @interface VYBPlayerViewController () <VYBPlayerViewControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIImageView *loopImageView;
+@property (nonatomic, weak) IBOutlet UIView *noMoPage;
 @property (nonatomic, weak) IBOutlet UIView *firstOverlay;
 
-@property (nonatomic, weak) IBOutlet UIImageView *topBarBG;
+@property (nonatomic, weak) IBOutlet UIView *topBar;
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
-@property (nonatomic, weak) IBOutlet UIButton *dismissButton;
-@property (nonatomic, weak) IBOutlet UIButton *addButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
 @property (nonatomic, weak) IBOutlet UILabel *usernameLabel;
@@ -49,6 +48,9 @@
 
 - (IBAction)goNextButtonPressed:(id)sender;
 - (IBAction)goPrevButtonPressed:(id)sender;
+
+- (IBAction)captureButtonPressed:(id)sender;
+- (IBAction)bigCaptureButtonPressed:(id)sender;
 
 - (IBAction)optionsButtonPressed:(id)sender;
 - (IBAction)flagOverlayButtonPressed;
@@ -124,7 +126,6 @@
   
   DownloadQueue *downloadQueue;
 }
-@synthesize dismissButton;
 
 @synthesize currPlayer = _currPlayer;
 @synthesize currPlayerView = _currPlayerView;
@@ -166,6 +167,7 @@
   [self.view addGestureRecognizer:swipeUpGesture];
   
   self.firstOverlay.hidden = YES;
+  self.topBar.hidden = YES;
   self.optionsOverlay.hidden = YES;
   self.goNextButton.hidden = YES;
   self.goPrevButton.hidden = YES;
@@ -576,7 +578,10 @@
   
   // Reached the end of zone. Zone OUT
   if (_zoneCurrIdx == _zoneVybes.count - 1) {
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    self.firstOverlay.hidden = YES;
+    self.noMoPage.hidden = NO;
+    self.topBar.hidden = NO;
+//    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
   }
   else {
     //[self.currPlayer pause];
@@ -647,6 +652,7 @@
   }
   
   self.firstOverlay.hidden = !self.firstOverlay.hidden;
+  self.topBar.hidden = !self.topBar.hidden;
 }
 
 
@@ -725,9 +731,7 @@
   if (self.optionsButton.selected) {
     self.optionsOverlay.hidden = YES;
     
-    self.topBarBG.hidden = NO;
-    self.dismissButton.hidden = NO;
-    self.addButton.hidden = NO;
+    self.topBar.hidden = NO;
     self.timeLabel.hidden = NO;
     
     [self.currPlayer play];
@@ -737,15 +741,38 @@
     
     self.goNextButton.hidden = YES;
     self.goPrevButton.hidden = YES;
-    self.topBarBG.hidden = YES;
-    self.dismissButton.hidden = YES;
-    self.addButton.hidden = YES;
+    self.topBar.hidden = YES;
     self.timeLabel.hidden = YES;
     
     [self.currPlayer pause];
   }
   self.optionsButton.selected = !self.optionsButton.selected;
 }
+
+- (IBAction)captureButtonPressed:(id)sender {
+  [self moveToCaptureForCurrentTribe];
+}
+
+- (IBAction)bigCaptureButtonPressed:(id)sender {
+  [self moveToCaptureForCurrentTribe];
+}
+
+- (void)moveToCaptureForCurrentTribe {
+  PFObject *currVybe = _zoneVybes[_zoneCurrIdx];
+  PFObject *currTribe = currVybe[kVYBVybeTribeKey];
+  
+  if (currTribe) {
+    [[MyVybeStore sharedInstance] setCurrTribe:currTribe];
+  }
+  
+  [self.delegate dismissPlayerViewController:self completion:^{
+    TribesViewController *tribesVC = (TribesViewController *)self.delegate;
+    if (tribesVC) {
+      [tribesVC moveToCapture];
+    }
+  }];
+}
+
 
 - (IBAction)dismissButtonPressed {
   [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
