@@ -227,6 +227,10 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     }
   }
   
+  func dismissPlayerViewController(playerVC: VYBPlayerViewController!, completion completionHandler: (() -> Void)!) {
+    self.dismissViewControllerAnimated(true, completion: completionHandler)
+  }
+  
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
