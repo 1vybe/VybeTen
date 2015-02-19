@@ -147,14 +147,6 @@ extern NSString *const kVYBTribeTypeKey;
 extern NSString *const kVYBTribeTypeSecretKey;
 
 
-#pragma mark - PFObject Hashtag Class
-extern NSString *const kVYBHashtagClassKey;
-
-extern NSString *const kVYBHashtagNameKey;
-extern NSString *const kVYBHashtagVybesKey;
-extern NSString *const kVYBHashtagLowercaseKey;
-//extern NSString *const kVYBHashTagZoneKey;
-
 #pragma mark - PFObject Activity Class
 // Class key
 extern NSString *const kVYBActivityClassKey;
@@ -171,6 +163,15 @@ extern NSString *const kVYBActivityTimestampKey;
 extern NSString *const kVYBActivityTypeFollow;
 extern NSString *const kVYBActivityTypeLike;
 extern NSString *const kVYBActivityTypeComment;
+
+#pragma mark - PFObject Hashtag Class
+extern NSString *const kVYBHashtagClassKey;
+
+extern NSString *const kVYBHashtagNameKey;
+extern NSString *const kVYBHashtagVybesKey;
+extern NSString *const kVYBHashtagLowercaseKey;
+//extern NSString *const kVYBHashTagZoneKey;
+
 
 #pragma mark - Cached Vybe Attributes
 // keys

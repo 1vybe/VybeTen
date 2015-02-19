@@ -96,14 +96,6 @@ NSString *const kVYBTribeDescriptionKey                         = @"description"
 NSString *const kVYBTribeGeoTagKey                              = @"geoTag";
 NSString *const kVYBTribeTypeKey                                = @"type";
 
-#pragma mark - PFObject Hashtag Class
-NSString *const kVYBHashtagClassKey                               = @"Hashtag";
-
-NSString *const kVYBHashtagNameKey                                = @"name";
-NSString *const kVYBHashtagVybesKey                               = @"vybes";
-NSString *const kVYBHashtagLowercaseKey                           = @"name_lowercase";
-//NSString *const kVYBHashTagZoneKey                                = @"zone";
-
 #pragma mark - PFObject Activity Class
 // Class key
 NSString *const kVYBActivityClassKey                            = @"Activity";
@@ -121,6 +113,14 @@ NSString *const kVYBActivityTimestampKey                        = @"timestamp";
 NSString *const kVYBActivityTypeFollow                          = @"follow";
 NSString *const kVYBActivityTypeLike                            = @"like";
 NSString *const kVYBActivityTypeComment                         = @"comment";
+
+#pragma mark - PFObject Hashtag Class
+NSString *const kVYBHashtagClassKey                               = @"Hashtag";
+
+NSString *const kVYBHashtagNameKey                                = @"name";
+NSString *const kVYBHashtagVybesKey                               = @"vybes";
+NSString *const kVYBHashtagLowercaseKey                           = @"name_lowercase";
+//NSString *const kVYBHashTagZoneKey                                = @"zone";
 
 #pragma mark - Cached User Attributes
 // keys

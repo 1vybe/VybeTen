@@ -12,6 +12,7 @@
                 <outlet property="firstOverlay" destination="i5M-Pr-FkT" id="6xs-Ur-JgG"/>
                 <outlet property="flagOverlayButton" destination="sWX-cp-Y9g" id="keB-3w-5RO"/>
                 <outlet property="locationLabel" destination="2xr-fh-a0w" id="cA0-kh-x5y"/>
+                <outlet property="loopImageView" destination="bBM-ZE-ReO" id="QJm-3n-foV"/>
                 <outlet property="optionsButton" destination="0It-Qq-qG9" id="izg-7e-rXW"/>
                 <outlet property="optionsOverlay" destination="afv-fB-hBX" id="gXl-St-DZD"/>
                 <outlet property="timeLabel" destination="UPQ-0i-rrO" id="4c8-UE-Biw"/>
@@ -207,11 +208,18 @@
                         </mask>
                     </variation>
                 </view>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="highlight" translatesAutoresizingMaskIntoConstraints="NO" id="bBM-ZE-ReO">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="600"/>
+                </imageView>
             </subviews>
             <constraints>
+                <constraint firstItem="bBM-ZE-ReO" firstAttribute="leading" secondItem="NzJ-pm-eNV" secondAttribute="leading" id="3Iq-DY-Dre"/>
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="top" secondItem="NzJ-pm-eNV" secondAttribute="top" id="6O1-5Q-B5F"/>
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="leading" secondItem="NzJ-pm-eNV" secondAttribute="leading" id="IWL-PO-StZ"/>
                 <constraint firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="R0X-2U-EEj"/>
+                <constraint firstItem="bBM-ZE-ReO" firstAttribute="top" secondItem="NzJ-pm-eNV" secondAttribute="top" id="UnZ-xm-hz8"/>
+                <constraint firstAttribute="trailing" secondItem="bBM-ZE-ReO" secondAttribute="trailing" id="eSa-yd-wlI"/>
+                <constraint firstAttribute="bottom" secondItem="bBM-ZE-ReO" secondAttribute="bottom" id="hhO-pn-tOn"/>
                 <constraint firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="zMp-1G-fbd"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
@@ -229,5 +237,6 @@
         <image name="Player_More" width="29" height="9"/>
         <image name="Player_ReportUser-btn" width="174" height="52"/>
         <image name="Player_ReportUser-btnON" width="174" height="52"/>
+        <image name="highlight" width="375" height="667"/>
     </resources>
 </document>
