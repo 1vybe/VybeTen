@@ -159,6 +159,7 @@
   longPressRecognizer.delegate = self;
   [self.view addGestureRecognizer:longPressRecognizer];
   
+  self.firstOverlay.hidden = YES;
   self.optionsOverlay.hidden = YES;
   self.goNextButton.hidden = YES;
   self.goPrevButton.hidden = YES;
@@ -639,18 +640,7 @@
     return;
   }
   
-  if (self.currPlayer.rate == 0.0) {
-    [self.currPlayer play];
-    
-    self.goPrevButton.hidden = YES;
-    self.goNextButton.hidden = YES;
-  }
-  else {
-    [self.currPlayer pause];
-    
-    self.goPrevButton.hidden = NO;
-    self.goNextButton.hidden = NO;
-  }
+  self.firstOverlay.hidden = !self.firstOverlay.hidden;
 }
 
 

@@ -102,14 +102,6 @@ class WelcomeManager: NSObject {
       // Update Google Analytics
       self.updateGoogleAnalytics()
       
-      // Update all tribe list
-      let tribeQuery = PFQuery(className: kVYBTribeClassKey)
-      tribeQuery.findObjectsInBackgroundWithBlock({ (objects: [AnyObject]!, error: NSError!) -> Void in
-        if objects != nil {
-          PFObject.pinAllInBackground(objects, block:nil)
-        }
-      })
-      
       // Update myFlags cache
       let myFlags = PFUser.currentUser().relationForKey(kVYBUserFlagsKey)
       var flagQuery = myFlags.query()
