@@ -8,6 +8,16 @@
 
 import UIKit
 
+class Tribe {
+  var tribeObject: AnyObject
+  var freshCount: Int
+  
+  init(parseObj: AnyObject) {
+    tribeObject = parseObj
+    freshCount = 0
+  }
+}
+
 let reuseIdentifier = "TribeCollectionCell"
 
 class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYBPlayerViewControllerDelegate {
@@ -40,26 +50,47 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     collectionView?.alwaysBounceVertical = true
     
     refreshControl = control
+    
+    self.reloadTribes{  }
   }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
-    
+  
+    self.reloadMyFeed()
+  }
+  
+  func refreshControlPulled() {
+    self.reloadTribes { () -> Void in
+      self.reloadMyFeed()
+    }
+  }
+  
+  private func reloadTribes(completionBlock: (() -> ())) {
     // Update all tribe list
     let tribeQuery = PFQuery(className: kVYBTribeClassKey)
-    tribeQuery.findObjectsInBackgroundWithBlock({ (objects: [AnyObject]!, error: NSError!) -> Void in
-      if objects != nil {
-        self.tribeObjects = objects
-        self.collectionView?.reloadData()
+    tribeQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+      if let objects = result as? [PFObject] {
+        self.tribeObjects = []
+        
+        for obj in objects {
+          let newTribe = Tribe(parseObj: obj)
+          self.tribeObjects += [newTribe]
+        }
+        completionBlock()
       }
     })
   }
   
-  func refreshControlPulled() {
-    self.reloadMyFeed()
-  }
-  
   private func reloadMyFeed() {
+    // First reset freshCount for each tribe
+    if let tribes = tribeObjects as? [Tribe] {
+      for tribe in tribes {
+        tribe.freshCount = 0
+      }
+    }
+
+    
     let feed = PFUser.currentUser().relationForKey(kVYBUserFreshFeedKey)
     let query = feed.query()
     query.includeKey(kVYBVybeTribeKey)
@@ -70,6 +101,19 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
         PFObject.unpinAllObjectsInBackgroundWithName("MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
           PFObject.pinAllInBackground(result, withName: "MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
             if success {
+              for vybeObj in result {
+                if let trObj = vybeObj.objectForKey(kVYBVybeTribeKey) as? PFObject {
+                  if let tribes = self.tribeObjects as? [Tribe] {
+                    innerLoop: for tribe in tribes {
+                      if trObj.objectId == tribe.tribeObject.objectId {
+                        tribe.freshCount++
+                        break innerLoop
+                      }
+                    }
+                  }
+                }
+              }
+
               self.collectionView?.reloadData()
             }
             self.refreshControl?.endRefreshing()
@@ -125,14 +169,16 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PFCollectionViewCell
     
-    let tribeObj = tribeObjects[indexPath.row] as! PFObject
+    let tribe = tribeObjects[indexPath.row] as! Tribe
     
     if let nameLabel = cell.viewWithTag(235) as? UILabel {
-      nameLabel.text = tribeObj.objectForKey(kVYBTribeNameKey) as? String
+      nameLabel.text = tribe.tribeObject.objectForKey(kVYBTribeNameKey) as? String
+      
+      println("\(nameLabel.text) has \(tribe.freshCount) fresh vybes")
     }
     
     if let tribeImageView = cell.viewWithTag(123) as? PFImageView {
-      if let file = tribeObj[kVYBTribePhotoKey] as? PFFile {
+      if let file = tribe.tribeObject[kVYBTribePhotoKey] as? PFFile {
         tribeImageView.file = file
         tribeImageView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
           if image != nil {
@@ -147,7 +193,9 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   }
   
   override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    let tribeObj = tribeObjects[indexPath.row] as? PFObject
+    let tribe = tribeObjects[indexPath.row] as? Tribe
+    let tribeObj = tribe?.tribeObject as? PFObject
+    
     let query = PFQuery(className: kVYBVybeClassKey)
     query.fromPinWithName("MyFreshFeed")
     query.whereKey(kVYBVybeTribeKey, equalTo: tribeObj)
