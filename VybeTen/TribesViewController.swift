@@ -178,6 +178,14 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     }
     
     if let tribeImageView = cell.viewWithTag(123) as? PFImageView {
+      let borderColor: UIColor
+      if tribe.freshCount > 0 {
+        borderColor = UIColor(red: 74/255.0, green: 144/255.0, blue: 226/255.0, alpha: 1.0)
+      } else {
+        borderColor = UIColor.clearColor()
+      }
+      tribeImageView.makeCircleWithBorderColor(borderColor, width: 4.0)
+      
       if let file = tribe.tribeObject[kVYBTribePhotoKey] as? PFFile {
         tribeImageView.file = file
         tribeImageView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
@@ -186,6 +194,8 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
             tribeImageView.image = VYBUtility.maskImage(image, withMask: maskImage)
           }
         })
+      } else {
+        tribeImageView.image = UIImage()
       }
     }
     
@@ -229,6 +239,14 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   
   func dismissPlayerViewController(playerVC: VYBPlayerViewController!, completion completionHandler: (() -> Void)!) {
     self.dismissViewControllerAnimated(true, completion: completionHandler)
+  }
+  
+  override func supportedInterfaceOrientations() -> Int {
+    return UIInterfaceOrientation.Portrait.rawValue
+  }
+  
+  override func shouldAutorotate() -> Bool {
+    return false
   }
   
   override func didReceiveMemoryWarning() {
