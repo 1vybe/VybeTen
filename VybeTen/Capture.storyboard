@@ -29,6 +29,10 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d4Y-Mh-xLU" userLabel="homeButton">
                                         <rect key="frame" x="549" y="549" width="36" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="X7S-MD-N5g"/>
+                                            <constraint firstAttribute="width" constant="36" id="oG7-3S-vis"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" name="ProximaNovaSoft-Regular" family="Proxima Nova Soft" pointSize="13"/>
                                         <state key="normal" image="Home-Btn">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -100,7 +104,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zSy-IB-oM3" userLabel="tribeButton">
                                         <rect key="frame" x="188" y="548" width="223" height="37"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="223" id="LsD-sr-scy"/>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="223" id="LsD-sr-scy"/>
                                         </constraints>
                                         <state key="normal" image="SelectTribe_Space">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -119,6 +123,7 @@
                                         <rect key="frame" x="264" y="180" width="71" height="71"/>
                                     </imageView>
                                 </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="W36-pV-hkE" secondAttribute="trailing" id="16y-8K-E2i"/>
                                     <constraint firstAttribute="trailing" secondItem="Txd-Bq-kYn" secondAttribute="trailing" id="2oV-9z-MDa"/>
@@ -137,6 +142,7 @@
                                     <constraint firstItem="zSy-IB-oM3" firstAttribute="centerY" secondItem="ZKc-IJ-e56" secondAttribute="centerY" id="dUe-I8-7yz"/>
                                     <constraint firstItem="lDT-z3-VQ2" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" constant="21" id="l6h-kf-0sT"/>
                                     <constraint firstAttribute="centerX" secondItem="zSy-IB-oM3" secondAttribute="centerX" id="oNX-VG-JVb"/>
+                                    <constraint firstItem="d4Y-Mh-xLU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="zSy-IB-oM3" secondAttribute="trailing" constant="20" id="qEa-17-nOo"/>
                                     <constraint firstItem="crN-zb-JCR" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" constant="20" id="qEd-sT-IZg"/>
                                     <constraint firstItem="zSy-IB-oM3" firstAttribute="centerX" secondItem="ZKc-IJ-e56" secondAttribute="centerX" id="wAn-lF-lCa"/>
                                 </constraints>
@@ -682,6 +688,6 @@
         <image name="player_bottom_overlay" width="375" height="133"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="nzE-FD-KVJ"/>
+        <segue reference="P1a-3M-Ykl"/>
     </inferredMetricsTieBreakers>
 </document>
