@@ -193,8 +193,8 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gZk-GI-L6h" userLabel="TopBar">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="NavBar(Blk)" translatesAutoresizingMaskIntoConstraints="NO" id="f73-eY-esM" userLabel="TopBarBG">
-                            <rect key="frame" x="-94" y="118" width="375" height="64"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NavBar(Blk)" translatesAutoresizingMaskIntoConstraints="NO" id="f73-eY-esM" userLabel="TopBarBG">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="64" id="8kX-aU-bCR"/>
                             </constraints>
@@ -245,7 +245,7 @@
                         <constraint firstAttribute="height" constant="64" id="xlj-94-RTV"/>
                     </constraints>
                 </view>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="highlight" translatesAutoresizingMaskIntoConstraints="NO" id="bBM-ZE-ReO">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="highlight" translatesAutoresizingMaskIntoConstraints="NO" id="bBM-ZE-ReO">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="600"/>
                 </imageView>
             </subviews>
@@ -256,9 +256,13 @@
                 <constraint firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="R0X-2U-EEj"/>
                 <constraint firstItem="Est-Kx-hCy" firstAttribute="top" secondItem="NzJ-pm-eNV" secondAttribute="top" id="T77-Wq-hNe"/>
                 <constraint firstAttribute="trailing" secondItem="Est-Kx-hCy" secondAttribute="trailing" id="ZQn-gT-RY3"/>
+                <constraint firstItem="bBM-ZE-ReO" firstAttribute="leading" secondItem="NzJ-pm-eNV" secondAttribute="leading" id="f9g-ga-S10"/>
+                <constraint firstAttribute="trailing" secondItem="bBM-ZE-ReO" secondAttribute="trailing" id="fTf-1Y-8PN"/>
                 <constraint firstItem="gZk-GI-L6h" firstAttribute="top" secondItem="NzJ-pm-eNV" secondAttribute="top" id="fik-oI-18B"/>
                 <constraint firstItem="Est-Kx-hCy" firstAttribute="leading" secondItem="NzJ-pm-eNV" secondAttribute="leading" id="iJA-D4-d0d"/>
+                <constraint firstItem="bBM-ZE-ReO" firstAttribute="top" secondItem="NzJ-pm-eNV" secondAttribute="top" id="ial-2c-MNQ"/>
                 <constraint firstItem="gZk-GI-L6h" firstAttribute="leading" secondItem="NzJ-pm-eNV" secondAttribute="leading" id="vbv-Uo-QQu"/>
+                <constraint firstAttribute="bottom" secondItem="bBM-ZE-ReO" secondAttribute="bottom" id="yAr-Zg-aF5"/>
                 <constraint firstAttribute="trailing" secondItem="gZk-GI-L6h" secondAttribute="trailing" id="z72-Xc-t1L"/>
                 <constraint firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="zMp-1G-fbd"/>
             </constraints>
