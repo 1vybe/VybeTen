@@ -59,6 +59,7 @@
 		607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 607CA69918C5C80C0060B420 /* VYBPlayerView.m */; };
 		60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */; };
 		7401D5361A7C64E3003EEB12 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7401D5351A7C64E3003EEB12 /* Profile.storyboard */; };
+		7408864B1A97EA86008BD390 /* TribeCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7408864A1A97EA86008BD390 /* TribeCollectionCell.swift */; };
 		740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */; };
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
 		74172D001A720FCF00142EC1 /* ActionUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74172CFF1A720FCF00142EC1 /* ActionUtility.swift */; };
@@ -215,6 +216,7 @@
 		60F1BBB718BAAFA900070EEC /* VYBMyVybeStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VYBMyVybeStore.h; sourceTree = "<group>"; };
 		60F1BBB818BAAFA900070EEC /* VYBMyVybeStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VYBMyVybeStore.m; sourceTree = "<group>"; };
 		7401D5351A7C64E3003EEB12 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
+		7408864A1A97EA86008BD390 /* TribeCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TribeCollectionCell.swift; sourceTree = "<group>"; };
 		740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
 		74172CFF1A720FCF00142EC1 /* ActionUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionUtility.swift; sourceTree = "<group>"; };
@@ -432,6 +434,7 @@
 				607CA69918C5C80C0060B420 /* VYBPlayerView.m */,
 				020FB84719744EBA005C9BA9 /* VYBCameraView.h */,
 				020FB84819744EBA005C9BA9 /* VYBCameraView.m */,
+				7408864A1A97EA86008BD390 /* TribeCollectionCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -885,6 +888,7 @@
 				025CC90C19D51AF400A1208C /* UINavigationBar+fixedSize.m in Sources */,
 				748C78FA1A772F89000200C4 /* UIStoryboard+Vybe.m in Sources */,
 				0276D13C19590CDF007292B0 /* VYBPageViewController.m in Sources */,
+				7408864B1A97EA86008BD390 /* TribeCollectionCell.swift in Sources */,
 				7437BAFD1A96FBB600F6D4A7 /* PFImageView+Shield.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

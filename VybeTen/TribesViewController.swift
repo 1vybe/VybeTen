@@ -158,7 +158,7 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   }
   
   func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-    if collectionView.bounds.size.width > 320 {
+    if UIScreen.mainScreen().bounds.size.width > 320 {
       // iPhone6
       return CGSizeMake(100.0, 120.0)
     } else {
@@ -167,36 +167,32 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   }
   
   override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PFCollectionViewCell
+    let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! TribeCollectionCell
+    // NOTE: - Initially a cell's subviews need to be updated for a new bounds of the cell.
+    cell.layoutIfNeeded()
     
     let tribe = tribeObjects[indexPath.row] as! Tribe
     
-    if let nameLabel = cell.viewWithTag(235) as? UILabel {
-      nameLabel.text = tribe.tribeObject.objectForKey(kVYBTribeNameKey) as? String
-      
-      println("\(nameLabel.text) has \(tribe.freshCount) fresh vybes")
+    cell.nameLabel.text = tribe.tribeObject.objectForKey(kVYBTribeNameKey) as? String
+  
+    let borderColor: UIColor
+    if tribe.freshCount > 0 {
+      borderColor = UIColor(red: 74/255.0, green: 144/255.0, blue: 226/255.0, alpha: 1.0)
+    } else {
+      borderColor = UIColor.clearColor()
     }
+    cell.photoImageView.makeCircleWithBorderColor(borderColor, width: 4.0)
     
-    if let tribeImageView = cell.viewWithTag(123) as? PFImageView {
-      let borderColor: UIColor
-      if tribe.freshCount > 0 {
-        borderColor = UIColor(red: 74/255.0, green: 144/255.0, blue: 226/255.0, alpha: 1.0)
-      } else {
-        borderColor = UIColor.clearColor()
-      }
-      tribeImageView.makeCircleWithBorderColor(borderColor, width: 4.0)
-      
-      if let file = tribe.tribeObject[kVYBTribePhotoKey] as? PFFile {
-        tribeImageView.file = file
-        tribeImageView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
-          if image != nil {
-            let maskImage = UIImage(named: "SquareMask")
-            tribeImageView.image = VYBUtility.maskImage(image, withMask: maskImage)
-          }
-        })
-      } else {
-        tribeImageView.image = UIImage()
-      }
+    if let file = tribe.tribeObject[kVYBTribePhotoKey] as? PFFile {
+      cell.photoImageView.file = file
+      cell.photoImageView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
+        if image != nil {
+          let maskImage = UIImage(named: "SquareMask")
+          cell.photoImageView.image = VYBUtility.maskImage(image, withMask: maskImage)
+        }
+      })
+    } else {
+      cell.photoImageView.image = UIImage()
     }
     
     return cell
