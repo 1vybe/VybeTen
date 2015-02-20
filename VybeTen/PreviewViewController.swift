@@ -134,6 +134,10 @@ class PreviewViewController: UIViewController, SelectTribeDelegate {
     return true
   }
   
+  override func shouldAutorotate() -> Bool {
+    return false
+  }
+  
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.

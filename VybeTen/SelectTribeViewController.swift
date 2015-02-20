@@ -34,7 +34,6 @@ class SelectTribeViewController: UIViewController, UITableViewDelegate, UITableV
     tableView.contentInset = UIEdgeInsetsMake(topBar.bounds.size.height, 0.0, 0.0, 0.0)
     
     let query = PFQuery(className: kVYBTribeClassKey)
-    query.fromLocalDatastore()
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if result != nil {
         self.tribeObjects = result as! [PFObject]
