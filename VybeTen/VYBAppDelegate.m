@@ -201,7 +201,7 @@
   }
   
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-    application.applicationIconBadgeNumber = application.applicationIconBadgeNumber + 1;
+//    application.applicationIconBadgeNumber = application.applicationIconBadgeNumber + 1;
   }
   
   completionHandler(UIBackgroundFetchResultNoData);
