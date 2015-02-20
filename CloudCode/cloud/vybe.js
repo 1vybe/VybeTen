@@ -28,40 +28,32 @@ Parse.Cloud.afterSave('Vybe', function (request) {
   var query = new Parse.Query(Parse.User);
   query.notEqualTo('username', request.user.get('username'));
   query.each(function(user) {
-    // console.log('feeding to ' + user.get('username'));
-
     var feed = user.relation('feed');
     feed.add(request.object);
     user.save();
-    // console.log('successfully fed to ' + user.get('username'));
   });
 
+    // Send push
+  var tribe = request.object.get('tribe');
+  tribe.fetch().then(function (tribeObj) {
+    query = new Parse.Query(Parse.User);
+    query.notEqualTo('username', request.user.get('username'));
+    var alertMessage = request.user.get('username') + ' vybed in ' + tribeObj.get('name') + ' Tribe.'
+    var pushPayload = {
+      alert: alertMessage, // Set our alert message.
+      p: 'v', // Payload Type: Activity
+      pid: request.object.id // Vybe Id
+    }
 
-  console.log('lets update hashtags!!');
-  // Update the right Hashtag object's relation('vybes')
-  var hashtags = request.object.get('hashtags');
-  _.each(hashtags, function (tagName) {
-    var tagQuery = new Parse.Query('Hashtag');
-    tagQuery.equalTo('name_lowercase', tagName.toLowerCase());
-    tagQuery.first().then(function (tag) {
-      if (tag) {
-        var vybes = tag.relation('vybes');
-        vybes.add(request.object);
-
-        tag.save();
-      } else {
-        var newTag = new Hashtag;
-        newTag.set('name', tagName);
-        newTag.set('name_lowercase', tagName.toLowerCase());
-
-        var relation = newTag.relation('vybes');
-        relation.add(request.object);
-
-        newTag.save();
-      }
+    Parse.Push.send({
+      where: query,
+      data: pushPayload
+    }).then(function() {
+      console.log('Sent Vybe Push : ' + alertMessage);
+    }, function(error) {
+      throw error.code + ' : ' + error.message;
     });
   });
-
 });
 
 
