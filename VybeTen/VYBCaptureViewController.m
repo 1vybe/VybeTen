@@ -32,10 +32,12 @@
 
 @property (nonatomic, weak) IBOutlet UIImageView *focusTarget;
 
+@property (nonatomic, strong) UIProgressView *progressBar;
+
 - (IBAction)homeButtonPressed:(id)sender;
 - (IBAction)flipButtonPressed:(id)sender;
 - (IBAction)flashButtonPressed:(id)sender;
-- (IBAction)recordButtonPressed:(id)sender;
+//- (IBAction)recordButtonPressed:(id)sender;
 
 @property (nonatomic) VYBCapturePipeline *capturePipeline;
 
@@ -107,6 +109,22 @@ static void *XYZContext = &XYZContext;
   UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusOnTouchArea:)];
   [self.view addGestureRecognizer:tapGesture];
   self.focusTarget.alpha = 0;
+  
+  UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
+  longPress.minimumPressDuration = 0.2;
+  [self.recordButton addGestureRecognizer:longPress];
+  
+  // Progress Bar
+  self.progressBar = [[UIProgressView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 12, self.view.bounds.size.width, 12)];
+  
+//  UIImage *trackImage = [[UIImage imageNamed:@"ProgressTile(fade)"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 1, 0, 1) resizingMode:UIImageResizingModeStretch];
+//  [self.progressBar setTrackImage:trackImage];
+//  UIImage *progressImage = [[UIImage imageNamed:@"ProgressTile(Fill)"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 1, 0, 1) resizingMode:UIImageResizingModeStretch];
+//  [self.progressBar setProgressImage:progressImage];
+  
+//  [self.progressBar setProgress:0.7];
+  
+  [self.view insertSubview:self.progressBar aboveSubview:self.cameraView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -117,7 +135,10 @@ static void *XYZContext = &XYZContext;
     self.tribeLabel.text = currTribe[kVYBTribeNameKey];
   }
   
+  // NOTE: - Suspicion.
   [capturePipeline startRunning];
+  
+  self.progressBar.progress = 0.0;
   
   flashButton.selected = _flashOn;
   flipButton.selected = _isFrontCamera;
@@ -149,31 +170,40 @@ static void *XYZContext = &XYZContext;
   [[NSNotificationCenter defaultCenter] removeObserver:self name:MotionOrientationChangedNotification object:nil];
 }
 
-- (IBAction)recordButtonPressed:(id)sende {
-  if (!_isRecording) {
-    [UIApplication sharedApplication].idleTimerDisabled = YES;
-    
-    if ( [[UIDevice currentDevice] isMultitaskingSupported] )
-      _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
-    
-    [[MyVybeStore sharedInstance] prepareNewVybe];
-    [[SpotFinder sharedInstance] findSpotFromCurrentLocationInBackground];
-    
-    [recordButton setEnabled:NO];
-    [recordButton setSelected:YES];
-    
-    [[AudioManager sharedInstance] activateCategoryPlayAndRecording];
-    
-    [capturePipeline setRecordingOrientation:_captureOrientation];
-    [capturePipeline startRecording];
-   
-    _isRecording = YES;
-    [self syncUIWithRecordingStatus];
-  }
-  else {
-    [recordButton setEnabled:NO];
-    [_timeBomb invalidate];
-    [capturePipeline stopRecording];
+- (void)longPressDetected:(UILongPressGestureRecognizer *)recognizer {
+  switch (recognizer.state) {
+    case UIGestureRecognizerStateBegan:
+      if (!_isRecording) {
+        [UIApplication sharedApplication].idleTimerDisabled = YES;
+        
+        if ( [[UIDevice currentDevice] isMultitaskingSupported] )
+          _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
+        
+        [[MyVybeStore sharedInstance] prepareNewVybe];
+        [[SpotFinder sharedInstance] findSpotFromCurrentLocationInBackground];
+        
+        [recordButton setEnabled:NO];
+        [recordButton setSelected:YES];
+        
+        [[AudioManager sharedInstance] activateCategoryPlayAndRecording];
+        
+        [capturePipeline setRecordingOrientation:_captureOrientation];
+        [capturePipeline startRecording];
+        
+        _isRecording = YES;
+        [self syncUIWithRecordingStatus];
+      }
+      break;
+    case UIGestureRecognizerStateCancelled:
+    case UIGestureRecognizerStateEnded:
+      if (_isRecording) {
+        [recordButton setEnabled:NO];
+        [_timeBomb invalidate];
+        [capturePipeline stopRecording];
+      }
+      break;
+    default:
+      break;
   }
 }
 
@@ -209,9 +239,8 @@ static void *XYZContext = &XYZContext;
 
 - (void)capturePipelineRecordingDidStart:(VYBCapturePipeline *)pipeline {
   [recordButton setEnabled:YES];
-  _timeBomb = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
-  [recordButton setTitle:[NSString stringWithFormat:@"%d", VYBE_LENGTH_SEC] forState:UIControlStateSelected];
-  _timerCount = 15;
+  _timeBomb = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
+  _timerCount = 150;
 }
 
 - (void)capturePipelineRecordingWillStop:(VYBCapturePipeline *)pipeline {
@@ -266,7 +295,9 @@ static void *XYZContext = &XYZContext;
   _timerCount = _timerCount - 1;
   
   if (_timerCount > 0) {
-    [recordButton setTitle:[NSString stringWithFormat:@"%u", (int)_timerCount] forState:UIControlStateSelected];
+    float percent = (150 - _timerCount) / 150.0;
+    [self.progressBar setProgress:percent];
+//    [recordButton setTitle:[NSString stringWithFormat:@"%u", (int)_timerCount] forState:UIControlStateSelected];
   }
   else {
     if (_isRecording) {
