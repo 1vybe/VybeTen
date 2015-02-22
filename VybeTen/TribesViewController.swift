@@ -44,6 +44,14 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    var textAttributes = [NSObject : AnyObject]()
+    if let font = UIFont(name: "HelveticaNeue-Medium", size: 18.0) {
+      let textColor = UIColor(red: 255.0/255.0, green: 76.0/255.0, blue: 70.0/255.0, alpha: 1.0)
+      textAttributes[NSFontAttributeName] = font
+      textAttributes[NSForegroundColorAttributeName] = textColor
+      self.navigationController?.navigationBar.titleTextAttributes = textAttributes
+    }
+    
     let control = UIRefreshControl()
     control.addTarget(self, action: "refreshControlPulled", forControlEvents: UIControlEvents.ValueChanged)
     collectionView?.addSubview(control)
@@ -172,6 +180,9 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     cell.layoutIfNeeded()
     
     let tribe = tribeObjects[indexPath.row] as! Tribe
+    
+    cell.tribeObject = tribe.tribeObject
+    cell.delegate = self
     
     cell.nameLabel.text = tribe.tribeObject.objectForKey(kVYBTribeNameKey) as? String
   
