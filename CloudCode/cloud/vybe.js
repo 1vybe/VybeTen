@@ -26,7 +26,6 @@ Parse.Cloud.afterSave('Vybe', function (request) {
   // Insert this new vybe to each user's freshFeed
   Parse.Cloud.useMasterKey();
   var query = new Parse.Query(Parse.User);
-  query.notEqualTo('username', request.user.get('username'));
   query.each(function(user) {
     var feed = user.relation('feed');
     feed.add(request.object);
@@ -42,7 +41,7 @@ Parse.Cloud.afterSave('Vybe', function (request) {
     var pushPayload = {
       alert: alertMessage, // Set our alert message.
       p: 'v', // Payload Type: Activity
-      pid: request.object.id // Vybe Id
+      tid: tribe.id // Tribe Id
     }
 
     Parse.Push.send({
