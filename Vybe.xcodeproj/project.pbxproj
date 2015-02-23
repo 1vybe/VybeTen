@@ -63,6 +63,8 @@
 		740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */; };
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
 		74172D001A720FCF00142EC1 /* ActionUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74172CFF1A720FCF00142EC1 /* ActionUtility.swift */; };
+		741FFB9A1A9AD58700C35064 /* CreateTribeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741FFB991A9AD58700C35064 /* CreateTribeViewController.swift */; };
+		741FFB9C1A9AD83900C35064 /* EditTribeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741FFB9B1A9AD83900C35064 /* EditTribeViewController.swift */; };
 		742C45401A7AF75F0062617E /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 742C453F1A7AF75F0062617E /* AudioManager.swift */; };
 		7430F71E1A94F5D8009D5D26 /* SimpleDismissActionSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7430F71D1A94F5D8009D5D26 /* SimpleDismissActionSegue.swift */; };
 		74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */; };
@@ -88,7 +90,7 @@
 		749256F61A65C82C00E04F31 /* PostTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 749256F41A65C82C00E04F31 /* PostTableViewCell.xib */; };
 		74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */; };
 		74A0FA571A36A8B50065059E /* UnblockUser.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74A0FA561A36A8B50065059E /* UnblockUser.storyboard */; };
-		74A1F9F81A9114E7001D6F15 /* CreateTribeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A1F9F71A9114E7001D6F15 /* CreateTribeViewController.swift */; };
+		74A1F9F81A9114E7001D6F15 /* TribeDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A1F9F71A9114E7001D6F15 /* TribeDetailsViewController.swift */; };
 		74A1F9FF1A929F11001D6F15 /* NSString+TribeName.m in Sources */ = {isa = PBXBuildFile; fileRef = 74A1F9FE1A929F11001D6F15 /* NSString+TribeName.m */; };
 		74B6CEB61A688D4F001F869D /* ActivityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74B6CEB51A688D4F001F869D /* ActivityTableViewCell.swift */; };
 		74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */; };
@@ -105,6 +107,8 @@
 		74E33E3E1A86ACF000CCAB36 /* ProfileSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E33E3D1A86ACF000CCAB36 /* ProfileSummaryView.swift */; };
 		74E570EF1A41D430005072E1 /* Notification.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74E570EE1A41D430005072E1 /* Notification.storyboard */; };
 		74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */; };
+		74E794E81A9A6F56001DD41F /* AddMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E794E71A9A6F56001DD41F /* AddMemberViewController.swift */; };
+		74E794EA1A9A85F1001DD41F /* AddMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E794E91A9A85F1001DD41F /* AddMemberTableViewCell.swift */; };
 		74F095571A7D5F2300B3B116 /* Capture.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74F095561A7D5F2300B3B116 /* Capture.storyboard */; };
 		74F095591A7D691E00B3B116 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F095581A7D691E00B3B116 /* PreviewViewController.swift */; };
 		74F0955D1A80234400B3B116 /* TaggingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F0955C1A80234400B3B116 /* TaggingViewController.swift */; };
@@ -220,6 +224,8 @@
 		740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
 		74172CFF1A720FCF00142EC1 /* ActionUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionUtility.swift; sourceTree = "<group>"; };
+		741FFB991A9AD58700C35064 /* CreateTribeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTribeViewController.swift; sourceTree = "<group>"; };
+		741FFB9B1A9AD83900C35064 /* EditTribeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditTribeViewController.swift; sourceTree = "<group>"; };
 		742C453F1A7AF75F0062617E /* AudioManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		7430F71D1A94F5D8009D5D26 /* SimpleDismissActionSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleDismissActionSegue.swift; sourceTree = "<group>"; };
 		74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyVybeStore.swift; sourceTree = "<group>"; };
@@ -247,7 +253,7 @@
 		749256F41A65C82C00E04F31 /* PostTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostTableViewCell.xib; sourceTree = "<group>"; };
 		74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedUsersTableViewController.swift; sourceTree = "<group>"; };
 		74A0FA561A36A8B50065059E /* UnblockUser.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UnblockUser.storyboard; sourceTree = "<group>"; };
-		74A1F9F71A9114E7001D6F15 /* CreateTribeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTribeViewController.swift; sourceTree = "<group>"; };
+		74A1F9F71A9114E7001D6F15 /* TribeDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TribeDetailsViewController.swift; sourceTree = "<group>"; };
 		74A1F9FD1A929F11001D6F15 /* NSString+TribeName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+TribeName.h"; sourceTree = "<group>"; };
 		74A1F9FE1A929F11001D6F15 /* NSString+TribeName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TribeName.m"; sourceTree = "<group>"; };
 		74B6CEB51A688D4F001F869D /* ActivityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityTableViewCell.swift; sourceTree = "<group>"; };
@@ -266,6 +272,8 @@
 		74E33E3D1A86ACF000CCAB36 /* ProfileSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSummaryView.swift; sourceTree = "<group>"; };
 		74E570EE1A41D430005072E1 /* Notification.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Notification.storyboard; sourceTree = "<group>"; };
 		74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTableViewController.swift; sourceTree = "<group>"; };
+		74E794E71A9A6F56001DD41F /* AddMemberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMemberViewController.swift; sourceTree = "<group>"; };
+		74E794E91A9A85F1001DD41F /* AddMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMemberTableViewCell.swift; sourceTree = "<group>"; };
 		74F095561A7D5F2300B3B116 /* Capture.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Capture.storyboard; sourceTree = "<group>"; };
 		74F095581A7D691E00B3B116 /* PreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		74F0955C1A80234400B3B116 /* TaggingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaggingViewController.swift; sourceTree = "<group>"; };
@@ -371,7 +379,9 @@
 				7441011F1A64739B00D2F874 /* CheckInViewController.xib */,
 				749256E71A64966000E04F31 /* SpotTableCell.xib */,
 				74F0955C1A80234400B3B116 /* TaggingViewController.swift */,
-				74A1F9F71A9114E7001D6F15 /* CreateTribeViewController.swift */,
+				741FFB991A9AD58700C35064 /* CreateTribeViewController.swift */,
+				741FFB9B1A9AD83900C35064 /* EditTribeViewController.swift */,
+				74A1F9F71A9114E7001D6F15 /* TribeDetailsViewController.swift */,
 				743727EC1A93CDCD00CF7C4B /* SelectTribeTableCell.swift */,
 				743727EE1A93EA3A00CF7C4B /* Vybe.swift */,
 			);
@@ -608,8 +618,10 @@
 			isa = PBXGroup;
 			children = (
 				74DF7ABF1A93F4A900650B48 /* Tribes.storyboard */,
+				74E794E71A9A6F56001DD41F /* AddMemberViewController.swift */,
 				74DF7AC11A93FA4400650B48 /* TribesViewController.swift */,
 				7430F71D1A94F5D8009D5D26 /* SimpleDismissActionSegue.swift */,
+				74E794E91A9A85F1001DD41F /* AddMemberTableViewCell.swift */,
 			);
 			name = Home;
 			sourceTree = "<group>";
@@ -836,6 +848,7 @@
 				025CC90F19D5229200A1208C /* UIImage+maskImage.m in Sources */,
 				7435F5FA1A6DC9B70075E60C /* SimpleTabBarSegue.swift in Sources */,
 				029729721A02A1EC0050406D /* SpotFinder.swift in Sources */,
+				741FFB9C1A9AD83900C35064 /* EditTribeViewController.swift in Sources */,
 				74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */,
 				74F095591A7D691E00B3B116 /* PreviewViewController.swift in Sources */,
 				027DE0EF19E7484200F5F4C0 /* VYBCaptureRecorder.m in Sources */,
@@ -855,6 +868,7 @@
 				749256F51A65C82C00E04F31 /* PostTableViewCell.swift in Sources */,
 				74DF7AC21A93FA4400650B48 /* TribesViewController.swift in Sources */,
 				742C45401A7AF75F0062617E /* AudioManager.swift in Sources */,
+				74E794E81A9A6F56001DD41F /* AddMemberViewController.swift in Sources */,
 				607CA69A18C5C80C0060B420 /* VYBPlayerView.m in Sources */,
 				023E538D191F142000C3CF78 /* VYBCache.m in Sources */,
 				8887DA0E19F50774007BCC53 /* VYBVybeTableViewCell.m in Sources */,
@@ -863,8 +877,10 @@
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
 				023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */,
 				740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */,
+				741FFB9A1A9AD58700C35064 /* CreateTribeViewController.swift in Sources */,
 				025408E119BA0FD7009C7C71 /* NSArray+PFObject.m in Sources */,
 				88CA12331A272BB700D4B097 /* LogInViewController.swift in Sources */,
+				74E794EA1A9A85F1001DD41F /* AddMemberTableViewCell.swift in Sources */,
 				0266802819F15CB000030836 /* VYBPlayerViewController.m in Sources */,
 				74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */,
 				74C4EA4C1A81412E00124C9D /* ProfileListViewController.swift in Sources */,
@@ -879,7 +895,7 @@
 				7464831E1A731A0A00FA4C9F /* VybeCardCell.swift in Sources */,
 				026216BE19EA470600EC6544 /* VYBVybe.m in Sources */,
 				743727ED1A93CDCD00CF7C4B /* SelectTribeTableCell.swift in Sources */,
-				74A1F9F81A9114E7001D6F15 /* CreateTribeViewController.swift in Sources */,
+				74A1F9F81A9114E7001D6F15 /* TribeDetailsViewController.swift in Sources */,
 				020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */,
 				74E33E3E1A86ACF000CCAB36 /* ProfileSummaryView.swift in Sources */,
 				02512D081A0BEDA800155068 /* ZoneStore.swift in Sources */,

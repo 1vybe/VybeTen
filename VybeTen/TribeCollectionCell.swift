@@ -11,6 +11,7 @@ import UIKit
 class TribeCollectionCell: UICollectionViewCell, UIGestureRecognizerDelegate {
   @IBOutlet weak var photoImageView: PFImageView!
   @IBOutlet weak var nameLabel: UILabel!
+  @IBOutlet weak var membersCount: UILabel!
   
   weak var tribeObject: AnyObject?
   weak var delegate: UIViewController?
@@ -31,8 +32,19 @@ class TribeCollectionCell: UICollectionViewCell, UIGestureRecognizerDelegate {
       tribesVC.moveToCapture()
     }
   }
-
-  func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailByGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-    return true
+  
+  @IBAction func tribeNamePressed(sender: AnyObject) {
+    if let tribesVC = delegate as? TribesViewController,
+      let tribe = tribeObject as? PFObject {
+      tribesVC.didSelectTribeToShowInfo(tribe)
+    }
   }
+  
+  @IBAction func tribePhotoPressed(sender: AnyObject) {
+    if let tribesVC = delegate as? TribesViewController,
+      let tribe = tribeObject as? PFObject {
+        tribesVC.didSelectTribeToPlay(tribe)
+    }
+  }
+
 }

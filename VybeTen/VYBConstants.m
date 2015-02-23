@@ -92,6 +92,8 @@ NSString *const kVYBTribeClassKey                               = @"Tribe";
 NSString *const kVYBTribeNameKey                                = @"name";
 NSString *const kVYBTribePhotoKey                               = @"photo";
 NSString *const kVYBTribeCoordinatorKey                         = @"coordinator";
+NSString *const kVYBTribeMembersKey                             = @"members";
+
 NSString *const kVYBTribeDescriptionKey                         = @"description";
 NSString *const kVYBTribeGeoTagKey                              = @"geoTag";
 NSString *const kVYBTribeTypeKey                                = @"type";
@@ -153,7 +155,8 @@ NSString *const kAPNSBadgeKey                                   = @"badge";
 NSString *const kAPNSSoundKey                                   = @"sound";
 
 NSString *const kVYBPushPayloadPayloadTypeKey                   = @"p";
-NSString *const kVYBPushPayloadPayloadTypeVyveKey               = @"v";
+NSString *const kVYBPushPayloadPayloadTypeVybeKey               = @"v";
+NSString *const kVYBPushPayloadTribeIDKey                       = @"tid";
 
 NSString *const kVYBPushPayloadPayloadTypeActivityKey           = @"a";
 NSString *const kVYBPushPayloadActivityTypeKey                  = @"t";

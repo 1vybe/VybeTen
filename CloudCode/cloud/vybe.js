@@ -41,8 +41,8 @@ Parse.Cloud.afterSave('Vybe', function (request) {
     var alertMessage = request.user.get('username') + ' vybed in ' + tribeObj.get('name') + ' Tribe.'
     var pushPayload = {
       alert: alertMessage, // Set our alert message.
-      p: 'v', // Payload Type: Activity
-      pid: request.object.id // Vybe Id
+      p: 'v', // Payload Type: Vybe
+      tid: tribe.id // Tribe Id
     }
 
     Parse.Push.send({
@@ -55,9 +55,6 @@ Parse.Cloud.afterSave('Vybe', function (request) {
     });
   })
  
-
-
-
 
   console.log('lets update hashtags!!');
   // Update the right Hashtag object's relation('vybes')

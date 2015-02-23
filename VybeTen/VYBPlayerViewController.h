@@ -10,11 +10,13 @@
 
 @protocol VYBPlayerViewControllerDelegate;
 @class Zone;
+@class Tribe;
 @interface VYBPlayerViewController : UIViewController <UIGestureRecognizerDelegate>
 @property (nonatomic, weak) id<VYBPlayerViewControllerDelegate> delegate;
 
 
 //TODO: Called should call this method inside the completion block when it is calling presentViewController:
+- (void)playStreamForTribe:(PFObject *)obj;
 - (void)playAllFresh;
 - (void)playAllActiveVybes;
 - (void)playOnce:(PFObject *)vybe;
