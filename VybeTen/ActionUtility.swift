@@ -20,7 +20,7 @@ class ActionUtility: NSObject {
     
     watchedObj.unpinInBackgroundWithName("MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
       if success {
-        
+        println("removed from feed")
       }
     })
   }

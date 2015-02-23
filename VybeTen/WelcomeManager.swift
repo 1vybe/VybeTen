@@ -68,11 +68,6 @@ class WelcomeManager: NSObject {
           })
         }
       } else {
-        if let vybeAppDelegate = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
-          dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            vybeAppDelegate.proceedToMainInterface()
-          })
-        }
         PFUser.currentUser().fetchInBackgroundWithTarget(self, selector: ("fetchCurrentUserDataWithResult:error:"))
       }
     })
@@ -86,7 +81,7 @@ class WelcomeManager: NSObject {
     })
   }
   
-  func fetchCurrentUserDataWithResult(userObj: PFObject!, error: NSError!) {
+  func fetchCurrentUserDataWithResult(userObj: AnyObject, error: NSError!) {
     if error != nil {
       if error.code == kPFErrorObjectNotFound {
         if let vybeAppDel = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
@@ -101,6 +96,26 @@ class WelcomeManager: NSObject {
       
       // Update Google Analytics
       self.updateGoogleAnalytics()
+      
+      // Clear feed that was stored LOCALLY from last session
+      PFObject.unpinAllObjectsInBackgroundWithName("MyFreshFeed", block: nil)
+      
+      // Reset all user list
+      PFObject.unpinAllObjectsInBackgroundWithName("AllOtherUsers", block: { (success: Bool, error: NSError!) -> Void in
+        let query = PFUser.query()
+        query.whereKey(kVYBUserUsernameKey, notEqualTo:userObj[kVYBUserUsernameKey])
+        query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+          if result != nil {
+            PFObject.pinAllInBackground(result, withName: "AllOtherUsers", block: { (success: Bool, error: NSError!) -> Void in
+              if let vybeAppDelegate = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                  vybeAppDelegate.proceedToMainInterface()
+                })
+              }
+            })
+          }
+        })
+      })
       
       // Update myFlags cache
       let myFlags = PFUser.currentUser().relationForKey(kVYBUserFlagsKey)

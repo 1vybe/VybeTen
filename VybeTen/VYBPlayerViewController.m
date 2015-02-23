@@ -23,34 +23,17 @@
 @interface VYBPlayerViewController () <VYBPlayerViewControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIImageView *loopImageView;
-@property (nonatomic, weak) IBOutlet UIView *noMoPage;
 @property (nonatomic, weak) IBOutlet UIView *firstOverlay;
-
-@property (nonatomic, weak) IBOutlet UIView *topBar;
-@property (nonatomic, weak) IBOutlet UILabel *locationLabel;
 
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
 @property (nonatomic, weak) IBOutlet UILabel *usernameLabel;
 @property (nonatomic, weak) IBOutlet UIButton *optionsButton;
-
-@property (nonatomic, weak) IBOutlet UIButton *goPrevButton;
-@property (nonatomic, weak) IBOutlet UIButton *goNextButton;
-@property (nonatomic, weak) IBOutlet UIButton *nextAerialButton;
-@property (nonatomic, weak) IBOutlet UIButton *prevAerialButton;
 
 @property (nonatomic, weak) IBOutlet UIView *optionsOverlay;
 @property (nonatomic, weak) IBOutlet UIButton *flagOverlayButton;
 @property (nonatomic, weak) IBOutlet UIButton *blockOverlayButton;
 
 @property (nonatomic) NSArray *hashtagButtons;
-
-- (IBAction)dismissButtonPressed;
-
-- (IBAction)goNextButtonPressed:(id)sender;
-- (IBAction)goPrevButtonPressed:(id)sender;
-
-- (IBAction)captureButtonPressed:(id)sender;
-- (IBAction)bigCaptureButtonPressed:(id)sender;
 
 - (IBAction)optionsButtonPressed:(id)sender;
 - (IBAction)flagOverlayButtonPressed;
@@ -162,15 +145,12 @@
   longPressRecognizer.delegate = self;
   [self.view addGestureRecognizer:longPressRecognizer];
   
-  UISwipeGestureRecognizer *swipeUpGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeUpDetected:)];
-  swipeUpGesture.direction = UISwipeGestureRecognizerDirectionUp;
-  [self.view addGestureRecognizer:swipeUpGesture];
+  UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeDownDetected:)];
+  swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+  [self.view addGestureRecognizer:swipeGestureRecognizer];
   
   self.firstOverlay.hidden = YES;
-  self.topBar.hidden = YES;
   self.optionsOverlay.hidden = YES;
-  self.goNextButton.hidden = YES;
-  self.goPrevButton.hidden = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -265,6 +245,20 @@
                                   [self.delegate playerViewController:self didFinishSetup:NO];
                                 }
                               }];
+}
+
+- (void)playStreamForTribe:(PFObject *)obj {
+  PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+  [query fromPinWithName:@"MyFreshFeed"];
+  [query whereKey:kVYBVybeTribeKey equalTo:obj];
+  [query includeKey:kVYBVybeUserKey];
+  [query orderByAscending:kVYBVybeTimestampKey];
+  
+  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    if (!error && objects.count) {
+      [self playStream:objects];
+    }
+  }];
 }
 
 - (void)playStream:(NSArray *)vybes {
@@ -464,7 +458,7 @@
         PFObject *currItem = _zoneVybes[_zoneCurrIdx];
         if ( [currItem.objectId isEqualToString:nextItem.objectId]) {
           dispatch_async(dispatch_get_main_queue(), ^{
-            [self.nextAerialButton setEnabled:YES];
+//            [self.nextAerialButton setEnabled:YES];
           });
         }
       }];
@@ -472,7 +466,7 @@
   } else {
     dispatch_async(dispatch_get_main_queue(), ^{
       [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-      [self.nextAerialButton setEnabled:NO];
+//      [self.nextAerialButton setEnabled:NO];
     });
   }
 }
@@ -501,13 +495,6 @@
 }
 
 - (void)syncUIElementsFor:(PFObject *)aVybe {
-  // Display location and time
-  NSString *zoneName = aVybe[kVYBVybeZoneNameKey];
-  if (!zoneName) {
-    zoneName = @"Earth";
-  }
-  [self.locationLabel setText:zoneName];
-  
   NSString *timeString = [[NSString alloc] init];
   timeString = [VYBUtility timeStringForPlayer:aVybe[kVYBVybeTimestampKey]];
   [self.timeLabel setText:timeString];
@@ -543,23 +530,23 @@
   self.lastTimePlayingAsset = [NSDate date];
 }
 
-- (IBAction)goNextButtonPressed:(id)sender {
-  [self playNextItem];
-  
-  [UIView animateWithDuration:0.7 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-    self.goNextButton.alpha = 0.0;
-    self.goPrevButton.alpha = 0.0;
-  } completion:^(BOOL finished) {
-    if (finished) {
-      self.goNextButton.alpha = 1.0;
-      self.goPrevButton.alpha = 1.0;
-      
-      self.goNextButton.hidden = YES;
-      self.goPrevButton.hidden = YES;
-    }
-  }];
-
-}
+//- (IBAction)goNextButtonPressed:(id)sender {
+//  [self playNextItem];
+//  
+//  [UIView animateWithDuration:0.7 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+//    self.goNextButton.alpha = 0.0;
+//    self.goPrevButton.alpha = 0.0;
+//  } completion:^(BOOL finished) {
+//    if (finished) {
+//      self.goNextButton.alpha = 1.0;
+//      self.goPrevButton.alpha = 1.0;
+//      
+//      self.goNextButton.hidden = YES;
+//      self.goPrevButton.hidden = YES;
+//    }
+//  }];
+//
+//}
 
 - (void)playNextItem {
   // Remove notification for current item
@@ -578,10 +565,7 @@
   
   // Reached the end of zone. Zone OUT
   if (_zoneCurrIdx == _zoneVybes.count - 1) {
-    self.firstOverlay.hidden = YES;
-    self.noMoPage.hidden = NO;
-    self.topBar.hidden = NO;
-//    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
   }
   else {
     //[self.currPlayer pause];
@@ -652,7 +636,6 @@
   }
   
   self.firstOverlay.hidden = !self.firstOverlay.hidden;
-  self.topBar.hidden = !self.topBar.hidden;
 }
 
 
@@ -695,11 +678,8 @@
   }
 }
 
-- (void)swipeUpDetected:(UIGestureRecognizer *)recognizer {
-  PFObject *currObj = _zoneVybes[_zoneCurrIdx];
-  if (currObj) {
-    
-  }
+- (void)swipeDownDetected:(UIGestureRecognizer *)recognizer {
+  [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Map
@@ -731,7 +711,6 @@
   if (self.optionsButton.selected) {
     self.optionsOverlay.hidden = YES;
     
-    self.topBar.hidden = NO;
     self.timeLabel.hidden = NO;
     
     [self.currPlayer play];
@@ -739,9 +718,6 @@
   else {
     self.optionsOverlay.hidden = NO;
     
-    self.goNextButton.hidden = YES;
-    self.goPrevButton.hidden = YES;
-    self.topBar.hidden = YES;
     self.timeLabel.hidden = YES;
     
     [self.currPlayer pause];

@@ -10,7 +10,7 @@ import UIKit
 
 @objc class SwipeContainerController: UIViewController, UIGestureRecognizerDelegate {
   private var containerView = UIView()
-  private var selectedViewController: UIViewController?
+  var selectedViewController: UIViewController?
   private var destViewController: UIViewController?
   
   var viewControllers: [UIViewController]!
@@ -69,12 +69,12 @@ import UIKit
   }
   
   func moveToTribeScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
+    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
   }
   
   
   func moveToCaptureScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
+    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
   }
   
   
@@ -242,19 +242,15 @@ import UIKit
   
   override func prefersStatusBarHidden() -> Bool {
     if selectedViewController == nil {
-      return true
-    }
-    else if selectedViewController === viewControllers[0] {
-      // Capture Side
-      return true
-    } else {
-      // Home Side
       return false
     }
-//    if selectedViewController != nil {
-//      return selectedViewController!.prefersStatusBarHidden()
-//    }
-//    return true
+    else if selectedViewController === viewControllers[0] {
+      // Home Side
+      return false
+    } else {
+      // Capture Side
+      return true
+    }
   }
   
   func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {

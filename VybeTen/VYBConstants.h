@@ -139,6 +139,8 @@ extern NSString *const kVYBTribeClassKey;
 extern NSString *const kVYBTribeNameKey;
 extern NSString *const kVYBTribePhotoKey;
 extern NSString *const kVYBTribeCoordinatorKey;
+extern NSString *const kVYBTribeMembersKey;
+
 extern NSString *const kVYBTribeDescriptionKey;
 extern NSString *const kVYBTribeGeoTagKey;
 extern NSString *const kVYBTribeTypeKey;
@@ -205,7 +207,8 @@ extern NSString *const kAPNSSoundKey;
 
 extern NSString *const kVYBPushPayloadPayloadTypeKey;
 extern NSString *const kVYBPushPayloadPayloadTypeActivityKey;
-extern NSString *const kVYBPushPayloadPayloadTypeVyveKey;
+extern NSString *const kVYBPushPayloadPayloadTypeVybeKey;
+extern NSString *const kVYBPushPayloadTribeIDKey;
 
 extern NSString *const kVYBPushPayloadActivityTypeKey;
 extern NSString *const kVYBPushPayloadActivityTypeFollowKey;

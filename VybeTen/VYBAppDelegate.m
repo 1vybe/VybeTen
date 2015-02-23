@@ -212,15 +212,11 @@
     [self.swipeContainerController moveToTribeScreenWithAnimation:NO];
     
     NSString *pushType = payload[kVYBPushPayloadPayloadTypeKey];
-    if ([pushType isEqualToString:kVYBPushPayloadPayloadTypeActivityKey]) {
-      NSString *activityType = payload[kVYBPushPayloadActivityTypeKey];
-      
-      if ([activityType isEqualToString:kVYBPushPayloadActivityTypeLikeKey]) {
-        [self.swipeContainerController goToNotificationScreen:^{
-          [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateHandlePushPlayActivityNotification object:nil userInfo:payload];
-        }];
-      } else {
-        [self.swipeContainerController goToNotificationScreen:nil];
+    if ([pushType isEqualToString:kVYBPushPayloadPayloadTypeVybeKey]) {
+      TribesViewController *tribesVC = (TribesViewController *)[(UINavigationController *)self.swipeContainerController.selectedViewController topViewController];
+      if (tribesVC) {
+        NSString *tribeID = payload[kVYBPushPayloadTribeIDKey];
+        [tribesVC playVybeFromPushNotification:tribeID];
       }
     }
   }
@@ -271,10 +267,10 @@
 
 - (void)setUpViewControllers {
   VYBCaptureViewController *captureVC = (VYBCaptureViewController *)[[UIStoryboard storyboardWithName:@"Capture" bundle:nil] instantiateInitialViewController];
-  ProfileViewController *profileVC = (ProfileViewController *)[[UIStoryboard storyboardWithName:@"Tribes" bundle:nil] instantiateInitialViewController];
-  VYBNavigationController *profileNav = [[VYBNavigationController alloc] initWithRootViewController:profileVC];
+  TribesViewController *tribeVC = (TribesViewController *)[[UIStoryboard storyboardWithName:@"Tribes" bundle:nil] instantiateInitialViewController];
+  VYBNavigationController *tribeNav = [[VYBNavigationController alloc] initWithRootViewController:tribeVC];
 
-  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[captureVC, profileNav]];
+  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[tribeNav, captureVC]];
   
   [self.mainNavController pushViewController:self.swipeContainerController animated:NO];
   

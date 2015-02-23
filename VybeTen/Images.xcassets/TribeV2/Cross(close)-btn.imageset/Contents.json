@@ -7,12 +7,12 @@
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "Ok-Btn@2x.png"
+      "filename" : "Cross(close)-btn@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "Ok-Btn@3x.png"
+      "filename" : "Cross(close)-btn@3x.png"
     }
   ],
   "info" : {

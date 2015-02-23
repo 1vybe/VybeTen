@@ -40,32 +40,7 @@ Parse.Cloud.afterSave('Vybe', function (request) {
     var alertMessage = request.user.get('username') + ' vybed in ' + tribeObj.get('name') + ' Tribe.'
     var pushPayload = {
       alert: alertMessage, // Set our alert message.
-      p: 'v', // Payload Type: Activity
-      pid: request.object.id // Vybe Id
-    }
-
-    Parse.Push.send({
-      where: query,
-      data: pushPayload
-    }).then(function() {
-      console.log('Sent Vybe Push : ' + alertMessage);
-    }, function(error) {
-      throw error.code + ' : ' + error.message;
-    });
-  })
- 
-
-
-
-    // Send push
-  var tribe = request.object.get('tribe');
-  tribe.fetch().then(function (tribeObj) {
-    query = new Parse.Query(Parse.User);
-    query.notEqualTo('username', request.user.get('username'));
-    var alertMessage = request.user.get('username') + ' vybed in ' + tribeObj.get('name') + ' Tribe.'
-    var pushPayload = {
-      alert: alertMessage, // Set our alert message.
-      p: 'v', // Payload Type: Activity
+      p: 'v', // Payload Type: Vybe
       tid: tribe.id // Tribe Id
     }
 
