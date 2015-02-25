@@ -137,7 +137,7 @@ extern NSString *const kVYBTribeClassKey;
 
 // field keys
 extern NSString *const kVYBTribeNameKey;
-extern NSString *const kVYBTribePhotoKey;
+extern NSString *const kVYBTribeLastVybeKey;
 extern NSString *const kVYBTribeCoordinatorKey;
 extern NSString *const kVYBTribeMembersKey;
 

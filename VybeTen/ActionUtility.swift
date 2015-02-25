@@ -16,7 +16,6 @@ class ActionUtility: NSObject {
     
     let myFeed = PFUser.currentUser().relationForKey(kVYBUserFreshFeedKey)
     myFeed.removeObject(watchedObj)
-    PFUser.currentUser().saveEventually(nil)
     
     watchedObj.unpinInBackgroundWithName("MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
       if success {

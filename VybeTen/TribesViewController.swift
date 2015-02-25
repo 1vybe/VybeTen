@@ -1,4 +1,4 @@
-//
+
 //  TribesViewController.swift
 //  Vybe
 //
@@ -10,6 +10,7 @@ import UIKit
 
 @objc class Tribe {
   var tribeObject: AnyObject
+  var coverVybe: AnyObject?
   var freshCount: Int
   var memberCount: Int
   
@@ -45,35 +46,12 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     }
   }
   
-  @IBAction func settingsButtonPressed(sender: AnyObject) {
-    let username: String
-    if let name = PFUser.currentUser()[kVYBUserUsernameKey] as? String {
-      username = name
-    } else {
-      username = "Vyber"
-    }
-    
-    let alertController = UIAlertController(title: "Hello \(username)", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-    let logOutAction = UIAlertAction(title: "Log Out", style: .Destructive) { (action: UIAlertAction!) -> Void in
-      if let appDelegate = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
-        appDelegate.logOut()
-      }
-    }
-    
-    let goBackAction = UIAlertAction(title: "Go Back", style: .Cancel, handler: nil)
-    
-    alertController.addAction(logOutAction)
-    alertController.addAction(goBackAction)
-    
-    self.presentViewController(alertController, animated: true, completion: nil)
-  }
-  
   override func viewDidLoad() {
     super.viewDidLoad()
     
     var textAttributes = [NSObject : AnyObject]()
-    if let font = UIFont(name: "HelveticaNeue-Medium", size: 18.0) {
-      let textColor = UIColor(red: 255.0/255.0, green: 76.0/255.0, blue: 70.0/255.0, alpha: 1.0)
+    if let font = UIFont(name: "Helvetica Neue", size: 18.0) {
+      let textColor = UIColor(red: 254.0/255.0, green: 68.0/255.0, blue: 0.0/255.0, alpha: 1.0)
       textAttributes[NSFontAttributeName] = font
       textAttributes[NSForegroundColorAttributeName] = textColor
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
@@ -86,89 +64,85 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     
     refreshControl = control
     
-    let button = UIButton(frame: CGRectMake(20, self.view.bounds.height - 50, 30, 30))
-    button.setImage(UIImage(named: "SmallPrivatecircle_selected"), forState: UIControlState.Normal)
+    let button = UIButton(frame: CGRectMake(25, self.view.bounds.size.height - 86, 61, 61))
+    button.setImage(UIImage(named: "Camera-Btn"), forState: UIControlState.Normal)
     button.addTarget(self, action: "moveToCapture", forControlEvents: UIControlEvents.TouchUpInside)
     captureButton = button
     
-//    self.view.addSubview(button)
+    self.collectionView?.addSubview(button)
     
-    self.reloadTribes{  }
+    // Subscribe to a notification to receive vybe updates in real time
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDelegateDidReceiveRemoteNotification:", name: VYBAppDelegateApplicationDidReceiveRemoteNotification, object: nil)
   }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
   
-    // First reset freshCount for each tribe
+    // First reset freshCount and coverVybe for each tribe
     if let tribes = tribes as? [Tribe] {
       for tribe in tribes {
         tribe.freshCount = 0
+        tribe.coverVybe = nil
       }
-    }
-    let query = PFQuery(className: kVYBVybeClassKey)
-    query.fromPinWithName("MyFreshFeed")
-    query.findObjectsInBackgroundWithBlock { (result :[AnyObject]!, error: NSError!) -> Void in
-      if error == nil {
-        for vybeObj in result {
-          if let trObj = vybeObj.objectForKey(kVYBVybeTribeKey) as? PFObject {
-            if let trbs = self.tribes as? [Tribe] {
-              innerLoop: for tribe in trbs {
-                if trObj.objectId == tribe.tribeObject.objectId {
-                  tribe.freshCount++
-                  break innerLoop
-                }
-              }
-            }
-          }
-        }
-        self.collectionView?.reloadData()
-      }
-      self.reloadMyFeed()
     }
     
+    self.loadTribesFromLocal()
   }
   
-  func refreshControlPulled() {
-    self.reloadTribes { () -> Void in
-      self.reloadMyFeed()
-    }
-  }
-  
-  private func reloadTribes(completionBlock: (() -> ())) {
-    // Update all tribe list
-    PFObject.unpinAllObjectsInBackgroundWithName("MyTribes", block: { (success: Bool, error: NSError!) -> Void in
-      let query = PFQuery(className: kVYBTribeClassKey)
-      query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
-      query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-        if result != nil {
-          PFObject.pinAllInBackground(result, withName: "MyTribes", block: {
-            (success: Bool, error: NSError!) -> Void in
-            if let objects = result as? [PFObject] {
-              self.tribes = []
-              
-              for obj in objects {
+  func loadTribesFromLocal() {
+    let query = PFQuery(className: kVYBTribeClassKey)
+    query.fromPinWithName("MyTribes")
+    query.whereKey("objectId", notContainedIn: self.localTribeObjectIds())
+    query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
+    query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+      if error == nil {
+        if result.count > 0 {
+
+          for obj in result {
+            let newTribe = Tribe(parseObj: obj)
+            self.tribes += [newTribe]
+          }
+          
+          self.refreshMyFeed()
+        } else {
+          let query = PFQuery(className: kVYBTribeClassKey)
+          query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
+          query.whereKey("objectId", notContainedIn: self.localTribeObjectIds())
+          query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+            if result != nil {
+              for obj in result {
                 let newTribe = Tribe(parseObj: obj)
                 self.tribes += [newTribe]
               }
-              completionBlock()
+              
+              PFObject.pinAllInBackground(result, withName: "MyTribes")
+              
+              // NOTE: - It may be a good practice to update feed from local store first
+              self.refreshMyFeed()
             }
           })
         }
-      })
+      }
     })
   }
   
-  private func reloadMyFeed() {
-    // First reset freshCount for each tribe
-    if let arr = tribes as? [Tribe] {
-      for tribe in arr {
-        tribe.freshCount = 0
+  private func localTribeObjectIds() -> [String] {
+    // Check for new tribes
+    // Array of existing tribe objectID's
+    var array: [String] = []
+    for tr in tribes {
+      if let objId = tr.tribeObject.objectId {
+        array += [objId]
       }
     }
-
+    
+    return array
+  }
+  
+  
+  func refreshMyFeed() {
     let feed = PFUser.currentUser().relationForKey(kVYBUserFreshFeedKey)
     let query = feed.query()
-    query.includeKey(kVYBVybeTribeKey)
     query.includeKey(kVYBVybeUserKey)
     
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
@@ -180,8 +154,33 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
                 if let trObj = vybeObj.objectForKey(kVYBVybeTribeKey) as? PFObject {
                   if let tribes = self.tribes as? [Tribe] {
                     innerLoop: for tribe in tribes {
-                      if trObj.objectId == tribe.tribeObject.objectId {
-                        tribe.freshCount++
+                      if let trb = tribe.tribeObject as? PFObject where trObj.objectId == trb.objectId {
+                        // Do not increment the count for your own vybe but still update the cover vybe
+                        if let user = vybeObj[kVYBVybeUserKey] as? PFObject where user.objectId != PFUser.currentUser().objectId {
+                          tribe.freshCount++
+                        }
+                        if let coverObjDate = tribe.coverVybe?.objectForKey(kVYBVybeTimestampKey) as? NSDate {
+                          if let newDate = vybeObj[kVYBVybeTimestampKey] as? NSDate {
+                            let comparison = newDate.compare(coverObjDate)
+                            if comparison == NSComparisonResult.OrderedAscending {
+                              tribe.coverVybe = vybeObj
+                            }
+                          }
+                        } else {
+                          tribe.coverVybe = vybeObj
+                        }
+                        
+                        if let lastVybeDate = trb[kVYBTribeLastVybeKey].objectForKey(kVYBVybeTimestampKey) as? NSDate,
+                          let newDate = vybeObj[kVYBVybeTimestampKey] as? NSDate {
+                            let comparison = newDate.compare(lastVybeDate)
+                            if comparison == NSComparisonResult.OrderedDescending {
+                              trb[kVYBTribeLastVybeKey] = vybeObj
+                              trb.pinInBackgroundWithName("MyTribes")
+                            }
+                        } else {
+                          trb[kVYBTribeLastVybeKey] = vybeObj
+                          trb.pinInBackgroundWithName("MyTribes")
+                        }
                         break innerLoop
                       }
                     }
@@ -197,18 +196,42 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     }
   }
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if segue.identifier == "ShowCreateTribeSegue" {
-      if let createTribeVC = segue.destinationViewController as? CreateTribeViewController {
-        createTribeVC.delegate = self
-      }
-    } else if segue.identifier == "ShowTribeInfoSegue" {
-      if let tribeDetails = segue.destinationViewController as? TribeDetailsViewController {
-        tribeDetails.tribeObj = selectedTribe
+  func refreshControlPulled() {
+    // First reset freshCount and coverVybe for each tribe
+    if let tribes = tribes as? [Tribe] {
+      for tribe in tribes {
+        tribe.freshCount = 0
+        tribe.coverVybe = nil
       }
     }
+    
+    let query = PFQuery(className: kVYBTribeClassKey)
+    query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
+    query.whereKey("objectId", notContainedIn: self.localTribeObjectIds())
+    query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+      if result != nil {
+        PFObject.pinAllInBackground(result, withName: "MyTribes")
+        
+        if let objects = result as? [PFObject] {
+          for obj in objects {
+            let newTribe = Tribe(parseObj: obj)
+            self.tribes += [newTribe]
+          }
+        }
+        
+        // Refresh feed
+        self.refreshMyFeed()
+      }
+    })
   }
   
+  func appDelegateDidReceiveRemoteNotification(notification: NSNotification) {
+    if let payload = notification.userInfo,
+      let pushType = payload[kVYBPushPayloadPayloadTypeKey] as? String where pushType == kVYBPushPayloadPayloadTypeVybeKey {
+        
+    }
+  }
+
   // MARK: - CreateTribeDelegate
   
   func didCreateTribe(tribe: AnyObject) {
@@ -241,9 +264,9 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
     if UIScreen.mainScreen().bounds.size.width > 320 {
       // iPhone6
-      return CGSizeMake(100.0, 135.0)
+      return CGSizeMake(100.0, 120.0)
     } else {
-      return CGSizeMake(84.0, 119.0)
+      return CGSizeMake(84.0, 104.0)
     }
   }
   
@@ -254,7 +277,7 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     
     let tribe = tribes[indexPath.row] as! Tribe
     
-    cell.tribeObject = tribe.tribeObject
+    cell.tribeObject = tribe
     cell.delegate = self
 
     cell.nameLabel.text = tribe.tribeObject.objectForKey(kVYBTribeNameKey) as? String
@@ -267,11 +290,18 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     }
     cell.photoImageView.makeCircleWithBorderColor(borderColor, width: 4.0)
     
-    if let file = tribe.tribeObject[kVYBTribePhotoKey] as? PFFile {
-      cell.photoImageView.file = file
+    var photoFile: PFFile? = nil
+    if let cover = tribe.coverVybe as? PFObject,
+      let photoFile = cover.objectForKey(kVYBVybeThumbnailKey) as? PFFile {
+      cell.photoImageView.file = photoFile
       cell.photoImageView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
         if image != nil {
-          let maskImage = UIImage(named: "SquareMask")
+          let maskImage: UIImage?
+          if image.size.height > image.size.width {
+            maskImage = UIImage(named: "thumbnail_mask_portrait")
+          } else {
+            maskImage = UIImage(named: "thumbnail_mask_landscape")
+          }
           cell.photoImageView.image = VYBUtility.maskImage(image, withMask: maskImage)
         }
       })
@@ -282,13 +312,25 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     return cell
   }
   
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == "ShowCreateTribeSegue" {
+      if let createTribeVC = segue.destinationViewController as? CreateTribeViewController {
+        createTribeVC.delegate = self
+      }
+    } else if segue.identifier == "ShowTribeInfoSegue" {
+      if let tribeDetails = segue.destinationViewController as? TribeDetailsViewController {
+        tribeDetails.tribeObj = selectedTribe
+      }
+    }
+  }
+  
   func didSelectTribeToShowInfo(obj: AnyObject) {
     selectedTribe = obj
     self.performSegueWithIdentifier("ShowTribeInfoSegue", sender: nil)
   }
   
   func didSelectTribeToPlay(obj: AnyObject) {
-    if let tribe = obj as? PFObject {
+    if let tribe = obj as? Tribe {
       let playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
       playerVC.delegate = self
       playerVC.playStreamForTribe(tribe)
@@ -311,7 +353,6 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
         playerVC.playStream(result)
       }
     }
-
   }
   
   // MARK: - VYBPlayerViewControllerDelegate
@@ -330,11 +371,35 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     self.dismissViewControllerAnimated(true, completion: completionHandler)
   }
   
+  @IBAction func settingsButtonPressed(sender: AnyObject) {
+    let username: String
+    if let name = PFUser.currentUser()[kVYBUserUsernameKey] as? String {
+      username = name
+    } else {
+      username = "Vyber"
+    }
+    
+    let alertController = UIAlertController(title: "Hello \(username)", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+    let logOutAction = UIAlertAction(title: "Log Out", style: .Destructive) { (action: UIAlertAction!) -> Void in
+      if let appDelegate = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
+        appDelegate.logOut()
+      }
+    }
+    
+    let goBackAction = UIAlertAction(title: "Go Back", style: .Cancel, handler: nil)
+    
+    alertController.addAction(logOutAction)
+    alertController.addAction(goBackAction)
+    
+    self.presentViewController(alertController, animated: true, completion: nil)
+  }
+  
   // MARK: - UIScrollViewDelegate
+  
   override func scrollViewDidScroll(scrollView: UIScrollView) {
     if let button = captureButton {
       var frame = button.frame
-      frame.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - captureButton!.bounds.size.height
+      frame.origin.y = scrollView.contentOffset.y + self.view.bounds.size.height - captureButton!.bounds.size.height - 25
       button.frame = frame
     }
   }

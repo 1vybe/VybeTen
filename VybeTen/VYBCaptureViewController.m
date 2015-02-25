@@ -27,8 +27,8 @@
 @property (nonatomic, weak) IBOutlet UIButton *recordButton;
 
 @property (nonatomic, weak) IBOutlet UIButton *homeButton;
-@property (nonatomic, weak) IBOutlet UIButton *chooseTribeButton;
 @property (nonatomic, weak) IBOutlet UILabel *tribeLabel;
+@property (nonatomic, weak) IBOutlet UIView *tribeLabelBG;
 
 @property (nonatomic, weak) IBOutlet UIImageView *focusTarget;
 
@@ -71,7 +71,6 @@ static void *XYZContext = &XYZContext;
   
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
-  [[NSNotificationCenter defaultCenter] removeObserver:self name:VYBUtilityActivityCountUpdatedNotification object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionInterruptionNotification object:nil];
 }
 
@@ -80,15 +79,11 @@ static void *XYZContext = &XYZContext;
   // Subscribing to Notifications
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActiveNotificationReceived:) name:VYBAppDelegateApplicationDidBecomeActiveNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroundNotificationReceived:) name:VYBAppDelegateApplicationDidEnterBackgourndNotification object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityCountChanged) name:VYBUtilityActivityCountUpdatedNotification object:nil];
-  
-  // In case capture screen is loaded AFTER initial loading from appdelegate is done already
-  [self activityCountChanged];
   
   // Device orientation detection
   motion_orientation_queue = dispatch_queue_create("com.vybe.app.capture.motion.orientation.queue", NULL);
   dispatch_async(motion_orientation_queue, ^{
-    [MotionOrientation initialize];
+//    [MotionOrientation initialize];
   });
   
   _captureOrientation = AVCaptureVideoOrientationPortrait;
@@ -125,6 +120,8 @@ static void *XYZContext = &XYZContext;
 //  [self.progressBar setProgress:0.7];
   
   [self.view insertSubview:self.progressBar aboveSubview:self.cameraView];
+  
+  [self getPermissionIfNeeded];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -133,6 +130,12 @@ static void *XYZContext = &XYZContext;
   PFObject *currTribe = [[MyVybeStore sharedInstance] currTribe];
   if (currTribe) {
     self.tribeLabel.text = currTribe[kVYBTribeNameKey];
+    self.tribeLabel.hidden = NO;
+    self.tribeLabelBG.hidden = NO;
+  } else {
+    self.tribeLabel.text = @"Select Tribe";
+    self.tribeLabel.hidden = YES;
+    self.tribeLabelBG.hidden = YES;
   }
   
   // NOTE: - Suspicion.
@@ -265,7 +268,6 @@ static void *XYZContext = &XYZContext;
   [self.flipButton setEnabled:NO];
   [self.flashButton setEnabled:NO];
   [self.homeButton setEnabled:NO];
-  [self.chooseTribeButton setEnabled:NO];
   
   [capturePipeline flipCameraWithCompletion:^(AVCaptureDevicePosition cameraPosition){
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -275,7 +277,6 @@ static void *XYZContext = &XYZContext;
       [[self flashButton] setEnabled:YES];
       [[self flashButton] setHidden:_isFrontCamera];
       [self.homeButton setEnabled:YES];
-      [self.chooseTribeButton setEnabled:YES];
     });
   }];
 }
@@ -416,10 +417,6 @@ static void *XYZContext = &XYZContext;
   }
 }
 
-- (void)activityCountChanged {
-  
-}
-
 #pragma mark - Tap to focus
 
 - (void)focusOnTouchArea:(UIGestureRecognizer *)gesture {
@@ -445,8 +442,12 @@ static void *XYZContext = &XYZContext;
   [self dismissViewControllerAnimated:YES completion:^{
     if (tribe && tribe[kVYBTribeNameKey]) {
       self.tribeLabel.text = tribe[kVYBTribeNameKey];
+      self.tribeLabel.hidden = NO;
+      self.tribeLabelBG.hidden = NO;
     } else {
       self.tribeLabel.text = @"Select Tribe";
+      self.tribeLabel.hidden = YES;
+      self.tribeLabelBG.hidden = YES;
     }
     self.overlayView.hidden = NO;
   }];
@@ -458,12 +459,57 @@ static void *XYZContext = &XYZContext;
   }];
 }
 
+#pragma mark - Request for a permission to send push notifications
+
+- (void)getPermissionIfNeeded {
+  // iOS8
+  if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+    // Check notification permission settings
+    if ([[[UIApplication sharedApplication] currentUserNotificationSettings] types] > 0) {
+      [[NSUserDefaults standardUserDefaults] setObject:kVYBUserDefaultsNotificationPermissionGrantedKey forKey:kVYBUserDefaultsNotificationPermissionKey];
+    }
+    
+    NSString *notiPermission = [[NSUserDefaults standardUserDefaults] objectForKey:kVYBUserDefaultsNotificationPermissionKey];
+    if ( [notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionUndeterminedKey] ) {
+      UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Push Notification"
+                                                                               message:@"We would like to notify when there are live happenings around you"
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+      UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                             style:UIAlertActionStyleCancel handler:nil];
+      UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction *action) {
+                                                         UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
+                                                                                                         UIUserNotificationTypeBadge |
+                                                                                                         UIUserNotificationTypeSound);
+                                                         UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
+                                                                                                                                  categories:nil];
+                                                         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+                                                       }];
+      [alertController addAction:cancelAction];
+      [alertController addAction:okAction];
+      
+      [self presentViewController:alertController animated:NO completion:nil];
+    }
+    else if ([notiPermission isEqualToString:kVYBUserDefaultsNotificationPermissionDeniedKey]) {
+      UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enable Notification"
+                                                                               message:@"Please let us notify you so you know what's happening around you when you want from Settings -> Notifications"
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+      
+      UIAlertAction *emptyAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+      [alertController addAction:emptyAction];
+      
+      [self presentViewController:alertController animated:NO completion:nil];
+    }
+  }
+}
+
 #pragma mark - ()
 
 - (void)syncUIWithRecordingStatus {
   self.homeButton.hidden = _isRecording;
   self.tribeLabel.hidden = _isRecording;
-  self.chooseTribeButton.hidden = _isRecording;
+  self.tribeLabelBG.hidden = _isRecording;
   
   flipButton.hidden = _isRecording;
   flashButton.hidden = _isRecording || _isFrontCamera;

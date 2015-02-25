@@ -90,7 +90,7 @@ NSString *const kVYBTribeClassKey                               = @"Tribe";
 
 // field keys
 NSString *const kVYBTribeNameKey                                = @"name";
-NSString *const kVYBTribePhotoKey                               = @"photo";
+NSString *const kVYBTribeLastVybeKey                            = @"lastVybe";
 NSString *const kVYBTribeCoordinatorKey                         = @"coordinator";
 NSString *const kVYBTribeMembersKey                             = @"members";
 

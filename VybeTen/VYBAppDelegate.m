@@ -13,7 +13,7 @@
 #import <GAITracker.h>
 #import <GAIFields.h>
 //NOTE: Take out this part when releasing to TESTFLIGHT
-//#import <HockeySDK/HockeySDK.h>
+#import <HockeySDK/HockeySDK.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
@@ -57,12 +57,12 @@
   
   //NOTE: Take out this part when releasing to TESTFLIGHT
   /* HockeyApp Initilization */
-//  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
-//  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
-//  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
-//  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
-//  [hockeyManager startManager];
-//  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+  BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
+  [hockeyManager configureWithIdentifier:HOCKEY_APP_ID];
+  hockeyManager.updateManager.checkForUpdateOnLaunch = YES;
+  hockeyManager.updateManager.updateSetting = BITUpdateCheckStartup;
+  [hockeyManager startManager];
+  [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
   
   [[WelcomeManager sharedInstance] setLaunchOptions:launchOptions];
   
@@ -171,23 +171,7 @@
   }
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-  [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
-  
-  if ([UIApplication sharedApplication].applicationState == UIApplicationStateInactive) {
-#ifdef DEBUG
-#else
-    // Tracks app open due to a push notification when the app was not active
-    if (![[ConfigManager sharedInstance] currentUserExcludedFromAnalytics]) {
-      [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
-    }
-#endif
-  }
-}
-
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-  
-  [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
   
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateInactive) {
 #ifdef DEBUG
@@ -201,6 +185,7 @@
   }
   
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:VYBAppDelegateApplicationDidReceiveRemoteNotification object:userInfo];
 //    application.applicationIconBadgeNumber = application.applicationIconBadgeNumber + 1;
   }
   
@@ -270,7 +255,7 @@
   TribesViewController *tribeVC = (TribesViewController *)[[UIStoryboard storyboardWithName:@"Tribes" bundle:nil] instantiateInitialViewController];
   VYBNavigationController *tribeNav = [[VYBNavigationController alloc] initWithRootViewController:tribeVC];
 
-  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[tribeNav, captureVC]];
+  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[captureVC, tribeNav]];
   
   [self.mainNavController pushViewController:self.swipeContainerController animated:NO];
   

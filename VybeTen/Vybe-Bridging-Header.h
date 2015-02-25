@@ -6,6 +6,7 @@
 #import <Parse/PFAnalytics.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import <ParseUI/ParseUI.h>
+#import <Bolts/Bolts.h>
 
 #import <MBProgressHUD/MBProgressHUD.h>
 

@@ -11,7 +11,11 @@ import UIKit
 class PreviewViewController: UIViewController, SelectTribeDelegate {
   @IBOutlet weak var playerView: VYBPlayerView!
   @IBOutlet weak var overlayView: UIView!
-  @IBOutlet weak var tribeLabel: UILabel!
+  
+  @IBOutlet weak var tribeNameLabel: UILabel!
+  @IBOutlet weak var tribeNameBG: UIView!
+  
+  @IBOutlet weak var shareButton: UIButton!
   
   var player: AVPlayer?
   var currItem: AVPlayerItem?
@@ -34,7 +38,15 @@ class PreviewViewController: UIViewController, SelectTribeDelegate {
     
     if let currTribe = MyVybeStore.sharedInstance.currTribe,
       let tribeName = currTribe.objectForKey(kVYBTribeNameKey) as? String {
-        tribeLabel.text = tribeName
+        tribeNameLabel.text = tribeName
+        tribeNameLabel.hidden = false
+        tribeNameBG.hidden = false
+        shareButton.selected = true
+    } else {
+      tribeNameLabel.text = "Select Tribe"
+      tribeNameLabel.hidden = true
+      tribeNameBG.hidden = true
+      shareButton.selected = false
     }
     
     player = AVPlayer()
@@ -122,9 +134,15 @@ class PreviewViewController: UIViewController, SelectTribeDelegate {
   func didSelectTribe(tribe: AnyObject?) {
     self.dismissViewControllerAnimated(true, completion: { () -> Void in
       if let tribeName = tribe?.objectForKey(kVYBTribeNameKey) as? String {
-        self.tribeLabel.text = tribeName
+        self.tribeNameLabel.text = tribeName
+        self.tribeNameLabel.hidden = false
+        self.tribeNameBG.hidden = false
+        self.shareButton.selected = true
       } else {
-        self.tribeLabel.text = "Select Tribe"
+        self.tribeNameLabel.text = "Select Tribe"
+        self.tribeNameLabel.hidden = true
+        self.tribeNameBG.hidden = true
+        self.shareButton.selected = false
       }
       self.overlayView.hidden = false
     })

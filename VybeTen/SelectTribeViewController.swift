@@ -19,7 +19,7 @@ class SelectTribeViewController: UIViewController, UITableViewDelegate, UITableV
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var topBar: UIView!
   
-  var tribeObjects: [AnyObject] = [AnyObject]()
+  var tribeObjects: [AnyObject] = []
   var selectedTribeIndex: Int?
   
   deinit {
@@ -34,9 +34,10 @@ class SelectTribeViewController: UIViewController, UITableViewDelegate, UITableV
     tableView.contentInset = UIEdgeInsetsMake(topBar.bounds.size.height, 0.0, 0.0, 0.0)
     
     let query = PFQuery(className: kVYBTribeClassKey)
+    query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if result != nil {
-        self.tribeObjects = result as! [PFObject]
+        self.tribeObjects = result
         self.moveSelectedTribeToFirst()
         
         self.tableView.reloadData()

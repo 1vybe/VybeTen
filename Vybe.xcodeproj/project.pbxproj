@@ -62,6 +62,8 @@
 		7408864B1A97EA86008BD390 /* TribeCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7408864A1A97EA86008BD390 /* TribeCollectionCell.swift */; };
 		740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */; };
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
+		741277001A9D7D06008A7E24 /* PaddedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741276FF1A9D7D06008A7E24 /* PaddedLabel.swift */; };
+		741277021A9D86AB008A7E24 /* TimeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741277011A9D86AB008A7E24 /* TimeBar.swift */; };
 		74172D001A720FCF00142EC1 /* ActionUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74172CFF1A720FCF00142EC1 /* ActionUtility.swift */; };
 		741FFB9A1A9AD58700C35064 /* CreateTribeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741FFB991A9AD58700C35064 /* CreateTribeViewController.swift */; };
 		741FFB9C1A9AD83900C35064 /* EditTribeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741FFB9B1A9AD83900C35064 /* EditTribeViewController.swift */; };
@@ -108,7 +110,6 @@
 		74E570EF1A41D430005072E1 /* Notification.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74E570EE1A41D430005072E1 /* Notification.storyboard */; };
 		74E570F11A41DD0D005072E1 /* NotificationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */; };
 		74E794E81A9A6F56001DD41F /* AddMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E794E71A9A6F56001DD41F /* AddMemberViewController.swift */; };
-		74E794EA1A9A85F1001DD41F /* AddMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E794E91A9A85F1001DD41F /* AddMemberTableViewCell.swift */; };
 		74F095571A7D5F2300B3B116 /* Capture.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74F095561A7D5F2300B3B116 /* Capture.storyboard */; };
 		74F095591A7D691E00B3B116 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F095581A7D691E00B3B116 /* PreviewViewController.swift */; };
 		74F0955D1A80234400B3B116 /* TaggingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F0955C1A80234400B3B116 /* TaggingViewController.swift */; };
@@ -223,6 +224,8 @@
 		7408864A1A97EA86008BD390 /* TribeCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TribeCollectionCell.swift; sourceTree = "<group>"; };
 		740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
+		741276FF1A9D7D06008A7E24 /* PaddedLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaddedLabel.swift; sourceTree = "<group>"; };
+		741277011A9D86AB008A7E24 /* TimeBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeBar.swift; sourceTree = "<group>"; };
 		74172CFF1A720FCF00142EC1 /* ActionUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionUtility.swift; sourceTree = "<group>"; };
 		741FFB991A9AD58700C35064 /* CreateTribeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTribeViewController.swift; sourceTree = "<group>"; };
 		741FFB9B1A9AD83900C35064 /* EditTribeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditTribeViewController.swift; sourceTree = "<group>"; };
@@ -273,7 +276,6 @@
 		74E570EE1A41D430005072E1 /* Notification.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Notification.storyboard; sourceTree = "<group>"; };
 		74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTableViewController.swift; sourceTree = "<group>"; };
 		74E794E71A9A6F56001DD41F /* AddMemberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMemberViewController.swift; sourceTree = "<group>"; };
-		74E794E91A9A85F1001DD41F /* AddMemberTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMemberTableViewCell.swift; sourceTree = "<group>"; };
 		74F095561A7D5F2300B3B116 /* Capture.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Capture.storyboard; sourceTree = "<group>"; };
 		74F095581A7D691E00B3B116 /* PreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		74F0955C1A80234400B3B116 /* TaggingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaggingViewController.swift; sourceTree = "<group>"; };
@@ -445,6 +447,8 @@
 				020FB84719744EBA005C9BA9 /* VYBCameraView.h */,
 				020FB84819744EBA005C9BA9 /* VYBCameraView.m */,
 				7408864A1A97EA86008BD390 /* TribeCollectionCell.swift */,
+				741276FF1A9D7D06008A7E24 /* PaddedLabel.swift */,
+				741277011A9D86AB008A7E24 /* TimeBar.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -621,7 +625,6 @@
 				74E794E71A9A6F56001DD41F /* AddMemberViewController.swift */,
 				74DF7AC11A93FA4400650B48 /* TribesViewController.swift */,
 				7430F71D1A94F5D8009D5D26 /* SimpleDismissActionSegue.swift */,
-				74E794E91A9A85F1001DD41F /* AddMemberTableViewCell.swift */,
 			);
 			name = Home;
 			sourceTree = "<group>";
@@ -855,6 +858,7 @@
 				74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
 				74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */,
+				741277021A9D86AB008A7E24 /* TimeBar.swift in Sources */,
 				7441011E1A645A3E00D2F874 /* CheckInViewController.swift in Sources */,
 				7464831C1A73063500FA4C9F /* HomeViewController.swift in Sources */,
 				02A45CEF1A1E664E00425F9C /* PizzaProgressView.swift in Sources */,
@@ -875,12 +879,12 @@
 				74CD7E2D1A8C4A1B009778CC /* SelectTribeViewController.swift in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
+				741277001A9D7D06008A7E24 /* PaddedLabel.swift in Sources */,
 				023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */,
 				740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */,
 				741FFB9A1A9AD58700C35064 /* CreateTribeViewController.swift in Sources */,
 				025408E119BA0FD7009C7C71 /* NSArray+PFObject.m in Sources */,
 				88CA12331A272BB700D4B097 /* LogInViewController.swift in Sources */,
-				74E794EA1A9A85F1001DD41F /* AddMemberTableViewCell.swift in Sources */,
 				0266802819F15CB000030836 /* VYBPlayerViewController.m in Sources */,
 				74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */,
 				74C4EA4C1A81412E00124C9D /* ProfileListViewController.swift in Sources */,

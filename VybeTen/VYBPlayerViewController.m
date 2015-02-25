@@ -145,9 +145,17 @@
   longPressRecognizer.delegate = self;
   [self.view addGestureRecognizer:longPressRecognizer];
   
-  UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeDownDetected:)];
-  swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
-  [self.view addGestureRecognizer:swipeGestureRecognizer];
+  UISwipeGestureRecognizer *swipeDownGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeDownDetected:)];
+  swipeDownGesture.direction = UISwipeGestureRecognizerDirectionDown;
+  [self.view addGestureRecognizer:swipeDownGesture];
+  
+  UISwipeGestureRecognizer *swipeLeftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeftDetected:)];
+  swipeLeftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
+  [self.view addGestureRecognizer:swipeLeftGesture];
+  
+  UISwipeGestureRecognizer *swipeRightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRightDetected:)];
+  swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
+  [self.view addGestureRecognizer:swipeRightGesture];
   
   self.firstOverlay.hidden = YES;
   self.optionsOverlay.hidden = YES;
@@ -247,18 +255,37 @@
                               }];
 }
 
-- (void)playStreamForTribe:(PFObject *)obj {
-  PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-  [query fromPinWithName:@"MyFreshFeed"];
-  [query whereKey:kVYBVybeTribeKey equalTo:obj];
-  [query includeKey:kVYBVybeUserKey];
-  [query orderByAscending:kVYBVybeTimestampKey];
-  
-  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    if (!error && objects.count) {
-      [self playStream:objects];
-    }
-  }];
+- (void)playStreamForTribe:(Tribe *)tribe {
+  PFObject *obj = tribe.tribeObject;
+  if (obj) {
+    PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
+    [query fromPinWithName:@"MyFreshFeed"];
+    [query whereKey:kVYBVybeTribeKey equalTo:obj];
+    [query includeKey:kVYBVybeUserKey];
+    [query orderByAscending:kVYBVybeTimestampKey];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+      if (!error) {
+        if (objects.count) {
+          [self playStream:objects];
+        } else {
+          if (tribe.coverVybe) {
+            [self playOnce:tribe.coverVybe];
+          } else {
+            PFQuery *oQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
+            [oQuery whereKey:kVYBVybeTribeKey equalTo:tribe.tribeObject];
+            [oQuery includeKey:kVYBVybeUserKey];
+            [oQuery orderByDescending:kVYBVybeTimestampKey];
+            [oQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+              if (object) {
+                [self playOnce:object];
+              }
+            }];
+          }
+        }
+      }
+    }];
+  }
 }
 
 - (void)playStream:(NSArray *)vybes {
@@ -450,6 +477,8 @@
     });
     
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
+    CMTime duration = asset.duration;
+    
     [self playAsset:asset];
     
     if (_zoneCurrIdx + 1 < _zoneVybes.count) {
@@ -565,11 +594,13 @@
   
   // Reached the end of zone. Zone OUT
   if (_zoneCurrIdx == _zoneVybes.count - 1) {
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[PFUser currentUser] saveEventually:^(BOOL succeeded, NSError *error) {
+      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+      [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    }];
   }
   else {
-    //[self.currPlayer pause];
-    
     _zoneCurrIdx = _zoneCurrIdx + 1;
     [self playCurrentItem];
   }
@@ -682,6 +713,14 @@
   [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)swipeLeftDetected:(UIGestureRecognizer *)recognizer {
+  [self playNextItem];
+}
+
+- (void)swipeRightDetected:(UIGestureRecognizer *)recognizer {
+  [self playPrevItem];
+}
+
 #pragma mark - Map
 
 - (void)presentMapViewController {
@@ -723,14 +762,6 @@
     [self.currPlayer pause];
   }
   self.optionsButton.selected = !self.optionsButton.selected;
-}
-
-- (IBAction)captureButtonPressed:(id)sender {
-  [self moveToCaptureForCurrentTribe];
-}
-
-- (IBAction)bigCaptureButtonPressed:(id)sender {
-  [self moveToCaptureForCurrentTribe];
 }
 
 - (void)moveToCaptureForCurrentTribe {

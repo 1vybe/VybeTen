@@ -65,16 +65,17 @@ import UIKit
     
     // NOTE: - Start with Capture screen
     selectedViewController = viewControllers[0]
+    
     self.transitionToViewController(selectedViewController!, interactive: false, animation: false)
   }
   
   func moveToTribeScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
+    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
   }
   
   
   func moveToCaptureScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
+    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
   }
   
   
@@ -241,10 +242,11 @@ import UIKit
   }
   
   override func prefersStatusBarHidden() -> Bool {
+    // Initially capture screen
     if selectedViewController == nil {
-      return false
+      return true
     }
-    else if selectedViewController === viewControllers[0] {
+    else if selectedViewController === viewControllers[1] {
       // Home Side
       return false
     } else {

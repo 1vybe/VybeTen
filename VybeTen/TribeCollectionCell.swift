@@ -11,9 +11,8 @@ import UIKit
 class TribeCollectionCell: UICollectionViewCell, UIGestureRecognizerDelegate {
   @IBOutlet weak var photoImageView: PFImageView!
   @IBOutlet weak var nameLabel: UILabel!
-  @IBOutlet weak var membersCount: UILabel!
   
-  weak var tribeObject: AnyObject?
+  weak var tribeObject: Tribe?
   weak var delegate: UIViewController?
   
   override func awakeFromNib() {
@@ -26,23 +25,23 @@ class TribeCollectionCell: UICollectionViewCell, UIGestureRecognizerDelegate {
   }
   
   func doubleTapDetected() {
-    MyVybeStore.sharedInstance.currTribe = tribeObject as? PFObject
+    MyVybeStore.sharedInstance.currTribe = tribeObject?.tribeObject as? PFObject
     
     if let tribesVC = delegate as? TribesViewController {
       tribesVC.moveToCapture()
     }
   }
   
-  @IBAction func tribeNamePressed(sender: AnyObject) {
-    if let tribesVC = delegate as? TribesViewController,
-      let tribe = tribeObject as? PFObject {
-      tribesVC.didSelectTribeToShowInfo(tribe)
-    }
-  }
+//  @IBAction func tribeNamePressed(sender: AnyObject) {
+//    if let tribesVC = delegate as? TribesViewController,
+//      let tribe = tribeObject {
+//      tribesVC.didSelectTribeToShowInfo(tribe)
+//    }
+//  }
   
   @IBAction func tribePhotoPressed(sender: AnyObject) {
     if let tribesVC = delegate as? TribesViewController,
-      let tribe = tribeObject as? PFObject {
+      let tribe = tribeObject {
         tribesVC.didSelectTribeToPlay(tribe)
     }
   }
