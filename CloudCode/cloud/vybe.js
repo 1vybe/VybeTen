@@ -35,17 +35,17 @@ Parse.Cloud.afterSave('Vybe', function (request) {
     // Send push
   var tribe = request.object.get('tribe');
   tribe.fetch().then(function (tribeObj) {
-    query = new Parse.Query(Parse.User);
-    query.notEqualTo('username', request.user.get('username'));
-    var alertMessage = request.user.get('username') + ' vybed in ' + tribeObj.get('name') + ' Tribe.'
+    var pQuery = new Parse.Query(Parse.User);
+    pQuery.notEqualTo('username', request.user.get('username'));
+    var alertMessage = request.user.get('username') + ' vybed in ' + tribeObj.get('name')
     var pushPayload = {
       alert: alertMessage, // Set our alert message.
-      p: 'v', // Payload Type: Activity
+      p: 'v', // Payload Type: Vybe
       tid: tribe.id // Tribe Id
     }
 
     Parse.Push.send({
-      where: query,
+      where: pQuery,
       data: pushPayload
     }).then(function() {
       console.log('Sent Vybe Push : ' + alertMessage);
