@@ -68,7 +68,13 @@ class WelcomeManager: NSObject {
           })
         }
       } else {
-        PFUser.currentUser().fetchInBackgroundWithTarget(self, selector: ("fetchCurrentUserDataWithResult:error:"))
+        PFUser.currentUser().fetch()
+
+        if let vybeAppDelegate = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            vybeAppDelegate.proceedToMainInterface()
+          })
+        }        
       }
     })
   }
@@ -98,28 +104,24 @@ class WelcomeManager: NSObject {
       self.updateGoogleAnalytics()
       
       // Update myFlags cache
-      let myFlags = PFUser.currentUser().relationForKey(kVYBUserFlagsKey)
-      var flagQuery = myFlags.query()
-      flagQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-        if error == nil {
-          for vybeObj in result as! [PFObject] {
-            VYBCache.sharedCache().setAttributesForVybe(vybeObj, flaggedByCurrentUser: true)
+      if let currUser = userObj as? PFUser, let myFlags = currUser.relationForKey(kVYBUserFlagsKey) {
+        var flagQuery = myFlags.query()
+        flagQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+          if error == nil {
+            for vybeObj in result as! [PFObject] {
+              VYBCache.sharedCache().setAttributesForVybe(vybeObj, flaggedByCurrentUser: true)
+            }
           }
-        }
-      })
+        })
+      }
       
       // Update blockedUsers cache
-      let blockedUsers = PFUser.currentUser().relationForKey(kVYBUserBlockedUsersKey)
-      var blockQuery = blockedUsers.query()
-      blockQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-        if error == nil {
-          VYBCache.sharedCache().setBlockedUsers(result, forUser: PFUser.currentUser())
-        }
-      })
-      
-      if let vybeAppDelegate = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          vybeAppDelegate.proceedToMainInterface()
+      if let currUser = userObj as? PFUser, let blockedUsers = currUser.relationForKey(kVYBUserBlockedUsersKey) {
+        var blockQuery = blockedUsers.query()
+        blockQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+          if error == nil {
+            VYBCache.sharedCache().setBlockedUsers(result, forUser: currUser)
+          }
         })
       }
     }

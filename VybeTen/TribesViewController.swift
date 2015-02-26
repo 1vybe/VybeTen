@@ -146,51 +146,50 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     query.includeKey(kVYBVybeUserKey)
     
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
-      if result != nil {
-        PFObject.unpinAllObjectsInBackgroundWithName("MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
-          PFObject.pinAllInBackground(result, withName: "MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
-            if success {
-              for vybeObj in result {
-                if let trObj = vybeObj.objectForKey(kVYBVybeTribeKey) as? PFObject {
-                  if let tribes = self.tribes as? [Tribe] {
-                    innerLoop: for tribe in tribes {
-                      if let trb = tribe.tribeObject as? PFObject where trObj.objectId == trb.objectId {
-                        // Do not increment the count for your own vybe but still update the cover vybe
-                        if let user = vybeObj[kVYBVybeUserKey] as? PFObject where user.objectId != PFUser.currentUser().objectId {
-                          tribe.freshCount++
-                        }
-                        if let coverObjDate = tribe.coverVybe?.objectForKey(kVYBVybeTimestampKey) as? NSDate {
-                          if let newDate = vybeObj[kVYBVybeTimestampKey] as? NSDate {
-                            let comparison = newDate.compare(coverObjDate)
-                            if comparison == NSComparisonResult.OrderedAscending {
-                              tribe.coverVybe = vybeObj
-                            }
-                          }
-                        } else {
-                          tribe.coverVybe = vybeObj
-                        }
-                        
-                        if let lastVybeDate = trb[kVYBTribeLastVybeKey].objectForKey(kVYBVybeTimestampKey) as? NSDate,
-                          let newDate = vybeObj[kVYBVybeTimestampKey] as? NSDate {
-                            let comparison = newDate.compare(lastVybeDate)
-                            if comparison == NSComparisonResult.OrderedDescending {
-                              trb[kVYBTribeLastVybeKey] = vybeObj
-                              trb.pinInBackgroundWithName("MyTribes")
-                            }
-                        } else {
-                          trb[kVYBTribeLastVybeKey] = vybeObj
-                          trb.pinInBackgroundWithName("MyTribes")
-                        }
-                        break innerLoop
+      if let feedObjs = result as? [PFObject] {
+        PFObject.pinAllInBackground(feedObjs, withName: "MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
+          if success {
+            for vybeObj in feedObjs {
+              if let trObj = vybeObj[kVYBVybeTribeKey] as? PFObject {
+                if let tribes = self.tribes as? [Tribe] {
+                  innerLoop: for tribe in tribes {
+                    if let trb = tribe.tribeObject as? PFObject where trObj.objectId == trb.objectId {
+                      // Do not increment the count for your own vybe but still update the cover vybe
+                      if let user = vybeObj[kVYBVybeUserKey] as? PFObject where user.objectId != PFUser.currentUser().objectId {
+                        tribe.freshCount++
                       }
+                      if let coverObjDate = tribe.coverVybe?.objectForKey(kVYBVybeTimestampKey) as? NSDate {
+                        if let newDate = vybeObj[kVYBVybeTimestampKey] as? NSDate {
+                          let comparison = newDate.compare(coverObjDate)
+                          if comparison == NSComparisonResult.OrderedAscending {
+                            tribe.coverVybe = vybeObj
+                          }
+                        }
+                      } else {
+                        tribe.coverVybe = vybeObj
+                      }
+                      
+                      if let lastVybe = trb[kVYBTribeLastVybeKey] as? PFObject,
+                        let lastVybeTime = lastVybe[kVYBVybeTimestampKey] as? NSDate,
+                        let newDate = vybeObj[kVYBVybeTimestampKey] as? NSDate {
+                          let comparison = newDate.compare(lastVybeTime)
+                          if comparison == NSComparisonResult.OrderedDescending {
+                            trb[kVYBTribeLastVybeKey] = vybeObj
+                            trb.pinInBackgroundWithName("MyTribes")
+                          }
+                      } else {
+                        trb[kVYBTribeLastVybeKey] = vybeObj
+                        trb.pinInBackgroundWithName("MyTribes")
+                      }
+                      break innerLoop
                     }
                   }
                 }
               }
-              self.collectionView?.reloadData()
             }
-            self.refreshControl?.endRefreshing()
-          })
+            self.collectionView?.reloadData()
+          }
+          self.refreshControl?.endRefreshing()
         })
       }
     }
@@ -290,24 +289,29 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     }
     cell.photoImageView.makeCircleWithBorderColor(borderColor, width: 4.0)
     
-    var photoFile: PFFile? = nil
+    var photoFile: PFFile!
     if let cover = tribe.coverVybe as? PFObject,
-      let photoFile = cover.objectForKey(kVYBVybeThumbnailKey) as? PFFile {
-      cell.photoImageView.file = photoFile
-      cell.photoImageView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
-        if image != nil {
-          let maskImage: UIImage?
-          if image.size.height > image.size.width {
-            maskImage = UIImage(named: "thumbnail_mask_portrait")
-          } else {
-            maskImage = UIImage(named: "thumbnail_mask_landscape")
-          }
-          cell.photoImageView.image = VYBUtility.maskImage(image, withMask: maskImage)
-        }
-      })
-    } else {
-      cell.photoImageView.image = UIImage()
+      let file = cover[kVYBVybeThumbnailKey] as? PFFile {
+      photoFile = file
+    } else if let trb = tribe.tribeObject as? PFObject,
+        let lastVybe = trb[kVYBTribeLastVybeKey] as? PFObject,
+        let file = lastVybe[kVYBVybeThumbnailKey] as? PFFile {
+      photoFile = file
     }
+    
+    cell.photoImageView.file = photoFile
+    cell.photoImageView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
+      if image != nil {
+        let maskImage: UIImage?
+        if image.size.height > image.size.width {
+          maskImage = UIImage(named: "thumbnail_mask_portrait")
+        } else {
+          maskImage = UIImage(named: "thumbnail_mask_landscape")
+        }
+        cell.photoImageView.image = VYBUtility.maskImage(image, withMask: maskImage)
+      }
+    })
+
     
     return cell
   }

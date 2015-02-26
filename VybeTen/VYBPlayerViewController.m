@@ -265,23 +265,21 @@
     [query orderByAscending:kVYBVybeTimestampKey];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-      if (!error) {
-        if (objects.count) {
-          [self playStream:objects];
+      if (!error && objects.count) {
+        [self playStream:objects];
+      } else {
+        if (tribe.coverVybe) {
+          [self playOnce:tribe.coverVybe];
         } else {
-          if (tribe.coverVybe) {
-            [self playOnce:tribe.coverVybe];
-          } else {
-            PFQuery *oQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
-            [oQuery whereKey:kVYBVybeTribeKey equalTo:tribe.tribeObject];
-            [oQuery includeKey:kVYBVybeUserKey];
-            [oQuery orderByDescending:kVYBVybeTimestampKey];
-            [oQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-              if (object) {
-                [self playOnce:object];
-              }
-            }];
-          }
+          PFQuery *oQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
+          [oQuery whereKey:kVYBVybeTribeKey equalTo:tribe.tribeObject];
+          [oQuery includeKey:kVYBVybeUserKey];
+          [oQuery orderByDescending:kVYBVybeTimestampKey];
+          [oQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            if (object) {
+              [self playOnce:object];
+            }
+          }];
         }
       }
     }];
