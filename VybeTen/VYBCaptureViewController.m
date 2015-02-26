@@ -32,7 +32,7 @@
 
 @property (nonatomic, weak) IBOutlet UIImageView *focusTarget;
 
-@property (nonatomic, strong) UIProgressView *progressBar;
+@property (nonatomic, weak) IBOutlet TimeProgressBar *progressBar;
 
 - (IBAction)homeButtonPressed:(id)sender;
 - (IBAction)flipButtonPressed:(id)sender;
@@ -83,7 +83,7 @@ static void *XYZContext = &XYZContext;
   // Device orientation detection
   motion_orientation_queue = dispatch_queue_create("com.vybe.app.capture.motion.orientation.queue", NULL);
   dispatch_async(motion_orientation_queue, ^{
-//    [MotionOrientation initialize];
+    [MotionOrientation initialize];
   });
   
   _captureOrientation = AVCaptureVideoOrientationPortrait;
@@ -109,18 +109,6 @@ static void *XYZContext = &XYZContext;
   longPress.minimumPressDuration = 0.2;
   [self.recordButton addGestureRecognizer:longPress];
   
-  // Progress Bar
-  self.progressBar = [[UIProgressView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 12, self.view.bounds.size.width, 12)];
-  
-//  UIImage *trackImage = [[UIImage imageNamed:@"ProgressTile(fade)"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 1, 0, 1) resizingMode:UIImageResizingModeStretch];
-//  [self.progressBar setTrackImage:trackImage];
-//  UIImage *progressImage = [[UIImage imageNamed:@"ProgressTile(Fill)"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 1, 0, 1) resizingMode:UIImageResizingModeStretch];
-//  [self.progressBar setProgressImage:progressImage];
-  
-//  [self.progressBar setProgress:0.7];
-  
-  [self.view insertSubview:self.progressBar aboveSubview:self.cameraView];
-  
   [self getPermissionIfNeeded];
 }
 
@@ -140,8 +128,6 @@ static void *XYZContext = &XYZContext;
   
   // NOTE: - Suspicion.
   [capturePipeline startRunning];
-  
-  self.progressBar.progress = 0.0;
   
   flashButton.selected = _flashOn;
   flipButton.selected = _isFrontCamera;
@@ -186,7 +172,12 @@ static void *XYZContext = &XYZContext;
         [[SpotFinder sharedInstance] findSpotFromCurrentLocationInBackground];
         
         [recordButton setEnabled:NO];
-        [recordButton setSelected:YES];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [UIView animateWithDuration:1.0 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+            [recordButton setSelected:YES];
+          } completion:nil];
+        });
         
         [[AudioManager sharedInstance] activateCategoryPlayAndRecording];
         
@@ -218,7 +209,9 @@ static void *XYZContext = &XYZContext;
   
   [recordButton setEnabled:YES];
   [recordButton setSelected:NO];
-  [recordButton setTitle:@"" forState:UIControlStateNormal];
+  
+  self.progressBar.hidden = YES;
+  self.progressBar.progress = 0.0;
   
   [UIApplication sharedApplication].idleTimerDisabled = NO;
   
@@ -242,8 +235,10 @@ static void *XYZContext = &XYZContext;
 
 - (void)capturePipelineRecordingDidStart:(VYBCapturePipeline *)pipeline {
   [recordButton setEnabled:YES];
-  _timeBomb = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
-  _timerCount = 150;
+  self.progressBar.hidden = NO;
+  
+  _timeBomb = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
+  _timerCount = 300;
 }
 
 - (void)capturePipelineRecordingWillStop:(VYBCapturePipeline *)pipeline {
@@ -296,15 +291,18 @@ static void *XYZContext = &XYZContext;
   _timerCount = _timerCount - 1;
   
   if (_timerCount > 0) {
-    float percent = (150 - _timerCount) / 150.0;
-    [self.progressBar setProgress:percent];
-//    [recordButton setTitle:[NSString stringWithFormat:@"%u", (int)_timerCount] forState:UIControlStateSelected];
+    float percent = (300 - _timerCount) / 300.0;
+    self.progressBar.progress = percent;
   }
   else {
     if (_isRecording) {
       [recordButton setEnabled:NO];
       [_timeBomb invalidate];
       _timeBomb = nil;
+      
+      self.progressBar.progress = 0.0;
+      self.progressBar.hidden = YES;
+      
       [capturePipeline stopRecording];
     }
     

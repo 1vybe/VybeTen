@@ -62,8 +62,7 @@
 		7408864B1A97EA86008BD390 /* TribeCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7408864A1A97EA86008BD390 /* TribeCollectionCell.swift */; };
 		740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */; };
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
-		741277001A9D7D06008A7E24 /* PaddedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741276FF1A9D7D06008A7E24 /* PaddedLabel.swift */; };
-		741277021A9D86AB008A7E24 /* TimeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741277011A9D86AB008A7E24 /* TimeBar.swift */; };
+		741277021A9D86AB008A7E24 /* TimeProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741277011A9D86AB008A7E24 /* TimeProgressBar.swift */; };
 		74172D001A720FCF00142EC1 /* ActionUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74172CFF1A720FCF00142EC1 /* ActionUtility.swift */; };
 		741FFB9A1A9AD58700C35064 /* CreateTribeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741FFB991A9AD58700C35064 /* CreateTribeViewController.swift */; };
 		741FFB9C1A9AD83900C35064 /* EditTribeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741FFB9B1A9AD83900C35064 /* EditTribeViewController.swift */; };
@@ -224,8 +223,7 @@
 		7408864A1A97EA86008BD390 /* TribeCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TribeCollectionCell.swift; sourceTree = "<group>"; };
 		740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
-		741276FF1A9D7D06008A7E24 /* PaddedLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaddedLabel.swift; sourceTree = "<group>"; };
-		741277011A9D86AB008A7E24 /* TimeBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeBar.swift; sourceTree = "<group>"; };
+		741277011A9D86AB008A7E24 /* TimeProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeProgressBar.swift; sourceTree = "<group>"; };
 		74172CFF1A720FCF00142EC1 /* ActionUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionUtility.swift; sourceTree = "<group>"; };
 		741FFB991A9AD58700C35064 /* CreateTribeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTribeViewController.swift; sourceTree = "<group>"; };
 		741FFB9B1A9AD83900C35064 /* EditTribeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditTribeViewController.swift; sourceTree = "<group>"; };
@@ -447,8 +445,7 @@
 				020FB84719744EBA005C9BA9 /* VYBCameraView.h */,
 				020FB84819744EBA005C9BA9 /* VYBCameraView.m */,
 				7408864A1A97EA86008BD390 /* TribeCollectionCell.swift */,
-				741276FF1A9D7D06008A7E24 /* PaddedLabel.swift */,
-				741277011A9D86AB008A7E24 /* TimeBar.swift */,
+				741277011A9D86AB008A7E24 /* TimeProgressBar.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -858,7 +855,7 @@
 				74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */,
 				60F1BBB918BAAFA900070EEC /* VYBMyVybeStore.m in Sources */,
 				74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */,
-				741277021A9D86AB008A7E24 /* TimeBar.swift in Sources */,
+				741277021A9D86AB008A7E24 /* TimeProgressBar.swift in Sources */,
 				7441011E1A645A3E00D2F874 /* CheckInViewController.swift in Sources */,
 				7464831C1A73063500FA4C9F /* HomeViewController.swift in Sources */,
 				02A45CEF1A1E664E00425F9C /* PizzaProgressView.swift in Sources */,
@@ -879,7 +876,6 @@
 				74CD7E2D1A8C4A1B009778CC /* SelectTribeViewController.swift in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
-				741277001A9D7D06008A7E24 /* PaddedLabel.swift in Sources */,
 				023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */,
 				740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */,
 				741FFB9A1A9AD58700C35064 /* CreateTribeViewController.swift in Sources */,

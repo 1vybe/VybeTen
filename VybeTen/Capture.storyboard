@@ -119,12 +119,34 @@
                                         </state>
                                         <state key="selected" image="CapturingBTN"/>
                                     </button>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tf5-Av-Ngb" customClass="TimeProgressBar" customModule="Vybe" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="592" width="600" height="8"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="70" id="AjN-CN-zhJ"/>
+                                            <constraint firstAttribute="height" constant="8" id="M7m-sl-ReX"/>
+                                            <constraint firstAttribute="width" constant="70" id="Wqb-tz-9tr"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="progress">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="AjN-CN-zhJ"/>
+                                                <exclude reference="Wqb-tz-9tr"/>
+                                            </mask>
+                                        </variation>
+                                    </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="FocusTarget" translatesAutoresizingMaskIntoConstraints="NO" id="9U9-QL-4mJ" userLabel="focusTarget">
                                         <rect key="frame" x="264" y="180" width="71" height="71"/>
                                     </imageView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="W36-pV-hkE" secondAttribute="trailing" id="16y-8K-E2i"/>
+                                    <constraint firstAttribute="centerX" secondItem="Tf5-Av-Ngb" secondAttribute="centerX" id="1nP-ws-lJC"/>
+                                    <constraint firstAttribute="bottom" secondItem="Tf5-Av-Ngb" secondAttribute="bottom" id="34E-Z1-9ar"/>
                                     <constraint firstItem="Txd-Bq-kYn" firstAttribute="centerY" secondItem="d4Y-Mh-xLU" secondAttribute="centerY" id="3Ee-cn-7c6"/>
                                     <constraint firstAttribute="trailing" secondItem="crN-zb-JCR" secondAttribute="trailing" constant="25" id="3i2-qU-h04"/>
                                     <constraint firstItem="giu-7r-23x" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" id="8G8-UC-PjA"/>
@@ -138,7 +160,9 @@
                                     <constraint firstAttribute="trailing" secondItem="d4Y-Mh-xLU" secondAttribute="trailing" constant="25" id="Me8-1H-vrk"/>
                                     <constraint firstItem="IOP-0G-33S" firstAttribute="leading" secondItem="LPI-Hs-hc4" secondAttribute="leading" constant="3" id="NAy-Wz-hJm"/>
                                     <constraint firstItem="IOP-0G-33S" firstAttribute="trailing" secondItem="LPI-Hs-hc4" secondAttribute="trailing" constant="-3" id="REt-7K-mM1"/>
+                                    <constraint firstItem="Tf5-Av-Ngb" firstAttribute="leading" secondItem="0zR-hY-UKf" secondAttribute="leading" id="Rka-yZ-291"/>
                                     <constraint firstAttribute="bottom" secondItem="d4Y-Mh-xLU" secondAttribute="bottom" constant="15" id="Tkc-Mt-z6A"/>
+                                    <constraint firstAttribute="centerY" secondItem="Tf5-Av-Ngb" secondAttribute="centerY" id="UVs-EP-p8F"/>
                                     <constraint firstItem="crN-zb-JCR" firstAttribute="top" secondItem="IOP-0G-33S" secondAttribute="top" id="VSZ-tP-ivb"/>
                                     <constraint firstItem="W36-pV-hkE" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" id="W8Y-Cb-9BY"/>
                                     <constraint firstAttribute="centerX" secondItem="uQn-Ex-Hhs" secondAttribute="centerX" id="Zxb-ev-kvk"/>
@@ -148,9 +172,12 @@
                                     <constraint firstItem="IOP-0G-33S" firstAttribute="bottom" secondItem="LPI-Hs-hc4" secondAttribute="bottom" id="pwT-6D-Alm"/>
                                     <constraint firstItem="crN-zb-JCR" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" constant="27" id="qEd-sT-IZg"/>
                                     <constraint firstItem="IOP-0G-33S" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" constant="27" id="qtp-e1-f1c"/>
+                                    <constraint firstAttribute="trailing" secondItem="Tf5-Av-Ngb" secondAttribute="trailing" id="vfC-Hv-Gf6"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
+                                        <exclude reference="1nP-ws-lJC"/>
+                                        <exclude reference="UVs-EP-p8F"/>
                                         <exclude reference="VSZ-tP-ivb"/>
                                         <exclude reference="B9S-fu-16t"/>
                                         <exclude reference="GDH-x2-4EW"/>
@@ -179,6 +206,7 @@
                         <outlet property="focusTarget" destination="9U9-QL-4mJ" id="RzX-C3-Avr"/>
                         <outlet property="homeButton" destination="d4Y-Mh-xLU" id="qVX-hD-WlW"/>
                         <outlet property="overlayView" destination="0zR-hY-UKf" id="2Bh-7h-YB4"/>
+                        <outlet property="progressBar" destination="Tf5-Av-Ngb" id="YE0-ci-FEO"/>
                         <outlet property="recordButton" destination="uQn-Ex-Hhs" id="rs8-1f-rJm"/>
                         <outlet property="tribeLabel" destination="IOP-0G-33S" id="HDU-Bf-KPH"/>
                         <outlet property="tribeLabelBG" destination="LPI-Hs-hc4" id="fpJ-IM-0rg"/>

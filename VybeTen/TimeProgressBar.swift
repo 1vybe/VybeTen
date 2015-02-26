@@ -1,5 +1,5 @@
 //
-//  TimeBar.swift
+//  TimeProgressBar.swift
 //  Vybe
 //
 //  Created by Jinsu Kim on 2/24/15.
@@ -10,7 +10,7 @@ import UIKit
 
 @IBDesignable
 
-class TimeBar: UIView {
+class TimeProgressBar: UIView {
   internal struct Constants {
     static let zeroProgress = 0.0
   }
@@ -32,8 +32,17 @@ class TimeBar: UIView {
     
     let context = UIGraphicsGetCurrentContext()
     CGContextClearRect(context, rect)
+ 
+    // Background
+    bgColor.setFill()
+    let rectPath = UIBezierPath(rect: rect)
+    rectPath.fill()
     
-    let linearPath = UIBezierPath(rect: rect)
+    // Progress Drawing
+    let progRect = CGRectMake(0, 0, rect.width * CGFloat(progress), rect.height)
+    let progPath = UIBezierPath(rect: progRect)
+    barColor.setFill()
+    progPath.fill()
     
   }
   
