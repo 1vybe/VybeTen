@@ -22,7 +22,8 @@
 
 @interface VYBPlayerViewController () <VYBPlayerViewControllerDelegate>
 
-@property (nonatomic, weak) IBOutlet UIImageView *loopImageView;
+//@property (nonatomic, weak) IBOutlet UIImageView *loopImageView;
+@property (nonatomic, weak) IBOutlet TimeProgressBar *timeBar;
 @property (nonatomic, weak) IBOutlet UIView *firstOverlay;
 
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
@@ -91,7 +92,9 @@
 @implementation VYBPlayerViewController {
   NSInteger downloadingVybeIndex;
   BOOL menuMode;
-  NSTimer *overlayTimer;
+  
+  NSTimer *_timer;
+  int _timerCount;
   
   NSInteger _pageIndex;
   NSArray *_zoneVybes;
@@ -120,10 +123,7 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  
-  _loopCurrItem = NO;
-  self.loopImageView.hidden = YES;
-  
+    
   downloadQueue = [[DownloadQueue alloc] init];
   
   // Set up player view
@@ -135,10 +135,6 @@
   [playerView setPlayer:self.currPlayer];
   
   [self.view insertSubview:playerView atIndex:0];
-  
-  // Add gestures on screen
-  UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnce:)];
-  [self.view addGestureRecognizer:tapGesture];
   
   longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
   longPressRecognizer.minimumPressDuration = 0.3;
@@ -157,6 +153,7 @@
   swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
   [self.view addGestureRecognizer:swipeRightGesture];
   
+  _loopCurrItem = NO;
   self.firstOverlay.hidden = YES;
   self.optionsOverlay.hidden = YES;
 }
@@ -463,6 +460,11 @@
     return;
   }
   
+  if (_timer) {
+    [_timer invalidate];
+    _timer = nil;
+  }
+  
   // Play after syncing UI elements
   NSURL *cacheURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
   cacheURL = [cacheURL URLByAppendingPathComponent:[vybe objectId]];
@@ -475,8 +477,6 @@
     });
     
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:cacheURL options:nil];
-    CMTime duration = asset.duration;
-    
     [self playAsset:asset];
     
     if (_zoneCurrIdx + 1 < _zoneVybes.count) {
@@ -553,6 +553,11 @@
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
   [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
   
+  float seconds = CMTimeGetSeconds([asset duration]);
+  NSLog(@"Playing asset length - %g seconds", seconds);
+  _timer = [NSTimer scheduledTimerWithTimeInterval:seconds/100.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
+  _timerCount = 100;
+  
   [self.currPlayer play];
   self.lastTimePlayingAsset = [NSDate date];
 }
@@ -580,9 +585,6 @@
   [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.currItem];
   
   if (_zoneVybes) {
-    PFObject *currItem = _zoneVybes[_zoneCurrIdx];
-    [ActionUtility removeFromMyFeed:currItem];
-    
     [self playNextZoneVideo];
   }
 }
@@ -592,6 +594,11 @@
   
   // Reached the end of zone. Zone OUT
   if (_zoneCurrIdx == _zoneVybes.count - 1) {
+    PFObject *currItem = _zoneVybes[_zoneCurrIdx];
+    [ActionUtility removeFromMyFeed:currItem];
+    
+    [currItem pinInBackgroundWithName:@"LastVybes"];
+    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[PFUser currentUser] saveEventually:^(BOOL succeeded, NSError *error) {
       [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -599,11 +606,26 @@
     }];
   }
   else {
+    PFObject *currItem = _zoneVybes[_zoneCurrIdx];
+    [ActionUtility removeFromMyFeed:currItem];
+    
     _zoneCurrIdx = _zoneCurrIdx + 1;
     [self playCurrentItem];
   }
 }
 
+- (void)timer:(NSTimer *)timer {
+  _timerCount = _timerCount - 1;
+  
+  if (_timerCount > 0) {
+    self.timeBar.progress = (100 - _timerCount) / 100.0;
+  } else {
+    self.timeBar.progress = 0.0;
+    [_timer invalidate];
+    _timer = nil;
+  }
+//  NSLog(@"timeBar progress - %g", self.timeBar.progress);
+}
 
 - (IBAction)goPrevButtonPressed:(id)sender {
 //  if (self.lastTimePlayingAsset && [self.lastTimePlayingAsset timeIntervalSinceNow] > -2.0) {
@@ -657,15 +679,15 @@
     [self playNextItem];
   }
 }
-
-- (void)tapOnce:(id)sender {
-  // You can't pause/resume when you are in options menu
-  if ( ! self.optionsOverlay.hidden) {
-    return;
-  }
-  
-  self.firstOverlay.hidden = !self.firstOverlay.hidden;
-}
+//
+//- (void)tapOnce:(id)sender {
+//  // You can't pause/resume when you are in options menu
+//  if ( ! self.optionsOverlay.hidden) {
+//    return;
+//  }
+//  
+//  self.firstOverlay.hidden = !self.firstOverlay.hidden;
+//}
 
 
 - (void)playerViewController:(VYBPlayerViewController *)playerVC didFinishSetup:(BOOL)ready {
@@ -694,12 +716,12 @@
 - (void)longPressDetected:(UIGestureRecognizer *)recognizer {
   switch (recognizer.state) {
     case UIGestureRecognizerStateBegan:
-      self.loopImageView.hidden = NO;
+      self.firstOverlay.hidden = NO;
         _loopCurrItem = YES;
       break;
     case UIGestureRecognizerStateCancelled:
     case UIGestureRecognizerStateEnded:
-      self.loopImageView.hidden = YES;
+      self.firstOverlay.hidden = YES;
         _loopCurrItem = NO;
       break;
     default:
@@ -708,7 +730,11 @@
 }
 
 - (void)swipeDownDetected:(UIGestureRecognizer *)recognizer {
-  [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+  [[PFUser currentUser] saveEventually:^(BOOL succeeded, NSError *error) {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+  }];
 }
 
 - (void)swipeLeftDetected:(UIGestureRecognizer *)recognizer {
@@ -738,10 +764,6 @@
   VYBMapViewController *mapVC = [[VYBMapViewController alloc] init];
   mapVC.delegate = self;
   [mapVC displayLocation:targetLocation];
-}
-
-- (void)dismissMapViewController {
-  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)optionsButtonPressed:(id)sender {

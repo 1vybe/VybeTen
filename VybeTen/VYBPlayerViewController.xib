@@ -9,9 +9,9 @@
                 <outlet property="blockOverlayButton" destination="BsT-WT-KSd" id="FOI-pW-Ox4"/>
                 <outlet property="firstOverlay" destination="i5M-Pr-FkT" id="6xs-Ur-JgG"/>
                 <outlet property="flagOverlayButton" destination="sWX-cp-Y9g" id="keB-3w-5RO"/>
-                <outlet property="loopImageView" destination="bBM-ZE-ReO" id="QJm-3n-foV"/>
                 <outlet property="optionsButton" destination="0It-Qq-qG9" id="izg-7e-rXW"/>
                 <outlet property="optionsOverlay" destination="afv-fB-hBX" id="gXl-St-DZD"/>
+                <outlet property="timeBar" destination="zk0-A5-0s0" id="ycd-Fe-v7H"/>
                 <outlet property="timeLabel" destination="UPQ-0i-rrO" id="4c8-UE-Biw"/>
                 <outlet property="usernameLabel" destination="KPb-Hj-SQM" id="Fko-BQ-KWg"/>
                 <outlet property="view" destination="NzJ-pm-eNV" id="vAf-zx-lkw"/>
@@ -122,32 +122,41 @@
                                 <action selector="optionsButtonPressed:" destination="-1" eventType="touchUpInside" id="tsE-1K-lJg"/>
                             </connections>
                         </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zk0-A5-0s0" userLabel="TimeBar" customClass="TimeProgressBar" customModule="Vybe" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="592" width="375" height="8"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="8" id="aQK-T4-8ud"/>
+                            </constraints>
+                        </view>
                     </subviews>
                     <constraints>
+                        <constraint firstItem="KPb-Hj-SQM" firstAttribute="top" secondItem="zk0-A5-0s0" secondAttribute="bottom" id="2Cd-kp-tDm"/>
+                        <constraint firstItem="zk0-A5-0s0" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="4Zg-ut-fFQ"/>
                         <constraint firstAttribute="trailing" secondItem="afv-fB-hBX" secondAttribute="trailing" id="5Yk-1R-I0O"/>
                         <constraint firstItem="UPQ-0i-rrO" firstAttribute="top" secondItem="KPb-Hj-SQM" secondAttribute="bottom" constant="7" id="KZb-yC-FOr"/>
                         <constraint firstAttribute="centerX" secondItem="UPQ-0i-rrO" secondAttribute="centerX" id="KZj-XB-ypq"/>
                         <constraint firstItem="afv-fB-hBX" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Ota-Ss-W0u"/>
                         <constraint firstItem="afv-fB-hBX" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="TVn-FP-yaC"/>
+                        <constraint firstAttribute="trailing" secondItem="zk0-A5-0s0" secondAttribute="trailing" id="YHK-pr-pQI"/>
                         <constraint firstAttribute="trailing" secondItem="0It-Qq-qG9" secondAttribute="trailing" constant="20" id="Ylu-l3-G3Y"/>
+                        <constraint firstAttribute="bottom" secondItem="zk0-A5-0s0" secondAttribute="bottom" id="gLq-bD-kaK"/>
                         <constraint firstAttribute="bottom" secondItem="UPQ-0i-rrO" secondAttribute="bottom" constant="25" id="iEW-Py-N0m"/>
                         <constraint firstAttribute="bottom" secondItem="afv-fB-hBX" secondAttribute="bottom" id="mP1-3J-fmr"/>
                         <constraint firstAttribute="centerX" secondItem="KPb-Hj-SQM" secondAttribute="centerX" id="tQ7-hf-h9k"/>
                         <constraint firstAttribute="bottom" secondItem="0It-Qq-qG9" secondAttribute="bottom" constant="41" id="zKd-J7-use"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="2Cd-kp-tDm"/>
+                        </mask>
+                    </variation>
                 </view>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="highlight" translatesAutoresizingMaskIntoConstraints="NO" id="bBM-ZE-ReO">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="600"/>
-                </imageView>
             </subviews>
             <constraints>
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="top" secondItem="NzJ-pm-eNV" secondAttribute="top" id="6O1-5Q-B5F"/>
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="leading" secondItem="NzJ-pm-eNV" secondAttribute="leading" id="IWL-PO-StZ"/>
                 <constraint firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="R0X-2U-EEj"/>
-                <constraint firstItem="bBM-ZE-ReO" firstAttribute="leading" secondItem="NzJ-pm-eNV" secondAttribute="leading" id="f9g-ga-S10"/>
-                <constraint firstAttribute="trailing" secondItem="bBM-ZE-ReO" secondAttribute="trailing" id="fTf-1Y-8PN"/>
-                <constraint firstItem="bBM-ZE-ReO" firstAttribute="top" secondItem="NzJ-pm-eNV" secondAttribute="top" id="ial-2c-MNQ"/>
-                <constraint firstAttribute="bottom" secondItem="bBM-ZE-ReO" secondAttribute="bottom" id="yAr-Zg-aF5"/>
                 <constraint firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="zMp-1G-fbd"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
@@ -159,7 +168,6 @@
         <image name="Close_Button" width="40" height="40"/>
         <image name="Player_FlagVybe-BtnON" width="174" height="53"/>
         <image name="Player_ReportUser-btnON" width="174" height="52"/>
-        <image name="highlight" width="375" height="655"/>
         <image name="more_player" width="41" height="17"/>
     </resources>
 </document>
