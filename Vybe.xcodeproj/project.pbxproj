@@ -63,7 +63,7 @@
 		740AE0551A3292C000CB4487 /* UserAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */; };
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
 		741277021A9D86AB008A7E24 /* TimeProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741277011A9D86AB008A7E24 /* TimeProgressBar.swift */; };
-		74172D001A720FCF00142EC1 /* ActionUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74172CFF1A720FCF00142EC1 /* ActionUtility.swift */; };
+		74172D001A720FCF00142EC1 /* CloudUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74172CFF1A720FCF00142EC1 /* CloudUtility.swift */; };
 		741FFB9A1A9AD58700C35064 /* CreateTribeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741FFB991A9AD58700C35064 /* CreateTribeViewController.swift */; };
 		741FFB9C1A9AD83900C35064 /* EditTribeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741FFB9B1A9AD83900C35064 /* EditTribeViewController.swift */; };
 		742C45401A7AF75F0062617E /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 742C453F1A7AF75F0062617E /* AudioManager.swift */; };
@@ -224,7 +224,7 @@
 		740AE0531A3292C000CB4487 /* UserAgreementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAgreementViewController.swift; sourceTree = "<group>"; };
 		740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAgreementViewController.xib; sourceTree = "<group>"; };
 		741277011A9D86AB008A7E24 /* TimeProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeProgressBar.swift; sourceTree = "<group>"; };
-		74172CFF1A720FCF00142EC1 /* ActionUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionUtility.swift; sourceTree = "<group>"; };
+		74172CFF1A720FCF00142EC1 /* CloudUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudUtility.swift; sourceTree = "<group>"; };
 		741FFB991A9AD58700C35064 /* CreateTribeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTribeViewController.swift; sourceTree = "<group>"; };
 		741FFB9B1A9AD83900C35064 /* EditTribeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditTribeViewController.swift; sourceTree = "<group>"; };
 		742C453F1A7AF75F0062617E /* AudioManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
@@ -582,7 +582,7 @@
 				0275087A19252D5C00B070EE /* VYBUtility.h */,
 				0275087B19252D5C00B070EE /* VYBUtility.m */,
 				742C453F1A7AF75F0062617E /* AudioManager.swift */,
-				74172CFF1A720FCF00142EC1 /* ActionUtility.swift */,
+				74172CFF1A720FCF00142EC1 /* CloudUtility.swift */,
 				74551C801A3E91FA00D348BB /* ConfigManager.swift */,
 				604B628318B495BB00D3EF19 /* Supporting Files */,
 				027D924818EA85F300537822 /* Old */,
@@ -861,7 +861,7 @@
 				02A45CEF1A1E664E00425F9C /* PizzaProgressView.swift in Sources */,
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				025408E419BA10E5009C7C71 /* NSMutableArray+PFObject.m in Sources */,
-				74172D001A720FCF00142EC1 /* ActionUtility.swift in Sources */,
+				74172D001A720FCF00142EC1 /* CloudUtility.swift in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
 				88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */,

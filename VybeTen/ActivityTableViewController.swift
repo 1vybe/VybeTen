@@ -15,9 +15,9 @@ class ActivityTableViewController: PFQueryTableViewController, VYBPlayerViewCont
     if let followButton = sender as? UIButton {
       if let user = objects[followButton.tag].objectForKey?(kVYBActivityFromUserKey) as? PFUser {
         if followButton.selected {
-          ActionUtility.unfollowUser(user)
+          CloudUtility.unfollowUser(user)
         } else {
-          ActionUtility.followUser(user)
+          CloudUtility.followUser(user)
         }
       }
       followButton.selected = !followButton.selected

@@ -263,21 +263,29 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
       if (!error && objects.count) {
-        [self playStream:objects];
-      } else {
-        if (tribe.coverVybe) {
-          [self playOnce:tribe.coverVybe];
-        } else {
-          PFQuery *oQuery = [PFQuery queryWithClassName:kVYBVybeClassKey];
-          [oQuery whereKey:kVYBVybeTribeKey equalTo:tribe.tribeObject];
-          [oQuery includeKey:kVYBVybeUserKey];
-          [oQuery orderByDescending:kVYBVybeTimestampKey];
-          [oQuery getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-            if (object) {
-              [self playOnce:object];
-            }
-          }];
+        // NOTE: Skip vybes at the beginning if they are of your own.
+        int startIdx = 0;
+        for (int i = 0; i < objects.count; i++) {
+          PFObject *user = obj[kVYBVybeUserKey];
+          if ([user.objectId isEqualToString:[PFUser currentUser].objectId]) {
+            [CloudUtility removeFromMyFeed:obj];
+          } else {
+            startIdx = i;
+            break;
+          }
         }
+        if (startIdx < objects.count) {
+          NSRange theRange;
+          theRange.location = startIdx;
+          theRange.length = objects.count - startIdx;
+          NSArray *frontFiltered = [objects subarrayWithRange:theRange];
+          
+          [self playStream:frontFiltered];
+        } else {
+          [self playOnce:tribe.coverVybe];
+        }
+      } else if (tribe.coverVybe) {
+        [self playOnce:tribe.coverVybe];
       }
     }];
   }
@@ -595,7 +603,7 @@
   // Reached the end of zone. Zone OUT
   if (_zoneCurrIdx == _zoneVybes.count - 1) {
     PFObject *currItem = _zoneVybes[_zoneCurrIdx];
-    [ActionUtility removeFromMyFeed:currItem];
+    [CloudUtility removeFromMyFeed:currItem];
     
     [currItem pinInBackgroundWithName:@"LastVybes"];
     
@@ -607,7 +615,7 @@
   }
   else {
     PFObject *currItem = _zoneVybes[_zoneCurrIdx];
-    [ActionUtility removeFromMyFeed:currItem];
+    [CloudUtility removeFromMyFeed:currItem];
     
     _zoneCurrIdx = _zoneCurrIdx + 1;
     [self playCurrentItem];

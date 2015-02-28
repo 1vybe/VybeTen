@@ -1,5 +1,5 @@
 //
-//  ActionUtility.swift
+//  CloudUtility.swift
 //  VybeTen
 //
 //  Created by Jinsu Kim on 1/23/15.
@@ -9,7 +9,7 @@
 import UIKit
 
 
-class ActionUtility: NSObject {
+class CloudUtility: NSObject {
   
   class func removeFromMyFeed(watched: AnyObject) {
     let watchedObj = watched as! PFObject
@@ -22,6 +22,23 @@ class ActionUtility: NSObject {
         println("removed from feed")
       }
     })
+  }
+  
+  class func updateLastVybe(last: AnyObject) {
+    let lastObj = last as! PFObject
+    
+    if let tribe = lastObj[kVYBVybeTribeKey] as? PFObject {
+      let query = PFQuery(className: kVYBVybeClassKey)
+      query.fromPinWithName("LastVybes")
+      query.whereKey(kVYBVybeTribeKey, equalTo: tribe)
+      query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
+        if result != nil {
+          PFObject.unpinAllInBackground(result, withName: "LastVybes", block: { (success: Bool, error: NSError!) -> Void in
+            lastObj.pinInBackgroundWithName("LastVybes")
+          })
+        }
+      }
+    }
   }
   
   class func followUser(userObj: AnyObject) {

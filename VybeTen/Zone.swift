@@ -216,12 +216,6 @@ import MapKit
   
   func featuredThumbnailFile() -> PFFile? {
     return featuredThumbnail
-  }
-  
-  
-  override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
-    
-  }
-  
+  } 
   
 }

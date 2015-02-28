@@ -11,6 +11,7 @@ import UIKit
 class TribeCollectionCell: UICollectionViewCell, UIGestureRecognizerDelegate {
   @IBOutlet weak var photoImageView: PFImageView!
   @IBOutlet weak var nameLabel: UILabel!
+  @IBOutlet weak var userCount: UILabel!
   
   weak var tribeObject: Tribe?
   weak var delegate: UIViewController?

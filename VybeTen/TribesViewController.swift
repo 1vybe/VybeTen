@@ -95,33 +95,28 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     query.whereKey("objectId", notContainedIn: self.localTribeObjectIds())
     query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
     query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-      if error == nil {
-        if result.count > 0 {
-
-          for obj in result {
-            let newTribe = Tribe(parseObj: obj)
-            self.tribes += [newTribe]
-          }
-          
-          self.refreshMyFeed()
-        } else {
-          let query = PFQuery(className: kVYBTribeClassKey)
-          query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
-          query.whereKey("objectId", notContainedIn: self.localTribeObjectIds())
-          query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-            if result != nil {
-              for obj in result {
-                let newTribe = Tribe(parseObj: obj)
-                self.tribes += [newTribe]
-              }
-              
-              PFObject.pinAllInBackground(result, withName: "MyTribes")
-              
+      if error == nil && result.count > 0 {
+        for obj in result {
+          let newTribe = Tribe(parseObj: obj)
+          self.tribes += [newTribe]
+        }
+      } else {
+        let query = PFQuery(className: kVYBTribeClassKey)
+        query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
+        query.whereKey("objectId", notContainedIn: self.localTribeObjectIds())
+        query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+          if result != nil {
+            for obj in result {
+              let newTribe = Tribe(parseObj: obj)
+              self.tribes += [newTribe]
+            }
+            
+            PFObject.pinAllInBackground(result, withName: "MyTribes", block:{ (success: Bool, error: NSError!) -> Void in
               // NOTE: - It may be a good practice to update feed from local store first
               self.refreshMyFeed()
-            }
-          })
-        }
+            })
+          }
+        })
       }
     })
   }
@@ -146,18 +141,16 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     query.includeKey(kVYBVybeUserKey)
     
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
-      if let feedObjs = result as? [PFObject] {
-        PFObject.pinAllInBackground(feedObjs, withName: "MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
-          if success {
-            for vybeObj in feedObjs {
-              if let trObj = vybeObj[kVYBVybeTribeKey] as? PFObject {
-                if let tribes = self.tribes as? [Tribe] {
-                  innerLoop: for tribe in tribes {
-                    if let trb = tribe.tribeObject as? PFObject where trObj.objectId == trb.objectId {
-                      // Do not increment the count for your own vybe but still update the cover vybe
-                      if let user = vybeObj[kVYBVybeUserKey] as? PFObject where user.objectId != PFUser.currentUser().objectId {
-                        tribe.freshCount++
-                      }
+      PFObject.pinAllInBackground(result, withName: "MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
+        if success {
+          for vybeObj in result {
+            if let trObj = vybeObj[kVYBVybeTribeKey] as? PFObject {
+              if let tribes = self.tribes as? [Tribe] {
+                innerLoop: for tribe in tribes {
+                  if let trb = tribe.tribeObject as? PFObject where trObj.objectId == trb.objectId {
+                    // Ignore your own vybes when incrementing the count and updating the cover vybe
+                    if let user = vybeObj[kVYBVybeUserKey] as? PFObject where user.objectId != PFUser.currentUser().objectId {
+                      tribe.freshCount++
                       if let coverObjDate = tribe.coverVybe?.objectForKey(kVYBVybeTimestampKey) as? NSDate {
                         if let newDate = vybeObj[kVYBVybeTimestampKey] as? NSDate {
                           let comparison = newDate.compare(coverObjDate)
@@ -168,30 +161,60 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
                       } else {
                         tribe.coverVybe = vybeObj
                       }
-                      
-                      if let lastVybe = trb[kVYBTribeLastVybeKey] as? PFObject,
-                        let lastVybeTime = lastVybe[kVYBVybeTimestampKey] as? NSDate,
-                        let newDate = vybeObj[kVYBVybeTimestampKey] as? NSDate {
-                          let comparison = newDate.compare(lastVybeTime)
-                          if comparison == NSComparisonResult.OrderedDescending {
-                            trb[kVYBTribeLastVybeKey] = vybeObj
-                            trb.pinInBackgroundWithName("MyTribes")
-                          }
-                      } else {
-                        trb[kVYBTribeLastVybeKey] = vybeObj
-                        trb.pinInBackgroundWithName("MyTribes")
-                      }
-                      break innerLoop
+                    }
+                    
+                    break innerLoop
+                  }
+                }
+              }
+            }
+          }
+          // Update cover thumbnails
+          let lastQ = PFQuery(className:kVYBVybeClassKey)
+          lastQ.fromPinWithName("LastVybes")
+          // NOTE: - This should be unnecessary because only one vybe should have been pinned for each tribe
+          lastQ.orderByAscending(kVYBVybeTimestampKey)
+          lastQ.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+            if result != nil {
+              for obj in result {
+                if let tribe = obj[kVYBVybeTribeKey] as? PFObject {
+                  innerLoop: for trb in self.tribes {
+                    if let trbObj = trb.tribeObject as? PFObject where
+                      trbObj.objectId == tribe.objectId {
+                        // NOTE: - Update Tribe that has no fresh contents. However it must be that checking this condition is not required.
+                        if let t = trb as? Tribe where t.freshCount == 0 {
+                          t.coverVybe = obj
+                        }
+                        break innerLoop
                     }
                   }
                 }
               }
             }
+            // Refresh the collection view after updating cover vybes
             self.collectionView?.reloadData()
-          }
-          self.refreshControl?.endRefreshing()
-        })
-      }
+            
+            // Download the most recent vybe for tribes that have ZERO fresh content - however cover vybe might exist
+            for (idx, tribe) in enumerate(self.tribes) {
+              if let trb = tribe as? Tribe, trbObj = trb.tribeObject as? PFObject where trb.freshCount == 0 {
+                let query = PFQuery(className: kVYBVybeClassKey)
+                query.whereKey(kVYBVybeTribeKey, equalTo: trbObj)
+                query.orderByDescending(kVYBVybeTimestampKey)
+                query.getFirstObjectInBackgroundWithBlock({ (obj: PFObject!, error: NSError!) -> Void in
+                  if error == nil {
+                    CloudUtility.updateLastVybe(obj)
+                    
+                    trb.coverVybe = obj
+                    let indexPath = NSIndexPath(forRow: idx, inSection: 0)
+                    self.collectionView?.reloadItemsAtIndexPaths([indexPath])
+                  }
+                })
+              }
+            }
+          })
+        }
+        self.refreshControl?.endRefreshing()
+      })
     }
   }
   
@@ -293,10 +316,6 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     if let cover = tribe.coverVybe as? PFObject,
       let file = cover[kVYBVybeThumbnailKey] as? PFFile {
       photoFile = file
-    } else if let trb = tribe.tribeObject as? PFObject,
-        let lastVybe = trb[kVYBTribeLastVybeKey] as? PFObject,
-        let file = lastVybe[kVYBVybeThumbnailKey] as? PFFile {
-      photoFile = file
     }
     
     cell.photoImageView.file = photoFile
@@ -312,7 +331,6 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
       }
     })
 
-    
     return cell
   }
   

@@ -283,10 +283,6 @@ static void *XYZContext = &XYZContext;
   [capturePipeline setFlashOn:_flashOn];
 }
 
-
-#pragma mark - UIResponder
-
-
 - (void)timer:(NSTimer *)timer {
   _timerCount = _timerCount - 1;
   
@@ -295,6 +291,7 @@ static void *XYZContext = &XYZContext;
     self.progressBar.progress = percent;
   }
   else {
+    NSLog(@"CAPTURE TIME BOMB");
     if (_isRecording) {
       [recordButton setEnabled:NO];
       [_timeBomb invalidate];
