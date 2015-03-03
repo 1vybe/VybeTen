@@ -49,14 +49,6 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    var textAttributes = [NSObject : AnyObject]()
-    if let font = UIFont(name: "Helvetica Neue", size: 18.0) {
-      let textColor = UIColor(red: 254.0/255.0, green: 68.0/255.0, blue: 0.0/255.0, alpha: 1.0)
-      textAttributes[NSFontAttributeName] = font
-      textAttributes[NSForegroundColorAttributeName] = textColor
-      self.navigationController?.navigationBar.titleTextAttributes = textAttributes
-    }
-    
     let control = UIRefreshControl()
     control.addTarget(self, action: "refreshControlPulled", forControlEvents: UIControlEvents.ValueChanged)
     collectionView?.addSubview(control)
@@ -77,6 +69,14 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
+    
+    var textAttributes = [NSObject : AnyObject]()
+    if let font = UIFont(name: "Helvetica Neue", size: 18.0) {
+      let textColor = UIColor(red: 254.0/255.0, green: 68.0/255.0, blue: 0.0/255.0, alpha: 1.0)
+      textAttributes[NSFontAttributeName] = font
+      textAttributes[NSForegroundColorAttributeName] = textColor
+      self.navigationController?.navigationBar.titleTextAttributes = textAttributes
+    }
   
     // First reset freshCount and coverVybe for each tribe
     if let tribes = tribes as? [Tribe] {
