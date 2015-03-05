@@ -28,7 +28,11 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
+<<<<<<< HEAD
+	<string>1.3.12</string>
+=======
 	<string>1.2.19</string>
+>>>>>>> cp
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>

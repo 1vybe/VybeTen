@@ -23,21 +23,24 @@ class EditTribeViewController: TribeDetailsViewController, UITableViewDelegate, 
   @IBAction func leaveButtonPressed(sender: AnyObject) {
     if let trb = tribeObj as? PFObject {
       // In case you are an admin, assign a coordinator title and role to a random person
-      if let first = members.first as? PFObject where editable {
-        trb[kVYBTribeCoordinatorKey] = first
-        
-        PFCloud.callFunctionInBackground("grantRole", withParameters: ["userId" : first.objectId, "tribeId" : trb.objectId])
+      if editable {
+        if let first = members.first as? PFObject {
+          trb[kVYBTribeCoordinatorKey] = first
+          
+          PFCloud.callFunctionInBackground("grantRole", withParameters: ["userId" : first.objectId, "tribeId" : trb.objectId])
+        }
       }
       
       // First remove from members
       let relation = trb.relationForKey(kVYBTribeMembersKey)
       relation.removeObject(PFUser.currentUser())
       
-      // Remove the current user from the role
-      let params = ["userId" : PFUser.currentUser().objectId, "tribeId" : trb.objectId]
-      PFCloud.callFunctionInBackground("removeFromRole", withParameters: params)
-      
+      MBProgressHUD.showHUDAddedTo(self.view, animated: true)
       trb.saveInBackgroundWithBlock({ (success: Bool, error: NSError!) -> Void in
+        // Remove the current user from the role
+        let params = ["userId" : PFUser.currentUser().objectId, "tribeId" : trb.objectId]
+        PFCloud.callFunctionInBackground("removeFromRole", withParameters: params)
+        MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
         self.navigationController?.popViewControllerAnimated(true)
       })
     }
@@ -50,12 +53,11 @@ class EditTribeViewController: TribeDetailsViewController, UITableViewDelegate, 
       self.navigationItem.title = tribeName
     }
     
-    if let coordinator = tribeObj?[kVYBTribeCoordinatorKey] as? PFObject,
-      let name = coordinator[kVYBUserUsernameKey] as? String {
-        let nameText: String
+    if let coordinator = tribeObj?[kVYBTribeCoordinatorKey] as? PFObject {
+      if let name = coordinator[kVYBUserUsernameKey] as? String {
+        var nameText: String = "You"
         if coordinator.objectId == PFUser.currentUser().objectId {
           editable = true
-          nameText = "You"
         } else {
           nameText = name
           // Add bar button on a navigation bar only appears if you were an admin
@@ -63,28 +65,34 @@ class EditTribeViewController: TribeDetailsViewController, UITableViewDelegate, 
         }
         
         coordinatorName.text = nameText
+      }
     }
   }
 
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
     
-    if let trb = tribeObj as? PFObject,
-      relation = trb.relationForKey(kVYBTribeMembersKey),
-      currUsername = PFUser.currentUser().objectForKey(kVYBUserUsernameKey) as? String,
-      coordUsername = trb[kVYBTribeCoordinatorKey].objectForKey(kVYBUserUsernameKey) as? String {
-        let query = relation.query()
-        // Show users except for the coordinator and current user
-        query.whereKey(kVYBUserUsernameKey, notContainedIn:[currUsername, coordUsername])
-        
-        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-          if error == nil {
-            self.members = result
-            self.tableView.reloadData()
-          }
-          MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
-        })
+    if let trb = tribeObj as? PFObject {
+      let relation = trb.relationForKey(kVYBTribeMembersKey)
+      let query = relation.query()
+      var list = [String]()
+      if let currUsername = PFUser.currentUser().objectForKey(kVYBUserUsernameKey) as? String {
+        list += [currUsername]
+      }
+      if let coordUsername = trb[kVYBTribeCoordinatorKey].objectForKey(kVYBUserUsernameKey) as? String {
+        list += [coordUsername]
+      }
+      // Show users except for the coordinator and current user
+      query.whereKey(kVYBUserUsernameKey, notContainedIn:list)
+      
+      MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+      query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+        if error == nil {
+          self.members = result
+          self.tableView.reloadData()
+        }
+        MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
+      })
     }
   }
   
@@ -95,10 +103,13 @@ class EditTribeViewController: TribeDetailsViewController, UITableViewDelegate, 
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("TribeMemberCellIdentifier") as! UITableViewCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("TribeMemberCellIdentifier") as UITableViewCell
     
-    if let member = members[indexPath.row] as? PFObject, memberName = member[kVYBUserUsernameKey] as? String, usernameLabel = cell.viewWithTag(123) as? UILabel {
+    let member = members[indexPath.row] as PFObject
+    if let memberName = member[kVYBUserUsernameKey] as? String {
+      if let usernameLabel = cell.viewWithTag(123) as? UILabel {
         usernameLabel.text = memberName
+      }
     }
     
     return cell
@@ -106,9 +117,10 @@ class EditTribeViewController: TribeDetailsViewController, UITableViewDelegate, 
   
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if let addMemberVC = segue.destinationViewController as? AddMemberViewController
-      where segue.identifier == "ShowAddMemberSegue" {
+    if segue.identifier == "ShowAddMemberSegue" {
+      if let addMemberVC = segue.destinationViewController as? AddMemberViewController {
         addMemberVC.currTribe = tribeObj
+      }
     }
   }
   
@@ -118,8 +130,9 @@ class EditTribeViewController: TribeDetailsViewController, UITableViewDelegate, 
   
   func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
     if editingStyle == UITableViewCellEditingStyle.Delete {
-      if let tribe = tribeObj as? PFObject, relation = tribe.relationForKey(kVYBTribeMembersKey),
-        let usr = members[indexPath.row] as? PFObject {
+      if let tribe = tribeObj as? PFObject {
+        let relation = tribe.relationForKey(kVYBTribeMembersKey)
+        if let usr = members[indexPath.row] as? PFObject {
           relation.removeObject(usr)
           
           MBProgressHUD.showHUDAddedTo(self.view, animated: true)
@@ -135,6 +148,7 @@ class EditTribeViewController: TribeDetailsViewController, UITableViewDelegate, 
             }
             MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
           })
+        }
       }
     }
   }

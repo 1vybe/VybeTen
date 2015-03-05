@@ -36,12 +36,13 @@ class PreviewViewController: UIViewController, SelectTribeDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    if let currTribe = MyVybeStore.sharedInstance.currTribe,
-      let tribeName = currTribe.objectForKey(kVYBTribeNameKey) as? String {
+    if let currTribe = MyVybeStore.sharedInstance.currTribe {
+      if let tribeName = currTribe.objectForKey(kVYBTribeNameKey) as? String {
         tribeNameLabel.text = tribeName
         tribeNameLabel.hidden = false
         tribeNameBG.hidden = false
         shareButton.selected = true
+      }
     } else {
       tribeNameLabel.text = "Select Tribe"
       tribeNameLabel.hidden = true

@@ -320,45 +320,6 @@
   }
 }
 
-- (void)playAllFresh {
-  [[ZoneStore sharedInstance] refreshFreshVybesInBackground:^(BOOL success) {
-    if (success) {
-      NSArray *allContents = [NSArray arrayWithArray:[[ZoneStore sharedInstance] allFreshVybes]];
-      _zoneVybes = allContents;
-      _zoneCurrIdx = 0;
-      _isFreshStream = YES;
-      [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
-        [self.delegate playerViewController:self didFinishSetup:success];
-      }];
-    }
-    else {
-      [self.delegate playerViewController:self didFinishSetup:NO];
-    }
-  }];
-}
-
-- (void)playAllActiveVybes {
-  NSDate *someTimeAgo = [NSDate dateWithTimeIntervalSinceNow:-60*60*24]; // 24 hour
-  PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-  [query setLimit:1000];
-  [query setCachePolicy:kPFCachePolicyCacheElseNetwork];
-  [query includeKey:kVYBVybeUserKey];
-  [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:someTimeAgo];
-  [query orderByAscending:kVYBVybeTimestampKey];
-  // NOTE: - Blocked users, flagged iterms are not filtered
-  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    if (!error && objects.count) {
-      _zoneVybes = objects;
-      _zoneCurrIdx = 0;
-      [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
-        [self.delegate playerViewController:self didFinishSetup:success];
-      }];
-    } else {
-      [self.delegate playerViewController:self didFinishSetup:NO];
-    }
-  }];
-}
-
 - (void)playOnce:(PFObject *)vybe {
   PFUser *user = vybe[kVYBVybeUserKey];
   [user fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
@@ -374,69 +335,6 @@
     }
   }];
 }
-
-
-- (void)playFeaturedZone:(Zone *)zone {
-  PFQuery *query = [PFQuery queryWithClassName:kVYBVybeClassKey];
-  [query whereKey:kVYBVybeZoneIDKey equalTo:zone.zoneID];
-  [query whereKey:kVYBVybeTimestampKey greaterThanOrEqualTo:zone.fromDate];
-  [query includeKey:kVYBVybeUserKey];
-  [query orderByAscending:kVYBVybeTimestampKey];
-  
-  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    if (!error) {
-      _zoneVybes = objects;
-      _zoneCurrIdx = 0;
-      [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
-        [self.delegate playerViewController:self didFinishSetup:success];
-      }];
-    } else {
-      [self.delegate playerViewController:self didFinishSetup:NO];
-    }
-  }];
-}
-
-- (void)playFreshVybesFromZone:(NSString *)zoneID {
-  [[ZoneStore sharedInstance] refreshFreshVybesInBackground:^(BOOL success) {
-    if (success) {
-      NSArray *freshContents = [NSArray arrayWithArray:[[ZoneStore sharedInstance] freshVybesFromZone:zoneID]];
-      if (freshContents.count > 0) {
-        _zoneVybes = freshContents;
-        _zoneCurrIdx = 0;
-        _isFreshStream = YES;
-        [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
-          [self.delegate playerViewController:self didFinishSetup:success];
-        }];
-      }
-      else {
-        [self playActiveVybesFromZone:zoneID];
-      }
-    }
-    else {
-      [self.delegate playerViewController:self didFinishSetup:NO];
-    }
-  }];
-}
-
-- (void)playActiveVybesFromZone:(NSString *)zoneID {
-  NSString *functionName = @"get_active_zone_vybes";
-  
-  [PFCloud callFunctionInBackground:functionName withParameters:@{@"zoneID": zoneID} block:^(NSArray *objects, NSError *error) {
-    if (!error && objects.count) {
-      _zoneVybes = objects;
-      _zoneCurrIdx = 0;
-      [self prepareVideoInBackgroundFor:_zoneVybes[_zoneCurrIdx] withCompletion:^(BOOL success) {
-        [self.delegate playerViewController:self didFinishSetup:success];
-      }];
-    }
-    else {
-      [self.delegate playerViewController:self didFinishSetup:NO];
-    }
-  }];
-}
-
-
-
 
 #pragma mark - Behind the scene
 
@@ -756,22 +654,22 @@
 #pragma mark - Map
 
 - (void)presentMapViewController {
-  PFObject *vybeObj = _zoneVybes[_zoneCurrIdx];
-  CLLocationCoordinate2D targetLocation;
-
-  if (vybeObj[kVYBVybeZoneLatitudeKey]) {
-    double lat = [(NSNumber *)vybeObj[kVYBVybeZoneLatitudeKey] doubleValue];
-    double lng = [(NSNumber *)vybeObj[kVYBVybeZoneLongitudeKey] doubleValue];
-    targetLocation = CLLocationCoordinate2DMake(lat, lng);
-  }
-  else if (vybeObj[kVYBVybeGeotagKey]) {
-    PFGeoPoint *geoPt = vybeObj[kVYBVybeGeotagKey];
-    targetLocation = CLLocationCoordinate2DMake(geoPt.latitude, geoPt.longitude);
-  }
-  
-  VYBMapViewController *mapVC = [[VYBMapViewController alloc] init];
-  mapVC.delegate = self;
-  [mapVC displayLocation:targetLocation];
+//  PFObject *vybeObj = _zoneVybes[_zoneCurrIdx];
+//  CLLocationCoordinate2D targetLocation;
+//
+//  if (vybeObj[kVYBVybeZoneLatitudeKey]) {
+//    double lat = [(NSNumber *)vybeObj[kVYBVybeZoneLatitudeKey] doubleValue];
+//    double lng = [(NSNumber *)vybeObj[kVYBVybeZoneLongitudeKey] doubleValue];
+//    targetLocation = CLLocationCoordinate2DMake(lat, lng);
+//  }
+//  else if (vybeObj[kVYBVybeGeotagKey]) {
+//    PFGeoPoint *geoPt = vybeObj[kVYBVybeGeotagKey];
+//    targetLocation = CLLocationCoordinate2DMake(geoPt.latitude, geoPt.longitude);
+//  }
+//  
+//  VYBMapViewController *mapVC = [[VYBMapViewController alloc] init];
+//  mapVC.delegate = self;
+//  [mapVC displayLocation:targetLocation];
 }
 
 - (IBAction)optionsButtonPressed:(id)sender {

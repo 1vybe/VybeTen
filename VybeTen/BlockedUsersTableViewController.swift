@@ -38,7 +38,7 @@ class BlockedUsersTableViewController: UITableViewController {
       if error == nil {
         VYBCache.sharedCache().setBlockedUsers(result, forUser: PFUser.currentUser())
         if result.count > 0 {
-          self.blockedUsers = result as! [PFUser]
+          self.blockedUsers = result as [PFUser]
           self.tableView.reloadData()
         }
       }
@@ -66,7 +66,7 @@ class BlockedUsersTableViewController: UITableViewController {
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("BlockedUserTableCell", forIndexPath: indexPath) as! UITableViewCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("BlockedUserTableCell", forIndexPath: indexPath) as UITableViewCell
     
     if let aUser = blockedUsers[indexPath.row] as? PFUser {
       if let username = aUser[kVYBUserUsernameKey] as? String {

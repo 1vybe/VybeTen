@@ -38,20 +38,21 @@ class SelectTribeViewController: UIViewController, UITableViewDelegate, UITableV
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if result != nil {
         self.tribeObjects = result
-        self.moveSelectedTribeToFirst()
+        self.moveSelectedTribeToTop()
         
         self.tableView.reloadData()
       }
     }
   }
   
-  private func moveSelectedTribeToFirst() {
+  private func moveSelectedTribeToTop() {
     var sortedObjects = [AnyObject]()
     if let selected = MyVybeStore.sharedInstance.currTribe {
       for obj in tribeObjects {
-        if let fName = obj.objectForKey(kVYBTribeNameKey) as? String,
-          let sName = selected.objectForKey(kVYBTribeNameKey) as? String
-          where fName == sName {
+        let fName = obj.objectForKey(kVYBTribeNameKey) as? String
+        let sName = selected.objectForKey(kVYBTribeNameKey) as? String
+        
+        if fName == sName {
             sortedObjects = [obj] + sortedObjects
             selectedTribeIndex = 0
         } else {
@@ -75,12 +76,10 @@ class SelectTribeViewController: UIViewController, UITableViewDelegate, UITableV
   }
   
   @IBAction func okButtonPressed(sender: AnyObject) {
-    let selectedTribe: PFObject?
+    var selectedTribe: PFObject?
     
     if let index = selectedTribeIndex {
       selectedTribe = tribeObjects[index] as? PFObject
-    } else {
-      selectedTribe = nil
     }
     
     MyVybeStore.sharedInstance.currTribe = selectedTribe
@@ -88,7 +87,7 @@ class SelectTribeViewController: UIViewController, UITableViewDelegate, UITableV
   }
   
   @IBAction func tribeSelected(sender: AnyObject) {
-    let button = sender as! UIButton
+    let button = sender as UIButton
     
     if button.selected {
       selectedTribeIndex = nil
@@ -111,9 +110,9 @@ class SelectTribeViewController: UIViewController, UITableViewDelegate, UITableV
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let tribe = tribeObjects[indexPath.row] as! PFObject
+    let tribe = tribeObjects[indexPath.row] as PFObject
 
-    let cell = tableView.dequeueReusableCellWithIdentifier("TribeListTableCell") as! SelectTribeTableCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("TribeListTableCell") as SelectTribeTableCell
     
     if let tribeName = tribe[kVYBTribeNameKey] as? String {
         cell.nameLabel.text = tribeName

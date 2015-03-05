@@ -11,7 +11,6 @@ import UIKit
 private let _sharedInstance = MyVybeStore()
 
 class MyVybeStore: NSObject {
-  var currZone: Zone?
   var currTribe: PFObject?
 
   var currVybe: VYBVybe?

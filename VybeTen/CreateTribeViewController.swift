@@ -33,9 +33,8 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
   }
   
   @IBAction func cancelButtonPressed(sender: AnyObject) {
-    tribeObj?.unpinInBackgroundWithName("MyTribes", block: { (success: Bool, error: NSError!) -> Void in
-      self.delegate?.didCancelTribe()
-    })
+    tribeObj?.unpinInBackgroundWithName("MyTribes")
+    self.delegate?.didCancelTribe()
   }
 
   override func viewDidLoad() {
@@ -92,17 +91,21 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
   }
   
   func saveTribe(closure: (() -> ())?) {
-    if let tribe = tribeObj as? PFObject where self.validateTribeName(nameText.text) {
-      tribe.setObject(nameText.text, forKey: kVYBTribeNameKey)
-      let relation = tribe.relationForKey(kVYBTribeMembersKey)
-      if let array = members as? [PFUser] {
-        for m in array {
-          relation.addObject(m)
+    if let tribe = tribeObj as? PFObject {
+      if self.validateTribeName(nameText.text) {
+        tribe.setObject(nameText.text, forKey: kVYBTribeNameKey)
+        let relation = tribe.relationForKey(kVYBTribeMembersKey)
+        if let array = members as? [PFUser] {
+          for m in array {
+            relation.addObject(m)
+          }
         }
+        tribe.saveEventually({ (success: Bool, error: NSError!) -> Void in
+          if closure != nil {
+            closure!()
+          }
+        })
       }
-      tribe.saveEventually({ (success: Bool, error: NSError!) -> Void in
-        closure?()
-      })
     } else {
       let alertVC = UIAlertController(title: "Invalid tribe name", message: "A name must be between 2 - 20 in length and consist of alphabets and numbers only.", preferredStyle: UIAlertControllerStyle.Alert)
       alertVC.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
@@ -113,14 +116,18 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
   // MARK: - UITableViewDelegate
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("AddMemberTableCellIdentifier") as! UITableViewCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("AddMemberTableCellIdentifier") as UITableViewCell
     
-    if let user = allUsers[indexPath.row] as? PFObject,
-      username = user[kVYBUserUsernameKey] as? String,
-      usernameLabel = cell.viewWithTag(123) as? UILabel,
-      checkBox = cell.viewWithTag(235) as? UIImageView {
+    let user = allUsers[indexPath.row] as PFObject
+    
+    if let usernameLabel = cell.viewWithTag(123) as? UILabel {
+      if let username = user[kVYBUserUsernameKey] as? String {
         usernameLabel.text = username
-        checkBox.hidden = !self.membersInclude(user)
+      }
+    }
+
+    if let checkBox = cell.viewWithTag(235) as? UIImageView {
+      checkBox.hidden = !self.membersInclude(user)
     }
     
     return cell
@@ -131,20 +138,24 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    if let cell = tableView.cellForRowAtIndexPath(indexPath),
-      let checkBox = cell.viewWithTag(235) as? UIImageView,
-      let user = allUsers[indexPath.row] as? PFObject {
+    if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+      let user = allUsers[indexPath.row] as PFObject
+      self.addMember(user)
+
+      if let checkBox = cell.viewWithTag(235) as? UIImageView {
         checkBox.hidden = false
-        self.addMember(user)
+      }
     }
   }
   
   func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-    if let cell = tableView.cellForRowAtIndexPath(indexPath),
-      let checkBox = cell.viewWithTag(235) as? UIImageView,
-      let user = allUsers[indexPath.row] as? PFObject {
+    if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+      let user = allUsers[indexPath.row] as PFObject
+      self.removeMember(user)
+
+      if let checkBox = cell.viewWithTag(235) as? UIImageView {
         checkBox.hidden = true
-        self.removeMember(user)
+      }
     }
   }
   
@@ -161,8 +172,9 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
   }
   
   private func addMember(user: AnyObject) {
-    if let array = members as? [PFObject],
-      let user = user as? PFObject {
+    let user = user as PFObject
+
+    if let array = members as? [PFObject] {
         for member in array {
           if member.objectId == user.objectId {
             return
@@ -173,10 +185,11 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
   }
   
   private func removeMember(user: AnyObject) {
+    let user = user as PFObject
+    
     var newMembers = [PFObject]()
     
-    if let array = members as? [PFObject],
-      let user = user as? PFObject {
+    if let array = members as? [PFObject] {
         for member in array {
           if member.objectId != user.objectId {
             newMembers += [member]
@@ -188,16 +201,16 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
   
   // MARK: - UITextFieldDelegate
   func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-    let old = textField.text
-    let new: String
+    let oldStr = textField.text
+    var newStr: String
     
-    if string == "" && old != "" {
-      new = old.substringWithRange(Range<String.Index>(start: old.startIndex, end: advance(old.endIndex, -1)))
+    if string == "" && oldStr != "" {
+      newStr = oldStr.substringWithRange(Range<String.Index>(start: oldStr.startIndex, end: advance(oldStr.endIndex, -1)))
     } else {
-      new = old + string
+      newStr = oldStr + string
     }
     
-    self.updateCreateButtonAppearance(new)
+    self.updateCreateButtonAppearance(newStr)
     
     return true
   }
@@ -211,7 +224,7 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
   }
   
   private func updateCreateButtonAppearance(text: String) {
-    if count(text) > 2 {
+    if countElements(text) > 2 {
       createButton.hidden = false
     } else {
       createButton.hidden = true
@@ -219,7 +232,7 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
   }
   
   private func validateTribeName(text: String!) -> Bool {
-    if count(text) < 3 || count(text) > 20 {
+    if countElements(text) < 3 || countElements(text) > 20 {
       return false
     }
     
@@ -231,29 +244,33 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
   // MARK: - UIKeyboardNotification
   
   func keyboardWillShow(notification: NSNotification) {
-    if let userInfo = notification.userInfo,
-      let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey]?.CGRectValue(),
-      let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]?.doubleValue,
-      let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey]?.integerValue {
-        let keyboardFrame = self.view.convertRect(endFrame, fromView: self.view.window)
-        let keyboardHeight = CGRectGetMaxY(self.view.bounds) - CGRectGetMinY(keyboardFrame)
-        
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          UIView.animateWithDuration(duration, animations: { () -> Void in
-            self.bottomSpacing.constant = keyboardHeight
+    if let userInfo = notification.userInfo {
+      if let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey]?.CGRectValue() {
+        if let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]?.doubleValue {
+  //      let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey]?.integerValue
+          
+          let keyboardFrame = self.view.convertRect(endFrame, fromView: self.view.window)
+          let keyboardHeight = CGRectGetMaxY(self.view.bounds) - CGRectGetMinY(keyboardFrame)
+
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            UIView.animateWithDuration(duration, animations: { () -> Void in
+              self.bottomSpacing.constant = keyboardHeight
+            })
           })
-        })
+        }
+      }
     }
   }
   
   func keyboardWillHide(notification: NSNotification) {
-    if let userInfo = notification.userInfo,
-      let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]?.doubleValue {
+    if let userInfo = notification.userInfo {
+      if let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]?.doubleValue {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
           UIView.animateWithDuration(duration, animations: { () -> Void in
             self.bottomSpacing.constant = 0
           })
         })
+      }
     }
   }
   

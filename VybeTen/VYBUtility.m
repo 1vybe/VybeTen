@@ -290,47 +290,6 @@
   return query;
 }
 
-+ (void)fetchActiveZones:(void (^)(NSArray *zones, NSError *error))completionBlock {
-  NSString *functionName = @"get_active_vybes";
-  [PFCloud callFunctionInBackground:functionName withParameters:@{} block:^(NSArray *vybes, NSError *error) {
-    if (!error) {
-      NSArray *zones = [self groupByZonesFromVybes:vybes];
-      if (completionBlock)
-        completionBlock(zones, nil);
-    }
-    else {
-      if (completionBlock)
-        completionBlock(nil, error);
-    }
-  }];
-  
-}
-
-+ (NSArray *)groupByZonesFromVybes:(NSArray *)vybes {
-  NSMutableArray *zones = [[NSMutableArray alloc] init];
-  for (PFObject *aVybe in vybes) {
-    Zone *zone = [[Zone alloc] initWithName:aVybe[kVYBVybeZoneNameKey] zoneID:aVybe[kVYBVybeZoneIDKey]];
-    PFGeoPoint *geoPoint = aVybe[kVYBVybeGeotagKey];
-    CLLocation *location = [[CLLocation alloc] initWithLatitude:geoPoint.latitude longitude:geoPoint.longitude];
-    zone.coordinate = [location coordinate];
-    if ( ! [self array:zones containsZone:zone] ) {
-      [zones addObject:zone];
-    }
-  }
-  return zones;
-}
-
-+ (BOOL)array:(NSArray *)zones containsZone:(Zone *)zone {
-  for (Zone *aZone in zones) {
-    if ([aZone.zoneID isEqualToString:zone.zoneID]) {
-      return YES;
-    }
-  }
-  return NO;
-}
-
-
-
 #pragma mark Thumbnail
 
 + (void)saveThumbnailImageForVybe:(VYBVybe *)mVybe {

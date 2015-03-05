@@ -12,7 +12,7 @@ import UIKit
 class CloudUtility: NSObject {
   
   class func removeFromMyFeed(watched: AnyObject) {
-    let watchedObj = watched as! PFObject
+    let watchedObj = watched as PFObject
     
     let myFeed = PFUser.currentUser().relationForKey(kVYBUserFreshFeedKey)
     myFeed.removeObject(watchedObj)
@@ -25,7 +25,7 @@ class CloudUtility: NSObject {
   }
   
   class func updateLastVybe(last: AnyObject) {
-    let lastObj = last as! PFObject
+    let lastObj = last as PFObject
     
     if let tribe = lastObj[kVYBVybeTribeKey] as? PFObject {
       let query = PFQuery(className: kVYBVybeClassKey)
@@ -33,16 +33,15 @@ class CloudUtility: NSObject {
       query.whereKey(kVYBVybeTribeKey, equalTo: tribe)
       query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
         if result != nil {
-          PFObject.unpinAllInBackground(result, withName: "LastVybes", block: { (success: Bool, error: NSError!) -> Void in
-            lastObj.pinInBackgroundWithName("LastVybes")
-          })
+          PFObject.unpinAllObjectsInBackgroundWithName("LastVybes")
+          lastObj.pinInBackgroundWithName("LastVybes")
         }
       }
     }
   }
   
   class func followUser(userObj: AnyObject) {
-    let user = userObj as! PFUser
+    let user = userObj as PFUser
     if user.objectId == PFUser.currentUser().objectId {
       println("ERRORROR")
       return
@@ -55,7 +54,7 @@ class CloudUtility: NSObject {
     query.whereKey(kVYBActivityToUserKey, equalTo:user)
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if error == nil {
-        for activity in result as! [PFObject] {
+        for activity in result as [PFObject] {
           activity.deleteInBackgroundWithBlock(nil)
         }
       }
@@ -83,12 +82,12 @@ class CloudUtility: NSObject {
     query.whereKey(kVYBActivityToUserKey, equalTo:user)
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if error == nil {
-        for activity in result as! [PFObject] {
+        for activity in result as [PFObject] {
           activity.deleteInBackgroundWithBlock(nil)
         }
       }
     }
     
-    VYBCache.sharedCache().setFollowStatus(false, user: user as! PFUser)
+    VYBCache.sharedCache().setFollowStatus(false, user: user as PFUser)
   }
 }

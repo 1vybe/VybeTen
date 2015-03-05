@@ -106,7 +106,7 @@ static void *XYZContext = &XYZContext;
   self.focusTarget.alpha = 0;
   
   UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
-  longPress.minimumPressDuration = 0.2;
+  longPress.minimumPressDuration = 0.1;
   [self.recordButton addGestureRecognizer:longPress];
 }
 
@@ -169,7 +169,6 @@ static void *XYZContext = &XYZContext;
           _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
         
         [[MyVybeStore sharedInstance] prepareNewVybe];
-        [[SpotFinder sharedInstance] findSpotFromCurrentLocationInBackground];
         
         [recordButton setEnabled:NO];
         
@@ -433,7 +432,7 @@ static void *XYZContext = &XYZContext;
 
 #pragma mark - SelectTribeDelegate
 
-- (void)didSelectTribe:(__nullable id)tribe {
+- (void)didSelectTribe:(id)tribe {
   [self dismissViewControllerAnimated:YES completion:^{
     if (tribe && tribe[kVYBTribeNameKey]) {
       self.tribeLabel.text = tribe[kVYBTribeNameKey];
@@ -448,7 +447,7 @@ static void *XYZContext = &XYZContext;
   }];
 }
 
-- (void)dismissSelectTribeViewContrller:(__nonnull SelectTribeViewController *)vc {
+- (void)dismissSelectTribeViewContrller:(id)vc {
   [self dismissViewControllerAnimated:YES completion:^{
     self.overlayView.hidden = NO;
   }];

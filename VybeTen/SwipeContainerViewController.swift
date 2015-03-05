@@ -80,12 +80,12 @@ import UIKit
   
   
   func goToNotificationScreen(completionBlock: (Void -> Void)!) {
-    if let nav = viewControllers[1] as? VYBNavigationController {
-      nav.popToRootViewControllerAnimated(false)
-      if let activity = nav.topViewController as? VYBActivityTableViewController {
-        activity.goToNotificationScreenWithCompletion(completionBlock)
-      }
-    }
+//    if let nav = viewControllers[1] as? VYBNavigationController {
+//      nav.popToRootViewControllerAnimated(false)
+//      if let activity = nav.topViewController as? VYBActivityTableViewController {
+//        activity.goToNotificationScreenWithCompletion(completionBlock)
+//      }
+//    }
   }
   
   private func previousViewController() -> UIViewController? {
@@ -277,7 +277,7 @@ class SwipeInteractionManager: NSObject, UIViewControllerInteractiveTransitionin
   var leftToRight: Bool?
   
   func startInteractiveTransition(transitionContext: UIViewControllerContextTransitioning) {
-    self.transitionContext = transitionContext as! SwipeTransitionContext
+    self.transitionContext = transitionContext as SwipeTransitionContext
     leftToRight = !self.transitionContext.swipeToLeft
     
     transitionContext.containerView().layer.speed = 0
