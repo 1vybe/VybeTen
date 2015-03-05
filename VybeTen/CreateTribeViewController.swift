@@ -63,10 +63,6 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
     let relation = trb.relationForKey(kVYBTribeMembersKey)
     relation.addObject(PFUser.currentUser())
     
-    let ACL = PFACL(user: PFUser.currentUser())
-    ACL.setPublicReadAccess(true)
-    trb.ACL = ACL
-    
     trb.pinInBackgroundWithName("MyTribes", block: { (success: Bool, error: NSError!) -> Void in
       if success {
         self.tribeObj = trb
@@ -99,7 +95,7 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
     if let tribe = tribeObj as? PFObject where self.validateTribeName(nameText.text) {
       tribe.setObject(nameText.text, forKey: kVYBTribeNameKey)
       let relation = tribe.relationForKey(kVYBTribeMembersKey)
-      if let array = members as? [PFObject] {
+      if let array = members as? [PFUser] {
         for m in array {
           relation.addObject(m)
         }
@@ -120,9 +116,11 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
     let cell = tableView.dequeueReusableCellWithIdentifier("AddMemberTableCellIdentifier") as! UITableViewCell
     
     if let user = allUsers[indexPath.row] as? PFObject,
-      let username = user[kVYBUserUsernameKey] as? String,
-      let usernameLabel = cell.viewWithTag(123) as? UILabel {
+      username = user[kVYBUserUsernameKey] as? String,
+      usernameLabel = cell.viewWithTag(123) as? UILabel,
+      checkBox = cell.viewWithTag(235) as? UIImageView {
         usernameLabel.text = username
+        checkBox.hidden = !self.membersInclude(user)
     }
     
     return cell
@@ -148,6 +146,18 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
         checkBox.hidden = true
         self.removeMember(user)
     }
+  }
+  
+  private func membersInclude(user: AnyObject) -> Bool {
+    if let array = members as? [PFObject] {
+      for m in array {
+        if m.objectId == user.objectId {
+          return true
+        }
+      }
+    }
+    
+    return false
   }
   
   private func addMember(user: AnyObject) {

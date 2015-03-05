@@ -10,25 +10,37 @@ import UIKit
 
 class EditTribeViewController: TribeDetailsViewController, UITableViewDelegate, UITableViewDataSource  {
   @IBOutlet weak var coordinatorName: UILabel!
-  @IBOutlet weak var addButton: UIButton!
   @IBOutlet weak var leaveButton: UIButton!
   
   var editable: Bool = false
   
-  var members: AnyObject = []
-  
-  @IBAction func doneButtonPressed(sender: AnyObject) {
-//    super.saveTribe({ () -> () in
-//      self.navigationController?.popViewControllerAnimated(true)
-//    })
-  }
+  var members: [AnyObject] = []
   
   @IBAction func backButtonPressed(sender: AnyObject) {
     self.navigationController?.popViewControllerAnimated(true)
   }
   
   @IBAction func leaveButtonPressed(sender: AnyObject) {
-    
+    if let trb = tribeObj as? PFObject {
+      // In case you are an admin, assign a coordinator title and role to a random person
+      if let first = members.first as? PFObject where editable {
+        trb[kVYBTribeCoordinatorKey] = first
+        
+        PFCloud.callFunctionInBackground("grantRole", withParameters: ["userId" : first.objectId, "tribeId" : trb.objectId])
+      }
+      
+      // First remove from members
+      let relation = trb.relationForKey(kVYBTribeMembersKey)
+      relation.removeObject(PFUser.currentUser())
+      
+      // Remove the current user from the role
+      let params = ["userId" : PFUser.currentUser().objectId, "tribeId" : trb.objectId]
+      PFCloud.callFunctionInBackground("removeFromRole", withParameters: params)
+      
+      trb.saveInBackgroundWithBlock({ (success: Bool, error: NSError!) -> Void in
+        self.navigationController?.popViewControllerAnimated(true)
+      })
+    }
   }
   
   override func viewDidLoad() {
