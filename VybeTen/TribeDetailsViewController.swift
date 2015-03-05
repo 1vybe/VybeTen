@@ -120,6 +120,8 @@ class TribeDetailsViewController: UIViewController, UIImagePickerControllerDeleg
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    self.tableView.tableFooterView = UIView()
         
     var textAttributes = [NSObject : AnyObject]()
     if let font = UIFont(name: "HelveticaNeue-Medium", size: 18.0) {

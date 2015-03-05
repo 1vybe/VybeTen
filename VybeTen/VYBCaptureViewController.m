@@ -108,8 +108,6 @@ static void *XYZContext = &XYZContext;
   UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
   longPress.minimumPressDuration = 0.2;
   [self.recordButton addGestureRecognizer:longPress];
-  
-  [self getPermissionIfNeeded];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -131,6 +129,8 @@ static void *XYZContext = &XYZContext;
   
   flashButton.selected = _flashOn;
   flipButton.selected = _isFrontCamera;
+  
+  [self getPermissionIfNeeded]; 
 }
 
 - (void)viewDidAppear:(BOOL)animated {

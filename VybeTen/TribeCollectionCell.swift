@@ -33,12 +33,12 @@ class TribeCollectionCell: UICollectionViewCell, UIGestureRecognizerDelegate {
     }
   }
   
-//  @IBAction func tribeNamePressed(sender: AnyObject) {
-//    if let tribesVC = delegate as? TribesViewController,
-//      let tribe = tribeObject {
-//      tribesVC.didSelectTribeToShowInfo(tribe)
-//    }
-//  }
+  @IBAction func tribeNamePressed(sender: AnyObject) {
+    if let tribesVC = delegate as? TribesViewController,
+      let tribe = tribeObject?.tribeObject as? PFObject {
+      tribesVC.didSelectTribeToShowInfo(tribe)
+    }
+  }
   
   @IBAction func tribePhotoPressed(sender: AnyObject) {
     if let tribesVC = delegate as? TribesViewController,

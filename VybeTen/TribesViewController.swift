@@ -78,67 +78,37 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
   
-    // First reset freshCount and coverVybe for each tribe
-    if let tribes = tribes as? [Tribe] {
-      for tribe in tribes {
-        tribe.freshCount = 0
-        tribe.coverVybe = nil
-      }
-    }
-    
-    self.loadTribesFromLocal()
+    self.loadTribesFromCloud()
   }
   
-  func loadTribesFromLocal() {
+  func loadTribesFromCloud() {
+    // First reset freshCount and coverVybe for each tribe
+    tribes = []
+    
     let query = PFQuery(className: kVYBTribeClassKey)
-    query.fromPinWithName("MyTribes")
-    query.whereKey("objectId", notContainedIn: self.localTribeObjectIds())
     query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
+    query.includeKey(kVYBTribeCoordinatorKey)
+    
     query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-      if error == nil && result.count > 0 {
+      if result != nil {
         for obj in result {
           let newTribe = Tribe(parseObj: obj)
           self.tribes += [newTribe]
         }
-      } else {
-        let query = PFQuery(className: kVYBTribeClassKey)
-        query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
-        query.whereKey("objectId", notContainedIn: self.localTribeObjectIds())
-        query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-          if result != nil {
-            for obj in result {
-              let newTribe = Tribe(parseObj: obj)
-              self.tribes += [newTribe]
-            }
-            
-            PFObject.pinAllInBackground(result, withName: "MyTribes", block:{ (success: Bool, error: NSError!) -> Void in
-              // NOTE: - It may be a good practice to update feed from local store first
-              self.refreshMyFeed()
-            })
-          }
-        })
+        
+        self.refreshMyFeed()
       }
     })
   }
   
-  private func localTribeObjectIds() -> [String] {
-    // Check for new tribes
-    // Array of existing tribe objectID's
-    var array: [String] = []
-    for tr in tribes {
-      if let objId = tr.tribeObject.objectId {
-        array += [objId]
-      }
-    }
-    
-    return array
-  }
-  
-  
   func refreshMyFeed() {
     let feed = PFUser.currentUser().relationForKey(kVYBUserFreshFeedKey)
+    
     let query = feed.query()
     query.includeKey(kVYBVybeUserKey)
+    // We only show vybes within the last 48 hrs
+    let twoDaysAgo = NSDate(timeIntervalSinceNow: -1 * 60 * 60 * 24 * 2)
+    query.whereKey(kVYBVybeTimestampKey, greaterThanOrEqualTo: twoDaysAgo)
     
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       PFObject.pinAllInBackground(result, withName: "MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
@@ -219,32 +189,7 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   }
   
   func refreshControlPulled() {
-    // First reset freshCount and coverVybe for each tribe
-    if let tribes = tribes as? [Tribe] {
-      for tribe in tribes {
-        tribe.freshCount = 0
-        tribe.coverVybe = nil
-      }
-    }
-    
-    let query = PFQuery(className: kVYBTribeClassKey)
-    query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
-    query.whereKey("objectId", notContainedIn: self.localTribeObjectIds())
-    query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-      if result != nil {
-        PFObject.pinAllInBackground(result, withName: "MyTribes")
-        
-        if let objects = result as? [PFObject] {
-          for obj in objects {
-            let newTribe = Tribe(parseObj: obj)
-            self.tribes += [newTribe]
-          }
-        }
-        
-        // Refresh feed
-        self.refreshMyFeed()
-      }
-    })
+    self.loadTribesFromCloud()
   }
   
   func appDelegateDidReceiveRemoteNotification(notification: NSNotification) {
@@ -286,9 +231,9 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
     if UIScreen.mainScreen().bounds.size.width > 320 {
       // iPhone6
-      return CGSizeMake(100.0, 120.0)
+      return CGSizeMake(100.0, 135.0)
     } else {
-      return CGSizeMake(84.0, 104.0)
+      return CGSizeMake(84.0, 119.0)
     }
   }
   
@@ -316,21 +261,22 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     if let cover = tribe.coverVybe as? PFObject,
       let file = cover[kVYBVybeThumbnailKey] as? PFFile {
       photoFile = file
+      cell.photoImageView.file = photoFile
+      cell.photoImageView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
+        if image != nil {
+          let maskImage: UIImage?
+          if image.size.height > image.size.width {
+            maskImage = UIImage(named: "thumbnail_mask_portrait")
+          } else {
+            maskImage = UIImage(named: "thumbnail_mask_landscape")
+          }
+          cell.photoImageView.image = VYBUtility.maskImage(image, withMask: maskImage)
+        }
+      })
+    } else {
+      cell.photoImageView.image = UIImage(named: "Placeholder_Tribe")
     }
     
-    cell.photoImageView.file = photoFile
-    cell.photoImageView.loadInBackground({ (image: UIImage!, error: NSError!) -> Void in
-      if image != nil {
-        let maskImage: UIImage?
-        if image.size.height > image.size.width {
-          maskImage = UIImage(named: "thumbnail_mask_portrait")
-        } else {
-          maskImage = UIImage(named: "thumbnail_mask_landscape")
-        }
-        cell.photoImageView.image = VYBUtility.maskImage(image, withMask: maskImage)
-      }
-    })
-
     return cell
   }
   

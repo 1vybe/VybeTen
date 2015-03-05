@@ -40,7 +40,7 @@ class WelcomeManager: NSObject {
       var currentInstallation = PFInstallation.currentInstallation()
       if currentInstallation.badge != 0 {
         currentInstallation.badge = 0
-        currentInstallation.saveEventually(nil)
+        currentInstallation.saveEventually()
       }
       
       // Access Control
@@ -68,7 +68,7 @@ class WelcomeManager: NSObject {
           })
         }
       } else {
-        PFUser.currentUser().fetch()
+        PFUser.currentUser().fetchInBackgroundWithTarget(self, selector: "fetchCurrentUserDataWithResult:error:")
 
         if let vybeAppDelegate = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
           dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -102,6 +102,14 @@ class WelcomeManager: NSObject {
       
       // Update Google Analytics
       self.updateGoogleAnalytics()
+      
+      // Get a list of all users and pin them
+      let uQuery = PFUser.query()
+      uQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+        if error == nil {
+          PFObject.pinAllInBackground(result, withName: "AllUsers")
+        }
+      })
       
       // Update myFlags cache
       if let currUser = userObj as? PFUser, let myFlags = currUser.relationForKey(kVYBUserFlagsKey) {

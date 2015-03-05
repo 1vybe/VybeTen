@@ -188,7 +188,16 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
   
   // MARK: - UITextFieldDelegate
   func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-    self.updateCreateButtonAppearance(textField.text)
+    let old = textField.text
+    let new: String
+    
+    if string == "" && old != "" {
+      new = old.substringWithRange(Range<String.Index>(start: old.startIndex, end: advance(old.endIndex, -1)))
+    } else {
+      new = old + string
+    }
+    
+    self.updateCreateButtonAppearance(new)
     
     return true
   }
