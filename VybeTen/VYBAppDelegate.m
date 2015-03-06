@@ -290,22 +290,31 @@
   //    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kVYBUserDefaultsActivityFeedViewControllerLastRefreshKey];
   //    [[NSUserDefaults standardUserDefaults] synchronize];
   
-  // Unsubscribe from push notifications by removing the user association from the current installation.
-  [[PFInstallation currentInstallation] removeObjectForKey:kVYBInstallationUserKey];
-  [[PFInstallation currentInstallation] saveInBackground];
+  dispatch_queue_t clean_up_queue = dispatch_queue_create("com.vybe.app.appDelegate.cleanUp", DISPATCH_QUEUE_SERIAL);
+  dispatch_set_target_queue(clean_up_queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
   
-  // Clear all caches
-  [PFQuery clearAllCachedResults];
-  
-  // Log out
-  [PFUser logOut];
-  
-  // clear out cached data, view controllers, etc
-  [self.mainNavController popToRootViewControllerAnimated:NO];
-  
-  
-  self.permissionController = nil;
-}
+  [MBProgressHUD showHUDAddedTo:self.mainNavController.view animated:YES];
+  dispatch_async(clean_up_queue, ^{
+    // Unsubscribe from push notifications by removing the user association from the current installation.
+    [[PFInstallation currentInstallation] removeObjectForKey:kVYBInstallationUserKey];
+    [[PFInstallation currentInstallation] save];
+    
+    // Clear all caches
+    [PFQuery clearAllCachedResults];
+    
+    // Log out
+    [PFUser logOut];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [MBProgressHUD hideAllHUDsForView:self.mainNavController.view animated:YES];
+      // clear out cached data, view controllers, etc
+      [self.mainNavController popToRootViewControllerAnimated:NO];
+      
+      self.permissionController = nil;
+    });
+  });
+
+ }
 
 #pragma mark - ()
 
