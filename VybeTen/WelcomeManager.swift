@@ -95,43 +95,42 @@ class WelcomeManager: NSObject {
         }
         return
       }
-    } else {
-      // NOTE: - a break point here causes a crash
-      // Update config file from cloud
-      ConfigManager.sharedInstance.fetchIfNeeded()
-      
-      // Update Google Analytics
-      self.updateGoogleAnalytics()
-      
-      // Get a list of all users and pin them
-      let uQuery = PFUser.query()
-      uQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+    }
+    // NOTE: - a break point here causes a crash
+    // Update config file from cloud
+    ConfigManager.sharedInstance.fetchIfNeeded()
+    
+    // Update Google Analytics
+    self.updateGoogleAnalytics()
+    
+    // Get a list of all users and pin them
+    let uQuery = PFUser.query()
+    uQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+      if error == nil {
+        PFObject.pinAllInBackground(result, withName: "AllUsers")
+      }
+    })
+    
+    if let currUser = userObj as? PFUser {
+      // Update myFlags cache
+      let myFlags = currUser.relationForKey(kVYBUserFlagsKey)
+      let flagQuery = myFlags.query()
+      flagQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
         if error == nil {
-          PFObject.pinAllInBackground(result, withName: "AllUsers")
+          for vybeObj in result as! [PFObject] {
+            VYBCache.sharedCache().setAttributesForVybe(vybeObj, flaggedByCurrentUser: true)
+          }
         }
       })
       
-      // Update myFlags cache
-      if let currUser = userObj as? PFUser, let myFlags = currUser.relationForKey(kVYBUserFlagsKey) {
-        var flagQuery = myFlags.query()
-        flagQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-          if error == nil {
-            for vybeObj in result as! [PFObject] {
-              VYBCache.sharedCache().setAttributesForVybe(vybeObj, flaggedByCurrentUser: true)
-            }
-          }
-        })
-      }
-      
       // Update blockedUsers cache
-      if let currUser = userObj as? PFUser, let blockedUsers = currUser.relationForKey(kVYBUserBlockedUsersKey) {
-        var blockQuery = blockedUsers.query()
-        blockQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-          if error == nil {
-            VYBCache.sharedCache().setBlockedUsers(result, forUser: currUser)
-          }
-        })
-      }
+      let blockedUsers = currUser.relationForKey(kVYBUserBlockedUsersKey)
+      let blockQuery = blockedUsers.query()
+      blockQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+        if error == nil {
+          VYBCache.sharedCache().setBlockedUsers(result, forUser: currUser)
+        }
+      })
     }
   }
   
