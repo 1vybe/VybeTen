@@ -186,6 +186,8 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
         self.refreshControl?.endRefreshing()
       })
     }
+    
+    NSUserDefaults.standardUserDefaults().setObject(NSDate(), forKey: kVYBUserDefaultsLastRefreshKey)
   }
   
   func refreshControlPulled() {
@@ -308,11 +310,16 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   func playVybeFromPushNotification(tribeID: String) {
     let tribe = PFObject(withoutDataWithClassName: kVYBTribeClassKey, objectId: tribeID)
     
-    let query = PFQuery(className: kVYBVybeClassKey)
-    query.fromPinWithName("MyFreshFeed")
-    query.whereKey(kVYBVybeTribeKey, equalTo: tribe)
-    query.includeKey(kVYBVybeUserKey)
+    let newQ = PFQuery(className: kVYBVybeClassKey)
+    newQ.whereKey(kVYBVybeTribeKey, equalTo: tribe)
+    newQ.whereKey(kVYBVybeTimestampKey, greaterThanOrEqualTo: NSUserDefaults.standardUserDefaults().objectForKey(kVYBUserDefaultsLastRefreshKey))
+    let localQ = PFQuery(className: kVYBVybeClassKey)
+    localQ.whereKey(kVYBVybeTribeKey, equalTo: tribe)
+    localQ.fromPinWithName("MyFreshFeed")
+    
+    let query = PFQuery.orQueryWithSubqueries([newQ, localQ])
     query.orderByAscending(kVYBVybeTimestampKey)
+    query.includeKey(kVYBVybeUserKey)
     
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if result != nil {

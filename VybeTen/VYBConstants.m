@@ -46,7 +46,7 @@ NSString *const kVYBUserDefaultsVideoAccessPermissionUndeterminedKey = @"com.vyb
 NSString *const kVYBUserDefaultsVideoAccessPermissionGrantedKey = @"com.vybe.app.userDefaults.video.permission.granted";
 
 NSString *const kVYBUserDefaultsUserPromptsSeenKey = @"com.vybe.app.userDefaults.userPrompts.seen";
-
+NSString *const kVYBUserDefaultsLastRefreshKey     = @"com.vybe.app.userDefaults.lastRefresh";
 
 #pragma mark - PFObject User Class
 // field keys

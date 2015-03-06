@@ -93,6 +93,7 @@ extern NSString *const kVYBUserDefaultsVideoAccessPermissionUndeterminedKey;
 extern NSString *const kVYBUserDefaultsVideoAccessPermissionGrantedKey;
 
 extern NSString *const kVYBUserDefaultsUserPromptsSeenKey;
+extern NSString *const kVYBUserDefaultsLastRefreshKey;
 
 
 #pragma mark - PFObject User Class
