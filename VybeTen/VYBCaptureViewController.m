@@ -129,8 +129,6 @@ static void *XYZContext = &XYZContext;
   
   flashButton.selected = _flashOn;
   flipButton.selected = _isFrontCamera;
-  
-  [self getPermissionIfNeeded]; 
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -143,6 +141,9 @@ static void *XYZContext = &XYZContext;
   [[GAI sharedInstance].defaultTracker
    send:[[GAIDictionaryBuilder createAppView] build]];
 #endif
+  // Alert for a permission for push notifications.
+  [self getPermissionIfNeeded];
+
   [self resetRotationOfElements];
   
   dispatch_async(motion_orientation_queue, ^{
