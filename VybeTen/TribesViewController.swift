@@ -78,7 +78,14 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
   
-    self.loadTribesFromCloud()
+    if let lastRefresh = NSUserDefaults.standardUserDefaults().objectForKey(kVYBUserDefaultsLastRefreshKey) as? NSDate {
+      let timePassed = lastRefresh.timeIntervalSinceNow
+      if timePassed < -60 {
+        self.loadTribesFromCloud()
+      }
+    } else {
+      self.loadTribesFromCloud()
+    }
   }
   
   func loadTribesFromCloud() {
@@ -89,15 +96,15 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
     query.includeKey(kVYBTribeCoordinatorKey)
     
+    MBProgressHUD.showHUDAddedTo(self.view, animated: true)
     query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
       if result != nil {
         for obj in result {
           let newTribe = Tribe(parseObj: obj)
           self.tribes += [newTribe]
         }
-        
-        self.refreshMyFeed()
       }
+      self.refreshMyFeed()
     })
   }
   
@@ -191,6 +198,7 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
             }
           })
         }
+        MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
         self.refreshControl?.endRefreshing()
       })
     }
@@ -314,6 +322,9 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     if let tribe = obj as? Tribe {
       let playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
       playerVC.delegate = self
+      
+      MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+      println("Let's play [\(NSDate())]")
       playerVC.playStreamForTribe(tribe)
     }
   }
@@ -321,21 +332,20 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   func playVybeFromPushNotification(tribeID: String) {
     let tribe = PFObject(withoutDataWithClassName: kVYBTribeClassKey, objectId: tribeID)
     
-    let newQ = PFQuery(className: kVYBVybeClassKey)
-    newQ.whereKey(kVYBVybeTribeKey, equalTo: tribe)
-    newQ.whereKey(kVYBVybeTimestampKey, greaterThanOrEqualTo: NSUserDefaults.standardUserDefaults().objectForKey(kVYBUserDefaultsLastRefreshKey))
-    let localQ = PFQuery(className: kVYBVybeClassKey)
-    localQ.whereKey(kVYBVybeTribeKey, equalTo: tribe)
-    localQ.fromPinWithName("MyFreshFeed")
-    
-    let query = PFQuery.orQueryWithSubqueries([newQ, localQ])
-    query.orderByAscending(kVYBVybeTimestampKey)
+    // NOTE: - For simplicity, playing from a push notification always fetches fresh feed from the server
+    let query = PFQuery(className: kVYBVybeClassKey)
+    query.whereKey(kVYBVybeTribeKey, equalTo: tribe)
     query.includeKey(kVYBVybeUserKey)
-    
+    query.orderByAscending(kVYBVybeTimestampKey)
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if result != nil {
         let playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
         playerVC.delegate = self
+        
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+          MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+          return
+        })
         playerVC.playStream(result)
       }
     }
