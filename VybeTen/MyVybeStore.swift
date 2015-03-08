@@ -36,6 +36,12 @@ class MyVybeStore: NSObject {
     nVybe.setObject(NSNumber(bool: true), forKey: kVYBVybeTypePublicKey)
     
     currVybe = VYBVybe(parseObject:nVybe)
+    
+    PFGeoPoint.geoPointForCurrentLocationInBackground { (geoPt: PFGeoPoint!, error: NSError!) -> Void in
+      if geoPt != nil {
+        self.currVybe?.locationCL = CLLocation(latitude: geoPt.latitude, longitude: geoPt.longitude)
+      }
+    }
   }
   
   func uploadCurrentVybe() {
