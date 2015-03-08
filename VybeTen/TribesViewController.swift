@@ -333,7 +333,7 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     let tribe = PFObject(withoutDataWithClassName: kVYBTribeClassKey, objectId: tribeID)
     
     // NOTE: - For simplicity, playing from a push notification always fetches fresh feed from the server
-    let query = PFQuery(className: kVYBVybeClassKey)
+    let query = PFUser.currentUser().relationForKey(kVYBUserFreshFeedKey).query()
     query.whereKey(kVYBVybeTribeKey, equalTo: tribe)
     query.includeKey(kVYBVybeUserKey)
     query.orderByAscending(kVYBVybeTimestampKey)
@@ -373,7 +373,8 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
       username = name
     }
     
-    let alertController = UIAlertController(title: "Hello \(username)", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+    let appVer = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as String
+    let alertController = UIAlertController(title: "Hello \(username)", message: "Welcome to Vybe \(appVer)", preferredStyle: UIAlertControllerStyle.ActionSheet)
     let logOutAction = UIAlertAction(title: "Log Out", style: .Destructive) { (action: UIAlertAction!) -> Void in
       if let appDelegate = UIApplication.sharedApplication().delegate as? VYBAppDelegate {
         appDelegate.logOut()
