@@ -102,9 +102,6 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
       return;
   
   _session = [[AVCaptureSession alloc] init];
-  if ( [_session canSetSessionPreset:AVCaptureSessionPreset1280x720] ) {
-    [_session setSessionPreset:AVCaptureSessionPreset1280x720];
-  }
   
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionNotificationReceived:) name:nil object:_session];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForegroundNotificationReceived:) name:UIApplicationWillEnterForegroundNotification object:[UIApplication sharedApplication]];
@@ -473,7 +470,8 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
     }
     
     AVCaptureDevice *videoDevice = [VYBCapturePipeline deviceWithMediaType:AVMediaTypeVideo preferringPosition:prefferedPosition];
-    AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:nil];
+    NSError *error;
+    AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
     [_session beginConfiguration];
     [_session removeInput:_videoDeviceInput];
     if ( [_session canAddInput:videoDeviceInput] ) {
@@ -512,8 +510,6 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
       [captureDevice setAutomaticallyEnablesLowLightBoostWhenAvailable:YES];
     }
     [captureDevice unlockForConfiguration];
-  } else {
-    NSLog(@"Low light boost configuration failed: %@", error);
   }
   
   return captureDevice;
