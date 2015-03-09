@@ -33,8 +33,8 @@ Parse.Cloud.beforeSave(Parse.User, function(request, response) {
 });
 
 function validateUsername(username) {
-  if (username.length < 2 || username.length > 13) {
-    return "A username should be between 3 - 13 characters.";
+  if (username.length < 2 || username.length > 18) {
+    return "A username should be between 3 - 18 characters.";
   }
 
   if (!/^\w+$/.test(username)) {

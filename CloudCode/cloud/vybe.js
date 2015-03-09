@@ -15,6 +15,25 @@ Parse.Cloud.beforeSave('Vybe', function (request, response) {
   }
 });
 
+Parse.Cloud.job('updateAllUsersFeed', function (request, status) {
+  Parse.Cloud.useMasterKey();
+
+  var query = new Parse.Query(Parse.User);
+  var promises = [];
+  status.message('LET\'s FEED!!!!!!!!!!');
+
+  query.each(function(user) {
+    var feed = user.relation('feed');
+    feed.add(request.object);
+    promises.push(user.save());
+  });
+
+  return Parse.Promise.when(promises).then(function () {
+    status.success('Everyone\'s feed is updated');
+  }, function (error) {
+    status.error('Error occured updating everyone\'s feed.  ' + error.code);
+  });
+});
 
 Parse.Cloud.afterSave('Vybe', function (request) {
   // Continue only for new vybes
@@ -22,15 +41,26 @@ Parse.Cloud.afterSave('Vybe', function (request) {
     return;
   }
 
-  // Insert this new vybe to each user's freshFeed
-  Parse.Cloud.useMasterKey();
-  var query = new Parse.Query(Parse.User);
-  query.each(function(user) {
-    var feed = user.relation('feed');
-    feed.add(request.object);
-    user.save();
+  // Run a background job to push a new vybe into everyone's feed
+  Parse.Cloud.httpRequest({
+    method: 'POST',
+    url: 'https://api.parse.com/1/jobs/updateAllUsersFeed',
+    headers: {
+      'Content-Type' : 'application/json',
+      'X-Parse-Application-Id' : 'gYVd0gSQavfnxcvIyFhns8j0KKyp0XHekKdrjJkC',
+      'X-Parse-Master-Key' : 'OgzdYpZf8z99FCbmwHHr6WheKe45p5pv7qOChHmk'
+    },
+    body: {
+      'request' : request
+    },
+    success: function (httpResponse) {
+      console.log('Job Success: ' + httpResponse.text);
+    },
+    error: function (httpResponse) {
+      console.log('Job Failed: (code) ' + httpResponse.status)
+    }
   });
-  
+
   // Send push
   var tribe = request.object.get('tribe');
   tribe.fetch().then(function (tribeObj) {
@@ -60,7 +90,6 @@ Parse.Cloud.afterSave('Vybe', function (request) {
   });
 });
 
-
 Parse.Cloud.afterDelete('Vybe', function (request) {
   // Set up to modify user data
   Parse.Cloud.useMasterKey();
@@ -83,7 +112,6 @@ Parse.Cloud.afterDelete('Vybe', function (request) {
       return user.save();
   });
 });
-
 
 Parse.Cloud.job("removeDeletedVybesFromFeeds", function (request, status) {
   // Set up to modify user data
@@ -128,21 +156,22 @@ Parse.Cloud.job("resetUserPromptsSeen", function (request, status) {
     status.error("Job failed");
   });
 });
-
+// This job takes one parameter in a format - {"dateString": "2014-12-10T23:00:00Z"}
 Parse.Cloud.job("removeOldVybesFromFeeds", function (request, status) {
   // Set up to modify user data
   Parse.Cloud.useMasterKey();
 
   // Query for all users
   var query = new Parse.Query(Parse.User);
-
   var ttlAgo = new Date(request.params.dateString);
 
   query.each(function(user) {
     var username = user.get('username');
     console.log('cleaning for ' + username);
     var feed = user.relation('feed');
-    feed.query().find({
+    var feedQuery = feed.query();
+    feedQuery.limit(1000);
+    return feedQuery.find({
       success: function(list) {
         console.log('there are ' + list.length + ' feed for this user');
         for(i = 0; i < list.length; i++) {

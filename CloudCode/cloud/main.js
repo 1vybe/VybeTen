@@ -1,4 +1,5 @@
 require('cloud/installation');
+require('cloud/job');
 require('cloud/vybe');
 require('cloud/user');
 require('cloud/tribe');
