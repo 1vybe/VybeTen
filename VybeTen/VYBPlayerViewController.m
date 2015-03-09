@@ -262,6 +262,7 @@
     [query orderByAscending:kVYBVybeTimestampKey];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+      NSLog(@"Player loaded a stream [%@]", [NSDate date]);
       if (!error && objects.count) {
         // NOTE: Skip vybes at the beginning if they are of your own.
         int startIdx = 0;
@@ -296,6 +297,7 @@
   _zoneCurrIdx = 0;
   
   [self prepareVideoInBackgroundFor:_zoneVybes[0] withCompletion:^(BOOL success) {
+    NSLog(@"Player prepared the first video [%@]", [NSDate date]);
     [self.delegate playerViewController:self didFinishSetup:success];
   }];
 }
@@ -460,7 +462,6 @@
   [self.currPlayer replaceCurrentItemWithPlayerItem:self.currItem];
   
   float seconds = CMTimeGetSeconds([asset duration]);
-  NSLog(@"Playing asset length - %g seconds", seconds);
   _timer = [NSTimer scheduledTimerWithTimeInterval:seconds/100.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
   _timerCount = 100;
   
@@ -505,10 +506,14 @@
     
     [currItem pinInBackgroundWithName:@"LastVybes"];
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[PFUser currentUser] saveEventually:^(BOOL succeeded, NSError *error) {
-      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-      [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [self.delegate dismissPlayerViewController:self completion:^{
+      [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+      [[PFUser currentUser] saveEventually:^(BOOL succeeded, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        if ( [self.delegate respondsToSelector:@selector(loadTribesFromCloud)] ) {
+          [self.delegate performSelector:@selector(loadTribesFromCloud)];
+        }
+      }];
     }];
   }
   else {
@@ -636,12 +641,16 @@
 }
 
 - (void)swipeDownDetected:(UIGestureRecognizer *)recognizer {
-  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-  [[PFUser currentUser] saveEventually:^(BOOL succeeded, NSError *error) {
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+  [self.delegate dismissPlayerViewController:self completion:^{
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[PFUser currentUser] saveEventually:^(BOOL succeeded, NSError *error) {
+      [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+      if ( [self.delegate respondsToSelector:@selector(loadTribesFromCloud)] ) {
+        [self.delegate performSelector:@selector(loadTribesFromCloud)];
+      }
+    }];
   }];
-}
+ }
 
 - (void)swipeLeftDetected:(UIGestureRecognizer *)recognizer {
   [self playNextItem];
@@ -704,11 +713,6 @@
       [tribesVC moveToCapture];
     }
   }];
-}
-
-
-- (IBAction)dismissButtonPressed {
-  [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (IBAction)flagOverlayButtonPressed {
