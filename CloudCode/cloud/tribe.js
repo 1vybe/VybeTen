@@ -41,14 +41,17 @@ Parse.Cloud.define('removeFromRole', function (request, response) {
 	var query = new Parse.Query(Parse.Role);
 	query.equalTo('name', roleName);
 
-	console.log('removing User_' + user.id + ' from ' + roleName);
-	return query.first().then(function (roleObj) {
+	query.first().then(function (roleObj) {
 		if (roleObj) {
 			roleObj.getUsers().remove(user);
 			return roleObj.save();
 		} else {
 			response.error('No role exists for User_' + user.id);
 		}
+	}, function (error) {
+			response.error('No role exists for User_' + user.id);
+	}).then(function (roleObj) {
+		response.success('User_' + user.id + ' successfully removed from Role_' + roleObj);
 	});
 });
 
@@ -64,13 +67,17 @@ Parse.Cloud.define('grantRole', function (request, response) {
 	query.equalTo('name', roleName);
 
 	console.log('Granting User_' + user.id + ' Role_' + roleName);
-	return query.first().then(function (roleObj) {
+	query.first().then(function (roleObj) {
 		if (roleObj) {
 			roleObj.getUsers().add(user);
 			return roleObj.save();
 		} else {
 			response.error('No role exists for User_' + user.id);
 		}
+	}, function (error) {
+		response.error('No role exists for User_' + user.id);
+	}).then(function (roleObj) {
+		response.success('User_' + user.id + ' successfully granted Role_' + roleObj);
 	});
 });
 
