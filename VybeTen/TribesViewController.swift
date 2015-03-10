@@ -23,7 +23,7 @@ import UIKit
 
 let reuseIdentifier = "TribeCollectionCell"
 
-class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYBPlayerViewControllerDelegate {
+class TribesViewController: UICollectionViewController, CreateTribeDelegate, EditTribeDelegate,VYBPlayerViewControllerDelegate {
   var tribes: [AnyObject]
   var selectedTribe: AnyObject?
   var captureButton: UIButton?
@@ -90,7 +90,9 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   
   func loadTribesFromCloud() {
     // First reset freshCount and coverVybe for each tribe
-    tribes = []
+    for t in self.tribes as [Tribe] {
+      t.freshCount = 0
+    }
     
     let query = PFQuery(className: kVYBTribeClassKey)
     query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
@@ -99,15 +101,26 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
     query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
       if result != nil {
-        for obj in result {
-          let newTribe = Tribe(parseObj: obj)
-          self.tribes += [newTribe]
+        for obj in result as [PFObject] {
+          self.addTribe(obj)
         }
       }
       self.refreshMyFeed()
     })
   }
   
+  private func addTribe(obj: AnyObject) {
+    for trb in self.tribes as [Tribe] {
+      let trbObj = trb.tribeObject as PFObject
+      if trbObj.objectId == obj.objectId {
+        return
+      }
+    }
+    
+    let newTribe = Tribe(parseObj: obj)
+    self.tribes += [newTribe]
+  }
+
   func refreshMyFeed() {
     let feed = PFUser.currentUser().relationForKey(kVYBUserFreshFeedKey)
     
@@ -148,6 +161,8 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
               }
             }
           }
+          self.collectionView?.reloadData()
+
           // Update cover thumbnails
           let lastQ = PFQuery(className:kVYBVybeClassKey)
           lastQ.fromPinWithName("LastVybes")
@@ -157,13 +172,15 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
             if result != nil {
               for obj in result {
                 if let tribe = obj[kVYBVybeTribeKey] as? PFObject {
-                  innerLoop: for trb in self.tribes {
+                  innerLoop: for (idx, trb) in enumerate(self.tribes) {
                     let trbObj = trb.tribeObject as PFObject
                     if trbObj.objectId == tribe.objectId {
                         // NOTE: - Update Tribe that has no fresh contents. However it must be that checking this condition is not required.
                       let t = trb as Tribe
                       if t.freshCount == 0 {
                         t.coverVybe = obj
+                        let indexPath = NSIndexPath(forRow: idx, inSection: 0)
+                        self.collectionView?.reloadItemsAtIndexPaths([indexPath])
                       }
                       
                       break innerLoop
@@ -172,8 +189,6 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
                 }
               }
             }
-            // Refresh the collection view after updating cover vybes
-            self.collectionView?.reloadData()
             
             // Download the most recent vybe for tribes that have ZERO fresh content - however cover vybe might exist
             for (idx, tribe) in enumerate(self.tribes) {
@@ -228,6 +243,8 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
     let newTrb = Tribe(parseObj: tribe)
     tribes += [newTrb]
     
+    self.collectionView?.reloadData()
+    
     if let navigation = self.navigationController as? VYBNavigationController {
       navigation.popViewControllerAnimated(true, completion: { () -> Void in
         if let swipeContainer = navigation.parentViewController as? SwipeContainerController {
@@ -240,6 +257,25 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
   func didCancelTribe() {
     if let navigation = self.navigationController as? VYBNavigationController {
       navigation.popViewControllerAnimated(true)
+    }
+  }
+  
+  // MARK: - EditTribeDelegate
+  func didLeaveTribe(tribe: AnyObject) {
+    self.navigationController?.popViewControllerAnimated(true)
+    
+    var dIdx = -1
+    for (idx,obj) in enumerate(self.tribes as [Tribe]) {
+      let trb = obj.tribeObject as PFObject
+      if trb.objectId == tribe.objectId {
+        dIdx = idx
+        break
+      }
+    }
+
+    if dIdx >= 0 {
+      self.tribes.removeAtIndex(dIdx)
+      self.collectionView?.deleteItemsAtIndexPaths([NSIndexPath(forRow: dIdx, inSection: 0)])
     }
   }
   
@@ -307,8 +343,9 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, VYB
         createTribeVC.delegate = self
       }
     } else if segue.identifier == "ShowTribeInfoSegue" {
-      if let tribeDetails = segue.destinationViewController as? TribeDetailsViewController {
+      if let tribeDetails = segue.destinationViewController as? EditTribeViewController {
         tribeDetails.tribeObj = selectedTribe
+        tribeDetails.delegate = self
       }
     }
   }

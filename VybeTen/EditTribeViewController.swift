@@ -1,4 +1,3 @@
-	//
 //  EditTribeViewController.swift
 //  Vybe
 //
@@ -8,7 +7,13 @@
 
 import UIKit
 
+protocol EditTribeDelegate {
+  func didLeaveTribe(tribe: AnyObject)
+}
+  
 class EditTribeViewController: TribeDetailsViewController, UITableViewDelegate, UITableViewDataSource  {
+  var delegate: EditTribeDelegate? // NOTE: - Why weak var is not allowed for an optional?
+  
   @IBOutlet weak var coordinatorName: UILabel!
   @IBOutlet weak var leaveButton: UIButton!
   
@@ -40,8 +45,9 @@ class EditTribeViewController: TribeDetailsViewController, UITableViewDelegate, 
         // Remove the current user from the role
         let params = ["userId" : PFUser.currentUser().objectId, "tribeId" : trb.objectId]
         PFCloud.callFunctionInBackground("removeFromRole", withParameters: params)
+        
         MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
-        self.navigationController?.popViewControllerAnimated(true)
+        self.delegate?.didLeaveTribe(trb)
       })
     }
   }
