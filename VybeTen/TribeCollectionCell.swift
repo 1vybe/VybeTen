@@ -11,10 +11,13 @@ import UIKit
 class TribeCollectionCell: UICollectionViewCell, UIGestureRecognizerDelegate {
   @IBOutlet weak var photoImageView: PFImageView!
   @IBOutlet weak var nameLabel: UILabel!
-  @IBOutlet weak var userCount: UILabel!
+  @IBOutlet weak var playButton: UIButton!
+  @IBOutlet weak var detailButton: UIButton!
   
   weak var tribeObject: Tribe?
   weak var delegate: UIViewController?
+  
+  var doubleTapGesture: UIGestureRecognizer!
   
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -22,7 +25,17 @@ class TribeCollectionCell: UICollectionViewCell, UIGestureRecognizerDelegate {
     let doubleTap = UITapGestureRecognizer(target: self, action: "doubleTapDetected")
     doubleTap.numberOfTapsRequired = 2
     doubleTap.delegate = self
+    self.doubleTapGesture = doubleTap
+    
     self.addGestureRecognizer(doubleTap)
+    
+    let tapToPlay = UITapGestureRecognizer(target: self, action: "playTribe")
+    tapToPlay.requireGestureRecognizerToFail(doubleTap)
+    self.playButton.addGestureRecognizer(tapToPlay)
+    
+    let tapToShowDetails = UITapGestureRecognizer(target: self, action: "showTribeDetail")
+    tapToShowDetails.requireGestureRecognizerToFail(doubleTap)
+    self.detailButton.addGestureRecognizer(tapToShowDetails)
   }
   
   func doubleTapDetected() {
@@ -33,7 +46,7 @@ class TribeCollectionCell: UICollectionViewCell, UIGestureRecognizerDelegate {
     }
   }
   
-  @IBAction func tribeNamePressed(sender: AnyObject) {
+  func showTribeDetail() {
     if let tribesVC = delegate as? TribesViewController {
       if let tribe = tribeObject?.tribeObject as? PFObject {
         tribesVC.didSelectTribeToShowInfo(tribe)
@@ -41,7 +54,7 @@ class TribeCollectionCell: UICollectionViewCell, UIGestureRecognizerDelegate {
     }
   }
   
-  @IBAction func tribePhotoPressed(sender: AnyObject) {
+  func playTribe() {
     if let tribesVC = delegate as? TribesViewController {
       tribesVC.didSelectTribeToPlay(tribeObject)
     }

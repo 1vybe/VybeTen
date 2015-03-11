@@ -47,18 +47,12 @@
                                             <state key="normal">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
-                                            <connections>
-                                                <action selector="tribeNamePressed:" destination="X63-ND-8aS" eventType="touchUpInside" id="Od0-dr-Kmc"/>
-                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6u0-zJ-UKm" userLabel="Play">
                                             <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                             <state key="normal">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
-                                            <connections>
-                                                <action selector="tribePhotoPressed:" destination="X63-ND-8aS" eventType="touchUpInside" id="b5C-dh-PUV"/>
-                                            </connections>
                                         </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -81,8 +75,10 @@
                                     <constraint firstAttribute="centerX" secondItem="zy2-TP-XRe" secondAttribute="centerX" id="wW0-lF-f9I"/>
                                 </constraints>
                                 <connections>
+                                    <outlet property="detailButton" destination="zmF-Wl-Iid" id="8jX-ef-7zG"/>
                                     <outlet property="nameLabel" destination="zy2-TP-XRe" id="OLG-aF-BHQ"/>
                                     <outlet property="photoImageView" destination="utb-x5-M7Z" id="iYz-yN-flr"/>
+                                    <outlet property="playButton" destination="6u0-zJ-UKm" id="eMP-xi-31Y"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
