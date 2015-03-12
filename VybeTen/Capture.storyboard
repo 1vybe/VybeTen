@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7515.2" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rgS-Qd-smr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rgS-Qd-smr">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7512"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="ProximaNovaSoft-Regular.otf">
@@ -111,31 +111,18 @@
                                             <action selector="homeButtonPressed:" destination="rgS-Qd-smr" eventType="touchUpInside" id="roI-oV-uvO"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uQn-Ex-Hhs" userLabel="recordButton">
-                                        <rect key="frame" x="248" y="470" width="105" height="105"/>
-                                        <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="18"/>
-                                        <state key="normal" image="CaptureBTN">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="selected" image="CapturingBTN"/>
-                                    </button>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tf5-Av-Ngb" customClass="TimeProgressBar" customModule="Vybe" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="592" width="600" height="8"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wmo-4Q-KVA" userLabel="recordButton" customClass="VYBRecordButton">
+                                        <rect key="frame" x="240" y="465" width="120" height="120"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="70" id="AjN-CN-zhJ"/>
-                                            <constraint firstAttribute="height" constant="8" id="M7m-sl-ReX"/>
-                                            <constraint firstAttribute="width" constant="70" id="Wqb-tz-9tr"/>
+                                            <constraint firstAttribute="height" constant="100" id="7UW-Y5-orA"/>
+                                            <constraint firstAttribute="height" constant="120" id="HtG-Go-Geg"/>
+                                            <constraint firstAttribute="width" constant="100" id="PfX-6N-e4Z"/>
+                                            <constraint firstAttribute="width" constant="120" id="Zth-tH-shb"/>
                                         </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="progress">
-                                                <real key="value" value="0.0"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
                                         <variation key="default">
                                             <mask key="constraints">
-                                                <exclude reference="AjN-CN-zhJ"/>
-                                                <exclude reference="Wqb-tz-9tr"/>
+                                                <exclude reference="7UW-Y5-orA"/>
+                                                <exclude reference="PfX-6N-e4Z"/>
                                             </mask>
                                         </variation>
                                     </view>
@@ -145,8 +132,6 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="W36-pV-hkE" secondAttribute="trailing" id="16y-8K-E2i"/>
-                                    <constraint firstAttribute="centerX" secondItem="Tf5-Av-Ngb" secondAttribute="centerX" id="1nP-ws-lJC"/>
-                                    <constraint firstAttribute="bottom" secondItem="Tf5-Av-Ngb" secondAttribute="bottom" id="34E-Z1-9ar"/>
                                     <constraint firstItem="Txd-Bq-kYn" firstAttribute="centerY" secondItem="d4Y-Mh-xLU" secondAttribute="centerY" id="3Ee-cn-7c6"/>
                                     <constraint firstAttribute="trailing" secondItem="crN-zb-JCR" secondAttribute="trailing" constant="25" id="3i2-qU-h04"/>
                                     <constraint firstItem="giu-7r-23x" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" id="8G8-UC-PjA"/>
@@ -160,24 +145,19 @@
                                     <constraint firstAttribute="trailing" secondItem="d4Y-Mh-xLU" secondAttribute="trailing" constant="25" id="Me8-1H-vrk"/>
                                     <constraint firstItem="IOP-0G-33S" firstAttribute="leading" secondItem="LPI-Hs-hc4" secondAttribute="leading" constant="3" id="NAy-Wz-hJm"/>
                                     <constraint firstItem="IOP-0G-33S" firstAttribute="trailing" secondItem="LPI-Hs-hc4" secondAttribute="trailing" constant="-3" id="REt-7K-mM1"/>
-                                    <constraint firstItem="Tf5-Av-Ngb" firstAttribute="leading" secondItem="0zR-hY-UKf" secondAttribute="leading" id="Rka-yZ-291"/>
                                     <constraint firstAttribute="bottom" secondItem="d4Y-Mh-xLU" secondAttribute="bottom" constant="15" id="Tkc-Mt-z6A"/>
-                                    <constraint firstAttribute="centerY" secondItem="Tf5-Av-Ngb" secondAttribute="centerY" id="UVs-EP-p8F"/>
                                     <constraint firstItem="crN-zb-JCR" firstAttribute="top" secondItem="IOP-0G-33S" secondAttribute="top" id="VSZ-tP-ivb"/>
                                     <constraint firstItem="W36-pV-hkE" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" id="W8Y-Cb-9BY"/>
-                                    <constraint firstAttribute="centerX" secondItem="uQn-Ex-Hhs" secondAttribute="centerX" id="Zxb-ev-kvk"/>
                                     <constraint firstAttribute="centerX" secondItem="IOP-0G-33S" secondAttribute="centerX" id="d3I-XG-iij"/>
-                                    <constraint firstAttribute="bottom" secondItem="uQn-Ex-Hhs" secondAttribute="bottom" constant="25" id="i2W-SB-43W"/>
                                     <constraint firstItem="lDT-z3-VQ2" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" constant="25" id="l6h-kf-0sT"/>
+                                    <constraint firstAttribute="centerX" secondItem="wmo-4Q-KVA" secondAttribute="centerX" id="oBh-dr-08h"/>
                                     <constraint firstItem="IOP-0G-33S" firstAttribute="bottom" secondItem="LPI-Hs-hc4" secondAttribute="bottom" id="pwT-6D-Alm"/>
                                     <constraint firstItem="crN-zb-JCR" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" constant="27" id="qEd-sT-IZg"/>
                                     <constraint firstItem="IOP-0G-33S" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" constant="27" id="qtp-e1-f1c"/>
-                                    <constraint firstAttribute="trailing" secondItem="Tf5-Av-Ngb" secondAttribute="trailing" id="vfC-Hv-Gf6"/>
+                                    <constraint firstAttribute="bottom" secondItem="wmo-4Q-KVA" secondAttribute="bottom" constant="15" id="rsm-PX-Eeh"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="1nP-ws-lJC"/>
-                                        <exclude reference="UVs-EP-p8F"/>
                                         <exclude reference="VSZ-tP-ivb"/>
                                         <exclude reference="B9S-fu-16t"/>
                                         <exclude reference="GDH-x2-4EW"/>
@@ -206,8 +186,7 @@
                         <outlet property="focusTarget" destination="9U9-QL-4mJ" id="RzX-C3-Avr"/>
                         <outlet property="homeButton" destination="d4Y-Mh-xLU" id="qVX-hD-WlW"/>
                         <outlet property="overlayView" destination="0zR-hY-UKf" id="2Bh-7h-YB4"/>
-                        <outlet property="progressBar" destination="Tf5-Av-Ngb" id="YE0-ci-FEO"/>
-                        <outlet property="recordButton" destination="uQn-Ex-Hhs" id="rs8-1f-rJm"/>
+                        <outlet property="recordButton" destination="wmo-4Q-KVA" id="ODA-wI-I3N"/>
                         <outlet property="tribeLabel" destination="IOP-0G-33S" id="HDU-Bf-KPH"/>
                         <outlet property="tribeLabelBG" destination="LPI-Hs-hc4" id="fpJ-IM-0rg"/>
                         <segue destination="bEz-f4-14y" kind="presentation" identifier="PreviewSegue" modalTransitionStyle="crossDissolve" id="0dp-Nr-eip"/>
@@ -518,8 +497,6 @@
     <resources>
         <image name="BlackFade(BG)" width="375" height="667"/>
         <image name="Blue-SHARE-btn" width="102" height="102"/>
-        <image name="CaptureBTN" width="105" height="105"/>
-        <image name="CapturingBTN" width="129" height="129"/>
         <image name="CheckBox(OFF)" width="26" height="26"/>
         <image name="CheckBox(ON)" width="26" height="26"/>
         <image name="Cross(close)-btn" width="20" height="20"/>

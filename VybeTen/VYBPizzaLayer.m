@@ -13,25 +13,25 @@
 @dynamic startAngle, endAngle, radius;
 @synthesize fillColor, strokeColor, strokeWidth;
 
+- (id)initWithLayer:(id)layer {
+  self = [super initWithLayer:layer];
+  if (self) {
+    VYBPizzaLayer *other = (VYBPizzaLayer *)layer;
+    self.startAngle = other.startAngle;
+    self.endAngle = other.endAngle;
+    self.radius = other.radius;
+    self.fillColor = other.fillColor;
+    self.strokeWidth = other.strokeWidth;
+    self.strokeColor = other.strokeColor;
+  }
+  return self;
+}
+
 - (id<CAAction>)actionForKey:(NSString *)event {
     if ([event isEqualToString:@"startAngle"] || [event isEqualToString:@"endAngle"] || [event isEqualToString:@"radius"]) {
         return [self makeAnimationForKey:event];
     }
     return [super actionForKey:event];
-}
-
-- (id)initWithLayer:(id)layer {
-    self = [super initWithLayer:layer];
-    if (self) {
-        VYBPizzaLayer *other = (VYBPizzaLayer *)layer;
-        self.startAngle = other.startAngle;
-        self.endAngle = other.endAngle;
-        self.radius = other.radius;
-        self.fillColor = other.fillColor;
-        self.strokeWidth = other.strokeWidth;
-        self.strokeColor = other.strokeColor;
-    }
-    return self;
 }
 
 + (BOOL)needsDisplayForKey:(NSString *)key {
@@ -59,7 +59,6 @@
     CGContextMoveToPoint(ctx, p1.x, p1.y);
     int clockwise = self.startAngle > self.endAngle;
     CGContextAddArc(ctx, center.x, center.y, self.radius, self.startAngle, self.endAngle, clockwise);
-    //CGContextClosePath(ctx);
     
     CGContextSetFillColorWithColor(ctx, self.fillColor.CGColor);
     CGContextSetStrokeColorWithColor(ctx, self.strokeColor.CGColor);

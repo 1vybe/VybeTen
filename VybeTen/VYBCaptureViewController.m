@@ -16,6 +16,8 @@
 #import "VYBCache.h"
 #import "VYBUtility.h"
 
+#import "VYBRecordButton.h"
+
 #import "Vybe-Swift.h"
 
 @interface VYBCaptureViewController () <VYBCapturePipelineDelegate, SelectTribeDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
@@ -24,15 +26,13 @@
 @property (nonatomic, weak) IBOutlet UIView *overlayView;
 @property (nonatomic, weak) IBOutlet UIButton *flipButton;
 @property (nonatomic, weak) IBOutlet UIButton *flashButton;
-@property (nonatomic, weak) IBOutlet UIButton *recordButton;
+@property (nonatomic, weak) IBOutlet VYBRecordButton *recordButton;
 
 @property (nonatomic, weak) IBOutlet UIButton *homeButton;
 @property (nonatomic, weak) IBOutlet UILabel *tribeLabel;
 @property (nonatomic, weak) IBOutlet UIView *tribeLabelBG;
 
 @property (nonatomic, weak) IBOutlet UIImageView *focusTarget;
-
-@property (nonatomic, weak) IBOutlet TimeProgressBar *progressBar;
 
 - (IBAction)homeButtonPressed:(id)sender;
 - (IBAction)flipButtonPressed:(id)sender;
@@ -171,13 +171,9 @@ static void *XYZContext = &XYZContext;
         
         [[MyVybeStore sharedInstance] prepareNewVybe];
         
-        [recordButton setEnabled:NO];
+        [recordButton setUserInteractionEnabled:NO];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-          [UIView animateWithDuration:1.0 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            [recordButton setSelected:YES];
-          } completion:nil];
-        });
+        [recordButton didStartRecording];
         
         [[AudioManager sharedInstance] activateCategoryPlayAndRecording];
         
@@ -191,7 +187,7 @@ static void *XYZContext = &XYZContext;
     case UIGestureRecognizerStateCancelled:
     case UIGestureRecognizerStateEnded:
       if (_isRecording) {
-        [recordButton setEnabled:NO];
+        [recordButton setUserInteractionEnabled:NO];
         [_timeBomb invalidate];
         [capturePipeline stopRecording];
       }
@@ -207,11 +203,8 @@ static void *XYZContext = &XYZContext;
   
   [[AudioManager sharedInstance] activateCategoryPlaybackOnly];
   
-  [recordButton setEnabled:YES];
-  [recordButton setSelected:NO];
-  
-  self.progressBar.hidden = YES;
-  self.progressBar.progress = 0.0;
+  [recordButton setUserInteractionEnabled:YES];
+  [recordButton didStopRecording];
   
   [UIApplication sharedApplication].idleTimerDisabled = NO;
   
@@ -234,15 +227,14 @@ static void *XYZContext = &XYZContext;
 }
 
 - (void)capturePipelineRecordingDidStart:(VYBCapturePipeline *)pipeline {
-  [recordButton setEnabled:YES];
-  self.progressBar.hidden = NO;
+  [recordButton setUserInteractionEnabled:YES];
   
   _timeBomb = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
   _timerCount = 300;
 }
 
 - (void)capturePipelineRecordingWillStop:(VYBCapturePipeline *)pipeline {
-  [recordButton setEnabled:NO];
+  [recordButton setUserInteractionEnabled:NO];
 }
 
 - (void)capturePipelineRecordingDidStop:(VYBCapturePipeline *)pipeline {
@@ -286,23 +278,14 @@ static void *XYZContext = &XYZContext;
 - (void)timer:(NSTimer *)timer {
   _timerCount = _timerCount - 1;
   
-  if (_timerCount > 0) {
-    float percent = (300 - _timerCount) / 300.0;
-    self.progressBar.progress = percent;
-  }
-  else {
-    NSLog(@"CAPTURE TIME BOMB");
+  if (_timerCount < 1) {
     if (_isRecording) {
-      [recordButton setEnabled:NO];
+      [recordButton setUserInteractionEnabled:NO];
       [_timeBomb invalidate];
       _timeBomb = nil;
-      
-      self.progressBar.progress = 0.0;
-      self.progressBar.hidden = YES;
-      
+
       [capturePipeline stopRecording];
     }
-    
   }
 }
 
