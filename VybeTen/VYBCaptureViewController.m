@@ -58,6 +58,8 @@ static void *XYZContext = &XYZContext;
   
   dispatch_queue_t motion_orientation_queue;
   
+  dispatch_queue_t longPress_gesture_queue;
+  
   UIBackgroundTaskIdentifier _backgroundRecordingID;
 }
 
@@ -105,9 +107,14 @@ static void *XYZContext = &XYZContext;
   [self.view addGestureRecognizer:tapGesture];
   self.focusTarget.alpha = 0;
   
+  // Tap and Hold to record
+  longPress_gesture_queue = dispatch_queue_create("com.vybe.app.capture.longPress.gesture.queue", DISPATCH_QUEUE_SERIAL);
+  
   UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressDetected:)];
   longPress.minimumPressDuration = 0.1;
   [self.recordButton addGestureRecognizer:longPress];
+
+  
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -163,32 +170,30 @@ static void *XYZContext = &XYZContext;
 - (void)longPressDetected:(UILongPressGestureRecognizer *)recognizer {
   switch (recognizer.state) {
     case UIGestureRecognizerStateBegan:
-      if (!_isRecording) {
-        [UIApplication sharedApplication].idleTimerDisabled = YES;
-        
-        if ( [[UIDevice currentDevice] isMultitaskingSupported] )
-          _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
-        
-        [[MyVybeStore sharedInstance] prepareNewVybe];
-        
-        [recordButton setUserInteractionEnabled:NO];
-        
-        [recordButton didStartRecording];
-        
-        [[AudioManager sharedInstance] activateCategoryPlayAndRecording];
-        
-        [capturePipeline setRecordingOrientation:_captureOrientation];
-        [capturePipeline startRecording];
-        
-        _isRecording = YES;
-        [self syncUIWithRecordingStatus];
-      }
+        if (!_isRecording) {
+          [UIApplication sharedApplication].idleTimerDisabled = YES;
+          
+          if ( [[UIDevice currentDevice] isMultitaskingSupported] )
+            _backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
+          
+          [[MyVybeStore sharedInstance] prepareNewVybe];
+          
+          [[AudioManager sharedInstance] activateCategoryPlayAndRecording];
+          
+          [capturePipeline setRecordingOrientation:_captureOrientation];
+          [capturePipeline startRecording];
+          
+          _isRecording = YES;
+          [self syncUIWithRecordingStatus];
+          [recordButton setUserInteractionEnabled:NO];
+          [recordButton didStartRecording];
+        }
       break;
     case UIGestureRecognizerStateCancelled:
     case UIGestureRecognizerStateEnded:
+    case UIGestureRecognizerStateFailed:
       if (_isRecording) {
         [recordButton setUserInteractionEnabled:NO];
-        [_timeBomb invalidate];
         [capturePipeline stopRecording];
       }
       break;
@@ -197,19 +202,26 @@ static void *XYZContext = &XYZContext;
   }
 }
 
-- (void)recordingStopped {
+- (void)resetRecording {
   _isRecording = NO;
+  
+  [_timeBomb invalidate];
+  _timeBomb = nil;
+  
   [self syncUIWithRecordingStatus];
-  
-  [[AudioManager sharedInstance] activateCategoryPlaybackOnly];
-  
   [recordButton setUserInteractionEnabled:YES];
   [recordButton didStopRecording];
+  
+  [[AudioManager sharedInstance] activateCategoryPlaybackOnly];
   
   [UIApplication sharedApplication].idleTimerDisabled = NO;
   
   [[UIApplication sharedApplication] endBackgroundTask:_backgroundRecordingID];
   _backgroundRecordingID = UIBackgroundTaskInvalid;
+}
+
+- (void)recordingStopped {
+  [self resetRecording];
   
   VYBVybe *currVybe = [[MyVybeStore sharedInstance] currVybe];
   if (currVybe) {
@@ -217,7 +229,6 @@ static void *XYZContext = &XYZContext;
     
     [self performSegueWithIdentifier:@"PreviewSegue" sender:self];
   }
-
 }
 
 #pragma mark - VYBCapturePipelineDelegate
@@ -241,8 +252,12 @@ static void *XYZContext = &XYZContext;
   [self recordingStopped];
 }
 
+- (void)capturePipelineRecordingDidCancel:(VYBCapturePipeline *)pipeline {
+  [self resetRecording];
+}
+
 - (void)capturePipeline:(VYBCapturePipeline *)pipeline recordingDidFailWithError:(NSError *)error {
-  [self recordingStopped];
+  [self resetRecording];
   
   NSLog(@"[CaptureVC] recording failed: %@", error);
 }
@@ -251,7 +266,6 @@ static void *XYZContext = &XYZContext;
 #pragma mark - Capture Settings
 
 - (IBAction)flipButtonPressed:(id)sender {
-  
   [self.flipButton setEnabled:NO];
   [self.flashButton setEnabled:NO];
   [self.homeButton setEnabled:NO];
@@ -279,13 +293,8 @@ static void *XYZContext = &XYZContext;
   _timerCount = _timerCount - 1;
   
   if (_timerCount < 1) {
-    if (_isRecording) {
-      [recordButton setUserInteractionEnabled:NO];
-      [_timeBomb invalidate];
-      _timeBomb = nil;
-
-      [capturePipeline stopRecording];
-    }
+    [recordButton setUserInteractionEnabled:NO];
+    [capturePipeline stopRecording];
   }
 }
 

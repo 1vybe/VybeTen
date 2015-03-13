@@ -67,7 +67,7 @@ typedef NS_ENUM (NSInteger,VYBRecorderStatus) {
     //CFRetain(audioDescription);
     
     // writer setup queue
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+    dispatch_async(_assetWriterQueue, ^{
         NSError *error = nil;
         NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:[[[MyVybeStore sharedInstance] currVybe] videoFilePath]];
         _assetWriter = [[AVAssetWriter alloc] initWithURL:outputURL fileType:AVFileTypeMPEG4 error:&error];
@@ -192,26 +192,27 @@ typedef NS_ENUM (NSInteger,VYBRecorderStatus) {
 }
 
 - (void)stopRecording {
+  dispatch_async(_assetWriterQueue, ^{
     @synchronized (self) {
-        if (_status != VYBRecorderStatusRecording) {
-            @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"recorder must be recording before stopping" userInfo:nil];
-        }
-        
-        _status = VYBRecorderStatusStoppingRecording;
-        dispatch_async(_assetWriterQueue, ^{
-            [_assetWriter finishWritingWithCompletionHandler:^{
-                NSError *error = _assetWriter.error;
-                dispatch_async(_delegateCallbackQueue, ^{
-                    if (error) {
-                        [_delegate captureRecorder:self didFailWithError:error];
-                    } else {
-                        [_delegate captureRecorderDidFinishRecording:self];
-                    }
-                });
+      if (_status != VYBRecorderStatusRecording) {
+          @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"recorder must be recording before stopping" userInfo:nil];
+      }
+      
+      _status = VYBRecorderStatusStoppingRecording;
+      [_assetWriter finishWritingWithCompletionHandler:^{
+          NSError *error = _assetWriter.error;
+          dispatch_async(_delegateCallbackQueue, ^{
+              if (error) {
+                  [_delegate captureRecorder:self didFailWithError:error];
+              } else {
+                  [_delegate captureRecorderDidFinishRecording:self];
+              }
+          });
 
-            }];
-        });
+      }];
     }
+  });
+
 }
 
 - (void)cleanUpAssetWriter {

@@ -34,6 +34,7 @@
 // Recording
 - (void)capturePipelineRecordingDidStart:(VYBCapturePipeline *)pipeline;
 - (void)capturePipelineRecordingWillStop:(VYBCapturePipeline *)pipeline;
+- (void)capturePipelineRecordingDidCancel:(VYBCapturePipeline *)pipeline;
 - (void)capturePipelineRecordingDidStop:(VYBCapturePipeline *)pipeline;
 - (void)capturePipeline:(VYBCapturePipeline *)pipeline recordingDidFailWithError:(NSError *)error;
 @end

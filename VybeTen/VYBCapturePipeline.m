@@ -16,6 +16,7 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
   VYBRecorderRecordingStatusStartingRecording,
   VYBRecorderRecordingStatusRecording,
   VYBRecorderRecordingStatusStoppingRecording,
+  VYBRecorderRecordingStatusCancellingRecording
 };
 
 @interface VYBCapturePipeline ()  <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, VYBCaptureRecorderDelegate>
@@ -343,7 +344,8 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
 
 - (void)stopRecording {
   @synchronized (self) {
-    if (_recordingStatus != VYBRecorderRecordingStatusRecording) {
+    if (_recordingStatus != VYBRecorderRecordingStatusRecording
+        && _recordingStatus != VYBRecorderRecordingStatusStartingRecording) {
       return;
     }
     
@@ -351,11 +353,17 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
       [self setTorchMode:AVCaptureTorchModeOff forDevice:[_videoDeviceInput device]];
     });
     
-    _recordingStatus = VYBRecorderRecordingStatusStoppingRecording;
+    [_recorder stopRecording];
+
+    if (_recordingStatus == VYBRecorderRecordingStatusStartingRecording) {
+      _recordingStatus = VYBRecorderRecordingStatusCancellingRecording;
+    } else {
+      _recordingStatus = VYBRecorderRecordingStatusStoppingRecording;
+    }
+    
     dispatch_async(_delegateCallbackQueue, ^{
       [_delegate capturePipelineRecordingWillStop:self];
     });
-    [_recorder stopRecording];
   }
 }
 
@@ -363,11 +371,14 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
 
 - (void)captureRecorderDidStartRecording:(VYBCaptureRecorder *)recorder {
   @synchronized (self) {
-    if (_recordingStatus != VYBRecorderRecordingStatusStartingRecording) {
+    if (_recordingStatus != VYBRecorderRecordingStatusStartingRecording && _recordingStatus != VYBRecorderRecordingStatusCancellingRecording) {
       @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"something occured during preparing recorder" userInfo:nil];
       return;
     }
-    _recordingStatus = VYBRecorderRecordingStatusRecording;
+    
+    if (_recordingStatus == VYBRecorderRecordingStatusStartingRecording) {
+      _recordingStatus = VYBRecorderRecordingStatusRecording;
+    }
     
     dispatch_async(_delegateCallbackQueue, ^{
       [_delegate capturePipelineRecordingDidStart:self];
@@ -377,14 +388,22 @@ typedef NS_ENUM (NSInteger, VYBRecorderRecordingStatus) {
 
 - (void)captureRecorderDidFinishRecording:(VYBCaptureRecorder *)recorder {
   @synchronized (self) {
-    if (_recordingStatus != VYBRecorderRecordingStatusStoppingRecording) {
+    if (_recordingStatus != VYBRecorderRecordingStatusStoppingRecording
+        && _recordingStatus != VYBRecorderRecordingStatusCancellingRecording) {
       @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"something happened before finish recording" userInfo:nil];
     }
-    _recordingStatus = VYBRecorderRecordingStatusIdle;
     
-    dispatch_async(_delegateCallbackQueue, ^{
-      [_delegate capturePipelineRecordingDidStop:self];
-    });
+    if (_recordingStatus == VYBRecorderRecordingStatusCancellingRecording) {
+      dispatch_async(_delegateCallbackQueue, ^{
+        [_delegate capturePipelineRecordingDidCancel:self];
+      });
+    } else {
+      dispatch_async(_delegateCallbackQueue, ^{
+        [_delegate capturePipelineRecordingDidStop:self];
+      });
+    }
+    
+    _recordingStatus = VYBRecorderRecordingStatusIdle;
   }
 }
 

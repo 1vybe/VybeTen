@@ -26,6 +26,8 @@
 #import "VYBUtility.h"
 #import "VYBVybe.h"
 
+#import "VYBPizzaLayer.h"
+
 #import "AVAsset+VideoOrientation.h"
 #import "NSString+TribeName.h"
 #import "PFImageView+Shield.h"

@@ -30,7 +30,6 @@ const CGFloat _fBlackStrokeWidth = 1.0f;
   
   CGFloat _fgWidth;
   CGFloat _fgHeight;
-  
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -97,12 +96,10 @@ const CGFloat _fBlackStrokeWidth = 1.0f;
 //  _foregroundLayer.contentsGravity = kCAGravityResizeAspect;
 }
 
-
 - (void)didStartRecording {
   
   const CGFloat bigRadius = 56;
   const CGFloat thickLineWidth = 6.0f;
-  
   
   [CATransaction begin];                                  // red circle animation
   [CATransaction setValue:[NSNumber numberWithFloat:15.0f] forKey:kCATransactionAnimationDuration];
@@ -171,7 +168,6 @@ const CGFloat _fBlackStrokeWidth = 1.0f;
 - (CGImageRef)getContentsWithNamed:(NSString *)imgName {
   NSBundle *bundle = [NSBundle bundleForClass:[self class]];
   return [UIImage imageNamed:imgName inBundle:bundle compatibleWithTraitCollection:self.traitCollection].CGImage;
-  
 }
 
 @end
