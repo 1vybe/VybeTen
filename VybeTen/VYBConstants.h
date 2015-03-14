@@ -141,10 +141,9 @@ extern NSString *const kVYBTribeNameKey;
 //extern NSString *const kVYBTribeLastVybeKey;
 extern NSString *const kVYBTribeCoordinatorKey;
 extern NSString *const kVYBTribeMembersKey;
-
+extern NSString *const kVYBTribeTypeIsPublicKey;
 //extern NSString *const kVYBTribeDescriptionKey;
 extern NSString *const kVYBTribeGeoTagKey;
-extern NSString *const kVYBTribeTypeKey;
 
 // type values
 extern NSString *const kVYBTribeTypeSecretKey;

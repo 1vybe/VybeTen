@@ -96,7 +96,7 @@ NSString *const kVYBTribeMembersKey                             = @"members";
 
 NSString *const kVYBTribeDescriptionKey                         = @"description";
 NSString *const kVYBTribeGeoTagKey                              = @"geoTag";
-NSString *const kVYBTribeTypeKey                                = @"type";
+NSString *const kVYBTribeTypeIsPublicKey                        = @"isPublic";
 
 #pragma mark - PFObject Activity Class
 // Class key

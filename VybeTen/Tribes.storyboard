@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="sl6-fu-P9x">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="sl6-fu-P9x">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
@@ -163,8 +163,33 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HvH-hk-ee6" userLabel="Mode">
+                                <rect key="frame" x="0.0" y="124" width="600" height="50"/>
+                                <subviews>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ksD-5X-G5M">
+                                        <rect key="frame" x="533" y="9" width="51" height="31"/>
+                                        <connections>
+                                            <action selector="switchChanged:" destination="825-oo-Lfr" eventType="valueChanged" id="8I1-pQ-cfU"/>
+                                        </connections>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hd7-oJ-DzN">
+                                        <rect key="frame" x="21" y="15" width="51" height="21"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                        <color key="textColor" red="0.2901960784" green="0.56470588239999997" blue="0.8862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="centerY" secondItem="hd7-oJ-DzN" secondAttribute="centerY" id="7np-81-hoA"/>
+                                    <constraint firstItem="hd7-oJ-DzN" firstAttribute="leading" secondItem="HvH-hk-ee6" secondAttribute="leading" constant="21" id="SgI-yq-paX"/>
+                                    <constraint firstAttribute="height" constant="50" id="feX-Q4-0YG"/>
+                                    <constraint firstAttribute="centerY" secondItem="ksD-5X-G5M" secondAttribute="centerY" id="jJ0-h8-prb"/>
+                                    <constraint firstAttribute="trailing" secondItem="ksD-5X-G5M" secondAttribute="trailing" constant="18" id="lA5-LU-tRD"/>
+                                </constraints>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="52" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="UnD-fI-pmx">
-                                <rect key="frame" x="0.0" y="124" width="600" height="476"/>
+                                <rect key="frame" x="0.0" y="174" width="600" height="426"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="AddMemberTableCellIdentifier" id="9xD-cD-Ujz">
@@ -229,20 +254,17 @@
                             <constraint firstAttribute="trailing" secondItem="g4p-rw-kwC" secondAttribute="trailing" id="2b7-9d-iO4"/>
                             <constraint firstItem="oDq-8c-d3g" firstAttribute="top" secondItem="MUu-z4-zOX" secondAttribute="bottom" id="6JZ-8J-nIu"/>
                             <constraint firstItem="oDq-8c-d3g" firstAttribute="top" secondItem="UnD-fI-pmx" secondAttribute="bottom" id="EnL-oc-oZJ"/>
-                            <constraint firstItem="UnD-fI-pmx" firstAttribute="top" secondItem="qGR-2I-64U" secondAttribute="top" constant="200" id="KaS-QH-cxt"/>
                             <constraint firstItem="g4p-rw-kwC" firstAttribute="leading" secondItem="qGR-2I-64U" secondAttribute="leading" id="Md2-qf-SIF"/>
                             <constraint firstAttribute="trailing" secondItem="UnD-fI-pmx" secondAttribute="trailing" id="Oo0-pw-J1r"/>
+                            <constraint firstItem="HvH-hk-ee6" firstAttribute="top" secondItem="g4p-rw-kwC" secondAttribute="bottom" id="UTa-r8-RGH"/>
                             <constraint firstItem="g4p-rw-kwC" firstAttribute="top" secondItem="d0w-hP-CHf" secondAttribute="bottom" id="Wdw-UX-Upd"/>
-                            <constraint firstItem="UnD-fI-pmx" firstAttribute="top" secondItem="g4p-rw-kwC" secondAttribute="bottom" id="ZQZ-LT-WVl"/>
+                            <constraint firstItem="HvH-hk-ee6" firstAttribute="leading" secondItem="qGR-2I-64U" secondAttribute="leading" id="XC8-Du-9Xk"/>
+                            <constraint firstItem="UnD-fI-pmx" firstAttribute="top" secondItem="HvH-hk-ee6" secondAttribute="bottom" id="dG1-U1-JeR"/>
                             <constraint firstItem="UnD-fI-pmx" firstAttribute="leading" secondItem="qGR-2I-64U" secondAttribute="leading" id="dqj-Rp-GqT"/>
                             <constraint firstAttribute="trailing" secondItem="MUu-z4-zOX" secondAttribute="trailing" id="lUF-0d-EKe"/>
+                            <constraint firstAttribute="trailing" secondItem="HvH-hk-ee6" secondAttribute="trailing" id="rky-Cr-F3i"/>
                             <constraint firstItem="MUu-z4-zOX" firstAttribute="leading" secondItem="qGR-2I-64U" secondAttribute="leading" id="tSD-QT-FeU"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="KaS-QH-cxt"/>
-                            </mask>
-                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="New Tribe" id="K1A-3N-MFz">
                         <barButtonItem key="leftBarButtonItem" image="Blk-X-Btn" id="7TF-3J-7G6">
@@ -256,8 +278,10 @@
                     <connections>
                         <outlet property="bottomSpacing" destination="6JZ-8J-nIu" id="H2J-O6-9Ei"/>
                         <outlet property="createButton" destination="MUu-z4-zOX" id="VUy-bq-JJJ"/>
+                        <outlet property="modeSwitch" destination="ksD-5X-G5M" id="wMa-lV-J1P"/>
                         <outlet property="nameText" destination="TJo-Er-SxH" id="GKM-Ya-Kfg"/>
                         <outlet property="tableView" destination="UnD-fI-pmx" id="ejT-x4-Ima"/>
+                        <outlet property="tribeMode" destination="hd7-oJ-DzN" id="unh-EO-SCi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V1o-xQ-NJy" userLabel="First Responder" sceneMemberID="firstResponder"/>

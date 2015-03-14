@@ -8,25 +8,36 @@ Parse.Cloud.afterSave('Tribe', function (request, response) {
 
 	var user = request.user;
 
-	var members = request.object.relation('members');
-	var query = members.query();
-	return query.find().then(function (userObjs) {
-		var roleName = 'membersOf_' + request.object.id;
-		var role = new Parse.Role(roleName, new Parse.ACL(user));
+	var type = request.object.get('isPublic');
+	if (type) {
+		var acl = new Parse.ACL();
+		acl.setPublicReadAccess(true);
+		acl.setWriteAccess(user, true);
 
-		_.each(userObjs, function (obj) {
-			role.getUsers().add(obj);
-		})
+		request.object.setACL(acl);
+		return request.object.save();
+	} else {	
+		var members = request.object.relation('members');
+		var query = members.query();
+		return query.find().then(function (userObjs) {
+			var roleName = 'membersOf_' + request.object.id;
+			var role = new Parse.Role(roleName, new Parse.ACL(user));
 
-		return role.save().then(function (role) {
-			var acl = new Parse.ACL();
-			acl.setRoleReadAccess(role, true);
-			acl.setRoleWriteAccess(role, true);
+			_.each(userObjs, function (obj) {
+				role.getUsers().add(obj);
+			})
 
-			request.object.setACL(acl);
-			return request.object.save();
+			return role.save().then(function (role) {
+				var acl = new Parse.ACL();
+				acl.setRoleReadAccess(role, true);
+				acl.setRoleWriteAccess(role, true);
+
+				request.object.setACL(acl);
+				return request.object.save();
+			});
 		});
-	});
+	}
+
 });
 
 // This function takes one argument 'tribeId' - objectID of the tribe

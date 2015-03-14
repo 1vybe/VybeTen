@@ -22,6 +22,9 @@ import UIKit
 }
 
 let reuseIdentifier = "TribeCollectionCell"
+let privateTextColor = UIColor(red: 155/255.0, green: 155/255.0, blue: 155/255.0, alpha: 1.0)
+let publicTextColor = UIColor(red: 74/255.0, green: 144/255.0, blue: 226/255.0, alpha: 1.0)
+
 
 class TribesViewController: UICollectionViewController, CreateTribeDelegate, EditTribeDelegate,VYBPlayerViewControllerDelegate {
   var tribes: [AnyObject]
@@ -65,6 +68,8 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, Edi
     
     // Subscribe to a notification to receive vybe updates in real time
     NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDelegateDidReceiveRemoteNotification:", name: VYBAppDelegateApplicationDidReceiveRemoteNotification, object: nil)
+    
+    NSUserDefaults.standardUserDefaults().setObject(nil, forKey: kVYBUserDefaultsLastRefreshKey)
   }
   
   override func viewWillAppear(animated: Bool) {
@@ -94,8 +99,12 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, Edi
       t.freshCount = 0
     }
     
-    let query = PFQuery(className: kVYBTribeClassKey)
-    query.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
+    let privateQuery = PFQuery(className: kVYBTribeClassKey)
+    privateQuery.whereKey(kVYBTribeMembersKey, equalTo: PFUser.currentUser())
+    let publicQuery = PFQuery(className: kVYBTribeClassKey)
+    publicQuery.whereKey(kVYBTribeTypeIsPublicKey, equalTo: true)
+    
+    let query = PFQuery.orQueryWithSubqueries([privateQuery, publicQuery])
     query.includeKey(kVYBTribeCoordinatorKey)
     
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
@@ -305,6 +314,11 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, Edi
     cell.delegate = self
 
     cell.nameLabel.text = tribe.tribeObject.objectForKey(kVYBTribeNameKey) as? String
+    if let isPublic = tribe.tribeObject.objectForKey(kVYBTribeTypeIsPublicKey) as? Bool {
+      cell.nameLabel.textColor = (isPublic) ? publicTextColor : privateTextColor
+    } else {
+      cell.nameLabel.textColor = privateTextColor
+    }
   
     var borderColor: UIColor = UIColor.clearColor()
     if tribe.freshCount > 0 {
@@ -356,14 +370,18 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, Edi
   }
   
   func didSelectTribeToPlay(obj: AnyObject?) {
-    if let tribe = obj as? Tribe {
-      let playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
-      playerVC.delegate = self
-      
-      MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-      println("Let's play [\(NSDate())]")
-      playerVC.playStreamForTribe(tribe)
+    let tribe = (obj as Tribe).tribeObject as PFObject
+    
+    let playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
+    playerVC.delegate = self
+    MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+    if let isPublic = tribe[kVYBTribeTypeIsPublicKey] as? Bool {
+      if isPublic {
+        playerVC.playStreamForTribe(obj as Tribe, mode: true)
+        return
+      }
     }
+    playerVC.playStreamForTribe(obj as Tribe, mode: false)
   }
   
   func playVybeFromPushNotification(tribeID: String) {

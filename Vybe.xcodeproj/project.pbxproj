@@ -72,6 +72,7 @@
 		743727EF1A93EA3A00CF7C4B /* Vybe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743727EE1A93EA3A00CF7C4B /* Vybe.swift */; };
 		7437BAFD1A96FBB600F6D4A7 /* PFImageView+Shield.m in Sources */ = {isa = PBXBuildFile; fileRef = 7437BAFC1A96FBB600F6D4A7 /* PFImageView+Shield.m */; };
 		744101201A64739B00D2F874 /* CheckInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7441011F1A64739B00D2F874 /* CheckInViewController.xib */; };
+		74423B151AB3B1820013257C /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74423B141AB3B1820013257C /* PlayerViewController.swift */; };
 		74551C811A3E91FA00D348BB /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74551C801A3E91FA00D348BB /* ConfigManager.swift */; };
 		7464831E1A731A0A00FA4C9F /* VybeCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7464831D1A731A0A00FA4C9F /* VybeCardCell.swift */; };
 		746FDAC91A42C2EA0021360C /* UserPrompts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 746FDAC81A42C2EA0021360C /* UserPrompts.storyboard */; };
@@ -230,6 +231,7 @@
 		7437BAFC1A96FBB600F6D4A7 /* PFImageView+Shield.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PFImageView+Shield.m"; sourceTree = "<group>"; };
 		7441011D1A645A3E00D2F874 /* CheckInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckInViewController.swift; sourceTree = "<group>"; };
 		7441011F1A64739B00D2F874 /* CheckInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckInViewController.xib; sourceTree = "<group>"; };
+		74423B141AB3B1820013257C /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		74551C801A3E91FA00D348BB /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
 		7464831B1A73063500FA4C9F /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		7464831D1A731A0A00FA4C9F /* VybeCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VybeCardCell.swift; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 				0266802519F15CB000030836 /* VYBPlayerViewController.h */,
 				0266802619F15CB000030836 /* VYBPlayerViewController.m */,
 				0266802719F15CB000030836 /* VYBPlayerViewController.xib */,
+				74423B141AB3B1820013257C /* PlayerViewController.swift */,
 			);
 			name = Player;
 			sourceTree = "<group>";
@@ -850,6 +853,7 @@
 				0275087C19252D5C00B070EE /* VYBUtility.m in Sources */,
 				025408E419BA10E5009C7C71 /* NSMutableArray+PFObject.m in Sources */,
 				74172D001A720FCF00142EC1 /* CloudUtility.swift in Sources */,
+				74423B151AB3B1820013257C /* PlayerViewController.swift in Sources */,
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
 				88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */,

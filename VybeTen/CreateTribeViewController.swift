@@ -17,6 +17,9 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
   var delegate: CreateTribeDelegate?
   
   @IBOutlet weak var nameText: UITextField!
+  @IBOutlet weak var modeSwitch: UISwitch!
+  @IBOutlet weak var tribeMode: UILabel!
+  
   @IBOutlet weak var createButton: UIButton!
   @IBOutlet weak var bottomSpacing: NSLayoutConstraint!
   
@@ -31,12 +34,18 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
     
     if self.validateTribeName(nameText.text) {
       tribe.setObject(nameText.text, forKey: kVYBTribeNameKey)
-      let relation = tribe.relationForKey(kVYBTribeMembersKey)
-      if let array = members as? [PFUser] {
-        for m in array {
-          relation.addObject(m)
+      tribe.setObject(modeSwitch.on, forKey: kVYBTribeTypeIsPublicKey)
+      
+      // Add Members for private tribe
+      if !modeSwitch.on {
+        let relation = tribe.relationForKey(kVYBTribeMembersKey)
+        if let array = members as? [PFUser] {
+          for m in array {
+            relation.addObject(m)
+          }
         }
       }
+      
       MBProgressHUD.showHUDAddedTo(self.view, animated: true)
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
         let success = tribe.save()
@@ -65,7 +74,7 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
     super.viewDidLoad()
 
     tableView.allowsMultipleSelection = true
-    
+    tableView.hidden = true       // By default it's a PUBLIC tribe
     
     // SearchController
     let searchController = UISearchController(searchResultsController: nil)
@@ -277,6 +286,20 @@ class CreateTribeViewController: TribeDetailsViewController, UITextFieldDelegate
     let name = text as NSString
     
     return name.isValidTribeName()
+  }
+  
+  // MARK: - Switch Control
+  @IBAction func switchChanged(sender: AnyObject) {
+    let switchControl = sender as UISwitch
+    if switchControl.on {
+      self.tribeMode.text = "Public"
+      self.tribeMode.textColor = publicTextColor
+      self.tableView.hidden = true
+    } else {
+      self.tribeMode.text = "Private"
+      self.tribeMode.textColor = privateTextColor
+      self.tableView.hidden = false
+    }
   }
 
   // MARK: - UIKeyboardNotification
