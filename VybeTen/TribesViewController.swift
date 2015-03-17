@@ -370,18 +370,14 @@ class TribesViewController: UICollectionViewController, CreateTribeDelegate, Edi
   }
   
   func didSelectTribeToPlay(obj: AnyObject?) {
-    let tribe = (obj as Tribe).tribeObject as PFObject
+    let tribe = obj as Tribe
     
-    let playerVC = VYBPlayerViewController(nibName: "VYBPlayerViewController", bundle: nil)
-    playerVC.delegate = self
-    MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-    if let isPublic = tribe[kVYBTribeTypeIsPublicKey] as? Bool {
-      if isPublic {
-        playerVC.playStreamForTribe(obj as Tribe, mode: true)
-        return
+    if let vybe = tribe.coverVybe as? PFObject {
+      let playerVC = PlayerViewController(nibName: "PlayerViewController", bundle: nil)
+      self.presentViewController(playerVC, animated: true) { () -> Void in
+        playerVC.playVybe(vybe)
       }
     }
-    playerVC.playStreamForTribe(obj as Tribe, mode: false)
   }
   
   func playVybeFromPushNotification(tribeID: String) {
