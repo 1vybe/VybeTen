@@ -20,11 +20,12 @@ PODS:
     - ParseFacebookUtils (~> 1.6)
 
 DEPENDENCIES:
-  - GoogleAnalytics-iOS-SDK (~> 3.0)
-  - HockeySDK (~> 3.5)
-  - MBProgressHUD (~> 0.8)
+  - Bolts (~> 1.1.3)
+  - GoogleAnalytics-iOS-SDK (~> 3.10)
+  - HockeySDK (~> 3.6)
+  - MBProgressHUD (~> 0.9)
   - MotionOrientation@PTEz (~> 1.1.0)
-  - Parse (~> 1.6.1)
+  - Parse (~> 1.6)
   - ParseCrashReporting (~> 1.6.0)
   - ParseUI (~> 1.1.0)
 

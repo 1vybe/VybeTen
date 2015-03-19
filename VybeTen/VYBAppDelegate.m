@@ -24,6 +24,8 @@
 #import "VYBUtility.h"
 #import "Reachability.h"
 
+#import "UIStoryboard+Vybe.h"
+
 #import "Vybe-Swift.h"
 
 @interface VYBAppDelegate () <PFLogInViewControllerDelegate>
@@ -193,18 +195,6 @@
 }
 
 - (void)handlePush:(NSDictionary *)payload {
-  if (self.swipeContainerController && self.swipeContainerController.viewControllers.count) {
-    [self.swipeContainerController moveToTribeScreenWithAnimation:NO];
-    
-    NSString *pushType = payload[kVYBPushPayloadPayloadTypeKey];
-    if ([pushType isEqualToString:kVYBPushPayloadPayloadTypeVybeKey]) {
-      TribesViewController *tribesVC = (TribesViewController *)[(UINavigationController *)self.swipeContainerController.selectedViewController topViewController];
-      if (tribesVC) {
-        NSString *tribeID = payload[kVYBPushPayloadTribeIDKey];
-        [tribesVC playVybeFromPushNotification:tribeID];
-      }
-    }
-  }
 }
 
 #pragma mark - AppDelegate
@@ -251,11 +241,10 @@
 }
 
 - (void)setUpViewControllers {
-  VYBCaptureViewController *captureVC = (VYBCaptureViewController *)[[UIStoryboard storyboardWithName:@"Capture" bundle:nil] instantiateInitialViewController];
-  TribesViewController *tribeVC = (TribesViewController *)[[UIStoryboard storyboardWithName:@"Tribes" bundle:nil] instantiateInitialViewController];
-  VYBNavigationController *tribeNav = [[VYBNavigationController alloc] initWithRootViewController:tribeVC];
+  VYBCaptureViewController *captureVC = (VYBCaptureViewController *)[[UIStoryboard captureStoryboard] instantiateInitialViewController];
+  UINavigationController *homeInNav = (UINavigationController *)[[UIStoryboard homeStoryboard] instantiateInitialViewController];
 
-  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[captureVC, tribeNav]];
+  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[captureVC, homeInNav]];
   
   [self.mainNavController pushViewController:self.swipeContainerController animated:NO];
   

@@ -20,7 +20,7 @@
 
 #import "Vybe-Swift.h"
 
-@interface VYBCaptureViewController () <VYBCapturePipelineDelegate, SelectTribeDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
+@interface VYBCaptureViewController () <VYBCapturePipelineDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
   NSInteger _pageIndex;
 }
 @property (nonatomic, weak) IBOutlet UIView *overlayView;
@@ -29,8 +29,6 @@
 @property (nonatomic, weak) IBOutlet VYBRecordButton *recordButton;
 
 @property (nonatomic, weak) IBOutlet UIButton *homeButton;
-@property (nonatomic, weak) IBOutlet UILabel *tribeLabel;
-@property (nonatomic, weak) IBOutlet UIView *tribeLabelBG;
 
 @property (nonatomic, weak) IBOutlet UIImageView *focusTarget;
 
@@ -119,17 +117,6 @@ static void *XYZContext = &XYZContext;
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
-  
-  PFObject *currTribe = [[MyVybeStore sharedInstance] currTribe];
-  if (currTribe) {
-    self.tribeLabel.text = currTribe[kVYBTribeNameKey];
-    self.tribeLabel.hidden = NO;
-    self.tribeLabelBG.hidden = NO;
-  } else {
-    self.tribeLabel.text = @"Select Tribe";
-    self.tribeLabel.hidden = YES;
-    self.tribeLabelBG.hidden = YES;
-  }
   
   // NOTE: - Suspicion.
   [capturePipeline startRunning];
@@ -423,29 +410,6 @@ static void *XYZContext = &XYZContext;
   [capturePipeline setExposurePoint:scaledPt];
 }
 
-#pragma mark - SelectTribeDelegate
-
-- (void)didSelectTribe:(id)tribe {
-  [self dismissViewControllerAnimated:YES completion:^{
-    if (tribe && tribe[kVYBTribeNameKey]) {
-      self.tribeLabel.text = tribe[kVYBTribeNameKey];
-      self.tribeLabel.hidden = NO;
-      self.tribeLabelBG.hidden = NO;
-    } else {
-      self.tribeLabel.text = @"Select Tribe";
-      self.tribeLabel.hidden = YES;
-      self.tribeLabelBG.hidden = YES;
-    }
-    self.overlayView.hidden = NO;
-  }];
-}
-
-- (void)dismissSelectTribeViewContrller:(id)vc {
-  [self dismissViewControllerAnimated:YES completion:^{
-    self.overlayView.hidden = NO;
-  }];
-}
-
 #pragma mark - Request for a permission to send push notifications
 
 - (void)getPermissionIfNeeded {
@@ -495,20 +459,9 @@ static void *XYZContext = &XYZContext;
 
 - (void)syncUIWithRecordingStatus {
   self.homeButton.hidden = _isRecording;
-  self.tribeLabel.hidden = _isRecording;
-  self.tribeLabelBG.hidden = _isRecording;
-  
+
   flipButton.hidden = _isRecording;
   flashButton.hidden = _isRecording || _isFrontCamera;
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-  if ( [segue.identifier isEqualToString:@"SelectTribeSegue"] ) {
-    SelectTribeViewController *selectTribe = (SelectTribeViewController *)segue.destinationViewController;
-    selectTribe.delegate = self;
-    
-    self.overlayView.hidden = YES;
-  }
 }
 
 - (IBAction)homeButtonPressed:(id)sender {

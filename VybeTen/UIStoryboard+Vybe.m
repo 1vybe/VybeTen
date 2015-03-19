@@ -14,4 +14,8 @@
   return [UIStoryboard storyboardWithName:@"Home" bundle:[NSBundle mainBundle]];
 }
 
++ (UIStoryboard *)captureStoryboard {
+  return [UIStoryboard storyboardWithName:@"Capture" bundle:[NSBundle mainBundle]];
+}
+
 @end

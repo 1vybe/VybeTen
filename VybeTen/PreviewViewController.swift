@@ -8,13 +8,10 @@
 
 import UIKit
 
-class PreviewViewController: UIViewController, SelectTribeDelegate {
-  @IBOutlet weak var playerView: VYBPlayerView!
+class PreviewViewController: UIViewController {
+  @IBOutlet weak var playerView: PlayerView!
   @IBOutlet weak var overlayView: UIView!
-  
-  @IBOutlet weak var tribeNameLabel: UILabel!
-  @IBOutlet weak var tribeNameBG: UIView!
-  
+    
   @IBOutlet weak var shareButton: UIButton!
   
   var player: AVPlayer?
@@ -36,22 +33,8 @@ class PreviewViewController: UIViewController, SelectTribeDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    if let currTribe = MyVybeStore.sharedInstance.currTribe {
-      if let tribeName = currTribe.objectForKey(kVYBTribeNameKey) as? String {
-        tribeNameLabel.text = tribeName
-        tribeNameLabel.hidden = false
-        tribeNameBG.hidden = false
-        shareButton.selected = true
-      }
-    } else {
-      tribeNameLabel.text = "Select Tribe"
-      tribeNameLabel.hidden = true
-      tribeNameBG.hidden = true
-      shareButton.selected = false
-    }
-    
     player = AVPlayer()
-    playerView.player = player
+    playerView.setPlayer(player!)
     
     if videoPath != nil {
       if let videoURL = NSURL(fileURLWithPath: videoPath!) {
@@ -98,15 +81,6 @@ class PreviewViewController: UIViewController, SelectTribeDelegate {
     player?.play()
   }
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    if segue.identifier == "SelectTribeSegue" {
-      if let selectTribeVC = segue.destinationViewController as? SelectTribeViewController {
-        selectTribeVC.delegate = self
-      }
-      self.overlayView.hidden = true
-    }
-  }
-  
   // NOTE: - Unwind does not work when previewVC using show action segue (e.g. push)
   @IBAction func dismissButtonPressed(sender: AnyObject) {
     self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
@@ -122,31 +96,6 @@ class PreviewViewController: UIViewController, SelectTribeDelegate {
       alertVC.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
       self.presentViewController(alertVC, animated: true, completion: nil)
     }
-  }
-  
-  // MARK: - SelectTribeDelegate
-  
-  func dismissSelectTribeViewContrller(vc: SelectTribeViewController) {
-    self.dismissViewControllerAnimated(true, completion: { () -> Void in
-      self.overlayView.hidden = false
-    })
-  }
-  
-  func didSelectTribe(tribe: AnyObject?) {
-    self.dismissViewControllerAnimated(true, completion: { () -> Void in
-      if let tribeName = tribe?.objectForKey(kVYBTribeNameKey) as? String {
-        self.tribeNameLabel.text = tribeName
-        self.tribeNameLabel.hidden = false
-        self.tribeNameBG.hidden = false
-        self.shareButton.selected = true
-      } else {
-        self.tribeNameLabel.text = "Select Tribe"
-        self.tribeNameLabel.hidden = true
-        self.tribeNameBG.hidden = true
-        self.shareButton.selected = false
-      }
-      self.overlayView.hidden = false
-    })
   }
   
   override func prefersStatusBarHidden() -> Bool {

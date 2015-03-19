@@ -11,6 +11,9 @@ import UIKit
 @IBDesignable
 
 class TimeProgressBar: UIView {
+  var _timerCount: Int!
+  var _timer: NSTimer?
+
   internal struct Constants {
     static let zeroProgress = 0.0
   }
@@ -43,7 +46,25 @@ class TimeProgressBar: UIView {
     let progPath = UIBezierPath(rect: progRect)
     barColor.setFill()
     progPath.fill()
+  }
+  
+  func fire(sec: Double) {
+    _timer?.invalidate()
     
+    _timerCount = 100
+    self.progress = 0.0
+    let interval: NSTimeInterval = sec / 100.0
+    _timer = NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: "updateTimeBar:", userInfo: nil, repeats: true)
+  }
+  
+  func updateTimeBar(timer: NSTimer) {
+    if _timerCount > 0 {
+      _timerCount = _timerCount - 1
+    } else {
+      timer.invalidate()
+      _timer = nil
+    }
+    self.progress = (100.0 - Double(_timerCount)) / 100.0
   }
   
 }

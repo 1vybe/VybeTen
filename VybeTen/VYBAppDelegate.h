@@ -8,7 +8,6 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 #import "VYBNavigationController.h"
-#import "VYBPageViewController.h"
 
 @class VYBPlayerViewController;
 @interface VYBAppDelegate : UIResponder <UIApplicationDelegate>

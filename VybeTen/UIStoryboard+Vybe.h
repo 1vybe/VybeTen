@@ -10,4 +10,6 @@
 
 @interface UIStoryboard (Vybe)
 + (UIStoryboard *)homeStoryboard;
++ (UIStoryboard *)captureStoryboard;
+
 @end
