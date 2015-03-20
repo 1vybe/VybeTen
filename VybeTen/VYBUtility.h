@@ -6,21 +6,23 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <Parse/Parse.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+//#import <CoreLocation/CLLocationManager.h>
 
 @class VYBVybe;
+@class PFQuery;
+@class PFObject;
+@class PFGeoPoint;
+@class CLPlacemark;
+
 @interface VYBUtility : NSObject
 
-+ (void)getNewActivityCountWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock;
-+ (void)updateLastRefreshForCurrentUser;
+//+ (void)getNewActivityCountWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+//+ (void)updateLastRefreshForCurrentUser;
 
-+ (void)likeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
-+ (void)unlikeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
-+ (void)updateBumpCountInBackground:(PFObject *)vybe withBlock:(void (^)(BOOL succeeded))completionBlock;
-
-+ (PFQuery *)queryForActivitiesOnVybe:(PFObject *)vybe cachePolicy:(PFCachePolicy)cachePolicy;
+//+ (void)likeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+//+ (void)unlikeVybeInBackground:(id)vybe block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
+//+ (void)updateBumpCountInBackground:(PFObject *)vybe withBlock:(void (^)(BOOL succeeded))completionBlock;
 
 + (void)saveThumbnailImageForVybe:(VYBVybe *)mVybe;
 + (NSString *)timeStringForPlayer:(NSDate *)aDate;

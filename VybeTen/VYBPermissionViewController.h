@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
 
 @interface VYBPermissionViewController : UIViewController <CLLocationManagerDelegate, UIAlertViewDelegate>
 - (BOOL)checkPermissionSettings;

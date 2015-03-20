@@ -184,7 +184,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="0.0" placeholderIntrinsicHeight="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="dRX-YS-Qns" userLabel="PlayerView" customClass="VYBPlayerView">
+                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="0.0" placeholderIntrinsicHeight="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="dRX-YS-Qns" userLabel="PlayerView" customClass="PlayerView" customModule="Vybe" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t5w-aK-2V5" userLabel="OverlayView">
@@ -229,10 +229,6 @@
                                             <action selector="sendButtonPressed:" destination="bEz-f4-14y" eventType="touchUpInside" id="zcG-Ez-HkM"/>
                                         </connections>
                                     </button>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mek-bf-6rU" userLabel="BG">
-                                        <rect key="frame" x="249" y="27" width="102" height="20"/>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </view>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="MwC-TA-Y3Z" secondAttribute="bottom" constant="25" id="0Hh-RK-FIJ"/>

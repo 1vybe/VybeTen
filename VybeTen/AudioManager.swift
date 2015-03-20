@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 private let _sharedInstance = AudioManager()
 

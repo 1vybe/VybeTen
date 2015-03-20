@@ -6,10 +6,7 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <MBProgressHUD/MBProgressHUD.h>
-
-@interface VYBNavigationController : UINavigationController <MBProgressHUDDelegate>
+@interface VYBNavigationController : UINavigationController
 
 @property (nonatomic, assign) IBInspectable NSInteger pageIndex;
 

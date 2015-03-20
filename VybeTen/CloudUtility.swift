@@ -71,7 +71,7 @@ class CloudUtility: NSObject {
     
     followActivity.saveEventually(nil)
     
-    VYBCache.sharedCache().setFollowStatus(true, user: user)
+//    VYBCache.sharedCache().setFollowStatus(true, user: user)
   }
   
   class func unfollowUser(user: AnyObject) {
@@ -88,6 +88,6 @@ class CloudUtility: NSObject {
       }
     }
     
-    VYBCache.sharedCache().setFollowStatus(false, user: user as PFUser)
+//    VYBCache.sharedCache().setFollowStatus(false, user: user as PFUser)
   }
 }

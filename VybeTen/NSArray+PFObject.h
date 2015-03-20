@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@class PFObject;
 
 @interface NSArray (PFObject)
 - (BOOL)containsPFObject:(PFObject *)obj;

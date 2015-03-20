@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 Vybe. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 @interface UIStoryboard (Vybe)
 + (UIStoryboard *)homeStoryboard;
 + (UIStoryboard *)captureStoryboard;

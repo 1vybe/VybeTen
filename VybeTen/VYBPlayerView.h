@@ -6,7 +6,6 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
 @interface VYBPlayerView : UIView

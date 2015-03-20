@@ -7,13 +7,13 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
+#import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <ImageIO/ImageIO.h>
 #import <CoreLocation/CoreLocation.h>
 #import <MotionOrientation@PTEz/MotionOrientation.h>
 #import "VYBCapturePipeline.h"
 #import "VYBCaptureViewController.h"
-#import "VYBCache.h"
 #import "VYBUtility.h"
 
 #import "VYBRecordButton.h"

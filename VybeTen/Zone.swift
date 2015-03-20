@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-@objc class Zone: NSObject {
+class Zone: NSObject {
   var zoneID: String!
   var name: String!
   

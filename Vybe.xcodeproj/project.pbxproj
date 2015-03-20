@@ -10,11 +10,9 @@
 		0207236519F1991800817A02 /* VYBPermissionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0207236419F1991800817A02 /* VYBPermissionViewController.xib */; };
 		020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 020F1C491977054900C3AA40 /* VYBPermissionViewController.m */; };
 		020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 020FB84819744EBA005C9BA9 /* VYBCameraView.m */; };
-		021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 021B5B6919A7B49100B906F3 /* AVAsset+VideoOrientation.m */; };
 		0222946D19FF2CE200A2AD62 /* VYBPizzaLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0222946C19FF2CE200A2AD62 /* VYBPizzaLayer.m */; };
 		0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0226CBAC194A0339005270D3 /* VYBNavigationController.m */; };
 		0237C13719EEF44A00AC6F81 /* DefaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0237C13619EEF44A00AC6F81 /* DefaultPreferences.plist */; };
-		023E538D191F142000C3CF78 /* VYBCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 023E538C191F142000C3CF78 /* VYBCache.m */; };
 		023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 023F0FCD19AA6BFA0055D3B7 /* UIImage+FixOrientation.m */; };
 		025408E119BA0FD7009C7C71 /* NSArray+PFObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 025408E019BA0FD7009C7C71 /* NSArray+PFObject.m */; };
 		025408E419BA10E5009C7C71 /* NSMutableArray+PFObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 025408E319BA10E5009C7C71 /* NSMutableArray+PFObject.m */; };
@@ -64,7 +62,6 @@
 		745544A21AB8DD2800AF619F /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7464831B1A73063500FA4C9F /* HomeViewController.swift */; };
 		7463BAB01ABA224200845B9B /* VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 026216BD19EA470600EC6544 /* VYBVybe.m */; };
 		7463BAB11ABA22CC00845B9B /* VYBRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 74B9B5871AB22EC5008C2D95 /* VYBRecordButton.m */; };
-		7464831E1A731A0A00FA4C9F /* VybeCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7464831D1A731A0A00FA4C9F /* VybeCardCell.swift */; };
 		746FDAC91A42C2EA0021360C /* UserPrompts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 746FDAC81A42C2EA0021360C /* UserPrompts.storyboard */; };
 		746FDACB1A42C36A0021360C /* UserPromptsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */; };
 		748C78FA1A772F89000200C4 /* UIStoryboard+Vybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 748C78F91A772F89000200C4 /* UIStoryboard+Vybe.m */; };
@@ -72,12 +69,10 @@
 		749256F61A65C82C00E04F31 /* PostTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 749256F41A65C82C00E04F31 /* PostTableViewCell.xib */; };
 		74A0FA541A3668FD0065059E /* BlockedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */; };
 		74A0FA571A36A8B50065059E /* UnblockUser.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74A0FA561A36A8B50065059E /* UnblockUser.storyboard */; };
-		74A1F9FF1A929F11001D6F15 /* NSString+TribeName.m in Sources */ = {isa = PBXBuildFile; fileRef = 74A1F9FE1A929F11001D6F15 /* NSString+TribeName.m */; };
 		74B9A2571A2EB6A100594641 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74B9A2561A2EB6A100594641 /* LaunchScreen.storyboard */; };
 		74BF89B71A4A033E00E92FB4 /* WelcomeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BF89B61A4A033E00E92FB4 /* WelcomeManager.swift */; };
 		74C5D9741A22F8B40006695B /* NSMutableArray+VYBVybe.m in Sources */ = {isa = PBXBuildFile; fileRef = 74C5D9731A22F8B40006695B /* NSMutableArray+VYBVybe.m */; };
 		74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0A9801A256A730066AC4E /* SimpleInteractionManager.swift */; };
-		74D203EE1A5C918F00DBF3B7 /* SimpleTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D203ED1A5C918F00DBF3B7 /* SimpleTextField.swift */; };
 		74D6179E1A25BD7500AAD2F0 /* SwipeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6179D1A25BD7500AAD2F0 /* SwipeContainerViewController.swift */; };
 		74DF7AC01A93F4A900650B48 /* Tribes.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74DF7ABF1A93F4A900650B48 /* Tribes.storyboard */; };
 		74E570EF1A41D430005072E1 /* Notification.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74E570EE1A41D430005072E1 /* Notification.storyboard */; };
@@ -214,7 +209,6 @@
 		744642591AB7618E0011D460 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		74551C801A3E91FA00D348BB /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
 		7464831B1A73063500FA4C9F /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		7464831D1A731A0A00FA4C9F /* VybeCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VybeCardCell.swift; sourceTree = "<group>"; };
 		746FDAC81A42C2EA0021360C /* UserPrompts.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UserPrompts.storyboard; sourceTree = "<group>"; };
 		746FDACA1A42C36A0021360C /* UserPromptsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPromptsViewController.swift; sourceTree = "<group>"; };
 		74781FC81A66F1AA0076FB3C /* ActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityTableViewController.swift; sourceTree = "<group>"; };
@@ -451,7 +445,6 @@
 				022F4A651A0126DE00C20526 /* VYBMapViewController.swift */,
 				74781FC81A66F1AA0076FB3C /* ActivityTableViewController.swift */,
 				74A0FA521A3668FD0065059E /* BlockedUsersTableViewController.swift */,
-				7464831D1A731A0A00FA4C9F /* VybeCardCell.swift */,
 				74E570F01A41DD0D005072E1 /* NotificationTableViewController.swift */,
 				02A45CEE1A1E664E00425F9C /* PizzaProgressView.swift */,
 				02A45CF21A1E821300425F9C /* CircleProgressView.swift */,
@@ -812,7 +805,6 @@
 				8861F0D319A81E08000249DB /* NSString+Email.m in Sources */,
 				8861F0D019A81C8C000249DB /* NSString+Username.m in Sources */,
 				74D0A9811A256A730066AC4E /* SimpleInteractionManager.swift in Sources */,
-				74A1F9FF1A929F11001D6F15 /* NSString+TribeName.m in Sources */,
 				746FDACB1A42C36A0021360C /* UserPromptsViewController.swift in Sources */,
 				025CC90F19D5229200A1208C /* UIImage+maskImage.m in Sources */,
 				74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */,
@@ -829,9 +821,7 @@
 				604B628D18B495BB00D3EF19 /* VYBAppDelegate.m in Sources */,
 				604B628918B495BB00D3EF19 /* main.m in Sources */,
 				88366AAD19F10CB60093B148 /* VYBWelcomeViewController.m in Sources */,
-				021B5B6A19A7B49100B906F3 /* AVAsset+VideoOrientation.m in Sources */,
 				742C45401A7AF75F0062617E /* AudioManager.swift in Sources */,
-				023E538D191F142000C3CF78 /* VYBCache.m in Sources */,
 				025DE65B18CB16E30054F739 /* VYBConstants.m in Sources */,
 				0226CBAD194A0339005270D3 /* VYBNavigationController.m in Sources */,
 				023F0FCE19AA6BFA0055D3B7 /* UIImage+FixOrientation.m in Sources */,
@@ -843,9 +833,7 @@
 				88828D9B19344AEB005CB06C /* Reachability.m in Sources */,
 				74551C811A3E91FA00D348BB /* ConfigManager.swift in Sources */,
 				0288603E19E4A02A007876AE /* VYBCapturePipeline.m in Sources */,
-				74D203EE1A5C918F00DBF3B7 /* SimpleTextField.swift in Sources */,
 				0222946D19FF2CE200A2AD62 /* VYBPizzaLayer.m in Sources */,
-				7464831E1A731A0A00FA4C9F /* VybeCardCell.swift in Sources */,
 				020F1C4B1977054900C3AA40 /* VYBPermissionViewController.m in Sources */,
 				6061246E18B7862F00B0A14E /* VYBCaptureViewController.m in Sources */,
 				743727EF1A93EA3A00CF7C4B /* Vybe.swift in Sources */,
@@ -901,6 +889,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = Vybe;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -934,6 +923,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = Vybe;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

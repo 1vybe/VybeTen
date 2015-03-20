@@ -36,7 +36,7 @@ class BlockedUsersTableViewController: UITableViewController {
     let userQuery = relation.query()
     userQuery.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if error == nil {
-        VYBCache.sharedCache().setBlockedUsers(result, forUser: PFUser.currentUser())
+//        VYBCache.sharedCache().setBlockedUsers(result, forUser: PFUser.currentUser())
         if result.count > 0 {
           self.blockedUsers = result as [PFUser]
           self.tableView.reloadData()
@@ -104,7 +104,7 @@ class BlockedUsersTableViewController: UITableViewController {
                 switchLabel?.textColor = UIColor(red: 92/255.0, green: 140/255.0, blue: 242/255.0, alpha: 1.0)
                 }, completion: { (completed: Bool) -> Void in
                   self.delay(0.4) {
-                    VYBCache.sharedCache().removeBlockedUser(aUser, forUser: currUser)
+//                    VYBCache.sharedCache().removeBlockedUser(aUser, forUser: currUser)
                     self.removeUserFromBlockedUsers(aUser)
                     println("\(aUser[kVYBUserUsernameKey]) unblocked!")
                     //                  self.blockedUsers?.

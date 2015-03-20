@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-@class Zone;
+@class PFObject;
+@class CLLocation;
 @interface VYBVybe : NSObject
 @property (nonatomic) NSString *uniqueFileName;
 @property (nonatomic) CLLocation *locationCL;

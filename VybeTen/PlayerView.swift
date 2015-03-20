@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 extension AVAsset {
   func videoOrientation() -> AVCaptureVideoOrientation {
@@ -50,7 +51,9 @@ class PlayerView: UIView {
   }
 
   required init(coder aDecoder: NSCoder) {
-      fatalError("init(coder:) should not be called")
+    super.init(coder: aDecoder)
+    
+    (self.layer as AVPlayerLayer).videoGravity = AVLayerVideoGravityResizeAspectFill
   }
   
   func setPlayer(player: AVPlayer) {
@@ -62,12 +65,11 @@ class PlayerView: UIView {
   }
   
   func setOrientation(asset: AVAsset) {
-    let orientation = asset.videoOrientation
+    let orientation: AVCaptureVideoOrientation = asset.videoOrientation()
     
     self.resetLayerToIdentity()
     
-    if orientation == AVCaptureVideoOrientation.LandscapeLeft ||
-      orientation == AVCaptureVideoOrientation.LandscapeRight {
+    if orientation == .LandscapeLeft || orientation == .LandscapeRight {
         let rotation = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
         self.transform = rotation
         

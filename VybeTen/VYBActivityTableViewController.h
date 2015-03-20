@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 @class PFQueryTableViewController;
 IB_DESIGNABLE
 @interface VYBActivityTableViewController : PFQueryTableViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>

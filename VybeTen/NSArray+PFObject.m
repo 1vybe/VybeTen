@@ -7,6 +7,7 @@
 //
 
 #import "NSArray+PFObject.h"
+#import <Parse/PFObject.h>
 
 @implementation NSArray (PFObject)
 

@@ -7,6 +7,7 @@
 //
 
 #import "VYBNavigationController.h"
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @implementation VYBNavigationController
 

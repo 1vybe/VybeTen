@@ -118,7 +118,7 @@ class WelcomeManager: NSObject {
       flagQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
         if error == nil {
           for vybeObj in result as [PFObject] {
-            VYBCache.sharedCache().setAttributesForVybe(vybeObj, flaggedByCurrentUser: true)
+//            VYBCache.sharedCache().setAttributesForVybe(vybeObj, flaggedByCurrentUser: true)
           }
         }
       })
@@ -128,7 +128,7 @@ class WelcomeManager: NSObject {
       let blockQuery = blockedUsers.query()
       blockQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
         if error == nil {
-          VYBCache.sharedCache().setBlockedUsers(result, forUser: currUser)
+//          VYBCache.sharedCache().setBlockedUsers(result, forUser: currUser)
         }
       })
     }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class PreviewViewController: UIViewController {
   @IBOutlet weak var playerView: PlayerView!
@@ -24,10 +25,10 @@ class PreviewViewController: UIViewController {
   }
   
   required init(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    
     videoPath = MyVybeStore.sharedInstance.currVybe?.videoFilePath()
     thumbnailPath = MyVybeStore.sharedInstance.currVybe?.thumbnailFilePath()
-
-    super.init(coder: aDecoder)
   }
   
   override func viewDidLoad() {
@@ -42,16 +43,14 @@ class PreviewViewController: UIViewController {
   
         currItem = AVPlayerItem(asset: asset)
         
-        var value: NSNumber
-        switch asset.videoOrientation {
-        case .Portrait:
-          value = NSNumber(integer: UIInterfaceOrientation.Portrait.rawValue)
-        case .LandscapeLeft:
+        // default
+        var value = NSNumber(integer: UIInterfaceOrientation.Portrait.rawValue)
+        
+        let orientation: AVCaptureVideoOrientation = asset.videoOrientation()
+        if orientation == .LandscapeLeft {
           value = NSNumber(integer: UIInterfaceOrientation.LandscapeLeft.rawValue)
-        case .LandscapeRight:
+        } else if orientation == .LandscapeRight {
           value = NSNumber(integer: UIInterfaceOrientation.LandscapeRight.rawValue)
-        default:
-          return
         }
         
         UIDevice.currentDevice().setValue(value, forKey: "orientation")

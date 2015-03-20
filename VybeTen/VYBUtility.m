@@ -10,11 +10,8 @@
 #import <MBProgressHUD/MBProgressHUD.h>
 #import "VYBUtility.h"
 
-#import "VYBCache.h"
-
-#import "AVAsset+VideoOrientation.h"
-#import "UIImage+FixOrientation.h"
-
+//#import "AVAsset+VideoOrientation.h"
+//#import "UIImage+FixOrientation.h"
 
 #import "NSMutableArray+PFObject.h"
 #import "NSArray+PFObject.h"
@@ -24,6 +21,7 @@
 @implementation VYBUtility
 
 #pragma mark - Activity
+/*
 + (void)getNewActivityCountWithCompletion:(void (^)(BOOL succeeded, NSError *error))completionBlock {
   if (![PFUser currentUser]) {
     return;
@@ -77,32 +75,6 @@
   currentInstallation.badge = 0;
   [currentInstallation saveInBackground];
 }
-
-+ (void)clearTempDirectory {
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    NSFileManager* fm = [NSFileManager defaultManager];
-    NSURL *path = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
-    NSArray* temp = [fm contentsOfDirectoryAtPath:NSTemporaryDirectory() error:NULL];
-    int count = 0;
-    for (NSString *file in temp) {
-      NSURL *filePath = [path URLByAppendingPathComponent:file];
-      NSError *error;
-      NSDictionary* attrs = [fm attributesOfItemAtPath:[filePath path] error:&error];
-      if (attrs != nil) {
-        NSDate *date = (NSDate*)[attrs objectForKey: NSFileCreationDate];
-        // Delete all files created more than 3 days ago
-        if ([date timeIntervalSinceNow] < -60 * 60 * 24 * 3 ) {
-          [fm removeItemAtPath:[filePath path] error:&error];
-          count++;
-        }
-      }
-    }
-    if (count) {
-      NSLog(@"Cleared - %d", count);
-    }
-  });
-}
-
 
 #pragma mark - Like Vybes
 
@@ -242,6 +214,7 @@
   }];
 }
 
+
 + (void)updateBumpCountInBackground:(PFObject *)vybe withBlock:(void (^)(BOOL succeeded))completionBlock {
   PFQuery *query = [self queryForActivitiesOnVybe:vybe cachePolicy:kPFCachePolicyNetworkOnly];
   [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -270,7 +243,6 @@
   }];
 }
 
-
 #pragma mark Activities
 
 + (PFQuery *)queryForActivitiesOnVybe:(PFObject *)vybe cachePolicy:(PFCachePolicy)cachePolicy {
@@ -289,6 +261,7 @@
   
   return query;
 }
+*/
 
 #pragma mark Thumbnail
 
@@ -302,7 +275,7 @@
   AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
   // To transform the snapshot to be in the orientation the video was taken with
   [generate setAppliesPreferredTrackTransform:YES];
-
+  
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     NSError *err = NULL;
     CMTime time = CMTimeMake(1, 60);
@@ -315,6 +288,11 @@
     NSURL *thumbURL = [[NSURL alloc] initFileURLWithPath:thumbnailPath];
     
     [thumbData writeToURL:thumbURL options:NSDataWritingAtomic error:&err];
+    if (err) {
+      NSLog(@"Error saving the thumbnail image");
+    } else {
+      NSLog(@"Successfully saved the thumbnail image");
+    }
   });
 }
 
@@ -374,7 +352,7 @@
   static NSDateFormatter *simpleDateFormatterLocalized = nil;
   if (!simpleDateFormatterLocalized) {
     simpleDateFormatterLocalized = [[NSDateFormatter alloc] init];
-
+    
     NSTimeZone *timeZone = [NSTimeZone localTimeZone];
     [simpleDateFormatterLocalized setTimeZone:timeZone];
     [simpleDateFormatterLocalized setDateFormat:@"MMM dd h:mm a"];
@@ -386,7 +364,7 @@
   static NSDateFormatter *dFormatterLocalized = nil;
   if (!dFormatterLocalized) {
     dFormatterLocalized = [[NSDateFormatter alloc] init];
-
+    
     NSTimeZone *timeZone = [NSTimeZone localTimeZone];
     [dFormatterLocalized setTimeZone:timeZone];
     [dFormatterLocalized setDateFormat:@"MMM dd, yyyy HH:mm"];
@@ -443,6 +421,12 @@
   return theTime;
 }
 
++ (void)showUploadProgressBarFromBottom:(UIView *)aView {
+  UIView *progressView = [[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:nil options:nil] firstObject];
+  [aView addSubview:progressView];
+  [progressView setFrame:CGRectMake(0, aView.bounds.size.height - progressView.bounds.size.height, progressView.bounds.size.width, progressView.bounds.size.height)];
+}
+
 
 + (NSString *)reverseTimeShorthand:(NSDate *)aDate {
   double timePassed = [[NSDate date] timeIntervalSinceDate:aDate];
@@ -496,10 +480,29 @@
   });
 }
 
-+ (void)showUploadProgressBarFromBottom:(UIView *)aView {
-  UIView *progressView = [[[NSBundle mainBundle] loadNibNamed:@"UploadProgressBottomBar" owner:nil options:nil] firstObject];
-  [aView addSubview:progressView];
-  [progressView setFrame:CGRectMake(0, aView.bounds.size.height - progressView.bounds.size.height, progressView.bounds.size.width, progressView.bounds.size.height)];
++ (void)clearTempDirectory {
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    NSFileManager* fm = [NSFileManager defaultManager];
+    NSURL *path = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
+    NSArray* temp = [fm contentsOfDirectoryAtPath:NSTemporaryDirectory() error:NULL];
+    int count = 0;
+    for (NSString *file in temp) {
+      NSURL *filePath = [path URLByAppendingPathComponent:file];
+      NSError *error;
+      NSDictionary* attrs = [fm attributesOfItemAtPath:[filePath path] error:&error];
+      if (attrs != nil) {
+        NSDate *date = (NSDate*)[attrs objectForKey: NSFileCreationDate];
+        // Delete all files created more than 3 days ago
+        if ([date timeIntervalSinceNow] < -60 * 60 * 24 * 3 ) {
+          [fm removeItemAtPath:[filePath path] error:&error];
+          count++;
+        }
+      }
+    }
+    if (count) {
+      NSLog(@"Cleared - %d", count);
+    }
+  });
 }
 
 + (CGAffineTransform)getTransformFromOrientation:(NSInteger)orientation {
@@ -540,5 +543,7 @@
   CGImageRelease(masked);
   return simpleImg;
 }
+ 
+ 
 
 @end

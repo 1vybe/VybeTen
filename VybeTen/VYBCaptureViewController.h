@@ -6,9 +6,6 @@
 //  Copyright (c) 2014년 Vybe. All rights reserved.
 //
 
-#import <AVFoundation/AVFoundation.h>
-#import <UIKit/UIKit.h>
-#import "GAITrackedViewController.h"
 #import "VYBCameraView.h"
 
 @protocol VYBCapturePipelineDelegate;

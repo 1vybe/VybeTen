@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 protocol PlayerDelegate {
   func didFinishSetup(success: Bool, vc: PlayerViewController)

@@ -17,10 +17,8 @@
 #import <ParseCrashReporting/ParseCrashReporting.h>
 #import "VYBAppDelegate.h"
 #import "VYBCaptureViewController.h"
-#import "VYBPlayerViewController.h"
 #import "VYBPermissionViewController.h"
 #import "VYBWelcomeViewController.h"
-#import "VYBCache.h"
 #import "VYBUtility.h"
 #import "Reachability.h"
 
@@ -272,7 +270,7 @@
 
 - (void)logOut {
   // clear cache
-  [[VYBCache sharedCache] clear];
+//  [[VYBCache sharedCache] clear];
   
   //    // clear NSUserDefaults
   //    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPAPUserDefaultsCacheFacebookFriendsKey];
