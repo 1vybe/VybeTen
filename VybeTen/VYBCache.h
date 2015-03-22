@@ -7,17 +7,19 @@
 //  Copyright (c) 2014 Vybe. All rights reserved.
 //
 
+@class PFObject, PFUser;
 @interface VYBCache : NSObject
 
 + (id)sharedCache;
 
 - (void)clear;
-- (void)addFreshVybe:(PFObject *)nVybe;
-- (void)removeFreshVybe:(PFObject *)oVybe;
-- (NSArray *)freshVybes;
 
-- (void)setActivityCount:(int)count;
-- (NSInteger)activityCount;
+- (void)setPointScore:(NSInteger)score forVybe:(PFObject *)vybe;
+- (NSInteger)pointScoreForVybe:(PFObject *)vybe;
+- (void)incrementPointScoreForVybe:(PFObject *)vybe;
+- (void)decrementPointScoreForVybe:(PFObject *)vybe;
+- (void)setPointTypeFromCurrentUserForVybe:(PFObject *)vybe type:(NSString *)typeStr;
+- (NSString *)pointTypeFromCurrentUserForVybe:(PFObject *)vybe;
 
 - (NSArray *)bumpActivitiesForUser:(PFUser *)user;
 - (NSInteger)newBumpActivityCountForCurrentUser;

@@ -11,8 +11,6 @@ import UIKit
 private let _sharedInstance = MyVybeStore()
 
 class MyVybeStore: NSObject {
-  var currTribe: PFObject?
-
   var currVybe: VYBVybe?
   var currentVybeUploadTask: UIBackgroundTaskIdentifier?
   
@@ -33,7 +31,6 @@ class MyVybeStore: NSObject {
   func prepareNewVybe() {
     var nVybe = PFObject(className: kVYBVybeClassKey)
     nVybe.setObject(NSDate(), forKey: kVYBVybeTimestampKey)
-    nVybe.setObject(NSNumber(bool: true), forKey: kVYBVybeTypePublicKey)
     
     currVybe = VYBVybe(parseObject:nVybe)
     
@@ -45,11 +42,7 @@ class MyVybeStore: NSObject {
   }
   
   func uploadCurrentVybe() {
-    if let nVybe = currVybe {
-      if currTribe != nil {
-        nVybe.setTribe(currTribe)
-      }
-      
+    if let nVybe = currVybe {      
       let vybe = VYBVybe(vybeObject: nVybe)
       var vybeParseObj = vybe.parseObject()
       
@@ -75,6 +68,9 @@ class MyVybeStore: NSObject {
         }
         UIApplication.sharedApplication().endBackgroundTask(self.currentVybeUploadTask!)
       })
+      
+      PFUser.currentUser().incrementKey(kVYBUserPointScoreKey)
+      PFUser.currentUser().saveEventually()
     }
   }
   

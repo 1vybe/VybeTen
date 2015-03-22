@@ -11,7 +11,8 @@
                 <outlet property="flagButton" destination="sWX-cp-Y9g" id="5RD-Sa-Tou"/>
                 <outlet property="optionsButton" destination="0It-Qq-qG9" id="gm5-Xz-KKk"/>
                 <outlet property="optionsOverlay" destination="afv-fB-hBX" id="gXl-St-DZD"/>
-                <outlet property="scoreLabel" destination="rbG-xf-SgC" id="una-6n-as4"/>
+                <outlet property="playerView" destination="5TF-bP-q9N" id="Jv7-dx-RP8"/>
+                <outlet property="pointsLabel" destination="rbG-xf-SgC" id="W4b-b8-mQC"/>
                 <outlet property="timeLabel" destination="UPQ-0i-rrO" id="4c8-UE-Biw"/>
                 <outlet property="timeProgressBar" destination="zk0-A5-0s0" id="m0T-62-e1n"/>
                 <outlet property="usernameLabel" destination="KPb-Hj-SQM" id="Fko-BQ-KWg"/>
@@ -25,6 +26,9 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="600"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5TF-bP-q9N" customClass="PlayerView" customModule="Vybe" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="600"/>
+                </view>
                 <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i5M-Pr-FkT" userLabel="Overlay">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="600"/>
                     <subviews>
@@ -61,7 +65,7 @@
                                 </mask>
                             </variation>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OgX-nT-z8f" userLabel="voteUp">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OgX-nT-z8f" userLabel="VoteUp">
                             <rect key="frame" x="316" y="491" width="30" height="30"/>
                             <state key="normal" title="UP">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -71,7 +75,7 @@
                                 <action selector="voteUpButtonPressed:" destination="-1" eventType="touchUpInside" id="PrX-tR-4yP"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="35" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbG-xf-SgC" userLabel="Score">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="35" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rbG-xf-SgC" userLabel="Point">
                             <rect key="frame" x="323" y="526" width="17" height="19"/>
                             <constraints>
                                 <constraint firstAttribute="width" relation="lessThanOrEqual" constant="120" id="53F-R4-o3F"/>
@@ -87,7 +91,7 @@
                                 </mask>
                             </variation>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UPh-Zk-p0L" userLabel="voteDown">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UPh-Zk-p0L" userLabel="VoteDown">
                             <rect key="frame" x="307" y="550" width="48" height="30"/>
                             <state key="normal" title="DOWN">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -103,8 +107,8 @@
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BlackFade(BG)" translatesAutoresizingMaskIntoConstraints="NO" id="vmx-YI-kfk">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="600"/>
                                 </imageView>
-                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BsT-WT-KSd" userLabel="block">
-                                    <rect key="frame" x="101" y="317" width="174" height="52"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BsT-WT-KSd" userLabel="block">
+                                    <rect key="frame" x="149" y="326" width="78" height="34"/>
                                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="16"/>
                                     <state key="normal" title="Block User">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -113,8 +117,8 @@
                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sWX-cp-Y9g" userLabel="flag">
-                                    <rect key="frame" x="100" y="231" width="174" height="53"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sWX-cp-Y9g" userLabel="flag">
+                                    <rect key="frame" x="150" y="240" width="74" height="34"/>
                                     <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="16"/>
                                     <state key="normal" title="Flag Vybe">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -204,8 +208,12 @@
             <constraints>
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="top" secondItem="NzJ-pm-eNV" secondAttribute="top" id="6O1-5Q-B5F"/>
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="leading" secondItem="NzJ-pm-eNV" secondAttribute="leading" id="IWL-PO-StZ"/>
+                <constraint firstAttribute="bottom" secondItem="5TF-bP-q9N" secondAttribute="bottom" id="L2n-xP-cs9"/>
                 <constraint firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="R0X-2U-EEj"/>
+                <constraint firstItem="5TF-bP-q9N" firstAttribute="top" secondItem="NzJ-pm-eNV" secondAttribute="top" id="VN3-1u-rKX"/>
+                <constraint firstItem="5TF-bP-q9N" firstAttribute="leading" secondItem="NzJ-pm-eNV" secondAttribute="leading" id="oJl-ol-Tat"/>
                 <constraint firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="zMp-1G-fbd"/>
+                <constraint firstAttribute="trailing" secondItem="5TF-bP-q9N" secondAttribute="trailing" id="zYd-F8-6Nt"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

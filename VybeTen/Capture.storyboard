@@ -68,7 +68,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d4Y-Mh-xLU" userLabel="homeButton">
-                                        <rect key="frame" x="522" y="522" width="53" height="53"/>
+                                        <rect key="frame" x="25" y="522" width="53" height="53"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="36" id="X7S-MD-N5g"/>
                                             <constraint firstAttribute="width" constant="36" id="oG7-3S-vis"/>
@@ -83,18 +83,8 @@
                                                 <exclude reference="oG7-3S-vis"/>
                                             </mask>
                                         </variation>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Txd-Bq-kYn" userLabel="homeAerial">
-                                        <rect key="frame" x="519" y="519" width="60" height="60"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="60" id="AkQ-0I-2CH"/>
-                                            <constraint firstAttribute="height" constant="60" id="fwj-lG-tVd"/>
-                                        </constraints>
-                                        <state key="normal">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
                                         <connections>
-                                            <action selector="homeButtonPressed:" destination="rgS-Qd-smr" eventType="touchUpInside" id="roI-oV-uvO"/>
+                                            <action selector="homeButtonPressed:" destination="rgS-Qd-smr" eventType="touchUpInside" id="eMv-bj-J6X"/>
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wmo-4Q-KVA" userLabel="recordButton" customClass="VYBRecordButton">
@@ -118,7 +108,6 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="W36-pV-hkE" secondAttribute="trailing" id="16y-8K-E2i"/>
-                                    <constraint firstItem="Txd-Bq-kYn" firstAttribute="centerY" secondItem="d4Y-Mh-xLU" secondAttribute="centerY" id="3Ee-cn-7c6"/>
                                     <constraint firstAttribute="trailing" secondItem="crN-zb-JCR" secondAttribute="trailing" constant="25" id="3i2-qU-h04"/>
                                     <constraint firstItem="giu-7r-23x" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" id="8G8-UC-PjA"/>
                                     <constraint firstAttribute="bottom" secondItem="d4Y-Mh-xLU" secondAttribute="bottom" constant="20" id="B9S-fu-16t"/>
@@ -126,7 +115,6 @@
                                     <constraint firstItem="giu-7r-23x" firstAttribute="leading" secondItem="0zR-hY-UKf" secondAttribute="leading" id="Eau-Zs-8ju"/>
                                     <constraint firstItem="lDT-z3-VQ2" firstAttribute="leading" secondItem="0zR-hY-UKf" secondAttribute="leading" constant="25" id="FX2-j6-t45"/>
                                     <constraint firstItem="d4Y-Mh-xLU" firstAttribute="leading" secondItem="0zR-hY-UKf" secondAttribute="leading" constant="20" id="GDH-x2-4EW"/>
-                                    <constraint firstItem="Txd-Bq-kYn" firstAttribute="centerX" secondItem="d4Y-Mh-xLU" secondAttribute="centerX" id="Hhe-FK-cNP"/>
                                     <constraint firstAttribute="trailing" secondItem="d4Y-Mh-xLU" secondAttribute="trailing" constant="25" id="Me8-1H-vrk"/>
                                     <constraint firstAttribute="bottom" secondItem="d4Y-Mh-xLU" secondAttribute="bottom" constant="15" id="Tkc-Mt-z6A"/>
                                     <constraint firstItem="W36-pV-hkE" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" id="W8Y-Cb-9BY"/>
@@ -134,11 +122,13 @@
                                     <constraint firstAttribute="centerX" secondItem="wmo-4Q-KVA" secondAttribute="centerX" id="oBh-dr-08h"/>
                                     <constraint firstItem="crN-zb-JCR" firstAttribute="top" secondItem="0zR-hY-UKf" secondAttribute="top" constant="27" id="qEd-sT-IZg"/>
                                     <constraint firstAttribute="bottom" secondItem="wmo-4Q-KVA" secondAttribute="bottom" constant="15" id="rsm-PX-Eeh"/>
+                                    <constraint firstItem="d4Y-Mh-xLU" firstAttribute="leading" secondItem="0zR-hY-UKf" secondAttribute="leading" constant="25" id="wwo-dU-s9i"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="B9S-fu-16t"/>
                                         <exclude reference="GDH-x2-4EW"/>
+                                        <exclude reference="Me8-1H-vrk"/>
                                         <exclude reference="Tkc-Mt-z6A"/>
                                     </mask>
                                 </variation>
@@ -191,7 +181,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XoB-lb-VF1" userLabel="reject">
-                                        <rect key="frame" x="25" y="522" width="53" height="53"/>
+                                        <rect key="frame" x="522" y="522" width="53" height="53"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="32" id="3rj-6L-Cuk"/>
                                             <constraint firstAttribute="width" constant="32" id="LTC-Wv-hkx"/>
@@ -205,18 +195,8 @@
                                                 <exclude reference="LTC-Wv-hkx"/>
                                             </mask>
                                         </variation>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e8a-Xs-N1J" userLabel="rejectAerial">
-                                        <rect key="frame" x="17" y="514" width="70" height="70"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="70" id="5Tb-By-E9h"/>
-                                            <constraint firstAttribute="width" constant="70" id="INq-FP-JUH"/>
-                                        </constraints>
-                                        <state key="normal">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
                                         <connections>
-                                            <action selector="dismissButtonPressed:" destination="bEz-f4-14y" eventType="touchUpInside" id="9R3-nW-kLw"/>
+                                            <action selector="dismissButtonPressed:" destination="bEz-f4-14y" eventType="touchUpInside" id="2Zg-99-gxb"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MwC-TA-Y3Z" userLabel="shareButton">
@@ -234,10 +214,14 @@
                                     <constraint firstAttribute="bottom" secondItem="MwC-TA-Y3Z" secondAttribute="bottom" constant="25" id="0Hh-RK-FIJ"/>
                                     <constraint firstItem="XoB-lb-VF1" firstAttribute="leading" secondItem="t5w-aK-2V5" secondAttribute="leading" constant="25" id="8nJ-jM-aff"/>
                                     <constraint firstAttribute="centerX" secondItem="MwC-TA-Y3Z" secondAttribute="centerX" id="KFH-Vd-cQR"/>
-                                    <constraint firstItem="e8a-Xs-N1J" firstAttribute="centerX" secondItem="XoB-lb-VF1" secondAttribute="centerX" id="XlC-AN-XbU"/>
-                                    <constraint firstItem="e8a-Xs-N1J" firstAttribute="centerY" secondItem="XoB-lb-VF1" secondAttribute="centerY" id="mHV-Ma-36u"/>
+                                    <constraint firstAttribute="trailing" secondItem="XoB-lb-VF1" secondAttribute="trailing" constant="25" id="cWd-Ve-BeY"/>
                                     <constraint firstAttribute="bottom" secondItem="XoB-lb-VF1" secondAttribute="bottom" constant="25" id="z7L-hp-ECZ"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="8nJ-jM-aff"/>
+                                    </mask>
+                                </variation>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>

@@ -49,6 +49,7 @@
 		740AE0561A3292C000CB4487 /* UserAgreementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 740AE0541A3292C000CB4487 /* UserAgreementViewController.xib */; };
 		741277021A9D86AB008A7E24 /* TimeProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741277011A9D86AB008A7E24 /* TimeProgressBar.swift */; };
 		74172D001A720FCF00142EC1 /* CloudUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74172CFF1A720FCF00142EC1 /* CloudUtility.swift */; };
+		7417441C1ABCC1250052E136 /* VYBCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 023E538C191F142000C3CF78 /* VYBCache.m */; };
 		742C45401A7AF75F0062617E /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 742C453F1A7AF75F0062617E /* AudioManager.swift */; };
 		74349A201A48AA9C006BA83C /* MyVybeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74349A1F1A48AA9C006BA83C /* MyVybeStore.swift */; };
 		74349A271A4945EB006BA83C /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 74349A261A4945EB006BA83C /* libsqlite3.dylib */; };
@@ -797,6 +798,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7417441C1ABCC1250052E136 /* VYBCache.m in Sources */,
 				7463BAB11ABA22CC00845B9B /* VYBRecordButton.m in Sources */,
 				7463BAB01ABA224200845B9B /* VYBVybe.m in Sources */,
 				020FB84919744EBA005C9BA9 /* VYBCameraView.m in Sources */,

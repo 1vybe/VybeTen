@@ -8,36 +8,78 @@
 
 import UIKit
 
-
 class CloudUtility: NSObject {
-  
-  class func removeFromMyFeed(watched: AnyObject) {
-    let watchedObj = watched as PFObject
+  class func voteUp(vybe vy: PFObject) {
+    let type = VYBCache.sharedCache().pointTypeFromCurrentUserForVybe(vy)
     
-    let myFeed = PFUser.currentUser().relationForKey(kVYBUserFreshFeedKey)
-    myFeed.removeObject(watchedObj)
-    
-    watchedObj.unpinInBackgroundWithName("MyFreshFeed", block: { (success: Bool, error: NSError!) -> Void in
-      if success {
-        println("removed from feed")
-      }
-    })
-  }
-  
-  class func updateLastVybe(last: AnyObject) {
-    let lastObj = last as PFObject
-    
-    if let tribe = lastObj[kVYBVybeTribeKey] as? PFObject {
-      let query = PFQuery(className: kVYBVybeClassKey)
-      query.fromPinWithName("LastVybes")
-      query.whereKey(kVYBVybeTribeKey, equalTo: tribe)
-      query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
-        if result != nil {
-          PFObject.unpinAllObjectsInBackgroundWithName("LastVybes")
-          lastObj.pinInBackgroundWithName("LastVybes")
+    let query = PFQuery(className: kVYBPointClassKey)
+    query.whereKey(kVYBPointVybeKey, equalTo: vy)
+    query.whereKey(kVYBPointUserKey, equalTo: PFUser.currentUser())
+    query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+      if result != nil {
+        for obj in result as [PFObject] {
+          obj.deleteInBackground()
         }
       }
+    })
+
+    if type == kVYBVybeAttributesPointTypeUpKey {
+      VYBCache.sharedCache().decrementPointScoreForVybe(vy)
+      VYBCache.sharedCache().setPointTypeFromCurrentUserForVybe(vy, type: kVYBVybeAttributesPointTypeNoneKey)
+    } else {
+      VYBCache.sharedCache().incrementPointScoreForVybe(vy)
+      VYBCache.sharedCache().setPointTypeFromCurrentUserForVybe(vy, type: kVYBVybeAttributesPointTypeUpKey)
+      // If you have voted DOWN before, we need to increment twice
+      if type == kVYBVybeAttributesPointTypeDownKey {
+        VYBCache.sharedCache().incrementPointScoreForVybe(vy)
+      }
+      
+      let upPoint = PFObject(className: kVYBPointClassKey)
+      upPoint[kVYBPointTypeKey] = kVYBPointTypeUpKey
+      upPoint[kVYBPointUserKey] = PFUser.currentUser()
+      upPoint[kVYBPointVybeKey] = vy
+      upPoint.saveEventually()
     }
+    
+    NSNotificationCenter.defaultCenter().postNotificationName(CloudUtilityPointUpdatedByCurrentUserNotification, object: nil)
+  }
+  
+  class func voteDown(vybe vy: PFObject) {
+    let type = VYBCache.sharedCache().pointTypeFromCurrentUserForVybe(vy)
+    if type == kVYBVybeAttributesPointTypeDownKey {
+      VYBCache.sharedCache().incrementPointScoreForVybe(vy)
+      VYBCache.sharedCache().setPointTypeFromCurrentUserForVybe(vy, type: kVYBVybeAttributesPointTypeNoneKey)
+    } else {
+      VYBCache.sharedCache().decrementPointScoreForVybe(vy)
+      VYBCache.sharedCache().setPointTypeFromCurrentUserForVybe(vy, type: kVYBVybeAttributesPointTypeDownKey)
+      // If you have voted UP before, we need to decrement twice
+      if type == kVYBVybeAttributesPointTypeUpKey {
+        VYBCache.sharedCache().decrementPointScoreForVybe(vy)
+      }
+      
+      let downPoint = PFObject(className: kVYBPointClassKey)
+      downPoint[kVYBPointTypeKey] = kVYBPointTypeDownKey
+      downPoint[kVYBPointUserKey] = PFUser.currentUser()
+      downPoint[kVYBPointVybeKey] = vy
+      downPoint.saveEventually()
+    }
+
+    let query = PFQuery(className: kVYBPointClassKey)
+    query.whereKey(kVYBPointVybeKey, equalTo: vy)
+    query.whereKey(kVYBPointUserKey, equalTo: PFUser.currentUser())
+    query.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+      if result != nil {
+        for obj in result as [PFObject] {
+          obj.deleteInBackground()
+        }
+      }
+    })
+    
+    NSNotificationCenter.defaultCenter().postNotificationName(CloudUtilityPointUpdatedByCurrentUserNotification, object: nil)
+  }
+  
+  class private func updatePointsForVybe(vy: PFObject) {
+    
   }
   
   class func followUser(userObj: AnyObject) {

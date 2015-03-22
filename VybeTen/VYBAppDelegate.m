@@ -225,7 +225,7 @@
     [PFAnalytics trackAppOpenedWithLaunchOptions:nil];
   }
 #endif
-  [self proceedToMainInterface];
+  [[WelcomeManager sharedInstance] checkLogInStatus];
 }
 
 #pragma mark -
@@ -242,7 +242,7 @@
   VYBCaptureViewController *captureVC = (VYBCaptureViewController *)[[UIStoryboard captureStoryboard] instantiateInitialViewController];
   UINavigationController *homeInNav = (UINavigationController *)[[UIStoryboard homeStoryboard] instantiateInitialViewController];
 
-  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[captureVC, homeInNav]];
+  self.swipeContainerController = [[SwipeContainerController alloc] initWithViewControllers:@[homeInNav, captureVC]];
   
   [self.mainNavController pushViewController:self.swipeContainerController animated:NO];
   

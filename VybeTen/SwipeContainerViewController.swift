@@ -49,33 +49,33 @@ import UIKit
     
     self.view = rootView
     
-    let screenEdgePanGesture_Right = UIScreenEdgePanGestureRecognizer(target: self, action: "handleScreenEdgePanGesture:")
-    screenEdgePanGesture_Right.edges = UIRectEdge.Right
-    screenEdgePanGesture_Right.delegate = self
-    let screenEdgePanGesture_Left = UIScreenEdgePanGestureRecognizer(target: self, action: "handleScreenEdgePanGesture:")
-    screenEdgePanGesture_Left.edges = UIRectEdge.Left
-    screenEdgePanGesture_Left.delegate = self
-    
-    containerView.addGestureRecognizer(screenEdgePanGesture_Left)
-    containerView.addGestureRecognizer(screenEdgePanGesture_Right)
+//    let screenEdgePanGesture_Right = UIScreenEdgePanGestureRecognizer(target: self, action: "handleScreenEdgePanGesture:")
+//    screenEdgePanGesture_Right.edges = UIRectEdge.Right
+//    screenEdgePanGesture_Right.delegate = self
+//    let screenEdgePanGesture_Left = UIScreenEdgePanGestureRecognizer(target: self, action: "handleScreenEdgePanGesture:")
+//    screenEdgePanGesture_Left.edges = UIRectEdge.Left
+//    screenEdgePanGesture_Left.delegate = self
+//    
+//    containerView.addGestureRecognizer(screenEdgePanGesture_Left)
+//    containerView.addGestureRecognizer(screenEdgePanGesture_Right)
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     // NOTE: - Start with Capture screen
-    selectedViewController = viewControllers[0]
+    selectedViewController = viewControllers[1]
     
     self.transitionToViewController(selectedViewController!, interactive: false, animation: false)
   }
   
-  func moveToTribeScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
+  func moveToHomeScreen(animation animate: Bool) {
+    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
   }
   
   
   func moveToCaptureScreen(animation animate: Bool) {
-    self.transitionToViewController(viewControllers[0], interactive: false, animation:animate)
+    self.transitionToViewController(viewControllers[1], interactive: false, animation:animate)
   }
   
   
@@ -247,11 +247,11 @@ import UIKit
       return true
     }
     else if selectedViewController === viewControllers[1] {
-      // Home Side
-      return false
-    } else {
       // Capture Side
       return true
+    } else {
+      // Home Side
+      return false
     }
   }
   

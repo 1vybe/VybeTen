@@ -67,6 +67,8 @@ extern NSString *const VYBFreshVybeFeedFetchedFromRemoteNotification;
 extern NSString *const VYBCacheFreshVybeCountChangedNotification;
 extern NSString *const VYBCacheRefreshedBumpActivitiesForCurrentUser;
 
+extern NSString *const CloudUtilityPointUpdatedByCurrentUserNotification;
+
 extern NSString *const VYBUtilityVybesLoadedNotification;
 extern NSString *const VYBUtilityActivityCountUpdatedNotification;
 extern NSString *const VYBUtilityUserLikedUnlikedVybeCallbackFinishedNotification;
@@ -99,16 +101,19 @@ extern NSString *const kVYBUserDefaultsLastRefreshKey;
 #pragma mark - PFObject User Class
 // field keys
 extern NSString *const kVYBUserUsernameKey;
-extern NSString *const kVYBUserProfilePicSmallKey;
-extern NSString *const kVYBUserProfilePicMediumKey;
-extern NSString *const kVYBUserLastVybedZoneKey;
-extern NSString *const kVYBUserLastVybedTimeKey;
-extern NSString *const kVYBUserFreshFeedKey;
+extern NSString *const kVYBUserPointScoreKey;
 extern NSString *const kVYBUserLastRefreshedKey;
 extern NSString *const kVYBUserBlockedUsersKey;
 extern NSString *const kVYBUserTermsAgreedKey;
 extern NSString *const kVYBUserPromptsSeenKey;
 extern NSString *const kVYBUserFlagsKey;
+
+//extern NSString *const kVYBUserFreshFeedKey;
+//extern NSString *const kVYBUserProfilePicSmallKey;
+//extern NSString *const kVYBUserProfilePicMediumKey;
+//extern NSString *const kVYBUserLastVybedZoneKey;
+//extern NSString *const kVYBUserLastVybedTimeKey;
+
 
 #pragma mark - PFObject Vybe Class
 // class key
@@ -120,17 +125,27 @@ extern NSString *const kVYBVybeThumbnailKey;
 extern NSString *const kVYBVybeUserKey;
 extern NSString *const kVYBVybeTimestampKey;
 extern NSString *const kVYBVybeGeotagKey;
-extern NSString *const kVYBVybeTypePublicKey;
-extern NSString *const kVYBVybeTribeKey;
+//extern NSString *const kVYBVybePointScoreKey;
 
-extern NSString *const kVYBVybeLocationStringKey;
-extern NSString *const kVYBVybeCountryCodeKey;
-extern NSString *const kVYBVybeTagKey;
-extern NSString *const kVYBVybeZoneNameKey;
-extern NSString *const kVYBVybeZoneIDKey;
-extern NSString *const kVYBVybeZoneLatitudeKey;
-extern NSString *const kVYBVybeZoneLongitudeKey;
-extern NSString *const kVYBVybeHashtagsKey;
+//extern NSString *const kVYBVybeTypePublicKey;
+//extern NSString *const kVYBVybeTribeKey;
+//extern NSString *const kVYBVybeLocationStringKey;
+//extern NSString *const kVYBVybeCountryCodeKey;
+//extern NSString *const kVYBVybeTagKey;
+//extern NSString *const kVYBVybeZoneNameKey;
+//extern NSString *const kVYBVybeZoneIDKey;
+//extern NSString *const kVYBVybeZoneLatitudeKey;
+//extern NSString *const kVYBVybeZoneLongitudeKey;
+//extern NSString *const kVYBVybeHashtagsKey;
+
+#pragma mark - PFObject Point Class
+extern NSString *const kVYBPointClassKey;
+extern NSString *const kVYBPointVybeKey;
+extern NSString *const kVYBPointUserKey;
+
+extern NSString *const kVYBPointTypeKey;
+extern NSString *const kVYBPointTypeUpKey;
+extern NSString *const kVYBPointTypeDownKey;
 
 #pragma mark - PFObject Tribe Class
 // class key
@@ -177,6 +192,13 @@ extern NSString *const kVYBHashtagLowercaseKey;
 
 #pragma mark - Cached Vybe Attributes
 // keys
+extern NSString *const kVYBVybeAttributesPointScoreKey;
+extern NSString *const kVYBVybeAttributesPointTypeByCurrentUserKey;
+extern NSString *const kVYBVybeAttributesPointTypeNoneKey;
+extern NSString *const kVYBVybeAttributesPointTypeUpKey;
+extern NSString *const kVYBVybeAttributesPointTypeDownKey;
+
+
 extern NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey;
 extern NSString *const kVYBVybeAttributesIsFlaggedByCurrentUserKey;
 extern NSString *const kVYBVybeAttributesLikeCountKey;

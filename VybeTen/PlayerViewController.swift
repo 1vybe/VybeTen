@@ -15,6 +15,8 @@ protocol PlayerDelegate {
 }
 
 class PlayerViewController: UIViewController {
+  @IBOutlet weak var playerView: PlayerView!
+
   @IBOutlet weak var timeProgressBar: TimeProgressBar!
   @IBOutlet weak var firstOverlay: UIView!
   
@@ -24,16 +26,17 @@ class PlayerViewController: UIViewController {
   
   @IBOutlet weak var voteUpButton: UIButton!
   @IBOutlet weak var voteDownButton: UIButton!
-  @IBOutlet weak var scoreLabel: UILabel!
+  @IBOutlet weak var pointsLabel: UILabel!
   
   @IBOutlet weak var optionsOverlay: UIView!
   @IBOutlet weak var flagButton: UIButton!
   @IBOutlet weak var blockButton: UIButton!
   
-  var currPlayerView: PlayerView!
   var currPlayer: AVPlayer = AVPlayer()
   var currItem: AVPlayerItem?
+  var currAsset: AVAsset?
   
+  var currVybe: PFObject?
   var query: PFQuery?
   
   var delegate: PlayerDelegate?
@@ -41,17 +44,21 @@ class PlayerViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    // playerView set-up
-    let playerView = PlayerView(frame: UIScreen.mainScreen().bounds)
-    playerView.setPlayer(currPlayer)
-    currPlayerView = playerView
-    self.view.insertSubview(playerView, atIndex: 0)
+    self.playerView.setPlayer(self.currPlayer)
     
     self.optionsOverlay.hidden = true
+    
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateVybePointScore", name:CloudUtilityPointUpdatedByCurrentUserNotification, object: nil)
     
     let swipeDownGesture = UISwipeGestureRecognizer(target: self, action: "swipeDownToDismiss")
     swipeDownGesture.direction = UISwipeGestureRecognizerDirection.Down
     self.view.addGestureRecognizer(swipeDownGesture)
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    self.updateUIElements()
   }
   
   override func viewDidAppear(animated: Bool) {
@@ -61,62 +68,96 @@ class PlayerViewController: UIViewController {
     self.setNeedsStatusBarAppearanceUpdate()
   }
   
-  func play(arr: [AnyObject]) {
-    if let first = arr.first as? PFObject {
-      self.delegate?.didFinishSetup(true, vc: self)
-      self.playVybe(first)
-    } else {
-      self.delegate?.didFinishSetup(false, vc: self)
-    }
-  }
-  
-  func playVybe(vy: PFObject) {
+  func prepare(vybe vy: PFObject) {
+    self.currVybe = vy
+    
     if let url = NSURL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true) {
       var cacheURL = url.URLByAppendingPathComponent(vy.objectId)
       cacheURL = cacheURL.URLByAppendingPathExtension("mp4")
       
       if NSFileManager.defaultManager().fileExistsAtPath(cacheURL.path!) {
         let asset = AVURLAsset(URL: cacheURL, options: nil)
-        self.playAsset(asset)
+        self.currAsset = asset
+
+        self.delegate?.didFinishSetup(true, vc: self)
       } else {
         if let videoFile = vy[kVYBVybeVideoKey] as? PFFile {
-          MBProgressHUD.showHUDAddedTo(self.view, animated: true)
           videoFile.getDataInBackgroundWithBlock({ (data: NSData!, error: NSError!) -> Void in
             if error == nil {
               data.writeToURL(cacheURL, atomically: true)
-              
               let asset = AVURLAsset(URL: cacheURL, options: nil)
-              self.playAsset(asset)
+              self.currAsset = asset
+              
+              self.delegate?.didFinishSetup(true, vc: self)
+            } else {
+              self.delegate?.didFinishSetup(false, vc: self)
             }
-            MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
           })
         }
       }
     }
   }
   
-  func playAsset(asset: AVAsset) {
-    self.currPlayerView.setOrientation(asset)
+  private func updateUIElements() {
+    if let vy = currVybe {
+      if let user = vy[kVYBVybeUserKey] as? PFObject {
+        if let username = user[kVYBUserUsernameKey] as? String {
+          self.usernameLabel.text = username
+        }
+      }
+      
+      if let timestamp = vy[kVYBVybeTimestampKey] as? NSDate {
+        self.timeLabel.text = VYBUtility.reverseTime(timestamp)
+      }
+    }
     
-    self.currItem = AVPlayerItem(asset: asset)
-    self.currPlayer.replaceCurrentItemWithPlayerItem(self.currItem)
-    self.currPlayer.play()
-    
-    let seconds = Double(CMTimeGetSeconds(asset.duration))
-    self.timeProgressBar.fire(seconds)
+    self.updateVybePointScore()
+  }
+  
+  func updateVybePointScore() {
+    if let vy = currVybe {
+      let score = VYBCache.sharedCache().pointScoreForVybe(vy)
+      self.pointsLabel.text = "\(score)"
+    }
+  }
+  
+  func play() {
+    if let asset = currAsset {
+      self.playerView.setOrientation(asset)
+      
+      self.currItem = AVPlayerItem(asset: asset)
+      self.currPlayer.replaceCurrentItemWithPlayerItem(self.currItem)
+      self.currPlayer.play()
+      
+      let seconds = Double(CMTimeGetSeconds(asset.duration))
+      self.timeProgressBar.fire(seconds)
+    }
   }
 
+  // MARK: - Voting
   
   @IBAction func voteUpButtonPressed(sender: AnyObject) {
-    
+    if currVybe != nil {
+      CloudUtility.voteUp(vybe: currVybe!)
+    }
   }
   
   @IBAction func voteDownButtonPressed(sender: AnyObject) {
-    
+    if currVybe != nil {
+      CloudUtility.voteDown(vybe: currVybe!)
+    }
   }
   
   func swipeDownToDismiss() {
     self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+  }
+  
+  override func shouldAutorotate() -> Bool {
+    return false
+  }
+  
+  override func supportedInterfaceOrientations() -> Int {
+    return Int(UIInterfaceOrientationMask.Portrait.rawValue)
   }
   
   override func prefersStatusBarHidden() -> Bool {

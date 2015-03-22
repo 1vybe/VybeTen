@@ -34,7 +34,7 @@ class WelcomeManager: NSObject {
       
       ParseCrashReporting.enable()
       
-      Parse.setApplicationId(PARSE_APPLICATION_ID, clientKey: PARSE_CLIENT_KEY)
+      Parse.setApplicationId(PARSE_APPLICATION_ID_DEV, clientKey: PARSE_CLIENT_KEY_DEV)
       
       // Clearing Push-noti Badge number
       var currentInstallation = PFInstallation.currentInstallation()
@@ -103,35 +103,62 @@ class WelcomeManager: NSObject {
     // Update Google Analytics
     self.updateGoogleAnalytics()
     
-    // Get a list of all users and pin them
-    let uQuery = PFUser.query()
-    uQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+    let currUser = userObj as PFUser
+
+    // Give a user 100 points which is the starting point for the first time user
+    if let score = currUser[kVYBUserPointScoreKey] as? Int {
+      println("Current user has \(score) points")
+    } else {
+      currUser[kVYBUserPointScoreKey] = 100
+      currUser.saveEventually()
+    }
+    
+    // update all points
+    let ptQuery = PFQuery(className: kVYBPointClassKey)
+    ptQuery.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if error == nil {
-        PFObject.pinAllInBackground(result, withName: "AllUsers")
+        for pointObj in result as [PFObject] {
+          if let vy = pointObj[kVYBPointVybeKey] as? PFObject {
+            if let type = pointObj[kVYBPointTypeKey] as? String {
+              var typeAttr: String
+              if type == kVYBPointTypeUpKey {
+                typeAttr = kVYBVybeAttributesPointTypeUpKey
+                VYBCache.sharedCache().incrementPointScoreForVybe(vy)
+              } else {
+                typeAttr = kVYBVybeAttributesPointTypeDownKey
+                VYBCache.sharedCache().decrementPointScoreForVybe(vy)
+              }
+              // points current user has made
+              if let user = pointObj[kVYBPointUserKey] as? PFObject {
+                if user.objectId == PFUser.currentUser().objectId {
+                  VYBCache.sharedCache().setPointTypeFromCurrentUserForVybe(vy, type: typeAttr)
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    // Update myFlags cache
+    let myFlags = currUser.relationForKey(kVYBUserFlagsKey)
+    let flagQuery = myFlags.query()
+    flagQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+      if error == nil {
+        for vybeObj in result as [PFObject] {
+//            VYBCache.sharedCache().setAttributesForVybe(vybeObj, flaggedByCurrentUser: true)
+        }
       }
     })
     
-    if let currUser = userObj as? PFUser {
-      // Update myFlags cache
-      let myFlags = currUser.relationForKey(kVYBUserFlagsKey)
-      let flagQuery = myFlags.query()
-      flagQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-        if error == nil {
-          for vybeObj in result as [PFObject] {
-//            VYBCache.sharedCache().setAttributesForVybe(vybeObj, flaggedByCurrentUser: true)
-          }
-        }
-      })
-      
-      // Update blockedUsers cache
-      let blockedUsers = currUser.relationForKey(kVYBUserBlockedUsersKey)
-      let blockQuery = blockedUsers.query()
-      blockQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
-        if error == nil {
+    // Update blockedUsers cache
+    let blockedUsers = currUser.relationForKey(kVYBUserBlockedUsersKey)
+    let blockQuery = blockedUsers.query()
+    blockQuery.findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
+      if error == nil {
 //          VYBCache.sharedCache().setBlockedUsers(result, forUser: currUser)
-        }
-      })
-    }
+      }
+    })
   }
   
   func updateGoogleAnalytics() {

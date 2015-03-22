@@ -86,15 +86,9 @@ class PreviewViewController: UIViewController {
   }
   
   @IBAction func sendButtonPressed(sender: AnyObject) {
-    if let selectedTribe = MyVybeStore.sharedInstance.currTribe {
-      MyVybeStore.sharedInstance.uploadCurrentVybe()
-      
-      self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
-    } else {
-      let alertVC = UIAlertController(title: "Select Tribe", message: "Choose or create a tribe you want to share your video with.", preferredStyle: UIAlertControllerStyle.Alert)
-      alertVC.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-      self.presentViewController(alertVC, animated: true, completion: nil)
-    }
+    MyVybeStore.sharedInstance.uploadCurrentVybe()
+    
+    self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
   }
   
   override func prefersStatusBarHidden() -> Bool {

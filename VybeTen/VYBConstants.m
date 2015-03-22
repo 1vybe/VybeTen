@@ -16,6 +16,7 @@ NSString *const VYBAppDelegateApplicationDidEnterBackgourndNotification = @"com.
 NSString *const VYBAppDelegateHandlePushPlayActivityNotification =
     @"com.vybe.app.AppDelegate.handlePush.playActivity";
 
+NSString *const CloudUtilityPointUpdatedByCurrentUserNotification = @"com.vybe.app.CloudUtility.pointUpdatedByCurrentUser";
 
 NSString *const VYBFreshVybeFeedFetchedFromRemoteNotification = @"com.vybe.app.utility.freshFeedFetched";
 NSString *const VYBUtilityVybesLoadedNotification = @"com.vybe.app.utility.vybesLoaded";
@@ -51,16 +52,18 @@ NSString *const kVYBUserDefaultsLastRefreshKey     = @"com.vybe.app.userDefaults
 #pragma mark - PFObject User Class
 // field keys
 NSString *const kVYBUserUsernameKey                             = @"username";
-NSString *const kVYBUserProfilePicSmallKey                      = @"profilePictureSmall";
-NSString *const kVYBUserProfilePicMediumKey                     = @"profilePictureMedium";
-NSString *const kVYBUserLastVybedZoneKey                        = @"lastVybedZone";
-NSString *const kVYBUserLastVybedTimeKey                        = @"lastVybedTime";
-NSString *const kVYBUserFreshFeedKey                            = @"feed";
+NSString *const kVYBUserPointScoreKey                           = @"pointScore";
 NSString *const kVYBUserLastRefreshedKey                        = @"lastRefreshed";
 NSString *const kVYBUserBlockedUsersKey                         = @"blockedUsers";
 NSString *const kVYBUserTermsAgreedKey                          = @"termsAgreed";
 NSString *const kVYBUserPromptsSeenKey                          = @"userPromptsSeen";
 NSString *const kVYBUserFlagsKey                                = @"flags";
+
+//NSString *const kVYBUserProfilePicSmallKey                      = @"profilePictureSmall";
+//NSString *const kVYBUserProfilePicMediumKey                     = @"profilePictureMedium";
+//NSString *const kVYBUserLastVybedZoneKey                        = @"lastVybedZone";
+//NSString *const kVYBUserLastVybedTimeKey                        = @"lastVybedTime";
+//NSString *const kVYBUserFreshFeedKey                            = @"feed";
 
 #pragma mark - PFObject Vybe Class
 // class key
@@ -72,17 +75,27 @@ NSString *const kVYBVybeThumbnailKey                            = @"thumbnail";
 NSString *const kVYBVybeUserKey                                 = @"user";
 NSString *const kVYBVybeTimestampKey                            = @"timestamp";
 NSString *const kVYBVybeGeotagKey                               = @"location";
-NSString *const kVYBVybeTribeKey                                = @"tribe";
+//NSString *const kVYBVybePointScoreKey                           = @"pointScore";
 
-NSString *const kVYBVybeTypePublicKey                           = @"isPublic";
-NSString *const kVYBVybeLocationStringKey                       = @"locationString";
-NSString *const kVYBVybeCountryCodeKey                          = @"countryCode";
-NSString *const kVYBVybeTagKey                                  = @"tag";
-NSString *const kVYBVybeZoneNameKey                             = @"zoneName";
-NSString *const kVYBVybeZoneIDKey                               = @"zoneID";
-NSString *const kVYBVybeZoneLatitudeKey                         = @"zoneLatitude";
-NSString *const kVYBVybeZoneLongitudeKey                        = @"zoneLongitude";
-NSString *const kVYBVybeHashtagsKey                             = @"hashtags";
+//NSString *const kVYBVybeTribeKey                                = @"tribe";
+//NSString *const kVYBVybeTypePublicKey                           = @"isPublic";
+//NSString *const kVYBVybeLocationStringKey                       = @"locationString";
+//NSString *const kVYBVybeCountryCodeKey                          = @"countryCode";
+//NSString *const kVYBVybeTagKey                                  = @"tag";
+//NSString *const kVYBVybeZoneNameKey                             = @"zoneName";
+//NSString *const kVYBVybeZoneIDKey                               = @"zoneID";
+//NSString *const kVYBVybeZoneLatitudeKey                         = @"zoneLatitude";
+//NSString *const kVYBVybeZoneLongitudeKey                        = @"zoneLongitude";
+//NSString *const kVYBVybeHashtagsKey                             = @"hashtags";
+
+#pragma mark - PFObject Point Class
+NSString *const kVYBPointClassKey                              = @"Point";
+NSString *const kVYBPointVybeKey                               = @"vybe";
+NSString *const kVYBPointUserKey                               = @"user";
+
+NSString *const kVYBPointTypeKey                               = @"type";
+NSString *const kVYBPointTypeUpKey                             = @"up";
+NSString *const kVYBPointTypeDownKey                           = @"down";
 
 #pragma mark - PFObject Tribe Class
 // class key
@@ -134,6 +147,12 @@ NSString *const kVYBUserAttributesMyBumpsKey                    = @"myBumps";
 
 #pragma mark - Cached Vybe Attributes
 // keys
+NSString *const kVYBVybeAttributesPointScoreKey                   = @"pointScore";
+NSString *const kVYBVybeAttributesPointTypeByCurrentUserKey       = @"pointType";
+NSString *const kVYBVybeAttributesPointTypeNoneKey                  = @"none";
+NSString *const kVYBVybeAttributesPointTypeUpKey                  = @"upPoint";
+NSString *const kVYBVybeAttributesPointTypeDownKey                = @"downPoint";
+
 NSString *const kVYBVybeAttributesIsLikedByCurrentUserKey         = @"isLikedByCurrentUser";
 NSString *const kVYBVybeAttributesIsFlaggedByCurrentUserKey       = @"isFlaggedByCurrentUser";
 NSString *const kVYBVybeAttributesLikeCountKey                    = @"likeCount";

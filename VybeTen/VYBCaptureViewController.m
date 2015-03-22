@@ -466,7 +466,7 @@ static void *XYZContext = &XYZContext;
 
 - (IBAction)homeButtonPressed:(id)sender {
   SwipeContainerController *swipeContainer = (SwipeContainerController *)self.parentViewController;
-  [swipeContainer moveToTribeScreenWithAnimation:YES];
+  [swipeContainer moveToHomeScreenWithAnimation:YES];
 }
 
 - (void)didReceiveMemoryWarning

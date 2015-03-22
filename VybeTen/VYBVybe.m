@@ -113,8 +113,4 @@
   return [thumbnailPath stringByAppendingPathExtension:@"jpeg"];
 }
 
-- (void)setTribe:(PFObject *)tribe {
-  [parseObjectDictionary setObject:tribe forKey:kVYBVybeTribeKey];
-}
-
 @end
