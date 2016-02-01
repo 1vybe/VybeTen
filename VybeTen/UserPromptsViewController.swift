@@ -28,9 +28,9 @@ class UserPromptsViewController: UIViewController {
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem()
    
-    var swipeToLeft = UISwipeGestureRecognizer(target: self, action: "swipeToLeft")
+    let swipeToLeft = UISwipeGestureRecognizer(target: self, action: "swipeToLeft")
     swipeToLeft.direction = UISwipeGestureRecognizerDirection.Left
-    var swipeToRight = UISwipeGestureRecognizer(target: self, action: "swipeToRight")
+    let swipeToRight = UISwipeGestureRecognizer(target: self, action: "swipeToRight")
     swipeToRight.direction = UISwipeGestureRecognizerDirection.Right
     
     self.view.addGestureRecognizer(swipeToLeft)

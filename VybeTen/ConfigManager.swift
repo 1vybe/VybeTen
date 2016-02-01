@@ -62,7 +62,7 @@ class ConfigManager: NSObject {
         for zObj in listObj {
           if let zName = zObj["name"] as? String {
             if let zID = zObj["id"] as? String {
-              var zone = Zone(name: zName, zoneID: zID)
+              let zone = Zone(name: zName, zoneID: zID)
               if let lat = zObj["latitude"] as? NSNumber {
                 if let lng = zObj["longitude"] as? NSNumber {
                   let zCoord = CLLocationCoordinate2D(latitude: lat.doubleValue, longitude: lng.doubleValue)

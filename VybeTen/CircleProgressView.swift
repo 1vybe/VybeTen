@@ -57,7 +57,7 @@ class CircleProgressView: UIView {
     didSet { setNeedsDisplay() }
   }
   
-  override func drawRect(var rect: CGRect) {
+  override func drawRect(rect: CGRect) {
     
     super.drawRect(rect)
     
@@ -106,7 +106,7 @@ class CircleProgressView: UIView {
     CGContextRestoreGState(context)
   }
   
-  func setProgress(progress: Double) {
+  private func setProgress(progress: Double) {
     self.progress = progress
   }
   

@@ -32,7 +32,7 @@ class MyVybeStore: NSObject {
   }
   
   func prepareNewVybe() {
-    var nVybe = PFObject(className: kVYBVybeClassKey)
+    let nVybe = PFObject(className: kVYBVybeClassKey)
     nVybe.setObject(NSDate(), forKey: kVYBVybeTimestampKey)
     nVybe.setObject(NSNumber(bool: true), forKey: kVYBVybeTypePublicKey)
     
@@ -47,7 +47,7 @@ class MyVybeStore: NSObject {
     let array = tagText.componentsSeparatedByString(" ")
     for aTag in array {
       if let tagName = aTag.componentsSeparatedByString("#").last {
-        if countElements(tagName) > 0 {
+        if tagName.characters.count > 0 {
           self.addToCurrHashTags(tagName)
         }
       }
@@ -78,7 +78,7 @@ class MyVybeStore: NSObject {
       }
       
       let vybe = VYBVybe(vybeObject: nVybe)
-      var vybeParseObj = vybe.parseObject()
+      let vybeParseObj = vybe.parseObject()
       
       if let video = NSData(contentsOfFile:vybe.videoFilePath()) {
         let videoFile = PFFile(data: video, contentType:"video/mp4")

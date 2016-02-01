@@ -74,17 +74,18 @@ private let _sharedInstance = ZoneFinder()
   private func generateZonesFromData(data: NSData!) -> [Zone]? {
     var zones = [Zone]()
     var jsonError: NSError?
-    var jsonObj = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &jsonError) as [String: AnyObject]
-    if jsonError == nil {
-      let response = jsonObj["response"] as [String: AnyObject]
-      let venues = response["venues"] as [NSDictionary]
+    do {
+      var jsonObj = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! [String: AnyObject]
+      let response = jsonObj["response"] as! [String: AnyObject]
+      let venues = response["venues"] as! [NSDictionary]
       for aVenue in venues {
         let aZone = Zone(foursquareVenue: aVenue)
         zones.append(aZone)
       }
       return zones
+    } catch _ {
+      return nil
     }
-    return nil
   }
   
   func suggestedZones() -> [Zone] {
@@ -96,10 +97,10 @@ private let _sharedInstance = ZoneFinder()
   }
   
   
-  func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+  func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     locationManager.stopUpdatingLocation()
     
-    let currLocation = locations.last as CLLocation
+    let currLocation = locations.last!
     
     if let currVybe = MyVybeStore.sharedInstance.currVybe {
       currVybe.locationCL = currLocation
@@ -108,9 +109,9 @@ private let _sharedInstance = ZoneFinder()
     self.searchURL += "&limit=\(self.numOfResults)"
     self.searchURL += "&ll=\(currLocation.coordinate.latitude),\(currLocation.coordinate.longitude)"
     
-    var dataTask = self.session.dataTaskWithURL(NSURL(string: self.searchURL)!, completionHandler: { (data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
+    var dataTask = self.session.dataTaskWithURL(NSURL(string: self.searchURL)!, completionHandler: { (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
       if error == nil {
-        let statusCode = (response as NSHTTPURLResponse).statusCode
+        let statusCode = (response as! NSHTTPURLResponse).statusCode
         
         if statusCode == 200 {
           if let zones = self.generateZonesFromData(data) {
@@ -130,8 +131,8 @@ private let _sharedInstance = ZoneFinder()
     dataTask.resume()
   }
   
-  func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
-    println(error)
+  func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+    print(error)
   }
   
 }

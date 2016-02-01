@@ -30,7 +30,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
     query.limit = 1000
     query.findObjectsInBackgroundWithBlock { (result: [AnyObject]!, error: NSError!) -> Void in
       if error == nil {
-        let vybes = result as [PFObject]
+        let vybes = result as! [PFObject]
         self.createZonesForMap(vybes)
         
         completionHandler(success: true)
@@ -69,7 +69,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
   func fetchActiveVybes(completionHandler: ((success: Bool) -> Void)) {
     // Fetch ACTIVE zones
     let params = [:]
-    PFCloud.callFunctionInBackground("get_active_vybes", withParameters:params) { (result: AnyObject!, error: NSError!) -> Void in
+    PFCloud.callFunctionInBackground("get_active_vybes", withParameters:params as [NSObject : AnyObject]) { (result: AnyObject!, error: NSError!) -> Void in
       if error == nil {
         if let vybeObjects = result as? [PFObject] {
           // Group ACTIVE vybes into zones
@@ -84,7 +84,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
           })
           
           // Fetch Fresh vybes for ACTIVE zones
-          PFCloud.callFunctionInBackground("get_fresh_vybes", withParameters: params) { (result: AnyObject!, error: NSError!) -> Void in
+          PFCloud.callFunctionInBackground("get_fresh_vybes", withParameters: params as [NSObject : AnyObject]) { (result: AnyObject!, error: NSError!) -> Void in
             if error == nil {
               if let freshVybes = result as? [PFObject] {
                 for fVybe in freshVybes {
@@ -149,7 +149,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
   private func fetchFeaturedZones() {
 //    let featuredChannels = ConfigManager.sharedInstance.featuredChannels()
     let params = [:]
-    PFCloud.callFunctionInBackground("getFeaturedChannels", withParameters: params) { (result: AnyObject!, error: NSError!) -> Void in
+    PFCloud.callFunctionInBackground("getFeaturedChannels", withParameters: params as [NSObject : AnyObject]) { (result: AnyObject!, error: NSError!) -> Void in
       if error == nil {
         if let channels = result as? [AnyObject] {
           for channel in channels {
@@ -164,13 +164,13 @@ private let _zoneStoreSharedInstance = ZoneStore()
   
   private func createFeaturedZone(channel: [AnyObject]) {
     if channel.count != 4 {
-      println("invalid channel object")
+      print("invalid channel object")
       return
     }
     
     if let name = channel[0] as? String {
       if let zoneID = channel[1] as? String {
-        var zone = Zone(name: name, zoneID: zoneID)
+        let zone = Zone(name: name, zoneID: zoneID)
         zone.isFeatured = true
         if let timestamp = channel[2] as? NSDate {
           zone.fromDate = timestamp
@@ -277,7 +277,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
     var zoneID = "777"
     
     if aVybe[kVYBVybeZoneIDKey] != nil {
-      zoneID = aVybe[kVYBVybeZoneIDKey] as String
+      zoneID = aVybe[kVYBVybeZoneIDKey] as! String
     }
     
     for aZone in _activeZones {
@@ -307,12 +307,12 @@ private let _zoneStoreSharedInstance = ZoneStore()
     var zone: Zone!
     
     if let zoneID = aVybe[kVYBVybeZoneIDKey] as? String {
-      let zoneName = aVybe[kVYBVybeZoneNameKey] as String
+      let zoneName = aVybe[kVYBVybeZoneNameKey] as! String
       zone = Zone(name: zoneName, zoneID: zoneID)
       var coordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
       
       if let zLat = aVybe[kVYBVybeZoneLatitudeKey] as? Double {
-        let zLng = aVybe[kVYBVybeZoneLongitudeKey] as Double
+        let zLng = aVybe[kVYBVybeZoneLongitudeKey] as! Double
         coordinate = CLLocationCoordinate2D(latitude: zLat, longitude: zLng)
       }
       else {
@@ -397,9 +397,9 @@ private let _zoneStoreSharedInstance = ZoneStore()
       }
     }
     
-    allContents.sort { (vybe1: PFObject, vybe2: PFObject) -> Bool in
-      let firstTime = vybe1[kVYBVybeTimestampKey] as NSDate
-      let secondTime = vybe2[kVYBVybeTimestampKey] as NSDate
+    allContents.sortInPlace { (vybe1: PFObject, vybe2: PFObject) -> Bool in
+      let firstTime = vybe1[kVYBVybeTimestampKey] as! NSDate
+      let secondTime = vybe2[kVYBVybeTimestampKey] as! NSDate
       let comparisonResult = firstTime.compare(secondTime)
       return comparisonResult == NSComparisonResult.OrderedAscending
     }
@@ -408,7 +408,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
   }
   
   func freshVybesFromZone(zoneID: String) -> [PFObject]? {
-    var contents: [PFObject]? = self.mergeFreshContentsAndMyContentsInZone(zoneID)
+    let contents: [PFObject]? = self.mergeFreshContentsAndMyContentsInZone(zoneID)
 
     return contents
   }
@@ -434,8 +434,8 @@ private let _zoneStoreSharedInstance = ZoneStore()
     for myObj in myVybes {
       var idx = 0
       innerLoop: for ; idx < merged.count; {
-        let myTime = myObj[kVYBVybeTimestampKey] as NSDate
-        let freshTime = merged[idx].objectForKey(kVYBVybeTimestampKey) as NSDate
+        let myTime = myObj[kVYBVybeTimestampKey] as! NSDate
+        let freshTime = merged[idx].objectForKey(kVYBVybeTimestampKey) as! NSDate
         
         let comparison = myTime.compare(freshTime)
         if comparison == NSComparisonResult.OrderedAscending {
@@ -458,7 +458,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
     if let dVybe = aVybe as? PFObject  {
       var zoneID = "777"
       
-      if let zID = aVybe.objectForKey(kVYBVybeZoneIDKey) as String! {
+      if let zID = aVybe.objectForKey(kVYBVybeZoneIDKey) as! String! {
         zoneID = zID
       }
       
@@ -485,7 +485,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
           self.addUnlockedZone(zone)
         }
       }
-      self._unlockedZones.sort({ (zone1: Zone, zone2: Zone) -> Bool in
+      self._unlockedZones.sortInPlace({ (zone1: Zone, zone2: Zone) -> Bool in
         let comparisonResult = zone1.myMostRecentVybeTimestamp.compare(zone2.myMostRecentVybeTimestamp)
         return comparisonResult == NSComparisonResult.OrderedDescending
       })
@@ -493,7 +493,7 @@ private let _zoneStoreSharedInstance = ZoneStore()
   }
   
   func deleteMyVybeInBackground(obj: AnyObject!, completionHandler: ((success: Bool) -> Void)) {
-    let vybe = obj as PFObject
+    let vybe = obj as! PFObject
     vybe.deleteInBackgroundWithBlock { (success: Bool, error: NSError!) -> Void in
       if error == nil {
         if success {
@@ -559,13 +559,13 @@ private let _zoneStoreSharedInstance = ZoneStore()
 
   
   private func displayZoneInfo() {
-    println("#ACTIVE# Name:  [numFreshContents] [popScore] [mostRecentTimestamp] ")
+    print("#ACTIVE# Name:  [numFreshContents] [popScore] [mostRecentTimestamp] ")
     for aZone in _activeZones {
-      println("\(aZone.name): [\(aZone.freshContents.count)] [\(aZone.popularityScore)] [\(aZone.mostRecentActiveVybeTimestamp)]")
+      print("\(aZone.name): [\(aZone.freshContents.count)] [\(aZone.popularityScore)] [\(aZone.mostRecentActiveVybeTimestamp)]")
     }
-    println("#UNLOCKED# [mostRecentTimestamp] [numMyVybes]")
+    print("#UNLOCKED# [mostRecentTimestamp] [numMyVybes]")
     for aZone in _unlockedZones {
-      println("\(aZone.name): [\(aZone.myMostRecentVybeTimestamp)] [\(aZone.myVybes.count)]")
+      print("\(aZone.name): [\(aZone.myMostRecentVybeTimestamp)] [\(aZone.myVybes.count)]")
     }
   }
 

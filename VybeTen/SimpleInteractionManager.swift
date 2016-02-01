@@ -52,7 +52,7 @@ class SimpleInteractionManager: NSObject, UIViewControllerTransitioningDelegate 
       self.sourceViewController.presentViewController(destinationViewController, animated: true, completion: nil)
     case UIGestureRecognizerState.Changed:
         edgeSwipeInteractorToRight.updateInteractiveTransition(percent);
-        println("point: \(percent)")
+        print("point: \(percent)")
     case UIGestureRecognizerState.Cancelled,
     .Ended:
       if (percent > 0.5 || recognizer.velocityInView(sourceViewController.view).x > 1000.0) {

@@ -30,7 +30,7 @@ import MapKit
       mapView = MKMapView(frame: self.view.frame)
       self.view.addSubview(mapView)
       
-      if let coordinate = targetCoordinate? {
+      if let coordinate = targetCoordinate {
         mapView.delegate = self
         let span = MKCoordinateSpanMake(0.05, 0.05)
         let region = MKCoordinateRegionMake(coordinate, span)
@@ -67,13 +67,6 @@ import MapKit
   
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
-#if DEBUG
-#else
-    if let tracker = GAI.sharedInstance().defaultTracker {
-      tracker.set(kGAIScreenName, value: "Map Screen")
-      tracker.send(GAIDictionaryBuilder.createScreenView().build())
-    }
-#endif
   }
   
   func displayLocation(coordinate: CLLocationCoordinate2D) {
@@ -133,8 +126,8 @@ import MapKit
     self.updateZoneAnnoations(zonesOnScreen)
   }
   
-  func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
-    let simpleAnnotation = annotation as SimpleAnnotation
+  func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView! {
+    let simpleAnnotation = annotation as! SimpleAnnotation
     if simpleAnnotation.isCurrentLocation {
       let pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "currentLocatinPin")
       pin.pinColor = MKPinAnnotationColor.Green
@@ -170,8 +163,8 @@ import MapKit
     return pin
   }
   
-  func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
-    let zone = view.annotation as SimpleAnnotation
+  func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    let zone = view.annotation as! SimpleAnnotation
     
     var playerVC = VYBPlayerViewController()
     playerVC.delegate = self
@@ -209,8 +202,8 @@ import MapKit
     return true
   }
   
-  override func supportedInterfaceOrientations() -> Int {
-    return Int(UIInterfaceOrientationMask.Portrait.rawValue)
+  override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+    return UIInterfaceOrientationMask.Portrait
   }
   
   func playerViewController(playerVC: VYBPlayerViewController!, didFinishSetup ready: Bool) {
@@ -224,7 +217,7 @@ import MapKit
   
   class SimpleAnnotation: NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D
-    var title: String
+    var title: String?
     var zoneID: String
     var unwatched: Bool
     var isActive: Bool = false

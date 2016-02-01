@@ -49,12 +49,12 @@ import MapKit
   
   var myMostRecentVybeTimestamp: NSDate {
     get {
-      return myVybes.first?.objectForKey(kVYBVybeTimestampKey) as NSDate
+      return myVybes.first?.objectForKey(kVYBVybeTimestampKey) as! NSDate
     }
   }
   
   var coordinate: CLLocationCoordinate2D
-  var title: String!
+  var title: String?
   
   var latitude: Double {
     get {
@@ -72,9 +72,9 @@ import MapKit
   }
   
   init(foursquareVenue: NSDictionary!) {
-    let location = foursquareVenue["location"] as NSDictionary?
-    let latitude = location?["lat"] as Double
-    let longitude = location?["lng"] as Double
+    let location = foursquareVenue["location"] as! NSDictionary?
+    let latitude = location?["lat"] as! Double
+    let longitude = location?["lng"] as! Double
     let coord = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     coordinate = coord
     
@@ -105,14 +105,14 @@ import MapKit
   func addActiveVybe(aVybe: PFObject) {
     if let vybeTime = aVybe[kVYBVybeTimestampKey] as? NSDate {
       if mostRecentVybe != nil {
-        let result = vybeTime.compare(mostRecentVybe?[kVYBVybeTimestampKey] as NSDate)
+        let result = vybeTime.compare(mostRecentVybe?[kVYBVybeTimestampKey] as! NSDate)
         if result == NSComparisonResult.OrderedAscending {
           return
         }
       }
     }
     
-    if let user = aVybe[kVYBVybeUserKey] as PFObject! {
+    if let user = aVybe[kVYBVybeUserKey] as! PFObject! {
       // freshFeed is only array of vybes. User field is not included when a vybe is inserted into freshFeed in afterSave. So we compare User objectID
       let userObjID = user.objectId
       activeUsers[userObjID] = 1
@@ -124,8 +124,8 @@ import MapKit
       mostRecentVybe = aVybe
     }
     else {
-      let aDate = mostRecentVybe?[kVYBVybeTimestampKey] as NSDate
-      let cDate = aVybe[kVYBVybeTimestampKey] as NSDate
+      let aDate = mostRecentVybe?[kVYBVybeTimestampKey] as! NSDate
+      let cDate = aVybe[kVYBVybeTimestampKey] as! NSDate
       let comparison = aDate.compare(cDate)
       if comparison == NSComparisonResult.OrderedAscending {
         mostRecentVybe = aVybe
@@ -137,7 +137,7 @@ import MapKit
   
   
   private func updatePopularityScore() {
-    popularityScore = activeUsers.keys.array.count
+    popularityScore = activeUsers.keys.count
   }
   
   func addMyVybe(aVybe: PFObject) {
@@ -207,9 +207,9 @@ import MapKit
     //Update to cloud
     PFCloud.callFunctionInBackground("remove_from_feed", withParameters: ["vybeID" : vybe.objectId]) { (result: AnyObject!, error: NSError!) -> Void in
       if error != nil {
-        println("could not remove the vybe")
+        print("could not remove the vybe")
       } else {
-        println("did remove the vybe")
+        print("did remove the vybe")
       }
     }
   }
@@ -219,7 +219,7 @@ import MapKit
   }
   
   
-  override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+  override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
     
   }
   

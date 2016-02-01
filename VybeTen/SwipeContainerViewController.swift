@@ -18,7 +18,7 @@ import UIKit
   var swipeInteractor = SwipeInteractionManager()
   
   init(viewControllers arr: [UIViewController]!) {
-    super.init()
+    self.init()
 
     //TODO: copy this array
     viewControllers = arr
@@ -30,16 +30,16 @@ import UIKit
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
   }
 
-  required init(coder aDecoder: NSCoder) {
+  required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
   }
   
   override func loadView() {
-    var rootView = UIView()
+    let rootView = UIView()
     
     containerView = UIView()
-    containerView.autoresizingMask = UIViewAutoresizing.FlexibleHeight | .FlexibleWidth
-    containerView.setTranslatesAutoresizingMaskIntoConstraints(false)
+    containerView.autoresizingMask = [UIViewAutoresizing.FlexibleHeight, .FlexibleWidth]
+    containerView.translatesAutoresizingMaskIntoConstraints = false
     rootView.addSubview(containerView)
     
     rootView.addConstraint(NSLayoutConstraint(item: containerView, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: rootView, attribute: NSLayoutAttribute.Width, multiplier: 1, constant: 0))
@@ -118,8 +118,8 @@ import UIKit
     }
     
     let toView = toViewController.view
-    toView.setTranslatesAutoresizingMaskIntoConstraints(true)
-    toView.autoresizingMask = UIViewAutoresizing.FlexibleWidth | .FlexibleHeight
+    toView.translatesAutoresizingMaskIntoConstraints = true
+    toView.autoresizingMask = [UIViewAutoresizing.FlexibleWidth, .FlexibleHeight]
     toView.frame = containerView.bounds
     self.addChildViewController(toViewController)
     
@@ -138,8 +138,8 @@ import UIKit
       NSNotificationCenter.defaultCenter().postNotificationName(VYBSwipeContainerControllerWillMoveToActivityScreenNotification, object: nil)
     }
 
-    var animator = SwipeAnimator()
-    var transitionContext = SwipeTransitionContext(fromViewController: fromViewController, toController: toViewController, swipeToleft: (toViewController == viewControllers[1]))
+    let animator = SwipeAnimator()
+    let transitionContext = SwipeTransitionContext(fromViewController: fromViewController, toController: toViewController, swipeToleft: (toViewController == viewControllers[1]))
     transitionContext.animated = animation
     swipeInteractor.animator = animator
 
@@ -190,7 +190,7 @@ import UIKit
         } else {
           translation = max(translation, 0)
         }
-        var percent = translation / CGRectGetWidth(containerView.bounds)
+        let percent = translation / CGRectGetWidth(containerView.bounds)
         swipeInteractor.updateInteractiveTransition(percent)
       }
     case .Ended:
@@ -218,11 +218,11 @@ import UIKit
     return true
   }
   
-  override func supportedInterfaceOrientations() -> Int {
+  override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
     if selectedViewController != nil {
       return selectedViewController!.supportedInterfaceOrientations()
     }
-    return Int(UIInterfaceOrientationMask.Portrait.rawValue)
+    return UIInterfaceOrientationMask.Portrait
   }
   
   override func prefersStatusBarHidden() -> Bool {
@@ -240,13 +240,16 @@ import UIKit
 class SwipeInteractionManager: NSObject, UIViewControllerInteractiveTransitioning {
   var animator: UIViewControllerAnimatedTransitioning!
   var transitionContext: SwipeTransitionContext!
-  
-  var completionSpeed: CGFloat = 1
+
   var percentCompleted: CGFloat!
   var duration: CGFloat {
     get {
       return CGFloat(animator.transitionDuration(transitionContext))
     }
+  }
+  
+  func completionSpeed() -> CGFloat {
+    return 1
   }
 
   var cancelTick: CADisplayLink!
@@ -254,10 +257,10 @@ class SwipeInteractionManager: NSObject, UIViewControllerInteractiveTransitionin
   var leftToRight: Bool?
   
   func startInteractiveTransition(transitionContext: UIViewControllerContextTransitioning) {
-    self.transitionContext = transitionContext as SwipeTransitionContext
+    self.transitionContext = transitionContext as! SwipeTransitionContext
     leftToRight = !self.transitionContext.swipeToLeft
     
-    transitionContext.containerView().layer.speed = 0
+    transitionContext.containerView()!.layer.speed = 0
     
     animator.animateTransition(transitionContext)
   }
@@ -270,9 +273,9 @@ class SwipeInteractionManager: NSObject, UIViewControllerInteractiveTransitionin
   }
   
   func finishInteractiveTransition() {
-    var layer = transitionContext.containerView().layer
+    let layer = transitionContext.containerView().layer
     
-    layer.speed = Float(self.completionSpeed)
+    layer.speed = Float(self.completionSpeed())
     
     let pausedTime = layer.timeOffset
     layer.timeOffset = 0
@@ -434,13 +437,13 @@ class SwipeTransitionContext: NSObject, UIViewControllerContextTransitioning {
 class SwipeAnimator: NSObject, UIViewControllerAnimatedTransitioning {
   
   func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
-    var fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)!
-    var toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)!
+    let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)!
+    let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)!
     
     let containerView = transitionContext.containerView()
     
     toViewController.view.frame = transitionContext.initialFrameForViewController(toViewController)
-    containerView.addSubview(toViewController.view)
+    containerView!.addSubview(toViewController.view)
     
     UIView.animateWithDuration(self.transitionDuration(transitionContext), delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
       toViewController.view.frame = transitionContext.finalFrameForViewController(toViewController)
@@ -458,11 +461,11 @@ class SwipeAnimator: NSObject, UIViewControllerAnimatedTransitioning {
   
   func animationEnded(transitionCompleted: Bool) {
     if !transitionCompleted {
-      println("transition cancelled!")
+      print("transition cancelled!")
     }
   }
   
-  func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
+  func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
     return 0.3
   }
 }

@@ -22,11 +22,11 @@ class BlockedUsersTableViewController: UITableViewController {
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = false
     
-    let textAttributes = NSMutableDictionary()
+    var textAttributes : [String : AnyObject] = [:]
     if let font = UIFont(name: "Avenir Next", size: 14.0) {
       let textColor = UIColor(red: 247.0/255.0, green: 76.0/255.0, blue: 70.0/255.0, alpha: 1.0)
-      textAttributes.setObject(font, forKey: NSFontAttributeName)
-      textAttributes.setObject(textColor, forKey: NSForegroundColorAttributeName)
+      textAttributes[NSFontAttributeName] = font
+      textAttributes[NSForegroundColorAttributeName] = textColor
       self.navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
     
@@ -38,7 +38,7 @@ class BlockedUsersTableViewController: UITableViewController {
       if error == nil {
         VYBCache.sharedCache().setBlockedUsers(result, forUser: PFUser.currentUser())
         if result.count > 0 {
-          self.blockedUsers = result as [PFUser]
+          self.blockedUsers = result as! [PFUser]
           self.tableView.reloadData()
         }
       }
@@ -106,7 +106,7 @@ class BlockedUsersTableViewController: UITableViewController {
                   self.delay(0.4) {
                     VYBCache.sharedCache().removeBlockedUser(aUser, forUser: currUser)
                     self.removeUserFromBlockedUsers(aUser)
-                    println("\(aUser[kVYBUserUsernameKey]) unblocked!")
+                    print("\(aUser[kVYBUserUsernameKey]) unblocked!")
                     //                  self.blockedUsers?.
                     self.tableView.beginUpdates()
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Middle)
@@ -145,8 +145,8 @@ class BlockedUsersTableViewController: UITableViewController {
       dispatch_get_main_queue(), closure)
   }
 
-  override func supportedInterfaceOrientations() -> Int {
-    return Int(UIInterfaceOrientationMask.Portrait.rawValue)
+  override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+    return UIInterfaceOrientationMask.Portrait
   }
   
 }

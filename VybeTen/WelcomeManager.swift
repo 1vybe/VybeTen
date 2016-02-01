@@ -37,14 +37,14 @@ class WelcomeManager: NSObject {
       Parse.setApplicationId(PARSE_APPLICATION_ID_DEV, clientKey: PARSE_CLIENT_KEY_DEV)
       
       // Clearing Push-noti Badge number
-      var currentInstallation = PFInstallation.currentInstallation()
+      let currentInstallation = PFInstallation.currentInstallation()
       if currentInstallation.badge != 0 {
         currentInstallation.badge = 0
         currentInstallation.saveEventually()
       }
       
       // Access Control
-      var defaultACL = PFACL()
+      let defaultACL = PFACL()
       // Enable public read access by default, with any newly created PFObjects belonging to the current user
       defaultACL.setPublicReadAccess(true)
       PFACL.setDefaultACL(defaultACL, withAccessForCurrentUser: true)
@@ -80,7 +80,7 @@ class WelcomeManager: NSObject {
   
   func updateCurrentInstallationWithDeviceToken(deviceToken: NSData) {
     dispatch_async(parse_setup_queue, { () -> Void in
-      var currentInstallation = PFInstallation.currentInstallation()
+      let currentInstallation = PFInstallation.currentInstallation()
       currentInstallation.setDeviceTokenFromData(deviceToken)
       currentInstallation.saveEventually()
     })
@@ -107,7 +107,7 @@ class WelcomeManager: NSObject {
       var flagQuery = myFlags.query()
       flagQuery .findObjectsInBackgroundWithBlock({ (result: [AnyObject]!, error: NSError!) -> Void in
         if error == nil {
-          for vybeObj in result as [PFObject] {
+          for vybeObj in result as! [PFObject] {
             VYBCache.sharedCache().setAttributesForVybe(vybeObj, flaggedByCurrentUser: true)
           }
         }
@@ -128,21 +128,7 @@ class WelcomeManager: NSObject {
   }
   
   func updateGoogleAnalytics() {
-#if DEBUG
-#else
-    if let tracker = GAI.sharedInstance().defaultTracker {
-      tracker.set("&uid", value: PFUser.currentUser().username)
-      tracker.send(GAIDictionaryBuilder.createEventWithCategory("UX", action: "User Logged In", label: nil, value: nil).build())
-      
-      if ConfigManager.sharedInstance.currentUserExcludedFromAnalytics() {
-        let tribeName = "Founders"
-        tracker.set(GAIFields.customDimensionForIndex(2), value: tribeName)
-      } else {
-        let tribeName = "Beta Users"
-        tracker.set(GAIFields.customDimensionForIndex(2), value: tribeName)
-      }
-    }
-#endif
+
   }
 
 }
