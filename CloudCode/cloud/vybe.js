@@ -286,7 +286,7 @@ Parse.Cloud.define('get_active_vybes', function (request, response) {
         query.include('user');
         query.notContainedIn('user', list);
         query.addDescending('timestamp');
-        query.greaterThanOrEqualTo('timestamp',aDayAgo);
+        //query.greaterThanOrEqualTo('timestamp',aDayAgo);
         query.limit(10000)
 
         query.find({
